@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
-import { EmitEvent } from '../utils';
+
+import { EmitEvent, SELECT_CHANGE } from '../utils';
+
 
 export default function Select(props) {
   return (
@@ -13,12 +15,15 @@ export default function Select(props) {
         disabled={props.disabled}
         onChange={(e) => {
           const value = String(e.target.value);
-          EmitEvent(
-            'select:change',
-            'Select',
-            value.indexOf(':') < 0 ? value.split(':')[0] : value,
-            props.name
-          );
+          if (props.name && !props.analytics.noTrack) {
+            EmitEvent(
+              SELECT_CHANGE,
+              'select',
+              'change',
+              props.name,
+              value,
+            );
+          }
           props.onChange(e);
         }}
       >
@@ -46,4 +51,13 @@ Select.propTypes = {
   disabled: PropTypes.bool,
   options: PropTypes.array,
   children: PropTypes.array,
+  analytics: PropTypes.shape({
+    noTrack: PropTypes.bool.isRequired,
+  }),
+};
+
+Select.defaultProps = {
+  analytics: {
+    noTrack: false,
+  },
 };

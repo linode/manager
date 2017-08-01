@@ -102,7 +102,7 @@ describe('linodes/linode/settings/advanced/components/ConfigPanel', () => {
     const deleteBtn = panel.find('Button').at(1);
     deleteBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.callCount).to.equal(1);
-    await dispatch.args[0][0].body.props.onOk();
+    await dispatch.args[0][0].body.props.onSubmit();
     const fn = dispatch.secondCall.args[0];
     dispatch.reset();
     await expectRequest(fn, '/linode/instances/1238/configs/12345', { method: 'DELETE' });

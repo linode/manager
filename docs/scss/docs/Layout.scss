@@ -4,30 +4,28 @@ $sidebar-width: 250px;
     height: 100%;
 
     &-container {
-        height: 100%;
+        height: calc(100% - #{$nav-height});
         margin: 0 auto;
-        position: relative;
     }
 
     &-navigationContainer {
-        position: fixed;
-        top: $nav-height;
+        position: absolute;
         background-color: $light-gray;
         border-left: $border;
         border-right: $border;
         height: 100%;
+        overflow-y: auto;
         width: $sidebar-width;
     }
 
     &-content {
-        position: absolute;
-        top: $nav-height;
         background-color: $white;
-        min-height: calc(100% - #{$nav-height});
         margin-left: $sidebar-width;
         // Subtract the bootstrap margin too.
         width: calc(100% - #{$sidebar-width} - 30px);
         border-right: $border;
+        height: 100%;
+        overflow-y: auto;
     }
 
     @media screen and (max-width: #{$sidebar-breakpoint}) {

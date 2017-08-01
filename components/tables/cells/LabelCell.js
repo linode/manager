@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
 
 
@@ -41,7 +41,7 @@ export default function LabelCell(props) {
     );
 
     tooltipEnabledClass = 'TooltipEnabled';
-    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
+    tooltipAttributes = { 'data-tip': true, 'data-for': tooltipId };
     tooltipComponent = (
       <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
     );

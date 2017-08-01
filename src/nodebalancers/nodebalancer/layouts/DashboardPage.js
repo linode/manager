@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
@@ -22,6 +22,7 @@ import LineGraph from '~/components/graphs/LineGraph';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
+import { convertUnits } from '~/utilities';
 
 
 const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
@@ -77,7 +78,7 @@ export class DashboardPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={() => {
+        onSubmit={() => {
           const ids = [nodebalancer.id, config.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
@@ -85,7 +86,7 @@ export class DashboardPage extends Component {
             hideModal,
           ]));
         }}
-        typeOfItem={title}
+        typeOfItem="NodeBalancer Config"
         onCancel={() => dispatch(hideModal())}
         items={[`port ${config.port}`]}
       />
@@ -120,21 +121,21 @@ export class DashboardPage extends Component {
           title: 'Connections',
           yAxis: {
             label: `${CONNECTION_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${CONNECTION_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, CONNECTION_UNITS, 1),
           },
           data: formatData(['990066'], [stats.connections]),
-          unit: `${CONNECTION_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, CONNECTION_UNITS, 1),
         },
         traffic: {
           title: 'Traffic',
           yAxis: {
             label: `${NETWORK_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, NETWORK_UNITS, 1),
           },
           data: formatData(['0033CC', '32CD32'],
                            [stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
-          unit: `${NETWORK_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS, 1),
         },
       };
     }
@@ -220,10 +221,11 @@ export class DashboardPage extends Component {
               <CardHeader
                 title="Configs"
                 nav={
-                  <Link
+                  <PrimaryButton
                     to={`/nodebalancers/${nodebalancer.label}/configs/create`}
-                    className="linode-add btn btn-default float-sm-right"
-                  >Add a Config</Link>
+                    buttonClass="btn-default"
+                    className="float-sm-right"
+                  >Add a Config</PrimaryButton>
                 }
               />
             }

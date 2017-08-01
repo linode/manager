@@ -48,7 +48,11 @@ export class SummaryPage extends Component {
     const { loading, errors } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit} className="Backup Backup-emptySnapshot col-sm-3">
+      <Form
+        onSubmit={this.onSubmit}
+        className="Backup Backup-emptySnapshot col-sm-3"
+        title="Take first snapshot"
+      >
         <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
           <div className="Backup-description text-muted">

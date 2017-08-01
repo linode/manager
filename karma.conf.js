@@ -10,15 +10,18 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     webpack: {
       devtool: 'inline-source-map',
+      entry: [
+        './src/index'
+      ],
       module: {
-        loaders: [
+        rules: [
           {
             test: /\.json$/,
-            loaders: ['json-loader'],
+            use: ['json-loader'],
           },
           {
             test: /\.jsx?/,
-            loader: 'babel-loader',
+            use: ['babel-loader'],
             include: [
               path.join(__dirname, 'src'),
               path.join(__dirname, 'test'),
@@ -28,22 +31,25 @@ module.exports = function(config) {
           },
           {
             test: /\.scss$/,
-            loaders: ["style", "css", "sass"]
-          },
-          {
-            test: /\.jsx?/,
-            include: path.join(__dirname, 'src'),
-            loader: 'isparta'
+            use: [
+              "style-loader",
+              "css-loader",
+              {
+                loader: "sass-loader",
+                options: {
+                  includePaths: [
+                    path.resolve(__dirname, "./node_modules/bootstrap/scss/")
+                  ]
+                }
+              }
+            ]
           },
           {
             test: /\.svg$/,
-            loaders: ['file'],
+            use: ['file-loader'],
             include: path.join(__dirname, 'node_modules')
           }
         ]
-      },
-      sassLoader: {
-        includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss/")]
       },
       externals: {
         'cheerio': 'window',

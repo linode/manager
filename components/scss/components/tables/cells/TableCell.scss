@@ -1,6 +1,8 @@
 // default checkbox rows with labels to use font-large for the label
 .CheckboxCell + .TableCell.LinkCell,
-.CheckboxCell + .TableCell.LabelCell {
+.CheckboxCell + .TableCell.LabelCell,
+.ThumbnailCell + .TableCell.LinkCell,
+.ThumbnailCell + .TableCell.LabelCell {
     @extend .font-large;
 }
 

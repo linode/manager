@@ -12,7 +12,7 @@ form {
 }
 
 .col-form-label {
-  color: $light-black; // $lightest-black
+  color: $light-black;
   text-align: right;
 }
 
@@ -86,25 +86,11 @@ textarea {
 }
 
 .form-group {
-  margin-bottom: 10px;
+    @include placeholder-full();
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+    margin-bottom: 10px;
 
-  ::-webkit-input-placeholder {
-    @include placeholder();
-  }
-
-  ::-moz-placeholder {
-     @include placeholder();
-  }
-
-  :-moz-placeholder {
-    @include placeholder();
-  }
-
-  :-ms-input-placeholder {
-    @include placeholder();
-  }
+    &:last-child {
+        margin-bottom: 0;
+    }
 }

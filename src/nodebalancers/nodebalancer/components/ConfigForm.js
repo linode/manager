@@ -94,14 +94,17 @@ export default class ConfigForm extends Component {
     this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
-    const { submitText, submitDisabledText } = this.props;
+    const { submitText, submitDisabledText, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
       checkAttempts, sslCert, sslKey, checkPath, checkBody, errors, loading,
     } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'NodeBalancer Config Settings', action: config.id ? 'edit' : 'add' }}
+      >
         <FormGroup errors={errors} name="port" className="row">
           <label className="col-sm-2 col-form-label">Port</label>
           <div className="col-sm-10">
@@ -110,6 +113,7 @@ export default class ConfigForm extends Component {
               name="port"
               placeholder="80"
               type="number"
+              min={0}
               value={port}
               onChange={this.onChange}
             />
@@ -266,6 +270,7 @@ export default class ConfigForm extends Component {
               id="checkInterval"
               name="checkInterval"
               placeholder="0"
+              min={0}
               value={checkInterval}
               onChange={this.onChange}
               type="number"
@@ -281,6 +286,7 @@ export default class ConfigForm extends Component {
               id="checkTimeout"
               name="checkTimeout"
               placeholder="0"
+              min={0}
               value={checkTimeout}
               onChange={this.onChange}
               type="number"
@@ -296,6 +302,7 @@ export default class ConfigForm extends Component {
               id="checkAttempts"
               name="checkAttempts"
               placeholder="0"
+              min={0}
               value={checkAttempts}
               onChange={this.onChange}
               type="number"

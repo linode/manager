@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
+
 import { Tabs } from 'linode-components/tabs';
 
-import Breadcrumbs from '~/components/Breadcrumbs';
-
+import { setAnalytics, setTitle } from '~/actions';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { setTitle } from '~/actions/title';
+import Breadcrumbs from '~/components/Breadcrumbs';
 
 
 export class IndexPage extends Component {
@@ -20,6 +20,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, nodebalancer } = this.props;
     dispatch(setTitle(nodebalancer.label));
+    dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
   }
 
   render() {

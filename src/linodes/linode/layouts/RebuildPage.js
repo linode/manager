@@ -62,7 +62,7 @@ export class RebuildPage extends Component {
     return dispatch(showModal('Rebuild Linode', (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={callback}
+        onSubmit={callback}
       >
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
@@ -83,7 +83,10 @@ export class RebuildPage extends Component {
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
         </p>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Rebuild Linode' }}
+        >
           <div className="clearfix">
             <Distributions
               distributions={distributions.distributions}

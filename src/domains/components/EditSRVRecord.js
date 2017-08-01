@@ -1,18 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 
-import {
-  Form,
-  FormSummary,
-  Input,
-  Select,
-  SubmitButton,
-  ModalFormGroup,
-} from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
+import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -34,7 +26,6 @@ export default class EditSRVRecord extends Component {
 
     this.state = {
       errors: {},
-      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -51,7 +42,7 @@ export default class EditSRVRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, title, close } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, service, protocol, target, priority, weight, port } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -67,7 +58,6 @@ export default class EditSRVRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', id ? 'edit' : 'add', title); },
       close,
     ]));
   }
@@ -75,114 +65,102 @@ export default class EditSRVRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
-    const { close, title } = this.props;
+    const { close, title, id } = this.props;
     const {
-      errors,
-      loading,
-      defaultTTL,
-      ttl,
-      service,
-      protocol,
-      target,
-      priority,
-      weight,
-      port,
+      errors, defaultTTL, ttl, service, protocol, target, priority, weight, port,
     } = this.state;
+
+    const analytics = { title, action: id ? 'edit' : 'add' };
+
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="service" label="Service" apiKey="name" errors={errors}>
-          <Input
-            id="service"
-            name="service"
-            value={service}
-            placeholder="_sip"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="protocol" label="Protocol" apiKey="protocol" errors={errors}>
-          <Select
-            id="protocol"
-            name="protocol"
-            value={protocol}
-            onChange={this.onChange}
-          >
-            <option value="_tcp">tcp</option>
-            <option value="_udp">udp</option>
-            <option value="_xmpp">xmpp</option>
-            <option value="_tls">tls</option>
-            <option value="_smtp">smtp</option>
-          </Select>
-        </ModalFormGroup>
-        <ModalFormGroup id="target" label="Target" apiKey="target" errors={errors}>
-          <Input
-            id="target"
-            name="target"
-            value={target}
-            placeholder="www"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="priority" label="Priority" apiKey="priority" errors={errors}>
-          <Input
-            id="priority"
-            name="priority"
-            value={priority}
-            placeholder="10"
-            type="number"
-            min={0}
-            max={255}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="weight" label="Weight" apiKey="weight" errors={errors}>
-          <Input
-            id="weight"
-            name="weight"
-            value={weight}
-            placeholder="5"
-            type="number"
-            min={0}
-            max={255}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="port" label="Port" apiKey="port" errors={errors}>
-          <Input
-            id="port"
-            name="port"
-            value={port}
-            placeholder="80"
-            type="number"
-            min={0}
-            max={65535}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
-          <SelectDNSSeconds
-            id="ttl"
-            name="ttl"
-            value={ttl}
-            defaultSeconds={defaultTTL}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren={this.props.id ? undefined : 'Adding SRV Record'}
-          >
-            {this.props.id ? undefined : 'Add SRV Record'}
-          </SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText={id ? undefined : 'Add SRV Record'}
+        buttonDisabledText={id ? undefined : 'Adding SRV Record'}
+        analytics={analytics}
+        errors={errors}
+      >
+        <div>
+          <ModalFormGroup id="service" label="Service" apiKey="name" errors={errors}>
+            <Input
+              id="service"
+              name="service"
+              value={service}
+              placeholder="_sip"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="protocol" label="Protocol" apiKey="protocol" errors={errors}>
+            <Select
+              id="protocol"
+              name="protocol"
+              value={protocol}
+              onChange={this.onChange}
+            >
+              <option value="_tcp">tcp</option>
+              <option value="_udp">udp</option>
+              <option value="_xmpp">xmpp</option>
+              <option value="_tls">tls</option>
+              <option value="_smtp">smtp</option>
+            </Select>
+          </ModalFormGroup>
+          <ModalFormGroup id="target" label="Target" apiKey="target" errors={errors}>
+            <Input
+              id="target"
+              name="target"
+              value={target}
+              placeholder="www"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="priority" label="Priority" apiKey="priority" errors={errors}>
+            <Input
+              id="priority"
+              name="priority"
+              value={priority}
+              placeholder="10"
+              type="number"
+              min={0}
+              max={255}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="weight" label="Weight" apiKey="weight" errors={errors}>
+            <Input
+              id="weight"
+              name="weight"
+              value={weight}
+              placeholder="5"
+              type="number"
+              min={0}
+              max={255}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="port" label="Port" apiKey="port" errors={errors}>
+            <Input
+              id="port"
+              name="port"
+              value={port}
+              placeholder="80"
+              type="number"
+              min={0}
+              max={65535}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
+            <SelectDNSSeconds
+              id="ttl"
+              name="ttl"
+              value={ttl}
+              defaultSeconds={defaultTTL}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

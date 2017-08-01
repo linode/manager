@@ -45,7 +45,10 @@ export default class ChangeTimezone extends Component {
 
     return (
       <Card header={<CardHeader title="Change timezone" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Timezone Settings' }}
+        >
           <FormGroup className="row">
             <label htmlFor="timezone" className="col-sm-2 col-form-label">Timezone</label>
             <div className="col-sm-10">

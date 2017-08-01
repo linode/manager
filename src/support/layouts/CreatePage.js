@@ -14,8 +14,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { domains, linodes, nodebalancers, tickets } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -46,8 +45,8 @@ export class CreatePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Open a Ticket'));
+    dispatch(setAnalytics(['tickets', 'create']));
   }
 
   onSubmit = () => {
@@ -100,7 +99,10 @@ export class CreatePage extends Component {
           <TicketHelper displayHeader />
         </section>
         <Card>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Open a Ticket', action: 'add' }}
+          >
             <FormGroup className="row" errors={errors} name="summary">
               <label htmlFor="summary" className="col-sm-2 col-form-label">Summary</label>
               <div className="col-sm-10">

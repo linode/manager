@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
+import React, { Component } from 'react';
+
+import { EmitEvent, DROPDOWN_OPEN, DROPDOWN_CLICK, DROPDOWN_CLOSE } from '../utils';
 
 
 export default class Dropdown extends Component {
@@ -12,37 +14,64 @@ export default class Dropdown extends Component {
     };
   }
 
+  emitEvent(type, action, item) {
+    if (this.props.analytics && this.props.analytics.title) {
+      EmitEvent(type, 'dropdown', action, this.props.analytics.title, item);
+    }
+  }
+
   open() {
+    if (typeof this.props.onOpen === 'function') {
+      this.props.onOpen();
+    }
+
+    this.emitEvent(DROPDOWN_OPEN, 'open');
+
     this.setState({ open: !this.state.open });
   }
 
   close() {
+    if (typeof this.props.onClose === 'function') {
+      this.props.onClose();
+    }
+
+    this.emitEvent(DROPDOWN_CLOSE, 'close');
+
     this.setState({ open: false });
+  }
+
+  wrapClick(f, item) {
+    return (...args) => {
+      if (f !== this.open) {
+        this.emitEvent(DROPDOWN_CLICK, 'change', item);
+        f(...args);
+      }
+    };
   }
 
   render() {
     const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
 
-    const dropdownMenu = groups.map((group, i, groups) => (
+    const dropdownMenu = groups.map((group, i) => (
       <div className="Dropdown-group" key={group.name || i}>
         {!group.name ? null : (
           <div className="Dropdown-groupLabel">{group.name}</div>
         )}
         <div className="Dropdown-elements">
-          {group.elements.map((item, i) => (
+          {group.elements.map((item) => (
             <button
               type="button"
               key={item.name}
-              id={item.name.split(' ').join('-').toLowerCase()}
+              id={(item || '').name.split(' ').join('-').toLowerCase()}
               className="Dropdown-item"
               // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
-              onMouseDown={item.action}
+              onMouseDown={this.wrapClick(item.action, item.name)}
             >{item.name}</button>
           ))}
         </div>
       </div>
-    ))
+    ));
 
     const orientation = !this.props.leftOriented ? 'Dropdown-menu--right' : '';
 
@@ -54,9 +83,9 @@ export default class Dropdown extends Component {
         <button
           type="button"
           className="Dropdown-first"
-          onClick={first.action || this.open}
+          onClick={this.wrapClick(first.action || this.open)}
           disabled={disabled}
-          id={first.name.split(' ').join('-').toLowerCase()}
+          id={(first.name || '').split(' ').join('-').toLowerCase()}
         >{first.name}</button>
         {groups.length === 0 ? null : (
           <button
@@ -86,8 +115,14 @@ Dropdown.propTypes = {
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,
   dropdownIcon: PropTypes.string,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
+  analytics: PropTypes.shape({
+    title: PropTypes.string,
+  }),
 };
 
 Dropdown.defaultProps = {
   dropdownIcon: 'fa-caret-down',
+  analytics: {},
 };

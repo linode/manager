@@ -5,8 +5,7 @@ import { Link } from 'react-router';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Tabs } from 'linode-components/tabs';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 
 import NewMasterZone from '../components/NewMasterZone';
 import NewSlaveZone from '../components/NewSlaveZone';
@@ -23,6 +22,7 @@ export class CreatePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a Domain'));
+    dispatch(setAnalytics(['domains', 'create']));
   }
 
   render() {

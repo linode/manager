@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { replace } from 'react-router-redux';
 
 import { DeleteModalBody } from 'linode-components/modals';
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
@@ -77,10 +76,7 @@ export class MasterZone extends Component {
     const { domain } = this.props;
 
     const { TXT } = domain._groupedRecords;
-    return (TXT || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
+    return TXT || [];
   }
 
   formatCNAMERecords() {
@@ -93,35 +89,18 @@ export class MasterZone extends Component {
     }));
   }
 
-  renderDeleteRecord(title, id, name) {
+  renderDeleteRecord(type, id, name) {
     const { dispatch, domain } = this.props;
 
-    dispatch(showModal(title,
+    dispatch(showModal(`Delete ${type}`,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
         items={[name]}
-        typeOfItem={title}
+        typeOfItem={type}
         onCancel={() => dispatch(hideModal())}
-      />
-    ));
-  }
-
-  renderSOAEditRecord() {
-    const { dispatch, domain } = this.props;
-    const title = 'Edit SOA Record';
-    dispatch(showModal(
-      title,
-      <EditSOARecord
-        dispatch={dispatch}
-        title={title}
-        domains={domain}
-        close={(newDomain) => () => {
-          dispatch(hideModal());
-          dispatch(replace(`/domains/${newDomain || domain.domain}`));
-        }}
       />
     ));
   }
@@ -169,7 +148,7 @@ export class MasterZone extends Component {
   }
 
   render() {
-    const { domain } = this.props;
+    const { domain, dispatch } = this.props;
 
     const formatSeconds = (records) => {
       return records.map(record => {
@@ -235,9 +214,7 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Edit',
-                    onClick: () => {
-                      this.renderSOAEditRecord();
-                    },
+                    onClick: () => EditSOARecord.trigger(dispatch, domain),
                   },
                 ]}
                 data={[soaRecord]}
@@ -251,13 +228,14 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="NS Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => {
                         this.renderEditRecord('Add NS Record', EditNSRecord);
                       }}
+                      buttonClass="btn-default"
                     >
                       Add NS Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -279,7 +257,7 @@ export class MasterZone extends Component {
                     cellComponent: NameserversCell,
                     onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
                     onDeleteClick: ({ id, target }) =>
-                      this.renderDeleteRecord('Delete NS Record', id, target),
+                      this.renderDeleteRecord('NS Record', id, target),
                   },
                 ]}
                 data={nsRecords}
@@ -294,11 +272,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="MX Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add MX Record', EditMXRecord); }}
+                      buttonClass="btn-default"
                     >
                       Add MX Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -327,7 +306,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, target }) =>
-                      this.renderDeleteRecord('Delete MX Record', id, target),
+                      this.renderDeleteRecord('MX Record', id, target),
                   },
                 ]}
                 data={mxRecords}
@@ -342,11 +321,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="A/AAAA Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add A/AAAA Record', EditARecord); }}
+                      buttonClass="btn-default"
                     >
                       Add A/AAAA Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -374,7 +354,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete A/AAAA Record', id, name),
+                      this.renderDeleteRecord('A/AAAA Record', id, name),
                   },
                 ]}
                 data={aRecords}
@@ -389,13 +369,14 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="CNAME Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => {
                         this.renderEditRecord('Add CNAME Record', EditCNAMERecord);
                       }}
+                      buttonClass="btn-default"
                     >
                       Add CNAME Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -424,7 +405,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete CNAME Record', id, name),
+                      this.renderDeleteRecord('CNAME Record', id, name),
                   },
                 ]}
                 data={cnameRecords}
@@ -439,11 +420,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="TXT Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add TXT Record', EditTXTRecord); }}
+                      buttonClass="btn-default"
                     >
                       Add TXT Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -477,7 +459,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete TXT Record', id, name),
+                      this.renderDeleteRecord('TXT Record', id, name),
                   },
                 ]}
                 data={txtRecords}
@@ -491,11 +473,12 @@ export class MasterZone extends Component {
               <CardHeader
                 title="SRV Records"
                 nav={
-                  <Button
+                  <PrimaryButton
                     onClick={() => { this.renderEditRecord('Add SRV Record', EditSRVRecord); }}
+                    buttonClass="btn-default"
                   >
                     Add SRV Record
-                  </Button>
+                  </PrimaryButton>
                 }
               />
             }
@@ -534,7 +517,7 @@ export class MasterZone extends Component {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
                   text: 'Delete',
-                  onClick: ({ id, name }) => this.renderDeleteRecord('Delete SRV Record', id, name),
+                  onClick: ({ id, name }) => this.renderDeleteRecord('SRV Record', id, name),
                 },
               ]}
               data={srvRecords}

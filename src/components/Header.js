@@ -46,27 +46,64 @@ export default class Header extends Component {
     }
   }
 
+  renderLink(props) {
+    const {
+      to,
+      label,
+      parentClass = 'MainHeader',
+      alsoHighlightOn = [],
+    } = props;
+    const { pathname } = window.location;
+
+    const shouldHighlight = [...alsoHighlightOn, to].reduce(
+      (should, link) => should || pathname.indexOf(link) === 0, false);
+
+    const linkClass = shouldHighlight ? `${parentClass}-link--selected` : '';
+
+    return (
+      <Link
+        className={`${parentClass}-link ${linkClass}`}
+        to={to}
+      >{label}</Link>
+    );
+  }
+
   render() {
     const { username, notifications, events, email } = this.props;
     const gravatarLink = `https://gravatar.com/avatar/${getEmailHash(email)}`;
     const { pathname } = window.location;
-    const linkClass = (link, primary = 'MainHeader') =>
-      `${primary}-link ${pathname.indexOf(link) === 0 ? `${primary}-link--selected` : ''}`;
 
     const unseenCount = notifications.open ? 0 :
       events.ids.reduce(function (count, id) {
         return events.events[id].seen ? count : count + 1;
       }, 0);
 
-    const miniHeader = (
+    const infoHeader = (
       <div className="MiniHeader-text">
         This is the early-access Linode Manager.
         Click <a href="https://manager.linode.com">here</a> to go back to the classic Linode Manager.
       </div>
     );
 
+    let contextHeader;
+    if (['linodes', 'stackscripts', 'images', 'volumes'].indexOf(pathname.split('/')[1]) !== -1) {
+      contextHeader = (
+        <div className="Menu">
+          <div className="Menu-item">
+            <this.renderLink to="/stackscripts" label="StackScripts" parentClass="ContextHeader" />
+          </div>
+          <div className="Menu-item">
+            <this.renderLink to="/images" label="Images" parentClass="ContextHeader" />
+          </div>
+          <div className="Menu-item">
+            <this.renderLink to="/volumes" label="Volumes" parentClass="ContextHeader" />
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <HeaderWrapper miniHeader={miniHeader}>
+      <HeaderWrapper infoHeader={infoHeader} contextHeader={contextHeader}>
         <div className="MainHeader-brand">
           <Link to="/">
             <span className="MainHeader-logo">
@@ -79,18 +116,14 @@ export default class Header extends Component {
             </span>
           </Link>
         </div>
-        <Link
-          className={`${linkClass('/linodes')}`}
+        <this.renderLink
           to="/linodes"
-        >Linodes</Link>
-        <Link
-          className={`${linkClass('/nodebalancers')}`}
-          to="/nodebalancers"
-        >NodeBalancers</Link>
-        <Link
-          className={`${linkClass('/domains')}`}
-          to="/domains"
-        >Domains</Link>
+          label="Linodes"
+          alsoHighlightOn={['/stackscripts', '/volumes', '/images']}
+        />
+        <this.renderLink to="/nodebalancers" label="NodeBalancers" />
+        <this.renderLink to="/domains" label="Domains" />
+        <this.renderLink to="/support" label="Support" />
         {!username ? null : (
           <div
             className="MainHeader-session float-sm-right"

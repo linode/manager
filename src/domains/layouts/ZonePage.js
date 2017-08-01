@@ -2,8 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { domains } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
@@ -20,8 +19,8 @@ export class ZonePage extends Component {
   async componentDidMount() {
     const { dispatch, domain } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle(domain.domain));
+    dispatch(setAnalytics(['domains', 'domain']));
   }
 
   render() {

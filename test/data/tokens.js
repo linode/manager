@@ -19,7 +19,7 @@ export const tokens = {
   2: {
     ...testToken,
     id: 2,
-    label: 'oauth_token2',
+    label: '',
     type: 'client_token',
     client: {
       id: 'd64b169cc95fde4e367g',
@@ -30,12 +30,12 @@ export const tokens = {
   3: {
     ...testToken,
     id: 3,
-    label: 'oauth_token3',
+    label: '',
     type: 'client_token',
     client: {
-      id: 'd64b169cc95fde4e367g',
+      id: 'd64b169cc95fde4e367h',
       redirect_uri: 'http://localhost:9999/oauth/callback',
-      label: 'Test client',
+      label: 'Test client 123',
     },
     scopes: 'linodes:*,nodebalancers:create',
   },

@@ -123,7 +123,10 @@ export class AlertsPage extends Component {
 
     return (
       <Card header={header}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Linode Alert Settings' }}
+        >
           {alerts.map(this.renderAlertRow)}
           <div className="row">
             <div className="offset-sm-2 col-sm-10">

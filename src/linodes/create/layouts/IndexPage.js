@@ -5,8 +5,7 @@ import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import * as api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import Region from '~/components/Region';
@@ -47,6 +46,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a Linode'));
+    dispatch(setAnalytics(['linodes', 'create']));
   }
 
   onSubmit = () => {

@@ -12,8 +12,7 @@ import {
   Input,
 } from 'linode-components/forms';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setSource, setTitle } from '~/actions';
 import { nodebalancers } from '~/api';
 import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
@@ -51,7 +50,10 @@ export class SettingsPage extends Component {
 
     return (
       <Card>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'NodeBalancer Settings' }}
+        >
           <div className="row">
             <label className="col-sm-3 row-label">Hostname</label>
             <div className="col-sm-9">

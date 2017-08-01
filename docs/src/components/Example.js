@@ -5,7 +5,7 @@ import ClipboardButton from 'react-clipboard.js';
 
 const DEFAULT_CLIPBOARD_ICON = 'fa-clipboard';
 const languageMap = {
-  curl: 'bash'
+  curl: 'bash',
 };
 
 export default class Example extends Component {
@@ -23,7 +23,7 @@ export default class Example extends Component {
       this.setState({ clipboardIcon: 'fa-check' }, () => {
         setTimeout(() => {
           this.setState({ clipboardIcon: DEFAULT_CLIPBOARD_ICON });
-        }, 2500)
+        }, 2500);
       });
     }
   }
@@ -34,12 +34,17 @@ export default class Example extends Component {
 
     const collapsedClass = collapsed ? 'collapse' : '';
     const lowerCaseLanguage = language.toLowerCase();
-    const languageName = languageMap[lowerCaseLanguage] ? languageMap[lowerCaseLanguage] : lowerCaseLanguage;
+    const languageName = languageMap[lowerCaseLanguage] ?
+      languageMap[lowerCaseLanguage] : lowerCaseLanguage;
 
     let clipboardButton;
     if (!noclipboard) {
       clipboardButton = (
-        <ClipboardButton className="Example-clipboardButton" data-clipboard-text={example} onClick={this.onClickCopy}>
+        <ClipboardButton
+          className="Example-clipboardButton"
+          data-clipboard-text={example}
+          onClick={this.onClickCopy}
+        >
           <i className={`fa ${clipboardIcon}`}></i>
         </ClipboardButton>
       );
@@ -57,7 +62,10 @@ export default class Example extends Component {
 }
 
 Example.propTypes = {
-  noclipboard: PropTypes.bool
+  collapsed: PropTypes.bool,
+  example: PropTypes.string,
+  language: PropTypes.string,
+  noclipboard: PropTypes.bool,
 };
 
 Example.defaultProps = {

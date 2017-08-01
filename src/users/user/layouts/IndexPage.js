@@ -5,9 +5,8 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
+import { setAnalytics, setTitle } from '~/actions';
 import { getObjectByLabelLazily } from '~/api/util';
-
-import { setTitle } from '~/actions/title';
 
 
 export class IndexPage extends Component {
@@ -18,6 +17,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, user } = this.props;
     dispatch(setTitle(user.username));
+    dispatch(setAnalytics(['users', 'user']));
   }
 
   render() {
