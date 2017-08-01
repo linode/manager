@@ -28,10 +28,10 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
       />
     );
 
-    const selectDay = page.find('select[name="day"]');
+    const selectDay = page.find('input[name="day"]');
     expect(selectDay.props().value).to.equal('Saturday');
 
-    const selectWindow = page.find('select[name="window"]');
+    const selectWindow = page.find('input[name="window"]');
     expect(selectWindow.props().value).to.equal('W0');
 
     const settingsForm = page.find('Form');

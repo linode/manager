@@ -8,7 +8,7 @@ schema:
     _type: String
     _value: linode/Arch2014.10
   created:
-    _type: Datetime
+    _type: String
     _value: 2014-12-24T18:00:09
   label:
     _type: String

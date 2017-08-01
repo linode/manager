@@ -10,9 +10,6 @@ export default function SessionMenu(props) {
           <Link to="/profile">My Profile</Link>
         </li>
         <li className="SessionMenu-item">
-          <Link to="/support">Support</Link>
-        </li>
-        <li className="SessionMenu-item">
           <a href="mailto:feedback@linode.com">Submit Feedback</a>
         </li>
         <hr />

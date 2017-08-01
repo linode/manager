@@ -26,7 +26,10 @@ export default class TakeSnapshot extends Component {
     const { errors, loading } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'Take Snapshot', action: 'add' }}
+      >
         <FormGroup className="row">
           <div className="offset-sm-3 col-sm-9">
             <SubmitButton

@@ -7,8 +7,8 @@ import { DeleteModalBody } from 'linode-components/modals';
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 
-import { AddModal } from './AddModal';
-import { EditModal } from './EditModal';
+import AddDisk from './AddDisk';
+import EditDisk from './EditDisk';
 
 
 const borderColors = [
@@ -38,48 +38,18 @@ export class DiskPanel extends Component {
     return total - used;
   }
 
-  editAction(d) {
-    const { dispatch, linode } = this.props;
-    const title = 'Edit Disk';
-
-    return () => dispatch(showModal(title, (
-      <EditModal
-        free={this.freeSpace()}
-        linode={linode}
-        disk={d}
-        title={title}
-        dispatch={dispatch}
-      />
-    )));
-  }
-
   deleteAction(d) {
     const { dispatch, linode } = this.props;
 
     return () => dispatch(showModal('Delete Disk', (
       <DeleteModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={() => {
+        onSubmit={() => {
           dispatch(linodes.disks.delete(linode.id, d.id));
           dispatch(hideModal());
         }}
         typeOfItem="Disks"
         items={[d.label]}
-      />
-    )));
-  }
-
-  addAction = () => {
-    const { dispatch, linode, distributions } = this.props;
-    const title = 'Add a Disk';
-
-    return dispatch(showModal(title, (
-      <AddModal
-        distributions={distributions}
-        free={this.freeSpace()}
-        linode={linode}
-        title={title}
-        dispatch={dispatch}
       />
     )));
   }
@@ -99,7 +69,8 @@ export class DiskPanel extends Component {
   }
 
   render() {
-    const { linode: { _disks: { disks } } } = this.props;
+    const { dispatch, linode, distributions } = this.props;
+    const { disks } = linode._disks;
     const free = this.freeSpace();
     const header = <CardHeader title="Disks" />;
 
@@ -122,7 +93,9 @@ export class DiskPanel extends Component {
                 <small className="text-muted">Being deleted</small>}
                 {!this.poweredOff() || d.state === 'deleting' ? null : (
                   <div>
-                    <Button onClick={this.editAction(d)}>Edit</Button>
+                    <Button
+                      onClick={() => EditDisk.trigger(dispatch, linode, d, free)}
+                    >Edit</Button>
                     <Button onClick={this.deleteAction(d)}>Delete</Button>
                   </div>
                 )}
@@ -132,7 +105,10 @@ export class DiskPanel extends Component {
             <h3>Unallocated</h3>
             <p>{free} MB</p>
             {!this.poweredOff() ? null : (
-              <Button onClick={this.addAction} disabled={free === 0}>Add a disk</Button>
+              <Button
+                onClick={() => AddDisk.trigger(dispatch, linode, distributions, free)}
+                disabled={free === 0}
+              >Add a disk</Button>
             )}
           </div>
         </section>

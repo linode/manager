@@ -6,3 +6,4 @@ export { default as IPAddressCell } from './IPAddressCell';
 export { default as IPRdnsCell } from './IPRdnsCell';
 export { default as LastBackupCell } from './LastBackupCell';
 export { default as NameserversCell } from './NameserversCell';
+export { default as TimeCell } from './TimeCell';

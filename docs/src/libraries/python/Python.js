@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
-
-import { API_VERSION } from '~/constants';
-
-import { default as python } from '~/python';
 
 
 export default function Python(props) {
   const { route } = props;
   const { pythonDataObjects } = route;
-  const { pythonDataTitles, pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
-  return(
+  const { pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
+
+  return (
     <section className="Article">
       <div className="EndpointIndex-header">
         <div className="Title">
@@ -22,10 +18,10 @@ export default function Python(props) {
             <div className="float-sm-right">
               <span className="GithubLink">
                 See this project on <a
-                      href="https://github.com/linode/python-linode-api"
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                    >
+                  href="https://github.com/linode/python-linode-api"
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                >
                   <i className="fa fa-github"></i> GitHub
                 </a>.
               </span>
@@ -43,9 +39,9 @@ export default function Python(props) {
               textKey: 'path',
               label: 'Object',
               headerClassName: 'SectionColumn',
-              hrefFn: function(subPage) {
+              hrefFn: function (subPage) {
                 return subPage.href;
-              }
+              },
             },
             { label: 'Description', dataKey: 'description' },
           ]}
@@ -64,9 +60,9 @@ export default function Python(props) {
               textKey: 'path',
               label: 'Object',
               headerClassName: 'SectionColumn',
-              hrefFn: function(subPage) {
+              hrefFn: function (subPage) {
                 return subPage.href;
-              }
+              },
             },
             { label: 'Description', dataKey: 'description' },
           ]}
@@ -78,3 +74,7 @@ export default function Python(props) {
     </section>
   );
 }
+
+Python.propTypes = {
+  route: PropTypes.object,
+};

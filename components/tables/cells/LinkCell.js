@@ -11,6 +11,7 @@ export default function LinkCell(props) {
   const {
     className = '',
     hrefFn,
+    idKey = 'id',
     textKey = 'label',
     textFn,
     tooltipEnabled = false,
@@ -30,8 +31,8 @@ export default function LinkCell(props) {
   let tooltipAttributes;
   let tooltipEnabledClass = '';
   if (tooltipEnabled) {
-    const tooltipId = `tooltip-${record.id}-${cellIndex}`;
-    const idText = `ID: ${record.id}`;
+    const tooltipId = `tooltip-${record[idKey]}-${cellIndex}`;
+    const idText = `ID: ${record[idKey]}`;
     const tooltipText = (
       <div>
         <div>
@@ -42,7 +43,7 @@ export default function LinkCell(props) {
     );
 
     tooltipEnabledClass = 'TooltipEnabled';
-    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
+    tooltipAttributes = { 'data-tip': true, 'data-for': tooltipId };
     tooltipComponent = (
       <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
     );

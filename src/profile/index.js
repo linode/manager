@@ -6,7 +6,8 @@ import AuthenticationPage from './layouts/AuthenticationPage';
 import DisplayPage from './layouts/DisplayPage';
 import NotificationsPage from './layouts/NotificationsPage';
 import ReferralsPage from './layouts/ReferralsPage';
-import Integrations from './integrations';
+import APITokensPage from './layouts/APITokensPage';
+import MyAPIClientsPage from './layouts/MyAPIClientsPage';
 
 export default (
   <Route path="/profile" component={IndexPage}>
@@ -14,6 +15,7 @@ export default (
     <Route path="authentication" component={AuthenticationPage} />
     <Route path="notifications" component={NotificationsPage} />
     <Route path="referrals" component={ReferralsPage} />
-    {Integrations}
+    <Route path="clients" component={MyAPIClientsPage} />
+    <Route path="tokens" component={APITokensPage} />
   </Route>
 );

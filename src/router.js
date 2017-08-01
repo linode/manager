@@ -143,7 +143,7 @@ export class LoadingRouterContext extends RouterContext {
       }
 
       return (
-        <div className="layout layout--appLoader full-height">
+        <div className="Layout">
           <Header />
           <div className="AppLoader">
             <div className="AppLoader-text">Loading the Manager...</div>

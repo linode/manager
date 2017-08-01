@@ -1,17 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 
-import {
-  Form,
-  FormSummary,
-  Input,
-  SubmitButton,
-  ModalFormGroup,
-} from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
+import { Input, ModalFormGroup } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -29,7 +22,6 @@ export default class EditTXTRecord extends Component {
 
     this.state = {
       errors: {},
-      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -39,7 +31,7 @@ export default class EditTXTRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, title, close } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, textvalue, textname } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -52,7 +44,6 @@ export default class EditTXTRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', id ? 'edit' : 'add', title); },
       close,
     ]));
   }
@@ -60,53 +51,50 @@ export default class EditTXTRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
-    const { close, title } = this.props;
-    const { errors, loading, defaultTTL, ttl, textvalue, textname } = this.state;
+    const { close, title, id } = this.props;
+    const { errors, defaultTTL, ttl, textvalue, textname } = this.state;
+
+    const analytics = { title, action: id ? 'edit' : 'add' };
+
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="textname" label="Name" apiKey="name" errors={errors}>
-          <Input
-            id="textname"
-            name="textname"
-            value={textname}
-            placeholder=""
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="textvalue" label="Value" apiKey="target" errors={errors}>
-          <Input
-            id="textvalue"
-            name="textvalue"
-            value={textvalue}
-            placeholder=""
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
-          <SelectDNSSeconds
-            id="ttl"
-            name="ttl"
-            value={ttl}
-            defaultSeconds={defaultTTL}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren={!this.props.id && 'Adding TXT Record' || undefined}
-          >
-            {!this.props.id && 'Add TXT Record' || undefined}
-          </SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText={id ? undefined : 'Add TXT Record'}
+        buttonDisabledText={id ? undefined : 'Adding TXT Record'}
+        analytics={analytics}
+        errors={errors}
+      >
+        <div>
+          <ModalFormGroup id="textname" label="Name" apiKey="name" errors={errors}>
+            <Input
+              id="textname"
+              name="textname"
+              value={textname}
+              placeholder=""
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="textvalue" label="Value" apiKey="target" errors={errors}>
+            <Input
+              id="textvalue"
+              name="textvalue"
+              value={textvalue}
+              placeholder=""
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
+            <SelectDNSSeconds
+              id="ttl"
+              name="ttl"
+              value={ttl}
+              defaultSeconds={defaultTTL}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

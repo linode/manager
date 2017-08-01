@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
+import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
@@ -16,11 +16,11 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { domains } from '~/api';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
 
@@ -35,13 +35,15 @@ export class IndexPage extends Component {
     super(props);
 
     this.deleteZones = this.deleteZones.bind(this);
+
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Domains'));
+    dispatch(setAnalytics(['domains']));
   }
 
   deleteZones(zonesToDelete) {
@@ -52,7 +54,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete Domain(s)', (
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
           await Promise.all(ids.map(id => dispatch(domains.delete(id))));
@@ -68,21 +70,18 @@ export class IndexPage extends Component {
 
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
-    // TODO: add sort function in dns zones config definition
-    const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
+    const { filter } = this.state;
 
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedZones, d => d.group), (_zones, _group) => {
-        return {
-          name: _group,
-          data: _zones,
-        };
-      }), zoneGroup => zoneGroup.name);
+    const { groups, sorted: sortedZones } = transform(zones, {
+      filterOn: 'domain',
+      filterBy: filter,
+      sortBy: d => d.domain.toLowerCase(),
+    });
 
     return (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
               data={sortedZones}
               dispatch={dispatch}
@@ -92,6 +91,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>
@@ -118,6 +124,7 @@ export class IndexPage extends Component {
                       onClick: (zone) => { this.deleteZones(zone); },
                     },
                   ]}
+                  noDataMessage="No Domains found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader
@@ -139,10 +146,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Domains</h1>
-            <Link to="/domains/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton to="/domains/create" className="float-sm-right">
               Add a Domain
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">

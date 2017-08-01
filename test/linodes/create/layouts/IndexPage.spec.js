@@ -6,7 +6,12 @@ import sinon from 'sinon';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
+} from '@/common';
 import { api } from '@/data';
 
 describe('linodes/create/layouts/IndexPage', () => {
@@ -70,11 +75,8 @@ describe('linodes/create/layouts/IndexPage', () => {
     );
     dispatch.reset();
 
-    const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('label', 'label');
-    changeInput('password', 'password');
+    changeInput(page, 'label', 'label');
+    changeInput(page, 'password', 'password');
     page.find('Plan').props().onServiceSelected('the-type');
     page.find('Region').props().onRegionSelected('the-region');
     page.find('Source').props().onDistroSelected('the-distribution');

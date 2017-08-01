@@ -1,23 +1,18 @@
 import React, { PropTypes, Component } from 'react';
 
-import { CancelButton } from 'linode-components/buttons';
-import {
-  Form,
-  FormSummary,
-  Input,
-  ModalFormGroup,
-  SubmitButton,
-} from 'linode-components/forms';
+import { Input, ModalFormGroup } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 
 export default class EditRDNS extends Component {
+  static title = 'Edit RDNS Entry'
+
   static trigger(dispatch, ip) {
-    return dispatch(showModal('Edit RDNS Entry', (
+    return dispatch(showModal(EditRDNS.title, (
       <EditRDNS
         ip={ip}
         dispatch={dispatch}
@@ -36,12 +31,11 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip, title, close } = this.props;
+    const { dispatch, ip, close } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setRDNS(ip, hostname),
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       close,
     ]));
   }
@@ -49,11 +43,16 @@ export default class EditRDNS extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close, ip: { address }, title } = this.props;
-    const { errors, loading, hostname } = this.state;
+    const { close, ip: { address } } = this.props;
+    const { errors, hostname } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        analytics={{ title: EditRDNS.title }}
+        errors={errors}
+      >
         <p>
           This request may take a while.
         </p>
@@ -73,17 +72,7 @@ export default class EditRDNS extends Component {
             onChange={this.onChange}
           />
         </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton disabled={loading} />
-          <FormSummary errors={errors} />
-        </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

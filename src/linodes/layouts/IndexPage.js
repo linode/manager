@@ -1,33 +1,25 @@
 import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
-import { ScrollingList } from 'linode-components/lists';
+import { PrimaryButton } from 'linode-components/buttons';
+import { Input } from 'linode-components/forms';
+import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { List } from 'linode-components/lists';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import {
-  CheckboxCell,
-  LinkCell,
-} from 'linode-components/tables/cells';
+import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
-import { default as toggleSelected } from '~/actions/select';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { default as toggleSelected } from '~/actions/select';
 import { linodes as api } from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
-import {
-  IPAddressCell,
-  RegionCell,
-  BackupsCell,
-} from '~/components/tables/cells';
+import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 
@@ -38,10 +30,17 @@ export class IndexPage extends Component {
     await dispatch(api.all());
   }
 
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Linodes'));
+    dispatch(setAnalytics(['linodes']));
   }
 
   genericAction(actionToDispatch, linodes, confirmType) {
@@ -70,10 +69,12 @@ export class IndexPage extends Component {
       );
     }
 
-    dispatch(showModal(`Confirm ${confirmType}`, (
+    const title = `Confirm ${confirmType}`;
+    dispatch(showModal(title, (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={callback}
+        onSubmit={callback}
+        analytics={{ title }}
       >{modalBody}</ConfirmModalBody>
     )));
   }
@@ -92,7 +93,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete Linode(s)',
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
@@ -108,21 +109,16 @@ export class IndexPage extends Component {
 
   renderLinodes(linodes) {
     const { dispatch, selectedMap } = this.props;
-    // TODO: add sort function in linodes config definition
-    const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
+    const { filter } = this.state;
 
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
-        return {
-          name: _group,
-          data: _linodes,
-        };
-      }), lg => lg.name);
+    const { groups, sorted: sortedLinodes } = transform(linodes, {
+      filterBy: filter,
+    });
 
     return (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
               data={sortedLinodes}
               dispatch={dispatch}
@@ -137,6 +133,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>
@@ -174,6 +177,7 @@ export class IndexPage extends Component {
                       dispatch: dispatch,
                     },
                   ]}
+                  noDataMessage="No Linodes found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader
@@ -190,21 +194,20 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { linodes } = this.props.linodes;
+    const { linodes } = this.props;
 
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Linodes</h1>
-            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton to="/linodes/create" className="float-sm-right">
               Add a Linode
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
+          {Object.keys(linodes).length ? this.renderLinodes(linodes) :
             <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
         </div>
       </div>
@@ -219,8 +222,9 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
+  const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   return {
-    linodes: state.api.linodes,
+    linodes,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

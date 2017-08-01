@@ -32,7 +32,7 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
     );
 
     const overwriteVal = page.find('input[name="overwrite"]').props().value;
-    const restoreToVal = page.find('select').props().value;
+    const restoreToVal = page.find('input[name="target"]').props().value;
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });

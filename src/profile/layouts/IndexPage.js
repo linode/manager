@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+
+import { setAnalytics, setSource, setTitle } from '~/actions';
 
 
 export class IndexPage extends Component {
@@ -12,8 +12,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('My Profile'));
+    dispatch(setAnalytics(['profile']));
   }
 
   render() {
@@ -22,7 +22,8 @@ export class IndexPage extends Component {
     const tabs = [
       { name: 'Display', link: '' },
       { name: 'Password & Authentication', link: '/authentication' },
-      { name: 'Integrations', link: '/integrations' },
+      { name: 'API Tokens', link: '/tokens' },
+      { name: 'My API Clients', link: '/clients' },
       { name: 'Notifications', link: '/notifications' },
       { name: 'Referrals', link: '/referrals' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));

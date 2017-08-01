@@ -1,6 +1,5 @@
-import React from 'react';
-import { Route, IndexRedirect } from 'react-router';
-import _ from 'lodash';
+import React, { PropTypes } from 'react';
+import { Route } from 'react-router';
 
 import {
   Endpoint,
@@ -11,7 +10,9 @@ import {
 
 export function generateIndexRoute(props) {
   const { endpointIndex, key } = props;
-  const crumbs = [{ groupLabel: 'Reference', label: endpointIndex.path, to: endpointIndex.routePath }];
+  const crumbs = [
+    { groupLabel: 'Reference', label: endpointIndex.path, to: endpointIndex.routePath },
+  ];
 
   return (
     <Route
@@ -24,14 +25,21 @@ export function generateIndexRoute(props) {
   );
 }
 
+generateIndexRoute.propTypes = {
+  endpointIndex: PropTypes.object,
+  key: PropTypes.string,
+};
+
 export function generateChildRoute(props) {
   const { prevCrumbs, endpointIndex } = props;
   let childEndpoints = [];
 
   if (endpointIndex.groups.length) {
-    endpointIndex.groups.forEach(function(group, index) {
-      childEndpoints = childEndpoints.concat(group.endpoints.map(function(endpoint) {
-        const crumbs = [].concat(prevCrumbs).concat([{ label: endpoint.path, to: endpoint.routePath }]);
+    endpointIndex.groups.forEach(function (group, index) {
+      childEndpoints = childEndpoints.concat(group.endpoints.map(function (endpoint) {
+        const crumbs = []
+          .concat(prevCrumbs)
+          .concat([{ label: endpoint.path, to: endpoint.routePath }]);
 
         return (
           <Route
@@ -49,10 +57,17 @@ export function generateChildRoute(props) {
   return childEndpoints;
 }
 
+generateChildRoute.propTypes = {
+  prevCrumbs: PropTypes.array,
+  endpointIndex: PropTypes.object,
+};
+
 export function generateLibraryRoutes(props) {
   const { prevCrumbs, libraryObject, index } = props;
 
-  const crumbs = [].concat(prevCrumbs).concat([{ label: libraryObject.path, to: libraryObject.href }]);
+  const crumbs = []
+    .concat(prevCrumbs)
+    .concat([{ label: libraryObject.path, to: libraryObject.href }]);
   return (
     <Route
       key={index}
@@ -63,3 +78,9 @@ export function generateLibraryRoutes(props) {
     />
   );
 }
+
+generateLibraryRoutes.propTypes = {
+  prevCrumbs: PropTypes.array,
+  libraryObject: PropTypes.object,
+  index: PropTypes.number,
+};

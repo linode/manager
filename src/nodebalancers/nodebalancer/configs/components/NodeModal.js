@@ -1,33 +1,50 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
-import { hideModal } from '~/actions/modal';
+import { ModalFormGroup, Input, Select } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
+
+import { hideModal, showModal } from '~/actions/modal';
 import { nodebalancers } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { CancelButton } from 'linode-components/buttons';
-import {
-  Form,
-  FormSummary,
-  ModalFormGroup,
-  Input,
-  Select,
-  SubmitButton,
-} from 'linode-components/forms';
-import { EmitEvent } from 'linode-components/utils';
 
 
-export class NodeModal extends Component {
+export default class NodeModal extends Component {
+  // For some reason NodeModal.trigger only recognizes when the defaultProps
+  // are listed like this.
+  static defaultProps = {
+    node: {
+      id: '',
+      label: '',
+      address: '',
+      weight: '',
+      mode: 'accept',
+    },
+  }
+
+  static trigger(dispatch, nodebalancer, config, node) {
+    const title = node ? 'Edit Node' : 'Add a Node';
+
+    dispatch(showModal(title, (
+      <NodeModal
+        dispatch={dispatch}
+        configId={config.id}
+        nodebalancerId={nodebalancer.id}
+        title={title}
+        node={node}
+      />
+    )));
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
-      id: this.props.node.id,
-      label: this.props.node.label,
-      address: this.props.node.address,
-      weight: this.props.node.weight,
-      mode: this.props.node.mode,
+      id: props.node.id,
+      label: props.node.label,
+      address: props.node.address,
+      weight: props.node.weight,
+      mode: props.node.mode,
       errors: {},
-      loading: false,
     };
   }
 
@@ -46,112 +63,99 @@ export class NodeModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', 'add', 'Add Node'); },
       hideModal,
     ]));
   }
 
   render() {
-    const { dispatch } = this.props;
-    const { label, address, weight, mode, errors, loading } = this.state;
+    const { dispatch, title } = this.props;
+    const { id, label, address, weight, mode, errors } = this.state;
+
+    const modeOptions = [
+      { value: 'accept', label: 'Accept' },
+      { value: 'reject', label: 'Reject' },
+      { value: 'drain', label: 'Drain' },
+    ];
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup
-          label="Label"
-          id="label"
-          apiKey="label"
-          errors={errors}
-        >
-          <Input
-            name="label"
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={() => dispatch(hideModal())}
+        buttonText={id ? undefined : 'Add Node'}
+        buttonDisabledText={id ? undefined : 'Adding Node'}
+        analytics={{ title, action: id ? 'edit' : 'add' }}
+        errors={errors}
+      >
+        <div>
+          <ModalFormGroup
+            label="Label"
             id="label"
-            onChange={this.onChange}
-            value={label}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup
-          label="Address"
-          id="address"
-          apiKey="address"
-          errors={errors}
-        >
-          <Input
-            name="address"
-            id="address"
-            placeholder="192.168.1.10:80"
-            onChange={this.onChange}
-            value={address}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup
-          label="Weight"
-          description="Define a weight to be used in determining how
-            connections are balanced to this node."
-          id="weight"
-          apiKey="weight"
-          errors={errors}
-        >
-          <Input
-            name="weight"
-            id="weight"
-            type="number"
-            onChange={this.onChange}
-            value={weight}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup
-          label="Mode"
-          description="Configure how this node handles incoming connections
-            based on it's health."
-          id="mode"
-          apiKey="mode"
-          errors={errors}
-        >
-          <Select
-            id="mode"
-            name="mode"
-            onChange={this.onChange}
-            value={mode}
+            apiKey="label"
+            errors={errors}
           >
-            <option value="accept">Accept</option>
-            <option value="reject">Reject</option>
-            <option value="drain">Drain</option>
-          </Select>
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            disabled={loading}
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', 'Add Node');
-              dispatch(hideModal());
-            }}
-          />
-          <SubmitButton disabled={loading} />
-          <FormSummary errors={errors} />
+            <Input
+              name="label"
+              id="label"
+              onChange={this.onChange}
+              value={label}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            label="Address"
+            id="address"
+            apiKey="address"
+            errors={errors}
+          >
+            <Input
+              name="address"
+              id="address"
+              placeholder="192.168.1.10:80"
+              onChange={this.onChange}
+              value={address}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            label="Weight"
+            description="Define a weight to be used in determining how
+                         connections are balanced to this node."
+            id="weight"
+            apiKey="weight"
+            errors={errors}
+          >
+            <Input
+              name="weight"
+              id="weight"
+              type="number"
+              onChange={this.onChange}
+              value={weight}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            label="Mode"
+            description="Configure how this node handles incoming connections
+                         based on it's health."
+            id="mode"
+            apiKey="mode"
+            errors={errors}
+          >
+            <Select
+              id="mode"
+              name="mode"
+              onChange={this.onChange}
+              value={mode}
+              options={modeOptions}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }
 
 NodeModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  confirmText: PropTypes.string.isRequired,
-  node: PropTypes.object,
+  title: PropTypes.string.isRequired,
   configId: PropTypes.number.isRequired,
   nodebalancerId: PropTypes.number.isRequired,
+  node: PropTypes.object,
 };
-
-NodeModal.defaultProps = {
-  node: {
-    id: '',
-    label: '',
-    address: '',
-    weight: '',
-    mode: 'accept',
-  },
-};
-
-export default connect()(NodeModal);
-

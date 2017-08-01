@@ -60,11 +60,11 @@
     }
 
     &:not(.selected) > div:hover {
-        background-color: $gray;
+        @include selected();
     }
 
     &.selected {
-        background-color: $gray;
+        @include selected();
     }
 }
 

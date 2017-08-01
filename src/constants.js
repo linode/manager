@@ -20,6 +20,7 @@ export const LinodeStates = {
     'provisioning',
     'deleting',
     'rebuilding',
+    'restoring',
   ],
 };
 
@@ -53,6 +54,7 @@ export const LinodeStatesReadable = {
   provisioning: 'Provisioning',
   rebooting: 'Rebooting',
   rebuilding: 'Powering Off',
+  restoring: 'Restoring',
 };
 
 export const NodebalancerStatusReadable = {
@@ -240,3 +242,9 @@ export const IPV6_DNS_RESOLVERS = [
 ];
 
 export const MONTHLY_IP_COST = 1;
+
+export const DISTRIBUTION_DISPLAY_ORDER = [
+  'ubuntu', 'debian', 'centos', 'fedora', 'arch', 'opensuse', 'gentoo', 'slackware',
+];
+
+export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';

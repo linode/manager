@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditARecord from '~/domains/components/EditARecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -55,12 +55,9 @@ describe('domains/components/EditARecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target:
-        { value: value, name: name } });
-    changeInput('hostname', 'tee');
-    changeInput('ip', '4.4.4.4');
-    changeInput('ttl', 1);
+    changeInput(page, 'hostname', 'tee');
+    changeInput(page, 'ip', '4.4.4.4');
+    changeInput(page, 'ttl', 1);
 
     await page.find('Form').props().onSubmit();
 
@@ -93,12 +90,9 @@ describe('domains/components/EditARecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('hostname', 'tee');
-    changeInput('ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334');
-    changeInput('ttl', 1);
+    changeInput(page, 'hostname', 'tee');
+    changeInput(page, 'ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334');
+    changeInput(page, 'ttl', 1);
 
     await page.find('Form').props().onSubmit();
 
