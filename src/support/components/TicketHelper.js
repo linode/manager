@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { ExternalLink, LinkButton } from 'linode-components/buttons';

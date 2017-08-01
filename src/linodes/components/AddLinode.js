@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Checkbox, Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
@@ -137,6 +136,8 @@ export default class AddLinode extends Component {
           </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups">
             <Checkbox
+              value={backups}
+              checked={backups}
               label={backupsLabel}
               name="backups"
               id="backups"

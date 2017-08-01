@@ -115,7 +115,8 @@ export function linodeStats(linodeId) {
   };
 }
 
-export function cloneLinode(linodeId, regionId, planId, targetId = undefined, configs = [], disks = []) {
+export function cloneLinode(linodeId, regionId, planId,
+                            targetId = undefined, configs = [], disks = []) {
   return async function (dispatch) {
     const clonedLinode = await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,
@@ -125,5 +126,5 @@ export function cloneLinode(linodeId, regionId, planId, targetId = undefined, co
       linode: targetId,
     }));
     dispatch(actions.one(clonedLinode, clonedLinode.id));
-  }
+  };
 }

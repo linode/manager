@@ -198,7 +198,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, distributions, types, regions } = this.props;
+    const { dispatch, linodes, distributions, types } = this.props;
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
@@ -239,7 +239,9 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
-  linodes: PropTypes.object,
+  linodes: PropTypes.object.isRequired,
+  types: PropTypes.object.isRequired,
+  distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
 };
 

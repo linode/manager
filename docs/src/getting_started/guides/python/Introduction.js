@@ -236,7 +236,7 @@ root@localhost:~#`}
             // eslint-disable-next-line max-len
             to="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode"
           >
-              Install on Linode sample project
+            Install on Linode sample project
           </ExternalLink>
           &nbsp;for an example multi-user application using the library.
         </p>
