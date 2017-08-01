@@ -16,12 +16,12 @@ endpoints:
         params:
           label:
             description: >
-              A unique label to identify your new volume with
+              A unique label to identify your new volume with.
             type: String
           region:
             description: >
-              Which region the new volume should be created in
-            type: Datacenter
+              Which region the new volume should be created in.
+            type: Integer
           size:
             optional: true
             description: >
@@ -34,13 +34,13 @@ endpoints:
               An id to a Linode you'd like this volume to be attached to after
               creation. Requires an additional scope of `linode:modify` and you
               must have permission to access that given Linode.
-            type: Linode
+            type: Integer
           config_id:
             optional: true
             description: >
               An id to a Linode configuration profile to used when attaching to
               a Linode that has more than one configuration profile.
-            type: Linode Config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -68,13 +68,13 @@ endpoints:
               An id to a Linode you'd like this volume to be attached to.
               Requires an additional scope of `linode:modify` and you
               must have permission to access that given Linode.
-            type: Linode
+            type: Integer
           config_id:
             optional: true
             description: >
               An id to a Linode configuration profile to used when attaching to
               a Linode that has more than one configuration profile.
-            type: Linode Config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
