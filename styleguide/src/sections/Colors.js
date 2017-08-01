@@ -64,7 +64,6 @@ export default function Colors() {
               <div>
                 <div className="StyleguideColor-block StyleguideColor-block__light-blue"></div>
                 <div className="StyleguideColor-block StyleguideColor-block__blue"></div>
-                <div className="StyleguideColor-block StyleguideColor-block__dark-blue"></div>
               </div>
               <div className="StyleguideColor-block-details">
                 <div className="StyleguideColor-block-detail">

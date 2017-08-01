@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { Dropdown } from 'linode-components/dropdowns';
 import { List } from 'linode-components/lists';
@@ -37,7 +38,7 @@ export class SummaryPage extends Component {
 
     return dispatch(showModal('Delete IP Address', (
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           dispatch(deleteIP(ip));
           dispatch(hideModal());
         }}
@@ -84,7 +85,10 @@ export class SummaryPage extends Component {
 
     return (
       <TableCell column={column} record={record}>
-        <Dropdown groups={groups} />
+        <Dropdown
+          groups={groups}
+          analytics={{ title: 'IP actions' }}
+        />
       </TableCell>
     );
   }
@@ -145,18 +149,17 @@ export class SummaryPage extends Component {
       return { ...ip, type, address };
     });
 
-    const buttonGroups = [
-      { elements: [{ name: 'Add an IP Address', action: () => AddIP.trigger(dispatch, linode) }] },
-      // TODO: Add rdnslookup when API supports it
-      // { name: 'Add an RDNS Entry', action: this.rdnsLookup },
-    ];
-
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <div className="float-sm-right">
-            <Dropdown groups={buttonGroups} />
-          </div>
+          {/* TODO: Add rdnslookup when API supports it */}
+          <PrimaryButton
+            className="float-sm-right"
+            buttonClass="btn-default"
+            onClick={() => AddIP.trigger(dispatch, linode)}
+          >
+            Add an IP Address
+          </PrimaryButton>
         </header>
         <List>
           <ListBody>

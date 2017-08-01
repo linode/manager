@@ -11,10 +11,25 @@
     padding: 5px 15px 5px 0;
 }
 
+.ThumbnailColumn {
+    width: 50px;
+}
+
+.ThumbnailCell {
+    img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
 .LabelColumn {
     width: 300px;
 }
 
 .EmailColumn {
     width: 200px;
+}
+
+.DropdownColumn {
+    width: 150px;
 }

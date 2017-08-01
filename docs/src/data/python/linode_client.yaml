@@ -92,7 +92,7 @@ groups:
                         desc: Any number of filters to this function
                         _keyword: false
                 example: >
-                    linodes = client.linode.get_linodes(linode.Linode.group == "production")
+                    linodes = client.linode.get_instances(linode.Linode.group == "production")
                 returns: A list of Linode objects
             get_stackscripts:
                 desc: >

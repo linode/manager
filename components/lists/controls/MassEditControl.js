@@ -21,8 +21,8 @@ export default class MassEditControl extends Component {
 
   createMassEditActionHandler(fn) {
     return () => {
-      const { data, selectedMap } = this.props;
-      const filteredData = data.filter((record) => { return selectedMap[record.id]; });
+      const { data, selectedMap, selectedKey } = this.props;
+      const filteredData = data.filter((record) => { return selectedMap[record[selectedKey]]; });
 
       fn(filteredData);
     };
@@ -43,14 +43,14 @@ export default class MassEditControl extends Component {
 
     return (
       <MassEditDropdown
-        checked={allSelected}
+        checked={allSelected && !noneSelected}
         disabled={noneSelected}
         groups={massEditGroups.map((group) => ({
           ...group,
           elements: group.elements.map((option) => ({
             name: option.name,
             action: this.createMassEditActionHandler(option.action),
-          }))
+          })),
         }))}
         onChange={this.onMassEditChange}
       />

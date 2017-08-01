@@ -5,8 +5,8 @@ import sinon from 'sinon';
 
 import { ChangeEmail } from '~/profile/components';
 
+import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '@/common';
 import { profile } from '@/data/profile';
-import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 
 
 describe('profile/components/ChangeEmail', () => {
@@ -25,10 +25,7 @@ describe('profile/components/ChangeEmail', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('email', 'new@gmail.com');
+    changeInput(page, 'email', 'new@gmail.com');
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);

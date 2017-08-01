@@ -41,7 +41,10 @@ export default class ChangeEmail extends Component {
 
     return (
       <Card header={<CardHeader title="Change email" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Email Settings' }}
+        >
           <FormGroup className="row" errors={errors} name="email">
             <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
             <div className="col-sm-10">

@@ -23,7 +23,7 @@ export default class TableRow extends Component {
   render() {
     const { className, columns, onClick, record, selectedMap } = this.props;
     const checkboxColumn = columns.filter(function (column) {
-      return  column.cellComponent &&
+      return column.cellComponent &&
         (column.cellComponent === CheckboxCell) &&
         !column.onChange;
     })[0];

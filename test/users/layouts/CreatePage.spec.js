@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import { CreatePage } from '~/users/layouts/CreatePage';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
 describe('users/layouts/CreatePage', () => {
@@ -25,13 +25,10 @@ describe('users/layouts/CreatePage', () => {
 
     dispatch.reset();
 
-    const changeInput = (type, name, value) =>
-      page.find(type).find({ id: name }).simulate('change', { target: { value, name } });
-
-    changeInput('Input', 'username', 'theUser');
-    changeInput('Input', 'email', 'user@example.com');
-    changeInput('PasswordInput', 'password', 'password');
-    changeInput('Radio', 'restricted', true);
+    changeInput(page, 'username', 'theUser');
+    changeInput(page, 'email', 'user@example.com');
+    changeInput(page, 'password', 'password');
+    changeInput(page, 'restricted', true);
 
     await page.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];

@@ -53,7 +53,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     });
 
     const sectionB = page.find('#sectionB');
-    const linodeB = linodes[page.find('select').props().value];
+    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(Object.values(linodeB._ips).filter(
       ({ type, version }) => type === 'public' && version === 'ipv4').length);
@@ -74,8 +74,8 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     );
 
     const sectionB = page.find('#sectionB');
-    const select = page.find('select');
-    const linodeB = linodes[select.props().value];
+    const select = page.find('Select');
+    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
     const notLinodeB = Object.values(linodesInRegion).filter(
       ({ id }) => id !== linodeB.id)[0];
 

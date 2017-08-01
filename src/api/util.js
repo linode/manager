@@ -1,6 +1,8 @@
+import _ from 'lodash';
 import moment from 'moment';
 
 import * as api from './';
+import { fullyLoadedObject } from './apiActionReducerGenerator';
 import { reduceErrors } from './errors';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
@@ -98,7 +100,8 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
       state.api[collection][collection],
       props.params[paramField],
       labelName);
-    return { [resultField]: object };
+
+    return { [resultField]: fullyLoadedObject(object) ? object : null };
   };
 }
 
@@ -128,4 +131,31 @@ export function createHeaderFilter(filter) {
       'X-Filter': filter,
     },
   };
+}
+
+export function transform(objects, options = {}) {
+  const {
+    filterBy,
+    filterOn = 'label',
+    sortBy = o => o.label.toLowerCase(),
+    groupOn = 'group',
+  } = options;
+
+  const filterOnFn = _.isFunction(filterOn) ? filterOn : o => o[filterOn];
+  const filtered = filterBy.length ? _.pickBy(objects, o =>
+    filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
+  const sorted = _.sortBy(Object.values(filtered), sortBy);
+
+  const groupOnFn = _.isFunction(groupOn) ? groupOn : o => o[groupOn];
+  let groups = _.sortBy(
+    _.map(_.groupBy(sorted, groupOnFn), (objectsInGroup, groupName) => ({
+      name: groupName,
+      data: objectsInGroup,
+    })), group => group.name);
+
+  if (!groups.length) {
+    groups = [{ name: '', data: [] }];
+  }
+
+  return { filtered, sorted, groups };
 }

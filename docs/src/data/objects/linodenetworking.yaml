@@ -1,141 +1,26 @@
 name: Linode Networking Response
-description: >
-  Comprehensive information about a Linode's networking.
+description: Comprehensive information about a Linode's networking.
 schema:
   ipv4:
     _description: >
       The Linode's IPv4 networking data.
     public:
-      _type: Array[object]
-      _subtype: ipaddress
-      _description: >
-        The public IPv4 Addresses assigned to this Linode.
-      _value:
-        - address:
-            _type: String
-            _value: 97.107.143.37
-          gateway:
-            _type: String
-            _value: 97.107.143.1
-            _description: The default gateway. Gateways for private IP's are always null.
-          subnet_mask:
-            _type: String
-            _value: 255.255.255.0
-            _description: The subnet mask.
-          prefix:
-            _type: String
-            _value: 24
-            _description: The network prefix.
-          type:
-            _type: Enum
-            _subtype: IPAddressType
-            _value: public
-            _description: The type of IP Address, either public or private.
-          rdns:
-            _type: String
-            _value: "example.org"
-          linode_id:
-            _type: Integer
-            _value: 123
+      _type: ipaddress
+      _isArray: true
+      _description: The public IPv4 Addresses assigned to this Linode.
     private:
-      _type: Array[object]
-      _subtype: ipaddress
+      _type: ipaddress
+      _isArray: true
       _description: >
         The private IPv4 Addresses assigned to this Linode.
-      _value:
-        - address:
-            _type: String
-            _value: 192.168.1.210
-          gateway:
-            _type: String
-            _value: null
-            _description: The default gateway. Gateways for private IP's are always null.
-          subnet_mask:
-            _type: String
-            _value: 255.255.128.0
-            _description: The subnet mask.
-          prefix:
-            _type: String
-            _value: 17
-            _description: The network prefix.
-          type:
-            _type: Enum
-            _subtype: IPAddressType
-            _value: private
-            _description: The type of IP Address, either public or private.
-          rdns:
-            _type: String
-            _value: null
-          linode_id:
-            _type: Integer
-            _value: 123
     shared:
-      _type: Array[object]
-      _subtype: ipaddress
-      _value:
-        - address:
-            _type: String
-            _value: 97.107.143.25
-          gateway:
-            _type: String
-            _value: 97.107.143.1
-            _description: The default gateway. Gateways for private IPs are always nul.
-          subnet_mask:
-            _type: String
-            _value: 255.255.255.0
-            _description: The subnet mask.
-          prefix:
-            _type: String
-            _value: 24
-            _description: The network prefix.
-          type:
-            _type: Enum
-            _subtype: IPAddressType
-            _value: public
-            _description: The type of IP Address, either public or private.
-          rdns:
-            _type: String
-            _value: "example.org"
-          linode_id:
-            _type: Integer
-            _value: 124
+      _type: ipaddress
+      _isArray: true
   ipv6:
-    _description: >
-      The Linode's IPv6 networking data.
-    _value:
+    _description: The Linode's IPv6 networking data.
     addresses:
-        _type: Array[object]
-        _subtype: ipv6-address
-        _value:
-          - address:
-              _type: String
-              _value: "2600:3c01::2:5001"
-              _description: The IPv6 Address.
-            gateway:
-              _type: String
-              _value: "fe80::1"
-              _description: The default gateway.
-            range:
-              _type: String
-              _value: "2600:3c01::2:5000"
-              _description: The IPv6 range.
-            rdns:
-              _type: String
-              _value: "example.org"
-              _description: Optional reverse DNS address for this IPv6 Address.
-            prefix:
-              _type: Integer
-              _value: 116
-              _description: The network prefix.
-            subnet_mask:
-              _type: String
-              _value: "ffff:ffff:ffff:ffff:ffff:ffff:ffff:f000"
-              _description: The subnet mask.
-            type:
-              _type: Enum
-              _subtype: IPv6AddressType
-              _value: public
-              _description: The type of IP Address, either public or private.
+      _type: ipv6-address
+      _isArray: true
     slaac:
       _type: String
       _value: 2a01:7e00::f03c:91ff:fe96
@@ -147,14 +32,5 @@ schema:
       _description: >
         This Linode's link-local range.
     global:
-      _type: Array[object]
-      _subtype: ipv6pool
-      _description: >
-        Global IPv6 Pools that route to this Linode.
-      _value:
-        - range:
-            _type: String
-            _value: 2600:3c01::2:5000
-          region:
-            _type: String
-            _value: region
+      _type: ipv6pool
+      _description: Global IPv6 Pools that route to this Linode.

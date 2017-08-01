@@ -10,12 +10,11 @@ import {
   Select,
   PasswordInput,
 } from 'linode-components/forms';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { FormModalBody } from 'linode-components/modals';
 
 import { resetPassword } from '~/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 
 export default class ResetRootPassword extends Component {
@@ -54,24 +53,19 @@ export default class ResetRootPassword extends Component {
 
   onSubmitConfirm = () => {
     const { dispatch } = this.props;
-    const title = 'Reset root password';
-
-    const onOk = () => {
-      EmitEvent('modal:submit', 'Modal', 'reset', title);
-      dispatch(hideModal());
-      this.onSubmit();
-    };
+    const title = 'Confirm Reset Root Password';
 
     dispatch(showModal(title, (
-      <ConfirmModalBody
+      <FormModalBody
         buttonText="Reset"
         children="Are you sure you want to reset the root password for this Linode?
                   This cannot be undone."
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+        onCancel={() => dispatch(hideModal())}
+        onSubmit={() => {
           dispatch(hideModal());
+          return this.onSubmit();
         }}
-        onOk={onOk}
+        analytics={{ title }}
       />
     )));
   }
@@ -99,7 +93,10 @@ export default class ResetRootPassword extends Component {
 
     return (
       <Card header={header} className="full-height">
-        <Form onSubmit={this.onSubmitConfirm}>
+        <Form
+          onSubmit={this.onSubmitConfirm}
+          analytics={{ title: 'Reset root password' }}
+        >
           {disabledMessage}
           <FormGroup className="row" errors={errors} name="disk">
             <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>
@@ -110,9 +107,8 @@ export default class ResetRootPassword extends Component {
                 value={disk}
                 onChange={this.onChange}
                 disabled={disabled}
-              >
-                {this.nonSwapDisks.map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
-              </Select>
+                options={this.nonSwapDisks.map(d => ({ value: d.id, label: d.label }))}
+              />
             </div>
           </FormGroup>
           <FormGroup className="row" errors={errors} name="password">

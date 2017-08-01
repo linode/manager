@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditSOARecord from '~/domains/components/EditSOARecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -45,7 +45,7 @@ describe('domains/components/EditSOARecord', () => {
     expect(retryRate.props().value).to.equal(currentZone.retry_sec.toString());
 
     const expireTime = page.find('#expireTime');
-    expect(expireTime.props().value).to.equal(currentZone.expire_sec.toString());
+    expect(expireTime.props().value).to.equal(currentZone.expire_sec);
   });
 
   it('submits data onsubmit and closes modal', async () => {
@@ -60,16 +60,13 @@ describe('domains/components/EditSOARecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('domain', 'tester1234.com');
-    changeInput('group', 'tester-zones');
-    changeInput('email', 'admin@tester1234.com');
-    changeInput('defaultTTL', 3600);
-    changeInput('refreshRate', 3600);
-    changeInput('retryRate', 3600);
-    changeInput('expireTime', 3600);
+    changeInput(page, 'domain', 'tester1234.com');
+    changeInput(page, 'group', 'tester-zones');
+    changeInput(page, 'email', 'admin@tester1234.com');
+    changeInput(page, 'defaultTTL', 3600);
+    changeInput(page, 'refreshRate', 3600);
+    changeInput(page, 'retryRate', 3600);
+    changeInput(page, 'expireTime', 3600);
 
     await page.find('Form').props().onSubmit();
 

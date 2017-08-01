@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditMXRecord from '~/domains/components/EditMXRecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -52,12 +52,9 @@ describe('domains/components/EditMXRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('mailserver', 'mx1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('preference', 1);
+    changeInput(page, 'mailserver', 'mx1.tester1234.com');
+    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'preference', 1);
 
     await page.find('Form').props().onSubmit();
 
@@ -89,12 +86,9 @@ describe('domains/components/EditMXRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('mailserver', 'mx1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('preference', 1);
+    changeInput(page, 'mailserver', 'mx1.tester1234.com');
+    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'preference', 1);
 
     await page.find('Form').props().onSubmit();
 

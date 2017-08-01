@@ -13,7 +13,7 @@ constructor:
             _keyword: false
             desc: This StackScript's ID.
     example: >
-        stackscript = linode.StackScript(client, 6)
+        stackscript = StackScript(client, 6)
 methods:
     save:
         desc: >

@@ -1,34 +1,35 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
 import moment from 'moment';
 
 import { Select } from 'linode-components/forms';
 
-export default class SelectExpiration extends Component {
-  static map(value) {
-    return value === '0' ? undefined : (
-      moment()
-        .add(value, 'days')
-        .utc()
-        .format('YYYY-MM-DDTHH:mm:ss')
-        .toString());
-  }
 
-  render() {
-    return (
-      <Select
-        id={this.props.id}
-        onChange={this.props.onChange}
-        value={this.props.value}
-        name={this.props.name}
-      >
-        <option value="0">Never</option>
-        <option value="30">In 1 month</option>
-        <option value="90">In 3 months</option>
-        <option value="180">In 6 months</option>
-      </Select>
-    );
-  }
+export default function SelectExpiration(props) {
+  const options = [
+    { value: 180, label: 'In 6 months' },
+    { value: 90, label: 'In 3 months' },
+    { value: 30, label: 'In 1 month' },
+    { value: 0, label: 'Never' },
+  ];
+
+  return (
+    <Select
+      id={props.id}
+      onChange={props.onChange}
+      value={props.value}
+      name={props.name}
+      options={options}
+    />
+  );
 }
+
+SelectExpiration.map = function (value) {
+  return value === 0 ? undefined : moment()
+    .add(value, 'days')
+    .utc()
+    .format('YYYY-MM-DDTHH:mm:ss')
+    .toString();
+};
 
 SelectExpiration.propTypes = {
   value: PropTypes.string.isRequired,

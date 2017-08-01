@@ -6,12 +6,13 @@ import {
   FormGroup,
   FormGroupError,
   FormSummary,
-  SubmitButton,
   Select,
+  SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
 
-export default class NotificationsPage extends Component {
+export default class LishPage extends Component {
   constructor() {
     super();
 
@@ -30,10 +31,21 @@ export default class NotificationsPage extends Component {
   render() {
     const { errors, loading, authorization, keys } = this.state;
 
+    const title = 'Change Lish Settings';
+
+    const authorizationOptions = [
+      { value: '0', label: 'Allow both password and key authorization' },
+      { value: '1', label: 'Allow key authentication only' },
+      { value: '2', label: 'Disable Lish' },
+    ];
+
     return (
       <div>
-        <Card header={<CardHeader title="Change Lish settings" />}>
-          <Form onSubmit={this.onSubmit}>
+        <Card header={<CardHeader title={title} />}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title }}
+          >
             <FormGroup className="row" errors={errors} name="mode">
               <label htmlFor="authorization" className="col-sm-2 col-form-label">
                 Authorization mode
@@ -44,18 +56,15 @@ export default class NotificationsPage extends Component {
                   name="authorization"
                   onChange={mode => this.setState({ authorization: mode })}
                   value={authorization}
-                >
-                  <option value="0">Allow both password and key authorization</option>
-                  <option value="1">Allow key authentication only</option>
-                  <option value="2">Disable Lish</option>
-                </Select>
+                  options={authorizationOptions}
+                />
                 <FormGroupError errors={errors} name="mode" />
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="keys">
               <label htmlFor="keys" className="col-sm-2 col-form-label">Lish keys:</label>
               <div className="col-sm-10">
-                <textarea id="keys" className="textarea-md" name="keys" value={keys}></textarea>
+                <Textarea id="keys" className="textarea-md" name="keys" value={keys} />
                 <div>
                   <small className="text-muted">
                     Place your SSH public keys here for use with Lish console access.

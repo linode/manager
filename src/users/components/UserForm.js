@@ -58,10 +58,14 @@ export default class UserForm extends Component {
   }
 
   render() {
+    const { user: { username: oldUsername } } = this.props;
     const { username, email, restricted, password, loading, errors } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'Add/Edit User', action: oldUsername ? 'edit' : 'add' }}
+      >
         <FormGroup errors={errors} name="username" className="row">
           <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
           <div className="col-sm-10 clearfix">

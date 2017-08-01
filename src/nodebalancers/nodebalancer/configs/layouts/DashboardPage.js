@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { ListBody } from 'linode-components/lists/bodies';
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -12,11 +12,10 @@ import { DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers } from '~/api';
-import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { dispatchOrStoreErrors, getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
 
-import { NodeModal } from '../components/NodeModal';
-import { dispatchOrStoreErrors } from '~/api/util';
+import NodeModal from '../components/NodeModal';
 
 
 export class DashboardPage extends Component {
@@ -26,52 +25,13 @@ export class DashboardPage extends Component {
     await dispatch(nodebalancers.configs.nodes.all([id, configId]));
   }
 
-  constructor() {
-    super();
-
-    this.addNodeModal = this.addNodeModal.bind(this);
-    this.editNodeModal = this.editNodeModal.bind(this);
-    this.state = {
-      errors: {},
-      saving: false,
-      loading: false,
-    };
-  }
-
-  addNodeModal() {
-    const { dispatch, nodebalancer, config } = this.props;
-
-    dispatch(showModal('Add Node',
-      <NodeModal
-        dispatch={dispatch}
-        confirmText="Create"
-        configId={config.id}
-        nodebalancerId={nodebalancer.id}
-      />
-    ));
-  }
-
-  editNodeModal(node) {
-    const { dispatch, nodebalancer, config } = this.props;
-
-    dispatch(showModal('Edit Node',
-      <NodeModal
-        dispatch={dispatch}
-        confirmText="Save"
-        node={node}
-        configId={config.id}
-        nodebalancerId={nodebalancer.id}
-      />
-    ));
-  }
-
   deleteNBConfigNode(nodebalancer, config, node) {
     const { dispatch } = this.props;
     const title = 'Delete Node';
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={() => {
+        onSubmit={() => {
           const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
@@ -81,14 +41,66 @@ export class DashboardPage extends Component {
         }}
         onCancel={() => dispatch(hideModal())}
         items={[node.label]}
-        typeOfItem={title}
+        typeOfItem="Node"
       />
     ));
   }
 
-  render() {
-    const { nodebalancer, config } = this.props;
+  renderNodes() {
+    const { dispatch, nodebalancer, config } = this.props;
     const nodes = Object.values(config._nodes.nodes);
+
+    const nav = (
+      <PrimaryButton
+        onClick={() => NodeModal.trigger(dispatch, nodebalancer, config)}
+        buttonClass="btn-default"
+        className="float-sm-right"
+      >Add a Node</PrimaryButton>
+    );
+    const header = <CardHeader title="Nodes" nav={nav} />;
+
+    return (
+      <Card header={header}>
+        <List>
+          <ListBody>
+            <Table
+              className="Table--secondary"
+              columns={[
+                {
+                  cellComponent: LabelCell,
+                  headerClassName: 'LabelColumn',
+                  dataKey: 'label',
+                  label: 'Label',
+                  tooltipEnabled: true,
+                },
+                { dataKey: 'address', label: 'Address' },
+                { dataKey: 'weight', label: 'Weight' },
+                { dataKey: 'mode', label: 'Mode', formatFn: _.capitalize },
+                { dataKey: 'status', label: 'Status', formatFn: _.capitalize },
+                {
+                  cellComponent: ButtonCell,
+                  onClick: (node) => NodeModal.trigger(dispatch, nodebalancer, config, node),
+                  text: 'Edit',
+                },
+                {
+                  cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
+                  onClick: (node) => this.deleteNBConfigNode(nodebalancer, config, node),
+                  text: 'Delete',
+                },
+              ]}
+              data={nodes}
+              selectedMap={{}}
+              noDataMessage="You have no nodes."
+            />
+          </ListBody>
+        </List>
+      </Card>
+    );
+  }
+
+  render() {
+    const { config } = this.props;
 
     return (
       <div>
@@ -114,57 +126,7 @@ export class DashboardPage extends Component {
             </div>
           </Card>
         </section>
-        <Card
-          title="Nodes"
-          header={
-            <CardHeader
-              title="Nodes"
-              nav={
-                <Button
-                  onClick={this.addNodeModal}
-                  className="linode-add btn btn-default float-sm-right"
-                >Add a Node</Button>
-              }
-            />
-          }
-        >
-          <List>
-            <ListBody>
-              <Table
-                className="Table--secondary"
-                columns={[
-                  {
-                    cellComponent: LabelCell,
-                    headerClassName: 'LabelColumn',
-                    dataKey: 'label',
-                    label: 'Label',
-                    tooltipEnabled: true,
-                  },
-                  { dataKey: 'address', label: 'Address' },
-                  { dataKey: 'weight', label: 'Weight' },
-                  { dataKey: 'mode', label: 'Mode', formatFn: _.capitalize },
-                  { dataKey: 'status', label: 'Status', formatFn: _.capitalize },
-                  {
-                    cellComponent: ButtonCell,
-                    onClick: (node) => this.editNodeModal(node),
-                    text: 'Edit',
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    onClick: (node) => {
-                      this.deleteNBConfigNode(nodebalancer, config, node);
-                    },
-                    text: 'Delete',
-                  },
-                ]}
-                data={nodes}
-                selectedMap={{}}
-                noDataMessage="You have no nodes."
-              />
-            </ListBody>
-          </List>
-        </Card>
+        {this.renderNodes()}
       </div>
     );
   }

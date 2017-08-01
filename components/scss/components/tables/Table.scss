@@ -18,10 +18,13 @@
     }
 
     thead, th {
+        @extend .font-xs;
+
         background: transparent;
         border: 0;
         font-weight: normal;
         color: $lightest-black;
+        text-transform: uppercase;
     }
 
     &--secondary {

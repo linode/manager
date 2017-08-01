@@ -2,38 +2,40 @@ html,
 body,
 #root,
 #root > [data-reactroot],
-.layout {
+.Layout {
   height: 100%;
 }
 
-.layout {
+.Layout {
     min-width: 800px;
-}
-
-.row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-
-  .card {
-    height: 100%;
-  }
-}
-
-.Main {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding-top: $nav-height + $mini-nav-height;
-
-    &-dropdownContainer {
-        position: relative;
-        z-index: 1001;
-    }
 
     &-inner {
         flex: 1;
+    }
+}
+
+.Footer {
+    @extend .font-small;
+
+    padding: 15px 0;
+
+    span, a {
+        color: $lightest-black;
+        padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.Main {
+    &-dropdownContainer {
+        position: relative;
+        z-index: 1001;
     }
 }
 

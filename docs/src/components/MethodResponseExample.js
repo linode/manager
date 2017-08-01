@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import { default as Example } from './Example';
 
@@ -18,7 +18,7 @@ export default class MethodResponseExample extends Component {
   }
 
   render() {
-    const { resource } = this.props;
+    const { response } = this.props;
     const { collapsed } = this.state;
 
     const caretClass = collapsed ? 'fa-caret-right' : 'fa-caret-down';
@@ -27,10 +27,24 @@ export default class MethodResponseExample extends Component {
       <div className="Method-section MethodResponseExample">
         <div className="MethodResponseExample-header" onClick={this.onClick}>
           <h3>Example</h3>
-          <span className="MethodResponseExample-headerControl">{collapsedDenotation} <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} /></span>
+          <span className="MethodResponseExample-headerControl">
+            {collapsedDenotation}
+            <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} />
+          </span>
         </div>
-        <Example example={JSON.stringify(resource.example, null, 2)} name="json" noclipboard collapsed={collapsed} />
+        <Example
+          example={JSON.stringify(response.example, null, 2)}
+          name="json"
+          noclipboard
+          collapsed={collapsed}
+        />
       </div>
     );
   }
 }
+
+MethodResponseExample.propTypes = {
+  response: PropTypes.shape({
+    example: PropTypes.string,
+  }),
+};

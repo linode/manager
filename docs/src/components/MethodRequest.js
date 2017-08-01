@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { Tabs } from 'linode-components/tabs';
 import { default as Example } from './Example';
@@ -6,10 +6,12 @@ import { default as Example } from './Example';
 export default function MethodRequest(props) {
   const { examples } = props;
 
-  const tabs = examples.map(function(example, index) {
+  const tabs = examples.map(function (example) {
     return {
       name: example.name,
-      children: (<Example key={`${example.name}-index`} example={example.value} name={example.name} />)
+      children: (
+        <Example key={`${example.name}-index`} example={example.value} name={example.name} />
+      ),
     };
   });
 
@@ -19,4 +21,8 @@ export default function MethodRequest(props) {
       <Tabs tabs={tabs} />
     </div>
   );
+}
+
+MethodRequest.propTypes = {
+  examples: PropTypes.arrayOf(PropTypes.object),
 };

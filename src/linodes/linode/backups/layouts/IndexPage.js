@@ -50,7 +50,10 @@ export class IndexPage extends Component {
 
       return (
         <Card header={<CardHeader title="Enable backups" />}>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Enable Backups' }}
+          >
             <p>
               Backups not enabled. Enable backups for
               ${(linode.type.backups_price).toFixed(2)}/mo.

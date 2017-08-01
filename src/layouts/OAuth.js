@@ -35,10 +35,12 @@ export class OAuthCallbackPage extends Component {
         body: data,
         mode: 'cors',
       });
-      const { access_token, scopes } = await resp.json();
+      const { access_token, scopes, expires_in: expiresIn } = await resp.json();
 
+      const expires = new Date();
+      expires.setSeconds(expires.getSeconds() + expiresIn);
       // Token needs to be in redux state for all API calls
-      dispatch(session.start(access_token, scopes));
+      dispatch(session.start(access_token, scopes, expires));
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));

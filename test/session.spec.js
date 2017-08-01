@@ -6,7 +6,7 @@ import * as session from '~/session';
 import * as storage from '~/storage';
 
 
-describe('session/checkLogin', () => {
+describe('session', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -55,6 +55,7 @@ describe('session/checkLogin', () => {
     const sessionValues = [
       'authentication/oauth-token',
       'authentication/scopes',
+      'authentication/expires',
     ];
 
     expect(setStorage.callCount).to.equal(sessionValues.length);

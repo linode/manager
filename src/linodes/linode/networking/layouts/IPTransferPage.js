@@ -11,7 +11,6 @@ import {
   Select,
 } from 'linode-components/forms';
 
-
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { ipv4s, assignIPs } from '~/api/networking';
@@ -118,7 +117,10 @@ export class IPTransferPage extends Component {
               Linode (B).
             </small>
           </p>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'IP Transfer Settings' }}
+          >
             <FormGroup className="row">
               <div className="col-lg-6 col-md-12 col-sm-12">
                 <label className="col-form-label">Linode A:</label>
@@ -131,7 +133,7 @@ export class IPTransferPage extends Component {
                   name="selectedOtherLinode"
                   onChange={({ target: { name, value } }) =>
                     this.setState({ [name]: value, checkedB: {} })}
-                  options={linodesInRegion.map(linode => ({ ...linode, value: linode.id }))}
+                  options={linodesInRegion.map(({ label, id }) => ({ label, value: id }))}
                 />
               </div>
             </FormGroup>

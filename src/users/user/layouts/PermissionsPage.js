@@ -76,8 +76,10 @@ export class PermissionsPage extends Component {
   render() {
     const { global, customer, linode, domain, nodebalancer, loading, errors } = this.state;
 
+    const analytics = { title: 'User permissions' };
+
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit} analytics={analytics}>
         <Card className="Permissions">
           <div className="Permissions-section">
             <h3>Global Permissions</h3>

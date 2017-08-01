@@ -6,13 +6,14 @@ import {
   FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
+import { FormSummary } from 'linode-components/forms';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { FormSummary } from 'linode-components/forms';
+import { DEFAULT_DISTRIBUTION } from '~/constants';
 import Distributions from '~/linodes/components/Distributions';
 
 import { selectLinode } from '../utilities';
@@ -25,14 +26,12 @@ export class RebuildPage extends Component {
     }
   }
 
-  static DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS'
-
   constructor(props) {
     super(props);
 
     const distribution = props.linode.distribution;
     this.state = {
-      distribution: distribution ? distribution.id : RebuildPage.DEFAULT_DISTRIBUTION,
+      distribution: distribution ? distribution.id : DEFAULT_DISTRIBUTION,
       password: '',
       errors: {},
       loading: false,
@@ -52,7 +51,7 @@ export class RebuildPage extends Component {
     const callback = async () => {
       await dispatch(dispatchOrStoreErrors.call(this, [
         () => rebuildLinode(id, { distribution, root_pass: password }),
-        () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
+        () => this.setState({ password: '', distribution: DEFAULT_DISTRIBUTION }),
       ], ['distribution']));
 
       // We want to hide the modal regardless of the status of the call.
@@ -62,7 +61,7 @@ export class RebuildPage extends Component {
     return dispatch(showModal('Rebuild Linode', (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={callback}
+        onSubmit={callback}
       >
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
@@ -83,7 +82,10 @@ export class RebuildPage extends Component {
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
         </p>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Rebuild Linode' }}
+        >
           <div className="clearfix">
             <Distributions
               distributions={distributions.distributions}

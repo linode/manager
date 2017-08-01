@@ -34,7 +34,7 @@ export default function Tabs(props) {
       className={`${componentName} ${className}`}
     >
       <TabList className="TabList">
-        {tabs.map(function(tab, i) {
+        {tabs.map(function (tab, i) {
           const className = ((i + 1) === selected) ? 'selected-previous' : '';
           return (
             <Tab

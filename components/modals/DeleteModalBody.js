@@ -1,15 +1,18 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
-import ConfirmModalBody from './ConfirmModalBody';
+
+import FormModalBody from './FormModalBody';
 import { ScrollingList } from '../lists';
-import { EmitEvent } from '../utils';
+
 
 export default function DeleteModalBody(props) {
   const {
-    onOk,
+    onSubmit,
     items,
     onCancel,
     typeOfItem,
-    parentItem,
+    deleteAction,
+    deleteActionPending,
   } = props;
 
   let body;
@@ -17,8 +20,9 @@ export default function DeleteModalBody(props) {
     body = (
       <div>
         <p>
-          Are you sure you want to <strong>permanently</strong> delete
-          these {items.length} {typeOfItem}?
+          {/* eslint-disable max-len */}
+          Are you sure you want to <strong>permanently</strong> {deleteAction} these {items.length} {typeOfItem}?
+          {/* eslint-enable max-len */}
         </p>
         <ScrollingList items={items} />
         <p>This operation cannot be undone.</p>
@@ -28,33 +32,38 @@ export default function DeleteModalBody(props) {
     body = (
       <p>
         Are you sure you want
-        to <strong>permanently</strong> delete <strong>{items[0]}</strong>?
+        to <strong>permanently</strong> {deleteAction} <strong>{items[0]}</strong>?
       </p>
     );
   }
 
+  const title = `Delete ${typeOfItem}`;
+  const analytics = { title, action: 'delete' };
+
   return (
-    <ConfirmModalBody
+    <FormModalBody
       className="DeleteModalBody"
-      buttonText="Delete"
-      buttonDisabledText="Deleting"
-      onOk={() => {
-        onOk();
-        EmitEvent('modal:submit', 'Modal', 'delete', typeOfItem);
-      }}
-      onCancel={() => {
-        onCancel();
-        EmitEvent('modal:cancel', 'Modal', 'cancel', typeOfItem);
-      }}
+      buttonText={_.capitalize(deleteAction)}
+      buttonDisabledText={_.capitalize(deleteActionPending)}
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      analytics={analytics}
     >
       {body}
-    </ConfirmModalBody>
+    </FormModalBody>
   );
 }
 
 DeleteModalBody.propTypes = {
-  onOk: PropTypes.func,
+  onSubmit: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string.isRequired,
+  deleteAction: PropTypes.string.isRequired,
+  deleteActionPending: PropTypes.string.isRequired,
+};
+
+DeleteModalBody.defaultProps = {
+  deleteAction: 'delete',
+  deleteActionPending: 'deleting',
 };

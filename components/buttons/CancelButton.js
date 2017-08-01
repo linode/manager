@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 
-import SecondaryButton from './SecondaryButton';
+import Button from './Button';
 
 export default function CancelButton(props) {
   return (
-    <SecondaryButton {...props} >
+    <Button {...props} >
       {props.children}
-    </SecondaryButton>
+    </Button>
   );
 }
 

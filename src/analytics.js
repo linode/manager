@@ -1,3 +1,8 @@
+import { EVENTS } from 'linode-components/utils';
+
+import { store } from '~/store';
+
+
 function loadGA(debug = false) {
   /* eslint-disable */
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -8,13 +13,14 @@ function loadGA(debug = false) {
 }
 
 function handleEvent(eventName) {
-  document.addEventListener(eventName, function (e) {
-    const { cate, action, label, value } = e.detail;
+  document.addEventListener(eventName, async function (e) {
+    const objectPath = await store.dispatch((_, getState) => getState().analytics.category);
+    const { category, action, label, value } = e.detail;
     window.ga('send', 'event', {
-      category: cate,
-      action: action,
-      label: label,
-      value: value,
+      eventCategory: category,
+      eventAction: action,
+      eventLabel: `${objectPath.join(':')}:${label}`,
+      eventValue: value,
     });
   }, false);
 }
@@ -29,9 +35,5 @@ export function init(environment, GA_ID) {
     window.ga('create', GA_ID, 'auto');
   }
 
-  handleEvent('modal:submit');
-  handleEvent('modal:cancel');
-  handleEvent('modal:show');
-  handleEvent('modal:close');
-  handleEvent('select:change');
+  EVENTS.map(handleEvent);
 }

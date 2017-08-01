@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
@@ -19,7 +19,7 @@ export default function EndpointIndex(props) {
         {!endpointIndex.description ? null : <p>{endpointIndex.description}</p>}
       </div>
       <div>
-        {endpointIndex.groups.map(function(group) {
+        {endpointIndex.groups.map(function (group) {
           return (
             <div className="EndpointIndex-group">
               {group.label === 'default' ? null : <h3>{group.label}</h3>}
@@ -31,9 +31,9 @@ export default function EndpointIndex(props) {
                     textKey: 'path',
                     label: 'Endpoint',
                     headerClassName: 'EndpointColumn',
-                    hrefFn: function(endpoint) {
+                    hrefFn: function (endpoint) {
                       return endpoint.routePath;
-                    }
+                    },
                   },
                   { label: 'Description', dataKey: 'description' },
                 ]}
@@ -47,3 +47,7 @@ export default function EndpointIndex(props) {
     </div>
   );
 }
+
+EndpointIndex.propTypes = {
+  route: PropTypes.object,
+};

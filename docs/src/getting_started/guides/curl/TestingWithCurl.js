@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
-import { Table } from 'linode-components/tables';
 
 import { API_ROOT,
   API_VERSION,
@@ -14,30 +13,47 @@ import Example from '~/components/Example';
 export default function Introduction(props) {
   const { route } = props;
   const { crumbs } = route;
+
   return (
     <section className="Article">
-    <div className="Endpoint-breadcrumbsContainer">
-      <Breadcrumbs crumbs={crumbs} />
-    </div>
+      <div className="Endpoint-breadcrumbsContainer">
+        <Breadcrumbs crumbs={crumbs} />
+      </div>
       <header>
-          <h1>Testing with cURL</h1>
-          <h5>by William Smith; last updated May 22nd, 2017</h5>
+        <h1>Testing with cURL</h1>
+        <h5>by William Smith; last updated May 22nd, 2017</h5>
       </header>
       <section>
         <p>
-          <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">cURL</a> is a simple and popular command line tool that allows you to perform various kinds of HTTP requests. It may already be installed on your system - run <code>curl --version</code> in your shell to check. Once you've confirmed that you have it installed, we can use it to test out the Linode API from the comfort of your shell.
+          <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">
+            cURL
+          </a>
+          &nbsp;is a simple and popular command line tool that allows you to perform various kinds
+          of HTTP requests. It may already be installed on your system - run
+          <code>curl --version</code> in your shell to check. Once you've confirmed that
+          you have it installed, we can use it to test out the Linode API from the comfort
+          of your shell.
         </p>
       </section>
       <section>
         <h2>Unauthenticated Requests</h2>
         <p>
-          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
+          You can perform anonymous HTTP requests against various resources on the API.
+          You can tell which ones are anonymous from the
+          <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
+          indicator in the reference documentation. For API endpoints where this indicator is
+          missing, you're able to use curl to test them without any additional steps.
+          For example, we could&nbsp;
+          <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>
+            list supported distributions
+          </Link>:
         </p>
         <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will give you a response like this:
         </p>
-        <Example example={`{
+        <Example
+          example={`{
   "distributions": [
       {
           "created": "2014-10-24T15:48:04",
@@ -54,33 +70,54 @@ export default function Introduction(props) {
   "total_pages": 2,
   "total_results": 34
 }`}
-       name="json"
-       noclipboard
-      />
+          name="json"
+          noclipboard
+        />
       </section>
       <section>
         <h2>Authenticated Requests</h2>
         <p>
-          For many requests, you will have to authenticate as a particular user. For now, we’re going to use a personal access token to make things easier. If you’d like to learn how to make a full blown OAuth client, read the <Link to={`/${API_VERSION}/access`}>authentication documentation</Link>.
+          For many requests, you will have to authenticate as a particular user. For now, we’re
+          going to use a personal access token to make things easier. If you’d like to learn
+          how to make a full blown OAuth client, read the&nbsp;
+          <Link to={`/${API_VERSION}/access`}>
+            authentication documentation
+          </Link>.
         </p>
         <p>
-          To generate a personal access token, <a href={`${MANAGER_ROOT}/profile/integrations/tokens`} target="_blank" rel="nofollow noopener noreferrer">visit the new manager</a>. These tokens can be used to make authenticated API requests with your Linode account and can have full access to all OAuth scopes. You’ll only see the full OAuth token once, so be sure to write it down somewhere. If you’re in the shell, running something like this might work well:
+          To generate a personal access token,&nbsp;
+          <a
+            href={`${MANAGER_ROOT}/profile/integrations/tokens`}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+          >
+            visit the new manager
+          </a>
+          . These tokens can be used to make authenticated API requests with your Linode
+          account and can have full access to all OAuth scopes. You’ll only see the full
+          OAuth token once, so be sure to write it down somewhere. If you’re in the shell,
+          running something like this might work well:
         </p>
-        <Example example={`token="that token"`} name="bash" />
+        <Example example='token="that token"' name="bash" />
       </section>
       <section>
         <h2>Authentication Header</h2>
         <p>
-          Now you can make requests with curl using your access token by adding <code>-H "Authorization: token $token"</code>. The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> requests on the reference page include this header in the curl examples. For example:
+          Now you can make requests with curl using your access token by adding
+          <code>-H "Authorization: token $token"</code>.
+          The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
+          requests on the reference page include this header in the curl examples. For example:
         </p>
-        <Example example={`curl -H "Authorization: token $token" \\
+        <Example
+          example={`curl -H "Authorization: token $token" \\
   ${API_ROOT}/${API_VERSION}/linode/instances`}
-        name="bash"
+          name="bash"
         />
         <p>
           This will give you a response like this:
         </p>
-        <Example example={`{
+        <Example
+          example={`{
   "linodes": [
     {
        "id": 2019697,
@@ -160,11 +197,19 @@ export default function Introduction(props) {
   "total_pages": 1,
   "total_results": 1
 }`}
-        name="json"
-        noclipboard
-      />
+          name="json"
+          noclipboard
+        />
       </section>
-      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides/curl/creating-a-linode`}>Creating a Linode &raquo;</Link></div>
+      <div className="text-sm-center">
+        <Link to={`/${API_VERSION}/guides/curl/creating-a-linode`}>
+          Creating a Linode &raquo;
+        </Link>
+      </div>
     </section>
   );
 }
+
+Introduction.propTypes = {
+  route: PropTypes.object,
+};

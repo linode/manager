@@ -158,8 +158,9 @@ const EventTypeMap = {
   },
   backups_restore: {
     presentTenseAction: 'Restoring from backup',
-    pastTenseAction: 'backup restored',
-    redirectUrl: getLinodeBackupRedirectUrl,
+    pastTenseAction: '',
+    pastTensePrefix: 'Backup restored to',
+    redirectUrl: getLinodeRedirectUrl,
   },
 
   password_reset: {
