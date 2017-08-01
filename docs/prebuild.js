@@ -370,6 +370,12 @@ let endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/account`,
     groups: {}
   },
+  volumes: {
+    name: 'Volumes',
+    path: '/volumes',
+    routePath: `${ROUTE_BASE_PATH}/volumes`,
+    groups: {},
+  },
 };
 
 allEndpoints.forEach(function(endpointContainer) {
