@@ -13,7 +13,7 @@ export default function PrimaryButton(props) {
   }
 
   return (
-    <div className={`PrimaryButton ${props.buttonClass}`}>
+    <div className={`PrimaryButton ${props.className} ${props.buttonClass}`}>
       {/* TODO: add appropriate analytics items */}
       <Dropdown groups={groups} />
     </div>
@@ -26,9 +26,11 @@ PrimaryButton.propTypes = {
   onClick: PropTypes.func,
   to: PropTypes.string,
   buttonClass: PropTypes.string,
+  className: PropTypes.string,
 };
 
 PrimaryButton.defaultProps = {
   buttonClass: 'btn-primary',
+  className: '',
   options: [],
 };
