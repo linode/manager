@@ -49,7 +49,7 @@ describe('linodes/components/AddLinode', function () {
           type: testType.id,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linode/instances/my-linode')),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 
@@ -80,7 +80,7 @@ describe('linodes/components/AddLinode', function () {
           backups_enabled: true,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linode/instances/my-linode')),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 });

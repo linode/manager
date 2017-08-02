@@ -55,7 +55,7 @@ describe('linodes/components/CloneLinode', function () {
             },
           });
       },
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linode/instances/my-linode')),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 });
