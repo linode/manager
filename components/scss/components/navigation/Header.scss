@@ -15,10 +15,41 @@
         text-decoration: none;
     }
 
+    &-link, &-brand {
+        @extend .font-normal;
+        float: left;
+    }
+    
+    &-logo {
+        line-height: $nav-height - 5px;
+        margin-right: 15px;
+    }
+    
     &-title {
         color: $dark-gray;
         vertical-align: top;
         line-height: $nav-height;
         font-size: 18px; /* Special font-size case */
+    }
+    
+    &-link {
+        color: $main-header-color-text;
+        line-height: $nav-height;
+        padding: 0 15px;
+
+        &--selected,
+        &:hover,
+        &:focus,
+        &:active {
+            color: $main-header-color-text-highlight;
+        }
+
+        &--selected {
+            background-color: $main-header-color-active;
+        }
+
+        &:not(&--selected):hover {
+            background-color: $main-header-highlight-color;
+        }
     }
 }
