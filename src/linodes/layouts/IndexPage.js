@@ -200,8 +200,8 @@ export class IndexPage extends Component {
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Linodes</h1>
-            <PrimaryButton to="/linodes/create" className="float-sm-right">
+            <h1 className="float-left">Linodes</h1>
+            <PrimaryButton to="/linodes/create" className="float-right">
               Add a Linode
             </PrimaryButton>
           </div>

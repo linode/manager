@@ -93,7 +93,7 @@ export class Layout extends Component {
               this.props.children}
           </div>
         </div>
-        <footer className="Footer text-sm-center">
+        <footer className="Footer text-center">
           <div>
             <span>Version {VERSION}</span>
           </div>

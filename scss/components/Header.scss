@@ -13,6 +13,112 @@
     }
 }
 
+.MainHeader {
+    &-brand, &-search, &-session, &-link {
+        @extend .font-normal;
+        float: left;
+    }
+
+    &-logo {
+        line-height: $nav-height - 5px;
+        margin-right: 15px;
+    }
+
+    &-link {
+        color: $main-header-color-text;
+        line-height: $nav-height;
+        padding: 0 15px;
+
+        &--selected,
+        &:hover,
+        &:focus,
+        &:active {
+            color: $main-header-color-text-highlight;
+        }
+
+        &--selected {
+            background-color: $main-header-color-active;
+        }
+
+        &:not(&--selected):hover {
+            background-color: $main-header-highlight-color;
+        }
+    }
+
+    &-notifications {
+        @extend .font-normal;
+
+        float: right;
+        height: 100%;
+        padding: 19px 14px;
+        position: relative;
+        width: 48px;
+
+        &:hover {
+            background: $main-header-highlight-color;
+            cursor: pointer;
+
+            i {
+                color: $white;
+                color: $main-header-color-text-highlight;
+            }
+        }
+
+        i {
+            @extend .font-large;
+            color: $main-header-color-text;
+        }
+    }
+
+    &-session {
+        height: $nav-height;
+        float: right;
+        padding: 0 15px;
+        margin-right: 0;
+        position: relative; /* Give the badge something to relate to */
+
+        /* Disable double click highlight */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+            background: $main-header-highlight-color;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        &:hover .MainHeader-username {
+            color: $main-header-color-text-highlight;
+        }
+    }
+
+    &-username {
+        line-height: $nav-height;
+        padding-right: 15px;
+        color: $main-header-color-text;
+    }
+
+    &-gravatar {
+        vertical-align: initial;
+        position: relative;
+        top: calc(calc(#{$nav-height} - 35px) / 2);
+    }
+
+    &-badge {
+        @extend .Badge;
+        background: $red;
+        border: 2px solid $dark-black;
+        position: absolute;
+        right: 4px;
+        top: 6px;
+    }
+}
+
 .ContextHeader {
     background: $main-header-color-active;
     padding: 5px 0;
@@ -29,5 +135,9 @@
             text-decoration: none;
             color: $white;
         }
+    }
+
+    .Menu-item {
+        float: left;
     }
 }
