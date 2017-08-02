@@ -18,18 +18,6 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     sandbox.restore();
   });
 
-  it('does not show take snapshot button for an auto backup', () => {
-    const page = mount(
-      <TakeSnapshot
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-
-    const takeSnapshot = page.find('button[name="takeSnapshot"]');
-    expect(takeSnapshot.length).to.equal(0);
-  });
-
   it('should dispatch a snapshot request', async () => {
     const page = mount(
       <TakeSnapshot
