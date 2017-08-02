@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { push } from 'react-router-redux';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { ModalFormGroup } from 'linode-components/forms';
@@ -10,8 +11,8 @@ import { cloneLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import LinodeSelect from './LinodeSelect';
-import RegionSelect from './RegionSelect';
 import PlanSelect from './PlanSelect';
+import { RegionSelect } from '../../components';
 
 
 export default class CloneLinode extends Component {
@@ -43,7 +44,7 @@ export default class CloneLinode extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => cloneLinode(linode, region, plan),
-      close,
+      ({ label }) => push(`/linode/instances/${label}`),
     ]));
   }
 
@@ -61,7 +62,7 @@ export default class CloneLinode extends Component {
         errors={errors}
       >
         <div>
-          <ModalFormGroup label="Linode" id="linode" apiKey="linode">
+          <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
             <LinodeSelect
               linodes={linodes}
               value={linode}
@@ -71,7 +72,7 @@ export default class CloneLinode extends Component {
               allowNone
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region">
+          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}
               name="region"
@@ -82,7 +83,7 @@ export default class CloneLinode extends Component {
               <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
             </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Plan" id="plan" apiKey="plan">
+          <ModalFormGroup label="Plan" id="plan" apiKey="plan" errors={errors}>
             <PlanSelect
               plans={plans}
               value={plan}

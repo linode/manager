@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 
 
-export function planStyle(plan) {
+export function planStyle(plan, withPrice = false) {
   if (!plan || !plan.label) {
     return null;
   }
 
-  const planStr = plan.label.split(' ');
-  return `${planStr[0]} ${parseInt(planStr[1], 10) / 1024}G`;
+  const [name, number] = plan.label.split(' ');
+  const output = `${name} ${parseInt(number, 10) / 1024}G`;
+  return withPrice ? `${output} ($${plan.monthly_price.toFixed(2)}/mo)` : output;
 }
 
 export default function PlanStyle(props) {
