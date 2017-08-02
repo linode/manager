@@ -11,7 +11,6 @@ export default function PlanSelect(props) {
     ({ label: planStyle(plan, true), value: plan.id, class: plan.class }));
   const groupedPlans = _.groupBy(sortedPlans, 'class');
 
-  console.log(groupedPlans);
   const options = [
     { label: 'Standard', options: [...groupedPlans.nanode, ...groupedPlans.standard] },
     { label: 'High Memory', options: groupedPlans.highmem },

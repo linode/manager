@@ -38,9 +38,8 @@ export default class CloneLinode extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close } = this.props;
+    const { dispatch } = this.props;
     const { linode, region, plan } = this.state;
-
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => cloneLinode(linode, region, plan),

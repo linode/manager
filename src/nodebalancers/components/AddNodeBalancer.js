@@ -34,7 +34,7 @@ export default class AddNodeBalancer extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close } = this.props;
+    const { dispatch } = this.props;
     const { label, region } = this.state;
 
     const data = {

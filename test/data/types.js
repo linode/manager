@@ -32,7 +32,7 @@ export const types = {
     label: 'Linode 1024',
     monthly_price: 5.0,
   },
- 'linode1024.5': {
+  'linode1024.5': {
     hourly_price: 0.0075,
     id: 'linode1024.5',
     label: 'Linode 1024',
