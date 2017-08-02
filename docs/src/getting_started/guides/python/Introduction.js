@@ -232,7 +232,7 @@ root@localhost:~#`}
         <p>
           Now that you’ve had an overview of the features and concepts in the Python library,
           check out the Python library reference for in-depth documentation, or look at the&nbsp;
-          <ExternaLink
+          <ExternalLink
             // eslint-disable-next-line max-len
             to="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode"
           >
