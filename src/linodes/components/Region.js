@@ -12,7 +12,7 @@ export default function Region(props) {
         src={flags[obj.region.country]}
         height="15" width="20" alt={obj.region.label}
       />
-      <span>{obj.region.label}</span>
+      <span>{obj.region.id}</span>
     </span>
   );
 }

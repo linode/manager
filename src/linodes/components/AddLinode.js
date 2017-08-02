@@ -38,7 +38,7 @@ export default class AddLinode extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close } = this.props;
+    const { dispatch } = this.props;
     const { label, distribution, region, plan, backups, password } = this.state;
 
     const data = {
