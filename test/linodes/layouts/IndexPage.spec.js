@@ -41,7 +41,7 @@ describe('linodes/layouts/IndexPage', () => {
       />);
 
     dispatch.reset();
-    const { groups } = page.find('Dropdown').first().props();
+    const { groups } = page.find('MassEditControl').find('Dropdown').props();
     groups[2].elements[0].action();
     const modal = mount(dispatch.firstCall.args[0].body);
 

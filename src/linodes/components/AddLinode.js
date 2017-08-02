@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { push } from 'react-router-redux';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Checkbox, Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
@@ -10,8 +11,8 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import DistributionSelect from './DistributionSelect';
-import RegionSelect from './RegionSelect';
 import PlanSelect from './PlanSelect';
+import { RegionSelect } from '../../components';
 
 
 export default class AddLinode extends Component {
@@ -56,7 +57,7 @@ export default class AddLinode extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
-      close,
+      ({ label }) => push(`/linode/instances/${label}`),
     ]));
   }
 
@@ -80,7 +81,7 @@ export default class AddLinode extends Component {
         errors={errors}
       >
         <div>
-          <ModalFormGroup label="Label" id="label" apiKey="label">
+          <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
             <Input
               placeholder="my-linode"
               value={label}
@@ -89,7 +90,12 @@ export default class AddLinode extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Distribution" id="distribution" apiKey="distribution">
+          <ModalFormGroup
+            label="Distribution"
+            id="distribution"
+            apiKey="distribution"
+            errors={errors}
+          >
             <DistributionSelect
               distributions={distributions}
               value={distribution}
@@ -102,7 +108,7 @@ export default class AddLinode extends Component {
               <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
             </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region">
+          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}
               name="region"
@@ -113,7 +119,7 @@ export default class AddLinode extends Component {
               <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
             </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Plan" id="plan" apiKey="plan">
+          <ModalFormGroup label="Plan" id="plan" apiKey="plan" errors={errors}>
             <PlanSelect
               plans={plans}
               value={plan}
@@ -125,7 +131,7 @@ export default class AddLinode extends Component {
               <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
             </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Password" id="password" apiKey="root_pass">
+          <ModalFormGroup label="Password" id="password" apiKey="root_pass" errors={errors}>
             <PasswordInput
               value={password}
               name="password"
@@ -134,7 +140,7 @@ export default class AddLinode extends Component {
               disabled={distribution === 'none'}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Backups" id="backups" apiKey="backups">
+          <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
             <Checkbox
               value={backups}
               checked={backups}
