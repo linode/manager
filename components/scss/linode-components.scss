@@ -11,7 +11,7 @@ html {
 
 // default font sizes, defined in rem with a pixel fallback, computed whole pixel values
 .font-normal {
-  @include font-size(1.5);
+  @include font-size(1.4);
 }
 .font-small {
   @include font-size(1.3);

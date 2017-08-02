@@ -22,6 +22,8 @@ import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
+import { planStats } from '../components/PlanStyle';
+
 
 const OBJECT_TYPE = 'linodes';
 
@@ -157,12 +159,12 @@ export class IndexPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                       tooltipEnabled: true,
+                      subtitleFn: linode => planStats(linode.type),
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
                       cellComponent: RegionCell,
-                      headerClassName: 'RegionColumn hidden-md-down',
-                      className: 'hidden-md-down',
+                      headerClassName: 'RegionColumn',
                     },
                     {
                       cellComponent: BackupsCell,
