@@ -16,7 +16,7 @@ import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
-export default class LishPage extends Component {
+export class LishPage extends Component {
   constructor() {
     super();
 
@@ -28,10 +28,14 @@ export default class LishPage extends Component {
     };
   }
 
-  componentWillMount() {
+  componentWillMount(props) {
+    const {
+      lish_auth_method: authorization, authorized_keys: keys,
+    } = (props || this.props).profile;
+
     this.setState({
-      authorization: this.props.profile.lish_auth_method,
-      keys: this.props.profile.authorized_keys || '',
+      authorization,
+      keys: (keys || []).join('\n'),
     });
   }
 
@@ -55,9 +59,9 @@ export default class LishPage extends Component {
     const title = 'Change Lish Settings';
 
     const authorizationOptions = [
-      { value: '0', label: 'Allow both password and key authorization' },
-      { value: '1', label: 'Allow key authentication only' },
-      { value: '2', label: 'Disable Lish' },
+      { value: 'password_keys', label: 'Allow both password and key authorization' },
+      { value: 'keys_only', label: 'Allow key authentication only' },
+      { value: 'disabled', label: 'Disable Lish' },
     ];
 
     return (
@@ -77,14 +81,9 @@ export default class LishPage extends Component {
                   name="authorization"
                   onChange={this.onChange}
                   value={authorization}
+                  className="input-md"
                   options={authorizationOptions}
                 />
-                <FormGroupError errors={errors} name="mode" />
-                >
-                  <option value="0">Allow both password and key authorization</option>
-                  <option value="1">Allow key authentication only</option>
-                  <option value="2">Disable Lish</option>
-                </Select>
                 <FormGroupError errors={errors} name="lish_auth_method" />
               </div>
             </FormGroup>
@@ -100,7 +99,7 @@ export default class LishPage extends Component {
                 />
                 <div>
                   <small className="text-muted">
-                    Place your SSH public keys here for use with Lish console access.
+                    Place your SSH public keys here, one per line, for use with Lish console access.
                   </small>
                 </div>
                 <FormGroupError errors={errors} name="authorized_keys" inline={false} />

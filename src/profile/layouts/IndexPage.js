@@ -26,7 +26,7 @@ export class IndexPage extends Component {
       { name: 'My API Clients', link: '/clients' },
       { name: 'Notifications', link: '/notifications' },
       { name: 'Referrals', link: '/referrals' },
-      { name: 'Lish', link: '/lish' }
+      { name: 'Lish', link: '/lish' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     return (
