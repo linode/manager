@@ -57,7 +57,7 @@ export default class AddLinode extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
-      ({ label }) => push(`/linode/instances/${label}`),
+      ({ label }) => push(`/linodes/${label}`),
     ]));
   }
 

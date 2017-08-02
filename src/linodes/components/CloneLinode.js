@@ -43,7 +43,7 @@ export default class CloneLinode extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => cloneLinode(linode, region, plan),
-      ({ label }) => push(`/linode/instances/${label}`),
+      ({ label }) => push(`/linodes/${label}`),
     ]));
   }
 
