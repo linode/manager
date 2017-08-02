@@ -53,16 +53,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#backup-status').text()).to.equal('View Backups');
   });
 
-  it('renders plan', () => {
-    const page = mount(
-      <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
-
-    expect(page.find('#plan').text()).to.equal('Linode 2G');
-  });
-
   it('renders region', () => {
     const page = mount(
       <DashboardPage
