@@ -47,7 +47,7 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
       ([fn]) => expectRequest(fn, `/linode/instances/1234/backups/${backup.id}/restore`, {
         method: 'POST',
         body: {
-          linode: +restoreToVal,
+          linode_id: +restoreToVal,
           overwrite: overwriteVal,
         },
       }),
