@@ -24,8 +24,10 @@ a {
     &:hover,
     &:active,
     &:focus {
-        outline: 0;
-        box-shadow: none;
+        // Important because we want this to overrule the defaults for all buttons:
+        // .btn-primary, .btn-secondary, etc.
+        outline: 0 !important;
+        box-shadow: none !important;
     }
 
     &.btn-default {
@@ -102,12 +104,24 @@ a {
     }
 
     &.btn-cancel, &.btn-cancel:not([href]) {
-        margin-left: 10px;
-        display: inline-block;
+        margin: 0 10px;
+        display: inline;
+
+        color: $lightest-black;
+        text-decoration: underline;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: $lightest-black;
+        }
     }
 
-    & + & {
-        margin-left: 5px;
+    // This is for the disk list and record lists.
+    :not(.btn-group) {
+        &.btn-default + .btn-default {
+            margin-left: 10px;
+        }
     }
 }
 
@@ -122,8 +136,10 @@ a {
         padding: 0 8px;
         border-radius: 0;
 
-        .Checkbox {
-            padding: 0 !important;
+        input[type=checkbox] {
+            height: $checkbox-height-width;
+            width: $checkbox-height-width;
+            margin-top: 1px;
         }
     }
 

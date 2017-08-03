@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
-import { Link } from 'react-router';
+import { ExternalLink } from 'linode-components/buttons';
 
 import { API_VERSION } from '~/constants';
 import { Example } from '~/components';
@@ -25,26 +26,18 @@ export default function Introduction(props) {
           With the release of API V4, Linode has also released an official Python library.
           This guide is a simple introduction to working with the Python library.
           The official Linode Python library is open source on&nbsp;
-          <a
-            href="http://github.com/Linode/python-linode-api"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          >
-              Github
-          </a>
+          <ExternalLink to="http://github.com/Linode/python-linode-api">
+            Github
+          </ExternalLink>
           , and can be installed:
         </p>
         <Example example="pip install linode-api" name="bash" />
         <p>
           In order to make requests to the API, you're going to need an OAuth Token.
           You can make a personal access token at&nbsp;
-          <a
-            href="https://cloud.linode.com/profile/integrations/tokens"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          >
-              cloud.linode.com
-          </a>.
+          <ExternalLink
+            to="https://cloud.linode.com/profile/integrations/tokens"
+          >cloud.linode.com</ExternalLink>.
         </p>
       </section>
       <section>
@@ -239,14 +232,12 @@ root@localhost:~#`}
         <p>
           Now that you’ve had an overview of the features and concepts in the Python library,
           check out the Python library reference for in-depth documentation, or look at the&nbsp;
-          <a
+          <ExternalLink
             // eslint-disable-next-line max-len
-            href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
+            to="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode"
           >
-              Install on Linode sample project
-          </a>
+            Install on Linode sample project
+          </ExternalLink>
           &nbsp;for an example multi-user application using the library.
         </p>
       </section>

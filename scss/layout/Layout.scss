@@ -22,8 +22,11 @@ body,
 
     padding: 15px 0;
 
-    span, a {
+    span, a, .fa {
         color: $lightest-black;
+    }
+
+    span, a {
         padding: 0 10px;
     }
 

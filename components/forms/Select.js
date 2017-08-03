@@ -32,6 +32,15 @@ export default class Select extends Component {
                          this.props.options[0].options[0].value :
                          this.props.options[0].value;
 
+    const value = this.props.value || defaultValue;
+
+    // Update the form so the value is no longer undefined.
+    if (_.isUndefined(this.props.value)) {
+      // setState will not be allowed during render, so take it out of the current
+      // function.
+      setTimeout(() => this.onChange({ value: defaultValue }), 0);
+    }
+
     return (
       <span className={this.props.className}>
         {/* This allows us to use this in tests like a normal input. */}
@@ -40,7 +49,7 @@ export default class Select extends Component {
           id={this.props.id}
           name={this.props.name}
           onChange={this.onChange}
-          value={this.props.value}
+          value={value}
         />
         <VendorSelect
           clearable={false}
@@ -63,7 +72,7 @@ Select.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any,
   label: PropTypes.string,
   className: PropTypes.string,
   id: PropTypes.string,

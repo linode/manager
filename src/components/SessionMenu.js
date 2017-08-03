@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
+
+
 export default function SessionMenu(props) {
   const { open } = props;
   return (
@@ -26,13 +29,13 @@ export default function SessionMenu(props) {
         <hr />
         <li className="SessionMenu-header">Resources</li>
         <li className="SessionMenu-item">
-          <a href="https://forum.linode.com/" target="_blank" rel="nofollow noopener noreferrer">Community Forum</a>
+          <ExternalLink to="https://forum.linode.com/">Community Forum</ExternalLink>
         </li>
         <li className="SessionMenu-item">
-          <a href="https://linode.com/docs" target="_blank" rel="nofollow noopener noreferrer">User Documentation</a>
+          <ExternalLink to="https://linode.com/docs">User Documentation</ExternalLink>
         </li>
         <li className="SessionMenu-item">
-          <a href="https://developers.linode.com" target="_blank" rel="nofollow noopener noreferrer">Developer Documentation</a>
+          <ExternalLink to="https://developers.linode.com">Developer Documentation</ExternalLink>
         </li>
         <hr />
         <li className="SessionMenu-item">

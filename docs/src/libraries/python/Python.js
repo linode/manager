@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
@@ -17,13 +18,11 @@ export default function Python(props) {
             <h1>Python Library</h1>
             <div className="float-sm-right">
               <span className="GithubLink">
-                See this project on <a
-                  href="https://github.com/linode/python-linode-api"
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
+                See this project on <ExternalLink
+                  to="https://github.com/linode/python-linode-api"
                 >
                   <i className="fa fa-github"></i> GitHub
-                </a>.
+                </ExternalLink>.
               </span>
             </div>
           </div>

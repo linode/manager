@@ -45,10 +45,6 @@
         padding-right: 0;
         padding-bottom: 0;
         border-top: 0;
-
-        .btn:not(:first-child) {
-            margin-left: 5px;
-        }
     }
 
     &-body .alert {
@@ -57,7 +53,7 @@
         text-align: center;
 
         &.alert-danger {
-            text-align: left;
+            text-align: right;
         }
     }
 
@@ -65,12 +61,16 @@
         margin-bottom: 15px;
     }
 
-    .Input, .Select, textarea, .alert {
+    .Input, textarea, .alert {
         display: block;
 
         :last-child.form-control {
             width: 100%;
         }
+    }
+
+    .Select {
+        width: 100%;
     }
 
     textarea {

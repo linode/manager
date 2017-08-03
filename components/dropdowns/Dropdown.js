@@ -1,14 +1,15 @@
 import { PropTypes } from 'prop-types';
 import React, { Component } from 'react';
 
+// Avoid a circular import by importing ../buttons by itself.
+import Button from '../buttons/Button';
 import { EmitEvent, DROPDOWN_OPEN, DROPDOWN_CLICK, DROPDOWN_CLOSE } from '../utils';
 
 
 export default class Dropdown extends Component {
   constructor() {
     super();
-    this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
+
     this.state = {
       open: false,
     };
@@ -20,7 +21,7 @@ export default class Dropdown extends Component {
     }
   }
 
-  open() {
+  open = () => {
     if (typeof this.props.onOpen === 'function') {
       this.props.onOpen();
     }
@@ -30,7 +31,7 @@ export default class Dropdown extends Component {
     this.setState({ open: !this.state.open });
   }
 
-  close() {
+  close = () => {
     if (typeof this.props.onClose === 'function') {
       this.props.onClose();
     }
@@ -42,10 +43,8 @@ export default class Dropdown extends Component {
 
   wrapClick(f, item) {
     return (...args) => {
-      if (f !== this.open) {
-        this.emitEvent(DROPDOWN_CLICK, 'change', item);
-        f(...args);
-      }
+      this.emitEvent(DROPDOWN_CLICK, 'change', item);
+      f(...args);
     };
   }
 
@@ -80,15 +79,19 @@ export default class Dropdown extends Component {
         className={`Dropdown btn-group ${this.state.open ? 'Dropdown--open' : ''}`}
         onBlur={this.close}
       >
-        <button
+        <Button
           type="button"
           className="Dropdown-first"
-          onClick={this.wrapClick(first.action || this.open)}
+          onClick={first.action ? this.wrapClick(first.action, first.name) : this.open}
+          to={first.to}
           disabled={disabled}
-          id={(first.name || '').split(' ').join('-').toLowerCase()}
-        >{first.name}</button>
+          id={first.name.split(' ').join('-').toLowerCase()}
+        >
+          {first.icon ? <i className={`fa ${first.icon}`} /> : null}
+          {first.name}
+        </Button>
         {groups.length === 0 ? null : (
-          <button
+          <Button
             disabled={disabled}
             type="button"
             className="Dropdown-toggle"
@@ -96,9 +99,11 @@ export default class Dropdown extends Component {
             aria-haspopup="true"
             aria-expanded={this.state.open}
             onClick={this.open}
-          ><i className={`fa ${dropdownIcon}`} /></button>
+          ><i className={`fa ${dropdownIcon}`} /></Button>
         )}
-        <div className={`Dropdown-menu ${orientation}`}>{dropdownMenu}</div>
+        {groups.length === 0 ? null : (
+          <div className={`Dropdown-menu ${orientation}`}>{dropdownMenu}</div>
+        )}
       </div>
     );
   }
@@ -110,6 +115,8 @@ Dropdown.propTypes = {
     elements: PropTypes.arrayOf(PropTypes.shape({
       name: PropTypes.node.isRequired,
       action: PropTypes.func,
+      to: PropTypes.string,
+      icon: PropTypes.string,
     })),
   })).isRequired,
   leftOriented: PropTypes.bool,

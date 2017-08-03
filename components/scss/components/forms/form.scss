@@ -32,9 +32,12 @@ form {
     padding: 3px 0px;
 }
 
-input[type="checkbox"]:hover,
-input[type="radio"]:hover {
-    cursor: pointer;
+.Checkbox label,
+.Radio {
+    &:hover {
+        cursor: pointer;
+        cursor: hand;
+    }
 }
 
 .Select {

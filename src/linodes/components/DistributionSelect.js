@@ -27,6 +27,10 @@ export default function DistributionSelect(props) {
 
   const options = [];
 
+  if (props.allowNone) {
+    options.push({ label: 'No distribution', value: 'none' });
+  }
+
   for (const vendorName of DISTRIBUTION_DISPLAY_ORDER) {
     const byName = vendorByName(vendorName);
 
@@ -46,4 +50,5 @@ export default function DistributionSelect(props) {
 DistributionSelect.propTypes = {
   ...Select.propTypes,
   distributions: PropTypes.object.isRequired,
+  allowNone: PropTypes.bool,
 };
