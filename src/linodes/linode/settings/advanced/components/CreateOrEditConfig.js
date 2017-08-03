@@ -47,7 +47,7 @@ export default class CreateOrEditConfig extends Component {
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      disks: config.devices.map(d => d.disk_id),
+      disks: config.devices,
       isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
         config.root_device.replace('/dev/', '')) === -1,
       isMaxRam: config.ram_limit === 0,
@@ -69,7 +69,7 @@ export default class CreateOrEditConfig extends Component {
       label: this.state.label,
       comments: this.state.comments,
       kernel: this.state.kernel,
-      devices: this.state.disks.map(d => ({ disk_id: d })),
+      devices: this.state.disks,
       // API expects this to be null not ''
       initrd: this.state.initrd || null,
       root_device: this.state.rootDevice,
@@ -257,7 +257,7 @@ export default class CreateOrEditConfig extends Component {
             labelClassName="col-sm-2"
             fieldClassName="col-sm-10"
             onChange={({ target: { value, name } }) =>
-              this.setState({ disks: { ...this.state.disks, [name]: +value || null } })}
+              this.setState({ disks: { ...this.state.disks, [name]: value } })}
           />
         ))}
         <FormGroup className="row">
@@ -401,7 +401,7 @@ CreateOrEditConfig.propTypes = {
 
 CreateOrEditConfig.defaultProps = {
   config: {
-    disks: AVAILABLE_DISK_SLOTS.reduce((disks, slot) => ({ ...disks, [slot]: null }), {}),
+    devices: AVAILABLE_DISK_SLOTS.reduce((disks, slot) => ({ ...disks, [slot]: null }), {}),
     root_device: '/dev/sda',
     helpers: {
       enable_distro_helper: true,

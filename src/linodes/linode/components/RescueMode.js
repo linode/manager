@@ -33,6 +33,11 @@ export default class RescueMode extends Component {
     const { dispatch, linode } = this.props;
     const { disks } = this.state;
 
+    const disksWithDiskIdOnly = {}
+    Object.keys(disks).forEach(function (key) {
+      disksWithDiskIdOnly[key] = disks[key] ? disks[key].disk_id : null;
+    });
+
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => rescueLinode(linode.id, disks)],
     ]));

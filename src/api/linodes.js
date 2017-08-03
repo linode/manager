@@ -16,8 +16,8 @@ function linodeAction(id, action, body, handleRsp) {
   };
 }
 
-export function powerOnLinode(id, config_id = null) {
-  return linodeAction(id, 'boot', JSON.stringify({ config_id }), () =>
+export function powerOnLinode(id, configId = null) {
+  return linodeAction(id, 'boot', JSON.stringify({ config_id: configId }), () =>
     actions.one({ status: 'booting' }, id));
 }
 
@@ -26,8 +26,8 @@ export function powerOffLinode(id) {
     actions.one({ status: 'shutting_down' }, id));
 }
 
-export function rebootLinode(id, config_id = null) {
-  return linodeAction(id, 'reboot', JSON.stringify({ config_id }), () =>
+export function rebootLinode(id, configId = null) {
+  return linodeAction(id, 'reboot', JSON.stringify({ config_id: configId }), () =>
     actions.one({ status: 'rebooting' }, id));
 }
 
