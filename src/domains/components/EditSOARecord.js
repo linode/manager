@@ -66,6 +66,7 @@ export default class EditSOARecord extends Component {
     const data = {
       group,
       domain,
+      status,
       ttl_sec: parseInt(defaultTTL),
       refresh_sec: parseInt(refreshRate),
       retry_sec: parseInt(retryRate),
@@ -73,7 +74,6 @@ export default class EditSOARecord extends Component {
       soa_email: email,
       master_ips: masterIps.length ? masterIps.split(';') : [],
       axfr_ips: axfrIps.length ? axfrIps.split(';') : [],
-      status,
     };
 
     if (!data.group) {
@@ -142,6 +142,23 @@ export default class EditSOARecord extends Component {
               value={group}
               placeholder=""
               onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            label="Expire Time"
+            description="How long secondary (slave) nameservers wait
+                         before considering DNS data stale if it cannot reach the
+                         master nameserver"
+            id="expireTime"
+            apiKey="expire_sec"
+            errors={errors}
+          >
+            <Select
+              value={expireTime}
+              onChange={this.onChange}
+              id="expireTime"
+              name="expireTime"
+              options={expireOptions}
             />
           </ModalFormGroup>
           {type !== 'slave' ? null : (
