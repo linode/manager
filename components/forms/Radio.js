@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 export default function Radio(props) {
   return (
-    <div className="Radio">
+    <div className={`Radio ${props.className}`}>
       <label>
         <input
           id={props.id}
@@ -27,4 +27,9 @@ Radio.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   label: PropTypes.any,
   id: PropTypes.string,
+  className: PropTypes.string,
+};
+
+Radio.defaultProps = {
+  className: '',
 };

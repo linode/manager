@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
-import { CancelButton } from 'linode-components/buttons';
+import { CancelButton, ExternalLink } from 'linode-components/buttons';
 import {
   Form,
   FormGroup,
@@ -367,7 +367,7 @@ export default class CreateOrEditConfig extends Component {
               <div>
                 <small className="text-muted">
                   Automatically configure static networking.
-                  &nbsp;<a href="https://www.linode.com/docs/platform/network-helper">Learn More</a>
+                  &nbsp;<ExternalLink to="https://www.linode.com/docs/platform/network-helper">Learn More</ExternalLink>
                 </small>
               </div>
             </Checkboxes>

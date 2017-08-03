@@ -114,3 +114,17 @@ export function linodeStats(linodeId) {
     dispatch(actions.one({ _stats }, linodeId));
   };
 }
+
+export function cloneLinode(linodeId, regionId, planId,
+                            targetId = undefined, configs = [], disks = []) {
+  return async function (dispatch) {
+    const clonedLinode = await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/clone`, {
+      region: regionId,
+      type: planId,
+      disks: disks.length ? disks : undefined,
+      configs: configs.length ? disks : undefined,
+      linode: targetId,
+    }));
+    dispatch(actions.one(clonedLinode, clonedLinode.id));
+  };
+}

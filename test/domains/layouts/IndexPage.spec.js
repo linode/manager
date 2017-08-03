@@ -68,7 +68,7 @@ describe('domains/layouts/IndexPage', () => {
 
     dispatch.reset();
 
-    const actions = page.find('Dropdown').props().groups[0].elements;
+    const actions = page.find('MassEditControl').find('Dropdown').props().groups[0].elements;
     actions.find(a => a && a.name === 'Delete').action();
 
     const modal = mount(dispatch.firstCall.args[0].body);
