@@ -12,7 +12,7 @@ import { TableCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
-import { deleteIP, setRDNS } from '~/api/networking';
+import { addIP, deleteIP, setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import { MoreInfo, EditRDNS, AddIP } from '../components';
@@ -129,16 +129,16 @@ export class SummaryPage extends Component {
   renderAddButton() {
     const { dispatch, linode } = this.props;
 
-    const addIP = () => AddIP.trigger(dispatch, linode);
+    const addIPModal = () => AddIP.trigger(dispatch, linode);
 
     const privateIPv4s = Object.values(linode._ips).filter(
       ip => ip.version === 'ipv4' && ip.type === 'private');
-    if (!privateIPv4s.length) {
+    if (privateIPv4s.length) {
       return (
         <PrimaryButton
           className="float-sm-right"
           buttonClass="btn-default"
-          onClick={addIP}
+          onClick={addIPModal}
         >
           Add an IP Address
         </PrimaryButton>
@@ -149,16 +149,16 @@ export class SummaryPage extends Component {
       <PrimaryButton
         className="float-sm-right"
         buttonClass="btn-default"
-        onClick={this.addPrivateIP}
-        options={[{ elements: [{ name: 'Add Public IP Address', action: addIP }] }]}
+        onClick={() => dispatch(addIP(linode.id, 'private'))}
+        options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
       >
         Add a Private IP Address
       </PrimaryButton>
-    )
+    );
   }
 
   render() {
-    const { dispatch, linode } = this.props;
+    const { linode } = this.props;
 
     const ipv4s = Object.values(linode._ips).filter(ip => ip.version === 'ipv4').map(ip => ({
       ...ip,
