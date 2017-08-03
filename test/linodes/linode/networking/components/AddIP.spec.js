@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import AddIP from '~/linodes/linode/networking/components/AddIP';
 
-import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { state } from '@/data';
 
