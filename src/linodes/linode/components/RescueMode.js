@@ -38,8 +38,8 @@ export default class RescueMode extends Component {
       disksWithDiskIdOnly[key] = disks[key] ? disks[key].disk_id : null;
     });
 
-    return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => rescueLinode(linode.id, disks)],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => rescueLinode(linode.id, disksWithDiskIdOnly),
     ]));
   }
 
