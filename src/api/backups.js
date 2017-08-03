@@ -36,7 +36,7 @@ export function restoreBackup(linodeId, targetLinode, backupId, overwrite = fals
     const response = await fetch(token,
       `/linode/instances/${linodeId}/backups/${backupId}/restore`, {
         method: 'POST',
-        body: JSON.stringify({ linode: targetLinode, overwrite }),
+        body: JSON.stringify({ linode_id: targetLinode, overwrite }),
       });
     return await response.json();
   };

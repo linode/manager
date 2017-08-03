@@ -38,7 +38,7 @@ describe('linodes/linode/components/RescueMode', () => {
         linode={testLinode}
       />);
 
-    page.setState({ disks: { sda: 12345, sdb: 12346 } });
+    page.setState({ disks: { sda: { disk_id: 12345 }, sdb: { disk_id: 12346 } } });
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
@@ -49,6 +49,6 @@ describe('linodes/linode/components/RescueMode', () => {
           disks: { sda: 12345, sdb: 12346 },
         },
       }),
-    ]);
+    ], 1);
   });
 });
