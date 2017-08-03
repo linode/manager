@@ -30,7 +30,7 @@ describe('profile/components/ChangePassword', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile/password', {
+      ([fn]) => expectRequest(fn, '/profile/password', {
         method: 'POST',
         body: { password: 'thePassword' },
       }),

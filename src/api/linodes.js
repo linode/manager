@@ -16,18 +16,18 @@ function linodeAction(id, action, body, handleRsp) {
   };
 }
 
-export function powerOnLinode(id, config = null) {
-  return linodeAction(id, 'boot', JSON.stringify({ config }), () =>
+export function powerOnLinode(id, configId = null) {
+  return linodeAction(id, 'boot', JSON.stringify({ config_id: configId }), () =>
     actions.one({ status: 'booting' }, id));
 }
 
-export function powerOffLinode(id, config = null) {
-  return linodeAction(id, 'shutdown', JSON.stringify({ config }), () =>
+export function powerOffLinode(id) {
+  return linodeAction(id, 'shutdown', JSON.stringify({}), () =>
     actions.one({ status: 'shutting_down' }, id));
 }
 
-export function rebootLinode(id, config = null) {
-  return linodeAction(id, 'reboot', JSON.stringify({ config }), () =>
+export function rebootLinode(id, configId = null) {
+  return linodeAction(id, 'reboot', JSON.stringify({ config_id: configId }), () =>
     actions.one({ status: 'rebooting' }, id));
 }
 

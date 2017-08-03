@@ -4,7 +4,7 @@ import {
 
 export const config = genConfig({
   singular: 'profile',
-  endpoint: () => '/account/profile',
+  endpoint: () => '/profile',
   supports: [ONE, PUT],
 });
 

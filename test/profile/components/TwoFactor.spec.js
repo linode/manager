@@ -31,7 +31,7 @@ describe('profile/components/TwoFactor', () => {
       ([fn]) => {
         const _dispatch = sinon.stub();
         fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-disable', {
+        return expectRequest(_dispatch.firstCall.args[0], '/profile/tfa-disable', {
           method: 'POST',
         });
       },
@@ -56,7 +56,7 @@ describe('profile/components/TwoFactor', () => {
       ([fn]) => {
         const _dispatch = sinon.stub();
         fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable', {
+        return expectRequest(_dispatch.firstCall.args[0], '/profile/tfa-enable', {
           method: 'POST',
         });
       },
