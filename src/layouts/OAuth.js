@@ -38,13 +38,14 @@ export class OAuthCallbackPage extends Component {
           mode: 'cors',
         });
       } catch (e) {
+        const message = `Failed to exchange temporary code for access token: ${e}`;
         if (ENVIRONMENT === 'development') {
           /* eslint-disable no-alert */
-          alert(e);
+          alert(message);
           /* eslint-enable no-alert */
         } else {
           /* eslint-disable no-console */
-          console.log(e);
+          console.log(message);
           /* eslint-enable no-console */
         }
       }
