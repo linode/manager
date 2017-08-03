@@ -33,7 +33,7 @@ describe('profile/components/TwoFactorModal', () => {
       ([fn]) => {
         const _dispatch = sinon.stub();
         fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable-confirm', {
+        return expectRequest(_dispatch.firstCall.args[0], '/profile/tfa-enable-confirm', {
           method: 'POST',
           body: { tfa_code: 'theCode' },
         });
