@@ -6,11 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.12.2] 2017-08-03
 ### Fixed
-- temporary fix for disk selection changes
+- reset disk slot to null correctly when deselecting a slot #2369
 
 ## [0.12.1] 2017-08-03
 ### Fixed
-- breaking api changes
+- breaking api changes #2354
 
 ## [0.12.0] 2017-08-01
 ### Added
