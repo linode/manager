@@ -144,23 +144,6 @@ export default class EditSOARecord extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup
-            label="Expire Time"
-            description="How long secondary (slave) nameservers wait
-                         before considering DNS data stale if it cannot reach the
-                         master nameserver"
-            id="expireTime"
-            apiKey="expire_sec"
-            errors={errors}
-          >
-            <Select
-              value={expireTime}
-              onChange={this.onChange}
-              id="expireTime"
-              name="expireTime"
-              options={expireOptions}
-            />
-          </ModalFormGroup>
           {type !== 'slave' ? null : (
             <ModalFormGroup
               errors={errors}
