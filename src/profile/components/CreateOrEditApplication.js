@@ -1,15 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
-import { CancelButton } from 'linode-components/buttons';
-import { Form, FormSummary, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
-import { EmitEvent } from 'linode-components/utils';
+import { Input, ModalFormGroup } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { hideModal, showModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
@@ -21,12 +19,9 @@ export default class CreateOrEditApplication extends Component {
     return dispatch(showModal(title, (
       <CreateOrEditApplication
         dispatch={dispatch}
-        title={title}
-        label={client.label}
-        id={client.id}
-        redirect={client.redirect_uri}
-        thumbnail={client.thumbnail}
         close={() => dispatch(hideModal())}
+        title={title}
+        {...client}
       />
     )));
   }
@@ -36,24 +31,23 @@ export default class CreateOrEditApplication extends Component {
 
     this.state = {
       label: props.label || '',
-      redirect: props.redirect || '',
+      redirect: props.redirect_uri || '',
       thumbnail: props.thumbnail || '',
       errors: {},
-      loading: false,
     };
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
-    const { dispatch, submitText, title } = this.props;
+    const { dispatch, id, close } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
     const data = { label, redirect_uri: redirect };
-    const idsPath = [this.props.id].filter(Boolean);
+    const idsPath = [id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => clients[this.props.id ? 'put' : 'post'](data, ...idsPath),
+      () => clients[id ? 'put' : 'post'](data, ...idsPath),
       ({ id }) => {
         if (thumbnail) {
           if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
@@ -69,58 +63,51 @@ export default class CreateOrEditApplication extends Component {
           }) };
         }
       },
-      ({ secret }) => this.props.id ? this.props.close() :
-        renderSecret('client', 'created', secret, this.props.close),
-      () => { EmitEvent('modal:submit', 'Modal', submitText, title); },
+      ({ secret }) => id ? close() :
+        renderSecret('client', 'created', secret, close),
     ]));
   }
 
   render() {
-    const { close, title } = this.props;
-    const { errors, label, redirect, loading } = this.state;
+    const { close, title, id } = this.props;
+    const { errors, label, redirect } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
-          <Input
-            name="label"
-            id="label"
-            placeholder="My client"
-            value={label}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="redirect" label="Redirect URI" apiKey="redirect_uri" errors={errors}>
-          <Input
-            name="redirect"
-            id="redirect"
-            placeholder="http://localhost:3000/oauth/callback"
-            value={redirect}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="thumbnail" label="Thumbnail" apiKey="thumbnail" errors={errors}>
-          <Input
-            name="thumbnail"
-            id="thumbnail"
-            type="file"
-            onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
-          />
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren={this.props.submitDisabledText}
-          >{this.props.submitText}</SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        errors={errors}
+        analytics={{ title, action: id ? 'edit' : 'add' }}
+      >
+        <div>
+          <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
+            <Input
+              name="label"
+              id="label"
+              placeholder="My client"
+              value={label}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="redirect" label="Redirect URI" apiKey="redirect_uri" errors={errors}>
+            <Input
+              name="redirect"
+              id="redirect"
+              placeholder="http://localhost:3000/oauth/callback"
+              value={redirect}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="thumbnail" label="Thumbnail" apiKey="thumbnail" errors={errors}>
+            <Input
+              name="thumbnail"
+              id="thumbnail"
+              type="file"
+              onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }
@@ -129,10 +116,8 @@ CreateOrEditApplication.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  submitText: PropTypes.string,
-  submitDisabledText: PropTypes.string,
   label: PropTypes.string,
   id: PropTypes.string,
-  redirect: PropTypes.string,
+  redirect_uri: PropTypes.string,
   thumbnail: PropTypes.string,
 };

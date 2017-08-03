@@ -3,7 +3,6 @@ import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
-import { EmitEvent } from 'linode-components/utils';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
@@ -12,8 +11,9 @@ import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import Polling from '~/api/polling';
 import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
-import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
-import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
+
+import ConfigSelectModalBody from './ConfigSelectModalBody';
+import { launchWeblishConsole } from './WeblishLaunch';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -132,17 +132,15 @@ export default class StatusDropdown extends Component {
   confirmAction = (name, onConfirm) => {
     const { linode, dispatch } = this.props;
 
-    return dispatch(showModal(`Confirm ${name}`, (
+    const title = `Confirm ${name}`;
+    return dispatch(showModal(title, (
       <ConfirmModalBody
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${name}`);
+        onCancel={() => dispatch(hideModal())}
+        onSubmit={() => {
+          dispatch(onConfirm());
           dispatch(hideModal());
         }}
-        onOk={() => {
-          EmitEvent('modal:submit', 'Modal', name, `Confirm ${name}`);
-          onConfirm();
-          dispatch(hideModal());
-        }}
+        analytics={{ title }}
       >
         Are you sure you want to {name.toLowerCase()} <strong>{linode.label}</strong>?
       </ConfirmModalBody>
@@ -171,24 +169,20 @@ export default class StatusDropdown extends Component {
   }
 
   rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () =>
-    this.props.dispatch(powerOffLinode(this.props.linode.id)))
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
   powerOnLinode = () => this.selectConfig(powerOnLinode)
   deleteLinode = () => {
     const { linode, dispatch } = this.props;
 
     dispatch(showModal('Delete Linode', (
       <DeleteModalBody
-        onOk={async function () {
+        onSubmit={async function () {
           await dispatch(apiLinodes.delete(linode.id));
-          EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
           await dispatch(push('/'));
         }}
         items={[linode.label]}
-        onCancel={() => {
-          Event('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
-          dispatch(hideModal());
-        }}
+        typeOfItem="Linode"
+        onCancel={() => dispatch(hideModal())}
       />
     )));
   }
@@ -221,7 +215,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown groups={groups} dropdownIcon="fa-cog" />
+        <Dropdown groups={groups} dropdownIcon="fa-cog" analytics={{ title: 'Linode actions' }} />
         <div className="StatusDropdown-container">
           <div
             style={{ width: progressWidth }}

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
@@ -19,12 +19,10 @@ import {
   IPAddressCell,
 } from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
-import { EmitEvent } from 'linode-components/utils';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { nodebalancers as api } from '~/api';
 import { transform } from '~/api/util';
 
@@ -47,8 +45,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('NodeBalancers'));
+    dispatch(setAnalytics(['nodebalancers']));
   }
 
   deleteNodeBalancers(nodebalancers) {
@@ -58,18 +56,14 @@ export class IndexPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
-          EmitEvent('modal:submit', 'Modal', 'delete', title);
           dispatch(hideModal());
         }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
+        onCancel={() => dispatch(hideModal())}
         items={nodebalancersArr.map(n => n.label)}
         typeOfItem="NodeBalancers"
       />
@@ -142,10 +136,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">NodeBalancers</h1>
-            <Link to="/nodebalancers/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton to="/nodebalancers/create" className="float-sm-right">
               Add a NodeBalancer
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">

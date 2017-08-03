@@ -40,7 +40,10 @@ export class NotificationsPage extends Component {
     return (
       <div>
         <Card header={<CardHeader title="Change email settings" />}>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Notifications Settings' }}
+          >
             <p>Email notifications are currently {prefix}ed.</p>
             <SubmitButton
               disabled={loading}

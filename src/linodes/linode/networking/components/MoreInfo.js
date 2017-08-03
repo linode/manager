@@ -1,23 +1,27 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { ModalFormGroup, Input } from 'linode-components/forms';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { IPV4_DNS_RESOLVERS, IPV6_DNS_RESOLVERS } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
 
 
 export default class MoreInfo extends Component {
+  static title = 'Configure Static Networking'
+
   static trigger(dispatch, ip) {
-    return dispatch(showModal('Configuring Static Networking', (
-      <ConfirmModalBody
+    return dispatch(showModal(MoreInfo.title, (
+      <FormModalBody
+        onSubmit={() => dispatch(hideModal())}
         noCancel
-        onOk={() => dispatch(hideModal())}
         buttonText="Done"
+        buttonDisableText="Done"
+        analytics={{ title: MoreInfo.title, action: 'info' }}
       >
         <MoreInfo dispatch={dispatch} ip={ip} />
-      </ConfirmModalBody>
+      </FormModalBody>
     )));
   }
 
@@ -38,7 +42,7 @@ export default class MoreInfo extends Component {
   renderDNSResolvers(resolvers) {
     return (
       <ModalFormGroup label="DNS Resolvers">
-        <textarea
+        <Textarea
           className="form-control"
           disabled
           rows={resolvers.length}

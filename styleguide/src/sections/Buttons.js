@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StyleguideSection } from '../components';
-import { Button, LinkButton, PrimaryButton, SecondaryButton } from 'linode-components/buttons';
+import { Button, LinkButton, PrimaryButton } from 'linode-components/buttons';
 import { Dropdown } from 'linode-components/dropdowns';
 
 export default function Buttons() {
@@ -37,15 +37,6 @@ export default function Buttons() {
             </p>
             <p>
               This is for focal points and calls to action. Use sparingly.
-            </p>
-            <br />
-
-            <h3>SecondaryButton</h3>
-            <p>
-              Example: <SecondaryButton>Secondary Button</SecondaryButton>
-            </p>
-            <p>
-              Use secondary buttons for non-primary actions, edit, delete, cancel, etc.
             </p>
             <br />
 

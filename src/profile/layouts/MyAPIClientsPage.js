@@ -45,7 +45,7 @@ export class MyAPIClientsPage extends Component {
 
     return dispatch(showModal('Delete OAuth Client',
       <DeleteModalBody
-        onOk={() => {
+        onSubmit={() => {
           dispatch(hideModal());
           return dispatch(api.delete(client.id));
         }}
@@ -66,7 +66,7 @@ export class MyAPIClientsPage extends Component {
           EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
-        onOk={async () => {
+        onSubmit={async () => {
           const { secret } = await dispatch(resetSecret(client.id));
 
           EmitEvent('modal:submit', 'Modal', 'reset', title);
@@ -97,7 +97,7 @@ export class MyAPIClientsPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = clientsArr.map(function (client) { return client.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));

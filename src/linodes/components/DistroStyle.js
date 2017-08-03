@@ -10,11 +10,12 @@ export default function DistroStyle(props) {
     return (<span>Unknown</span>);
   }
 
+  const src = distroAssets[linode.distribution.vendor.toLowerCase()];
+
   return (
     <span className="distro-style">
       <img
-        src={distroAssets[linode.distribution.vendor]
-          ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
+        src={src}
         alt={linode.distribution.vendor}
         width="15" height="15"
       />

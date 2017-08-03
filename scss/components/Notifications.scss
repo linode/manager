@@ -4,7 +4,7 @@
 
     &--open {
         display: block;
-        position: fixed;
+        position: absolute;
         height: 100%;
         top: $nav-height + $mini-nav-height;
         z-index: 1001;

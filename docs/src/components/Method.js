@@ -15,10 +15,8 @@ export default function Method(props) {
     money,
     oauth,
     params,
-    resource = {},
+    response,
   } = method;
-
-  const { schema = [] } = resource;
 
   // TODO: Break these out if needed
   let methodParams = null;
@@ -34,11 +32,13 @@ export default function Method(props) {
 
   let methodResponse = null;
   let methodResponseExample = null;
-  if (name === 'GET') {
-    methodResponse = (<MethodResponse schema={schema} />);
 
-    if (resource.example) {
-      methodResponseExample = (<MethodResponseExample resource={resource} />);
+  const responseSchema = response.schema;
+  if (responseSchema) {
+    methodResponse = (<MethodResponse schema={responseSchema} />);
+
+    if (response.example) {
+      methodResponseExample = (<MethodResponseExample response={response} />);
     }
   }
 

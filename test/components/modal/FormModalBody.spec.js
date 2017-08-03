@@ -1,10 +1,12 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
-import { ConfirmModalBody } from 'linode-components/modals';
 
-describe('components/modal/ConfirmModalBody', () => {
+import { FormModalBody } from 'linode-components/modals';
+
+
+describe('components/modal/FormModalBody', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -13,58 +15,50 @@ describe('components/modal/ConfirmModalBody', () => {
 
   it('renders customizable content', () => {
     const modal = mount(
-      <ConfirmModalBody
+      <FormModalBody
         buttonText="OK button text"
-        onOk={() => {}}
+        onSubmit={() => {}}
         onCancel={() => {}}
       >
         <span className="bodytext">a child element</span>
-      </ConfirmModalBody>
+      </FormModalBody>
     );
 
-    expect(modal.find('.btn-default').text()).to.equal('OK button text');
+    expect(modal.find('.btn-default').at(1).text()).to.equal('OK button text');
     expect(modal.find('.bodytext').length).to.equal(1);
   });
 
-  it('calls onOk when confirm button is pressed', () => {
-    const onOk = sandbox.spy();
+  it('calls onSubmit when confirm button is pressed', () => {
+    const onSubmit = sandbox.spy();
 
     const modal = mount(
-      <ConfirmModalBody
+      <FormModalBody
         buttonText="OK button text"
-        onOk={onOk}
+        onSubmit={onSubmit}
         onCancel={() => {}}
       >
         Some text
-      </ConfirmModalBody>
+      </FormModalBody>
     );
 
     modal.find('Form').props().onSubmit({ preventDefault() {} });
-    expect(onOk.callCount).to.equal(1);
+    expect(onSubmit.callCount).to.equal(1);
   });
 
   it('calls onCancel when cancel button is pressed', () => {
     const onCancel = sandbox.spy();
 
     const modal = mount(
-      <ConfirmModalBody
+      <FormModalBody
         buttonText="OK button text"
-        onOk={() => {}}
+        onSubmit={() => {}}
         onCancel={onCancel}
       >
         <span className="bodytext">a child element</span>
-      </ConfirmModalBody>
+      </FormModalBody>
     );
 
     modal.find('CancelButton').simulate('click');
     expect(onCancel.callCount).to.equal(1);
-  });
-
-  it('uses a default confirm button text', () => {
-    const modal = mount(
-      <ConfirmModalBody onOk={() => {}} onCancel={() => {}} />
-    );
-
-    expect(modal.find('.btn-default').text()).to.equal('Confirm');
   });
 });

@@ -12,10 +12,10 @@ import {
   FormGroupError,
   FormSummary,
   SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { domains, linodes, nodebalancers, tickets } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -46,8 +46,8 @@ export class CreatePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Open a Ticket'));
+    dispatch(setAnalytics(['tickets', 'create']));
   }
 
   onSubmit = () => {
@@ -68,15 +68,13 @@ export class CreatePage extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderOptionsGroup(label, field, group) {
-    return (
-      <optgroup label={label} key={label}>
-        {group.map(object => (
-          <option key={object.id} value={`${field}:${object.id}`}>
-            {object.label || object.domain}
-          </option>
-         ))}
-      </optgroup>
-    );
+    return {
+      label,
+      options: group.map(object => ({
+        value: `${field}:${object.id}`,
+        label: object.label || object.domain,
+      })),
+    };
   }
 
   render() {
@@ -100,7 +98,10 @@ export class CreatePage extends Component {
           <TicketHelper displayHeader />
         </section>
         <Card>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Open a Ticket', action: 'add' }}
+          >
             <FormGroup className="row" errors={errors} name="summary">
               <label htmlFor="summary" className="col-sm-2 col-form-label">Summary</label>
               <div className="col-sm-10">
@@ -122,7 +123,8 @@ export class CreatePage extends Component {
                   id="regarding"
                   value={regarding}
                   onChange={this.onChange}
-                >{regardingOptions}</Select>
+                  options={regardingOptions}
+                />
                 <FormGroupError errors={errors} name="regarding" inline={false} />
               </div>
             </FormGroup>
@@ -131,7 +133,7 @@ export class CreatePage extends Component {
                 Description
               </label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   className="textarea-md"
                   name="description"
                   id="description"

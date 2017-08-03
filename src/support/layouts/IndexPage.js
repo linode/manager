@@ -3,13 +3,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { TableCell } from 'linode-components/tables/cells';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { tickets } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
@@ -59,8 +59,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Support'));
+    dispatch(setAnalytics(['tickets']));
   }
 
   renderLabelCell = ({ record: ticket }) => {
@@ -156,10 +156,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Support</h1>
-            <Link to="/support/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
-              Open a ticket
-            </Link>
+            <PrimaryButton to="/support/create" className="float-sm-right">
+              Open a Ticket
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">

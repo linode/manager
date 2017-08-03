@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { CreateOrEditApplication } from '~/profile/components';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
 describe('profile/components/CreateOrEditApplication', () => {
@@ -24,16 +24,13 @@ describe('profile/components/CreateOrEditApplication', () => {
         dispatch={dispatch}
         close={close}
         label="My awesome client"
-        redirect="http://example.com"
+        redirect_uri="http://example.com"
         id="1"
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('label', 'My new client');
-    changeInput('redirect', 'http://google.com');
+    changeInput(page, 'label', 'My new client');
+    changeInput(page, 'redirect', 'http://google.com');
 
     await page.props().onSubmit();
 

@@ -10,6 +10,7 @@ import {
   Select,
   Checkbox,
   SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
 import { nodebalancers } from '~/api';
@@ -94,14 +95,23 @@ export default class ConfigForm extends Component {
     this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
-    const { submitText, submitDisabledText } = this.props;
+    const { submitText, submitDisabledText, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
       checkAttempts, sslCert, sslKey, checkPath, checkBody, errors, loading,
     } = this.state;
 
+    const protocolOptions = [
+      { value: 'tcp', label: 'TCP' },
+      { value: 'http', label: 'HTTP' },
+      { value: 'https', label: 'HTTPS' },
+    ];
+
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'NodeBalancer Config Settings', action: config.id ? 'edit' : 'add' }}
+      >
         <FormGroup errors={errors} name="port" className="row">
           <label className="col-sm-2 col-form-label">Port</label>
           <div className="col-sm-10">
@@ -125,11 +135,8 @@ export default class ConfigForm extends Component {
               name="protocol"
               value={protocol}
               onChange={this.onChange}
-            >
-              <option value="tcp">TCP</option>
-              <option value="http">HTTP</option>
-              <option value="https">HTTPS</option>
-            </Select>
+              options={protocolOptions}
+            />
             <FormGroupError errors={errors} name="protocol" />
           </div>
         </FormGroup>
@@ -179,7 +186,7 @@ export default class ConfigForm extends Component {
             <FormGroup errors={errors} name="ssl_cert" className="row">
               <label htmlFor="sslCert" className="col-sm-2 col-form-label">SSL Certificate</label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   id="sslCert"
                   name="sslCert"
                   placeholder="SSL certificate (including chained intermediate
@@ -193,7 +200,7 @@ export default class ConfigForm extends Component {
             <FormGroup errors={errors} name="ssl_key" className="row">
               <label htmlFor="sslKey" className="col-sm-2 col-form-label">Private Key</label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   id="sslKey"
                   name="sslKey"
                   placeholder="Unpassphrassed SSL private key"

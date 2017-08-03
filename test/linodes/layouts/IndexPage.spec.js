@@ -24,7 +24,7 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
-        linodes={linodes}
+        linodes={linodes.linodes}
       />
     );
 
@@ -37,7 +37,7 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1234: true }}
-        linodes={linodes}
+        linodes={linodes.linodes}
       />);
 
     dispatch.reset();

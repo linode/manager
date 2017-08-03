@@ -9,14 +9,14 @@ import {
   FormGroupError,
   FormSummary,
   SubmitButton,
+  Textarea,
   Input,
 } from 'linode-components/forms';
 
 import { tickets } from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './IndexPage';
@@ -48,8 +48,8 @@ export class TicketPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle(this.props.ticket.summary));
+    dispatch(setAnalytics(['tickets', 'ticket']));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -87,10 +87,13 @@ export class TicketPage extends Component {
 
     return (
       <Card>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Ticket Response', action: 'add' }}
+        >
           <FormGroup>
             <label htmlFor="reply" className="row-label">Write a reply:</label>
-            <textarea
+            <Textarea
               name="reply"
               id="reply"
               className="textarea-lg"

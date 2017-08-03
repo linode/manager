@@ -10,10 +10,21 @@
         width: 100%;
 
         &-first {
-            @extend .text-muted;
+            &:not(#running) {
+                // important is needed to override some button hover I can't find
+                color: $lightest-black !important;
+            }
+
+            &#running {
+                color: $green;
+            }
 
             background: $white;
             width: calc(100% - #{$form-field-height});
+
+            &#running {
+                color: $green !important;
+            }
 
             &:hover,
             &:active,

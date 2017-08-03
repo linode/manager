@@ -56,7 +56,10 @@ export class ResizePage extends Component {
 
     return (
       <Card header={<CardHeader title="Resize" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Resize Linode' }}
+        >
           <FormGroup>
             <Plan
               types={types.types}

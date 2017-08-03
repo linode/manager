@@ -78,7 +78,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     );
 
     dispatch.reset();
-    page.find('#add-an-ip-address').props().onClick();
+    page.find('PrimaryButton').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });

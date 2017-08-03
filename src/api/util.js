@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import * as api from './';
+import { fullyLoadedObject } from './apiActionReducerGenerator';
 import { reduceErrors } from './errors';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
@@ -99,7 +100,8 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
       state.api[collection][collection],
       props.params[paramField],
       labelName);
-    return { [resultField]: object };
+
+    return { [resultField]: fullyLoadedObject(object) ? object : null };
   };
 }
 
@@ -135,7 +137,7 @@ export function transform(objects, options = {}) {
   const {
     filterBy,
     filterOn = 'label',
-    sortBy = o => moment(o.created),
+    sortBy = o => o.label.toLowerCase(),
     groupOn = 'group',
   } = options;
 

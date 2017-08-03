@@ -44,7 +44,11 @@ export default class RescueMode extends Component {
 
     return (
       <Card header={<CardHeader title="Rescue mode" />} className="full-height">
-        <Form className="RescueMode-form" onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          title="Rescue mode"
+          className="RescueMode-form"
+        >
           {AVAILABLE_DISK_SLOTS.map((slot, i) => slot === 'sdh' ? null : (
             <DiskSelect
               key={i}

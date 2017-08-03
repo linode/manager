@@ -71,7 +71,7 @@ export class APITokensPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = tokensArr.map(function (token) { return token.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
@@ -83,7 +83,7 @@ export class APITokensPage extends Component {
           EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
-        items={tokensArr.map(n => n.label)}
+        items={tokensArr.map(n => this.tokenLabel(n))}
         typeOfItem="Tokens"
         deleteAction="revoke"
         deleteActionPending="revoking"
@@ -102,6 +102,7 @@ export class APITokensPage extends Component {
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
       filterOn: this.tokenLabel,
+      sortBy: t => this.tokenLabel(t).toLowerCase(),
       groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
     });
 

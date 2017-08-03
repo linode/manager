@@ -8,13 +8,13 @@ description: >
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
 endpoints:
   /domains:
-    resource: domain
     authenticated: true
-    paginationKey: domains
     description: >
       Manage the collection of Domains your account may access.
     methods:
       GET:
+        response: domain
+        paginationKey: domains
         oauth: domains:view
         description: >
           Returns a list of <a href="#object-domain">Domains</a>.
@@ -116,9 +116,9 @@ endpoints:
             TODO
   /domains/:id:
     authenticated: true
-    resource: domain
     methods:
       GET:
+        response: domain
         oauth: domains:view
         description: >
           Returns information for the <a href="#object-domain">Domain</a>
@@ -169,13 +169,13 @@ endpoints:
             import linode
             TODO
   /domains/:id/records:
-    resource: domainrecords
-    paginationKey: records
     authenticated: true
     description: >
       Manage the collection of Domain Records your account may access.
     methods:
       GET:
+        response: domainrecords
+        paginationKey: records
         oauth: domains:view
         description: >
           Returns a list of <a href="#object-domainrecord">Domain Records</a>.
@@ -258,9 +258,9 @@ endpoints:
             TODO
   /domains/:id/records/:id:
     authenticated: true
-    resource: domainrecord
     methods:
       GET:
+        response: domainrecord
         oauth: domains:view
         description: >
           Returns information for the <a href="#object-domainrecord">Domain

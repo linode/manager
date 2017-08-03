@@ -6,9 +6,9 @@ import { Tabs } from 'linode-components/tabs';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
 
+import { setAnalytics, setTitle } from '~/actions';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { setTitle } from '~/actions/title';
 import { GroupLabel } from '~/components';
 
 
@@ -21,6 +21,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, nodebalancer } = this.props;
     dispatch(setTitle(nodebalancer.label));
+    dispatch(setAnalytics(['nodebalancers', 'nodebalancer']));
   }
 
   render() {

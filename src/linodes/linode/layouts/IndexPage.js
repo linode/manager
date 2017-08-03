@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-
 import { Link } from 'react-router';
+
 import { Tabs } from 'linode-components/tabs';
 
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setTitle } from '~/actions';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { GroupLabel } from '~/components';
@@ -30,6 +30,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, linode } = this.props;
     dispatch(setTitle(linode.label));
+    dispatch(setAnalytics(['linodes', 'linode']));
   }
 
   render() {

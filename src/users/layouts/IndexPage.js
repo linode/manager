@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+
+import { PrimaryButton } from 'linode-components/buttons';
 
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
@@ -15,12 +16,10 @@ import {
   LinkCell,
   ThumbnailCell,
 } from 'linode-components/tables/cells';
-import { EmitEvent } from 'linode-components/utils';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { users as api } from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
@@ -49,8 +48,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Users'));
+    dispatch(setAnalytics(['users']));
   }
 
   deleteUsers = (users) => {
@@ -60,18 +59,14 @@ export class IndexPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = usersArr.map(user => user.username);
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
-          EmitEvent('modal:submit', 'Modal', 'delete', title);
           dispatch(hideModal());
         }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
+        onCancel={() => dispatch(hideModal())}
         items={usersArr.map(n => n.username)}
         typeOfItem="Users"
       />
@@ -85,6 +80,7 @@ export class IndexPage extends Component {
     const { sorted: sortedUsers } = transform(users, {
       filterOn: 'username',
       filterBy: filter,
+      sortBy: u => u.username.toLowerCase(),
     });
 
     return (
@@ -160,10 +156,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Users</h1>
-            <Link to="/users/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton to="/users/create" className="float-sm-right">
               Add a User
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">

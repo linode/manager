@@ -12,7 +12,7 @@ form {
 }
 
 .col-form-label {
-  color: $light-black; // $lightest-black
+  color: $light-black;
   text-align: right;
 }
 
@@ -37,45 +37,66 @@ input[type="radio"]:hover {
     cursor: pointer;
 }
 
-select.form-control:not([size]):not([multiple]) {
-  height: $form-field-height;
+.Select {
+  min-height: $form-field-height;
 }
 
 input.form-control,
-select.form-control {
+.Select {
     width: 225px;
     max-width: 100%;
 }
 
 .input-md {
     input.form-control,
-    select.form-control.input-md {
-        width: 275px;
+    .Select {
+        max-width: 100%;
+        width: 350px;
     }
 }
 
 .input-lg {
     input.form-control,
-    select.form-control {
-        min-width: 600px;
+    .Select {
+        width: 600px;
+        max-width: 100%;
+    }
+}
+
+.col-md-4,
+.col-md-3,
+.col-lg-4,
+.col-lg-3  {
+    .Input,
+    .Select,
+    .Textarea {
+        display: block;
+    }
+
+    input.form-control,
+    select,
+    textarea.form-control {
+        width: 100%;
     }
 }
 
 input[type="number"].form-control {
-  width: 125px;
+    width: 125px;
+    max-width: 100%;
 }
 
-textarea {
+textarea.form-control {
     border: $border;
     max-width: 100%;
     min-height: 100px;
-    min-width: 400px;
+    width: 400px;
     outline: none;
     padding: $form-field-padding;
     resize: both;
 
     &.textarea-md {
-        min-width: 600px;
+        max-width: 100%;
+        width: 600px;
         min-height: 200px;
     }
 

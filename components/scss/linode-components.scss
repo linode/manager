@@ -106,7 +106,7 @@ section {
 
 .text-muted {
     // Bootstrap sets !important here by default;
-    color: $lightest-black !important;
+    color: $light-black !important;
 }
 
 .full-height {
@@ -126,21 +126,6 @@ section {
     }
 }
 
-footer {
-    @extend .font-small;
-
-    padding: 15px 0;
-
-    span, a {
-        color: $lightest-black;
-        padding: 0 10px;
-    }
-
-    a {
-        text-decoration: underline;
-    }
-}
-
 .Error {
     text-align: center;
 
@@ -152,6 +137,10 @@ footer {
     &-body {
         margin-top: 10px;
     }
+}
+
+.ComingSoon {
+    margin-top: 15px;
 }
 
 .sub-header {
