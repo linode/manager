@@ -30,14 +30,10 @@ describe('profile/components/TwoFactorModal', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => {
-        const _dispatch = sinon.stub();
-        fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable-confirm', {
-          method: 'POST',
-          body: { tfa_code: 'theCode' },
-        });
-      },
+      ([fn]) => expectRequest(fn, '/account/profile/tfa-enable-confirm', {
+        method: 'POST',
+        body: { tfa_code: 'theCode' },
+      }),
     ], 2, [{ secret: '' }]);
   });
 });

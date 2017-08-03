@@ -28,13 +28,9 @@ describe('profile/components/TwoFactor', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => {
-        const _dispatch = sinon.stub();
-        fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-disable', {
-          method: 'POST',
-        });
-      },
+      ([fn]) => expectRequest(fn, '/account/profile/tfa-disable', {
+        method: 'POST',
+      }),
     ], 1);
   });
 
@@ -53,13 +49,9 @@ describe('profile/components/TwoFactor', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => {
-        const _dispatch = sinon.stub();
-        fn(_dispatch, () => ({ api: { profile: {} } }));
-        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable', {
-          method: 'POST',
-        });
-      },
+      ([fn]) => expectRequest(fn, '/account/profile/tfa-enable', {
+        method: 'POST',
+      }),
     ], 1, [{ secret: '' }]);
   });
 });

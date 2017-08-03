@@ -79,16 +79,16 @@ export default function BackupDetails(props) {
         <div className="col-sm-9" id="space">{disks.length === 0 ? vacant : `${space}MB`}</div>
       </FormGroup>
       {backup.type === 'snapshot' && backup.status !== 'pending' ? (
-       <FormGroup className="row">
-         <div className="offset-sm-3 col-sm-9">
-           <Form
-             onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
-             analytics={{ title: 'Take Snapshot', action: 'add' }}
-           >
-             <SubmitButton disabledChildren="Taking snapshot">Take snapshot</SubmitButton>
-           </Form>
-         </div>
-       </FormGroup>) : null}
+        <FormGroup className="row">
+          <div className="offset-sm-3 col-sm-9">
+            <Form
+              onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
+              analytics={{ title: 'Take Snapshot', action: 'add' }}
+            >
+              <SubmitButton disabledChildren="Taking snapshot">Take snapshot</SubmitButton>
+            </Form>
+          </div>
+        </FormGroup>) : null}
     </Card>
   );
 }
