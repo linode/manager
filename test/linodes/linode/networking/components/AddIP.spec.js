@@ -28,7 +28,6 @@ describe('linodes/linode/networking/components/AddIP', () => {
       />
     );
 
-    changeInput(page, 'type', 'private', { displayName: 'Radio', nameOnly: true });
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });
@@ -47,7 +46,7 @@ describe('linodes/linode/networking/components/AddIP', () => {
           `/linode/instances/${testLinode.id}/ips`,
           {
             method: 'POST',
-            body: { type: 'private' },
+            body: { type: 'public' },
           });
       },
     ]);
