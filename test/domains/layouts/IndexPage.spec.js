@@ -38,6 +38,8 @@ describe('domains/layouts/IndexPage', () => {
       .to.equal('example.com');
     expect(firstZone.find('td').at(2).text())
       .to.equal('Master');
+    expect(firstZone.find('td').at(3).text())
+      .to.equal('Active');
   });
 
   it('shows the delete modal when delete is pressed', () => {
