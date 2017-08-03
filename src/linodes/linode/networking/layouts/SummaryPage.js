@@ -126,6 +126,37 @@ export class SummaryPage extends Component {
     );
   }
 
+  renderAddButton() {
+    const { dispatch, linode } = this.props;
+
+    const addIP = () => AddIP.trigger(dispatch, linode);
+
+    const privateIPv4s = Object.values(linode._ips).filter(
+      ip => ip.version === 'ipv4' && ip.type === 'private');
+    if (!privateIPv4s.length) {
+      return (
+        <PrimaryButton
+          className="float-sm-right"
+          buttonClass="btn-default"
+          onClick={addIP}
+        >
+          Add an IP Address
+        </PrimaryButton>
+      );
+    }
+
+    return (
+      <PrimaryButton
+        className="float-sm-right"
+        buttonClass="btn-default"
+        onClick={this.addPrivateIP}
+        options={[{ elements: [{ name: 'Add Public IP Address', action: addIP }] }]}
+      >
+        Add a Private IP Address
+      </PrimaryButton>
+    )
+  }
+
   render() {
     const { dispatch, linode } = this.props;
 
@@ -153,13 +184,7 @@ export class SummaryPage extends Component {
       <div>
         <header className="NavigationHeader clearfix">
           {/* TODO: Add rdnslookup when API supports it */}
-          <PrimaryButton
-            className="float-sm-right"
-            buttonClass="btn-default"
-            onClick={() => AddIP.trigger(dispatch, linode)}
-          >
-            Add an IP Address
-          </PrimaryButton>
+          {this.renderAddButton()}
         </header>
         <List>
           <ListBody>
