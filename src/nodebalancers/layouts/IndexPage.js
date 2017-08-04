@@ -140,7 +140,7 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">NodeBalancers</h1>
-            <PrimaryButton onClick={addNodeBalancer} className="float-sm-right">
+            <PrimaryButton onClick={addNodeBalancer} className="float-right">
               Add a NodeBalancer
             </PrimaryButton>
           </div>
