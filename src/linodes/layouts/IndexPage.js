@@ -215,7 +215,7 @@ export class IndexPage extends Component {
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Linodes</h1>
             <PrimaryButton
-              className="float-sm-right"
+              className="float-right"
               onClick={addLinode}
               options={addOptions}
             >
