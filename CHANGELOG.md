@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.12.2] 2017-08-03
+## [0.12.2] 2017-08-04
 ### Fixed
 - reset disk slot to null correctly when deselecting a slot #2369
 
