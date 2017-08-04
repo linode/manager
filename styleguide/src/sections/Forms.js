@@ -395,7 +395,7 @@ export default function Forms() {
                   <FormGroup className="row">
                     <label className="col-sm-3 col-form-label">Textarea</label>
                     <div className="col-sm-9">
-                      <textarea placeholder="Notes"></textarea>
+                      <Textarea placeholder="Notes"></Textarea>
                     </div>
                   </FormGroup>
                 </Form>

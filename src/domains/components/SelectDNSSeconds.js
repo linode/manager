@@ -50,11 +50,17 @@ export default function SelectDNSSeconds(props) {
 
   const actualValue = value || defaultSeconds || ONE_DAY; // Takes care of if defaultSeconds is 0.
 
+  const options = Object.keys(DNS_SECONDS_PRETTY).map((sec) =>
+    ({ value: sec.toString(), label: formatDNSSeconds(sec, defaultSeconds) }));
+
   return (
-    <Select value={actualValue.toString()} onChange={onChange} id={id} name={name}>
-      {Object.keys(DNS_SECONDS_PRETTY).map((sec, i) =>
-        <option key={i} value={sec.toString()}>{formatDNSSeconds(sec, defaultSeconds)}</option>)}
-    </Select>
+    <Select
+      value={actualValue.toString()}
+      onChange={onChange}
+      id={id}
+      name={name}
+      options={options}
+    />
   );
 }
 

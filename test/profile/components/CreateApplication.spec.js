@@ -7,7 +7,12 @@ import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { CreateOrEditApplication } from '~/profile/components';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
+} from '@/common';
 import { state } from '@/data';
 
 
@@ -28,11 +33,8 @@ describe('profile/components/CreateOrEditApplication', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('label', 'My new client');
-    changeInput('redirect', 'http://example.com');
+    changeInput(page, 'label', 'My new client');
+    changeInput(page, 'redirect', 'http://example.com');
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB - 0.5) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 
@@ -72,11 +74,8 @@ describe('profile/components/CreateOrEditApplication', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('label', 'My new client');
-    changeInput('redirect', 'http://example.com');
+    changeInput(page, 'label', 'My new client');
+    changeInput(page, 'redirect', 'http://example.com');
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB + 1) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 

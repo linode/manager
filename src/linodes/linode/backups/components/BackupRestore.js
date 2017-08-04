@@ -66,18 +66,17 @@ export default class BackupRestore extends Component {
     const { backup, linode, linodes } = this.props;
     const { errors, loading, target, overwrite } = this.state;
 
-    if (backup.status === 'pending') {
+    if (!backup || backup.status === 'pending') {
       return null;
     }
 
     const otherLinodes = Object.values(linodes.linodes).filter(
       l => l.id !== linode.id && l.region.id === linode.region.id);
 
-    const restoreTo = otherLinodes.map(
-      l => <option value={l.id} key={l.id}>{l.label}</option>);
-
-    restoreTo.splice(0, 0,
-      <option value={linode.id} key={linode.id}>This Linode</option>);
+    const restoreTo = [
+      { value: linode.id, label: 'This Linode' },
+      ...otherLinodes.map(l => ({ value: l.id, label: l.label })),
+    ];
 
     const targetLabel = target === linode.id ? 'This Linode' : linodes.linodes[target].label;
 
@@ -96,7 +95,8 @@ export default class BackupRestore extends Component {
                 value={target}
                 name="target"
                 onChange={this.onChange}
-              >{restoreTo}</Select>
+                options={restoreTo}
+              />
               <div>
                 <small className="text-muted">
                   You can only restore to Linodes within the same region.

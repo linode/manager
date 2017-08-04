@@ -15,6 +15,10 @@
         @extend .btn-default;
 
         text-align: left;
+
+        .fa {
+            color: $light-black;
+        }
     }
 
     &-item {
@@ -34,10 +38,6 @@
         height: $form-field-height;
         text-align: center;
 
-        .fa {
-            color: $light-black;
-        }
-
         // Hide default Bootstrap arrow
         ::after {
             display: none;
@@ -51,7 +51,7 @@
         width: 200px;
         text-align: right;
         position: absolute;
-        top: $form-field-height - 1px;
+        top: calc(100% + 1px);
         z-index: 1000;
 
         left: 0;

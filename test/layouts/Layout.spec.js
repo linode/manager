@@ -51,9 +51,9 @@ describe('layouts/Layout', () => {
 
   it('renders a footer', () => {
     const component = shallow(makeLayout());
-    const sourceLink = component.find('footer a');
-    expect(sourceLink.text()).to.equal('Page Source');
-    expect(sourceLink.props().href)
+    const sourceLink = component.find('footer').find('ExternalLink');
+    expect(sourceLink.props().children).to.equal('Page Source');
+    expect(sourceLink.props().to)
       .to.equal('https://github.com/linode/manager/blob/master/foobar.html');
   });
 

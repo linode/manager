@@ -133,7 +133,7 @@ export class IPTransferPage extends Component {
                   name="selectedOtherLinode"
                   onChange={({ target: { name, value } }) =>
                     this.setState({ [name]: value, checkedB: {} })}
-                  options={linodesInRegion.map(linode => ({ ...linode, value: linode.id }))}
+                  options={linodesInRegion.map(({ label, id }) => ({ label, value: id }))}
                 />
               </div>
             </FormGroup>

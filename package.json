@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.11.6",
+  "version": "0.12.1",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -113,6 +113,7 @@
     "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
+    "react-ace": "^5.1.1",
     "react-dom": "^15.1.0",
     "react-guard": "^0.4.0",
     "react-redux": "^4.0.6",

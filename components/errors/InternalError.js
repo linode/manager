@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { ExternalLink } from '../buttons';
 import { FormModalBody } from '../modals';
 
 
@@ -19,7 +20,7 @@ export default function InternalError(props) {
         <p>
           <small>
             If you think you've discovered a bug in the application and would like to report
-            it, check <a href="https://github.com/linode/manager/blob/master/CONTRIBUTING.md#reporting-bugs" target="_blank" rel="nofollow noopener noreferrer">here</a> for instructions.
+            it, check <ExternalLink to="https://github.com/linode/manager/blob/master/CONTRIBUTING.md#reporting-bugs">here</ExternalLink> for instructions.
           </small>
         </p>
       </div>

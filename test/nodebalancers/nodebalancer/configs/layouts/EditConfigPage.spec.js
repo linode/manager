@@ -3,10 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import {
-  expectDispatchOrStoreErrors,
-  expectRequest,
-} from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import { EditConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/EditConfigPage';
 
@@ -30,26 +27,17 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).props().onChange({
-        target: {
-          value,
-          checked: value,
-          name: id,
-        },
-      });
-
-    changeInput('port', 82);
-    changeInput('protocol', 'http');
-    changeInput('algorithm', 'roundrobin');
-    changeInput('stickiness', 'none');
-    changeInput('check', 'http_body');
-    changeInput('checkPath', '/');
-    changeInput('checkBody', 'foo');
-    changeInput('checkPassive', true);
-    changeInput('checkInterval', 0);
-    changeInput('checkTimeout', 30);
-    changeInput('checkAttempts', 3);
+    changeInput(page, 'port', 82);
+    changeInput(page, 'protocol', 'http');
+    changeInput(page, 'algorithm', 'roundrobin');
+    changeInput(page, 'stickiness', 'none');
+    changeInput(page, 'check', 'http_body');
+    changeInput(page, 'checkPath', '/');
+    changeInput(page, 'checkBody', 'foo');
+    changeInput(page, 'checkPassive', true);
+    changeInput(page, 'checkInterval', 0);
+    changeInput(page, 'checkTimeout', 30);
+    changeInput(page, 'checkAttempts', 3);
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -85,26 +73,17 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).props().onChange({
-        target: {
-          value,
-          checked: value,
-          name: id,
-        },
-      });
-
-    changeInput('port', 82);
-    changeInput('protocol', 'https');
-    changeInput('algorithm', 'roundrobin');
-    changeInput('stickiness', 'none');
-    changeInput('check', 'none');
-    changeInput('checkPassive', true);
-    changeInput('checkInterval', 0);
-    changeInput('checkTimeout', 30);
-    changeInput('checkAttempts', 3);
-    changeInput('sslCert', 'Some ssl cert');
-    changeInput('sslKey', 'Some ssl key');
+    changeInput(page, 'port', 82);
+    changeInput(page, 'protocol', 'https');
+    changeInput(page, 'algorithm', 'roundrobin');
+    changeInput(page, 'stickiness', 'none');
+    changeInput(page, 'check', 'none');
+    changeInput(page, 'checkPassive', true);
+    changeInput(page, 'checkInterval', 0);
+    changeInput(page, 'checkTimeout', 30);
+    changeInput(page, 'checkAttempts', 3);
+    changeInput(page, 'sslCert', 'Some ssl cert');
+    changeInput(page, 'sslKey', 'Some ssl key');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

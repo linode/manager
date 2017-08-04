@@ -10,7 +10,7 @@ export default function PasswordInput(props) {
   const strength = zxcvbn(props.value);
 
   return (
-    <div className="PasswordInput float-sm-left">
+    <div className={`PasswordInput ${props.className}`}>
       <Input
         value={props.value}
         name={props.name}
@@ -45,9 +45,11 @@ PasswordInput.propTypes = {
   passwordType: PropTypes.string,
   disabled: PropTypes.bool,
   id: PropTypes.string,
+  className: PropTypes.string,
 };
 
 PasswordInput.defaultProps = {
   passwordType: 'offline_fast_hashing_1e10_per_second',
   disabled: false,
+  className: '',
 };

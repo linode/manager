@@ -72,18 +72,24 @@ a, a.force-link:not([href]):not([tabindex]) {
     &:hover, &:focus, &:active {
         text-decoration: underline;
     }
+
+    .fa-external-link {
+        padding-left: 5px;
+        position: relative;
+        top: 1px;
+    }
 }
 
 a > i.fa {
-  color: $blue;
+    color: $blue;
 }
 
 label {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 p {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 hr {
@@ -93,11 +99,11 @@ hr {
 }
 
 small {
-  @extend .font-small;
+    @extend .font-small;
 }
 
 strong {
-  font-weight: 500; // toned down from 'bolder'
+    font-weight: 500; // toned down from 'bolder'
 }
 
 section {
@@ -126,21 +132,6 @@ section {
     }
 }
 
-footer {
-    @extend .font-small;
-
-    padding: 15px 0;
-
-    span, a {
-        color: $lightest-black;
-        padding: 0 10px;
-    }
-
-    a {
-        text-decoration: underline;
-    }
-}
-
 .Error {
     text-align: center;
 
@@ -152,6 +143,10 @@ footer {
     &-body {
         margin-top: 10px;
     }
+}
+
+.ComingSoon {
+    margin-top: 15px;
 }
 
 .sub-header {

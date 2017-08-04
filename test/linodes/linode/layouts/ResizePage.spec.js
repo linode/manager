@@ -39,7 +39,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
       ([fn]) => expectRequest(fn, '/linode/instances/1234/resize', {
         method: 'POST',
         body: {
-          type: 'linode1024.5',
+          type: 'g5-nanode-1',
         },
       }),
     ]);

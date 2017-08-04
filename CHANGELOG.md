@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.12.1] 2017-08-03
+### Fixed
+- breaking api changes
+
+## [0.12.0] 2017-08-01
+### Added
+- added linode filtering #2271
+- added user filtering #2282
+- added nodebalancer filtering #2273
+- added domains filtering #2272
+- added support link to main header #2296
+- enabled external source map #2314
+- added stackscript list and delete support #2317
+- moar contrast #2292
+- added subheader for navigation to stackscripts, volumes, lists #2321
+- added support for adding and editing stackscripts #2322
+### Changed
+- switched to webpack 2.6.0 #2278
+- fetch api pages asynchronously #2274
+- users view is a list #2282
+- regrouped tokens and PATs and moved out oauth tokens #2284
+- use source-map instead of module-eval-source-map for better errors #2214
+- expire token automatically rather than after attempting a request #2295
+- refactor and use modal body components more consistently #2189
+- default to sort by label #2360
+### Fixed
+- set min zero requirements on relevant nodebalancer config fields #2313
+- render correct tooltip data when switching between units #2315
+- allow shutdown from Linode status dropdown #2340
+
 ## [0.11.6] 2017-07-21
 ### Added
 - response_type to OAuth flow to conform to RFC 6749

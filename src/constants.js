@@ -21,17 +21,18 @@ export const LinodeStates = {
     'deleting',
     'rebuilding',
     'restoring',
+    'cloning',
   ],
 };
 
-export const regionMap = {
+export const REGION_MAP = {
   'North America': ['us-east-1a', 'us-south-1a', 'us-west-1a', 'us-southeast-1a'],
   Europe: ['eu-central-1a', 'eu-west-1a'],
   Asia: ['ap-northeast-1a', 'ap-south-1a', 'ap-northeast-1b'],
 };
 
 // Still necessary for older DNS lookups.
-export const DATACENTERS = {
+export const ZONES = {
   'us-east-1a': 'newark',
   'us-south-1a': 'dallas',
   'us-west-1a': 'fremont',
@@ -43,7 +44,7 @@ export const DATACENTERS = {
   'ap-south-1a': 'singapore',
 };
 
-export const UNAVAILABLE_DATACENTERS = ['ap-northeast-1a'];
+export const UNAVAILABLE_ZONES = ['ap-northeast-1a'];
 
 export const LinodeStatesReadable = {
   shutting_down: 'Powering Off',
@@ -242,3 +243,9 @@ export const IPV6_DNS_RESOLVERS = [
 ];
 
 export const MONTHLY_IP_COST = 1;
+
+export const DISTRIBUTION_DISPLAY_ORDER = [
+  'ubuntu', 'debian', 'centos', 'fedora', 'arch', 'opensuse', 'gentoo', 'slackware',
+];
+
+export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';

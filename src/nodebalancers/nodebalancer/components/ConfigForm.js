@@ -10,6 +10,7 @@ import {
   Select,
   Checkbox,
   SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
 import { nodebalancers } from '~/api';
@@ -100,6 +101,12 @@ export default class ConfigForm extends Component {
       checkAttempts, sslCert, sslKey, checkPath, checkBody, errors, loading,
     } = this.state;
 
+    const protocolOptions = [
+      { value: 'tcp', label: 'TCP' },
+      { value: 'http', label: 'HTTP' },
+      { value: 'https', label: 'HTTPS' },
+    ];
+
     return (
       <Form
         onSubmit={this.onSubmit}
@@ -128,11 +135,8 @@ export default class ConfigForm extends Component {
               name="protocol"
               value={protocol}
               onChange={this.onChange}
-            >
-              <option value="tcp">TCP</option>
-              <option value="http">HTTP</option>
-              <option value="https">HTTPS</option>
-            </Select>
+              options={protocolOptions}
+            />
             <FormGroupError errors={errors} name="protocol" />
           </div>
         </FormGroup>
@@ -182,7 +186,7 @@ export default class ConfigForm extends Component {
             <FormGroup errors={errors} name="ssl_cert" className="row">
               <label htmlFor="sslCert" className="col-sm-2 col-form-label">SSL Certificate</label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   id="sslCert"
                   name="sslCert"
                   placeholder="SSL certificate (including chained intermediate
@@ -196,10 +200,10 @@ export default class ConfigForm extends Component {
             <FormGroup errors={errors} name="ssl_key" className="row">
               <label htmlFor="sslKey" className="col-sm-2 col-form-label">Private Key</label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   id="sslKey"
                   name="sslKey"
-                  placeholder="Unpassphrassed SSL private key"
+                  placeholder="Unpassphrased SSL private key"
                   value={sslKey}
                   onChange={this.onChange}
                 />
@@ -310,7 +314,7 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="check_attempts" />
             <div>
               <small className="text-muted">
-                Take this node out of rotation after this number of failed health checks
+                Take the node out of rotation after this number of failed health checks.
               </small>
             </div>
           </div>

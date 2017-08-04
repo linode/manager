@@ -15,8 +15,3 @@
         padding-right: 10px;
     }
 }
-
-.btn-cancel + .btn-cancel {
-    @extend .font-small;
-    padding-left: 15px !important;
-}

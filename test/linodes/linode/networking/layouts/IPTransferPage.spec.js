@@ -53,7 +53,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     });
 
     const sectionB = page.find('#sectionB');
-    const linodeB = linodes[page.find('select').props().value];
+    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(Object.values(linodeB._ips).filter(
       ({ type, version }) => type === 'public' && version === 'ipv4').length);
@@ -74,8 +74,8 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     );
 
     const sectionB = page.find('#sectionB');
-    const select = page.find('select');
-    const linodeB = linodes[select.props().value];
+    const select = page.find('Select');
+    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
     const notLinodeB = Object.values(linodesInRegion).filter(
       ({ id }) => id !== linodeB.id)[0];
 
@@ -122,23 +122,16 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async function ([fn]) {
-        const _dispatch = sinon.stub();
-        await fn(_dispatch, () => state);
-
-        expect(_dispatch.callCount).to.equal(3);
-
-        expectRequest(_dispatch.firstCall.args[0], '/networking/ip-assign', {
-          method: 'POST',
-          body: {
-            region: testLinode.region.id,
-            assignments: [
-              { address: ipA.address, linode_id: ipB.linode_id },
-              { address: ipB.address, linode_id: ipA.linode_id },
-            ],
-          },
-        });
-      },
+      ([fn]) => expectRequest(fn, '/networking/ip-assign', {
+        method: 'POST',
+        body: {
+          region: testLinode.region.id,
+          assignments: [
+            { address: ipA.address, linode_id: ipB.linode_id },
+            { address: ipB.address, linode_id: ipA.linode_id },
+          ],
+        },
+      }),
     ], 1);
   });
 });

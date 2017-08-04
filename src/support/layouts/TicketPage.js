@@ -9,6 +9,7 @@ import {
   FormGroupError,
   FormSummary,
   SubmitButton,
+  Textarea,
   Input,
 } from 'linode-components/forms';
 
@@ -92,7 +93,7 @@ export class TicketPage extends Component {
         >
           <FormGroup>
             <label htmlFor="reply" className="row-label">Write a reply:</label>
-            <textarea
+            <Textarea
               name="reply"
               id="reply"
               className="textarea-lg"
