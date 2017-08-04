@@ -11,7 +11,7 @@ import {
   expectObjectDeepEquals,
   expectRequest,
 } from '@/common';
-import { api, state } from '@/data';
+import { api } from '@/data';
 import { testType } from '@/data/types';
 import { testLinode } from '@/data/linodes';
 
@@ -40,21 +40,13 @@ describe('linodes/components/CloneLinode', function () {
     modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async function ([fn]) {
-        const _dispatch = sandbox.stub();
-        _dispatch.returns({ id: 1 });
-        await fn(_dispatch, () => state);
-
-        await expectRequest(
-          _dispatch.firstCall.args[0],
-          `/linode/instances/${testLinode.id}/clone`, {
-            method: 'POST',
-            body: {
-              region: REGION_MAP.Asia[0],
-              type: testType.id,
-            },
-          });
-      },
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/clone`, {
+        method: 'POST',
+        body: {
+          region: REGION_MAP.Asia[0],
+          type: testType.id,
+        },
+      }, { id: 1 }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });

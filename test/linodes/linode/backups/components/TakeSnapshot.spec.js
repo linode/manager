@@ -1,11 +1,15 @@
-import { expect } from 'chai';
 import { mount } from 'enzyme';
-import React from 'react';
+import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import TakeSnapshot from '~/linodes/linode/backups/components/TakeSnapshot';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import {
+  changeInput,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
+} from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -18,32 +22,43 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     sandbox.restore();
   });
 
-  it('does not show take snapshot button for an auto backup', () => {
-    const page = mount(
-      <TakeSnapshot
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-
-    const takeSnapshot = page.find('button[name="takeSnapshot"]');
-    expect(takeSnapshot.length).to.equal(0);
-  });
-
   it('should dispatch a snapshot request', async () => {
-    const page = mount(
-      <TakeSnapshot
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
+    TakeSnapshot.trigger(dispatch, testLinode);
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    changeInput(modal, 'label', 'foobar');
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
 
-    expect(dispatch.callCount).to.equal(1);
+    modal.find('Form').props().onSubmit();
+
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/instances/1234/backups', { method: 'POST' }),
-    ], 1);
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.label}/backups`, {
+        method: 'POST',
+        body: {
+          label: 'foobar',
+        },
+      }, { id: 1 }),
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult, push(`/linodes/${testLinode.label}/backups/1`)),
+    ], 2, [{ id: 1 }]);
+  });
+
+  it('should not include label if label is not set', async () => {
+    TakeSnapshot.trigger(dispatch, testLinode);
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+
+    modal.find('Form').props().onSubmit();
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.label}/backups`, {
+        method: 'POST',
+        body: {},
+      }, { id: 1 }),
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult, push(`/linodes/${testLinode.label}/backups/1`)),
+    ], 2, [{ id: 1 }]);
   });
 });
