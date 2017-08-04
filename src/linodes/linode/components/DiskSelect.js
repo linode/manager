@@ -18,7 +18,7 @@ export default function DiskSelect(props) {
   // This linter error is stupid...
   // eslint-disable-next-line react/prop-types
   const onChange = ({ target: { value } }) =>
-    props.onChange({ target: { name: slot, value: { disk_id: +value || null } } });
+    props.onChange({ target: { name: slot, value: value ? { disk_id: +value } : null } });
 
   return (
     <FormGroup className="row" errors={errors} name={slot}>
