@@ -100,6 +100,7 @@ export default class AddDisk extends Component {
               value={distribution}
               distributions={distributions.distributions}
               onChange={this.onChange}
+              allowNone
             />
           </ModalFormGroup>
           {distribution ? (
