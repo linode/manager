@@ -12,7 +12,7 @@ endpoints:
       Manage your user information.
     methods:
       GET:
-        response: account
+        response: profile
         description: >
           Returns your user information.
         examples:
@@ -22,7 +22,7 @@ endpoints:
             my_profile = client.get_profile()
       PUT:
         description: >
-          Edits your account profile.
+          Edits your user's profile.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -67,12 +67,12 @@ endpoints:
   /profile/tfa-enable:
     _group: Two-Factor Authentication
     description: >
-      Begin enabling TFA on your account.  This must be followed with a call to /profile/tfa-enable-confirm to
+      Begin enabling TFA for your user.  This must be followed with a call to /profile/tfa-enable-confirm to
       require TFA for future logins.
     methods:
       POST:
         description: >
-          Begin enabling TFA on your account.  Returns a two-factor secret
+          Begin enabling TFA for your user.  Returns a two-factor secret
           that you must validate with the tfa-enable-confirm endpoint
           to require two-factor for future logins.
         examples:
@@ -87,7 +87,7 @@ endpoints:
   /profile/tfa-enable-confirm:
     _group: Two-Factor Authentication
     description: >
-      Finish enabling TFA on your account.  Once this is successful, future logins will require TFA.
+      Finish enabling TFA for your user. Once this is successful, future logins will require TFA.
     methods:
       POST:
         description: >
@@ -115,7 +115,7 @@ endpoints:
     methods:
       POST:
         description: >
-          Disable TFA on your account.  Future logins will not require TFA.
+          Disable TFA for your user.  Future logins will not require TFA.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
