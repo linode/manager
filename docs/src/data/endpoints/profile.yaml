@@ -1,0 +1,145 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Profile
+sort: 1
+description: >
+  Provides endpoints for managing your User.
+endpoints:
+  /profile:
+    _group: Profile
+    type: resource
+    resource: profile
+    description: >
+      Manage your user information.
+    methods:
+      GET:
+        response: account
+        description: >
+          Returns your user information.
+        examples:
+          curl: |
+            curl https://$api_root/$version/profile
+          python: |
+            my_profile = client.get_profile()
+      PUT:
+        description: >
+          Edits your account profile.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                    "username": "jsmith",
+                    "email": "jsmith@mycompany.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": ""
+                  }
+                }' \
+                https://$api_root/$version/profile
+          python: |
+            my_profile.email = 'jsmith@mycompany.com'
+            my_profile.timezone = 'US/Eastern'
+            my_profile.email_notifications = True
+            my_profile.ip_whitelist_enabled = True
+            my_profile.lish_auth_method = 'password_keys'
+            my_profile.save()
+  /profile/password:
+    _group: Profile
+    description: >
+      Change your password.
+    methods:
+      POST:
+        description: >
+          Change your password.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                  "password":"hunter7"
+              }' \
+              https://$api_root/$version/profile/password
+          python: |
+            my_profile = client.get_profile()
+            my_profile.reset_password('hunter7')
+  /profile/tfa-enable:
+    _group: Profile
+    description: >
+      Begin enabling TFA on your account.  This must be followed with a call to /profile/tfa-enable-confirm to
+      require TFA for future logins.
+    methods:
+      POST:
+        description: >
+          Begin enabling TFA on your account.  Returns a two-factor secret
+          that you must validate with the tfa-enable-confirm endpoint
+          to require two-factor for future logins.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST \
+              https://$api_root/$version/profile/tfa-enable
+          python: |
+            my_profile = client.get_profile()
+            secret = my_profile.enable_tfa()
+  /profile/tfa-enable-confirm:
+    _group: Profile
+    description: >
+      Finish enabling TFA on your account.  Once this is successful, future logins will require TFA.
+    methods:
+      POST:
+        description: >
+          Confirm your two-factor secret and require TFA for future logins.
+        params:
+          tfa_code:
+            type: String
+            description: >
+              The code generated using the two-factor secret you got from tfa-enable
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                "tfa_code": "123456"
+              }' \
+              https://$api_root/$version/profile/tfa-enable-confirm
+          python: |
+            my_profile = client.get_profile()
+            my_profile.confirm_tfa('123456')
+  /profile/tfa-disable:
+    _group: Profile
+    description: >
+      Disable TFA for your user.  This is immediate.
+    methods:
+      POST:
+        description: >
+          Disable TFA on your account.  Future logins will not require TFA.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST \
+              https://$api_root/$version/profile/tfa-disable
+          python: |
+            my_profile = client.get_profile()
+            my_profile.disable_tfa()
+  /profile/grants:
+    _group: Profile
+    description: >
+      Return grants for your user.  If your user is unrestricted, this returns an error.  Hides
+      entities that your user has no access to that would be visible to an unrestricted user.
+    type: strange
+    methods:
+      GET:
+        response: usergrants
+        description: >
+          Get grants for the current user.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/profile/grants
+          python: |
+            my_profile = client.get_profile()
+            my_grants = my_profile.grants
