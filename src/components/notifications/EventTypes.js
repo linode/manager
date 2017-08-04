@@ -77,12 +77,6 @@ const EventTypeMap = {
     linodeStatus: 'running',
     redirectUrl: getLinodeRedirectUrl,
   },
-  linode_snapshot: {
-    presentTenseAction: 'Taking a snapshot of',
-    pastTenseAction: 'taken',
-    pastTensePrefix: 'Snapshot of',
-    redirectUrl: getLinodeRedirectUrl,
-  },
   linode_addip: {
     presentTenseAction: 'Adding an IP to',
     pastTenseAction: '',
@@ -146,6 +140,12 @@ const EventTypeMap = {
     redirectUrl: getLinodeDiskRedirectUrl,
   },
 
+  linode_snapshot: {
+    presentTenseAction: 'Taking a snapshot of',
+    pastTenseAction: 'taken',
+    pastTensePrefix: 'Snapshot of',
+    redirectUrl: getLinodeBackupRedirectUrl,
+  },
   backups_enable: {
     presentTenseAction: 'Enabling backups service',
     pastTenseAction: 'backups enabled',

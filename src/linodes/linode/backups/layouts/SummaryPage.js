@@ -1,16 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
 
 import { Form, SubmitButton, FormSummary } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 
-import { takeBackup } from '~/api/backups';
 import { TimeDisplay } from '~/components';
 
-import { dispatchOrStoreErrors } from '~/api/util';
-
+import { TakeSnapshot } from '../components';
 import { selectLinode } from '../../utilities';
 
 
@@ -22,15 +19,6 @@ export class SummaryPage extends Component {
       errors: {},
       loading: false,
     };
-  }
-
-  onSubmit = () => {
-    const { dispatch, linode } = this.props;
-
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => takeBackup(linode.id),
-      ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
-    ]));
   }
 
   renderEmpty(title) {
@@ -45,11 +33,12 @@ export class SummaryPage extends Component {
   }
 
   renderEmptySnapshot() {
+    const { dispatch, linode } = this.props;
     const { loading, errors } = this.state;
 
     return (
       <Form
-        onSubmit={this.onSubmit}
+        onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
         className="Backup Backup-emptySnapshot col-sm-3"
         title="Take first snapshot"
       >
@@ -71,7 +60,7 @@ export class SummaryPage extends Component {
   renderBlock = ({ title, backup }) => {
     const { linode } = this.props;
 
-    if (!backup || !backup.finished) {
+    if (!backup) {
       return title === 'Snapshot' ? this.renderEmptySnapshot() :
         this.renderEmpty(title);
     }
@@ -81,7 +70,11 @@ export class SummaryPage extends Component {
         <Link to={`/linodes/${linode.label}/backups/${backup.id}`}>
           <div className="Backup-block Backup-block--clickable">
             <div className="Backup-title">{title}</div>
-            <div className="Backup-description"><TimeDisplay time={backup.finished} /></div>
+            <div className="Backup-description">
+              {!backup.finished ? 'Snapshot in progress' : (
+                <TimeDisplay time={backup.finished} />
+              )}
+            </div>
           </div>
         </Link>
       </div>

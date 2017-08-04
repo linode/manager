@@ -66,7 +66,7 @@ export default class BackupRestore extends Component {
     const { backup, linode, linodes } = this.props;
     const { errors, loading, target, overwrite } = this.state;
 
-    if (backup.status === 'pending') {
+    if (!backup || backup.status === 'pending') {
       return null;
     }
 

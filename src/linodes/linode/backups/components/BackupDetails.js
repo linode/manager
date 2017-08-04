@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup } from 'linode-components/forms';
+import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
 import TimeDisplay from '~/components/TimeDisplay';
 
@@ -11,6 +11,10 @@ import TakeSnapshot from './TakeSnapshot';
 
 export default function BackupDetails(props) {
   const { linode, backup, dispatch } = props;
+
+  if (!backup) {
+    return null;
+  }
 
   const duration = Math.floor((Date.parse(backup.finished) -
                                Date.parse(backup.created)) / 1000 / 60);
@@ -34,10 +38,6 @@ export default function BackupDetails(props) {
   );
 
   const vacant = 'In progress';
-
-  const takeSnapshot = backup.type === 'snapshot' && backup.status !== 'pending' ?
-    <TakeSnapshot linode={linode} dispatch={dispatch} /> :
-    null;
 
   return (
     <Card header={<CardHeader title="Backup details" />}>
@@ -78,7 +78,17 @@ export default function BackupDetails(props) {
         <div className="col-sm-3 row-label">Space Required</div>
         <div className="col-sm-9" id="space">{disks.length === 0 ? vacant : `${space}MB`}</div>
       </FormGroup>
-      {takeSnapshot}
+      {backup.type === 'snapshot' && backup.status !== 'pending' ? (
+        <FormGroup className="row">
+          <div className="offset-sm-3 col-sm-9">
+            <Form
+              onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
+              analytics={{ title: 'Take Snapshot', action: 'add' }}
+            >
+              <SubmitButton disabledChildren="Taking snapshot">Take snapshot</SubmitButton>
+            </Form>
+          </div>
+        </FormGroup>) : null}
     </Card>
   );
 }
