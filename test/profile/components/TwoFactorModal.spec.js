@@ -30,7 +30,7 @@ describe('profile/components/TwoFactorModal', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile/tfa-enable-confirm', {
+      ([fn]) => expectRequest(fn, '/profile/tfa-enable-confirm', {
         method: 'POST',
         body: { tfa_code: 'theCode' },
       }),

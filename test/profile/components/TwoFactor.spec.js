@@ -28,7 +28,7 @@ describe('profile/components/TwoFactor', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile/tfa-disable', {
+      ([fn]) => expectRequest(fn, '/profile/tfa-disable', {
         method: 'POST',
       }),
     ], 1);
@@ -49,7 +49,7 @@ describe('profile/components/TwoFactor', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile/tfa-enable', {
+      ([fn]) => expectRequest(fn, '/profile/tfa-enable', {
         method: 'POST',
       }),
     ], 1, [{ secret: '' }]);
