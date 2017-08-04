@@ -203,7 +203,7 @@ export default class ConfigForm extends Component {
                 <Textarea
                   id="sslKey"
                   name="sslKey"
-                  placeholder="Unpassphrassed SSL private key"
+                  placeholder="Unpassphrased SSL private key"
                   value={sslKey}
                   onChange={this.onChange}
                 />
@@ -314,7 +314,7 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="check_attempts" />
             <div>
               <small className="text-muted">
-                Take this node out of rotation after this number of failed health checks
+                Take the node out of rotation after this number of failed health checks.
               </small>
             </div>
           </div>

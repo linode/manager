@@ -7,7 +7,6 @@ import AddIP from '~/linodes/linode/networking/components/AddIP';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
-import { state } from '@/data';
 
 
 describe('linodes/linode/networking/components/AddIP', () => {
@@ -35,21 +34,10 @@ describe('linodes/linode/networking/components/AddIP', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async function ([fn]) {
-        const _dispatch = sinon.stub();
-        _dispatch.returns({ address: '192.168.1.1' });
-        await fn(_dispatch, () => state);
-
-        expect(_dispatch.callCount).to.equal(2);
-
-        await expectRequest(
-          _dispatch.firstCall.args[0],
-          `/linode/instances/${testLinode.id}/ips`,
-          {
-            method: 'POST',
-            body: { type: 'private' },
-          });
-      },
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips`, {
+        method: 'POST',
+        body: { type: 'private' },
+      }, { address: '192.168.1.1' }),
     ]);
   });
 });

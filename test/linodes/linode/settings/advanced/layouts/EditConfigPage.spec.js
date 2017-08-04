@@ -271,9 +271,9 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           run_level: 'default',
           virt_mode: 'paravirt',
           kernel: 'linode/latest_64',
-          disks: {
-            sda: { id: 12345 },
-            sdb: { id: 12346 },
+          devices: {
+            sda: { disk_id: 12345 },
+            sdb: { disk_id: 12346 },
             sdc: null,
             sdd: null,
             sde: null,

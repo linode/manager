@@ -11,7 +11,7 @@ import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 import LineGraph from '~/components/graphs/LineGraph';
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
@@ -174,7 +174,7 @@ export class DashboardPage extends Component {
 
   renderDetails() {
     const { username, linode } = this.props;
-    const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
+    const lishLink = `${username}@lish-${ZONES[linode.region.id]}.linode.com`;
 
     return (
       <div className="row">

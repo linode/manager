@@ -19,6 +19,19 @@ export const testType = {
 };
 
 export const types = {
+  'g5-nanode-1': {
+    mbits_out: 1000,
+    backups_price: 2.0,
+    id: 'g5-nanode-1',
+    storage: 20480,
+    ram: 1024,
+    class: 'nanode',
+    hourly_price: 0.0075,
+    transfer: 1000,
+    vcpus: 1,
+    label: 'Linode 1024',
+    monthly_price: 5.0,
+  },
   'linode1024.5': {
     hourly_price: 0.0075,
     id: 'linode1024.5',
@@ -34,4 +47,17 @@ export const types = {
     class: 'standard',
   },
   'linode2048.5': testType,
+  'g5-highmem-1': {
+    mbits_out: 1000,
+    backups_price: 5.0,
+    id: 'g5-highmem-1',
+    storage: 20480,
+    ram: 16384,
+    class: 'highmem',
+    hourly_price: 0.09,
+    transfer: 5000,
+    vcpus: 1,
+    label: 'Linode 16384',
+    monthly_price: 60.0,
+  },
 };
