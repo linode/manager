@@ -1,6 +1,9 @@
 import { fetch } from '~/fetch';
-import { actions } from './configs/linodes';
 import { linodeBackups } from '~/api/linodes';
+
+import { thunkFetch } from './apiActionReducerGenerator';
+import { actions } from './configs/linodes';
+
 
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {
@@ -18,14 +21,14 @@ function makeBackupAction(action) {
 export const enableBackup = makeBackupAction('enable');
 export const cancelBackup = makeBackupAction('cancel');
 
-export function takeBackup(id) {
-  return async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/linode/instances/${id}/backups`,
-      { method: 'POST' });
-    const json = await response.json();
-    dispatch(linodeBackups(id));
-    return json;
+export function takeBackup(id, label) {
+  return async (dispatch) => {
+    const result = await dispatch(thunkFetch.post(`/linode/instances/${id}/backups`, {
+      label: label || undefined,
+    }));
+
+    await dispatch(linodeBackups(id));
+    return result;
   };
 }
 
@@ -36,7 +39,7 @@ export function restoreBackup(linodeId, targetLinode, backupId, overwrite = fals
     const response = await fetch(token,
       `/linode/instances/${linodeId}/backups/${backupId}/restore`, {
         method: 'POST',
-        body: JSON.stringify({ linode: targetLinode, overwrite }),
+        body: JSON.stringify({ linode_id: targetLinode, overwrite }),
       });
     return await response.json();
   };

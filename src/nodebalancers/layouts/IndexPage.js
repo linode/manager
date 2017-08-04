@@ -26,6 +26,8 @@ import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
 import { transform } from '~/api/util';
 
+import { AddNodeBalancer } from '../components';
+
 
 const OBJECT_TYPE = 'nodebalancers';
 
@@ -131,12 +133,14 @@ export class IndexPage extends Component {
       </List>
     );
 
+    const addNodeBalancer = () => AddNodeBalancer.trigger(dispatch);
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">NodeBalancers</h1>
-            <PrimaryButton to="/nodebalancers/create" className="float-right">
+            <PrimaryButton onClick={addNodeBalancer} className="float-sm-right">
               Add a NodeBalancer
             </PrimaryButton>
           </div>
@@ -145,8 +149,8 @@ export class IndexPage extends Component {
           {Object.values(nodebalancers.nodebalancers).length ? renderNodeBalancers() : (
             <CreateHelper
               label="NodeBalancers"
-              href="/nodebalancers/create"
               linkText="Add a NodeBalancer"
+              onClick={addNodeBalancer}
             />
           )}
         </div>
