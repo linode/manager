@@ -65,7 +65,7 @@ endpoints:
             my_profile = client.get_profile()
             my_profile.reset_password('hunter7')
   /profile/tfa-enable:
-    _group: Profile
+    _group: Two-Factor Authentication
     description: >
       Begin enabling TFA on your account.  This must be followed with a call to /profile/tfa-enable-confirm to
       require TFA for future logins.
@@ -85,7 +85,7 @@ endpoints:
             my_profile = client.get_profile()
             secret = my_profile.enable_tfa()
   /profile/tfa-enable-confirm:
-    _group: Profile
+    _group: Two-Factor Authentication
     description: >
       Finish enabling TFA on your account.  Once this is successful, future logins will require TFA.
     methods:
@@ -109,7 +109,7 @@ endpoints:
             my_profile = client.get_profile()
             my_profile.confirm_tfa('123456')
   /profile/tfa-disable:
-    _group: Profile
+    _group: Two-Factor Authentication
     description: >
       Disable TFA for your user.  This is immediate.
     methods:
