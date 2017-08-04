@@ -21,7 +21,7 @@ endpoints:
           region:
             description: >
               Which region the new volume should be created in.
-            type: Integer
+            type: String
           size:
             optional: true
             description: >

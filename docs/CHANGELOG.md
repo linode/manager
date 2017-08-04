@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.1] 2017-08-04
+### Changed
+- /account/profile -> /profile and other api followups #2373
+
 ## [0.11.0] 2017-08-01
 ### Added
 - added more debugging for failing prebuild script #2233
