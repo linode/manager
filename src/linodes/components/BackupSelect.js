@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
@@ -7,7 +6,8 @@ import { Select } from 'linode-components/forms';
 export default function BackupSelect(props) {
   const { daily, weekly, snapshot } = props.backups;
 
-  const options = [{ label: 'Pick a Linode', value: 0 }];
+  const initialLabel = props.disabled ? 'Fetching backups' : 'Pick a Linode';
+  const options = [{ label: initialLabel, value: 0 }];
 
   if (daily) {
     options[0] = { label: 'Daily', options: [{ label: daily.id, value: daily.id }] };

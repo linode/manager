@@ -207,7 +207,6 @@ export class IndexPage extends Component {
 
     const addOptions = [
       { name: 'Create from Backup', action: restoreLinode },
-      //{ name: 'Create from StackScript', action: 1 },
       { name: 'Clone a Linode', action: cloneLinode },
     ];
 

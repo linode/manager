@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
@@ -144,7 +145,7 @@ export default class RestoreLinode extends Component {
           <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
             <BackupsCheckbox
               plans={plans}
-              plan={linode && linode.type}
+              plan={plan}
               value={backups}
               name="backups"
               id="backups"
