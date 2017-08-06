@@ -309,7 +309,7 @@ export class MasterZone extends Component {
                     titleKey: 'name',
                     tooltipEnabled: true,
                   },
-                   {
+                  {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Edit',
