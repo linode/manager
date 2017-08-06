@@ -105,6 +105,7 @@ export function linodeBackups(linodeId) {
     const response = await fetch(token, `/linode/instances/${linodeId}/backups`);
     const json = { _backups: await response.json() };
     dispatch(actions.one(json, linodeId));
+    return json._backups;
   };
 }
 

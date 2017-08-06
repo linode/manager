@@ -23,7 +23,7 @@ import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cell
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 import { planStats } from '../components/PlanStyle';
-import { AddLinode, CloneLinode } from '../components';
+import { AddLinode, CloneLinode, RestoreLinode } from '../components';
 
 
 const OBJECT_TYPE = 'linodes';
@@ -203,10 +203,11 @@ export class IndexPage extends Component {
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
+    const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
 
     const addOptions = [
-      { name: 'Create from Backup', action: 1 },
-      { name: 'Create from StackScript', action: 1 },
+      { name: 'Create from Backup', action: restoreLinode },
+      //{ name: 'Create from StackScript', action: 1 },
       { name: 'Clone a Linode', action: cloneLinode },
     ];
 

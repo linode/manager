@@ -2,29 +2,31 @@ import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { ExternalLink } from 'linode-components/buttons';
-import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
+import { Input, ModalFormGroup } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
+import { linodeBackups } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import BackupsCheckbox from './BackupsCheckbox';
-import DistributionSelect from './DistributionSelect';
+import BackupSelect from './BackupSelect';
+import LinodeSelect from './LinodeSelect';
 import PlanSelect from './PlanSelect';
 import { RegionSelect } from '../../components';
 
 
-export default class AddLinode extends Component {
-  static title = 'Add a Linode'
+export default class RestoreLinode extends Component {
+  static title = 'Create from Backup'
 
-  static trigger(dispatch, distributions, plans) {
-    return dispatch(showModal(AddLinode.title, (
-      <AddLinode
+  static trigger(dispatch, linodes, plans) {
+    return dispatch(showModal(RestoreLinode.title, (
+      <RestoreLinode
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
-        distributions={distributions}
+        linodes={linodes}
         plans={plans}
       />
     )));
@@ -33,28 +35,16 @@ export default class AddLinode extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, password: '' };
+    this.state = { errors: {}, allBackups: {}, backups: false };
 
     this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, distribution, region, plan, backups, password } = this.state;
+    const { label, backup, region, plan } = this.state;
 
-    const data = {
-      label,
-      distribution,
-      region,
-      type: plan,
-      backups_enabled: backups,
-      root_pass: password,
-    };
-
-    if (distribution === 'none') {
-      delete data.root_pass;
-      delete data.distribution;
-    }
+    const data = { label, backup, region, type: plan };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
@@ -62,20 +52,63 @@ export default class AddLinode extends Component {
     ]));
   }
 
+  onLinodeChange = (e) => {
+    this.onChange(e);
+    this.setState({ fetchingBackups: true }, async () => {
+      const linodeId = e.target.value;
+      const { allBackups } = this.state;
+
+      if (!allBackups[linodeId]) {
+        const backups = await this.props.dispatch(linodeBackups([linodeId]));
+        this.setState({
+          fetchingBackups: false,
+          allBackups: { ...allBackups, [linodeId]: backups },
+        });
+      }
+    });
+  }
+
   render() {
-    const { close, distributions, plans } = this.props;
-    const { errors, label, distribution, region, plan, backups, password } = this.state;
+    const { close, linodes, plans } = this.props;
+    const {
+      errors, label, linode, region, plan, backup, backups, allBackups, fetchingBackups,
+    } = this.state;
+
+    const linodesWithBackups = _.pickBy(linodes, (l) => l.backups.enabled);
+    const linodeBackups = allBackups[linode];
 
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
         onCancel={close}
-        buttonText="Add Linode"
-        buttonDisabledText="Adding Linode"
-        analytics={{ title: AddLinode.title, action: 'add' }}
+        buttonText="Create"
+        buttonDisabledText="Creating"
+        analytics={{ title: RestoreLinode.title, action: 'add' }}
         errors={errors}
       >
         <div>
+          <h3>Restore from (existing Linode)</h3>
+          <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
+            <LinodeSelect
+              linodes={linodesWithBackups}
+              value={linode}
+              name="linode"
+              id="linode"
+              onChange={this.onLinodeChange}
+              allowNone
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Backup" id="backup" apiKey="backup" errors={errors}>
+            <BackupSelect
+              backups={linodeBackups}
+              value={backup}
+              name="backup"
+              id="backup"
+              onChange={this.onChange}
+              disabled={fetchingBackups}
+            />
+          </ModalFormGroup>
+          <h3>Restore to (new Linode)</h3>
           <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
             <Input
               placeholder="my-linode"
@@ -84,24 +117,6 @@ export default class AddLinode extends Component {
               id="label"
               onChange={this.onChange}
             />
-          </ModalFormGroup>
-          <ModalFormGroup
-            label="Distribution"
-            id="distribution"
-            apiKey="distribution"
-            errors={errors}
-          >
-            <DistributionSelect
-              distributions={distributions}
-              value={distribution}
-              name="distribution"
-              id="distribution"
-              onChange={this.onChange}
-              allowNone
-            />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
@@ -126,19 +141,10 @@ export default class AddLinode extends Component {
               <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
             </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Password" id="password" apiKey="root_pass" errors={errors}>
-            <PasswordInput
-              value={password}
-              name="password"
-              id="password"
-              onChange={this.onChange}
-              disabled={distribution === 'none'}
-            />
-          </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
             <BackupsCheckbox
               plans={plans}
-              plan={plan}
+              plan={linode && linode.type}
               value={backups}
               name="backups"
               id="backups"
@@ -151,9 +157,9 @@ export default class AddLinode extends Component {
   }
 }
 
-AddLinode.propTypes = {
+RestoreLinode.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  distributions: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
   plans: PropTypes.object.isRequired,
 };
