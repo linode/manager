@@ -243,7 +243,14 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'target', label: 'Name Server' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Name Server',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
                   {
                     cellComponent: LabelCell,
                     headerClassName: 'LabelColumn',
@@ -285,8 +292,15 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'target', label: 'Mail Server' },
-                  { dataKey: 'priority', label: 'Preference' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Mail Server',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
+                  { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
                   {
                     cellComponent: LabelCell,
                     headerClassName: 'LabelColumn',
@@ -295,7 +309,7 @@ export class MasterZone extends Component {
                     titleKey: 'name',
                     tooltipEnabled: true,
                   },
-                  {
+                   {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Edit',
@@ -343,7 +357,7 @@ export class MasterZone extends Component {
                     tooltipEnabled: true,
                   },
                   { headerClassName: 'IPAddressColumn', dataKey: 'target', label: 'IP Address' },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
                     cellComponent: ButtonCell,
                     text: 'Edit',
@@ -392,8 +406,15 @@ export class MasterZone extends Component {
                     titleKey: 'name',
                     tooltipEnabled: true,
                   },
-                  { dataKey: 'target', label: 'Aliases to' },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Aliases to',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
@@ -447,7 +468,7 @@ export class MasterZone extends Component {
                     label: 'Value',
                     tooltipEnabled: true,
                   },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
@@ -486,8 +507,8 @@ export class MasterZone extends Component {
             <Table
               className="Table--secondary"
               columns={[
-                { dataKey: 'name', label: 'Service' },
-                { dataKey: 'priority', label: 'Priority' },
+                { dataKey: 'name', label: 'Service', headerClassName: 'ServiceColumn' },
+                { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
                 {
                   cellComponent: LabelCell,
                   headerClassName: 'LabelColumn',
@@ -496,8 +517,8 @@ export class MasterZone extends Component {
                   titleKey: 'domain',
                   tooltipEnabled: true,
                 },
-                { dataKey: 'weight', label: 'Weight' },
-                { dataKey: 'port', label: 'Port' },
+                { dataKey: 'weight', label: 'Weight', headerClassName: 'WeightColumn' },
+                { dataKey: 'port', label: 'Port', headerClassName: 'PortColumn' },
                 {
                   cellComponent: LabelCell,
                   headerClassName: 'LabelColumn',
@@ -506,7 +527,7 @@ export class MasterZone extends Component {
                   titleKey: 'target',
                   tooltipEnabled: true,
                 },
-                { dataKey: 'ttl_sec', label: 'TTL' },
+                { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                 {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
