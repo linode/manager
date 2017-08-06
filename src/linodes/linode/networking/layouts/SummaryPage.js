@@ -152,7 +152,7 @@ export class SummaryPage extends Component {
         onClick={() => dispatch(addIP(linode.id, 'private'))}
         options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
       >
-        Add a Private IP Address
+        Enable Private IPv4
       </PrimaryButton>
     );
   }
