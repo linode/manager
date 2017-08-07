@@ -15,7 +15,6 @@ export default function BackupsCheckbox(props) {
     <div>
       <Checkbox
         label={label}
-        checked={props.value}
         {...props}
       />
       <div>
@@ -23,7 +22,7 @@ export default function BackupsCheckbox(props) {
           <ExternalLink to="https://www.linode.com/backups">Learn more</ExternalLink>
         </small>
       </div>
-    </div> 
+    </div>
   );
 }
 

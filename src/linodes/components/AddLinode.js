@@ -46,7 +46,7 @@ export default class AddLinode extends Component {
       distribution,
       region,
       type: plan,
-      backups_enabled: backups,
+      with_backups: backups,
       root_pass: password,
     };
 
@@ -129,7 +129,7 @@ export default class AddLinode extends Component {
             <BackupsCheckbox
               plans={plans}
               plan={plan}
-              value={backups}
+              checked={backups}
               name="backups"
               id="backups"
               onChange={this.onChange}

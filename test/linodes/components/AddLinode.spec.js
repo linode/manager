@@ -77,7 +77,7 @@ describe('linodes/components/AddLinode', function () {
           type: testType.id,
           distribution: testDistro.id,
           root_pass: 'foobar',
-          backups_enabled: true,
+          with_backups: true,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
