@@ -27,10 +27,23 @@ export default class Select extends Component {
   }
 
   render() {
-    // The grouping can be at most 1 level deep.
-    const defaultValue = _.isUndefined(this.props.options[0].value) ?
-                         this.props.options[0].options[0].value :
-                         this.props.options[0].value;
+    const { options } = this.props;
+
+    let defaultValue;
+    // Putting a try-catch in here as a final resort because this commit is a patch and may not
+    // have been thoroughly tested.
+    try {
+      if (options && options.length) {
+        if (options[0] && options[0].value) {
+          defaultValue = options[0].value;
+        } else if (options[0].options && options[0].options.length) {
+          // The grouping can be at most 1 level deep.
+          defaultValue = options[0].options[0].value;
+        }
+      }
+    } catch (e) {
+      // Nothing to do.
+    }
 
     return (
       <span className={this.props.className}>
