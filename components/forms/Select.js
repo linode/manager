@@ -27,10 +27,13 @@ export default class Select extends Component {
   }
 
   render() {
-    // The grouping can be at most 1 level deep.
-    const defaultValue = _.isUndefined(this.props.options[0].value) ?
-                         this.props.options[0].options[0].value :
-                         this.props.options[0].value;
+    let defaultValue = null;
+    try {
+      // The grouping can be at most 1 level deep.
+      defaultValue = _.isUndefined(this.props.options[0].value) ?
+                     this.props.options[0].options[0].value :
+                     this.props.options[0].value;
+    } catch (e) {}
 
     return (
       <span className={this.props.className}>
