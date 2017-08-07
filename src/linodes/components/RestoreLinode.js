@@ -43,9 +43,9 @@ export default class RestoreLinode extends Component {
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, backup, region, plan } = this.state;
+    const { label, backup, region, plan, backups } = this.state;
 
-    const data = { label, backup, region, type: plan };
+    const data = { label, backup, region, backups_enabled: backups, type: plan };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
