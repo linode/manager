@@ -41,7 +41,9 @@ export default class Select extends Component {
           defaultValue = options[0].options[0].value;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      // Nothing to do.
+    }
 
     return (
       <span className={this.props.className}>
