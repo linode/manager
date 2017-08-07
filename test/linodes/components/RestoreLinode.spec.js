@@ -30,7 +30,7 @@ describe('linodes/components/RestoreLinode', function () {
     RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'backup', '1234');
+    changeInput(modal, 'backup', 1234);
     changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'plan', testType.id);
@@ -43,7 +43,7 @@ describe('linodes/components/RestoreLinode', function () {
       ([fn]) => expectRequest(fn, '/linode/instances/', {
         method: 'POST',
         body: {
-          backup: '1234',
+          backup_id: 1234,
           label: 'Restored from backup',
           region: REGION_MAP.Asia[0],
           type: testType.id,
@@ -58,7 +58,7 @@ describe('linodes/components/RestoreLinode', function () {
     RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'backup', '1235');
+    changeInput(modal, 'backup', 1235);
     changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'region', REGION_MAP.Asia[1]);
     changeInput(modal, 'plan', testType.id);
@@ -72,7 +72,7 @@ describe('linodes/components/RestoreLinode', function () {
       ([fn]) => expectRequest(fn, '/linode/instances/', {
         method: 'POST',
         body: {
-          backup: '1235',
+          backup_id: 1235,
           label: 'Restored from backup',
           region: REGION_MAP.Asia[1],
           type: testType.id,
