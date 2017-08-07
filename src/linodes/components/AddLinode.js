@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { ExternalLink } from 'linode-components/buttons';
 import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
@@ -99,9 +98,6 @@ export default class AddLinode extends Component {
               onChange={this.onChange}
               allowNone
             />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
@@ -110,9 +106,6 @@ export default class AddLinode extends Component {
               id="region"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Plan" id="plan" apiKey="type" errors={errors}>
             <PlanSelect
@@ -122,9 +115,6 @@ export default class AddLinode extends Component {
               id="plan"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Password" id="password" apiKey="root_pass" errors={errors}>
             <PasswordInput

@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
+
 import { REGION_MAP, UNAVAILABLE_ZONES } from '~/constants';
 
 
@@ -13,10 +15,15 @@ const options = _.map(REGION_MAP, (zones, region) => ({
 
 export default function RegionSelect(props) {
   return (
-    <Select
-      {...props}
-      options={options}
-    />
+    <div>
+      <Select
+        {...props}
+        options={options}
+      />
+      <small>
+        <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
+      </small>
+    </div>
   );
 }
 

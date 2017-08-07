@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Checkbox } from 'linode-components/forms';
 
 
@@ -11,11 +12,18 @@ export default function BackupsCheckbox(props) {
   }
 
   return (
-    <Checkbox
-      label={label}
-      checked={props.value}
-      {...props}
-    />
+    <div>
+      <Checkbox
+        label={label}
+        checked={props.value}
+        {...props}
+      />
+      <div>
+        <small>
+          <ExternalLink to="https://www.linode.com/backups">Learn more</ExternalLink>
+        </small>
+      </div>
+    </div> 
   );
 }
 
