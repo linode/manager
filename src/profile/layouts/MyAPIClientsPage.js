@@ -190,7 +190,7 @@ export class MyAPIClientsPage extends Component {
         <header className="NavigationHeader clearfix">
           <Button
             onClick={() => CreateOrEditApplication.trigger(dispatch)}
-            className="float-sm-right"
+            className="float-right"
           >Create an OAuth Client</Button>
         </header>
         {this.renderClients()}

@@ -187,7 +187,7 @@ export class APITokensPage extends Component {
         <header className="NavigationHeader clearfix">
           <Button
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}
-            className="float-sm-right"
+            className="float-right"
           >Create a Personal Access Token</Button>
         </header>
         {this.renderTokens()}

@@ -155,8 +155,8 @@ export class IndexPage extends Component {
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Users</h1>
-            <PrimaryButton to="/users/create" className="float-sm-right">
+            <h1 className="float-left">Users</h1>
+            <PrimaryButton to="/users/create" className="float-right">
               Add a User
             </PrimaryButton>
           </div>
