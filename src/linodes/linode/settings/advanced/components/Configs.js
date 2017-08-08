@@ -12,7 +12,7 @@ import {
 } from 'linode-components/tables/cells';
 
 
-export class ConfigPanel extends Component {
+export default class Configs extends Component {
   deleteConfig(linode, config) {
     const { dispatch } = this.props;
 
@@ -29,35 +29,9 @@ export class ConfigPanel extends Component {
     ));
   }
 
-  renderConfigContent(linode, configs) {
-    return (
-      <Table
-        className="ConfigPanel-config Table--secondary"
-        columns={[
-          {
-            cellComponent: LinkCell,
-            hrefFn: (config) => {
-              return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
-            },
-          },
-          {
-            cellComponent: ButtonCell,
-            headerClassName: 'ButtonColumn',
-            onClick: (config) => { this.deleteConfig(linode, config); },
-            text: 'Delete',
-          },
-        ]}
-        data={configs}
-        noDataMessage="You have no configs."
-      />
-    );
-  }
-
   render() {
     const { linode } = this.props;
     const configs = Object.values(linode._configs.configs);
-
-    const content = this.renderConfigContent(linode, configs);
 
     const nav = (
       <PrimaryButton
@@ -71,11 +45,33 @@ export class ConfigPanel extends Component {
 
     const header = <CardHeader title="Configs" nav={nav} />;
 
-    return <Card header={header}>{content}</Card>;
+    return (
+      <Card header={header}>
+        <Table
+          className="ConfigPanel-config Table--secondary"
+          columns={[
+            {
+              cellComponent: LinkCell,
+              hrefFn: (config) => {
+                return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
+              },
+            },
+            {
+              cellComponent: ButtonCell,
+              headerClassName: 'ButtonColumn',
+              onClick: (config) => { this.deleteConfig(linode, config); },
+              text: 'Delete',
+            },
+          ]}
+          data={configs}
+          noDataMessage="You have no configs."
+        />
+      </Card>
+    );
   }
 }
 
-ConfigPanel.propTypes = {
+Configs.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
 };

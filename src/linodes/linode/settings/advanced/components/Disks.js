@@ -23,7 +23,7 @@ const borderColors = [
   '#e67e22',
 ];
 
-export class DiskPanel extends Component {
+export default class Disks extends Component {
   poweredOff() {
     return [
       'offline', 'contact_support', 'provisioning',
@@ -70,54 +70,46 @@ export class DiskPanel extends Component {
 
   render() {
     const { dispatch, linode, distributions } = this.props;
-    const { disks } = linode._disks;
+    const disks = Object.values(linode._disks.disks);
     const free = this.freeSpace();
-    const header = <CardHeader title="Disks" />;
+
+    const nav = (
+      <PrimaryButton
+        className="float-sm-right"
+        buttonClass="btn-default"
+      >
+        Add a Disk
+      </PrimaryButton>
+    );
+
+    const header = <CardHeader title="Disks" nav={nav} />;
 
     return (
       <Card header={header}>
-        {this.renderStatusMessage()}
-        <section className="disk-layout">
-          {Object.values(disks).map(d =>
-            <div
-              className={`disk disk-${d.state}`}
-              key={d.id}
-              style={{
-                flexGrow: d.size,
-                borderColor: borderColors[Object.values(disks).indexOf(d) % borderColors.length],
-              }}
-            >
-              <h3 title={d.id}>{d.label} <small>{d.filesystem}</small></h3>
-              <p>{d.size} MB</p>
-              {d.state !== 'deleting' ? null :
-                <small className="text-muted">Being deleted</small>}
-                {!this.poweredOff() || d.state === 'deleting' ? null : (
-                  <div>
-                    <Button
-                      onClick={() => EditDisk.trigger(dispatch, linode, d, free)}
-                    >Edit</Button>
-                    <Button onClick={this.deleteAction(d)}>Delete</Button>
-                  </div>
-                )}
-            </div>
-          )}
-          <div className="disk free" style={{ flexGrow: free }}>
-            <h3>Unallocated</h3>
-            <p>{free} MB</p>
-            {!this.poweredOff() ? null : (
-              <Button
-                onClick={() => AddDisk.trigger(dispatch, linode, distributions, free)}
-                disabled={free === 0}
-              >Add a disk</Button>
-            )}
-          </div>
-        </section>
+        <Table
+          className="ConfigPanel-config Table--secondary"
+          columns={[
+            {
+              cellComponent: LabelCell,
+              textKey: 'label',
+              dataKey: 'label',
+            },
+            {
+              cellComponent: ButtonCell,
+              headerClassName: 'ButtonColumn',
+              onClick: (disk) => { this.deleteDisk(linode, disk); },
+              text: 'Delete',
+            },
+          ]}
+          data={configs}
+          noDataMessage="You have no disks."
+        />
       </Card>
     );
   }
 }
 
-DiskPanel.propTypes = {
+Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,

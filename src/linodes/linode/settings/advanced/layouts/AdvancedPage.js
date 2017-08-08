@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
 
-import { ConfigPanel } from '../components/ConfigPanel';
-import { DiskPanel } from '../components/DiskPanel';
+import { Configs, Disks, Volumes } from '../components';
 import { selectLinode } from '../../../utilities';
 
 
-export class ConfigsDisksPage extends Component {
+export class AdvancedPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -18,17 +17,18 @@ export class ConfigsDisksPage extends Component {
     return (
       <div>
         <section>
-          <ConfigPanel {...this.props} />
+          <Configs {...this.props} />
         </section>
         <section>
-          <DiskPanel {...this.props} />
+          <Disks {...this.props} />
         </section>
+        <Volumes {...this.props} />
       </div>
     );
   }
 }
 
-ConfigsDisksPage.propTypes = {
+AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
@@ -40,4 +40,4 @@ function select(state, params) {
   return { linode, distributions };
 }
 
-export default connect(select)(ConfigsDisksPage);
+export default connect(select)(AdvancedPage);
