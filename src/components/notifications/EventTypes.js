@@ -14,7 +14,7 @@ export function getLinodeNetworkingRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/networking`;
 }
 
-export function getLinodeDiskRedirectUrl(entity) {
+export function getLinodeAdvancedRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
 
@@ -46,6 +46,21 @@ export function getTicketRedirectUrl(entity) {
   return `${getTicketsRedirectUrl()}/${entity.id}`;
 }
 
+export function getStackScriptsRedirectUrl() {
+  return '/stackscripts';
+}
+
+export function getStackScriptRedirectUrl(entity) {
+  return `${getStackScriptsRedirectUrl()}/${entity.id}`;
+}
+
+export function getVolumesRedirectUrl() {
+  return '/volumes';
+}
+
+export function getVolumeRedirectUrl(entity) {
+  return `${getVolumesRedirectUrl()}/${entity.id}`;
+}
 
 const EventTypeMap = {
   linode_boot: {
@@ -125,25 +140,25 @@ const EventTypeMap = {
     presentTenseAction: 'Creating disk on',
     pastTenseAction: 'created',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_delete: {
     presentTenseAction: 'Deleting disk on',
     pastTenseAction: 'deleted',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_duplicate: {
     presentTenseAction: 'Duplicating disk on',
     pastTenseAction: 'duplicated',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_resize: {
     presentTenseAction: 'Resizing disk on',
     pastTenseAction: 'resized',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
 
   backups_enable: {
@@ -220,22 +235,22 @@ const EventTypeMap = {
   stackscript_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: baseRedirect,
+    redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_publicize: {
     presentTenseAction: 'Publicizing',
     pastTenseAction: 'publicized',
-    redirectUrl: baseRedirect,
+    redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_revise: {
     presentTenseAction: 'Revising',
     pastTenseAction: 'revised',
-    redirectUrl: baseRedirect,
+    redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: baseRedirect,
+    redirectUrl: getStackScriptsRedirectUrl,
   },
 
   ticket_create: {
@@ -254,6 +269,27 @@ const EventTypeMap = {
     pastTenseAction: '',
     pastTensePrefix: 'Attachment uploaded to',
     redirectUrl: getTicketRedirectUrl,
+  },
+
+  blockstorage_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getVolumeRedirectUrl,
+  },
+  blockstorage_attach: {
+    presentTenseAction: 'Attaching',
+    pastTenseAction: 'attached',
+    redirectUrl: getLinodeAdvancedRedirectUrl,
+  },
+  blockstorage_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getVolumesRedirectUrl,
+  },
+  blockstorage_detach: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getVolumeRedirectUrl,
   },
 };
 
