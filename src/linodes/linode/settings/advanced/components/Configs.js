@@ -48,13 +48,14 @@ export default class Configs extends Component {
     return (
       <Card header={header}>
         <Table
-          className="ConfigPanel-config Table--secondary"
+          className="Table--secondary"
           columns={[
             {
               cellComponent: LinkCell,
               hrefFn: (config) => {
                 return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
               },
+              label: 'Label',
             },
             {
               cellComponent: ButtonCell,

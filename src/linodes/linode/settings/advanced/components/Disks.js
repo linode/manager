@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { DeleteModalBody } from 'linode-components/modals';
+import { Table } from 'linode-components/tables';
+import { LabelCell, ButtonCell } from 'linode-components/tables/cells';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
@@ -87,13 +89,14 @@ export default class Disks extends Component {
     return (
       <Card header={header}>
         <Table
-          className="ConfigPanel-config Table--secondary"
+          className="Table--secondary"
           columns={[
             {
               cellComponent: LabelCell,
-              textKey: 'label',
               dataKey: 'label',
+              label: 'Label',
             },
+            { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} MB` },
             {
               cellComponent: ButtonCell,
               headerClassName: 'ButtonColumn',
@@ -101,7 +104,7 @@ export default class Disks extends Component {
               text: 'Delete',
             },
           ]}
-          data={configs}
+          data={disks}
           noDataMessage="You have no disks."
         />
       </Card>
