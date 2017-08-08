@@ -614,6 +614,72 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
+  /linode/instances/:id/clone:
+    type: Action
+    authenticated: true
+    description: >
+      Clones a Linode to a new or existing Linode.
+    methods:
+      POST:
+        money: true
+        oauth: linodes:create
+        dangerous: false
+        params:
+          region:
+            optional: true
+            description: >
+              A <a href="#object-region">region</a> ID to provision
+              this Linode in. Required when cloning to a new Linode.
+            type: Region
+          type:
+            optional: true
+            description: >
+              A <a href="#object-service">Linode type</a> ID to use for this
+              Linode. Required when cloning to a new Linode.
+            type: Service
+          linode_id:
+            optional: true
+            description: >
+              An existing <a href="#object-linode">Linode</a> can be a target clone location.
+            type: Integer
+          label:
+            optional: true
+            description: The label to assign this Linode when cloning to a new Linode. Defaults to "linode".
+            type: String
+            limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+          group:
+            optional: true
+            description: The group to assign this Linode when cloning to a new Linode. Defaults to "empty".
+            type: String
+            limit: 0-50 characters
+          with_backup:
+            optional: true
+            description: >
+              Subscribes this Linode with the Backup service when cloning to a new Linode. (Additional charges apply.) Defaults to "false".
+            type: Boolean
+          disks:
+            optional: true
+            description: >
+              A list of disk ID's to include in the clone process. All disks attached to configs will be cloned from the source Linode if not provided.
+            type: Array[object]
+          configs:
+            optional: true
+            description: >
+              A list of config ID's to include in the clone process. All configs will be cloned from the source Linode if not provided.
+            type: Array[object]
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "region": "us-east-1a",
+                    "type": "g5-standard-1",
+                    "disks": [2450]
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/clone
+          python: |
+            my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
   /linode/instances/:id/resize:
     type: Action
     authenticated: true
