@@ -4,7 +4,7 @@ import {
   EventTypeMap,
   baseRedirect,
   getLinodeRedirectUrl,
-  getLinodeDiskRedirectUrl,
+  getLinodeAdvancedRedirectUrl,
   getLinodeBackupRedirectUrl,
 } from '~/components/notifications';
 import { api } from '@/data';
@@ -28,7 +28,7 @@ describe('components/notifications/EventTypes', () => {
 
   it('should create a disk redirect url', () => {
     const event = events.events[385];
-    expect(getLinodeDiskRedirectUrl(event.entity))
+    expect(getLinodeAdvancedRedirectUrl(event.entity))
       .to.equal('/linodes/linode-www2/settings/advanced');
   });
 
