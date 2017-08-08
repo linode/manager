@@ -18,11 +18,6 @@ export const config = genConfig({
       endpoint: (linode, disk) => `/linode/instances/${linode}/disks/${disk}`,
       supports: [ONE, MANY, PUT, DELETE, POST],
     },
-    _backups: {
-      plural: 'backups',
-      endpoint: (linode, backup) => `/linode/instances/${linode}/backups/${backup}`,
-      supports: [ONE, MANY],
-    },
   },
 });
 

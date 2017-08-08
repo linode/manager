@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { REGION_MAP } from '~/constants';
-import { AddLinode } from '~/linodes/components';
+import { RestoreLinode } from '~/linodes/components';
 
 import {
   changeInput,
@@ -13,12 +13,11 @@ import {
 } from '@/common';
 import { api } from '@/data';
 import { testType } from '@/data/types';
-import { testDistro } from '@/data/distributions';
 
 
-const { distributions: { distributions }, types: { types } } = api;
+const { linodes: { linodes }, types: { types } } = api;
 
-describe('linodes/components/AddLinode', function () {
+describe('linodes/components/RestoreLinode', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
 
@@ -27,13 +26,13 @@ describe('linodes/components/AddLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates a linode with no distribution', async function () {
-    AddLinode.trigger(dispatch, distributions, types);
+  it('creates a new linode from a backup', async function () {
+    RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'label', 'No distro linode');
+    changeInput(modal, 'backup', 1234);
+    changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
-    changeInput(modal, 'distribution', 'none');
     changeInput(modal, 'plan', testType.id);
 
     dispatch.reset();
@@ -44,24 +43,25 @@ describe('linodes/components/AddLinode', function () {
       ([fn]) => expectRequest(fn, '/linode/instances/', {
         method: 'POST',
         body: {
-          label: 'No distro linode',
+          backup_id: 1234,
+          label: 'Restored from backup',
           region: REGION_MAP.Asia[0],
           type: testType.id,
+          with_backups: false,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 
-  it('creates a linode with a distribution and backups', async function () {
-    AddLinode.trigger(dispatch, distributions, types);
+  it('creates a new linode from a backup with backups enabled', async function () {
+    RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'label', 'Ubuntu Linode');
+    changeInput(modal, 'backup', 1235);
+    changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'region', REGION_MAP.Asia[1]);
     changeInput(modal, 'plan', testType.id);
-    changeInput(modal, 'distribution', testDistro.id);
-    changeInput(modal, 'password', 'foobar');
     changeInput(modal, 'backups', true);
 
     dispatch.reset();
@@ -72,11 +72,10 @@ describe('linodes/components/AddLinode', function () {
       ([fn]) => expectRequest(fn, '/linode/instances/', {
         method: 'POST',
         body: {
-          label: 'Ubuntu Linode',
+          backup_id: 1235,
+          label: 'Restored from backup',
           region: REGION_MAP.Asia[1],
           type: testType.id,
-          distribution: testDistro.id,
-          root_pass: 'foobar',
           with_backups: true,
         },
       }),
