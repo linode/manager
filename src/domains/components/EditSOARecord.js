@@ -66,6 +66,7 @@ export default class EditSOARecord extends Component {
     const data = {
       group,
       domain,
+      status,
       ttl_sec: parseInt(defaultTTL),
       refresh_sec: parseInt(refreshRate),
       retry_sec: parseInt(retryRate),
@@ -73,7 +74,6 @@ export default class EditSOARecord extends Component {
       soa_email: email,
       master_ips: masterIps.length ? masterIps.split(';') : [],
       axfr_ips: axfrIps.length ? axfrIps.split(';') : [],
-      status,
     };
 
     if (!data.group) {

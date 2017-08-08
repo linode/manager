@@ -117,6 +117,7 @@ export class IndexPage extends Component {
                       tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'status', formatFn: _.capitalize },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
