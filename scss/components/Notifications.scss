@@ -40,8 +40,10 @@
         color: $black;
         cursor: pointer;
         cursor: hand;
-        display: block;
         padding: 10px 15px;
+        text-overflow: ellipsis;
+        display: block;
+        overflow-x: hidden;
 
         &:hover,
         &:active,
