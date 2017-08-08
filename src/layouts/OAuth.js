@@ -20,7 +20,7 @@ export function setSession(oauthToken = '', scopes = '') {
   };
 }
 
-funciton getAccessToken() {
+function getAccessToken() {
   return window.location.hash.substr(1);
 }
 
