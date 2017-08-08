@@ -2,7 +2,7 @@
     display: none;
     z-index: 9999;
     position: fixed;
-    top: $nav-height + $mini-nav-height - 1px;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -15,8 +15,8 @@
 
 .Modal {
     width: 600px;
-    margin: 30px auto;
-    max-height: calc(100% - #{2 * 30px});
+    margin: 50px auto;
+    max-height: calc(100% - #{2 * 50px});
     box-shadow: $box-shadow;
     background: $white;
     display: flex;
@@ -45,10 +45,6 @@
         padding-right: 0;
         padding-bottom: 0;
         border-top: 0;
-
-        .btn:not(:first-child) {
-            margin-left: 5px;
-        }
     }
 
     &-body .alert {
@@ -57,7 +53,7 @@
         text-align: center;
 
         &.alert-danger {
-            text-align: left;
+            text-align: right;
         }
     }
 
@@ -65,12 +61,16 @@
         margin-bottom: 15px;
     }
 
-    .Input, .Select, textarea, .alert {
+    .Input, textarea, .alert {
         display: block;
 
         :last-child.form-control {
             width: 100%;
         }
+    }
+
+    .Select {
+        width: 100%;
     }
 
     textarea {

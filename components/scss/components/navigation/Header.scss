@@ -1,15 +1,12 @@
 .Header {
-    position: fixed;
-    top: 0;
     width: 100%;
-    min-width: inherit; /* From .layout min-width */
-    z-index: 9998;
+    min-width: inherit; /* From .Layout min-width */
 }
 
 .MainHeader {
     @extend .clearfix;
     height: $nav-height;
-    background: $dark-black;
+    background: $main-header-color;
     font-size: 0;
 
     a:hover,
@@ -18,124 +15,41 @@
         text-decoration: none;
     }
 
-    &-brand, &-search, &-session, &-link {
+    &-link, &-brand {
         @extend .font-normal;
         float: left;
-        margin-right: 15px;
     }
-
+    
     &-logo {
         line-height: $nav-height - 5px;
+        margin-right: 15px;
     }
-
+    
     &-title {
         color: $dark-gray;
         vertical-align: top;
         line-height: $nav-height;
         font-size: 18px; /* Special font-size case */
     }
-
+    
     &-link {
-        color: $lightest-black;
+        color: $main-header-color-text;
         line-height: $nav-height;
-        margin-right: 30px;
+        padding: 0 15px;
 
         &--selected,
         &:hover,
         &:focus,
         &:active {
-            color: $white;
-        }
-    }
-
-    &-notifications {
-        @extend .font-normal;
-        height: 100%;
-
-        padding: 19px 14px;
-        position: relative;
-        width: 48px;
-
-        &:hover {
-            background: $nav-hover-background-color;
-            cursor: pointer;
-
-            i {
-                color: $white;
-            }
+            color: $main-header-color-text-highlight;
         }
 
-        i {
-            @extend .font-large;
-            color: $lightest-black;
-        }
-    }
-
-    &-session {
-        height: $nav-height;
-        float: right;
-        padding: 0 15px;
-        margin-right: 0;
-        position: relative; /* Give the badge something to relate to */
-
-        /* Disable double click highlight */
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -khtml-user-select: none;
-        -ms-user-select: none;
-
-        &.active,
-        &:active,
-        &:hover,
-        &:focus {
-            background: $nav-hover-background-color;
-            cursor: pointer;
-            cursor: hand;
+        &--selected {
+            background-color: $main-header-color-active;
         }
 
-        &:hover .MainHeader-username {
-            color: $white;
+        &:not(&--selected):hover {
+            background-color: $main-header-highlight-color;
         }
-    }
-
-    &-username {
-        line-height: $nav-height;
-        padding-right: 15px;
-        color: $lightest-black;
-    }
-
-    &-gravatar {
-        vertical-align: initial;
-        position: relative;
-        top: calc(calc(#{$nav-height} - 35px) / 2);
-    }
-
-    &-badge {
-        @extend .Badge;
-        background: $red;
-        border: 2px solid $dark-black;
-        position: absolute;
-        right: 4px;
-        top: 6px;
-    }
-}
-
-.MiniHeader {
-    @extend .text-sm-center;
-
-    font-size: 12px;
-    background: #555;
-    color: #ccc;
-    height: $mini-nav-height;
-    line-height: $mini-nav-height;
-    overflow-x: auto;
-
-    a {
-        color: #ddd;
-        text-decoration: underline;
-    }
-
-    &-text {
-        min-width: 830px;
     }
 }

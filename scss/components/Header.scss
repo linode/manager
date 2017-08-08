@@ -1,0 +1,117 @@
+.MiniHeader {
+    font-size: 12px;
+    background: $light-black;
+    color: $dark-gray;
+    height: $mini-nav-height;
+    line-height: $mini-nav-height;
+    overflow-x: auto;
+    text-align: center;
+
+    a {
+        color: $white;
+        text-decoration: underline;
+    }
+}
+
+.MainHeader {
+    &-search, &-session {
+        @extend .font-normal;
+        float: left;
+    }
+
+    &-notifications {
+        @extend .font-normal;
+
+        float: right;
+        height: 100%;
+        padding: 19px 14px;
+        position: relative;
+        width: 48px;
+
+        &:hover {
+            background: $main-header-highlight-color;
+            cursor: pointer;
+
+            i {
+                color: $white;
+                color: $main-header-color-text-highlight;
+            }
+        }
+
+        i {
+            @extend .font-large;
+            color: $main-header-color-text;
+        }
+    }
+
+    &-session {
+        height: $nav-height;
+        float: right;
+        padding: 0 15px;
+        margin-right: 0;
+        position: relative; /* Give the badge something to relate to */
+
+        /* Disable double click highlight */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+            background: $main-header-highlight-color;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        &:hover .MainHeader-username {
+            color: $main-header-color-text-highlight;
+        }
+    }
+
+    &-username {
+        line-height: $nav-height;
+        padding-right: 15px;
+        color: $main-header-color-text;
+    }
+
+    &-gravatar {
+        vertical-align: initial;
+        position: relative;
+        top: calc(calc(#{$nav-height} - 35px) / 2);
+    }
+
+    &-badge {
+        @extend .Badge;
+        background: $red;
+        border: 2px solid $dark-black;
+        position: absolute;
+        right: 4px;
+        top: 6px;
+    }
+}
+
+.ContextHeader {
+    background: $main-header-color-active;
+    padding: 5px 0;
+
+    &-link {
+        @extend .font-small;
+
+        color: $gray;
+
+        &--selected,
+        &:hover,
+        &:active,
+        &:focus {
+            text-decoration: none;
+            color: $white;
+        }
+    }
+
+    .Menu-item {
+        float: left;
+    }
+}

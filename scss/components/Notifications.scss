@@ -4,7 +4,7 @@
 
     &--open {
         display: block;
-        position: fixed;
+        position: absolute;
         height: 100%;
         top: $nav-height + $mini-nav-height;
         z-index: 1001;
@@ -40,8 +40,10 @@
         color: $black;
         cursor: pointer;
         cursor: hand;
-        display: block;
         padding: 10px 15px;
+        text-overflow: ellipsis;
+        display: block;
+        overflow-x: hidden;
 
         &:hover,
         &:active,

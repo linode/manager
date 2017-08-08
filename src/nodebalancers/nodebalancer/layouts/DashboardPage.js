@@ -22,6 +22,7 @@ import LineGraph from '~/components/graphs/LineGraph';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
+import { convertUnits } from '~/utilities';
 
 
 const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
@@ -51,12 +52,6 @@ export class DashboardPage extends Component {
       source: 'connections',
       units: 0,
     };
-
-    this.componentWillReceiveProps = this.componentWillMount;
-  }
-
-  componentWillMount() {
-
   }
 
   async componentDidMount() {
@@ -98,9 +93,10 @@ export class DashboardPage extends Component {
     const _units = source === 'connections' ? CONNECTION_UNITS : NETWORK_UNITS;
 
     return (
-      <div className="Menu-item">
-        <label className="row-label">Units:</label>
+      <div className="Menu-item clearfix">
+        <label className="col-form-label float-sm-left">Units:</label>
         <Select
+          className="float-sm-left"
           value={units}
           name="units"
           onChange={this.onChange}
@@ -120,24 +116,29 @@ export class DashboardPage extends Component {
           title: 'Connections',
           yAxis: {
             label: `${CONNECTION_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${CONNECTION_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, CONNECTION_UNITS, 1),
           },
           data: formatData(['990066'], [stats.connections]),
-          unit: `${CONNECTION_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, CONNECTION_UNITS, 1),
         },
         traffic: {
           title: 'Traffic',
           yAxis: {
             label: `${NETWORK_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, NETWORK_UNITS, 1),
           },
           data: formatData(['0033CC', '32CD32'],
                            [stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
-          unit: `${NETWORK_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS, 1),
         },
       };
     }
+
+    const options = [
+      { value: 'connections', label: 'Connections' },
+      { value: 'traffic', label: 'Traffic' },
+    ];
 
     return (
       <Card header={<CardHeader title="Graphs" />}>
@@ -149,10 +150,8 @@ export class DashboardPage extends Component {
                   value={this.state.source}
                   name="source"
                   onChange={this.onChange}
-                >
-                  <option value="connections">Connections</option>
-                  <option value="traffic">Traffic</option>
-                </Select>
+                  options={options}
+                />
               </div>
               {this.renderUnitSelect()}
               <div className="Menu-item Menu-item--right">Last 24 Hours</div>

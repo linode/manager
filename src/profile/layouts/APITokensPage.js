@@ -102,6 +102,7 @@ export class APITokensPage extends Component {
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
       filterOn: this.tokenLabel,
+      sortBy: t => this.tokenLabel(t).toLowerCase(),
       groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
     });
 
@@ -186,7 +187,7 @@ export class APITokensPage extends Component {
         <header className="NavigationHeader clearfix">
           <Button
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}
-            className="float-sm-right"
+            className="float-right"
           >Create a Personal Access Token</Button>
         </header>
         {this.renderTokens()}

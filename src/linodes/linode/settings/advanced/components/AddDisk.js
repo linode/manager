@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components/forms';
@@ -7,6 +6,7 @@ import { FormModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { DistributionSelect } from '~/linodes/components';
 
 
 export default class AddDisk extends Component {
@@ -59,27 +59,15 @@ export default class AddDisk extends Component {
     const { dispatch, free, distributions } = this.props;
     const { label, size, distribution, filesystem, password, errors } = this.state;
 
-    const vendors = _.sortBy(
-      _.map(
-        _.groupBy(Object.values(distributions.distributions), d => d.vendor),
-        (v, k) => ({
-          name: k,
-          versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
-        })
-      ), vendor => vendor.name);
-
-    const distributionOptions = [{ value: '', label: 'None' }];
-    for (let i = 0; i < vendors.length; ++i) {
-      const v = vendors[i];
-      if (i !== 0) {
-        distributionOptions.push({ value: v.name, disabled: 'disabled', label: '──────────' });
-      }
-      v.versions.forEach(d =>
-        distributionOptions.push({ value: d.id, label: d.label }));
-    }
-
     const minimumStorageSize = () =>
       distributions.distributions[distribution].minimum_storage_size;
+
+    const filesystemOptions = [
+      { value: 'ext3', label: 'ext3' },
+      { value: 'ext4', label: 'ext4' },
+      { value: 'swap', label: 'swap' },
+      { value: 'raw', label: 'raw' },
+    ];
 
     return (
       <FormModalBody
@@ -106,12 +94,13 @@ export default class AddDisk extends Component {
             apiKey="distribution"
             errors={errors}
           >
-            <Select
+            <DistributionSelect
               id="distribution"
               name="distribution"
               value={distribution}
-              options={distributionOptions}
+              distributions={distributions.distributions}
               onChange={this.onChange}
+              allowNone
             />
           </ModalFormGroup>
           {distribution ? (
@@ -130,12 +119,8 @@ export default class AddDisk extends Component {
                 name="filesystem"
                 value={filesystem}
                 onChange={this.onChange}
-              >
-                <option value="ext3">ext3</option>
-                <option value="ext4">ext4</option>
-                <option value="swap">swap</option>
-                <option value="raw">raw</option>
-              </Select>
+                options={filesystemOptions}
+              />
             </ModalFormGroup>
           )}
           <ModalFormGroup id="size" label="Size" apiKey="size" errors={errors}>

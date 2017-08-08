@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { replace } from 'react-router-redux';
 
-import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { Input, ModalFormGroup, Select, Textarea } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
@@ -26,7 +26,9 @@ export default class EditSOARecord extends Component {
         domains={domain}
         close={(newDomain) => () => {
           dispatch(hideModal());
-          dispatch(replace(`/domains/${newDomain || domain.domain}`));
+          if (newDomain) {
+            dispatch(replace(`/domains/${newDomain || domain.domain}`));
+          }
         }}
       />
     )));
@@ -64,14 +66,14 @@ export default class EditSOARecord extends Component {
     const data = {
       group,
       domain,
-      ttl_sec: defaultTTL,
-      refresh_sec: refreshRate,
-      retry_sec: retryRate,
-      expire_sec: expireTime,
+      status,
+      ttl_sec: parseInt(defaultTTL),
+      refresh_sec: parseInt(refreshRate),
+      retry_sec: parseInt(retryRate),
+      expire_sec: parseInt(expireTime),
       soa_email: email,
       master_ips: masterIps.length ? masterIps.split(';') : [],
       axfr_ips: axfrIps.length ? axfrIps.split(';') : [],
-      status,
     };
 
     if (!data.group) {
@@ -98,10 +100,22 @@ export default class EditSOARecord extends Component {
       masterIps, axfrIps, status, errors,
     } = this.state;
 
+    const statusOptions = [
+      { value: 'active', label: 'Active (turn on serving of this domain)' },
+      { value: 'disabled', label: 'Disabled (turn off serving of this domain)' },
+      { value: 'edit_mode', label: 'Edit Mode (use while making edits)' },
+    ];
+
+    const expireOptions = [
+      { value: ONE_WEEK, label: 'Default (1 week)' },
+      { value: TWO_WEEKS, label: `${TWO_WEEKS} (2 weeks)` },
+      { value: FOUR_WEEKS, label: `${FOUR_WEEKS} (4 weeks)` },
+    ];
+
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={close}
+        onCancel={close()}
         analytics={{ title: EditSOARecord.title }}
         errors={errors}
       >
@@ -138,17 +152,16 @@ export default class EditSOARecord extends Component {
               id="masterIps"
               apiKey="master_ips"
               description="The IP addresses of the master DNS servers for this zone.
-                Semicolon delimited. (maximum: 6)"
+                           Semicolon delimited. (maximum: 6)"
             >
-              <textarea
+              <Textarea
                 name="masterIps"
                 value={masterIps}
                 id="masterIps"
                 placeholder="172.92.1.4;209.124.103.15"
                 onChange={this.onChange}
               />
-            </ModalFormGroup>
-          )}
+            </ModalFormGroup>)}
           <ModalFormGroup
             errors={errors}
             name="axfr_ips"
@@ -156,9 +169,9 @@ export default class EditSOARecord extends Component {
             apiKey="axfr_ips"
             id="axfrIps"
             description="The IP addresses allowed to AXFR this entire zone.
-              Semicolon delimited. (maximum: 6)"
+                         Semicolon delimited. (maximum: 6)"
           >
-            <textarea
+            <Textarea
               name="axfrIps"
               value={axfrIps}
               id="axfrIps"
@@ -195,11 +208,8 @@ export default class EditSOARecord extends Component {
                   onChange={this.onChange}
                   id="status"
                   name="status"
-                >
-                  <option value="active">Active - Turn ON serving of this domain</option>
-                  <option value="disabled">Disabled - Turn OFF serving of this domain</option>
-                  <option value="edit_mode">Edit Mode - Use this mode while making edits</option>
-                </Select>
+                  options={statusOptions}
+                />
               </ModalFormGroup>
               <h3 className="sub-header">Advanced</h3>
               <ModalFormGroup
@@ -256,15 +266,12 @@ export default class EditSOARecord extends Component {
                 errors={errors}
               >
                 <Select
-                  value={Math.max(expireTime, ONE_WEEK).toString()}
+                  value={expireTime}
                   onChange={this.onChange}
                   id="expireTime"
                   name="expireTime"
-                >
-                  <option value={ONE_WEEK}>Default (1 week)</option>
-                  <option value={TWO_WEEKS}>{TWO_WEEKS} (2 weeks)</option>
-                  <option value={FOUR_WEEKS}>{FOUR_WEEKS} (4 weeks)</option>
-                </Select>
+                  options={expireOptions}
+                />
               </ModalFormGroup>
             </span>
           )}

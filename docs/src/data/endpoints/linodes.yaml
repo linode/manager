@@ -493,7 +493,8 @@ endpoints:
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/volumes
           python: |
-            # not yet implemented
+            l = linode.Linode(client, 123)
+            volumes_for_linode = l.volumes
   /linode/instances/:id/boot:
     type: Action
     authenticated: true
@@ -1097,7 +1098,7 @@ endpoints:
             curl -H "Authorization; token $TOKEN" \
                 https://$api_root/$version/linode/volumes
           python: |
-            # not yet implemented
+            volumes = client.linode.get_volumes()
   /linode/volumes/:id:
     _group: Volumes
     type: resource
@@ -1115,4 +1116,33 @@ endpoints:
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
-            # not yet implemented
+            v = linode.Volume(client, 123)
+      DELETE:
+        oauth: volumes:delete
+        description: >
+          Removes a volume from your account.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/volumes/$volume_id
+          python: |
+            v = linode.Volume(client, 123)
+            v.delete()
+  /linode/volumes/:id/detach:
+    _group: Volumes
+    type: resource
+    authenticated: true
+    methods:
+      POST:
+        oauth: volumes:modify,linodes:modify
+        description: >
+          Detach a volume from a Linode
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/volumes/$volume_id/detach
+          python: |
+            v = linode.Volume(client, 123)
+            v.detach()

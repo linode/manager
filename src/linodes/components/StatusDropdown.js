@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
@@ -169,8 +170,7 @@ export default class StatusDropdown extends Component {
   }
 
   rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () =>
-    this.props.dispatch(powerOffLinode(this.props.linode.id)))
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
   powerOnLinode = () => this.selectConfig(powerOnLinode)
   deleteLinode = () => {
     const { linode, dispatch } = this.props;
@@ -191,7 +191,7 @@ export default class StatusDropdown extends Component {
   render() {
     const { linode } = this.props;
 
-    const status = LinodeStatesReadable[linode.status];
+    const status = LinodeStatesReadable[linode.status] || _.capitalize(linode.status);
     const groups = [
       { elements: [{ name: status }] },
       {
@@ -216,7 +216,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown groups={groups} dropdownIcon="fa-cog" analytics={{ title: 'Linode actions' }} />
+        <Dropdown groups={groups} analytics={{ title: 'Linode actions' }} />
         <div className="StatusDropdown-container">
           <div
             style={{ width: progressWidth }}

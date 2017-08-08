@@ -1,5 +1,6 @@
 export const apiTestKernel = {
   created: '2015-05-04T09:43:23',
+  current: true,
   deprecated: false,
   description: null,
   id: 'linode/latest_64',

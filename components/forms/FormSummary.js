@@ -1,31 +1,46 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 
-export default function FormSummary(props) {
-  const { errors } = props;
-
-  let content;
-  if (errors._ && errors._.length) {
-    content = (
-      <div className="alert alert-danger">
-        {errors._.map(error => {
-          const text = error.hasOwnProperty('reason') ? error.reason : error;
-          return (<div key={text}>{text}</div>);
-        })}
-      </div>
-    );
-  } else if (Object.keys(errors).length === 1) {
-    content = props.success ? <div className="alert alert-success">{props.success}</div> : '';
-  } else if (errors._) {
-    content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
+export default class FormSummary extends Component {
+  componentWillReceiveProps() {
+    clearTimeout(this._successTimeout);
+    this.setState({ renderSuccess: true });
   }
 
-  return (
-    <div className="FormSummary">{content}</div>
-  );
+  render() {
+    const { className, errors, success } = this.props;
+
+    let content;
+    if (errors._ && errors._.length) {
+      content = (
+        <div className="alert alert-danger">
+          {errors._.map(error => {
+            const text = error.hasOwnProperty('reason') ? error.reason : error;
+            return (<div key={text}>{text}</div>);
+          })}
+        </div>
+      );
+    } else if (Object.keys(errors).length === 1) {
+      if (this.state.renderSuccess) {
+        content = success ? <div className="alert alert-success">{success}</div> : '';
+        this._successTimeout = setTimeout(() => this.setState({ renderSuccess: false }), 3000);
+      }
+    } else if (errors._) {
+      content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
+    }
+
+    return (
+      <div className={`FormSummary ${className}`}>{content}</div>
+    );
+  }
 }
 
 FormSummary.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.string,
+  className: PropTypes.string,
+};
+
+FormSummary.defaultProps = {
+  className: '',
 };

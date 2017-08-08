@@ -55,7 +55,7 @@ export default class LineGraph extends Component {
     return undefined;
   }
 
-  renderChart({ timezone, data, title, yAxis, unit }) {
+  renderChart({ timezone, data, title, yAxis, tooltipFormat }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
     const ctx = thisDOMNode.getContext('2d');
     const config = {
@@ -102,7 +102,7 @@ export default class LineGraph extends Component {
               if (label) {
                 label += ': ';
               }
-              label += tooltipItem.yLabel + unit;
+              label += tooltipFormat(tooltipItem.yLabel);
               return label;
             },
           },

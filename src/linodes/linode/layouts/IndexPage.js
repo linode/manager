@@ -1,17 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-
 import { Link } from 'react-router';
+
 import { Tabs } from 'linode-components/tabs';
 
 import { setAnalytics, setTitle } from '~/actions';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { GroupLabel } from '~/components';
+import { planStats } from '~/linodes/components/PlanStyle';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
+
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -59,6 +61,7 @@ export class IndexPage extends Component {
                   <GroupLabel object={linode} />
                 </Link>
               </h1>
+              <div>{planStats(linode.type)}</div>
             </div>
             <span className="float-sm-right">
               <StatusDropdown

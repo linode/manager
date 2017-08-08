@@ -19,13 +19,11 @@
                 color: $green;
             }
 
-            background: $white;
+            background: $white !important;
             width: calc(100% - #{$form-field-height});
 
-            &:hover,
-            &:active,
-            &:focus {
-                background: $white;
+            &#running {
+                color: $green !important;
             }
         }
 

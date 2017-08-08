@@ -33,7 +33,7 @@ let allEndpoints = files.filter(function(fileName) {
   try {
     endpoint = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
   } catch (e) {
-    console.log(`File [${filePath}] could not be read.`);
+    console.log(`File [${filePath}] could not be read: ${e}`);
     process.exit();
   }
 
@@ -349,6 +349,18 @@ let endpointMap = {
     path: '/account',
     routePath: `${ROUTE_BASE_PATH}/account`,
     groups: {}
+  },
+  profile: {
+    name: 'Profile',
+    path: '/profile',
+    routePath: `${ROUTE_BASE_PATH}/profile`,
+    groups: {}
+  },
+  volumes: {
+    name: 'Volumes',
+    path: '/volumes',
+    routePath: `${ROUTE_BASE_PATH}/volumes`,
+    groups: {},
   },
 };
 

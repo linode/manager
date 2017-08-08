@@ -25,15 +25,12 @@ describe('profile/components/ChangeTimezone', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('timezone', 'GMT');
+    page.find('Select').props().onChange({ target: { value: 'GMT', name: 'timezone' } });
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile', {
+      ([fn]) => expectRequest(fn, '/profile', {
         method: 'PUT',
         body: { timezone: 'GMT' },
       }),

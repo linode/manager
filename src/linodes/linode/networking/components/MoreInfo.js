@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 
-import { ModalFormGroup, Input } from 'linode-components/forms';
+import { ExternalLink } from 'linode-components/buttons';
+import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { IPV4_DNS_RESOLVERS, IPV6_DNS_RESOLVERS } from '~/constants';
@@ -42,7 +42,7 @@ export default class MoreInfo extends Component {
   renderDNSResolvers(resolvers) {
     return (
       <ModalFormGroup label="DNS Resolvers">
-        <textarea
+        <Textarea
           className="form-control"
           disabled
           rows={resolvers.length}
@@ -59,7 +59,7 @@ export default class MoreInfo extends Component {
     if (isIPv4) {
       return (
         <div>
-          <p>For more information, see this <Link to="https://www.linode.com/docs/networking/linux-static-ip-configuration" target="_blank" rel="nofollow noopener noreferrer">guide</Link> on static IP configuration.</p>
+          <p>For more information, see this <ExternalLink to="https://www.linode.com/docs/networking/linux-static-ip-configuration">guide</ExternalLink> on static IP configuration.</p>
           <ModalFormGroup label="Address">
             <Input disabled value={ip.address} />
           </ModalFormGroup>
@@ -74,7 +74,7 @@ export default class MoreInfo extends Component {
 
     return (
       <div>
-        <p>For more information, see this <Link to="https://www.linode.com/docs/networking/linux-static-ip-configuration" target="_blank" rel="nofollow noopener noreferrer">guide</Link> on static IP configuration and this <Link to="https://www.linode.com/docs/networking/native-ipv6-networking" target="_blank" rel="nofollow noopener noreferrer">guide</Link> on IPv6 networking.</p>
+        <p>For more information, see this <ExternalLink to="https://www.linode.com/docs/networking/linux-static-ip-configuration">guide</ExternalLink> on static IP configuration and this <ExternalLink to="https://www.linode.com/docs/networking/native-ipv6-networking">guide</ExternalLink> on IPv6 networking.</p>
         <ModalFormGroup label={ip.type.toLowerCase() === 'pool' ? 'Range' : 'Address'}>
           <Input disabled value={ip.address} />
         </ModalFormGroup>

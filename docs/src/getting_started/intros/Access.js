@@ -78,7 +78,7 @@ export default function Authentication() {
               description: 'Required. Your application\'s client ID.',
             },
             {
-              parameter: 'scopes',
+              parameter: 'scope',
               description: 'A comma-delimited list of OAuth scopes you need.',
             },
             {
@@ -131,8 +131,10 @@ export default function Authentication() {
         <Example
           // eslint-disable-next-line max-len
           example={`{
-  "scopes": "linodes:create",
+  "scope": "linodes:create",
   "access_token": "03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
+  "token_type": "bearer",
+  "expires_in": 7200,
 }`}
           name="json"
           noclipboard
@@ -160,7 +162,7 @@ export default function Authentication() {
           That is, you are only allowed to see their username and email address. If you
           want more access, you need to add <em>OAuth scopes</em> to the query string.
           An OAuth scope defines the level of access your OAuth token will receive.
-          You can request a comma-delimited list of scopes by adding <code>scopes=a,b,c</code>
+          You can request a comma-delimited list of scopes by adding <code>scope=a,b,c</code>
           to the query string of the <code>{LOGIN_ROOT}</code> URL.
         </p>
         <p>

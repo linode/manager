@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.1] 2017-08-04
+### Changed
+- /account/profile -> /profile and other api followups #2373
+
+## [0.11.0] 2017-08-01
+### Added
+- added more debugging for failing prebuild script #2233
+- added docs linting #2283
+- added developers links to docs readme #2289
+- add response_type to oauth client docs #2330
+- add additional oauth fields #2334
+### Changed
+- show paginated results on paginated endpoints #2279
+- no custom object names #2279
+- independent method response fields #2320
+- scopes to scope for requesting scopes in oauth #2331
+### Fixed
+- sets non-integer numbers correctly to be float #2279
+- fixed typo in python example #2298
+
 ## [0.10.2] 2017-07-20
 ### Fixed
 - account endpoint documentation #2318

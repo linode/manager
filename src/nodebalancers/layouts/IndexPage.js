@@ -26,6 +26,8 @@ import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
 import { transform } from '~/api/util';
 
+import { AddNodeBalancer } from '../components';
+
 
 const OBJECT_TYPE = 'nodebalancers';
 
@@ -110,7 +112,7 @@ export class IndexPage extends Component {
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
                 tooltipEnabled: true,
               },
-              { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+              { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
               { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
@@ -131,12 +133,14 @@ export class IndexPage extends Component {
       </List>
     );
 
+    const addNodeBalancer = () => AddNodeBalancer.trigger(dispatch);
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">NodeBalancers</h1>
-            <PrimaryButton to="/nodebalancers/create" className="float-sm-right">
+            <h1 className="float-left">NodeBalancers</h1>
+            <PrimaryButton onClick={addNodeBalancer} className="float-right">
               Add a NodeBalancer
             </PrimaryButton>
           </div>
@@ -145,8 +149,8 @@ export class IndexPage extends Component {
           {Object.values(nodebalancers.nodebalancers).length ? renderNodeBalancers() : (
             <CreateHelper
               label="NodeBalancers"
-              href="/nodebalancers/create"
               linkText="Add a NodeBalancer"
+              onClick={addNodeBalancer}
             />
           )}
         </div>

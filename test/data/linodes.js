@@ -228,13 +228,9 @@ function createTestLinode(id) {
           root_device: '/dev/sda',
           root_device_ro: false,
           devtmpfs_automount: false,
-          disks: {
-            sda: {
-              id: 12345,
-            },
-            sdb: {
-              id: 12346,
-            },
+          devices: {
+            sda: { disk_id: 12345 },
+            sdb: { disk_id: 12346 },
             sdc: null,
             sdd: null,
             sde: null,
@@ -277,8 +273,8 @@ export const testLinode1233 = {
       12346: {
         ...testLinode._configs.configs['12345'],
         id: 12346,
-        disks: {
-          ...testLinode._configs.configs['12345'].disks,
+        devices: {
+          ...testLinode._configs.configs['12345'].devices,
           sdb: null,
         },
       },
