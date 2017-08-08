@@ -210,7 +210,7 @@ endpoints:
             optional: true
             description: >
               If true, this disk is read-only.
-            type: boolean
+            type: Boolean
           stackscript_id:
             optional: true
             description: >
