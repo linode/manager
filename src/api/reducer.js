@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import { reducer as linodes } from './configs/linodes';
+import { reducer as volumes } from './configs/volumes';
 import { reducer as distributions } from './configs/distributions';
 import { reducer as regions } from './configs/regions';
 import { reducer as types } from './configs/types';
@@ -18,6 +19,7 @@ import { reducer as stackscripts } from './configs/stackscripts';
 
 export default combineReducers({
   linodes,
+  volumes,
   regions,
   distributions,
   types,
