@@ -1,6 +1,5 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Error } from 'linode-components/errors';
@@ -103,7 +102,6 @@ export class Layout extends Component {
               to={`${githubRoot}${source.source}`}
             >Page Source</ExternalLink>
           )}
-          <Link to="/styleguide">Styleguide</Link>
         </footer>
       </div>
     );
