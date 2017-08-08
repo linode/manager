@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
 
 import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
@@ -40,10 +41,15 @@ export default function DistributionSelect(props) {
   }
 
   return (
-    <Select
-      {...props}
-      options={options}
-    />
+    <div>
+      <Select
+        {...props}
+        options={options}
+      />
+      <small className="text-muted">
+        <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
+      </small>
+    </div>
   );
 }
 

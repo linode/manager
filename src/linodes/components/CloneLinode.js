@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { ExternalLink } from 'linode-components/buttons';
 import { ModalFormGroup } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
@@ -78,9 +77,6 @@ export default class CloneLinode extends Component {
               id="region"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Plan" id="plan" apiKey="plan" errors={errors}>
             <PlanSelect
@@ -90,9 +86,6 @@ export default class CloneLinode extends Component {
               id="plan"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
         </div>
       </FormModalBody>
