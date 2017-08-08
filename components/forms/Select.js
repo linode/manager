@@ -45,13 +45,15 @@ export default class Select extends Component {
       // Nothing to do.
     }
 
-    const value = this.props.value || defaultValue;
+    let value = this.props.value;
 
-    // Update the form so the value is no longer undefined.
-    if (_.isUndefined(this.props.value)) {
-      // setState will not be allowed during render, so take it out of the current
-      // function.
-      setTimeout(() => this.onChange({ value: defaultValue }), 0);
+    // Update the form so the value with the default value so the state is no longer unset
+    // -- unless the default is itself unset (in which case we enter an infinite loop).
+    const unset = (v) => [undefined, null].indexOf(v) !== -1;
+    if (unset(value) && !unset(defaultValue)) {
+      value = defaultValue;
+      // setState will not be allowed during render, so take it out of the current function.
+      setTimeout(() => this.onChange({ target: { value } }), 0);
     }
 
     return (
@@ -68,7 +70,7 @@ export default class Select extends Component {
           clearable={false}
           name={`${this.props.name}-internal`}
           {..._.omit(this.props, ['className', 'id', 'name'])}
-          value={this.props.value || defaultValue}
+          value={value}
           onChange={this.onChange}
         />
         {!this.props.label ? null : (
