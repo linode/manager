@@ -27,7 +27,7 @@ export default class Select extends Component {
   }
 
   render() {
-    const { options, value } = this.props;
+    const { options } = this.props;
 
     let defaultValue;
     // Putting a try-catch in here as a final resort because this commit is a patch and may not
@@ -45,13 +45,15 @@ export default class Select extends Component {
       // Nothing to do.
     }
 
-    let realValue = value;
-    // Update the form so the value is no longer undefined.
-    if (_.isUndefined(value) || value === null) {
-      realValue = value;
-      // setState will not be allowed during render, so take it out of the current
-      // function.
-      setTimeout(() => this.onChange({ value: defaultValue }), 0);
+    let value = this.props.value;
+
+    // Update the form so the value with the default value so the state is no longer unset
+    // -- unless the default is itself unset (in which case we enter an infinite loop).
+    const unset = (v) => [undefined, null].indexOf(v) !== -1;
+    if (unset(value) && !unset(defaultValue)) {
+      value = defaultValue;
+      // setState will not be allowed during render, so take it out of the current function.
+      setTimeout(() => this.onChange({ target: { value } }), 0);
     }
 
     return (
@@ -62,13 +64,13 @@ export default class Select extends Component {
           id={this.props.id}
           name={this.props.name}
           onChange={this.onChange}
-          value={realValue}
+          value={value}
         />
         <VendorSelect
           clearable={false}
           name={`${this.props.name}-internal`}
           {..._.omit(this.props, ['className', 'id', 'name'])}
-          value={realValue}
+          value={value}
           onChange={this.onChange}
         />
         {!this.props.label ? null : (
@@ -85,7 +87,7 @@ Select.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any,
   label: PropTypes.string,
   className: PropTypes.string,
   id: PropTypes.string,
