@@ -65,25 +65,25 @@ endpoints:
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
             type: String
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
             type: String
-          backup:
+          backup_id:
             optional: true
             description: >
               The <a href="#object-backup">Backup</a> to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
-            type: Backup
+            type: Integer
           with_backup:
             optional: true
             description: >
@@ -211,13 +211,13 @@ endpoints:
             description: >
               If true, this disk is read-only.
             type: Boolean
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
@@ -510,11 +510,11 @@ endpoints:
         oauth: linodes:modify
         dangerous: false
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: Linode_config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -552,11 +552,11 @@ endpoints:
         oauth: linodes:modify
         dangerous: true
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: Linode_config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -794,10 +794,10 @@ endpoints:
         oauth: linodes:create
         dangerous: true
         params:
-          linode:
+          linode_id:
             description: >
               The ID of the Linode to restore a backup to.
-            type: Linode
+            type: Integer
           overwrite:
             description: >
                 If true, deletes all disks and configs on the target linode before restoring.
@@ -929,13 +929,13 @@ endpoints:
             description: >
                 The key to authorize for root access to the new deployment.
             type: String
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
@@ -978,12 +978,12 @@ endpoints:
             description: >
               Label of StackScript.
             limit: 3-128 characters
-            type: string
+            type: String
           description:
             optional: true
             description: >
               Description of the StackScript.
-            type: string
+            type: String
           distributions:
             description: >
               A list of <a href="#object-distribution">distributions</a>
@@ -994,17 +994,17 @@ endpoints:
             description: >
               If true, this StackScript will be publicly visible in the Linode
               StackScript library. Defaults to False.
-            type: boolean
+            type: Boolean
           rev_note:
             optional: true
             description: >
               Release notes for this revision.
             limit: 0-512 characters
-            type: string
+            type: String
           script:
             description: >
               The shell script to run on boot.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
