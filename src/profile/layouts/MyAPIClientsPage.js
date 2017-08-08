@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
@@ -188,10 +188,11 @@ export class MyAPIClientsPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button
+          <PrimaryButton
             onClick={() => CreateOrEditApplication.trigger(dispatch)}
             className="float-right"
-          >Create an OAuth Client</Button>
+            buttonClass="btn-secondary"
+          >Create an OAuth Client</PrimaryButton>
         </header>
         {this.renderClients()}
       </div>

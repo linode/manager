@@ -3,6 +3,7 @@
 }
 
 // default checkbox rows with labels to use font-large for the label
+.TableCell.LinkCell:first-of-type,
 .CheckboxCell + .TableCell.LinkCell,
 .CheckboxCell + .TableCell.LabelCell,
 .ThumbnailCell + .TableCell.LinkCell,

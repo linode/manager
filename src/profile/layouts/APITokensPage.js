@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -184,10 +184,11 @@ export class APITokensPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button
+          <PrimaryButton
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}
             className="float-right"
-          >Create a Personal Access Token</Button>
+            buttonClass="btn-secondary"
+          >Create a Personal Access Token</PrimaryButton>
         </header>
         {this.renderTokens()}
       </div>
