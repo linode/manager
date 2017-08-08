@@ -60,7 +60,7 @@ export class OAuthCallbackPage extends Component {
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
-    } else if (getAccessToken) {
+    } else if (getAccessToken()) {
       const accessToken = getAccessToken();
       const returnTo = location.query['return'];
       const nonce = location.query.state;
