@@ -33,7 +33,7 @@ let allEndpoints = files.filter(function(fileName) {
   try {
     endpoint = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
   } catch (e) {
-    console.log(`File [${filePath}] could not be read.`);
+    console.log(`File [${filePath}] could not be read: ${e}`);
     process.exit();
   }
 
