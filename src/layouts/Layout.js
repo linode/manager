@@ -1,6 +1,5 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { Error } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
@@ -104,7 +103,6 @@ export class Layout extends Component {
               href={`${githubRoot}${source.source}`}
             >Page Source</a>
           )}
-          <Link to="/styleguide">Styleguide</Link>
         </footer>
       </div>
     );
