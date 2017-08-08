@@ -3,7 +3,7 @@ description: >
   This represents a reply to a support ticket.
 schema:
   id:
-    _type: Int
+    _type: Integer
     _value: 1234
     _description: This ticket's ID
   description:

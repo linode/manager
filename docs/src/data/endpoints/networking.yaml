@@ -32,7 +32,7 @@ endpoints:
           linode:
             description: >
               The Linode ID to assign this IP to.
-            type: Int
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

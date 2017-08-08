@@ -37,17 +37,17 @@ endpoints:
           domain_id:
             description: >
               The Domain this ticket is regarding, if relevant.
-            type: Int
+            type: Integer
             optional: true
           linode_id:
             description: >
               The Linode this ticket is regarding, if relevant.
-            type: Int
+            type: Integer
             optional: true
           nodebalancer_id:
             description: >
               The NodeBalancer this ticket is regarding, if relevant.
-            type: Int
+            type: Integer
             optional: true
         examples:
           curl: |
