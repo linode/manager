@@ -146,19 +146,19 @@ const EventTypeMap = {
     presentTenseAction: 'Deleting disk on',
     pastTenseAction: 'deleted',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_duplicate: {
     presentTenseAction: 'Duplicating disk on',
     pastTenseAction: 'duplicated',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_resize: {
     presentTenseAction: 'Resizing disk on',
     pastTenseAction: 'resized',
     pastTensePrefix: 'Disk on',
-    redirectUrl: getLinodeDiskRedirectUrl,
+    redirectUrl: getLinodeAdvancedRedirectUrl,
   },
 
   backups_enable: {
@@ -290,7 +290,7 @@ const EventTypeMap = {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getVolumeRedirectUrl,
-  }
+  },
 };
 
 export default EventTypeMap;
