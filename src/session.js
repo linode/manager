@@ -10,7 +10,7 @@ const AUTH_EXPIRES = 'authentication/expires';
 export function initializeAuthentication(dispatch) {
   const token = getStorage('authentication/oauth-token') || null;
   const scopes = getStorage('authentication/scopes') || null;
-  dispatch({ type: SET_TOKEN, token, scopes });
+  dispatch({ type: setToken, token, scopes });
 }
 
 export function redirect(location) {

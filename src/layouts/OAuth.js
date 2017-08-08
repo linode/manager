@@ -68,9 +68,8 @@ export class OAuthCallbackPage extends Component {
         // Retry auth flow
         dispatch(push('/'));
         return null;
-      } else {
-        setStorage('authentication/nonce', '');
       }
+      setStorage('authentication/nonce', '');
 
       // Token needs to be in redux state for all API calls
       dispatch(setSession(accessToken, '*'));
@@ -79,7 +78,6 @@ export class OAuthCallbackPage extends Component {
       dispatch(push(returnTo || '/'));
 
       return null;
-
     } else {
       dispatch(push('/'));
     }
