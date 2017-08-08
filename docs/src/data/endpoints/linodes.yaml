@@ -552,11 +552,11 @@ endpoints:
         oauth: linodes:modify
         dangerous: true
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: Linode_config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
