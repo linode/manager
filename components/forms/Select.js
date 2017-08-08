@@ -27,7 +27,7 @@ export default class Select extends Component {
   }
 
   render() {
-    const { options } = this.props;
+    const { options, value } = this.props;
 
     let defaultValue;
     // Putting a try-catch in here as a final resort because this commit is a patch and may not
@@ -45,6 +45,15 @@ export default class Select extends Component {
       // Nothing to do.
     }
 
+    let realValue = value;
+    // Update the form so the value is no longer undefined.
+    if (_.isUndefined(value) || value === null) {
+      realValue = value;
+      // setState will not be allowed during render, so take it out of the current
+      // function.
+      setTimeout(() => this.onChange({ value: defaultValue }), 0);
+    }
+
     return (
       <span className={this.props.className}>
         {/* This allows us to use this in tests like a normal input. */}
@@ -53,13 +62,13 @@ export default class Select extends Component {
           id={this.props.id}
           name={this.props.name}
           onChange={this.onChange}
-          value={this.props.value}
+          value={realValue}
         />
         <VendorSelect
           clearable={false}
           name={`${this.props.name}-internal`}
           {..._.omit(this.props, ['className', 'id', 'name'])}
-          value={this.props.value || defaultValue}
+          value={realValue}
           onChange={this.onChange}
         />
         {!this.props.label ? null : (

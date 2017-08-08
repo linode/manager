@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.12.5] 2017-08-08
+### Changed
+- setState when using default value in Select
+
 ## [0.12.4] 2017-08-07
 ### Fixed
 - don't crash on rescue page when no disks are present because of bad Select logic
