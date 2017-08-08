@@ -12,7 +12,7 @@ import { TableCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
-import { deleteIP, setRDNS } from '~/api/networking';
+import { addIP, deleteIP, setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import { MoreInfo, EditRDNS, AddIP } from '../components';
@@ -128,8 +128,39 @@ export class SummaryPage extends Component {
     );
   }
 
-  render() {
+  renderAddButton() {
     const { dispatch, linode } = this.props;
+
+    const addIPModal = () => AddIP.trigger(dispatch, linode);
+
+    const privateIPv4s = Object.values(linode._ips).filter(
+      ip => ip.version === 'ipv4' && ip.type === 'private');
+    if (privateIPv4s.length) {
+      return (
+        <PrimaryButton
+          className="float-sm-right"
+          buttonClass="btn-default"
+          onClick={addIPModal}
+        >
+          Add an IP Address
+        </PrimaryButton>
+      );
+    }
+
+    return (
+      <PrimaryButton
+        className="float-sm-right"
+        buttonClass="btn-default"
+        onClick={() => dispatch(addIP(linode.id, 'private'))}
+        options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
+      >
+        Enable Private IPv4
+      </PrimaryButton>
+    );
+  }
+
+  render() {
+    const { linode } = this.props;
 
     const ipv4s = Object.values(linode._ips).filter(ip => ip.version === 'ipv4').map(ip => ({
       ...ip,
@@ -155,13 +186,7 @@ export class SummaryPage extends Component {
       <div>
         <header className="NavigationHeader clearfix">
           {/* TODO: Add rdnslookup when API supports it */}
-          <PrimaryButton
-            className="float-sm-right"
-            buttonClass="btn-default"
-            onClick={() => AddIP.trigger(dispatch, linode)}
-          >
-            Add an IP Address
-          </PrimaryButton>
+          {this.renderAddButton()}
         </header>
         <List>
           <ListBody>

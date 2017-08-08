@@ -6,6 +6,7 @@ import { expect } from 'chai';
 import { SHOW_MODAL } from '~/actions/modal';
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 
+import { expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -69,7 +70,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     });
   });
 
-  it('opens the add modal on click', function () {
+  it('opens the add modal on click if has private IP', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -78,9 +79,35 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     );
 
     dispatch.reset();
-    page.find('PrimaryButton').props().onClick();
+    const button = page.find('PrimaryButton');
+
+    expect(button.props().options.length).to.equal(0);
+
+    button.props().onClick();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
+    expect(dispatch.firstCall.args[0].title, 'Add a Public IP Address');
+  });
+
+  it('adds a private IP on click if doesnt exist', function () {
+    const page = mount(
+      <SummaryPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+
+    dispatch.reset();
+    const button = page.find('PrimaryButton');
+
+    expect(button.props().options.length).to.equal(0);
+
+    button.props().onClick();
+    expect(dispatch.callCount).to.equal(1);
+    expectRequest(dispatch.firstCall.args[0], `/linode/instances/${testLinode.id}/ips`, {
+      method: 'POST',
+      body: { type: 'private' },
+    });
   });
 
   it('opens the more info modal on click', function () {

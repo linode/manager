@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import AddIP from '~/linodes/linode/networking/components/AddIP';
 
-import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -27,7 +27,6 @@ describe('linodes/linode/networking/components/AddIP', () => {
       />
     );
 
-    changeInput(page, 'type', 'private', { displayName: 'Radio', nameOnly: true });
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });
@@ -36,7 +35,7 @@ describe('linodes/linode/networking/components/AddIP', () => {
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips`, {
         method: 'POST',
-        body: { type: 'private' },
+        body: { type: 'public' },
       }, { address: '192.168.1.1' }),
     ]);
   });
