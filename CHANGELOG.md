@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.12.5] 2017-08-08
 ### Changed
-- setState when using default value in Select
+- setState when using default value in Select #2401
 
 ## [0.12.4] 2017-08-07
 ### Fixed
