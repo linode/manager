@@ -68,17 +68,28 @@ export class DashboardPage extends Component {
               columns={[
                 {
                   cellComponent: LabelCell,
-                  headerClassName: 'LabelColumn',
+                  headerClassName: 'NodeBalancerLabelColumn',
                   dataKey: 'label',
                   label: 'Label',
                   tooltipEnabled: true,
                 },
-                { dataKey: 'address', label: 'Address' },
-                { dataKey: 'weight', label: 'Weight' },
-                { dataKey: 'mode', label: 'Mode', formatFn: _.capitalize },
-                { dataKey: 'status', label: 'Status', formatFn: _.capitalize },
+                { dataKey: 'address', label: 'Address', headerClassName: 'AddressColumn' },
+                { dataKey: 'weight', label: 'Weight', headerClassName: 'WeightColumn' },
+                {
+                  dataKey: 'mode',
+                  label: 'Mode',
+                  formatFn: _.capitalize,
+                  headerClassName: 'ModeColumn',
+                },
+                {
+                  dataKey: 'status',
+                  label: 'Status',
+                  formatFn: _.capitalize,
+                  headerClassName: 'ModeColumn',
+                },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   onClick: (node) => NodeModal.trigger(dispatch, nodebalancer, config, node),
                   text: 'Edit',
                 },

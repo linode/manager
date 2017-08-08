@@ -112,7 +112,7 @@ export class IndexPage extends Component {
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
                 tooltipEnabled: true,
               },
-              { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+              { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
               { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,

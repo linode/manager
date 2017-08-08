@@ -26,10 +26,44 @@
     width: 300px;
 }
 
+.Table--secondary {
+    .LabelColumn {
+        width: initial;
+    }
+}
+
 .EmailColumn {
     width: 200px;
 }
 
 .DropdownColumn {
     width: 150px;
+}
+
+.AddressColumn {
+    width: 150px;
+}
+
+.NodeBalancerLabelColumn {
+    width: 250px;
+}
+
+.WeightColumn {
+    width: 75px;
+}
+
+.ModeColumn {
+    width: 100px;
+}
+
+.ServiceColumn {
+    width: 120px;
+}
+
+.PortColumn {
+    width: 100px;
+}
+
+.TTLColumn {
+    width: 120px;
 }
