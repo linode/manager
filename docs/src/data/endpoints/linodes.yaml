@@ -670,7 +670,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "type": "g5-standard-1",
@@ -1171,7 +1171,7 @@ endpoints:
           Returns a list of volumes.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/volumes
           python: |
             volumes = client.linode.get_volumes()
@@ -1199,7 +1199,7 @@ endpoints:
           Removes a volume from your account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
@@ -1216,7 +1216,7 @@ endpoints:
           Detach a volume from a Linode
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/volumes/$volume_id/detach
           python: |

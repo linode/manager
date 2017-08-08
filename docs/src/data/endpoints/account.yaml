@@ -455,7 +455,7 @@ endpoints:
           Returns a list of <a href="#object-client">clients</a>.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients
       POST:
         oauth: clients:create
