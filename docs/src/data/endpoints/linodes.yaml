@@ -641,7 +641,7 @@ endpoints:
             optional: true
             description: >
               An existing <a href="#object-linode">Linode</a> can be a target clone location.
-            type: Int
+            type: Integer
           label:
             optional: true
             description: The label to assign this Linode when cloning to a new Linode. Defaults to "linode".
