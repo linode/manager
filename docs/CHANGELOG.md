@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.2] 2017-08-08
+### Added
+- docs for linode clone endpoint #2399
+
 ## [0.11.1] 2017-08-04
 ### Changed
 - /account/profile -> /profile and other api followups #2373
