@@ -8,7 +8,7 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { List } from 'linode-components/lists';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { TableCell } from 'linode-components/tables/cells';
+import { TableCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
@@ -99,20 +99,22 @@ export class SummaryPage extends Component {
         <Table
           className="Table--secondary"
           columns={[
-
             {
               dataKey: 'address',
               label: 'Address',
+              headerClassName: 'IPAddressColumn',
             },
             {
+              cellComponent: LabelCell,
+              headerClassName: 'LabelColumn',
               dataKey: 'rdns',
               label: 'Reverse DNS',
+              titleKey: 'rdns',
+              tooltipEnabled: true,
             },
             {
               dataKey: 'type',
               label: 'Type',
-              headerClassName: 'hidden-md-down',
-              className: 'hidden-md-down',
             },
             {
               cellComponent: this.renderIPNav,
