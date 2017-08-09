@@ -19,7 +19,7 @@ import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
-import { createHeaderFilter, transform } from '~/api/util';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
 
@@ -119,7 +119,14 @@ export class IndexPage extends Component {
                     } },
                     { dataFn: (volume) => {
                       const { region } = volume;
-                      return id;
+                      return region.id;
+                    } },
+                    { dataFn: (volume) => {
+                      const { linode_id: linodeId } = volume;
+                      if (!linodeId) {
+                        return 'Unattached';
+                      }
+                      return `Attached to ${linodeId}`;
                     } },
                     {
                       cellComponent: ButtonCell,
@@ -144,9 +151,6 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
-    console.log('v', this.props.volumes);
-
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
