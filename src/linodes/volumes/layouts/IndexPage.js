@@ -12,7 +12,6 @@ import { DeleteModalBody } from 'linode-components/modals';
 import {
   ButtonCell,
   CheckboxCell,
-  LinkCell,
   LabelCell,
 } from 'linode-components/tables/cells';
 import { RegionCell } from '~/components/tables/cells';
