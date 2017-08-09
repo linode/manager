@@ -5,16 +5,29 @@ import MassEditDropdown from './MassEditDropdown';
 
 
 export default class MassEditControl extends Component {
+  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
+  allSelected = () => this.props.data.every((record) =>
+    this.props.selectedMap[record[this.props.selectedKey]])
 
-  constructor(props) {
-    super(props);
+  onMassEditChange = () => {
+    const {
+      data, dispatch, objectType, selectedMap, selectedKey, toggleSelected,
+    } = this.props;
 
-    this.onMassEditChange = this.onMassEditChange.bind(this);
-  }
+    const allSelected = this.allSelected();
+    const noneSelected = this.noneSelected();
+    const indeterminate = !allSelected && !noneSelected;
 
-  onMassEditChange() {
-    const { data, dispatch, objectType, selectedKey, toggleSelected } = this.props;
-    const selected = data.map(function (record) { return record[selectedKey]; });
+    let selected = data;
+
+    // Uncheck all those that have been unchecked if in indeterminate state.
+    if (indeterminate) {
+      selected = selected.filter((record) => {
+        return selectedMap[record[selectedKey]];
+      });
+    }
+
+    selected = selected.map(function (record) { return record[selectedKey]; });
 
     dispatch(toggleSelected(objectType, selected));
   }
@@ -32,18 +45,15 @@ export default class MassEditControl extends Component {
     const {
       data,
       massEditGroups,
-      selectedKey,
-      selectedMap,
     } = this.props;
 
-    const noneSelected = (Object.keys(selectedMap).length === 0);
-    const allSelected = data.every((record) => {
-      return selectedMap[record[selectedKey]];
-    });
+    const allSelected = this.allSelected();
+    const noneSelected = this.noneSelected();
 
     return (
       <MassEditDropdown
         checked={allSelected && !noneSelected}
+        indeterminate={!allSelected && !noneSelected}
         disabled={noneSelected}
         groups={massEditGroups.map((group) => ({
           ...group,
