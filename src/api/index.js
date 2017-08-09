@@ -2,6 +2,7 @@ import * as distributionsModule from './configs/distributions';
 import * as regionsModule from './configs/regions';
 import * as typesModule from './configs/types';
 import * as linodesModule from './configs/linodes';
+import * as volumesModule from './configs/volumes';
 import * as stackscriptsModule from './configs/stackscripts';
 import * as kernelsModule from './configs/kernels';
 import * as domainsModule from './configs/domains';
@@ -22,6 +23,7 @@ export const regions = apiActionReducerGenerator(regionsModule.config,
                                                  regionsModule.actions);
 export const types = apiActionReducerGenerator(typesModule.config, typesModule.actions);
 export const linodes = apiActionReducerGenerator(linodesModule.config, linodesModule.actions);
+export const volumes = apiActionReducerGenerator(volumesModule.config, volumesModule.actions);
 export const stackscripts = apiActionReducerGenerator(stackscriptsModule.config,
                                                        stackscriptsModule.actions);
 export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsModule.actions);
