@@ -43,17 +43,11 @@ export class LishPage extends Component {
     const { dispatch } = this.props;
     const { authorization, keys } = this.state;
 
-    const data = {
-      lish_auth_method: authorization,
-      authorized_keys: keys.split('\n'),
-    };
-
-    if (authorization === 'disabled') {
-      delete data.authorized_keys;
-    }
-
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put(data),
+      () => profile.put({
+        lish_auth_method: authorization,
+        authorized_keys: keys.split('\n'),
+      }),
     ]));
   }
 
