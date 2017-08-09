@@ -32,11 +32,11 @@ describe('profile/layouts/LishPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile', {
+      ([fn]) => expectRequest(fn, '/profile', {
         method: 'PUT',
         body: {
           lish_auth_method: 'disabled',
-          authorized_keys: 'foobar\nbarfoo',
+          authorized_keys: ['foobar', 'barfoo'],
         },
       }),
     ], 1);

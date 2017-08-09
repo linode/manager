@@ -35,7 +35,7 @@ export class LishPage extends Component {
 
     this.setState({
       authorization,
-      keys: keys.join('\n'),
+      keys: (keys || []).join('\n'),
     });
   }
 
