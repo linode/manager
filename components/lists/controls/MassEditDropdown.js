@@ -35,6 +35,7 @@ export default class MassEditDropdown extends Component {
 MassEditDropdown.propTypes = {
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
+  indeterminate: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   groups: PropTypes.array.isRequired,
 };

@@ -5,10 +5,6 @@ import MassEditDropdown from './MassEditDropdown';
 
 
 export default class MassEditControl extends Component {
-  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
-  allSelected = () => this.props.data.every((record) =>
-    this.props.selectedMap[record[this.props.selectedKey]])
-
   onMassEditChange = () => {
     const {
       data, dispatch, objectType, selectedMap, selectedKey, toggleSelected,
@@ -32,6 +28,10 @@ export default class MassEditControl extends Component {
     dispatch(toggleSelected(objectType, selected));
   }
 
+  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
+  allSelected = () => this.props.data.every((record) =>
+    this.props.selectedMap[record[this.props.selectedKey]])
+
   createMassEditActionHandler(fn) {
     return () => {
       const { data, selectedMap, selectedKey } = this.props;
@@ -42,10 +42,7 @@ export default class MassEditControl extends Component {
   }
 
   render() {
-    const {
-      data,
-      massEditGroups,
-    } = this.props;
+    const { massEditGroups } = this.props;
 
     const allSelected = this.allSelected();
     const noneSelected = this.noneSelected();
