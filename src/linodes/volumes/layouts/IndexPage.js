@@ -7,7 +7,7 @@ import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { ListBody } from 'linode-components/lists/bodies';
 import { DeleteModalBody } from 'linode-components/modals';
 import {
   ButtonCell,
@@ -69,7 +69,7 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const { groups, sorted: sortedVolumes } = transform(volumes, {
+    const { sorted } = transform(volumes, {
       filterOn: 'label',
       filterBy: filter,
       sortBy: v => v.label.toLowerCase(),
@@ -80,7 +80,7 @@ export class IndexPage extends Component {
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl
-              data={sortedVolumes}
+              data={sorted}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
                 { name: 'Delete', action: this.deleteVolumes },
@@ -99,47 +99,43 @@ export class IndexPage extends Component {
           </div>
         </ListHeader>
         <ListBody>
-          {groups.map((group, index) => {
-            return (
-              <Table
-                columns={[
-                  { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
-                  {
-                    cellComponent: LinkCell,
-                    hrefFn: (volume) => `/volumes/${volume.id}`, textKey: 'label',
-                    tooltipEnabled: true,
-                  },
-                  { dataFn: (volume) => {
-                    const { size } = volume;
-                    return `${size} GiB`;
-                  } },
-                  { dataFn: (volume) => {
-                    const { region } = volume;
-                    return region.id;
-                  } },
-                  { dataFn: (volume) => {
-                    const { linode_id: linodeId } = volume;
-                    if (!linodeId) {
-                      return 'Unattached';
-                    }
-                    return `Attached to ${linodeId}`;
-                  } },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: (volume) => { this.deleteVolumes(volume); },
-                  },
-                ]}
-                data={group.data}
-                selectedMap={selectedMap}
-                disableHeader
-                onToggleSelect={(record) => {
-                  dispatch(toggleSelected(OBJECT_TYPE, record.id));
-                }}
-              />
-            );
-          })}
+          <Table
+            columns={[
+              { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+              {
+                cellComponent: LinkCell,
+                hrefFn: (volume) => `/volumes/${volume.id}`, textKey: 'label',
+                tooltipEnabled: true,
+              },
+              { dataFn: (volume) => {
+                const { size } = volume;
+                return `${size} GiB`;
+              } },
+              { dataFn: (volume) => {
+                const { region } = volume;
+                return region.id;
+              } },
+              { dataFn: (volume) => {
+                const { linode_id: linodeId } = volume;
+                if (!linodeId) {
+                  return 'Unattached';
+                }
+                return `Attached to ${linodeId}`;
+              } },
+              {
+                cellComponent: ButtonCell,
+                headerClassName: 'ButtonColumn',
+                text: 'Delete',
+                onClick: (volume) => { this.deleteVolumes(volume); },
+              },
+            ]}
+            data={sorted}
+            selectedMap={selectedMap}
+            disableHeader
+            onToggleSelect={(record) => {
+              dispatch(toggleSelected(OBJECT_TYPE, record.id));
+            }}
+          />
         </ListBody>
       </List>
     );
