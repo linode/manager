@@ -63,12 +63,6 @@ export function getVolumeRedirectUrl(entity) {
 }
 
 const EventTypeMap = {
-  blockstorage_create: {
-    presentTenseAction: 'Booting',
-    pastTenseAction: 'booted',
-    linodeStatus: 'running',
-    redirectUrl: getLinodeRedirectUrl,
-  },
   linode_boot: {
     presentTenseAction: 'Booting',
     pastTenseAction: 'booted',
