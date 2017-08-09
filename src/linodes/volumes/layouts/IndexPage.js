@@ -101,48 +101,43 @@ export class IndexPage extends Component {
         <ListBody>
           {groups.map((group, index) => {
             return (
-              <ListGroup
-                key={index}
-                name={group.name}
-              >
-                <Table
-                  columns={[
-                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
-                    {
-                      cellComponent: LinkCell,
-                      hrefFn: (volume) => `/volumes/${volume.id}`, textKey: 'label',
-                      tooltipEnabled: true,
-                    },
-                    { dataFn: (volume) => {
-                      const { size } = volume;
-                      return `${size} GiB`;
-                    } },
-                    { dataFn: (volume) => {
-                      const { region } = volume;
-                      return region.id;
-                    } },
-                    { dataFn: (volume) => {
-                      const { linode_id: linodeId } = volume;
-                      if (!linodeId) {
-                        return 'Unattached';
-                      }
-                      return `Attached to ${linodeId}`;
-                    } },
-                    {
-                      cellComponent: ButtonCell,
-                      headerClassName: 'ButtonColumn',
-                      text: 'Delete',
-                      onClick: (volume) => { this.deleteVolumes(volume); },
-                    },
-                  ]}
-                  data={group.data}
-                  selectedMap={selectedMap}
-                  disableHeader
-                  onToggleSelect={(record) => {
-                    dispatch(toggleSelected(OBJECT_TYPE, record.id));
-                  }}
-                />
-              </ListGroup>
+              <Table
+                columns={[
+                  { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+                  {
+                    cellComponent: LinkCell,
+                    hrefFn: (volume) => `/volumes/${volume.id}`, textKey: 'label',
+                    tooltipEnabled: true,
+                  },
+                  { dataFn: (volume) => {
+                    const { size } = volume;
+                    return `${size} GiB`;
+                  } },
+                  { dataFn: (volume) => {
+                    const { region } = volume;
+                    return region.id;
+                  } },
+                  { dataFn: (volume) => {
+                    const { linode_id: linodeId } = volume;
+                    if (!linodeId) {
+                      return 'Unattached';
+                    }
+                    return `Attached to ${linodeId}`;
+                  } },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Delete',
+                    onClick: (volume) => { this.deleteVolumes(volume); },
+                  },
+                ]}
+                data={group.data}
+                selectedMap={selectedMap}
+                disableHeader
+                onToggleSelect={(record) => {
+                  dispatch(toggleSelected(OBJECT_TYPE, record.id));
+                }}
+              />
             );
           })}
         </ListBody>
