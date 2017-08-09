@@ -34,7 +34,7 @@ export function loginAuthorizePath(returnTo) {
          `client_id=${clientId}` +
          '&scopes=*' +
          '&response_type=code' + // TODO: response_type should be 'token' for implicit grant flow
-         //`&state=${nonce}` + // TODO: response_type=token can optionally send a state
+         // `&state=${nonce}` + // TODO: response_type=token can optionally send a state
          `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
   /* eslint-enable prefer-template */
 }

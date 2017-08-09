@@ -23,10 +23,10 @@ export function setSession(oauthToken = '', scopes = '') {
 function getImplicitParams() {
   const hashParams = window.location.hash.substr(1).split('&');
   const params = {};
-  hashParams.forEach(function(hashParam) {
-    let hashParamParts = hashParam.split('=');
+  hashParams.forEach(function (hashParam) {
+    const hashParamParts = hashParam.split('=');
     if (hashParam.match(/return/)) {
-      params['returnTo'] = hashParamParts[2];
+      params.returnTo = hashParamParts[2];
     } else {
       params[hashParamParts[0]] = hashParamParts[1];
     }
