@@ -101,7 +101,6 @@ export class LishPage extends Component {
                   className="textarea-md"
                   name="keys"
                   value={keys}
-                  disabled={authorization === 'disabled'}
                   onChange={this.onChange}
                 />
                 <div>
