@@ -1,1 +1,2 @@
-export { default as AddVolume } from './AddVolume';
+export { default as AddEditVolume } from './AddEditVolume';
+export { default as VolumesList } from './VolumesList';

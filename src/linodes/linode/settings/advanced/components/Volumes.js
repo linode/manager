@@ -4,44 +4,17 @@ import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Dropdown } from 'linode-components/dropdowns';
 import { DeleteModalBody } from 'linode-components/modals';
-import { Table } from 'linode-components/tables';
-import { LabelCell, TableCell } from 'linode-components/tables/cells';
 
-import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { RegionCell } from '~/components/tables/cells';
+import { VolumesList } from '~/linodes/volumes/components';
 
-
-function VolumeActions(props) {
-  const { dispatch, linode, volume } = props;
-
-  const groups = [
-    { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, volume) }] },
-    { elements: [{ name: 'Edit', action: () => EditVolume.trigger(dispatch, linode, volume) }] },
-    { elements: [{ name: 'Delete', action: () => DeleteVolume.trigger(dispatch, volume) }] },
-  ];
-
-  return (
-    <Dropdown
-      groups={groups}
-      analytics={{ title: 'Volume actions' }}
-    />
-  );
-}
 
 export default class Volumes extends Component {
-  renderVolumeActions = ({ column, record }) => {
-    const { dispatch, linode } = this.props;
-
-    return (
-      <TableCell column={column} record={record} className="ActionsCell">
-        <VolumeActions linode={linode} volume={record} />
-      </TableCell>
-    );
-  }
+  static OBJECT_TYPE = 'linode-volumes'
 
   render() {
-    const { dispatch, linode, distributions } = this.props;
+    const { dispatch, linode, distributions, selectedMap } = this.props;
     const volumes = Object.values(linode._volumes.volumes);
 
     const nav = (
@@ -58,23 +31,12 @@ export default class Volumes extends Component {
 
     return (
       <Card header={header}>
-        <Table
+        <VolumesList
+          objectType={Volumes.OBJECT_TYPE}
+          volumes={volumes}
+          selectedMap={selectedMap}
+          dispatch={dispatch}
           className="Table--secondary"
-          columns={[
-            {
-              cellComponent: LabelCell,
-              dataKey: 'label',
-              label: 'Label',
-            },
-            { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} GB` },
-            {
-              cellComponent: RegionCell,
-              headerClassName: 'RegionColumn',
-            },
-            { cellComponent: this.renderVolumeActions },
-          ]}
-          data={volumes}
-          noDataMessage="You have no volumes."
         />
       </Card>
     );

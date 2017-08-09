@@ -22,7 +22,7 @@ export class AdvancedPage extends Component {
         <section>
           <Disks {...this.props} />
         </section>
-        <Volumes {...this.props} />
+        <Volumes {...this.props} selectedMap={this.props.volumesSelectedMap} />
       </div>
     );
   }
@@ -37,7 +37,8 @@ AdvancedPage.propTypes = {
 function select(state, params) {
   const { linode } = selectLinode(state, params);
   const { distributions } = state.api;
-  return { linode, distributions };
+  const volumesSelectedMap = state.select.selected[Volumes.OBJECT_TYPE] || {};
+  return { linode, distributions, volumesSelectedMap };
 }
 
 export default connect(select)(AdvancedPage);
