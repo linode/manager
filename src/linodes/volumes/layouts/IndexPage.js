@@ -14,6 +14,7 @@ import {
   CheckboxCell,
   LinkCell,
 } from 'linode-components/tables/cells';
+import { RegionCell } from '~/components/tables/cells';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
@@ -111,10 +112,10 @@ export class IndexPage extends Component {
                 const { size } = volume;
                 return `${size} GiB`;
               } },
-              { dataFn: (volume) => {
-                const { region } = volume;
-                return region.id;
-              } },
+              {
+                cellComponent: RegionCell,
+                headerClassName: 'RegionColumn',
+              },
               { dataFn: (volume) => {
                 const { linode_id: linodeId } = volume;
                 if (!linodeId) {
