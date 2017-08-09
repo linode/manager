@@ -36,8 +36,6 @@ describe('linodes/volumes/layouts/IndexPage', () => {
     // + 1 for the group
     expect(vol.length).to.equal(Object.keys(volumes.volumes).length);
     const firstVol = vol.at(0);
-    expect(firstVol.find('Link').props().to)
-      .to.equal('/volumes/38');
     expect(firstVol.find('td').at(1).text())
       .to.equal('test');
     expect(firstVol.find('td').at(2).text())

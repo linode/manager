@@ -103,11 +103,7 @@ export class IndexPage extends Component {
           <Table
             columns={[
               { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
-              {
-                cellComponent: LinkCell,
-                hrefFn: (volume) => `/volumes/${volume.id}`, textKey: 'label',
-                tooltipEnabled: true,
-              },
+              { dataKey: 'label' },
               { dataFn: (volume) => {
                 const { size } = volume;
                 return `${size} GiB`;
