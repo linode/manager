@@ -46,7 +46,8 @@ export class LishPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({
         lish_auth_method: authorization,
-        authorized_keys: keys.split('\n'),
+        // Strip all whitespace from keys for sanity.
+        authorized_keys: keys.split('\n').filter(key => key.replace(/\s/g, '').length),
       }),
     ]));
   }
