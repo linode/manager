@@ -19,9 +19,11 @@ import { RegionCell } from '~/components/tables/cells';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { volumes } from '~/api';
+import { volumes, linodes } from '~/api';
 import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
+
+import { AddVolume } from '../components';
 
 
 const OBJECT_TYPE = 'volumes';
@@ -29,6 +31,7 @@ const OBJECT_TYPE = 'volumes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(volumes.all());
+    dispatch(linodes.all());
   }
 
   constructor(props) {
@@ -144,6 +147,8 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch, linodes } = this.props;
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -151,7 +156,7 @@ export class IndexPage extends Component {
             <h1 className="float-sm-left">Volumes</h1>
             <PrimaryButton
               className="float-sm-right"
-              onClick={() => {}}
+              onClick={() => AddVolume.trigger(dispatch, linodes)}
             >
               Add a Volume
             </PrimaryButton>
@@ -182,6 +187,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     volumes: state.api.volumes,
+    linodes: state.api.linodes,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

@@ -10,12 +10,12 @@ import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { RegionSelect } from '~/components';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import BackupSelect from './BackupSelect';
 import LinodeSelect from './LinodeSelect';
 import PlanSelect from './PlanSelect';
-import { RegionSelect } from '../../components';
 
 
 export default class RestoreLinode extends Component {

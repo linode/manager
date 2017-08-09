@@ -34,7 +34,7 @@ export default class Volumes extends Component {
     const { dispatch, linode } = this.props;
 
     return (
-      <TableCell column={column} record={record}>
+      <TableCell column={column} record={record} className="ActionsCell">
         <VolumeActions linode={linode} volume={record} />
       </TableCell>
     );
@@ -71,10 +71,7 @@ export default class Volumes extends Component {
               cellComponent: RegionCell,
               headerClassName: 'RegionColumn',
             },
-            {
-              cellComponent: this.renderVolumeActions,
-              headerClassName: 'VolumeActionColumn',
-            },
+            { cellComponent: this.renderVolumeActions },
           ]}
           data={volumes}
           noDataMessage="You have no volumes."

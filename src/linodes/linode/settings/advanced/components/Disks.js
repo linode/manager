@@ -32,7 +32,7 @@ export default class Disks extends Component {
   deleteDisk(d) {
     const { dispatch, linode } = this.props;
 
-    return () => dispatch(showModal('Delete Disk', (
+    return dispatch(showModal('Delete Disk', (
       <DeleteModalBody
         onCancel={() => dispatch(hideModal())}
         onSubmit={() => {
@@ -59,7 +59,7 @@ export default class Disks extends Component {
     return null;
   }
 
-  renderDiskNav = ({ column, record }) => {
+  renderDiskActions = ({ column, record }) => {
     const { dispatch, linode } = this.props;
     const free = this.freeSpace();
 
@@ -69,7 +69,7 @@ export default class Disks extends Component {
     ];
 
     return (
-      <TableCell column={column} record={record}>
+      <TableCell column={column} record={record} className="ActionsCell">
         <Dropdown
           groups={groups}
           analytics={{ title: 'Disk actions' }}
@@ -106,10 +106,7 @@ export default class Disks extends Component {
               label: 'Label',
             },
             { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} MB` },
-            {
-              cellComponent: this.renderDiskNav,
-              headerClassName: 'DiskNavColumn',
-            },
+            { cellComponent: this.renderDiskActions },
           ]}
           data={disks}
           noDataMessage="You have no disks."

@@ -160,6 +160,7 @@ export class IndexPage extends Component {
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       cellComponent: LinkCell,
+                      headerClassName: 'LabelColumn',
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                       tooltipEnabled: true,
                       subtitleFn: linode => planStats(linode.type),
