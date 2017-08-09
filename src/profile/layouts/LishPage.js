@@ -35,7 +35,7 @@ export class LishPage extends Component {
 
     this.setState({
       authorization,
-      keys: (keys || []).join('\n'),
+      keys: keys.join('\n'),
     });
   }
 
@@ -43,11 +43,17 @@ export class LishPage extends Component {
     const { dispatch } = this.props;
     const { authorization, keys } = this.state;
 
+    const data = {
+      lish_auth_method: authorization,
+      authorized_keys: keys.split('\n'),
+    };
+
+    if (authorization === 'disabled') {
+      delete data.authorized_keys;
+    }
+
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({
-        lish_auth_method: authorization,
-        authorized_keys: keys,
-      }),
+      () => profile.put(data),
     ]));
   }
 
@@ -95,6 +101,7 @@ export class LishPage extends Component {
                   className="textarea-md"
                   name="keys"
                   value={keys}
+                  disabled={authorization === 'disabled'}
                   onChange={this.onChange}
                 />
                 <div>
