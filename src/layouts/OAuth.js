@@ -20,8 +20,18 @@ export function setSession(oauthToken = '', scopes = '') {
   };
 }
 
-function getAccessToken() {
-  return window.location.hash.substr(1);
+function getImplicitParams() {
+  const hashParams = window.location.hash.substr(1).split('&');
+  const params = {};
+  hashParams.forEach(function(hashParam) {
+    let hashParamParts = hashParam.split('=');
+    if (hashParam.match(/return/)) {
+      params['returnTo'] = hashParamParts[2];
+    } else {
+      params[hashParamParts[0]] = hashParamParts[1];
+    }
+  });
+  return params;
 }
 
 export class OAuthCallbackPage extends Component {
@@ -60,10 +70,12 @@ export class OAuthCallbackPage extends Component {
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
-    } else if (getAccessToken()) {
-      const accessToken = getAccessToken();
-      const returnTo = location.query['return'];
-      const nonce = location.query.state;
+    } else if (getImplicitParams().access_token) {
+      const {
+        access_token: accessToken,
+        returnTo,
+        state: nonce,
+      } = getImplicitParams();
       if (!nonce || getStorage('authentication/nonce') !== nonce) {
         // Retry auth flow
         dispatch(push('/'));
