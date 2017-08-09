@@ -187,7 +187,7 @@ export default function Introduction(props) {
         <Example
           // eslint-disable-next-line max-len
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances -d '{"type": "g5-standard-1", "region": "us-east-1a", "distribution": "linode/debian8", "root_pass": "$root_pass", "label": "prod-1"}' \\
-  -H "Authorization: token $TOKEN" -H "Content-type: application/json"
+  -H "Authorization: Bearer $TOKEN" -H "Content-type: application/json"
 `}
           name="bash"
         />
@@ -289,7 +289,7 @@ export default function Introduction(props) {
         </p>
         <Example
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id/boot \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />
@@ -300,7 +300,7 @@ export default function Introduction(props) {
         </p>
         <Example
           example={`curl ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />

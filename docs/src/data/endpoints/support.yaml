@@ -17,7 +17,7 @@ endpoints:
           Returns a list of <a href="#object-supportticket">Support Tickets</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/tickets
       POST:
         oauth: tickets:create
@@ -52,7 +52,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "summary": "A question about a Linode",
                     "description": "More details about the question",
@@ -73,7 +73,7 @@ endpoints:
           <a href="#object-supportticket">support ticket</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/ticket/$ticket_id
   /support/tickets/:id/replies:
     resource: supportticketreply
@@ -89,7 +89,7 @@ endpoints:
           <a href="#object-supportticketreply">support ticket replies</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/tickets/$ticket_id/replies
       POST:
         oauth: tickets:modify
@@ -103,7 +103,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "description": "More details about the ticket",
                 }' \
@@ -124,7 +124,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: multipart/form-data" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 -F file=@/path/to/file \
                 https://$api_root/$version/support/tickets/$ticket_id/attachments

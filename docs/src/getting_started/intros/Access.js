@@ -150,7 +150,7 @@ export default function Authentication() {
         </p>
         <Example
           // eslint-disable-next-line max-len
-          example="Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
+          example="Authorization: Bearer 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
           name="bash"
           noclipboard
         />

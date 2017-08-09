@@ -99,7 +99,7 @@ export default function Introduction(props) {
         <h2>Authentication Header</h2>
         <p>
           Now you can make requests with curl using your access token by adding
-          <code>-H "Authorization: token $token"</code>.
+          <code>-H "Authorization: Bearer $token"</code>.
           The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
           requests on the reference page include this header in the curl examples. For example:
         </p>
