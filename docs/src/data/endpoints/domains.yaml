@@ -20,7 +20,7 @@ endpoints:
           Returns a list of <a href="#object-domain">Domains</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains
           python: |
             import linode
@@ -95,7 +95,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "domain": "example.com",
                     "type": "master",
@@ -125,7 +125,7 @@ endpoints:
           identified by :id.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains/$domain_id
           python: |
             import linode
@@ -137,7 +137,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token TOKEN" \
+              -H "Authorization: Bearer TOKEN" \
               -X PUT -d '{
                 "domain": "examplechange.com",
                 "description": "The changed description",
@@ -162,7 +162,7 @@ endpoints:
           Deletes the Domain. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE
                 https://$api_root/$version/domains/$domain_id
           python: |
@@ -181,7 +181,7 @@ endpoints:
           Returns a list of <a href="#object-domainrecord">Domain Records</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains/$domain_id/records
           python: |
             import linode
@@ -246,7 +246,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "A",
                     "target": "123.456.789.101",
@@ -267,7 +267,7 @@ endpoints:
           Record</a> identified by ":id".
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               https://$api_root/$version/domains/$domain_id/records/$record_id
           python: |
             import linode
@@ -279,7 +279,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token TOKEN" \
+              -H "Authorization: Bearer TOKEN" \
               -X PUT -d '{
                     "target": "123.456.789.102",
                     "name": "sub2.example.com"
@@ -295,7 +295,7 @@ endpoints:
           Deletes the Domain Record. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               -X DELETE
               https://$api_root/$version/domains/$domain_id/records/$record_id
           python: |
