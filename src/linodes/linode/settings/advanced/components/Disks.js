@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Dropdown } from 'linode-components/dropdowns';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { LabelCell, ButtonCell } from 'linode-components/tables/cells';
+import { LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
@@ -12,18 +13,6 @@ import { linodes } from '~/api';
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
 
-
-const borderColors = [
-  '#1abc9c',
-  '#3498db',
-  '#9b59b6',
-  '#16a085',
-  '#f1c40f',
-  '#27ae60',
-  '#2980b9',
-  '#2ecc71',
-  '#e67e22',
-];
 
 export default class Disks extends Component {
   poweredOff() {
@@ -40,7 +29,7 @@ export default class Disks extends Component {
     return total - used;
   }
 
-  deleteAction(d) {
+  deleteDisk(d) {
     const { dispatch, linode } = this.props;
 
     return () => dispatch(showModal('Delete Disk', (
@@ -70,6 +59,25 @@ export default class Disks extends Component {
     return null;
   }
 
+  renderDiskNav = ({ column, record }) => {
+    const { dispatch, linode } = this.props;
+    const free = this.freeSpace();
+
+    const groups = [
+      { elements: [{ name: 'Edit', action: () => EditDisk.trigger(dispatch, linode, record, free) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteDisk(record) }] },
+    ];
+
+    return (
+      <TableCell column={column} record={record}>
+        <Dropdown
+          groups={groups}
+          analytics={{ title: 'Disk actions' }}
+        />
+      </TableCell>
+    );
+  }
+
   render() {
     const { dispatch, linode, distributions } = this.props;
     const disks = Object.values(linode._disks.disks);
@@ -77,8 +85,9 @@ export default class Disks extends Component {
 
     const nav = (
       <PrimaryButton
-        className="float-sm-right"
+        className="float-right"
         buttonClass="btn-default"
+        onClick={() => AddDisk.trigger(dispatch, linode, distributions, free)}
       >
         Add a Disk
       </PrimaryButton>
@@ -98,10 +107,8 @@ export default class Disks extends Component {
             },
             { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} MB` },
             {
-              cellComponent: ButtonCell,
-              headerClassName: 'ButtonColumn',
-              onClick: (disk) => { this.deleteDisk(linode, disk); },
-              text: 'Delete',
+              cellComponent: this.renderDiskNav,
+              headerClassName: 'DiskNavColumn',
             },
           ]}
           data={disks}

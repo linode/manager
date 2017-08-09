@@ -167,7 +167,7 @@ export class IndexPage extends Component {
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
                       cellComponent: RegionCell,
-                      headerClassName: 'RegionColumn',
+                      headerClassName: 'RegionColumn,'
                     },
                     {
                       cellComponent: BackupsCell,

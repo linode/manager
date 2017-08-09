@@ -36,10 +36,10 @@ export default class Configs extends Component {
     const nav = (
       <PrimaryButton
         to={`/linodes/${linode.label}/settings/advanced/configs/create`}
-        className="float-sm-right"
+        className="float-right"
         buttonClass="btn-default"
       >
-        Add a config
+        Add a Config
       </PrimaryButton>
     );
 

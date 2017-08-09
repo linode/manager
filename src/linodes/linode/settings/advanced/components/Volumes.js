@@ -2,23 +2,53 @@ import React, { Component, PropTypes } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Dropdown } from 'linode-components/dropdowns';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { LabelCell, ButtonCell } from 'linode-components/tables/cells';
+import { LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
+import { RegionCell } from '~/components/tables/cells';
 
+
+function VolumeActions(props) {
+  const { dispatch, linode, volume } = props;
+
+  const groups = [
+    { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, volume) }] },
+    { elements: [{ name: 'Edit', action: () => EditVolume.trigger(dispatch, linode, volume) }] },
+    { elements: [{ name: 'Delete', action: () => DeleteVolume.trigger(dispatch, volume) }] },
+  ];
+
+  return (
+    <Dropdown
+      groups={groups}
+      analytics={{ title: 'Volume actions' }}
+    />
+  );
+}
 
 export default class Volumes extends Component {
+  renderVolumeActions = ({ column, record }) => {
+    const { dispatch, linode } = this.props;
+
+    return (
+      <TableCell column={column} record={record}>
+        <VolumeActions linode={linode} volume={record} />
+      </TableCell>
+    );
+  }
+
   render() {
     const { dispatch, linode, distributions } = this.props;
     const volumes = Object.values(linode._volumes.volumes);
 
     const nav = (
       <PrimaryButton
-        className="float-sm-right"
+        className="float-right"
         buttonClass="btn-default"
+        onClick={() => AddVolume.trigger(dispatch, linode)}
       >
         Add a Volume
       </PrimaryButton>
@@ -38,10 +68,12 @@ export default class Volumes extends Component {
             },
             { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} GB` },
             {
-              cellComponent: ButtonCell,
-              headerClassName: 'ButtonColumn',
-              onClick: (volume) => { this.deleteVolume(linode, volume); },
-              text: 'Delete',
+              cellComponent: RegionCell,
+              headerClassName: 'RegionColumn',
+            },
+            {
+              cellComponent: this.renderVolumeActions,
+              headerClassName: 'VolumeActionColumn',
             },
           ]}
           data={volumes}
