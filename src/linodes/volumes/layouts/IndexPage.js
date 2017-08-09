@@ -13,6 +13,7 @@ import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
+  LabelCell,
 } from 'linode-components/tables/cells';
 import { RegionCell } from '~/components/tables/cells';
 
@@ -103,7 +104,13 @@ export class IndexPage extends Component {
           <Table
             columns={[
               { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
-              { dataKey: 'label' },
+              {
+                cellComponent: LabelCell,
+                headerClassName: 'LabelColumn',
+                dataKey: 'label',
+                titleKey: 'label',
+                tooltipEnabled: true,
+              },
               { dataFn: (volume) => {
                 const { size } = volume;
                 return `${size} GiB`;
