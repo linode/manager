@@ -7,18 +7,7 @@ import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
 
-import { setToken } from '~/actions/authentication';
 import { getStorage, setStorage } from '~/storage';
-
-export function setSession(oauthToken = '', scopes = '') {
-  return (dispatch) => {
-    // Set these two so we can grab them on subsequent page loads
-    setStorage('authentication/oauth-token', oauthToken);
-    setStorage('authentication/scopes', scopes);
-    // Add all to state for this (page load) session
-    dispatch(setToken(oauthToken, scopes));
-  };
-}
 
 function getImplicitParams() {
   const hashParams = window.location.hash.substr(1).split('&');
@@ -66,7 +55,7 @@ export class OAuthCallbackPage extends Component {
       const expires = new Date();
       expires.setSeconds(expires.getSeconds() + expiresIn);
       // Token needs to be in redux state for all API calls
-      dispatch(session.start(access_token, scopes, expires));
+      dispatch(session.start(access_token, scopes, expiresIn));
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
@@ -75,6 +64,8 @@ export class OAuthCallbackPage extends Component {
         access_token: accessToken,
         returnTo,
         state: nonce,
+        scope,
+        expires_in: expires,
       } = getImplicitParams();
       if (!nonce || getStorage('authentication/nonce') !== nonce) {
         // Retry auth flow
@@ -84,7 +75,7 @@ export class OAuthCallbackPage extends Component {
       setStorage('authentication/nonce', '');
 
       // Token needs to be in redux state for all API calls
-      dispatch(setSession(accessToken, '*'));
+      dispatch(session.start(accessToken, scope, expires));
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
