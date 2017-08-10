@@ -4,9 +4,9 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
+import { ListHeader } from 'linode-components/lists/headers';
 import { DeleteModalBody } from 'linode-components/modals';
 import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
 import { Table } from 'linode-components/tables';
 import {
   ButtonCell,
@@ -73,11 +73,10 @@ export default class VolumesList extends Component {
   }
 
   render() {
-    const { dispatch, selectedMap, volumes, objectType } = this.props;
+    const { dispatch, selectedMap, volumes, objectType, className } = this.props;
     const { filter } = this.state;
 
     const { sorted } = transform(volumes, {
-      filterOn: 'label',
       filterBy: filter,
       sortBy: v => v.label.toLowerCase(),
     });
@@ -112,24 +111,30 @@ export default class VolumesList extends Component {
               {
                 cellComponent: LabelCell,
                 headerClassName: 'LabelColumn',
+                label: className ? 'Label' : undefined,
                 dataKey: 'label',
                 titleKey: 'label',
                 tooltipEnabled: true,
               },
-              { dataFn: (volume) => {
-                const { size } = volume;
-                return `${size} GiB`;
-              } },
+              {
+                label: className ? 'Size' : undefined,
+                dataFn: (volume) => {
+                  const { size } = volume;
+                  return `${size} GiB`;
+                } },
               {
                 cellComponent: RegionCell,
                 headerClassName: 'RegionColumn',
+                label: className ? 'Region' : undefined,
               },
-              { dataFn: (volume) => {
-                const { linode_id: linodeId } = volume;
-                if (!linodeId) {
-                  return 'Unattached';
-                }
-                return `Attached to ${linodeId}`;
+              {
+                label: className ? 'Attached' : undefined,
+                dataFn: (volume) => {
+                  const { linode_id: linodeId } = volume;
+                  if (!linodeId) {
+                    return 'Unattached';
+                  }
+                  return `Attached to ${linodeId}`;
               } },
               {
                 cellComponent: this.renderVolumeActions,

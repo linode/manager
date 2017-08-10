@@ -7,41 +7,39 @@ import { DeleteModalBody } from 'linode-components/modals';
 
 import { linodes } from '~/api';
 import { RegionCell } from '~/components/tables/cells';
-import { VolumesList } from '~/linodes/volumes/components';
+import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
 
 
-export default class Volumes extends Component {
-  static OBJECT_TYPE = 'linode-volumes'
+export default function Volumes(props) {
+  const { dispatch, linode, distributions, selectedMap } = props;
+  const volumes = Object.values(linode._volumes.volumes);
 
-  render() {
-    const { dispatch, linode, distributions, selectedMap } = this.props;
-    const volumes = Object.values(linode._volumes.volumes);
+  const nav = (
+    <PrimaryButton
+      className="float-right"
+      buttonClass="btn-default"
+      onClick={() => AddEditVolume.trigger(dispatch, linode)}
+    >
+      Add a Volume
+    </PrimaryButton>
+  );
 
-    const nav = (
-      <PrimaryButton
-        className="float-right"
-        buttonClass="btn-default"
-        onClick={() => AddVolume.trigger(dispatch, linode)}
-      >
-        Add a Volume
-      </PrimaryButton>
-    );
+  const header = <CardHeader title="Volumes" nav={nav} />;
 
-    const header = <CardHeader title="Volumes" nav={nav} />;
-
-    return (
-      <Card header={header}>
-        <VolumesList
-          objectType={Volumes.OBJECT_TYPE}
-          volumes={volumes}
-          selectedMap={selectedMap}
-          dispatch={dispatch}
-          className="Table--secondary"
-        />
-      </Card>
-    );
-  }
+  return (
+    <Card header={header}>
+      <VolumesList
+        objectType={Volumes.OBJECT_TYPE}
+        volumes={volumes}
+        selectedMap={selectedMap}
+        dispatch={dispatch}
+        className="Table--secondary"
+      />
+    </Card>
+  );
 }
+
+Volumes.OBJECT_TYPE = 'linode-volumes';
 
 Volumes.propTypes = {
   dispatch: PropTypes.func.isRequired,

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
+import { Code } from 'linode-components/formats';
 import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -33,19 +34,19 @@ export default class MoreInfo extends Component {
         <p>
           To get started with a new volume, you'll want to create a filesystem on it:
         </p>
-        <code><pre>mkfs.ext4 /dev/disk/by-id/scsi-0Linode_Volume_{label}</pre></code>
+        <Code example={`mkfs.ext4 /dev/disk/by-id/scsi-0Linode_Volume_${label}`} />
         <p>
           Once the volume has a filesystem, you can create a mountpoint for it:
         </p>
-        <code><pre>mkdir /mnt/{label}</pre></code>
+        <Code example={`mkdir /mnt/${label}`} />
         <p>
           Then you can mount the new volume:
         </p>
-        <code><pre>mount /dev/disk/by-id/scsi-0Linode_Volume_{label} /mnt/{label}</pre></code>
+        <Code example={`mount /dev/disk/by-id/scsi-0Linode_Volume_${label} /mnt/${label}`} />
         <p>
           If you want the volume to automatically mount every time your Linode boots, you'll want to add a line like the following to your <strong>/etc/fstab</strong> file:
         </p>
-        <code><pre>/dev/disk/by-id/scsi-0Linode_Volume_{label} /mnt/{label} ext4 defaults 0 2</pre></code>
+        <Code example={`/dev/disk/by-id/scsi-0Linode_Volume_${label} /mnt/${label} ext4 defaults 0 2`} />
         <p>For more info see the <ExternalLink to="https://www.linode.com/docs/platform/how-to-use-block-storage-with-your-linode">docs</ExternalLink>.</p>
       </div>
     );

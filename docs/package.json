@@ -72,7 +72,6 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "react": "^15.1.0",
-    "react-clipboard.js": "^1.1.2",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.2",
     "react-router": "^2.4.1",

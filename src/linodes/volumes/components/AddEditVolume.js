@@ -40,11 +40,11 @@ export default class AddEditVolume extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close } = this.props;
+    const { dispatch, close, volume : { id } = {} } = this.props;
     const { label, region, size } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => volumes.post({ label, region, size }),
+      () => volumes[id ? 'put' : 'post']({ label, region, size }, [id].filter(Boolean)),
       close,
     ]));
   }

@@ -1,19 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 
-import { DeleteModalBody } from 'linode-components/modals';
-import { linodes } from '~/api';
-import { showModal, hideModal } from '~/actions/modal';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Input } from 'linode-components/forms';
+import { List } from 'linode-components/lists';
+import { ListBody } from 'linode-components/lists/bodies';
+import { MassEditControl } from 'linode-components/lists/controls';
+import { ListHeader } from 'linode-components/lists/headers';
+import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import {
-  LinkCell,
-  ButtonCell,
-} from 'linode-components/tables/cells';
+import { ButtonCell, CheckboxCell, LinkCell } from 'linode-components/tables/cells';
+
+import { showModal, hideModal } from '~/actions/modal';
+import { default as toggleSelected } from '~/actions/select';
+import { linodes } from '~/api';
+import { transform } from '~/api/util';
 
 
 export default class Configs extends Component {
-  deleteConfig(linode, config) {
+  static OBJECT_TYPE = 'linode-configs'
+
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
+  }
+
+  deleteConfigs(linode, configs) {
     const { dispatch } = this.props;
 
     dispatch(showModal('Delete Config',
@@ -22,7 +35,7 @@ export default class Configs extends Component {
           await dispatch(linodes.configs.delete(linode.id, config.id));
           dispatch(hideModal());
         }}
-        items={[config.label]}
+        items={configs.map(c => c.label)}
         typeOfItem="Configs"
         onCancel={() => dispatch(hideModal())}
       />
@@ -30,8 +43,13 @@ export default class Configs extends Component {
   }
 
   render() {
-    const { linode } = this.props;
+    const { dispatch, linode, selectedMap } = this.props;
+    const { filter } = this.state;
     const configs = Object.values(linode._configs.configs);
+    const { sorted } = transform(configs, {
+      filterBy: filter,
+      sortBy: v => v.label.toLowerCase(),
+    });
 
     const nav = (
       <PrimaryButton
@@ -47,26 +65,58 @@ export default class Configs extends Component {
 
     return (
       <Card header={header}>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              cellComponent: LinkCell,
-              hrefFn: (config) => {
-                return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
-              },
-              label: 'Label',
-            },
-            {
-              cellComponent: ButtonCell,
-              headerClassName: 'ButtonColumn',
-              onClick: (config) => { this.deleteConfig(linode, config); },
-              text: 'Delete',
-            },
-          ]}
-          data={configs}
-          noDataMessage="You have no configs."
-        />
+        <List>
+          <ListHeader className="Menu">
+            <div className="Menu-item">
+              <MassEditControl
+                data={sorted}
+                dispatch={dispatch}
+                massEditGroups={[{ elements: [
+                    { name: 'Delete', action: this.deleteConfigs },
+                  ] }]}
+                selectedMap={selectedMap}
+                objectType={Configs.OBJECT_TYPE}
+                toggleSelected={toggleSelected}
+              />
+            </div>
+            <div className="Menu-item">
+              <Input
+                placeholder="Filter..."
+                onChange={({ target: { value } }) => this.setState({ filter: value })}
+                value={this.state.filter}
+              />
+            </div>
+          </ListHeader>
+          <ListBody>
+            <Table
+              className="Table--secondary"
+              columns={[
+                { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+                {
+                  cellComponent: LinkCell,
+                  hrefFn: (config) => {
+                    return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
+                  },
+                  label: 'Label',
+                  titleKey: 'label',
+                  tooltipEnabled: true,
+                },
+                {
+                  cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
+                  onClick: (config) => { this.deleteConfigs(linode, [config]); },
+                  text: 'Delete',
+                },
+              ]}
+              data={sorted}
+              noDataMessage="You have no configs."
+              selectedMap={selectedMap}
+              onToggleSelect={(record) => {
+                dispatch(toggleSelected(Configs.OBJECT_TYPE, record.id));
+              }}
+            />
+          </ListBody>
+        </List>
       </Card>
     );
   }

@@ -3,18 +3,33 @@ import React, { Component, PropTypes } from 'react';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Dropdown } from 'linode-components/dropdowns';
+import { Input } from 'linode-components/forms';
+import { List } from 'linode-components/lists';
+import { ListBody } from 'linode-components/lists/bodies';
+import { MassEditControl } from 'linode-components/lists/controls';
+import { ListHeader } from 'linode-components/lists/headers';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { LabelCell, TableCell } from 'linode-components/tables/cells';
+import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { hideModal, showModal } from '~/actions/modal';
+import { default as toggleSelected } from '~/actions/select';
 import { linodes } from '~/api';
+import { transform } from '~/api/util';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
 
 
 export default class Disks extends Component {
+  static OBJECT_TYPE = 'linode-disks'
+
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
+  }
+
   poweredOff() {
     return [
       'offline', 'contact_support', 'provisioning',
@@ -79,9 +94,15 @@ export default class Disks extends Component {
   }
 
   render() {
-    const { dispatch, linode, distributions } = this.props;
+    const { dispatch, linode, distributions, selectedMap } = this.props;
+    const { filter } = this.state;
     const disks = Object.values(linode._disks.disks);
     const free = this.freeSpace();
+
+    const { sorted } = transform(disks, {
+      filterBy: filter,
+      sortBy: v => v.label.toLowerCase(),
+    });
 
     const nav = (
       <PrimaryButton
@@ -97,20 +118,52 @@ export default class Disks extends Component {
 
     return (
       <Card header={header}>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              cellComponent: LabelCell,
-              dataKey: 'label',
-              label: 'Label',
-            },
-            { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} MB` },
-            { cellComponent: this.renderDiskActions },
-          ]}
-          data={disks}
-          noDataMessage="You have no disks."
-        />
+        <List>
+          <ListHeader className="Menu">
+            <div className="Menu-item">
+              <MassEditControl
+                data={sorted}
+                dispatch={dispatch}
+                massEditGroups={[{ elements: [
+                    { name: 'Delete', action: this.deleteDisks },
+                  ] }]}
+                selectedMap={selectedMap}
+                objectType={Disks.OBJECT_TYPE}
+                toggleSelected={toggleSelected}
+              />
+            </div>
+            <div className="Menu-item">
+              <Input
+                placeholder="Filter..."
+                onChange={({ target: { value } }) => this.setState({ filter: value })}
+                value={this.state.filter}
+              />
+            </div>
+          </ListHeader>
+          <ListBody>
+            <Table
+              className="Table--secondary"
+              columns={[
+                { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+                {
+                  cellComponent: LabelCell,
+                  dataKey: 'label',
+                  label: 'Label',
+                  titleKey: 'label',
+                  tooltipEnabled: true,
+                },
+                { dataKey: 'size', label: 'Size', formatFn: (s) => `${s} MB` },
+                { cellComponent: this.renderDiskActions },
+              ]}
+              data={sorted}
+              noDataMessage="You have no disks."
+              selectedMap={selectedMap}
+              onToggleSelect={(record) => {
+                dispatch(toggleSelected(Disks.OBJECT_TYPE, record.id));
+              }}
+            />
+          </ListBody>
+        </List>
       </Card>
     );
   }
@@ -120,4 +173,5 @@ Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
+  selectedMap: PropTypes.object.isRequired,
 };

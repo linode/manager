@@ -17,10 +17,10 @@ export class AdvancedPage extends Component {
     return (
       <div>
         <section>
-          <Configs {...this.props} />
+          <Configs {...this.props} selectedMap={this.props.configsSelectedMap} />
         </section>
         <section>
-          <Disks {...this.props} />
+          <Disks {...this.props} selectedMap={this.props.disksSelectedMap} />
         </section>
         <Volumes {...this.props} selectedMap={this.props.volumesSelectedMap} />
       </div>
@@ -32,13 +32,24 @@ AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
+  configsSelectedMap: PropTypes.object.isRequired,
+  volumesSelectedMap: PropTypes.object.isRequired,
+  disksSelectedMap: PropTypes.object.isRequired,
 };
 
 function select(state, params) {
   const { linode } = selectLinode(state, params);
   const { distributions } = state.api;
   const volumesSelectedMap = state.select.selected[Volumes.OBJECT_TYPE] || {};
-  return { linode, distributions, volumesSelectedMap };
+  const disksSelectedMap = state.select.selected[Disks.OBJECT_TYPE] || {};
+  const configsSelectedMap = state.select.selected[Configs.OBJECT_TYPE] || {};
+  return {
+    linode,
+    distributions,
+    disksSelectedMap,
+    volumesSelectedMap,
+    configsSelectedMap,
+  };
 }
 
 export default connect(select)(AdvancedPage);

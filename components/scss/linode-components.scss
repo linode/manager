@@ -3,6 +3,9 @@
 @import 'bootstrap';
 @import 'utilities';
 
+@import '../node_modules/react-select-plus/dist/react-select-plus.min.css';
+@import '../node_modules/highlight.js/styles/tomorrow.css';
+
 @import 'components/index';
 
 html {
