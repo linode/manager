@@ -15,32 +15,23 @@ import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { linodes } from '~/api';
 import { transform } from '~/api/util';
+import { confirmThenDelete } from '~/utilities';
 
 
 export default class Configs extends Component {
   static OBJECT_TYPE = 'linode-configs'
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }
 
-  deleteConfigs(linode, configs) {
-    const { dispatch } = this.props;
-
-    dispatch(showModal('Delete Config',
-      <DeleteModalBody
-        onSubmit={async () => {
-          await dispatch(linodes.configs.delete(linode.id, config.id));
-          dispatch(hideModal());
-        }}
-        items={configs.map(c => c.label)}
-        typeOfItem="Configs"
-        onCancel={() => dispatch(hideModal())}
-      />
-    ));
-  }
+  deleteConfigs = confirmThenDelete(
+    this.props.dispatch,
+    'config',
+    (id) => linodes.configs.delete(this.props.linode.id, id),
+    Configs.OBJECT_TYPE).bind(this)
 
   render() {
     const { dispatch, linode, selectedMap } = this.props;

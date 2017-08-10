@@ -16,6 +16,7 @@ import { hideModal, showModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { linodes } from '~/api';
 import { transform } from '~/api/util';
+import { confirmThenDelete } from '~/utilities';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
@@ -24,8 +25,8 @@ import EditDisk from './EditDisk';
 export default class Disks extends Component {
   static OBJECT_TYPE = 'linode-disks'
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }
@@ -44,21 +45,11 @@ export default class Disks extends Component {
     return total - used;
   }
 
-  deleteDisk(d) {
-    const { dispatch, linode } = this.props;
-
-    return dispatch(showModal('Delete Disk', (
-      <DeleteModalBody
-        onCancel={() => dispatch(hideModal())}
-        onSubmit={() => {
-          dispatch(linodes.disks.delete(linode.id, d.id));
-          dispatch(hideModal());
-        }}
-        typeOfItem="Disks"
-        items={[d.label]}
-      />
-    )));
-  }
+  deleteDisks = confirmThenDelete(
+    this.props.dispatch,
+    'disk',
+    (id) => linodes.disks.delete(this.props.linode.id, id),
+    Disks.OBJECT_TYPE).bind(this)
 
   renderStatusMessage() {
     if (!this.poweredOff()) {

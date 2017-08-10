@@ -1,3 +1,37 @@
+import _ from 'lodash';
+import React from 'react';
+
+import { DeleteModalBody } from 'linode-components/modals';
+
+import { showModal, hideModal } from '~/actions/modal';
+
+
 export function convertUnits(value, units, unitType, fixedNumber = 0) {
   return `${value.toFixed(fixedNumber) / Math.pow(1000, units)}${unitType[units]}/s`;
+}
+
+export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectType,
+                                  labelKey = 'label') {
+  return function (_toDelete) {
+    const toDelete = (Array.isArray(_toDelete) ? _toDelete : [_toDelete]).map(o => o[labelKey]);
+
+    let title = `Delete ${_.capitalize(objectLabel)}`;
+    if (toDelete.length > 1) {
+      title += 's';
+    }
+
+    dispatch(showModal(title, (
+      <DeleteModalBody
+        onSubmit={async () => {
+            const ids = toDelete.map(o => o.id);
+            await Promise.all(ids.map(id => dispatch(deleteFunction(id))));
+            dispatch(toggleSelected(objectType, ids));
+            dispatch(hideModal());
+          }}
+        items={toDelete}
+        typeOfItem={`${objectLabel}s`}
+        onCancel={() => dispatch(hideModal())}
+      />
+    )));
+  }
 }
