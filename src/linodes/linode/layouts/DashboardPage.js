@@ -11,10 +11,9 @@ import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 import LineGraph from '~/components/graphs/LineGraph';
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
-import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { convertUnits } from '~/utilities';
 
@@ -175,8 +174,7 @@ export class DashboardPage extends Component {
 
   renderDetails() {
     const { username, linode } = this.props;
-    const plan = (<PlanStyle plan={linode.type} />);
-    const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
+    const lishLink = `${username}@lish-${ZONES[linode.region.id]}.linode.com`;
 
     return (
       <div className="row">
@@ -194,12 +192,6 @@ export class DashboardPage extends Component {
                 </ul>
               </div>
             </div>
-            {!plan ? null : (
-              <div className="row">
-                <div className="col-sm-4 row-label">Plan</div>
-                <div className="col-sm-8" id="plan">{plan}</div>
-              </div>
-            )}
             <div className="row">
               <div className="col-sm-4 row-label">Region</div>
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>

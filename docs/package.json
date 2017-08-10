@@ -1,12 +1,13 @@
 {
   "name": "linode-api-docs",
-  "version": "0.11.1",
+  "version": "0.11.3",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
     "build:webpack": "npm run prebuild && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "prebuild": "node prebuild.js",
     "build": "npm run clean && npm run build:webpack",
+    "rebuild-components": "rm -fr node_modules/linode-components && npm install",
     "lint": "eslint --max-warnings=0 src",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",

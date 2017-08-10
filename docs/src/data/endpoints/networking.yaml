@@ -19,7 +19,7 @@ endpoints:
           Returns a list of <a href="#object-ipaddress">IPv4 Addresses</a>
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               https://$api_root/$version/networking/ipv4
           python: |
             my_ipv4s = client.networking.get_ipv4()
@@ -29,14 +29,14 @@ endpoints:
         description: >
           Create a new Public <a href="#object-ipaddress">IPv4 Address</a>
         params:
-          linode:
+          linode_id:
             description: >
               The Linode ID to assign this IP to.
-            type: Int
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{"linode":123}' \
                 https://$api_root/$version/networking/ipv4
           python: |
@@ -55,7 +55,7 @@ endpoints:
             Returns a single <a href="#object-ipaddress">IPv4 Address</a>
         examples:
             curl: |
-              curl -H "Authorization: token $TOKEN" \
+              curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
             python: |
               my_ipv4 = linode.IPAddress(client, '97.107.143.37')
@@ -66,7 +66,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{"rdns":"example.org"}' \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
           python: |
@@ -78,7 +78,7 @@ endpoints:
           Delete a public IPv4 address
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
   /networking/ipv6:
@@ -95,7 +95,7 @@ endpoints:
           Returns a list of <a href="#object-ipv6pool">IPv6 Pools</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/networking/ipv6
           python: |
             my_ipv6s = client.networking.get_ipv6()
@@ -114,7 +114,7 @@ endpoints:
           Return a single <a href="#object-ipv6-address">IPv6 Address</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/networkint/ipv6/2600:3c01::2:5001
           python: |
             my_ipv6 = linode.IPv6Address(client, '2600:3c01::2:5001')
@@ -125,7 +125,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{"rdns":"example.org"}' \
                 https://$api_root/$version/networking/ipv6/2600:3c01::2:5001
           python: |
@@ -154,7 +154,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "assignments": [

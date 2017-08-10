@@ -18,7 +18,7 @@ endpoints:
           Returns a list of <a href="#object-linode">Linodes</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances
           python: |
             my_linodes = client.linode.get_instances()
@@ -65,25 +65,25 @@ endpoints:
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
             type: String
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
             type: String
-          backup:
+          backup_id:
             optional: true
             description: >
               The <a href="#object-backup">Backup</a> to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
-            type: Backup
+            type: Integer
           with_backup:
             optional: true
             description: >
@@ -92,7 +92,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "type": "g5-standard-1"
@@ -116,7 +116,7 @@ endpoints:
           Returns information about this <a href="#object-linode">Linode</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode = linode.Linode(client, 123)
@@ -127,7 +127,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "label": "newlabel",
                   "schedule": {
@@ -146,7 +146,7 @@ endpoints:
           Deletes this Linode. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
@@ -165,7 +165,7 @@ endpoints:
           Returns a list of <a href="#object-disk">disks</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             disks = my_linode.disks
@@ -211,13 +211,13 @@ endpoints:
             description: >
               If true, this disk is read-only.
             type: Boolean
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
@@ -227,7 +227,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example Disk",
                     "filesystem": "ext4",
@@ -250,7 +250,7 @@ endpoints:
           Returns information about this <a href="#object-disk">disk</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id
@@ -261,7 +261,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "label": "New Disk Label"
                 }' \
@@ -276,7 +276,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
@@ -288,7 +288,7 @@ endpoints:
           Deletes this disk. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
@@ -309,7 +309,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "size": 1024
                 }' \
@@ -332,7 +332,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "password": "hunter2"
                 }' \
@@ -354,7 +354,7 @@ endpoints:
           given Linode.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             configs = my_linode.configs
@@ -414,7 +414,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Arch Linux config",
                     "kernel": "linode/latest_64",
@@ -442,7 +442,7 @@ endpoints:
           Linode config</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id
@@ -453,7 +453,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "label": "Edited config",
                     "kernel": {
@@ -477,7 +477,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
@@ -495,7 +495,7 @@ endpoints:
           Returns a list of <a href="#object-volume">volumes</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/volumes
           python: |
             l = linode.Linode(client, 123)
@@ -510,15 +510,15 @@ endpoints:
         oauth: linodes:modify
         dangerous: false
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: Linode_config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "config": 5567
                 }' \
@@ -537,7 +537,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
@@ -552,15 +552,15 @@ endpoints:
         oauth: linodes:modify
         dangerous: true
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: Linode_config
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "config": 5567
 
@@ -580,7 +580,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
@@ -603,7 +603,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "disks": {
                       "sda": 5567,
@@ -614,6 +614,72 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
+  /linode/instances/:id/clone:
+    type: Action
+    authenticated: true
+    description: >
+      Clones a Linode to a new or existing Linode.
+    methods:
+      POST:
+        money: true
+        oauth: linodes:create
+        dangerous: false
+        params:
+          region:
+            optional: true
+            description: >
+              A <a href="#object-region">region</a> ID to provision
+              this Linode in. Required when cloning to a new Linode.
+            type: Region
+          type:
+            optional: true
+            description: >
+              A <a href="#object-service">Linode type</a> ID to use for this
+              Linode. Required when cloning to a new Linode.
+            type: Service
+          linode_id:
+            optional: true
+            description: >
+              An existing <a href="#object-linode">Linode</a> can be a target clone location.
+            type: Integer
+          label:
+            optional: true
+            description: The label to assign this Linode when cloning to a new Linode. Defaults to "linode".
+            type: String
+            limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+          group:
+            optional: true
+            description: The group to assign this Linode when cloning to a new Linode. Defaults to "empty".
+            type: String
+            limit: 0-50 characters
+          with_backup:
+            optional: true
+            description: >
+              Subscribes this Linode with the Backup service when cloning to a new Linode. (Additional charges apply.) Defaults to "false".
+            type: Boolean
+          disks:
+            optional: true
+            description: >
+              A list of disk ID's to include in the clone process. All disks attached to configs will be cloned from the source Linode if not provided.
+            type: Array[object]
+          configs:
+            optional: true
+            description: >
+              A list of config ID's to include in the clone process. All configs will be cloned from the source Linode if not provided.
+            type: Array[object]
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "region": "us-east-1a",
+                    "type": "g5-standard-1",
+                    "disks": [2450]
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/clone
+          python: |
+            my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
   /linode/instances/:id/resize:
     type: Action
     authenticated: true
@@ -632,7 +698,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "g5-standard-1"
                     }
@@ -653,7 +719,7 @@ endpoints:
         oauth: linodes:view
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             backups = my_linode.available_backups
@@ -673,7 +739,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Linode123456 snapshot",
                 }' \
@@ -694,7 +760,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
@@ -712,7 +778,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
@@ -728,10 +794,10 @@ endpoints:
         oauth: linodes:create
         dangerous: true
         params:
-          linode:
+          linode_id:
             description: >
               The ID of the Linode to restore a backup to.
-            type: Linode
+            type: Integer
           overwrite:
             description: >
                 If true, deletes all disks and configs on the target linode before restoring.
@@ -740,7 +806,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "linode": 123456,
                 }' \
@@ -762,7 +828,7 @@ endpoints:
           Returns a <a href="#object-linodenetworking">Linode Networking Object</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/ips
       POST:
         money: true
@@ -777,7 +843,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "private"
                 }' \
@@ -796,7 +862,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
@@ -816,7 +882,7 @@ endpoints:
           <a href="#object-ipv6-address">IPv6</a> Address.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
       PUT:
         oauth: linodes:modify
@@ -825,7 +891,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "rdns":"example.org"
                 }' \
@@ -836,7 +902,7 @@ endpoints:
           Delete a public IPv4 address associated with this Linode
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
   /linode/instances/:id/rebuild:
@@ -863,13 +929,13 @@ endpoints:
             description: >
                 The key to authorize for root access to the new deployment.
             type: String
-          stackscript:
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: Stackscript
+            type: Integer
           stackscript_data:
             optional: true
             description: >
@@ -879,7 +945,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/rebuild \
                 -d '{"distribution":"linode/debian8","root_pass":"hunter7"}'
@@ -912,12 +978,12 @@ endpoints:
             description: >
               Label of StackScript.
             limit: 3-128 characters
-            type: string
+            type: String
           description:
             optional: true
             description: >
               Description of the StackScript.
-            type: string
+            type: String
           distributions:
             description: >
               A list of <a href="#object-distribution">distributions</a>
@@ -928,21 +994,21 @@ endpoints:
             description: >
               If true, this StackScript will be publicly visible in the Linode
               StackScript library. Defaults to False.
-            type: boolean
+            type: Boolean
           rev_note:
             optional: true
             description: >
               Release notes for this revision.
             limit: 0-512 characters
-            type: string
+            type: String
           script:
             description: >
               The shell script to run on boot.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X POST -d '{
                 "label": "Initial Label",
                 "distributions": ["linode/ubuntu15.4", "linode/ubuntu15.10"],
@@ -967,7 +1033,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X GET \
               https://$api_root/$version/linode/stackscripts/$stackscript_id
           python: |
@@ -980,7 +1046,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X PUT -d '{
                 "label": "New Label"
               }' \
@@ -994,7 +1060,7 @@ endpoints:
           Deletes this StackScript.  This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               -X DELETE \
               https://$api_root/$version/linode/stackscripts/$stackscript_id
           python: |
@@ -1105,7 +1171,7 @@ endpoints:
           Returns a list of volumes.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/volumes
           python: |
             volumes = client.linode.get_volumes()
@@ -1123,7 +1189,7 @@ endpoints:
           Returns information about this Volume.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
             v = linode.Volume(client, 123)
@@ -1133,7 +1199,7 @@ endpoints:
           Removes a volume from your account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
@@ -1150,7 +1216,7 @@ endpoints:
           Detach a volume from a Linode
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/volumes/$volume_id/detach
           python: |

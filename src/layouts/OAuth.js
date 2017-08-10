@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { LOGIN_ROOT } from '~/constants';
+import { LOGIN_ROOT, ENVIRONMENT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
@@ -51,11 +51,26 @@ export class OAuthCallbackPage extends Component {
       returnTo = location.query['return'];
 
       // Exchange temporary code for access token.
-      const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
-        method: 'POST',
-        body: data,
-        mode: 'cors',
-      });
+      let resp;
+      try {
+        resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
+          method: 'POST',
+          body: data,
+          mode: 'cors',
+        });
+      } catch (e) {
+        const message = `Failed to exchange temporary code for access token: ${e}`;
+        if (ENVIRONMENT === 'development') {
+          /* eslint-disable no-alert */
+          alert(message);
+          /* eslint-enable no-alert */
+        } else {
+          /* eslint-disable no-console */
+          console.log(message);
+          /* eslint-enable no-console */
+        }
+      }
+
       ({ access_token: accessToken, scopes, expires_in: expiresIn } = await resp.json());
     } else if (implicitParams.access_token) {
       ({

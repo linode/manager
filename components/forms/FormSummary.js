@@ -8,7 +8,7 @@ export default class FormSummary extends Component {
   }
 
   render() {
-    const { errors, success } = this.props;
+    const { className, errors, success } = this.props;
 
     let content;
     if (errors._ && errors._.length) {
@@ -30,7 +30,7 @@ export default class FormSummary extends Component {
     }
 
     return (
-      <div className="FormSummary">{content}</div>
+      <div className={`FormSummary ${className}`}>{content}</div>
     );
   }
 }
@@ -38,4 +38,9 @@ export default class FormSummary extends Component {
 FormSummary.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.string,
+  className: PropTypes.string,
+};
+
+FormSummary.defaultProps = {
+  className: '',
 };

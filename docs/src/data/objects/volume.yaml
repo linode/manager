@@ -42,7 +42,7 @@ schema:
     _type: datetime
     _value: "2017-06-20T11:21:01"
   linode_id:
-    _type: integer
+    _type: Integer
     _description: The ID of the linode this volume is attached to.
     _value: 456
 enums:

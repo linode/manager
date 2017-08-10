@@ -58,7 +58,7 @@ function select(state, props) {
       }
     }
 
-    if (backups.weekly.length) {
+    if (backups.weekly && backups.weekly.length) {
       if (backups.weekly[0] && backups.weekly[0].id === backupId) {
         backup = backups.weekly[0];
       } else if (backups.weekly[1] && backups.weekly[1].id === backupId) {

@@ -4,7 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 
 import { testLinode, testLinode1246 } from '@/data/linodes';
@@ -53,16 +53,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#backup-status').text()).to.equal('View Backups');
   });
 
-  it('renders plan', () => {
-    const page = mount(
-      <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
-
-    expect(page.find('#plan').text()).to.equal('Linode 2G');
-  });
-
   it('renders region', () => {
     const page = mount(
       <DashboardPage
@@ -70,7 +60,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         timezone="UTC"
       />);
 
-    expect(page.find('#region').text()).to.equal(testLinode.region.label);
+    expect(page.find('#region').text()).to.equal(testLinode.region.id);
   });
 
   it('renders distribution', () => {
@@ -129,7 +119,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        DATACENTERS[testLinode.region.id]
+        ZONES[testLinode.region.id]
       }.linode.com`;
     const page = shallow(
       <DashboardPage

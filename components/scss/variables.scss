@@ -1,7 +1,7 @@
 /* BEGIN Color definitions */
 // Basic element colors
 $blue: #4A90E2;
-$light-blue: lighten($blue, 37%);
+$light-blue: lighten($blue, 15%);
 
 $green: #3bb878;
 $light-green: lighten($green, 45%);
@@ -57,6 +57,7 @@ $main-height: calc(100% - #{$nav-height + $mini-nav-height});
 
 $form-field-height: 32px;
 $form-field-padding: 6px 8px;
+$checkbox-height-width: 16px;
 
 $border-gray: $dark-gray;
 $border: 1px solid $border-gray;

@@ -1,18 +1,34 @@
 import React, { PropTypes } from 'react';
 
 
-export default function PlanStyle(props) {
-  const { plan } = props;
-
+export function planStyle(plan, withPrice = false) {
   if (!plan || !plan.label) {
     return null;
   }
 
-  const planStr = plan.label.split(' ');
+  const [name, number] = plan.label.split(' ');
+  const output = `${name} ${parseInt(number) / 1024}G`;
+  return withPrice ? `${output} ($${plan.monthly_price.toFixed(2)}/mo)` : output;
+}
+
+export function planStats(plan) {
+  const readable = planStyle(plan);
+  if (!readable) {
+    return null;
+  }
+
+  const ram = plan.ram / 1024;
+  const storage = plan.storage / 1024;
+  const vcpus = plan.vcpus;
+
+  return `${readable} | ${vcpus} CPU(s) | ${storage}G HD | ${ram}G RAM`;
+}
+
+export default function PlanStyle(props) {
+  const { plan } = props;
+
   return (
-    <span>
-      {`${planStr[0]} ${parseInt(planStr[1], 10) / 1024}G`}
-    </span>
+    <span>{planStyle(plan)}</span>
   );
 }
 

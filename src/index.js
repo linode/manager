@@ -9,7 +9,6 @@ import Raven from 'raven-js';
 
 import { InternalError, NotFound } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
-import Styleguide from 'linode-styleguide';
 
 import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
@@ -133,7 +132,6 @@ const init = () => {
               path="/linodes/:linodeLabel/weblish"
               component={Weblish}
             />
-            {Styleguide}
             <Route
               onChange={() => store.dispatch(hideModal())}
               path="/"

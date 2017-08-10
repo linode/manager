@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Error } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
 
@@ -93,18 +93,15 @@ export class Layout extends Component {
               this.props.children}
           </div>
         </div>
-        <footer className="Footer text-sm-center">
+        <footer className="Footer text-center">
           <div>
             <span>Version {VERSION}</span>
           </div>
           {!source || !source.source ? null : (
-            <a
-              target="__blank"
-              rel="noopener"
-              href={`${githubRoot}${source.source}`}
-            >Page Source</a>
+            <ExternalLink
+              to={`${githubRoot}${source.source}`}
+            >Page Source</ExternalLink>
           )}
-          <Link to="/styleguide">Styleguide</Link>
         </footer>
       </div>
     );

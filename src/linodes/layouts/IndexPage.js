@@ -15,19 +15,24 @@ import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { linodes as api } from '~/api';
+import * as api from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
+import { planStats } from '../components/PlanStyle';
+import { AddLinode, CloneLinode, RestoreLinode } from '../components';
+
 
 const OBJECT_TYPE = 'linodes';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.linodes.all());
+
+    ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
   constructor() {
@@ -96,7 +101,7 @@ export class IndexPage extends Component {
         onSubmit={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
+          await Promise.all(ids.map(id => dispatch(api.linodes.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
@@ -157,12 +162,12 @@ export class IndexPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                       tooltipEnabled: true,
+                      subtitleFn: linode => planStats(linode.type),
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
                       cellComponent: RegionCell,
-                      headerClassName: 'RegionColumn hidden-md-down',
-                      className: 'hidden-md-down',
+                      headerClassName: 'RegionColumn',
                     },
                     {
                       cellComponent: BackupsCell,
@@ -194,21 +199,39 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { linodes } = this.props;
+    const { dispatch, linodes, distributions, types } = this.props;
+
+    const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
+    const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
+    const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
+
+    const addOptions = [
+      { name: 'Create from Backup', action: restoreLinode },
+      { name: 'Clone a Linode', action: cloneLinode },
+    ];
 
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Linodes</h1>
-            <PrimaryButton to="/linodes/create" className="float-sm-right">
+            <h1 className="float-left">Linodes</h1>
+            <PrimaryButton
+              className="float-right"
+              onClick={addLinode}
+              options={addOptions}
+            >
               Add a Linode
             </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(linodes).length ? this.renderLinodes(linodes) :
-            <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
+          {Object.keys(linodes).length ? this.renderLinodes(linodes) : (
+            <CreateHelper
+              label="Linodes"
+              linkText="Add a Linode"
+              onClick={addLinode}
+            />
+          )}
         </div>
       </div>
     );
@@ -217,14 +240,21 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
-  linodes: PropTypes.object,
+  linodes: PropTypes.object.isRequired,
+  types: PropTypes.object.isRequired,
+  distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
 };
 
 function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
+  const distributions = state.api.distributions.distributions;
+  const types = state.api.types.types;
+
   return {
     linodes,
+    distributions,
+    types,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

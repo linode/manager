@@ -117,6 +117,7 @@ export class IndexPage extends Component {
                       tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'status', formatFn: _.capitalize },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
@@ -145,8 +146,8 @@ export class IndexPage extends Component {
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Domains</h1>
-            <PrimaryButton to="/domains/create" className="float-sm-right">
+            <h1 className="float-left">Domains</h1>
+            <PrimaryButton to="/domains/create" className="float-right">
               Add a Domain
             </PrimaryButton>
           </div>

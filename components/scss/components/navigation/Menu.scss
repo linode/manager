@@ -2,10 +2,10 @@
     @extend .clearfix;
 
     &-item {
-        @extend .float-sm-left;
+        float: left;
 
         &--right {
-            @extend .float-sm-right;
+            float: right;
         }
 
         & + &:not(&--right) {

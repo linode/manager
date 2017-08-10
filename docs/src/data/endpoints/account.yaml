@@ -19,7 +19,7 @@ endpoints:
           third-party OAuth Tokens, and Personal Access Tokens.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/tokens
           python: |
             my_tokens = client.account.get_tokens()
@@ -53,7 +53,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                   "scopes": "linodes:view;domains:view"
                 }' \
@@ -74,7 +74,7 @@ endpoints:
           Get a single token.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/tokens/123
           python: |
             my_token = linode.OAuthToken(client, 123)
@@ -85,7 +85,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "label": "test-new-label"
                 }' \
@@ -99,7 +99,7 @@ endpoints:
           Expire an OAuth Token for your user.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/tokens/123
           python: |
@@ -125,7 +125,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "address_1": "123 Main St.",
                   "address_2": "Suite 101",
@@ -165,7 +165,7 @@ endpoints:
           Returns a list of <a href="#object-client">clients</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients
           python: |
             my_clients = client.account.get_oauth_clients()
@@ -185,7 +185,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
@@ -207,7 +207,7 @@ endpoints:
           Returns information about this <a href="#object-client">OAuth client</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients/$client_id
           python: |
             my_client = linode.OAuthClient(client, 123)
@@ -218,7 +218,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
@@ -234,7 +234,7 @@ endpoints:
           Delete this OAuth application. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/clients/$client_id
           python: |
@@ -253,7 +253,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/account/clients/$client_id/reset_secret
           python: |
@@ -272,7 +272,7 @@ endpoints:
           Retrieve the OAuth application's current thumbnail image.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients/$client_id/thumbnail
           python: |
             img = my_client.get_thumbnail()
@@ -287,7 +287,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: image/png" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT \
                 --data-binary "@/path/to/image"
                 https://$api_root/$version/account/clients/$client_id/thumbnail
@@ -332,7 +332,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "username": "testguy",
                     "password": "hunter7",
@@ -360,7 +360,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "email": "newemail@linode.com"
                   }
@@ -375,7 +375,7 @@ endpoints:
           Deletes a user.  May not delete the last unrestricted user on the account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/users/testguy
           python: |
@@ -395,7 +395,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "password": "hunter7",
                 }' \
@@ -415,7 +415,7 @@ endpoints:
         description: Get grants for a restricted user.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/users/testguy/grants
           python: |
             my_user = linode.User(client, 'username')
@@ -428,7 +428,7 @@ endpoints:
           Update grants for a restricted user.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "global": {
                         "add_linodes": true
@@ -455,7 +455,7 @@ endpoints:
           Returns a list of <a href="#object-client">clients</a>.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients
       POST:
         oauth: clients:create
@@ -473,7 +473,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "name": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
@@ -493,7 +493,7 @@ endpoints:
           Returns information about this <a href="#object-client">OAuth client</a>.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/clients/$client_id
       PUT:
         oauth: clients:modify
@@ -502,7 +502,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
@@ -515,7 +515,7 @@ endpoints:
           Delete this OAuth application. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/clients/$client_id
   /account/events:

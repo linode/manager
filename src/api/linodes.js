@@ -42,7 +42,7 @@ export function rebuildLinode(id, config = null) {
     return {
       page: 1,
       totalPages: 1,
-      totalResults: rsp[resource].length,
+      totalResults: Object.values(rsp[resource]).length,
       [resource]: rsp[resource],
     };
   }
@@ -52,9 +52,9 @@ export function rebuildLinode(id, config = null) {
       // Add this manually so StatusDropdown will start polling.
       dispatch(actions.one({ status: 'rebuilding' }, id));
       await dispatch(actions.disks.invalidate([id], false));
-      await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
+      await dispatch(actions.disks.many(makeNormalResponse(rsp, '_disks'), id));
       await dispatch(actions.configs.invalidate([id], false));
-      await dispatch(actions.configs.many(makeNormalResponse(rsp, 'configs'), id));
+      await dispatch(actions.configs.many(makeNormalResponse(rsp, '_configs'), id));
     };
   }
 
@@ -105,6 +105,7 @@ export function linodeBackups(linodeId) {
     const response = await fetch(token, `/linode/instances/${linodeId}/backups`);
     const json = { _backups: await response.json() };
     dispatch(actions.one(json, linodeId));
+    return json._backups;
   };
 }
 
@@ -112,5 +113,19 @@ export function linodeStats(linodeId) {
   return async (dispatch) => {
     const { data: _stats } = await dispatch(thunkFetch.get(`/linode/instances/${linodeId}/stats`));
     dispatch(actions.one({ _stats }, linodeId));
+  };
+}
+
+export function cloneLinode(linodeId, regionId, planId,
+                            targetId = undefined, configs = [], disks = []) {
+  return async function (dispatch) {
+    const clonedLinode = await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/clone`, {
+      region: regionId,
+      type: planId,
+      disks: disks.length ? disks : undefined,
+      configs: configs.length ? disks : undefined,
+      linode: targetId,
+    }));
+    dispatch(actions.one(clonedLinode, clonedLinode.id));
   };
 }
