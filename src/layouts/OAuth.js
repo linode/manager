@@ -14,7 +14,7 @@ function getImplicitParams() {
   const params = {};
   hashParams.forEach(function (hashParam) {
     const hashParamParts = hashParam.split('=');
-    if (hashParam.match(/return/)) {
+    if (hashParamParts[0] === 'return') {
       params.returnTo = hashParamParts[2];
     } else {
       params[hashParamParts[0]] = hashParamParts[1];
