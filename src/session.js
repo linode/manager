@@ -28,13 +28,14 @@ function uuid4(a) {
 
 export function loginAuthorizePath(returnTo) {
   const nonce = uuid4();
+  const responseType = 'code'; // TODO: response_type should be 'token' for implicit grant flow
   setStorage('authentication/nonce', nonce);
   /* eslint-disable prefer-template */
   return `${LOGIN_ROOT}/oauth/authorize?` +
          `client_id=${clientId}` +
          '&scopes=*' +
-         '&response_type=code' + // TODO: response_type should be 'token' for implicit grant flow
-         // `&state=${nonce}` + // TODO: response_type=token can optionally send a state
+         `&response_type=${responseType}` +
+         (responseType === 'token' ? `&state=${nonce}` : '') +
          `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
   /* eslint-enable prefer-template */
 }
