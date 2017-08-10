@@ -20,6 +20,9 @@ import { default as toggleSelected } from '~/actions/select';
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';
 
+import AddEditVolume from './AddEditVolume';
+import MoreInfo from './MoreInfo';
+
 
 export default class VolumesList extends Component {
   constructor(props) {
@@ -51,11 +54,11 @@ export default class VolumesList extends Component {
   }
 
   renderVolumeActions = ({ column, record }) => {
-    const { dispatch, linode } = this.props;
+    const { dispatch, linode, plans } = this.props;
 
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      { elements: [{ name: 'Edit', action: () => EditVolume.trigger(dispatch, linode, record) }] },
+      { elements: [{ name: 'Edit', action: () => AddEditVolume.trigger(dispatch, linode, undefined, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 

@@ -8,8 +8,7 @@ const languageMap = {
   curl: 'bash',
 };
 
-export default class Example extends Component {
-
+export default class Code extends Component {
   constructor() {
     super();
 
@@ -41,7 +40,7 @@ export default class Example extends Component {
     if (!noclipboard) {
       clipboardButton = (
         <ClipboardButton
-          className="Example-clipboardButton"
+          className="Code-clipboardButton"
           data-clipboard-text={example}
           onClick={this.onClickCopy}
         >
@@ -51,7 +50,7 @@ export default class Example extends Component {
     }
 
     return (
-      <div className={`Example ${collapsedClass}`}>
+      <div className={`Code ${collapsedClass}`}>
         <Highlight className={`language-${languageName}`}>
           {example}
         </Highlight>
@@ -61,14 +60,14 @@ export default class Example extends Component {
   }
 }
 
-Example.propTypes = {
+Code.propTypes = {
   collapsed: PropTypes.bool,
   example: PropTypes.string,
   language: PropTypes.string,
   noclipboard: PropTypes.bool,
 };
 
-Example.defaultProps = {
+Code.defaultProps = {
   noclipboard: false,
   language: 'bash',
 };

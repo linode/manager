@@ -3,8 +3,8 @@ import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Table } from 'linode-components/tables';
+import { Code } from 'linode-components/formats';
 
-import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
 
 
@@ -28,7 +28,7 @@ export default function Introduction() {
         <p>
           All APIv4 endpoints are located at:
         </p>
-        <Example example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
+        <Code example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
         <p>
           Occasionally we will add features and improvements to our API -
           only certain changes will trigger a version bump, including:

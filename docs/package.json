@@ -75,7 +75,6 @@
     "react-clipboard.js": "^1.1.2",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.2",
-    "react-highlight": "^0.10.0",
     "react-router": "^2.4.1",
     "react-tabs": "^0.7.0"
   }

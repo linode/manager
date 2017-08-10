@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-highlight": "^0.10.0",
     "react-router": "^2.4.1",
     "react-router-dom": "^4.1.1",
     "react-select-plus": "^1.0.0-rc.5",

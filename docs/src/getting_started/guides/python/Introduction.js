@@ -3,9 +3,9 @@ import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { ExternalLink } from 'linode-components/buttons';
+import { Code } from 'linode-components/formats';
 
 import { API_VERSION } from '~/constants';
-import { Example } from '~/components';
 
 
 export default function Introduction(props) {
@@ -31,7 +31,7 @@ export default function Introduction(props) {
           </ExternalLink>
           , and can be installed:
         </p>
-        <Example example="pip install linode-api" name="bash" />
+        <Code example="pip install linode-api" name="bash" />
         <p>
           In order to make requests to the API, you're going to need an OAuth Token.
           You can make a personal access token at&nbsp;
@@ -47,7 +47,7 @@ export default function Introduction(props) {
           which expects an OAuth Token in his constructor.
         </p>
         <i>All example code in this guide is executed in a Python shell.</i>
-        <Example
+        <Code
           example={`>>> import linode
 >>> client = linode.LinodeClient('my-oauth-token')`}
           name="bash"
@@ -62,7 +62,7 @@ export default function Introduction(props) {
           Since we don’t know the IDs of any objects in the API,
           we’ll list them to see what we want:
         </p>
-        <Example
+        <Code
           example={`>>> for r in client.get_regions():
 ...   print(r.label)
 ...
@@ -81,7 +81,7 @@ Tokyo, JP`}
         <p>
           We've got a lot of regions to pick from - let's just use the first one and move on.
         </p>
-        <Example
+        <Code
           example=">>> region = client.get_regions()[0]"
           name="bash"
           noclipboard
@@ -90,7 +90,7 @@ Tokyo, JP`}
           For a Service, we know that we want "Linode 2048". Since we know the service
           type’s label, we don’t need to list all services, we can just use the label:
         </p>
-        <Example
+        <Code
           example=">>> serv = linode.Service(client, 'g5-standard-1')
 >>> serv.label
 'Linode 2048'"
@@ -109,7 +109,7 @@ Tokyo, JP`}
           Since we have everything we need to make a Linode, we can create one with the
           LinodeClient:
         </p>
-        <Example
+        <Code
           example=">>> l = client.linode.create_instance(serv, region)"
           name="bash"
           noclipboard
@@ -117,7 +117,7 @@ Tokyo, JP`}
         <p>
           And that’s it! Now we’ve got a fresh new Linode. Let’s check it out:
         </p>
-        <Example
+        <Code
           example={`>>> l.label
 'linode263'
 >>> l.ipv4
@@ -140,7 +140,7 @@ Tokyo, JP`}
           more vague - a Debian template. Which version? What are our options?
           Let’s have a look at all of the recommended Debian templates:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
           example={`>>> for d in client.linode.get_distributions(linode.Distribution.vendor == 'Debian', linode.Distribution.recommended == True):
 ...   print("{}: {}".format(d.label, d.id))
@@ -166,7 +166,7 @@ Debian 8.8: linode/debian8`}
           Now that we have a distribution, let’s make a new Linode running it! But first,
           let’s clean up that first Linode that we don’t really need:
         </p>
-        <Example
+        <Code
           example={`>>> l.delete()
 True`}
           name="bash"
@@ -175,7 +175,7 @@ True`}
         <p>
           Now that that’s gone, we can create a new Linode running Debian 8:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
           example='>>> l, pw = client.linode.create_instance(serv, region, distribution="linode/debian8")'
           name="bash"
@@ -188,7 +188,7 @@ True`}
           and we didn’t provide one, the client helpfully generated one for us and returned
           it as well. Let’s boot it and wait for it to come online:
         </p>
-        <Example
+        <Code
           example={`>>> l.boot()
 True
 >>> while not l.state == 'running':
@@ -207,7 +207,7 @@ True
           of a Linode, we can poll it. At fixed intervals, the value will be updated via a
           background API request. Once that loop exists, we can ssh in.
         </p>
-        <Example
+        <Code
           example={`>>> exit()
 $ ssh root@97.107.143.34
 The authenticity of host '97.107.143.34 (97.107.143.34)' can't be established.

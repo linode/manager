@@ -10,16 +10,17 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 
 
-export default class AddVolume extends Component {
-  static title = 'Add a Volume'
-
-  static trigger(dispatch, linodes, plans) {
-    return dispatch(showModal(AddVolume.title, (
-      <AddVolume
+export default class AddEditVolume extends Component {
+  static trigger(dispatch, linodes, plans, volume) {
+    const title = volume ? 'Edit Volume' : 'Add a Volume';
+    return dispatch(showModal(title, (
+      <AddEditVolume
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
         linodes={linodes}
         plans={plans}
+        volume={volume}
+        title={title}
       />
     )));
   }
@@ -27,7 +28,13 @@ export default class AddVolume extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, label: '', size: 10 };
+    const { volume = {} } = props;
+
+    this.state = {
+      errors: {},
+      label: volume.label || '',
+      size: volume.size || 10,
+    };
 
     this.onChange = onChange.bind(this);
   }
@@ -43,16 +50,16 @@ export default class AddVolume extends Component {
   }
 
   render() {
-    const { close} = this.props;
+    const { close, title, volume } = this.props;
     const { errors, region, label, size } = this.state;
 
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
         onCancel={close}
-        buttonText="Add Volume"
-        buttonDisabledText="Cloning Volume"
-        analytics={{ title: AddVolume.title, action: 'add' }}
+        buttonText={volume ? undefined : 'Add Volume'}
+        buttonDisabledText={volume ? undefined : 'Adding Volume'}
+        analytics={{ title, action: 'add' }}
         errors={errors}
       >
         <div>
@@ -65,14 +72,16 @@ export default class AddVolume extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
-            <RegionSelect
-              value={region}
-              name="region"
-              id="region"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
+          {volume ? null : (
+            <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
+              <RegionSelect
+                value={region}
+                name="region"
+                id="region"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+          )}
           <ModalFormGroup label="Size" id="size" apiKey="size" errors={errors}>
             <Input
               placeholder="20"
@@ -83,6 +92,7 @@ export default class AddVolume extends Component {
               type="number"
               min={0}
               label="GiB"
+              disabled={/* TODO: undisable this once API support for resizing works */volume}
             />
           </ModalFormGroup>
         </div>
@@ -91,9 +101,10 @@ export default class AddVolume extends Component {
   }
 }
 
-AddVolume.propTypes = {
+AddEditVolume.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
-  plans: PropTypes.object.isRequired,
+  plans: PropTypes.object,
+  volume: PropTypes.object,
 };
