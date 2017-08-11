@@ -22,8 +22,8 @@ The following buzzwords are involved in this project:
 
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
-client](https://cloud.linode.com/profile/integrations/tokens), then create a file
-at `src/secrets.js` with your client ID and client secret set appropriately:
+client](https://cloud.linode.com/profile/tokens), then create a file at
+`src/secrets.js` with your client ID and client secret set appropriately:
 
     export const clientId = 'change me';
     export const clientSecret = 'change me';
@@ -158,7 +158,7 @@ Our tests live in test/**.spec.js. They're based on
 [Mocha](https://mochajs.org/) and do assertions with
 [Chai](http://chaijs.com/) plus DOM/React testing with
 [enzyme](http://airbnb.io/enzyme/). We run them with
-[Karma](https://news.ycombinator.com/item?id=11927891).
+[Karma](https://karma-runner.github.io/1.0/index.html).
 We're aiming for 95%+ test coverage.
 
 ## Coding Style
