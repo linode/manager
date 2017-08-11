@@ -1,8 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Checkbox, Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
+import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -10,6 +9,7 @@ import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+import BackupsCheckbox from './BackupsCheckbox';
 import DistributionSelect from './DistributionSelect';
 import PlanSelect from './PlanSelect';
 import { RegionSelect } from '../../components';
@@ -46,7 +46,7 @@ export default class AddLinode extends Component {
       distribution,
       region,
       type: plan,
-      backups_enabled: backups,
+      with_backups: backups,
       root_pass: password,
     };
 
@@ -64,12 +64,6 @@ export default class AddLinode extends Component {
   render() {
     const { close, distributions, plans } = this.props;
     const { errors, label, distribution, region, plan, backups, password } = this.state;
-
-    let backupsLabel = 'Enable';
-    if (plan) {
-      const backupsPrice = plans[plan].backups_price.toFixed(2);
-      backupsLabel = `Enable ($${backupsPrice}/mo)`;
-    }
 
     return (
       <FormModalBody
@@ -104,9 +98,6 @@ export default class AddLinode extends Component {
               onChange={this.onChange}
               allowNone
             />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
@@ -115,11 +106,8 @@ export default class AddLinode extends Component {
               id="region"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://www.linode.com/speedtest">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
-          <ModalFormGroup label="Plan" id="plan" apiKey="plan" errors={errors}>
+          <ModalFormGroup label="Plan" id="plan" apiKey="type" errors={errors}>
             <PlanSelect
               plans={plans}
               value={plan}
@@ -127,9 +115,6 @@ export default class AddLinode extends Component {
               id="plan"
               onChange={this.onChange}
             />
-            <small className="text-muted">
-              <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
-            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Password" id="password" apiKey="root_pass" errors={errors}>
             <PasswordInput
@@ -141,10 +126,10 @@ export default class AddLinode extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
-            <Checkbox
-              value={backups}
+            <BackupsCheckbox
+              plans={plans}
+              plan={plan}
               checked={backups}
-              label={backupsLabel}
               name="backups"
               id="backups"
               onChange={this.onChange}

@@ -16,7 +16,7 @@ endpoints:
           Returns a list of NodeBalancers.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers
           python: |
             my_nodebalancers = client.get_nodebalancers()
@@ -44,7 +44,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "label": "my_cool_balancer",
@@ -66,7 +66,7 @@ endpoints:
           Returns information about this NodeBalancer.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id
           python: |
             my_nodebalancer = linode.NodeBalancer(client, 123)
@@ -77,7 +77,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "region": "us-east-1a",
                     "label": "awesome_new_label",
@@ -96,7 +96,7 @@ endpoints:
          Deletes this NodeBalancer and all associated configs and nodes. This action cannot be undone.
        examples:
          curl: |
-           curl -H "Authorization: token $TOKEN" \
+           curl -H "Authorization: Bearer $TOKEN" \
                -X DELETE \
                https://$api_root/$version/nodebalancers/$nodebalancer_id
          python: |
@@ -116,7 +116,7 @@ endpoints:
           Returns a list of configs for a given NodeBalancer.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs
           python: |
             my_nodebalancer = linode.NodeBalancer(client, 123)
@@ -175,7 +175,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "myNodeBalancer",
                     "port": 80,
@@ -211,7 +211,7 @@ endpoints:
           Returns information about this NodeBalancer config.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id
           python: |
             nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id
@@ -222,7 +222,7 @@ endpoints:
         dangerous: true
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id
           python: |
@@ -241,7 +241,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                   "ssl_cert": "----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----",
                   "ssl_key": "----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----"
@@ -263,7 +263,7 @@ endpoints:
           Returns a list of config nodes for a given NodeBalancer.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
           python: |
             my_nodebalancer = linode.NodeBalancer(client, 123)
@@ -288,7 +288,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X POST -d '{
                   "label": "greatest_node_ever",
                   "address": "192.168.4.5:80",
@@ -310,7 +310,7 @@ endpoints:
           Returns information about this node..
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id
           python: |
             nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id
@@ -321,7 +321,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X PUT -d '{
                   "label": "node001",
                   "address": "192.168.12.12:100",
@@ -341,7 +341,7 @@ endpoints:
         dangerous: true
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id
           python: |

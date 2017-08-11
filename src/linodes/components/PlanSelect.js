@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
 
 import { planStyle } from './PlanStyle';
@@ -17,10 +18,15 @@ export default function PlanSelect(props) {
   ];
 
   return (
-    <Select
-      {...props}
-      options={options}
-    />
+    <div>
+      <Select
+        {...props}
+        options={options}
+      />
+      <small>
+        <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
+      </small>
+    </div>
   );
 }
 
