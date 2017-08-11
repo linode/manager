@@ -74,7 +74,7 @@ export class OAuthCallbackPage extends Component {
         }
       }
 
-      ({ access_token: accessToken, scopes, expires_in: expiresIn } = await resp.json());
+      ({ access_token: accessToken, scope: scopes, expires_in: expiresIn } = await resp.json());
     } else if (implicitParams.access_token) {
       ({
         access_token: accessToken,

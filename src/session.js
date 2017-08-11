@@ -27,7 +27,7 @@ export function loginAuthorizePath(returnTo) {
   /* eslint-disable prefer-template */
   return `${LOGIN_ROOT}/oauth/authorize?` +
          `client_id=${clientId}` +
-         '&scopes=*' +
+         '&scope=*' +
          `&response_type=${responseType}` +
          (responseType === 'token' ? `&state=${nonce}` : '') +
          `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?${returnTo}`;
