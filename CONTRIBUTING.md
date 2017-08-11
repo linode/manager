@@ -158,7 +158,7 @@ Our tests live in test/**.spec.js. They're based on
 [Mocha](https://mochajs.org/) and do assertions with
 [Chai](http://chaijs.com/) plus DOM/React testing with
 [enzyme](http://airbnb.io/enzyme/). We run them with
-[Karma](https://news.ycombinator.com/item?id=11927891).
+[Karma](https://karma-runner.github.io/1.0/index.html).
 We're aiming for 95%+ test coverage.
 
 ## Coding Style
