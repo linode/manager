@@ -36,7 +36,7 @@ export function loginAuthorizePath(returnTo) {
          '&scopes=*' +
          `&response_type=${responseType}` +
          (responseType === 'token' ? `&state=${nonce}` : '') +
-         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
+         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?${returnTo}`;
   /* eslint-enable prefer-template */
 }
 

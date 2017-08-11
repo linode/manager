@@ -15,7 +15,10 @@ function getImplicitParams() {
   hashParams.forEach(function (hashParam) {
     const hashParamParts = hashParam.split('=');
     if (hashParamParts[0] === 'return') {
-      params.returnTo = hashParamParts[2];
+      // In src/session.js we send /oauth/callback?{returnTo} as the redirect URI. The oauth
+      // server, login, will return to this URI verbatim. The part we need (for internal use)
+      // is the {returnTo} bit that tells us where in the app to go once we've been authenticated.
+      params.returnTo = hashParam.split('?')[1];
     } else {
       params[hashParamParts[0]] = hashParamParts[1];
     }
