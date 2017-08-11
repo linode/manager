@@ -5,19 +5,32 @@ import MassEditDropdown from './MassEditDropdown';
 
 
 export default class MassEditControl extends Component {
+  onMassEditChange = () => {
+    const {
+      data, dispatch, objectType, selectedMap, selectedKey, toggleSelected,
+    } = this.props;
 
-  constructor(props) {
-    super(props);
+    const allSelected = this.allSelected();
+    const noneSelected = this.noneSelected();
+    const indeterminate = !allSelected && !noneSelected;
 
-    this.onMassEditChange = this.onMassEditChange.bind(this);
-  }
+    let selected = data;
 
-  onMassEditChange() {
-    const { data, dispatch, objectType, selectedKey, toggleSelected } = this.props;
-    const selected = data.map(function (record) { return record[selectedKey]; });
+    // Uncheck all those that have been unchecked if in indeterminate state.
+    if (indeterminate) {
+      selected = selected.filter((record) => {
+        return selectedMap[record[selectedKey]];
+      });
+    }
+
+    selected = selected.map(function (record) { return record[selectedKey]; });
 
     dispatch(toggleSelected(objectType, selected));
   }
+
+  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
+  allSelected = () => this.props.data.every((record) =>
+    this.props.selectedMap[record[this.props.selectedKey]])
 
   createMassEditActionHandler(fn) {
     return () => {
@@ -29,21 +42,15 @@ export default class MassEditControl extends Component {
   }
 
   render() {
-    const {
-      data,
-      massEditGroups,
-      selectedKey,
-      selectedMap,
-    } = this.props;
+    const { massEditGroups } = this.props;
 
-    const noneSelected = (Object.keys(selectedMap).length === 0);
-    const allSelected = data.every((record) => {
-      return selectedMap[record[selectedKey]];
-    });
+    const allSelected = this.allSelected();
+    const noneSelected = this.noneSelected();
 
     return (
       <MassEditDropdown
         checked={allSelected && !noneSelected}
+        indeterminate={!allSelected && !noneSelected}
         disabled={noneSelected}
         groups={massEditGroups.map((group) => ({
           ...group,
