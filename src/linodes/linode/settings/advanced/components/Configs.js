@@ -7,11 +7,9 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import { ButtonCell, CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
-import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { linodes } from '~/api';
 import { transform } from '~/api/util';
@@ -64,7 +62,7 @@ export default class Configs extends Component {
                 dispatch={dispatch}
                 massEditGroups={[{ elements: [
                     { name: 'Delete', action: this.deleteConfigs },
-                  ] }]}
+                ] }]}
                 selectedMap={selectedMap}
                 objectType={Configs.OBJECT_TYPE}
                 toggleSelected={toggleSelected}
@@ -116,4 +114,5 @@ export default class Configs extends Component {
 Configs.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
+  selectedMap: PropTypes.object.isRequired,
 };

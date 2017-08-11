@@ -7,12 +7,7 @@ import { ListBody } from 'linode-components/lists/bodies';
 import { ListHeader } from 'linode-components/lists/headers';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { Table } from 'linode-components/tables';
-import {
-  ButtonCell,
-  CheckboxCell,
-  LabelCell,
-  TableCell,
-} from 'linode-components/tables/cells';
+import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
@@ -38,11 +33,12 @@ export default class VolumesList extends Component {
     this.props.objectType).bind(this)
 
   renderVolumeActions = ({ column, record }) => {
-    const { dispatch, linode, plans } = this.props;
+    const { dispatch, linodes } = this.props;
 
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      { elements: [{ name: 'Edit', action: () => AddEditVolume.trigger(dispatch, linode, undefined, record) }] },
+      { elements: [{ name: 'Edit', action: () =>
+        AddEditVolume.trigger(dispatch, linodes, undefined, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 
@@ -119,7 +115,8 @@ export default class VolumesList extends Component {
                     return 'Unattached';
                   }
                   return `Attached to ${linodeId}`;
-              } },
+                },
+              },
               {
                 cellComponent: this.renderVolumeActions,
                 headerClassName: 'ActionsColumn',
@@ -138,3 +135,13 @@ export default class VolumesList extends Component {
     );
   }
 }
+
+VolumesList.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  ojbectType: PropTypes.string.isRequired,
+  selectedMap: PropTypes.object.isRequired,
+  volumes: PropTypes.object.isRequired,
+  objectType: PropTypes.object.isRequired,
+  className: PropTypes.string,
+  linodes: PropTypes.object,
+};

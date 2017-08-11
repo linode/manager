@@ -2,10 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Code } from 'linode-components/formats';
-import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
-import { IPV4_DNS_RESOLVERS, IPV6_DNS_RESOLVERS } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
 
 
@@ -44,10 +42,14 @@ export default class MoreInfo extends Component {
         </p>
         <Code example={`mount /dev/disk/by-id/scsi-0Linode_Volume_${label} /mnt/${label}`} />
         <p>
+          {/* eslint-disable max-len */}
           If you want the volume to automatically mount every time your Linode boots, you'll want to add a line like the following to your <strong>/etc/fstab</strong> file:
+          {/* eslint-enable max-len */}
         </p>
+        {/* eslint-disable max-len */}
         <Code example={`/dev/disk/by-id/scsi-0Linode_Volume_${label} /mnt/${label} ext4 defaults 0 2`} />
         <p>For more info see the <ExternalLink to="https://www.linode.com/docs/platform/how-to-use-block-storage-with-your-linode">docs</ExternalLink>.</p>
+        {/* eslint-enable max-len */}
       </div>
     );
   }

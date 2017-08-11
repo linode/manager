@@ -43,12 +43,12 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(volumes.volumes).length ?
-           <VolumesList
-             objectType={OBJECT_TYPE}
-             volumes={volumes.volumes}
-             selectedMap={selectedMap}
-             dispatch={dispatch}
-           /> :
+            <VolumesList
+              objectType={OBJECT_TYPE}
+              volumes={volumes.volumes}
+              selectedMap={selectedMap}
+              dispatch={dispatch}
+            /> :
             <CreateHelper
               label="Volumes"
               onClick={() => {}}
@@ -64,6 +64,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   volumes: PropTypes.object,
+  linodes: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
 };
 

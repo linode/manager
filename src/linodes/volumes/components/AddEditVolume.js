@@ -40,7 +40,7 @@ export default class AddEditVolume extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close, volume : { id } = {} } = this.props;
+    const { dispatch, close, volume: { id } = {} } = this.props;
     const { label, region, size } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -105,6 +105,7 @@ AddEditVolume.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   plans: PropTypes.object,
   volume: PropTypes.object,
 };

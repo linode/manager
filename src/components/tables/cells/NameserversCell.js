@@ -16,10 +16,10 @@ export default function NameserversCell(props) {
     );
   } else {
     const groups = [
-      { elements: [{ name: 'Edit', action: () => onEditClick(record)}] },
+      { elements: [{ name: 'Edit', action: () => onEditClick(record) }] },
       { elements: [{ name: 'Delete', action: () => onDeleteClick(record) }] },
     ];
-    actions = <Dropdown groups={groups} analytics={{ title: 'DNS record actions' }} />
+    actions = <Dropdown groups={groups} analytics={{ title: 'DNS record actions' }} />;
   }
 
   return (

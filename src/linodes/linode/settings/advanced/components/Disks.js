@@ -8,11 +8,9 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
-import { hideModal, showModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { linodes } from '~/api';
 import { transform } from '~/api/util';
@@ -70,7 +68,8 @@ export default class Disks extends Component {
     const free = this.freeSpace();
 
     const groups = [
-      { elements: [{ name: 'Edit', action: () => EditDisk.trigger(dispatch, linode, record, free) }] },
+      { elements: [{ name: 'Edit', action: () =>
+        EditDisk.trigger(dispatch, linode, record, free) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteDisk(record) }] },
     ];
 
@@ -116,8 +115,8 @@ export default class Disks extends Component {
                 data={sorted}
                 dispatch={dispatch}
                 massEditGroups={[{ elements: [
-                    { name: 'Delete', action: this.deleteDisks },
-                  ] }]}
+                  { name: 'Delete', action: this.deleteDisks },
+                ] }]}
                 selectedMap={selectedMap}
                 objectType={Disks.OBJECT_TYPE}
                 toggleSelected={toggleSelected}
