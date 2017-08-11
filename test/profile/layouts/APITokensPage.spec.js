@@ -52,8 +52,8 @@ describe('profile/layouts/APITokensPage', () => {
 
     dispatch.reset();
 
-    const actions = page.find('Dropdown').at(0).props().groups[0].elements;
-    actions.find(a => a && a.name === 'Revoke').action();
+    const actions = page.find('MassEditControl').find('Dropdown').props().groups[0].elements;
+    actions.find(a => a && a.name === 'Delete').action();
 
     const modal = mount(dispatch.firstCall.args[0].body);
 

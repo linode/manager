@@ -74,11 +74,14 @@ describe('linodes/volumes/layouts/IndexPage', () => {
 
     dispatch.reset();
 
-    page.find('tr button').at(0).simulate('click');
-    const modal = mount(dispatch.firstCall.args[0].body);
+    const actions = page.find('MassEditControl').find('Dropdown').props().groups[0].elements;
+    actions.find(a => a && a.name === 'Delete').action();
 
+    const modal = mount(dispatch.firstCall.args[0].body);
+    console.log(modal.debug());
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
+
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/volumes/38', { method: 'DELETE' });
   });

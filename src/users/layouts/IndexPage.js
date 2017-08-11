@@ -55,7 +55,11 @@ export class IndexPage extends Component {
     this.props.dispatch,
     'user',
     api.delete,
-    OBJECT_TYPE).bind(this)
+    OBJECT_TYPE,
+    'username',
+    'delete',
+    'deleting',
+    'username').bind(this)
 
   renderUsers(users) {
     const { dispatch, selectedMap, profile: { username: currentUsername } } = this.props;
