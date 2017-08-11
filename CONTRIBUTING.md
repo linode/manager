@@ -22,8 +22,8 @@ The following buzzwords are involved in this project:
 
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
-client](https://cloud.linode.com/profile/integrations/tokens), then create a file
-at `src/secrets.js` with your client ID and client secret set appropriately:
+client](https://cloud.linode.com/profile/tokens), then create a file at
+`src/secrets.js` with your client ID and client secret set appropriately:
 
     export const clientId = 'change me';
     export const clientSecret = 'change me';
