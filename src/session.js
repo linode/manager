@@ -7,12 +7,6 @@ const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRES = 'authentication/expires';
 
-export function initializeAuthentication(dispatch) {
-  const token = getStorage('authentication/oauth-token') || null;
-  const scopes = getStorage('authentication/scopes') || null;
-  dispatch({ type: setToken, token, scopes });
-}
-
 export function redirect(location) {
   window.location = location;
 }
