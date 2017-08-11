@@ -12,9 +12,12 @@ export function convertUnits(value, units, unitType, fixedNumber = 0) {
 }
 
 export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectType,
-                                  labelKey = 'label') {
+                                  labelKey = 'label', deleteAction = 'delete',
+                                  deleteActionPending = 'deleting') {
   return function (_toDelete) {
-    const toDelete = (Array.isArray(_toDelete) ? _toDelete : [_toDelete]).map(o => o[labelKey]);
+    const labelFn = _.isFunction(labelKey) ? labelKey : (o) => o[labelKey];
+    
+    const toDelete = (Array.isArray(_toDelete) ? _toDelete : [_toDelete]).map(labelFn);
 
     let title = `Delete ${_.capitalize(objectLabel)}`;
     if (toDelete.length > 1) {
@@ -32,6 +35,8 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
         items={toDelete}
         typeOfItem={`${objectLabel}s`}
         onCancel={() => dispatch(hideModal())}
+        deleteAction={deleteAction}
+        deleteActionPending={deleteActionPending}
       />
     )));
   };

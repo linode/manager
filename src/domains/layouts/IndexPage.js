@@ -33,8 +33,6 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteZones = this.deleteZones.bind(this);
-
     this.state = { filter: '' };
   }
 
@@ -49,7 +47,8 @@ export class IndexPage extends Component {
     this.props.dispatch,
     'domain',
     domains.delete,
-    OBJECT_TYPE).bind(this)
+    OBJECT_TYPE,
+    'domain').bind(this)
 
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
@@ -68,7 +67,7 @@ export class IndexPage extends Component {
               data={sortedZones}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteZones },
+                { name: 'Delete', action: this.deleteDomains },
               ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
@@ -104,7 +103,7 @@ export class IndexPage extends Component {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
                       text: 'Delete',
-                      onClick: (zone) => { this.deleteZones(zone); },
+                      onClick: (domain) => { this.deleteDomains([domain]); },
                     },
                   ]}
                   noDataMessage="No domains found."

@@ -38,8 +38,8 @@ export class IndexPage extends Component {
     await dispatch(api.all());
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }

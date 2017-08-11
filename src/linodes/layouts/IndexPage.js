@@ -36,8 +36,8 @@ export class IndexPage extends Component {
     ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }

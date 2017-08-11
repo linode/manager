@@ -103,25 +103,26 @@ export default class AddDisk extends Component {
               allowNone
             />
           </ModalFormGroup>
-          <ModalFormGroup id="password" label="Root Password" apiKey="root_pass" errors={errors}>
-            <PasswordInput
-              name="password"
-              id="password"
-              value={password}
-              onChange={this.onChange}
-              disabled={!distribution}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup id="filesystem" label="Filesystem" apiKey="filesystem" errors={errors}>
-            <Select
-              id="filesystem"
-              name="filesystem"
-              value={filesystem}
-              onChange={this.onChange}
-              options={filesystemOptions}
-              disabled={!!distribution}
-            />
-          </ModalFormGroup>
+          {distribution ? (
+            <ModalFormGroup id="password" label="Root Password" apiKey="root_pass" errors={errors}>
+              <PasswordInput
+                name="password"
+                id="password"
+                value={password}
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+          ) : (
+            <ModalFormGroup id="filesystem" label="Filesystem" apiKey="filesystem" errors={errors}>
+              <Select
+                id="filesystem"
+                name="filesystem"
+                value={filesystem}
+                onChange={this.onChange}
+                options={filesystemOptions}
+              />
+            </ModalFormGroup>
+          )}
           <ModalFormGroup id="size" label="Size" apiKey="size" errors={errors}>
             <Input
               id="size"

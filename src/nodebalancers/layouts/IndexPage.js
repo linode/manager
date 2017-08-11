@@ -99,7 +99,7 @@ export class IndexPage extends Component {
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',
-                onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
+                onClick: (nodebalancer) => { this.deleteNodeBalancers([nodebalancer]); },
                 text: 'Delete',
               },
             ]}
