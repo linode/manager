@@ -1,16 +1,10 @@
 import { mount } from 'enzyme';
-import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { REGION_MAP } from '~/constants';
 import { AddEditVolume } from '~/linodes/volumes/components';
 
-import {
-  changeInput,
-  expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
-  expectRequest,
-} from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 import { testVolume } from '@/data/volumes';
 

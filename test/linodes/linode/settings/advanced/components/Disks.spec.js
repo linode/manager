@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { SHOW_MODAL } from '~/actions/modal';
 import { Disks } from '~/linodes/linode/settings/advanced/components';
 
-import { changeInput, expectRequest } from '@/common.js';
+import { expectRequest } from '@/common.js';
 import { testLinode } from '@/data/linodes';
 
 

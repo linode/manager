@@ -7,7 +7,7 @@ import { SHOW_MODAL } from '~/actions/modal';
 import { IndexPage } from '~/domains/layouts/IndexPage';
 
 import { api } from '@/data';
-import { changeInput, expectRequest } from '@/common.js';
+import { expectRequest } from '@/common.js';
 
 
 const { domains } = api;

@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { SHOW_MODAL } from '~/actions/modal';
 import { Configs } from '~/linodes/linode/settings/advanced/components';
 
-import { changeInput, expectRequest } from '@/common.js';
+import { expectRequest } from '@/common.js';
 import { testLinode } from '@/data/linodes';
 
 
@@ -69,6 +69,8 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, { method: 'DELETE' });
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
+      method: 'DELETE',
+    });
   });
 });
