@@ -26,6 +26,8 @@ import { getEmailHash } from '~/cache';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
 
+import { AddUser } from '../components';
+
 
 const OBJECT_TYPE = 'users';
 
@@ -151,12 +153,16 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch } = this.props;
+
+    const addUser = () => AddUser.trigger(dispatch);
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Users</h1>
-            <PrimaryButton to="/users/create" className="float-right">
+            <PrimaryButton onClick={addUser} className="float-right">
               Add a User
             </PrimaryButton>
           </div>
@@ -164,7 +170,7 @@ export class IndexPage extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.users.users).length ?
             this.renderUsers(this.props.users.users) :
-            <CreateHelper label="Users" href="/users/create" linkText="Add a User" />}
+            <CreateHelper label="Users" onClick={addUser} linkText="Add a User" />}
         </div>
       </div>
     );

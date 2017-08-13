@@ -1,35 +1,33 @@
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
-import NewSlaveZone from '~/domains/components/NewSlaveZone';
+import { AddMaster } from '~/domains/components';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 
 
-describe('domains/components/NewSlaveZone', () => {
+describe('domains/components/AddMaster', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
+  const dispatch = sandbox.stub();
+
   it('submits form and redirects to domain', async () => {
-    const dispatch = sandbox.stub();
-    const component = mount(
-      <NewSlaveZone
-        dispatch={dispatch}
-      />
-    );
+    AddMaster.trigger(dispatch);
+    const component = mount(dispatch.firstCall.args[0].body, '');
 
     const change = (name, value) =>
-      component.find({ name }).simulate('change', { target: { name, value } });
+      component.find('Input').find({ name }).simulate('change', { target: { name, value } });
 
-    change('ips', '1;2;3;4');
+    change('email', 'test@gmail.com');
     change('domain', 'test.com');
 
+    dispatch.reset();
     await component.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
@@ -38,11 +36,11 @@ describe('domains/components/NewSlaveZone', () => {
         method: 'POST',
         body: {
           domain: 'test.com',
-          type: 'slave',
-          master_ips: ['1', '2', '3', '4'],
+          soa_email: 'test@gmail.com',
+          type: 'master',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains')),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains/test.com')),
     ]);
   });
 });
