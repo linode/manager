@@ -16,7 +16,6 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
                                   deleteActionPending = 'deleting', idKey = 'id') {
   return function (_toDelete) {
     const labelFn = _.isFunction(labelKey) ? labelKey : (o) => o[labelKey];
-    
     const toDelete = Array.isArray(_toDelete) ? _toDelete : [_toDelete];
 
     let title = `Delete ${_.capitalize(objectLabel)}`;
