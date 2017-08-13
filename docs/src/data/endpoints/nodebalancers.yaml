@@ -1,8 +1,7 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: NodeBalancers
 description: >
-  NodeBalancer endpoints provide a means of managing <a href="#object-nodebalancer">
-  NodeBalancer objects</a> on your account.
+  NodeBalancer endpoints provide a means of managing NodeBalancer objects on your account.
 endpoints:
   /nodebalancers:
     authenticated: true
@@ -14,7 +13,7 @@ endpoints:
         paginationKey: nodebalancers
         oauth: nodebalancers:view
         description: >
-          Returns a list of <a href="#object-nodebalancer">NodeBalancers</a>.
+          Returns a list of NodeBalancers.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
@@ -29,8 +28,7 @@ endpoints:
         params:
           region:
             description: >
-              A <a href="#object-region">region</a> ID to provision
-              this NodeBalancer in.
+              A region ID to provision this NodeBalancer in.
             type: Region
           label:
             optional: true
@@ -64,7 +62,7 @@ endpoints:
         response: nodebalancer
         oauth: nodebalancers:view
         description: >
-          Returns information about this <a href="#object-nodebalancer">NodeBalancer</a>.
+          Returns information about this NodeBalancer.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
@@ -114,8 +112,7 @@ endpoints:
         paginationKey: configs
         oauth: nodebalancers:view
         description: >
-          Returns a list of <a href="#object-nodebalancer_config">configs</a> for a
-          given NodeBalancer.
+          Returns a list of configs for a given NodeBalancer.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
@@ -262,8 +259,7 @@ endpoints:
         paginationKey: nodes
         oauth: nodebalancers:view
         description: >
-          Returns a list of <a href="#object-nodebalancer_config_node">config nodes</a> for a
-          given NodeBalancer.
+          Returns a list of config nodes for a given NodeBalancer.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \

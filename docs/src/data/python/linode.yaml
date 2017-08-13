@@ -95,9 +95,7 @@ methods:
             '**kwargs':
                 _keyword: false
                 desc: >
-                    Any number of other keyword arguments to pass to the POST /linodes/12345/configs endpoint.  See
-                    the <a href="/reference/index.html#ep-linodes-configs-POST">API Reference</a> for a complete breakdown
-                    of all accepted values.
+                    Any number of other keyword arguments to pass to the POST /linodes/12345/configs endpoint.
         example: |
             kernel = client.linode.get_kernels(linode.Kernel.kvm == True, linode.Kernel.label.contains("4")).last()
             config = l.create_config(kernel, disks=[d for d in linode.disks])

@@ -1,6 +1,6 @@
 name: Linode Backups Response
 description: >
-    Information on a Linode's available <a href="#object-backup">Backups</a>
+    Information on a Linode's available Backups.
 schema:
   daily:
     _description: The current Daily backup for this Linode.

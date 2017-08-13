@@ -42,8 +42,7 @@ methods:
             '**kwargs':
                 _keyword: false
                 desc: >
-                    Any number of keyword arguments to send to the POST /nodebalancers/123/configs endpoint.  See
-                    the <a href="/reference#ep-nodebalancer-configs-POST">endpoint docs</a> for more information.
+                    Any number of keyword arguments to send to the POST /nodebalancers/123/configs endpoint.
         example: |
             config = nodebalancer.create_config(port=80, label='test')
         returns: A new NodeBalancerConfig object
