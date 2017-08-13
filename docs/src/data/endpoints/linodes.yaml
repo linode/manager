@@ -624,19 +624,19 @@ endpoints:
           region:
             optional: true
             description: >
-              A <a href="#object-region">region</a> ID to provision
+              A region ID to provision
               this Linode in. Required when cloning to a new Linode.
             type: Region
           type:
             optional: true
             description: >
-              A <a href="#object-service">Linode type</a> ID to use for this
+              A Linode type ID to use for this
               Linode. Required when cloning to a new Linode.
             type: Service
           linode_id:
             optional: true
             description: >
-              An existing <a href="#object-linode">Linode</a> can be a target clone location.
+              An existing Linode can be a target clone location.
             type: Integer
           label:
             optional: true

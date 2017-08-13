@@ -28,8 +28,7 @@ endpoints:
         params:
           region:
             description: >
-              A <a href="#object-region">region</a> ID to provision
-              this NodeBalancer in.
+              A region ID to provision this NodeBalancer in.
             type: Region
           label:
             optional: true
