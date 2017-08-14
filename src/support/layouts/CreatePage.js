@@ -16,7 +16,7 @@ import {
 } from 'linode-components/forms';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { domains, linodes, nodebalancers, tickets } from '~/api';
+import { domains, linodes, nodebalancers, volumes, tickets } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import TicketHelper from '../components/TicketHelper';
@@ -24,11 +24,7 @@ import TicketHelper from '../components/TicketHelper';
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([
-      dispatch(linodes.all()),
-      dispatch(domains.all()),
-      dispatch(nodebalancers.all()),
-    ]);
+    await Promise.all([linodes, domains, nodebalancers, volumes].map(o => dispatch(o.all())));
   }
 
   constructor(props) {
@@ -57,10 +53,14 @@ export class CreatePage extends Component {
     const regardingField = regarding.substring(0, regarding.indexOf(':'));
     const regardingId = regarding.substring(regardingField.length + 1);
 
-    this.setState({ loading: true, errors: {} });
+    const data = { summary, description };
+
+    if (regardingField !== 'other') {
+      data[regardingField] = +regardingId;
+    }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tickets.post({ summary, description, [regardingField]: +regardingId }),
+      () => tickets.post(data),
       ({ id }) => push(`/support/${id}`),
     ]));
   }
@@ -79,13 +79,13 @@ export class CreatePage extends Component {
 
   render() {
     const { summary, regarding, description, loading, errors } = this.state;
-    const { linodes, domains, nodebalancers } = this.props;
+    const { linodes, domains, nodebalancers, volumes } = this.props;
     const regardingOptions = [
       this.renderOptionsGroup('Linodes', 'linode_id', Object.values(linodes)),
       this.renderOptionsGroup('Domains', 'domain_id', Object.values(domains)),
       this.renderOptionsGroup('NodeBalancers', 'nodebalancer_id', Object.values(nodebalancers)),
-      // TODO: this is not currently supported by the API
-      // this.renderOptionsGroup('Other', [{ label: 'Other', id: 'other' }]),
+      this.renderOptionsGroup('Volumes', 'volume_id', Object.values(volumes)),
+      this.renderOptionsGroup('Other', '', [{ label: 'Other', id: 'other' }]),
     ];
 
     return (
@@ -162,6 +162,7 @@ CreatePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   domains: PropTypes.object.isRequired,
+  volumes: PropTypes.object.isRequired,
   nodebalancers: PropTypes.object.isRequired,
 };
 
@@ -170,6 +171,7 @@ function select(state) {
     nodebalancers: state.api.nodebalancers.nodebalancers,
     linodes: state.api.linodes.linodes,
     domains: state.api.domains.domains,
+    volumes: state.api.volumes.volumes,
   };
 }
 
