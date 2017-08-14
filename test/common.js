@@ -174,7 +174,7 @@ export function changeInput(component, idName, value, options = {}) {
     }
 
     // Work-around for testing the Select component with multiple values.
-    if (Array.isArray(value)) {
+    if (input.length && input.props()['data-type'] === 'select' && Array.isArray(value)) {
       input.props().onChange(value.map(value => ({ target: { value, name: idName } })));
       return;
     }

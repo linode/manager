@@ -25,7 +25,6 @@ form {
     &:focus {
         color: $black;
     }
-
 }
 
 .modal-description {
@@ -117,5 +116,12 @@ textarea.form-control {
 
     &:last-child {
         margin-bottom: 0;
+    }
+}
+
+textarea, input, select {
+    &:focus {
+        border: $border;
+        border-color: $light-blue;
     }
 }

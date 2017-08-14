@@ -9,7 +9,7 @@ import {
   FormSummary,
   Select,
   SubmitButton,
-  Textarea,
+  Tags,
 } from 'linode-components/forms';
 
 import { profile } from '~/api';
@@ -35,7 +35,7 @@ export class LishPage extends Component {
 
     this.setState({
       authorization,
-      keys: (keys || []).join('\n'),
+      keys: keys || [],
     });
   }
 
@@ -46,8 +46,7 @@ export class LishPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({
         lish_auth_method: authorization,
-        // Strip all whitespace from keys for sanity.
-        authorized_keys: keys.split('\n').filter(key => key.replace(/\s/g, '').length),
+        authorized_keys: keys,
       }),
     ]));
   }
@@ -91,11 +90,11 @@ export class LishPage extends Component {
             <FormGroup className="row" errors={errors} name="authorized_keys">
               <label htmlFor="keys" className="col-sm-2 col-form-label">Lish keys:</label>
               <div className="col-sm-10">
-                <Textarea
-                  id="keys"
-                  className="textarea-md"
-                  name="keys"
+                <Tags
                   value={keys}
+                  id="keys"
+                  name="keys"
+                  placeholder="Add an SSH public key"
                   onChange={this.onChange}
                 />
                 <div>
