@@ -7,12 +7,29 @@ import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
 
+import { getStorage, setStorage } from '~/storage';
+
+function getImplicitParams() {
+  const hashParams = window.location.hash.substr(1).split('&');
+  const params = {};
+  hashParams.forEach(function (hashParam) {
+    const hashParamParts = hashParam.split('=');
+    if (hashParamParts[0] === 'return') {
+      // In src/session.js we send /oauth/callback?{returnTo} as the redirect URI. The oauth
+      // server, login, will return to this URI verbatim. The part we need (for internal use)
+      // is the {returnTo} bit that tells us where in the app to go once we've been authenticated.
+      params.returnTo = hashParam.split('?')[1];
+    } else {
+      params[hashParamParts[0]] = hashParamParts[1];
+    }
+  });
+  return params;
+}
 
 export class OAuthCallbackPage extends Component {
   async componentDidMount() {
     const { dispatch, location } = this.props;
     const { error, code } = location.query;
-    const returnTo = location.query['return'];
 
     if (error) {
       // These errors only happen while developing or setting up the app.
@@ -23,11 +40,18 @@ export class OAuthCallbackPage extends Component {
       return;
     }
 
+    let accessToken;
+    let scopes;
+    let expiresIn;
+    let returnTo;
+    const implicitParams = getImplicitParams();
+
     if (code) {
       const data = new FormData();
       data.append('client_id', clientId);
       data.append('client_secret', clientSecret);
       data.append('code', code);
+      returnTo = location.query['return'];
 
       // Exchange temporary code for access token.
       let resp;
@@ -50,20 +74,36 @@ export class OAuthCallbackPage extends Component {
         }
       }
 
-      const { access_token, scopes, expires_in: expiresIn } = await resp.json();
-
-      const expires = new Date();
-      expires.setSeconds(expires.getSeconds() + expiresIn);
-      // Token needs to be in redux state for all API calls
-      dispatch(session.start(access_token, scopes, expires));
-
-      // Done OAuth flow. Let the app begin.
-      dispatch(push(returnTo || '/'));
+      ({ access_token: accessToken, scope: scopes, expires_in: expiresIn } = await resp.json());
+    } else if (implicitParams.access_token) {
+      ({
+        access_token: accessToken,
+        scope: scopes,
+        expires_in: expiresIn,
+        returnTo,
+      } = implicitParams);
+      const { state: nonce } = implicitParams;
+      const storedNonce = getStorage('authentication/nonce');
+      // nonce should be set and equal otherwise redirect
+      if (!(nonce && storedNonce === nonce)) {
+        // Retry auth flow
+        dispatch(push('/'));
+        return;
+      }
+      setStorage('authentication/nonce', '');
     } else {
       dispatch(push('/'));
+      return;
     }
-  }
 
+    const expireDate = new Date();
+    expireDate.setSeconds(expireDate.getSeconds() + expiresIn);
+    // Token needs to be in redux state for all API calls
+    dispatch(session.start(accessToken, scopes, expireDate));
+
+    // Done OAuth flow. Let the app begin.
+    dispatch(push(returnTo || '/'));
+  }
   render() {
     return null;
   }
