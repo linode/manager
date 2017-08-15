@@ -38,6 +38,7 @@ export default function BackupDetails(props) {
   );
 
   const vacant = 'In progress';
+  console.log(backup);
 
   return (
     <Card header={<CardHeader title="Backup details" />}>
@@ -78,7 +79,7 @@ export default function BackupDetails(props) {
         <div className="col-sm-3 row-label">Space Required</div>
         <div className="col-sm-9" id="space">{disks.length === 0 ? vacant : `${space}MB`}</div>
       </FormGroup>
-      {backup.type === 'snapshot' && backup.status !== 'pending' ? (
+      {backup.type === 'snapshot' && ['failed', 'successful'].indexOf(backup.status) !== -1 ? (
         <FormGroup className="row">
           <div className="offset-sm-3 col-sm-9">
             <Form

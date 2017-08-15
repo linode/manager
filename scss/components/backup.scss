@@ -9,7 +9,6 @@
     }
 
     &-block {
-        text-align: center;
         border: $border;
         color: $black;
         height: 140px;
@@ -24,17 +23,23 @@
     }
 
     &-title {
+        text-align: center;
         background-color: $light-gray;
         border-bottom: $border;
         height: 30px;
         padding: 3px 0px 3px 0px;
     }
 
-    &-description {
-        padding: 38px 0 0 0;
+    &-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(100% - 30px);
+        flex-direction: column;
+        padding: 5px;
     }
 
-    &-emptySnapshot &-description {
-        padding: 22px 0 0 0;
+    .FormSummary .alert {
+        margin-top: 5px;
     }
 }

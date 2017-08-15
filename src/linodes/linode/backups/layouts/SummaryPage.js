@@ -26,7 +26,9 @@ export class SummaryPage extends Component {
       <div className="Backup Backup--disabled col-sm-3">
         <div className="Backup-block">
           <div className="Backup-title">{title}</div>
-          <div className="Backup-description text-muted">Pending</div>
+          <div className="Backup-body">
+            <div className="Backup-description text-muted">Pending</div>
+          </div>
         </div>
       </div>
     );
@@ -44,14 +46,16 @@ export class SummaryPage extends Component {
       >
         <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
-          <div className="Backup-description text-muted">
-            No snapshots taken
+          <div className="Backup-body">
+            <div className="Backup-description text-muted">
+              No snapshots taken
+            </div>
+            <SubmitButton
+              disabled={loading}
+              disabledChildren="Taking first snapshot"
+            >Take first snapshot</SubmitButton>
+            <FormSummary errors={errors} />
           </div>
-          <SubmitButton
-            disabled={loading}
-            disabledChildren="Taking first snapshot"
-          >Take first snapshot</SubmitButton>
-          <FormSummary errors={errors} />
         </div>
       </Form>
     );
@@ -70,10 +74,12 @@ export class SummaryPage extends Component {
         <Link to={`/linodes/${linode.label}/backups/${backup.id}`}>
           <div className="Backup-block Backup-block--clickable">
             <div className="Backup-title">{title}</div>
-            <div className="Backup-description">
-              {!backup.finished ? 'Snapshot in progress' : (
-                <TimeDisplay time={backup.finished} />
-              )}
+            <div className="Backup-body">
+              <div className="Backup-description">
+                {!backup.finished ? 'Snapshot in progress' : (
+                  <TimeDisplay time={backup.finished} />
+                )}
+              </div>
             </div>
           </div>
         </Link>
@@ -83,6 +89,10 @@ export class SummaryPage extends Component {
 
   render() {
     const { linode: { _backups: backups } } = this.props;
+
+    if (!backups) {
+      return null;
+    }
 
     const daily = backups.daily;
     const snapshot = backups.snapshot &&
