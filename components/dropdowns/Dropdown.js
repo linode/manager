@@ -48,6 +48,16 @@ export default class Dropdown extends Component {
     };
   }
 
+  closeWithFirefoxFix = (e) => {
+    console.log('HERE');
+    if (e.nativeEvent.explicitOriginalTarget &&
+        e.nativeEvent.explicitOriginalTarget == e.nativeEvent.originalTarget) {
+      return;
+    }
+
+    this.close();
+  }
+
   render() {
     const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
@@ -77,7 +87,8 @@ export default class Dropdown extends Component {
     return (
       <div
         className={`Dropdown btn-group ${this.state.open ? 'Dropdown--open' : ''}`}
-        onBlur={this.close}
+        onBlur={this.closeWithFirefoxFix}
+        tabIndex="-1"
       >
         <Button
           type="button"
