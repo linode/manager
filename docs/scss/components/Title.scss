@@ -2,6 +2,8 @@
     padding: 10px 0;
 
     &-heading {
+        overflow-x: scroll;
+
         h1, h2 {
             display: inline;
         }
