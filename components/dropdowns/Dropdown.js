@@ -48,16 +48,6 @@ export default class Dropdown extends Component {
     };
   }
 
-  closeWithFirefoxFix = (e) => {
-    console.log('HERE');
-    if (e.nativeEvent.explicitOriginalTarget &&
-        e.nativeEvent.explicitOriginalTarget == e.nativeEvent.originalTarget) {
-      return;
-    }
-
-    this.close();
-  }
-
   render() {
     const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
@@ -87,8 +77,8 @@ export default class Dropdown extends Component {
     return (
       <div
         className={`Dropdown btn-group ${this.state.open ? 'Dropdown--open' : ''}`}
-        onBlur={this.closeWithFirefoxFix}
-        tabIndex="-1"
+        onBlur={this.close}
+        tabIndex="-1" // This allows firefox to treat this as a blurrable element.
       >
         <Button
           type="button"
