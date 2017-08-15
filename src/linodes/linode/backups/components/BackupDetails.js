@@ -38,7 +38,6 @@ export default function BackupDetails(props) {
   );
 
   const vacant = 'In progress';
-  console.log(backup);
 
   return (
     <Card header={<CardHeader title="Backup details" />}>
