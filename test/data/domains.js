@@ -90,7 +90,7 @@ export const testDomain = {
         id: 6,
         protocol: '_tcp',
         weight: 5,
-        target: 'ns1.service.com',
+        target: 'sipserver',
       },
     },
   },

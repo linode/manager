@@ -38,7 +38,7 @@ export class MasterZone extends Component {
     (NS || []).forEach(record => {
       nsRecords.push({
         ...record,
-        name: record.name || domain.domain,
+        name: record.name ? `${record.name}.${domain.domain}` : domain.domain,
         readOnly: false,
       });
     });
@@ -52,7 +52,7 @@ export class MasterZone extends Component {
     const { MX } = domain._groupedRecords;
     return (MX || []).map(record => ({
       ...record,
-      name: record.name || domain.domain,
+      name: record.name ? `${record.name}.${domain.domain}` : domain.domain,
     }));
   }
 
@@ -68,7 +68,8 @@ export class MasterZone extends Component {
 
     const { SRV } = domain._groupedRecords;
     return (SRV || []).map(record => ({
-      ...record, domain: domain.domain,
+      ...record,
+      domain: domain.domain,
     }));
   }
 

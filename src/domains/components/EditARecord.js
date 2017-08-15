@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+import DomainInput from './DomainInput';
 import SelectDNSSeconds from './SelectDNSSeconds';
 
 
@@ -29,17 +31,18 @@ export default class EditARecord extends Component {
       type: type || 'A',
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, close, zone } = this.props;
     const { ttl, hostname, ip, type } = this.state;
-    const ids = [this.props.zone.id, id].filter(Boolean);
+    const ids = [zone.id, id].filter(Boolean);
     const data = {
       type,
       ttl_sec: +ttl,
       target: ip,
-      // '' is the default and will track the zone
       name: hostname,
     };
 
@@ -49,14 +52,13 @@ export default class EditARecord extends Component {
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
   onIPChange = ({ target: { value } }) => {
     const type = value.indexOf(':') !== -1 ? 'AAAA' : 'A';
     this.setState({ type: value ? type : this.state.type, ip: value });
   }
 
   render() {
-    const { id, close, title } = this.props;
+    const { id, close, title, zone } = this.props;
     const { errors, defaultTTL, type, ttl, ip, hostname } = this.state;
 
     const analytics = { title, action: id ? 'edit' : 'add' };
@@ -72,11 +74,11 @@ export default class EditARecord extends Component {
       >
         <div>
           <ModalFormGroup label="Hostname" id="hostname" apiKey="name" errors={errors}>
-            <Input
-              id="hostname"
+            <DomainInput
               name="hostname"
               value={hostname}
               placeholder="www"
+              base={zone.domain}
               onChange={this.onChange}
             />
           </ModalFormGroup>

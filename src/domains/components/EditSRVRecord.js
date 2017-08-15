@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
@@ -13,7 +14,7 @@ export default class EditSRVRecord extends Component {
   constructor(props) {
     super();
 
-    const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
+    const { id, zone: { ttl_sec: defaultTTL } } = props;
     const {
       service,
       protocol,
@@ -26,24 +27,24 @@ export default class EditSRVRecord extends Component {
 
     this.state = {
       errors: {},
-      zone,
       defaultTTL,
       ttl,
+      priority,
+      weight,
+      port,
       service: service || '',
       protocol: protocol || '_tcp',
-      target: target || '',
-      // eslint-disable-next-line
-      priority: priority,
-      // eslint-disable-next-line
-      weight: weight,
-      // eslint-disable-next-line
-      port: port,
+      target,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
-    const { ttl, service, protocol, target, priority, weight, port } = this.state;
+    const {
+      ttl, service, protocol, target, priority, weight, port,
+    } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
       ttl_sec: +ttl,
@@ -61,8 +62,6 @@ export default class EditSRVRecord extends Component {
       close,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
     const { close, title, id } = this.props;
@@ -110,10 +109,9 @@ export default class EditSRVRecord extends Component {
           </ModalFormGroup>
           <ModalFormGroup id="target" label="Target" apiKey="target" errors={errors}>
             <Input
-              id="target"
               name="target"
               value={target}
-              placeholder="www"
+              placeholder="sipserver"
               onChange={this.onChange}
             />
           </ModalFormGroup>

@@ -1,55 +1,58 @@
 import React, { PropTypes, Component } from 'react';
 
 import { ModalFormGroup, Input } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+
+import DomainInput from './DomainInput';
 
 
 export default class EditMXRecord extends Component {
   constructor(props) {
     super();
 
-    const { id, zone: { domain: zone } } = props;
+    const { id, zone: { domain } } = props;
     const {
-      target: mailserver,
-      name: subdomain,
+      target,
+      name,
       priority: preference,
     } = props.zone._records.records[id] || {};
 
+    const subdomain = DomainInput.stripBase(name, domain);
     this.state = {
       errors: {},
-      zone,
-      mailserver,
+      mailserver: target,
       subdomain,
       preference,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, close, zone } = this.props;
     const { mailserver, subdomain, preference } = this.state;
-    const ids = [this.props.zone.id, id].filter(Boolean);
+
     const data = {
+      name: subdomain,
       target: mailserver,
-      // '' is the default and will track the zone
-      name: subdomain === this.props.zone.domain ? '' : subdomain,
       priority: +preference,
       type: 'MX',
     };
 
+    const ids = [zone.id, id].filter(Boolean);
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
       close,
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
   render() {
-    const { close, title, id } = this.props;
-    const { errors, zone, subdomain, preference, mailserver } = this.state;
+    const { close, title, id, zone } = this.props;
+    const { errors, subdomain, preference, mailserver } = this.state;
 
     const analytics = { title, action: id ? 'edit' : 'add' };
 
@@ -65,10 +68,9 @@ export default class EditMXRecord extends Component {
         <div>
           <ModalFormGroup id="mailserver" label="Mail Server" apiKey="target" errors={errors}>
             <Input
-              id="mailserver"
               name="mailserver"
               value={mailserver}
-              placeholder="mx.domain.com"
+              placeholder={`mx.${zone.domain}`}
               onChange={this.onChange}
             />
           </ModalFormGroup>
@@ -83,13 +85,17 @@ export default class EditMXRecord extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup label="Subdomain" id="subdomain" apiKey="name" errors={errors}>
-            <Input
-              id="subdomain"
+            <DomainInput
               name="subdomain"
-              value={subdomain || zone}
-              placeholder="domain.com"
+              value={subdomain}
+              base={zone.domain}
               onChange={this.onChange}
             />
+            <div>
+              <small className="text-muted">
+                You probably want to leave this blank.
+              </small>
+            </div>
           </ModalFormGroup>
         </div>
       </FormModalBody>

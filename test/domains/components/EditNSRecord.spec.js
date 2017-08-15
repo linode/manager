@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
+import DomainInput from '~/domains/components/DomainInput';
 import EditNSRecord from '~/domains/components/EditNSRecord';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
@@ -31,8 +32,9 @@ describe('domains/components/EditNSRecord', () => {
     const nameserver = page.find('#nameserver');
     expect(nameserver.props().value).to.equal(currentRecord.target);
 
+    const subdomainVal = DomainInput.stripBase(currentRecord.subdomain, currentZone.domain);
     const subdomain = page.find('#subdomain');
-    expect(subdomain.props().value).to.equal(currentRecord.name || currentZone.domain);
+    expect(subdomain.props().value).to.equal(subdomainVal);
 
     const ttl = page.find('#ttl');
     expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);

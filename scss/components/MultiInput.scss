@@ -1,0 +1,11 @@
+.MultiInput {
+    @extend .input-group;
+
+    &-input {
+        flex-basis: 100%;
+    }
+
+    &-marker {
+        padding: 0 3px;
+    }
+}

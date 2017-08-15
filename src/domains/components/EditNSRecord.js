@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+import DomainInput from './DomainInput';
 import SelectDNSSeconds from './SelectDNSSeconds';
 
 
@@ -13,34 +15,35 @@ export default class EditNSRecord extends Component {
   constructor(props) {
     super();
 
-    const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
+    const { id, zone: { ttl_sec: defaultTTL, domain } } = props;
     const {
-      target: nameserver,
-      name: subdomain,
+      target,
+      name,
       ttl_sec: ttl,
     } = props.zone._records.records[id] || {};
 
+    const subdomain = DomainInput.stripBase(name, domain);
     this.state = {
       errors: {},
       loading: false,
-      zone,
       defaultTTL,
       ttl,
-      nameserver,
+      nameserver: target,
       subdomain,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, close, zone } = this.props;
     const { ttl, nameserver, subdomain } = this.state;
-    const ids = [this.props.zone.id, id].filter(Boolean);
+    const ids = [zone.id, id].filter(Boolean);
 
     const data = {
       ttl_sec: +ttl,
       target: nameserver,
-      // '' is the default and will track the zone
-      name: subdomain === this.props.zone.domain ? '' : subdomain,
+      name: subdomain,
       type: 'NS',
     };
 
@@ -50,11 +53,9 @@ export default class EditNSRecord extends Component {
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
   render() {
-    const { close, title, id } = this.props;
-    const { errors, zone, defaultTTL, ttl, nameserver, subdomain } = this.state;
+    const { close, title, id, zone } = this.props;
+    const { errors, defaultTTL, ttl, nameserver, subdomain } = this.state;
 
     const analytics = { title, action: id ? 'edit' : 'add' };
 
@@ -70,21 +71,24 @@ export default class EditNSRecord extends Component {
         <div>
           <ModalFormGroup errors={errors} id="nameserver" label="Name Server" apiKey="target">
             <Input
-              id="nameserver"
               name="nameserver"
+              placeholder={`ns1.${zone.domain}`}
               value={nameserver}
-              placeholder="ns1.domain.com"
               onChange={this.onChange}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Subdomain" id="subdomain" apiKey="name" errors={errors}>
-            <Input
-              id="subdomain"
+            <DomainInput
               name="subdomain"
-              value={subdomain || zone}
-              placeholder="domain.com"
+              value={subdomain}
+              base={zone.domain}
               onChange={this.onChange}
             />
+            <div>
+              <small className="text-muted">
+                You probably want to leave this blank.
+              </small>
+            </div>
           </ModalFormGroup>
           <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
             <SelectDNSSeconds

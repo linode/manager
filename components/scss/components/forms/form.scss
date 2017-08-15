@@ -4,8 +4,20 @@ form {
     }
 }
 
+.form-control {
+    @extend .font-normal;
+
+    height: $form-field-height;
+    border-radius: 0;
+    color: $black;
+    display: inline-block;
+
+    &:focus {
+        color: $black;
+    }
+}
+
 .col-form-label,
-.form-control,
 .form-control-feedback {
     @extend .font-normal;
     padding: $form-field-padding;
@@ -15,17 +27,6 @@ form {
     @extend .text-sm-right;
 
     color: $light-black;
-}
-
-.form-control {
-    border-radius: 0;
-    color: $black;
-    display: inline-block;
-
-    &:focus {
-        color: $black;
-    }
-
 }
 
 .modal-description {
@@ -118,4 +119,17 @@ textarea.form-control {
     &:last-child {
         margin-bottom: 0;
     }
+}
+
+.input-group {
+    justify-content: space-between;
+
+    // Override bootstrap defaults.
+    input {
+        height: $form-field-height;
+    }
+}
+
+Form .input-group {
+    align-items: baseline;
 }

@@ -32,16 +32,16 @@ describe('domains/components/EditMXRecord', () => {
     expect(nameserver.props().value).to.equal(currentRecord.target);
 
     const subdomain = page.find('#subdomain');
-    expect(subdomain.props().value).to.equal(currentRecord.name || currentZone.domain);
+    expect(subdomain.props().value).to.equal(currentRecord.name);
 
     const ttl = page.find('#preference');
     expect(+ttl.props().value).to.equal(currentRecord.priority);
   });
 
-  it('submits data onsubmit and closes modal', async () => {
+  it('updates an existing mx record', async () => {
     const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
-    const currentRecord = currentZone._records.records[4];
+    const currentRecord = currentZone._records.records[3];
     const close = sandbox.spy();
     const page = mount(
       <EditMXRecord
@@ -53,7 +53,7 @@ describe('domains/components/EditMXRecord', () => {
     );
 
     changeInput(page, 'mailserver', 'mx1.tester1234.com');
-    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'subdomain', '');
     changeInput(page, 'preference', 1);
 
     await page.find('Form').props().onSubmit();
@@ -64,7 +64,7 @@ describe('domains/components/EditMXRecord', () => {
         method: 'PUT',
         body: {
           target: 'mx1.tester1234.com',
-          name: 'tester1234.com',
+          name: '',
           priority: 1,
           type: 'MX',
         },
@@ -87,7 +87,7 @@ describe('domains/components/EditMXRecord', () => {
     );
 
     changeInput(page, 'mailserver', 'mx1.tester1234.com');
-    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'subdomain', '');
     changeInput(page, 'preference', 1);
 
     await page.find('Form').props().onSubmit();
@@ -98,7 +98,7 @@ describe('domains/components/EditMXRecord', () => {
         method: 'POST',
         body: {
           target: 'mx1.tester1234.com',
-          name: 'tester1234.com',
+          name: '',
           priority: 1,
           type: 'MX',
         },
