@@ -78,7 +78,6 @@ export class IndexPage extends Component {
       };
       return returnedScript;
     }), {
-      filterOn: 'label',
       groupOn: 'privacy',
       filterBy: filter,
     });

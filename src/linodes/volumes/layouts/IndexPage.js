@@ -71,7 +71,6 @@ export class IndexPage extends Component {
     const { filter } = this.state;
 
     const { sorted } = transform(volumes, {
-      filterOn: 'label',
       filterBy: filter,
       sortBy: v => v.label.toLowerCase(),
     });
