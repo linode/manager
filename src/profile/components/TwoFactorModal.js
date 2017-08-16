@@ -98,6 +98,7 @@ export class TwoFactorModal extends Component {
                 value={tfaCode}
                 placeholder="901928"
                 autoComplete="off"
+                autoFocus
                 onChange={this.onChange}
               />
             </ModalFormGroup>
