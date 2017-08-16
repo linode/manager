@@ -1222,3 +1222,36 @@ endpoints:
           python: |
             v = linode.Volume(client, 123)
             v.detach()
+  /linode/instances/:id/stats:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for the last 24 hours.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+           Returns statistics for the last 24 hours.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats
+  /linode/instances/:id/stats/:year/:month:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for a specific month.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+          Returns statistics for the requested month. The last 30 days of 
+          available data will be returned if the current month is requested.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats/2017/08

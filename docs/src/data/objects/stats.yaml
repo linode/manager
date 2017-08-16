@@ -1,0 +1,64 @@
+name: Stats
+prefix: stats
+description: >
+    Graph data
+schema:
+  data:
+    _type: Object
+    _description: >
+      Graph data (if available) - data is in "[timestamp, reading]" array format
+    cpu:
+      _type: Array
+      _value: []
+      _description: Percentage of CPU(s) used
+    io:
+      _type: Object
+      swap:
+        _type: Array
+        _value: []
+        _description: blocks written
+      io:
+        _type: Array
+        _value: []
+        _description: blocks written
+    netv4:
+      _type: Object
+      in:
+        _type: Array
+        _value: []
+        _description: network data used
+      out:
+        _type: Array
+        _value: []
+        _description: network data used
+      private_in:
+        _type: Array
+        _value: []
+        _description: network data used
+      private_out:
+        _type: Array
+        _value: []
+        _description: network data used
+    netv6:
+      _type: Object
+      in:
+        _type: Array
+        _value: []
+        _description: network data used
+      out:
+        _type: Array
+        _value: []
+        _description: network data used
+      private_in:
+        _type: Array
+        _value: []
+        _description: network data used
+      private_out:
+        _type: Array
+        _value: []
+        _description: network data used
+  title:
+    _type: String
+    _value: "linode.com - mylinode (linode123) - stats span text"
+    _description: The title for the data requested.
+
