@@ -49,9 +49,10 @@ export default class Code extends Component {
       );
     }
 
+    // TODO: replace this Highlight component... It's tiny and terrible.
     return (
       <div className={`Code ${collapsedClass}`}>
-        <Highlight className={`language-${languageName}`}>
+        <Highlight className={`language-${languageName} hljs`}>
           {example}
         </Highlight>
         {clipboardButton}

@@ -138,7 +138,7 @@ export default class VolumesList extends Component {
 
 VolumesList.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  ojbectType: PropTypes.string.isRequired,
+  objectType: PropTypes.string.isRequired,
   selectedMap: PropTypes.object.isRequired,
   volumes: PropTypes.object.isRequired,
   objectType: PropTypes.string.isRequired,
