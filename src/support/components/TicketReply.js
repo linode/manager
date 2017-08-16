@@ -62,6 +62,14 @@ export default function TicketReply(props) {
   return (
     <Card header={header} className="TicketReply">
       {description}
+      {!props.reply.attachments ? null : (
+        <div className="TicketReply-attachments">
+          <p>Attachments:</p>
+          <ul>
+            {props.reply.attachments.map(name => <li>{name}</li>)}
+          </ul>
+        </div>
+      )}
     </Card>
   );
 }
