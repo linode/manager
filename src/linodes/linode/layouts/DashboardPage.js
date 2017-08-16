@@ -176,6 +176,8 @@ export class DashboardPage extends Component {
     const { username, linode } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region.id]}.linode.com`;
 
+    const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
+
     return (
       <div className="row">
         <section className="col-lg-6 col-md-12 col-sm-12">
@@ -186,7 +188,7 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8">
                 <ul className="list-unstyled" id="ips">
-                  <li>{linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0]}</li>
+                  <li>{publicIPv4}</li>
                   {linode.ipv6 === 'None/64' ? null : <li className="text-muted">{linode.ipv6}</li>}
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
@@ -218,11 +220,11 @@ export class DashboardPage extends Component {
                 <div className="input-group">
                   <Input
                     id="ssh-input"
-                    value={`ssh root@${linode.ipv4[0]}`}
+                    value={`ssh root@${publicIPv4}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
+                    <Button href={`ssh://root@${publicIPv4}`}>SSH</Button>
                   </span>
                 </div>
               </div>
