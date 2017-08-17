@@ -6,8 +6,8 @@ import sinon from 'sinon';
 import { API_ROOT } from '~/constants';
 import { APITokensPage } from '~/profile/layouts/APITokensPage';
 
-import { api } from '@/data';
 import { expectRequest } from '@/common.js';
+import { api } from '@/data';
 
 
 const { tokens } = api;
@@ -51,8 +51,7 @@ describe('profile/layouts/APITokensPage', () => {
     );
 
     dispatch.reset();
-
-    const actions = page.find('Dropdown').at(0).props().groups[0].elements;
+    const actions = page.find('MassEditControl').find('Dropdown').props().groups[0].elements;
     actions.find(a => a && a.name === 'Revoke').action();
 
     const modal = mount(dispatch.firstCall.args[0].body);

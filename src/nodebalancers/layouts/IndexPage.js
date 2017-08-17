@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
-import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -21,10 +20,10 @@ import {
 import { MassEditControl } from 'linode-components/lists/controls';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
 import { transform } from '~/api/util';
+import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
 
@@ -39,8 +38,6 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteNodeBalancers = this.deleteNodeBalancers.bind(this);
-
     this.state = { filter: '' };
   }
 
@@ -51,26 +48,11 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['nodebalancers']));
   }
 
-  deleteNodeBalancers(nodebalancers) {
-    const { dispatch } = this.props;
-    const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
-    const title = 'Delete NodeBalancer(s)';
-
-    dispatch(showModal(title,
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
-
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        onCancel={() => dispatch(hideModal())}
-        items={nodebalancersArr.map(n => n.label)}
-        typeOfItem="NodeBalancers"
-      />
-    ));
-  }
+  deleteNodeBalancers = confirmThenDelete(
+    this.props.dispatch,
+    'NodeBalancer',
+    api.delete,
+    OBJECT_TYPE).bind(this)
 
   render() {
     const { dispatch, nodebalancers, selectedMap } = this.props;
@@ -117,7 +99,7 @@ export class IndexPage extends Component {
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',
-                onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
+                onClick: (nodebalancer) => { this.deleteNodeBalancers([nodebalancer]); },
                 text: 'Delete',
               },
             ]}

@@ -310,16 +310,9 @@ export class MasterZone extends Component {
                     tooltipEnabled: true,
                   },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, target }) =>
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
+                    onDeleteClick: ({ id, target }) =>
                       this.renderDeleteRecord('MX Record', id, target),
                   },
                 ]}
@@ -359,16 +352,10 @@ export class MasterZone extends Component {
                   { headerClassName: 'IPAddressColumn', dataKey: 'target', label: 'IP Address' },
                   { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('A/AAAA Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('A/AAAA Record', id, target),
                   },
                 ]}
                 data={aRecords}
@@ -416,17 +403,10 @@ export class MasterZone extends Component {
                   },
                   { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('CNAME Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('CNAME Record', id, target),
                   },
                 ]}
                 data={cnameRecords}
@@ -470,17 +450,10 @@ export class MasterZone extends Component {
                   },
                   { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('TXT Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('TXT Record', id, target),
                   },
                 ]}
                 data={txtRecords}
@@ -529,16 +502,10 @@ export class MasterZone extends Component {
                 },
                 { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                 {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id, name }) => this.renderDeleteRecord('SRV Record', id, name),
+                  cellComponent: NameserversCell,
+                  onEditClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
+                  onDeleteClick: ({ id, target }) =>
+                    this.renderDeleteRecord('SRV Record', id, target),
                 },
               ]}
               data={srvRecords}

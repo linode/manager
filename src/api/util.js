@@ -133,40 +133,15 @@ export function createHeaderFilter(filter) {
   };
 }
 
-export function valueify(object, keys = []) {
-  if (object === null || object === undefined) {
-    return [];
-  }
-
-  if (_.isArray(object)) {
-    return _.flatten(object.map((o, i) => valueify(o, [...keys, i])));
-  }
-
-  if (_.isObject(object)) {
-    return _.flatten(Object.keys(object).map(key =>
-      valueify(object[key], [...keys, key])));
-  }
-
-  return `${keys.map(k => `:${k}`).join('')}=${object}`;
-}
-
 export function transform(objects, options = {}) {
   const {
     filterBy,
-    filterOn,
+    filterOn = 'label',
     sortBy = o => o.label.toLowerCase(),
     groupOn = 'group',
   } = options;
 
-  let filterOnFn = (o) => valueify(o).join('*');
-  if (filterOn) {
-    if (_.isFunction(filterOn)) {
-      filterOnFn = filterOn;
-    } else {
-      filterOnFn = o => o[filterOn];
-    }
-  }
-
+  const filterOnFn = _.isFunction(filterOn) ? filterOn : o => o[filterOn];
   const filtered = filterBy.length ? _.pickBy(objects, o =>
     filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
   const sorted = _.sortBy(Object.values(filtered), sortBy);

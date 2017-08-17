@@ -8,11 +8,11 @@ import { FormModalBody } from 'linode-components/modals';
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { RegionSelect } from '~/components';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import DistributionSelect from './DistributionSelect';
 import PlanSelect from './PlanSelect';
-import { RegionSelect } from '../../components';
 
 
 export default class AddLinode extends Component {

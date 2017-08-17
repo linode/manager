@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { default as Example } from './Example';
+import { Code } from 'linode-components/formats';
 
 
 export default class MethodResponseExample extends Component {
@@ -32,7 +32,7 @@ export default class MethodResponseExample extends Component {
             <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} />
           </span>
         </div>
-        <Example
+        <Code
           example={JSON.stringify(response.example, null, 2)}
           name="json"
           noclipboard

@@ -9,7 +9,6 @@ import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { DeleteModalBody } from 'linode-components/modals';
 import {
   ButtonCell,
   CheckboxCell,
@@ -17,11 +16,11 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { domains } from '~/api';
 import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
+import { confirmThenDelete } from '~/utilities';
 
 
 const OBJECT_TYPE = 'domains';
@@ -34,8 +33,6 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteZones = this.deleteZones.bind(this);
-
     this.state = { filter: '' };
   }
 
@@ -46,27 +43,12 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['domains']));
   }
 
-  deleteZones(zonesToDelete) {
-    const { dispatch } = this.props;
-    const zonesArr = Array.isArray(zonesToDelete) ? zonesToDelete : [zonesToDelete];
-
-    const selectedDomains = zonesArr.map(l => l.domain);
-
-    dispatch(showModal('Delete Domain(s)', (
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = zonesArr.map(function (zone) { return zone.id; });
-
-          await Promise.all(ids.map(id => dispatch(domains.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        items={selectedDomains}
-        typeOfItem="Domains"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
-  }
+  deleteDomains = confirmThenDelete(
+    this.props.dispatch,
+    'domain',
+    domains.delete,
+    OBJECT_TYPE,
+    'domain').bind(this)
 
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
@@ -85,7 +67,7 @@ export class IndexPage extends Component {
               data={sortedZones}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteZones },
+                { name: 'Delete', action: this.deleteDomains },
               ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
@@ -121,10 +103,10 @@ export class IndexPage extends Component {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
                       text: 'Delete',
-                      onClick: (zone) => { this.deleteZones(zone); },
+                      onClick: (domain) => { this.deleteDomains([domain]); },
                     },
                   ]}
-                  noDataMessage="No Domains found."
+                  noDataMessage="No domains found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader

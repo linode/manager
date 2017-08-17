@@ -2,6 +2,8 @@
     background: transparent !important;
 
     .btn {
+        @extend .font-medium;
+
         padding: 10px 15px;
         height: auto;
     }

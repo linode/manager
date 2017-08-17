@@ -4,17 +4,15 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { IndexPage } from '~/linodes/volumes/layouts/IndexPage';
+import { VolumesList } from '~/linodes/volumes/components';
 
+import { expectRequest } from '@/common.js';
 import { api } from '@/data';
-import {
-  expectRequest,
-} from '@/common.js';
 
 
-const { volumes } = api;
+const { volumes: { volumes } } = api;
 
-describe('linodes/volumes/layouts/IndexPage', () => {
+describe('linodes/volumes/layouts/VolumesList', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -25,16 +23,17 @@ describe('linodes/volumes/layouts/IndexPage', () => {
 
   it('renders a list of volumes', () => {
     const page = mount(
-      <IndexPage
+      <VolumesList
         dispatch={dispatch}
         selectedMap={{}}
         volumes={volumes}
+        objectType="volumes"
       />
     );
 
     const vol = page.find('.TableRow');
     // + 1 for the group
-    expect(vol.length).to.equal(Object.keys(volumes.volumes).length);
+    expect(vol.length).to.equal(Object.keys(volumes).length);
     const firstVol = vol.at(0);
     expect(firstVol.find('td').at(1).text())
       .to.equal('test');
@@ -48,10 +47,11 @@ describe('linodes/volumes/layouts/IndexPage', () => {
 
   it('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <IndexPage
+      <VolumesList
         dispatch={dispatch}
         selectedMap={{}}
         volumes={volumes}
+        objectType="volumes"
       />
     );
 
@@ -65,20 +65,21 @@ describe('linodes/volumes/layouts/IndexPage', () => {
 
   it('deletes selected volumes when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
+      <VolumesList
         dispatch={dispatch}
-        selectedMap={{ 1: true }}
+        selectedMap={{ 38: true }}
         volumes={volumes}
+        objectType="volumes"
       />
     );
 
     dispatch.reset();
+    page.find('MassEditControl').find('Dropdown').props().groups[0].elements[0].action();
 
-    page.find('tr button').at(0).simulate('click');
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/volumes/38', { method: 'DELETE' });
   });
