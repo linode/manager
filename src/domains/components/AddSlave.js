@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup, Textarea } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -29,6 +30,8 @@ export default class AddSlave extends Component {
       ips: '',
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -41,9 +44,8 @@ export default class AddSlave extends Component {
     ]));
   }
 
-  onChange = ({ target: { value, name } }) => this.setState({ [name]: value })
-
   render() {
+    const { close } = this.props;
     const { errors, domain, ips } = this.state;
 
     return (
@@ -85,4 +87,5 @@ export default class AddSlave extends Component {
 
 AddSlave.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };

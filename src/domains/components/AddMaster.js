@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -30,6 +31,8 @@ export default class AddMaster extends Component {
       email: props.email,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -42,9 +45,8 @@ export default class AddMaster extends Component {
     ]));
   }
 
-  onChange = ({ target: { value, name } }) => this.setState({ [name]: value })
-
   render() {
+    const { close } = this.props;
     const { errors, domain, email } = this.state;
 
     return (
@@ -84,4 +86,5 @@ export default class AddMaster extends Component {
 AddMaster.propTypes = {
   dispatch: PropTypes.func.isRequired,
   email: PropTypes.string.isRequired,
+  close: PropTypes.func.isRequired,
 };
