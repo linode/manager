@@ -141,7 +141,6 @@ VolumesList.propTypes = {
   objectType: PropTypes.string.isRequired,
   selectedMap: PropTypes.object.isRequired,
   volumes: PropTypes.object.isRequired,
-  objectType: PropTypes.string.isRequired,
   className: PropTypes.string,
   linodes: PropTypes.object,
 };
