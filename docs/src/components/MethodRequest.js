@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import { Tabs } from 'linode-components/tabs';
-import { default as Example } from './Example';
+import { Code } from 'linode-components/formats';
 
 export default function MethodRequest(props) {
   const { examples } = props;
@@ -10,7 +10,7 @@ export default function MethodRequest(props) {
     return {
       name: example.name,
       children: (
-        <Example key={`${example.name}-index`} example={example.value} name={example.name} />
+        <Code key={`${example.name}-index`} example={example.value} name={example.name} />
       ),
     };
   });

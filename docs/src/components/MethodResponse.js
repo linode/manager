@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Table, TableRow } from 'linode-components/tables';
-import Example from './Example';
+import { Code } from 'linode-components/formats';
+
 import { DescriptionCell, FieldCell, NestedParentCell } from './tables/cells';
 
 
@@ -42,7 +43,7 @@ export default class MethodResponse extends Component {
     let example = null;
     if (record.example) {
       example = (
-        <div><Example example={JSON.stringify(record.example, null, 2)} /></div>
+        <div><Code example={JSON.stringify(record.example, null, 2)} /></div>
       );
     }
 

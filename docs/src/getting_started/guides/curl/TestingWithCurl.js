@@ -3,12 +3,12 @@ import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { Code } from 'linode-components/formats';
 
 import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,
 } from '~/constants';
-import Example from '~/components/Example';
 
 
 export default function Introduction(props) {
@@ -47,11 +47,11 @@ export default function Introduction(props) {
             list supported distributions
           </Link>:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "distributions": [
       {
@@ -93,7 +93,7 @@ export default function Introduction(props) {
           OAuth token once, so be sure to write it down somewhere. If you’re in the shell,
           running something like this might work well:
         </p>
-        <Example example='token="that token"' name="bash" />
+        <Code example='token="that token"' name="bash" />
       </section>
       <section>
         <h2>Authentication Header</h2>
@@ -103,7 +103,7 @@ export default function Introduction(props) {
           The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
           requests on the reference page include this header in the curl examples. For example:
         </p>
-        <Example
+        <Code
           example={`curl -H "Authorization: token $token" \\
   ${API_ROOT}/${API_VERSION}/linode/instances`}
           name="bash"
@@ -111,7 +111,7 @@ export default function Introduction(props) {
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "linodes": [
     {

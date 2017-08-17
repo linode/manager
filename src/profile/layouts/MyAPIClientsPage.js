@@ -1,23 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+import { ConfirmModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import { DropdownCell, CheckboxCell, ThumbnailCell } from 'linode-components/tables/cells';
 import { EmitEvent } from 'linode-components/utils';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { hideModal, showModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { clients as api } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { transform } from '~/api/util';
 import { API_ROOT } from '~/constants';
+import { confirmThenDelete } from '~/utilities';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
 import CreateOrEditApplication from '../components/CreateOrEditApplication';
@@ -30,8 +31,8 @@ export class MyAPIClientsPage extends Component {
     await dispatch(api.all());
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }
@@ -40,21 +41,11 @@ export class MyAPIClientsPage extends Component {
     return `${API_ROOT}/account/clients/${client.id}/thumbnail`;
   }
 
-  deleteAction = (client) => {
-    const { dispatch } = this.props;
-
-    return dispatch(showModal('Delete OAuth Client',
-      <DeleteModalBody
-        onSubmit={() => {
-          dispatch(hideModal());
-          return dispatch(api.delete(client.id));
-        }}
-        onCancel={() => dispatch(hideModal())}
-        typeOfItem="Clients"
-        items={[client.label]}
-      />
-    ));
-  }
+  deleteClients = confirmThenDelete(
+    this.props.dispatch,
+    'client',
+    api.delete,
+    OBJECT_TYPE).bind(this)
 
   resetAction = (client) => {
     const { dispatch } = this.props;
@@ -85,34 +76,9 @@ export class MyAPIClientsPage extends Component {
       { elements: [{ name: 'Edit', action: () =>
         CreateOrEditApplication.trigger(dispatch, client) }] },
       { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteAction(client) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
     ];
     return groups;
-  }
-
-  deleteClients = (clients) => {
-    const { dispatch } = this.props;
-    const clientsArr = Array.isArray(clients) ? clients : [clients];
-    const title = 'Delete Client(s)';
-
-    dispatch(showModal(title,
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = clientsArr.map(function (client) { return client.id; });
-
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          EmitEvent('modal:submit', 'Modal', 'delete', title);
-          dispatch(hideModal());
-        }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
-        items={clientsArr.map(n => n.label)}
-        typeOfItem="Clients"
-      />
-    ));
   }
 
   clientLabel(client) {
@@ -188,10 +154,11 @@ export class MyAPIClientsPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button
+          <PrimaryButton
             onClick={() => CreateOrEditApplication.trigger(dispatch)}
             className="float-right"
-          >Create an OAuth Client</Button>
+            buttonClass="btn-secondary"
+          >Create an OAuth Client</PrimaryButton>
         </header>
         {this.renderClients()}
       </div>

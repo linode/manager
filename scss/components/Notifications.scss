@@ -41,9 +41,7 @@
         cursor: pointer;
         cursor: hand;
         padding: 10px 15px;
-        text-overflow: ellipsis;
         display: block;
-        overflow-x: hidden;
 
         &:hover,
         &:active,
@@ -61,6 +59,11 @@
         &-time {
             display: block;
             margin-top: -1px;
+        }
+
+        div {
+            text-overflow: ellipsis;
+            overflow-x: hidden;
         }
     }
 

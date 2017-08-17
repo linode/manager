@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { API_VERSION } from '~/constants';
 
-import Example from '~/components/Example';
+import { Code } from 'linode-components/formats';
 
 
 export default function Pagination() {
@@ -13,7 +13,7 @@ export default function Pagination() {
         <p>
           Resource lists are always paginated. The response will look similar to this:
         </p>
-        <Example
+        <Code
           example={`{
   "linodes": [ ... ],
   "page": 1,

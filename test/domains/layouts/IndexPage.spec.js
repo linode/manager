@@ -3,10 +3,12 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import { SHOW_MODAL } from '~/actions/modal';
 import { IndexPage } from '~/domains/layouts/IndexPage';
+
 import { api } from '@/data';
 import { expectRequest } from '@/common.js';
-import { SHOW_MODAL } from '~/actions/modal';
+
 
 const { domains } = api;
 
@@ -29,7 +31,6 @@ describe('domains/layouts/IndexPage', () => {
     );
 
     const zone = page.find('.TableRow');
-    // + 1 for the group
     expect(zone.length).to.equal(Object.keys(domains.domains).length);
     const firstZone = zone.at(0);
     expect(firstZone.find('Link').props().to)

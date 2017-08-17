@@ -18,6 +18,11 @@ export const config = genConfig({
       endpoint: (linode, disk) => `/linode/instances/${linode}/disks/${disk}`,
       supports: [ONE, MANY, PUT, DELETE, POST],
     },
+    _volumes: {
+      plural: 'volumes',
+      endpoint: (linode, volume) => `/linode/instances/${linode}/volumes/${volume}`,
+      supports: [ONE, MANY, PUT, DELETE, POST],
+    },
   },
 });
 

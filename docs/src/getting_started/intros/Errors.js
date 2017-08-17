@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
+import { Code } from 'linode-components/formats';
 import { Table } from 'linode-components/tables';
 
-import Example from '~/components/Example';
 import { API_VERSION } from '~/constants';
 
 
@@ -26,7 +26,7 @@ export default function Errors() {
         <p>
           Every request that returns errors will look something like this:
         </p>
-        <Example
+        <Code
           example={`{
   "errors": [
     {

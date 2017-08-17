@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { TableCell } from 'linode-components/tables/cells';
+import { TableCell, LinkCell } from 'linode-components/tables/cells';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
@@ -63,18 +63,6 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['tickets']));
   }
 
-  renderLabelCell = ({ record: ticket }) => {
-    return (
-      <TableCell
-        column={{ className: 'LabelCell', headerClassName: 'TicketLabelColumn' }}
-        record={ticket}
-      >
-        <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
-        <small>{renderTicketCreationInfo(ticket)}</small>
-      </TableCell>
-    );
-  }
-
   renderUpdatedByCell({ record: ticket }) {
     return (
       <TableCell column={{}} record={ticket}>
@@ -103,7 +91,11 @@ export class IndexPage extends Component {
         name: _group,
         columns: [
           {
-            cellComponent: this.renderLabelCell,
+            cellComponent: LinkCell,
+            hrefFn: (ticket) => `/support/${ticket.id}`,
+            textKey: 'summary',
+            tooltipEnabled: true,
+            subtitleFn: (ticket) => renderTicketCreationInfo(ticket),
             headerClassName: 'TicketLabelColumn',
           },
           {

@@ -19,6 +19,8 @@ export default class MassEditDropdown extends Component {
         <span className="input-group-addon">
           <input
             type="checkbox"
+            name="select-all"
+            id="select-all"
             onChange={function (e) {
               onChange(e.target.checked);
             }}

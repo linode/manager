@@ -3,6 +3,9 @@
 @import 'bootstrap';
 @import 'utilities';
 
+@import '../node_modules/react-select-plus/dist/react-select-plus.min.css';
+@import '../node_modules/highlight.js/styles/tomorrow.css';
+
 @import 'components/index';
 
 html {
@@ -20,20 +23,25 @@ html {
   @include font-size(1.2);
 }
 .font-medium {
-  @include font-size(1.6);
+  @include font-size(1.5);
 }
 .font-large {
-  @include font-size(1.7);
+  @include font-size(1.6);
 }
 .font-extra-large {
-  @include font-size(1.8);
+  @include font-size(1.7);
 }
 
 body {
-  @extend .font-normal;
-  background: $background-color;
-  color: $black;
-  font-weight: normal;
+    @extend .font-normal;
+
+    background: $background-color;
+    color: $black;
+    font-weight: normal;
+}
+
+body, input, select, textarea, button {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {

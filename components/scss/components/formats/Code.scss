@@ -1,0 +1,24 @@
+.Code {
+    position: relative;
+
+    pre {
+        padding: 0;
+        border: $border;
+    }
+
+    &-clipboardButton {
+        background: transparent;
+        border: transparent;
+        position: absolute;
+        top: 2px;
+        right: 4px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
