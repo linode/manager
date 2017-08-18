@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "dependencies": {
     "asap": {
       "version": "2.0.5",
