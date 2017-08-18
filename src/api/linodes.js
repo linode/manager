@@ -39,6 +39,7 @@ export function rescueLinode(id, disks = null) {
 
 export function rebuildLinode(id, config = null) {
   function makeNormalResponse(rsp, resource) {
+    console.log(rsp, resource);
     return {
       page: 1,
       totalPages: 1,

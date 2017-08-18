@@ -74,7 +74,7 @@ export class RebuildPage extends Component {
   }
 
   render() {
-    const { distributions } = this.props;
+    const { distributions, linode: { distribution: { id: currentDistribution } } } = this.props;
     const { distribution, errors, loading } = this.state;
 
     return (
@@ -89,7 +89,10 @@ export class RebuildPage extends Component {
           <FormGroup className="row">
             <label className="col-sm-3 col-form-label">Current Distribution</label>
             <div className="col-sm-9">
-              <Input disabled value={(distributions[distribution] || { label: 'Unknown' }).label} />
+              <Input
+                disabled
+                value={(distributions[currentDistribution] || { label: 'Unknown' }).label}
+              />
             </div>
           </FormGroup>
           <FormGroup errors={errors} name="distribution" className="row">
