@@ -59,7 +59,7 @@ export function getVolumesRedirectUrl() {
 }
 
 export function getVolumeRedirectUrl(entity) {
-  return `${getVolumesRedirectUrl()}/${entity.id}`;
+  return getVolumesRedirectUrl();
 }
 
 const EventTypeMap = {
