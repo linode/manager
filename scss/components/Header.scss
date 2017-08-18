@@ -24,9 +24,9 @@
 
         float: right;
         height: 100%;
-        padding: 19px 14px;
+        line-height: $nav-height;
+        padding: 0 14px;
         position: relative;
-        width: 48px;
 
         &:hover {
             background: $main-header-highlight-color;

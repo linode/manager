@@ -78,6 +78,7 @@ export default class Dropdown extends Component {
       <div
         className={`Dropdown btn-group ${this.state.open ? 'Dropdown--open' : ''}`}
         onBlur={this.close}
+        tabIndex="-1" // This allows firefox to treat this as a blurrable element.
       >
         <Button
           type="button"
