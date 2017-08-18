@@ -29,7 +29,6 @@ export function renderTicketCreationInfo(ticket) {
   const entity = ticket.entity || {};
   const to = TICKET_LINK_MAP[entity.type];
 
-  console.log(entity.type, to, entity.label);
   let link = <strong>{entity.label}</strong>;
   if (to) {
     link = <Link to={to(entity)}>{entity.label}</Link>;
