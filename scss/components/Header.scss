@@ -85,6 +85,8 @@
 
     &-badge {
         @extend .Badge;
+
+        line-height: initial;
         background: $red;
         border: 2px solid $dark-black;
         position: absolute;
