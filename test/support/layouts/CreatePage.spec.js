@@ -29,6 +29,7 @@ describe('support/layouts/CreatePage', () => {
         linodes={api.linodes.linodes}
         domains={api.domains.domains}
         nodebalancers={api.nodebalancers.nodebalancers}
+        volumes={api.volumes.volumes}
         dispatch={dispatch}
       />
     );
