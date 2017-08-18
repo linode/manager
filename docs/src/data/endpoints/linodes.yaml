@@ -1175,6 +1175,51 @@ endpoints:
                 https://$api_root/$version/linode/volumes
           python: |
             volumes = client.linode.get_volumes()
+      POST:
+        oauth: volume:create
+        description: >
+          Create a new Block Storage Volume
+        params:
+          label:
+            description: >
+              A unique label to identify your new volume with.
+            type: String
+          region:
+            description: >
+              Which region the new volume should be created in.
+            type: String
+          size:
+            optional: true
+            description: >
+              The size in GBs that you wish to make your new volume.
+              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+            type: Integer
+          linode_id:
+            optional: true
+            description: >
+              An id to a Linode you'd like this volume to be attached to after
+              creation. Requires an additional scope of `linode:modify` and you
+              must have permission to access that given Linode.
+            type: Integer
+          config_id:
+            optional: true
+            description: >
+              An id to a Linode configuration profile to used when attaching to
+              a Linode that has more than one configuration profile.
+            type: Integer
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                  "label": "a_fancy_new_volume",
+                  "datacenter": "newark",
+                  "size": "100"
+                }'
+                https://$api_root/$version/volumes
+          python: |
+            import linode
+            TODO
   /linode/volumes/:id:
     _group: Volumes
     type: resource
@@ -1205,6 +1250,84 @@ endpoints:
           python: |
             v = linode.Volume(client, 123)
             v.delete()
+      POST:
+        oauth: volume:create
+        description: >
+          Create a new Block Storage Volume
+        params:
+          label:
+            description: >
+              A unique label to identify your new volume with.
+            type: String
+          region:
+            description: >
+              Which region the new volume should be created in.
+            type: String
+          size:
+            optional: true
+            description: >
+              The size in GBs that you wish to make your new volume.
+              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+            type: Integer
+          linode_id:
+            optional: true
+            description: >
+              An id to a Linode you'd like this volume to be attached to after
+              creation. Requires an additional scope of `linode:modify` and you
+              must have permission to access that given Linode.
+            type: Integer
+          config_id:
+            optional: true
+            description: >
+              An id to a Linode configuration profile to used when attaching to
+              a Linode that has more than one configuration profile.
+            type: Integer
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                  "label": "a_fancy_new_volume",
+                  "datacenter": "newark",
+                  "size": "100"
+                }'
+                https://$api_root/$version/volumes
+          python: |
+            import linode
+            TODO 
+  /linode/volumes/:id/attach:
+    _group: Volumes
+    authenticated: true
+    resource: volume
+    methods:
+      POST:
+        oauth: volume:modify
+        description: >
+          Attach a Block Storage Volume to a Linode
+        params:
+          linode_id:
+            description: >
+              An id to a Linode you'd like this volume to be attached to.
+              Requires an additional scope of `linode:modify` and you
+              must have permission to access that given Linode.
+            type: Integer
+          config_id:
+            optional: true
+            description: >
+              An id to a Linode configuration profile to used when attaching to
+              a Linode that has more than one configuration profile.
+            type: Integer
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "linode_id": 1234
+                }'
+                https://$api_root/$version/volumes/$volume_id/attach
+          python: |
+            import linode
+            TODO
   /linode/volumes/:id/detach:
     _group: Volumes
     type: resource
