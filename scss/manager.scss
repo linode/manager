@@ -8,3 +8,10 @@
 @import 'support/index';
 @import 'profile/components/TwoFactorModal';
 @import 'profile/integrations/components/OAuthScopes';
+
+pre {
+    padding: 0.6rem 1.2rem;
+    margin-top: 1rem;
+    background-color: $medium-gray;
+    border: 1px solid $dark-gray;
+}

@@ -1,0 +1,21 @@
+.Access {
+    &-method {
+        margin-bottom: 1rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &-launchers {
+        font-size: 0.8em;
+
+        a {
+            margin-right: 1rem;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}
