@@ -81,7 +81,6 @@ export class APITokensPage extends Component {
 
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
-      filterOn: this.tokenLabel,
       sortBy: t => this.tokenLabel(t).toLowerCase(),
       groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
     });
