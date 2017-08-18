@@ -99,7 +99,7 @@ export class LishPage extends Component {
                 />
                 <div>
                   <small className="text-muted">
-                    Place your SSH public keys here, one per line, for use with Lish console access.
+                    Place your SSH public keys here for use with Lish console access.
                   </small>
                 </div>
                 <FormGroupError errors={errors} name="authorized_keys" inline={false} />

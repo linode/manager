@@ -119,7 +119,7 @@ textarea.form-control {
     }
 }
 
-textarea, input, select {
+textarea.form-control, input.form-control, select {
     &:focus {
         border: $border;
         border-color: $light-blue;

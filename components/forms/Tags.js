@@ -24,7 +24,7 @@ export default class Tags extends Component {
   }
 
   render() {
-    const { value } = this.props;
+    const { value, maxTags } = this.props;
 
     return (
       <div className="Tags">
@@ -44,8 +44,11 @@ export default class Tags extends Component {
           inputProps={{ className: 'Tags-input', placeholder: this.props.placeholder }}
           tagProps={{ className: 'Tags-tag', classNameRemove: 'Tags-remove' }}
           renderTag={this.renderTag}
+          pasteSplit={(data) => data.split('\n').map(d => d.trim())}
           focusedClassName="Tags--focused"
           className="Tags-container"
+          maxTags={maxTags}
+          addOnPaste
         />
       </div>
     );
@@ -58,4 +61,10 @@ Tags.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.array.isRequired,
   placeholder: PropTypes.string,
+  maxTags: PropTypes.number,
+};
+
+Tags.defaultProps = {
+  // Infinite
+  maxTags: -1,
 };
