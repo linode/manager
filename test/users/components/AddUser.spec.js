@@ -1,13 +1,12 @@
 import { mount } from 'enzyme';
-import React from 'react';
 import sinon from 'sinon';
 
-import { CreatePage } from '~/users/layouts/CreatePage';
+import { AddUser } from '~/users/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
-describe('users/layouts/CreatePage', () => {
+describe('users/components/AddUser', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -17,20 +16,17 @@ describe('users/layouts/CreatePage', () => {
   const dispatch = sandbox.stub();
 
   it('should commit changes to the API', async () => {
-    const page = mount(
-      <CreatePage
-        dispatch={dispatch}
-      />
-    );
+    AddUser.trigger(dispatch);
+    const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
 
-    changeInput(page, 'username', 'theUser');
-    changeInput(page, 'email', 'user@example.com');
-    changeInput(page, 'password', 'password');
-    changeInput(page, 'restricted', true);
+    changeInput(modal, 'username', 'theUser');
+    changeInput(modal, 'email', 'user@example.com');
+    changeInput(modal, 'password', 'password');
+    changeInput(modal, 'restricted', true);
 
-    await page.find('Form').props().onSubmit();
+    await modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
