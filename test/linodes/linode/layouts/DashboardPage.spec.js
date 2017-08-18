@@ -70,7 +70,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         timezone="UTC"
       />);
 
-    expect(page.find('#distro').text()).to.equal(testLinode.distribution.vendor);
+    expect(page.find('#distro').text()).to.equal(testLinode.distribution.label);
   });
 
   it('renders unknown distribution', () => {

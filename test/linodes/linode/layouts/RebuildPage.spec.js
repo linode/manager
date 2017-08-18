@@ -50,7 +50,11 @@ describe('linodes/linode/layouts/RebuildPage', () => {
           distribution: 'linode/debian7',
           root_pass: 'new password',
         },
-      }, testLinode),
+      }, {
+        ...testLinode,
+        disks: testLinode._disks,
+        configs: testLinode._configs,
+      }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/test-linode')),
     ]);
   });
