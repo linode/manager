@@ -74,8 +74,10 @@ export class RebuildPage extends Component {
   }
 
   render() {
-    const { distributions, linode: { distribution: { id: currentDistribution } } } = this.props;
+    const { distributions, linode } = this.props;
     const { distribution, errors, loading } = this.state;
+
+    const currentDistribution = linode.distribution ? linode.distribution.id : null;
 
     return (
       <Card header={<CardHeader title="Rebuild" />}>
