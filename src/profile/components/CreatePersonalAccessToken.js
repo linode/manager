@@ -50,7 +50,7 @@ export default class CreatePersonalAccessToken extends Component {
     this.state = {
       ...OAUTH_SCOPES.reduce((object, scope) => ({
         ...object,
-        [scope]: OAUTH_SUBSCOPES[OAUTH_SUBSCOPES.length - 1],
+        [scope]: null,
       }), {}),
       errors: {},
       label: '',
@@ -94,7 +94,7 @@ export default class CreatePersonalAccessToken extends Component {
           id={scope}
           value={this.state[scope]}
           onChange={this.onChange}
-          options={['No Access', ...OAUTH_SUBSCOPES].reverse().map(value => ({
+          options={['No Access', ...OAUTH_SUBSCOPES].map(value => ({
             value,
             label: `${_.capitalize(value)}${value === 'delete' ? ' (All Access)' : ''}`,
           }))}
