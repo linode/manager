@@ -10,7 +10,9 @@ export default function Region(props) {
     <span className="region-style">
       <img
         src={flags[obj.region.country]}
-        height="15" width="20" alt={obj.region.label}
+        height="15"
+        width="20"
+        role="presentation"
       />
       <span>{obj.region.id}</span>
     </span>
