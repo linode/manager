@@ -39,6 +39,7 @@ export class IndexPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => enableBackup(linode.id),
+      () => linodeBackups(linode.id),
     ]));
   }
 
