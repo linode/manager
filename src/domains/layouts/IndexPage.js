@@ -22,6 +22,8 @@ import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
 
+import { AddMaster, AddSlave } from '../components';
+
 
 const OBJECT_TYPE = 'domains';
 
@@ -123,12 +125,21 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch, email } = this.props;
+
+    const addMaster = () => AddMaster.trigger(dispatch, email);
+    const addSlave = () => AddSlave.trigger(dispatch);
+
+    const addOptions = [
+      { name: 'Add a Slave Domain', action: addSlave },
+    ];
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Domains</h1>
-            <PrimaryButton to="/domains/create" className="float-right">
+            <PrimaryButton onClick={addMaster} options={addOptions} className="float-right">
               Add a Domain
             </PrimaryButton>
           </div>
@@ -136,7 +147,7 @@ export class IndexPage extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.domains.domains).length ?
             this.renderZones(this.props.domains.domains) :
-            <CreateHelper label="Domains" href="/domains/create" linkText="Add a Domain" />}
+            <CreateHelper label="Domains" onClick={addMaster} linkText="Add a Domain" />}
         </div>
       </div>
     );
@@ -146,6 +157,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   domains: PropTypes.object,
+  email: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
 };
 
@@ -154,6 +166,7 @@ function select(state) {
   return {
     domains: state.api.domains,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
+    email: state.api.profile.email,
   };
 }
 
