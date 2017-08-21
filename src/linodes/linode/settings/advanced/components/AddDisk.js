@@ -56,11 +56,13 @@ export default class AddDisk extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { dispatch, free, distributions } = this.props;
+    const { dispatch, free, distributions: { distributions } } = this.props;
     const { label, size, distribution, filesystem, password, errors } = this.state;
 
-    const minimumStorageSize = () =>
-      distributions.distributions[distribution].minimum_storage_size;
+    let minimumStorageSize = 8;
+    if (distributions[distribution]) {
+      minimumStorageSize = distributions[distribution].minimum_storage_size;
+    }
 
     const filesystemOptions = [
       { value: 'ext3', label: 'ext3' },
@@ -98,7 +100,7 @@ export default class AddDisk extends Component {
               id="distribution"
               name="distribution"
               value={distribution}
-              distributions={distributions.distributions}
+              distributions={distributions}
               onChange={this.onChange}
               allowNone
             />
@@ -129,7 +131,7 @@ export default class AddDisk extends Component {
               name="size"
               value={size}
               type="number"
-              min={distribution ? minimumStorageSize() : 8}
+              min={minimumStorageSize}
               max={free}
               onChange={this.onChange}
               label="MB"
