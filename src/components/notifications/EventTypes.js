@@ -58,8 +58,8 @@ export function getVolumesRedirectUrl() {
   return '/volumes';
 }
 
-export function getVolumeRedirectUrl(entity) {
-  return `${getVolumesRedirectUrl()}/${entity.id}`;
+export function getVolumeRedirectUrl() {
+  return getVolumesRedirectUrl();
 }
 
 const EventTypeMap = {

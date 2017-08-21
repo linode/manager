@@ -13,7 +13,7 @@ import { setAnalytics, setSource, setTitle } from '~/actions';
 import { tickets } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
-  getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl,
+  getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
 } from '~/components/notifications/EventTypes';
 import TimeDisplay from '~/components/TimeDisplay';
 
@@ -22,6 +22,7 @@ const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,
   nodebalancer: getNodebalancerRedirectUrl,
   domain: getDomainRedirectUrl,
+  volume: getVolumeRedirectUrl,
 };
 
 export function renderTicketCreationInfo(ticket) {
@@ -110,6 +111,9 @@ export class IndexPage extends Component {
         ],
         data: _tickets,
       }));
+
+    // Put Open first.
+    groups.sort(({ name: groupA }, { name: groupB }) => groupA > groupB ? -1 : 1);
 
     if (groups[0].name !== 'Open') {
       groups.unshift({ name: 'Open', data: [] });
