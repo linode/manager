@@ -14,8 +14,9 @@ const OBJECT_TYPE = 'volumes';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(volumes.all());
-    dispatch(linodes.all());
+    await Promise.all([
+      linodes, volumes,
+    ].map(o => dispatch(o.all())));
   }
 
   async componentDidMount() {
@@ -48,6 +49,7 @@ export class IndexPage extends Component {
               volumes={volumes.volumes}
               selectedMap={selectedMap}
               dispatch={dispatch}
+              linodes={linodes}
             /> :
             <CreateHelper
               label="Volumes"
@@ -72,7 +74,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     volumes: state.api.volumes,
-    linodes: state.api.linodes,
+    linodes: state.api.linodes.linodes,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

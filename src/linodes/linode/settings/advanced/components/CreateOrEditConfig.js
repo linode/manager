@@ -23,7 +23,7 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
-import { DiskSelect } from '../../../components';
+import { DeviceSelect } from '../../../components';
 
 
 export default class CreateOrEditConfig extends Component {
@@ -37,17 +37,17 @@ export default class CreateOrEditConfig extends Component {
 
   componentWillMount(nextProps) {
     const { config, account } = nextProps || this.props;
-
+      
     this.setState({
       label: config.label,
       comments: config.comments,
       kernel: config.kernel,
       initrd: config.initrd || '',
       rootDevice: config.root_device,
+      devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      disks: config.devices,
       isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
         config.root_device.replace('/dev/', '')) === -1,
       isMaxRam: config.ram_limit === 0,
@@ -69,7 +69,7 @@ export default class CreateOrEditConfig extends Component {
       label: this.state.label,
       comments: this.state.comments,
       kernel: this.state.kernel,
-      devices: this.state.disks,
+      devices: DeviceSelect.format(this.state.devices),
       // API expects this to be null not ''
       initrd: this.state.initrd || null,
       root_device: this.state.rootDevice,
@@ -118,10 +118,11 @@ export default class CreateOrEditConfig extends Component {
     const { linode, config } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, rootDevice, initrd, errors, virtMode,
-      runLevel, ramLimit, isMaxRam, disks, enableDistroHelper, enableNetworkHelper,
+      runLevel, ramLimit, isMaxRam, devices, enableDistroHelper, enableNetworkHelper,
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
 
+    console.log(devices);
     return (
       <Form
         onSubmit={this.onSubmit}
@@ -248,16 +249,17 @@ export default class CreateOrEditConfig extends Component {
         </FormGroup>
         <h3 className="sub-header">Block Device Assignment</h3>
         {AVAILABLE_DISK_SLOTS.map((slot, i) => (
-          <DiskSelect
+          <DeviceSelect
             key={i}
             errors={errors}
-            configuredDisks={disks}
+            configuredDevices={devices}
             disks={this.props.disks}
+            volumes={this.props.volumes}
             slot={slot}
             labelClassName="col-sm-2"
             fieldClassName="col-sm-10"
             onChange={({ target: { value, name } }) =>
-              this.setState({ disks: { ...this.state.disks, [name]: value } })}
+              this.setState({ devices: { ...this.state.devices, [name]: value } })}
           />
         ))}
         <FormGroup className="row">
@@ -394,6 +396,7 @@ CreateOrEditConfig.propTypes = {
   linode: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   disks: PropTypes.object.isRequired,
+  volumes: PropTypes.object.isRequired,
   account: PropTypes.object.isRequired,
   submitText: PropTypes.string,
   submitDisabledText: PropTypes.string,

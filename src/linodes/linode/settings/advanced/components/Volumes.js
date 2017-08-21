@@ -7,7 +7,7 @@ import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
 
 
 export default function Volumes(props) {
-  const { dispatch, linode, selectedMap } = props;
+  const { dispatch, linode, selectedMap, linodes } = props;
   const volumes = Object.values(linode._volumes.volumes);
 
   const nav = (
@@ -26,6 +26,7 @@ export default function Volumes(props) {
     <Card header={header}>
       <VolumesList
         objectType={Volumes.OBJECT_TYPE}
+        linodes={linodes}
         volumes={volumes}
         selectedMap={selectedMap}
         dispatch={dispatch}

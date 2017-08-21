@@ -11,6 +11,10 @@ export default function LinodeSelect(props) {
     options: group,
   }));
 
+  if (props.allowNone) {
+    options.unshift({ label: '-- None --', value: LinodeSelect.EMPTY });
+  }
+
   return (
     <Select
       {...props}
@@ -19,7 +23,10 @@ export default function LinodeSelect(props) {
   );
 }
 
+LinodeSelect.EMPTY = '-- None --';
+
 LinodeSelect.propTypes = {
   ...Select.propTypes,
   linodes: PropTypes.object.isRequired,
+  allowNone: PropTypes.bool,
 };

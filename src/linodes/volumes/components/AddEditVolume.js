@@ -8,6 +8,7 @@ import { hideModal, showModal } from '~/actions/modal';
 import { volumes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
+import LinodeSelect from '~/linodes/components/LinodeSelect';
 
 
 export default class AddEditVolume extends Component {
@@ -41,9 +42,14 @@ export default class AddEditVolume extends Component {
 
   onSubmit = () => {
     const { dispatch, close, volume: { id } = {} } = this.props;
-    const { label, region, size } = this.state;
+    const { label, region, size, linode } = this.state;
 
-    const data = id ? { label } : { label, region, size };
+    const data = id ? { label } : {
+      label,
+      region,
+      size,
+      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
+    };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => volumes[id ? 'put' : 'post'](data, [id].filter(Boolean)),
@@ -52,8 +58,8 @@ export default class AddEditVolume extends Component {
   }
 
   render() {
-    const { close, title, volume } = this.props;
-    const { errors, region, label, size } = this.state;
+    const { close, title, volume, linodes } = this.props;
+    const { errors, region, label, size, linode } = this.state;
 
     return (
       <FormModalBody
@@ -95,6 +101,16 @@ export default class AddEditVolume extends Component {
               min={0}
               label="GiB"
               disabled={/* TODO: undisable this once API support for resizing works */volume}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
+            <LinodeSelect
+              linodes={linodes}
+              value={linode}
+              name="linode"
+              id="linode"
+              onChange={this.onChange}
+              allowNone
             />
           </ModalFormGroup>
         </div>

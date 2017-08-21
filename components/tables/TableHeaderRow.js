@@ -5,7 +5,7 @@ import TableHeaderCell from './TableHeaderCell';
 
 
 export default function TableHeaderRow(props) {
-  const { columns } = props;
+  const { columns, disableHeader } = props;
 
   return (
     <tr>
@@ -14,7 +14,7 @@ export default function TableHeaderRow(props) {
           <TableHeaderCell
             className={column.headerClassName}
             key={index}
-            text={column.label}
+            text={disableHeader ? undefined : column.label}
           />
         );
       })}
@@ -26,4 +26,5 @@ TableHeaderRow.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string,
   })).isRequired,
+  disableHeader: PropTypes.bool,
 };
