@@ -12,16 +12,16 @@ import LinodeSelect from '~/linodes/components/LinodeSelect';
 
 
 export default class AddEditVolume extends Component {
-  static trigger(dispatch, linodes, plans, volume) {
+  static trigger(dispatch, linodes, volume, linode) {
     const title = volume ? 'Edit Volume' : 'Add a Volume';
     return dispatch(showModal(title, (
       <AddEditVolume
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
         linodes={linodes}
-        plans={plans}
         volume={volume}
         title={title}
+        linode={linode}
       />
     )));
   }
@@ -29,9 +29,10 @@ export default class AddEditVolume extends Component {
   constructor(props) {
     super(props);
 
-    const { volume = {} } = props;
+    const { volume = {}, linode, } = props;
 
     this.state = {
+      linode,
       errors: {},
       label: volume.label || '',
       size: volume.size || 10,
@@ -110,6 +111,7 @@ export default class AddEditVolume extends Component {
               name="linode"
               id="linode"
               onChange={this.onChange}
+              disabled={!!this.props.linode}
               allowNone
             />
           </ModalFormGroup>
@@ -124,6 +126,6 @@ AddEditVolume.propTypes = {
   close: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  plans: PropTypes.object,
   volume: PropTypes.object,
+  linode: PropTypes.object,
 };

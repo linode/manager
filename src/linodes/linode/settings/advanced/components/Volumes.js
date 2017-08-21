@@ -14,7 +14,7 @@ export default function Volumes(props) {
     <PrimaryButton
       className="float-right"
       buttonClass="btn-default"
-      onClick={() => AddEditVolume.trigger(dispatch, linode)}
+      onClick={() => AddEditVolume.trigger(dispatch, linodes, undefined, linode)}
     >
       Add a Volume
     </PrimaryButton>

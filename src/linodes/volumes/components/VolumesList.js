@@ -39,7 +39,7 @@ export default class VolumesList extends Component {
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
       { elements: [{ name: 'Edit', action: () =>
-        AddEditVolume.trigger(dispatch, linodes, undefined, record) }] },
+        AddEditVolume.trigger(dispatch, linodes, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 
