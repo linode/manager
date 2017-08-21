@@ -32,7 +32,7 @@ export class CreatePage extends Component {
 
     this.state = {
       summary: '',
-      regarding: `linode_id:${Object.values(props.linodes)[0].id}`,
+      regarding: null,
       description: '',
       errors: {},
       loading: false,
