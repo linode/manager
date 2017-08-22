@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { ResizePage } from '~/linodes/linode/layouts/ResizePage';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { api } from '@/data';
 
@@ -31,8 +31,9 @@ describe('linodes/linode/layouts/ResizePage', () => {
 
     dispatch.reset();
 
-    page.find('.plan').first().simulate('click');
-    await await page.find('Form').props().onSubmit();
+    changeInput(page, 'type', 'g5-nanode-1');
+
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

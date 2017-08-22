@@ -23,9 +23,11 @@ export default function PlanSelect(props) {
         {...props}
         options={options}
       />
-      <small>
-        <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
-      </small>
+      <div>
+        <small>
+          <ExternalLink to="https://linode.com/pricing">Learn more</ExternalLink>
+        </small>
+      </div>
     </div>
   );
 }
