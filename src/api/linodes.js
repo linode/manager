@@ -127,5 +127,6 @@ export function cloneLinode(linodeId, regionId, planId,
       linode: targetId,
     }));
     dispatch(actions.one(clonedLinode, clonedLinode.id));
+    return clonedLinode;
   };
 }
