@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { replace } from 'react-router-redux';
 
-import { Input, ModalFormGroup, Select, Textarea } from 'linode-components/forms';
+import { Input, ModalFormGroup, Select, Tags } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
@@ -53,8 +53,8 @@ export default class EditSOARecord extends Component {
       expireTime,
       email,
       status,
-      axfrIps: axfrIps.join(';'),
-      masterIps: masterIps.join(';'),
+      axfrIps: axfrIps,
+      masterIps: masterIps,
     };
   }
 
@@ -72,8 +72,8 @@ export default class EditSOARecord extends Component {
       retry_sec: parseInt(retryRate),
       expire_sec: parseInt(expireTime),
       soa_email: email,
-      master_ips: masterIps.length ? masterIps.split(';') : [],
-      axfr_ips: axfrIps.length ? axfrIps.split(';') : [],
+      master_ips: masterIps,
+      axfr_ips: axfrIps,
     };
 
     if (!data.group) {
@@ -151,14 +151,13 @@ export default class EditSOARecord extends Component {
               label="Masters"
               id="masterIps"
               apiKey="master_ips"
-              description="The IP addresses of the master DNS servers for this zone.
-                           Semicolon delimited. (maximum: 6)"
+              description="Up to 6 IP addresses of the master DNS servers for this zone."
             >
-              <Textarea
-                name="masterIps"
+              <Tags
                 value={masterIps}
                 id="masterIps"
-                placeholder="172.92.1.4;209.124.103.15"
+                name="masterIps"
+                maxTags={6}
                 onChange={this.onChange}
               />
             </ModalFormGroup>)}
@@ -168,14 +167,13 @@ export default class EditSOARecord extends Component {
             label="Domain Transfers"
             apiKey="axfr_ips"
             id="axfrIps"
-            description="The IP addresses allowed to AXFR this entire zone.
-                         Semicolon delimited. (maximum: 6)"
+            description="Up to 6 IP addresses allowed to AXFR this entire zone."
           >
-            <Textarea
-              name="axfrIps"
+            <Tags
               value={axfrIps}
               id="axfrIps"
-              placeholder="172.92.1.4;209.124.103.15"
+              name="axfrIps"
+              maxTags={6}
               onChange={this.onChange}
             />
           </ModalFormGroup>

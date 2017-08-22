@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup, Textarea } from 'linode-components/forms';
+import { Input, ModalFormGroup, Tags } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -27,7 +27,7 @@ export default class AddSlave extends Component {
 
     this.state = {
       domain: '',
-      ips: '',
+      ips: [],
       errors: {},
     };
 
@@ -39,7 +39,7 @@ export default class AddSlave extends Component {
     const { domain, ips } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.post({ domain, master_ips: ips.split(';'), type: 'slave' }),
+      () => domains.post({ domain, master_ips: ips, type: 'slave' }),
       () => push(`/domains/${domain}`),
     ]));
   }
@@ -67,15 +67,16 @@ export default class AddSlave extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup label="Master Zones" errors={errors} id="ips" apiKey="master_ips">
-            <Textarea
-              name="ips"
+            <Tags
               value={ips}
-              placeholder="172.92.1.4;209.124.103.15"
+              id="ips"
+              name="ips"
+              maxTags={6}
               onChange={this.onChange}
             />
             <div>
               <small className="text-muted">
-                Use semicolons to separate multiple IP addresses.
+                Up to 6 IP addresses of the master DNS servers for this zone.
               </small>
             </div>
           </ModalFormGroup>

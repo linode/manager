@@ -1,0 +1,38 @@
+.Tags {
+    width: 400px;
+    max-width: 100%;
+    padding: 0;
+
+    &--focused {
+        border-color: $light-blue;
+    }
+
+    &-container {
+        border: $border;
+    }
+
+    &-tag {
+        @extend .font-xs;
+
+        display: block;
+        padding: 5px;
+        margin: 5px;
+        width: calc(100% - 10px);
+        background: rgba(0,126,255,.08);
+        border: 1px solid rgba(0,126,255,.24);
+        color: $blue;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &-remove {
+        cursor: pointer;
+        font-weight: bold;
+        padding-right: 5px;
+    }
+
+    textarea#{&}-input {
+        border: 0;
+        resize: none;
+    }
+}

@@ -27,7 +27,7 @@ describe('profile/layouts/LishPage', () => {
     );
 
     changeInput(page, 'authorization', 'disabled');
-    changeInput(page, 'keys', 'foobar\nbarfoo\n \n');
+    changeInput(page, 'keys', ['foobar', 'barfoo', '']);
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
