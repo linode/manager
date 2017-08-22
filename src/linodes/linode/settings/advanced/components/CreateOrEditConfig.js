@@ -37,7 +37,7 @@ export default class CreateOrEditConfig extends Component {
 
   componentWillMount(nextProps) {
     const { config, account } = nextProps || this.props;
-      
+
     this.setState({
       label: config.label,
       comments: config.comments,
@@ -122,7 +122,6 @@ export default class CreateOrEditConfig extends Component {
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
 
-    console.log(devices);
     return (
       <Form
         onSubmit={this.onSubmit}

@@ -29,7 +29,7 @@ export default class AddEditVolume extends Component {
   constructor(props) {
     super(props);
 
-    const { volume = {}, linode, } = props;
+    const { volume = {}, linode } = props;
 
     this.state = {
       linode,

@@ -46,6 +46,7 @@ EditConfigPage.propTypes = {
   disks: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
+  volumes: PropTypes.object.isRequired,
 };
 
 export function select(state, props) {

@@ -43,4 +43,5 @@ Volumes.propTypes = {
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
 };

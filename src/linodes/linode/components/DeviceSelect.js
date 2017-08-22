@@ -80,4 +80,5 @@ DeviceSelect.propTypes = {
   volumes: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   slot: PropTypes.string.isRequired,
+  noVolumes: PropTypes.bool.isRequired,
 };

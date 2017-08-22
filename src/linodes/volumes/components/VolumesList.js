@@ -73,7 +73,7 @@ export default class VolumesList extends Component {
       <TableCell column={column} record={record}>
         {contents}
       </TableCell>
-    )
+    );
   }
 
   render() {
@@ -143,11 +143,11 @@ export default class VolumesList extends Component {
             ]}
             data={sorted}
             selectedMap={selectedMap}
-            disableHeader={!this.props.className}
+            disableHeader={!className}
             onToggleSelect={(record) => {
               dispatch(toggleSelected(objectType, record.id));
             }}
-            className={this.props.className}
+            className={className}
           />
         </ListBody>
       </List>
