@@ -52,9 +52,9 @@ export function rebuildLinode(id, config = null) {
       // Add this manually so StatusDropdown will start polling.
       dispatch(actions.one({ status: 'rebuilding' }, id));
       await dispatch(actions.disks.invalidate([id], false));
-      await dispatch(actions.disks.many(makeNormalResponse(rsp, '_disks'), id));
+      await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
       await dispatch(actions.configs.invalidate([id], false));
-      await dispatch(actions.configs.many(makeNormalResponse(rsp, '_configs'), id));
+      await dispatch(actions.configs.many(makeNormalResponse(rsp, 'configs'), id));
     };
   }
 

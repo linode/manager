@@ -199,7 +199,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>
             </div>
             <div className="row">
-              <div className="col-sm-4 row-label">Distribution</div>
+              <div className="col-sm-4 row-label">Deployed From</div>
               <div className="col-sm-8" id="distro"><DistroStyle linode={linode} /></div>
             </div>
             <div className="row linode-backups">
