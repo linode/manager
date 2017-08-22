@@ -27,6 +27,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     config: testLinode._configs.configs[12345],
     disks: testLinode._disks.disks,
     kernels: api.kernels,
+    volumes: testLinode._volumes.volumes,
     account: { network_helper: true },
   });
 

@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { RescueMode } from '~/linodes/linode/components';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -38,7 +38,8 @@ describe('linodes/linode/components/RescueMode', () => {
         linode={testLinode}
       />);
 
-    page.setState({ disks: { sda: { disk_id: 12345 }, sdb: { disk_id: 12346 } } });
+    changeInput(page, 'sda', 12345);
+    changeInput(page, 'sdb', 12346);
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);

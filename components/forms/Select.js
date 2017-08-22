@@ -61,7 +61,7 @@ export default class Select extends Component {
         {/* This allows us to use this in tests like a normal input. */}
         <input
           type="hidden"
-          id={this.props.id}
+          id={this.props.id || this.props.name}
           name={this.props.name}
           onChange={this.onChange}
           value={value}

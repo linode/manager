@@ -9,7 +9,7 @@ import { api } from '@/data';
 import { testVolume } from '@/data/volumes';
 
 
-const { linodes: { linodes }, types: { types } } = api;
+const { linodes: { linodes } } = api;
 
 describe('linodes/volumes/components/AddEditVolume', function () {
   const sandbox = sinon.sandbox.create();
@@ -21,7 +21,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
   });
 
   it('creates a volume', async function () {
-    AddEditVolume.trigger(dispatch, linodes, types);
+    AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'my-volume');
@@ -45,7 +45,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
   });
 
   it('updates an existing volume', async function () {
-    AddEditVolume.trigger(dispatch, linodes, types, testVolume);
+    AddEditVolume.trigger(dispatch, linodes, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'my-new-volume-label');

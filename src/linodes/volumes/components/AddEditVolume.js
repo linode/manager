@@ -49,7 +49,7 @@ export default class AddEditVolume extends Component {
       label,
       region,
       size,
-      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
+      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode.id,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [

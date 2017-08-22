@@ -3,16 +3,18 @@ import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
 
+import { transform } from '~/api/util';
+
 
 export default function LinodeSelect(props) {
-  const sortedLinodes = _.sortBy(props.linodes, 'label').map(l => ({ ...l, value: l.id }));
-  const options = _.map(_.groupBy(sortedLinodes, 'group'), (group) => ({
-    label: group[0].label,
-    options: group,
+  const { groups } = transform(props.linodes);
+  const options = groups.map(({ name, data }) => ({
+    label: name || '-- No Group --',
+    options: data,
   }));
 
   if (props.allowNone) {
-    options.unshift({ label: '-- None --', value: LinodeSelect.EMPTY });
+    options.unshift({ label: LinodeSelect.EMPTY, value: LinodeSelect.EMPTY });
   }
 
   return (
