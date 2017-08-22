@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
@@ -10,7 +9,7 @@ export default function LinodeSelect(props) {
   const { groups } = transform(props.linodes);
   const options = groups.map(({ name, data }) => ({
     label: name || '-- No Group --',
-    options: data,
+    options: data.map(({ label, id }) => ({ label, value: id })),
   }));
 
   if (props.allowNone) {

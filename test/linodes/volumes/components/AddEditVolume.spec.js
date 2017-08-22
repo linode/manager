@@ -29,7 +29,6 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     changeInput(modal, 'size', 20);
 
     dispatch.reset();
-
     modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -39,6 +38,31 @@ describe('linodes/volumes/components/AddEditVolume', function () {
           label: 'my-volume',
           region: REGION_MAP.Asia[0],
           size: 20,
+        },
+      }),
+    ], 1);
+  });
+
+  it('creates a volume and attaches it', async function () {
+    AddEditVolume.trigger(dispatch, linodes);
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    changeInput(modal, 'label', 'my-volume');
+    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'size', 20);
+    changeInput(modal, 'linode', { id: 12345 });
+
+    dispatch.reset();
+    modal.find('Form').props().onSubmit();
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+        method: 'POST',
+        body: {
+          label: 'my-volume',
+          region: REGION_MAP.Asia[0],
+          size: 20,
+          linode_id: 12345,
         },
       }),
     ], 1);

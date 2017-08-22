@@ -275,12 +275,6 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           devices: {
             sda: { disk_id: 12345 },
             sdb: { disk_id: 12346 },
-            sdc: null,
-            sdd: null,
-            sde: null,
-            sdf: null,
-            sdg: null,
-            sdh: null,
           },
           initrd: null,
           root_device: '/dev/sda',

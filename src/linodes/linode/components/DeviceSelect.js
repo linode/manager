@@ -68,7 +68,7 @@ DeviceSelect.format = function (devices) {
     // Pass
   }
 
-  return _.omitBy(formatted, _.isEmpty);
+  return _.omitBy(formatted, d => !_.isInteger(d) && _.isEmpty(d));
 };
 
 DeviceSelect.propTypes = {

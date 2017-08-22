@@ -23,10 +23,6 @@ export default class RescueMode extends Component {
       errors: {},
       loading: false,
     };
-
-    AVAILABLE_DISK_SLOTS.forEach(slot => {
-      this.state.devices[slot];
-    });
   }
 
   onSubmit = () => {

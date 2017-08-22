@@ -200,7 +200,7 @@ function createTestLinode(id) {
           status: 'active',
           created: '2017-08-08T13:55:16',
           region: {
-          id: 'us-east-1a',
+            id: 'us-east-1a',
             label: 'Newark, NJ',
             country: 'us',
           },

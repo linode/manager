@@ -5,7 +5,9 @@ import sinon from 'sinon';
 
 import { RescueMode } from '~/linodes/linode/components';
 
-import { changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
