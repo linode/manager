@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -8,7 +9,8 @@ import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
 
 export default function Volumes(props) {
   const { dispatch, linode, selectedMap, linodes } = props;
-  const volumes = Object.values(linode._volumes.volumes);
+  // Hack because the API is currently returning deleted volumes.
+  const volumes = _.omitBy(Object.values(linode._volumes.volumes), v => v.status === 'deleted');
 
   const nav = (
     <PrimaryButton

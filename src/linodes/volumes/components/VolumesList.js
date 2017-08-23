@@ -148,6 +148,7 @@ export default class VolumesList extends Component {
               dispatch(toggleSelected(objectType, record.id));
             }}
             className={className}
+            noDataMessage="No Volumes found."
           />
         </ListBody>
       </List>

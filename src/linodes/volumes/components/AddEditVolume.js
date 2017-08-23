@@ -6,6 +6,7 @@ import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { volumes } from '~/api';
+import { actions as linodeActions } from '~/api/configs/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 import LinodeSelect from '~/linodes/components/LinodeSelect';
@@ -52,10 +53,17 @@ export default class AddEditVolume extends Component {
       linode_id: linode === LinodeSelect.EMPTY ? undefined : linode.id,
     };
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
+    const actions = [
       () => volumes[id ? 'put' : 'post'](data, [id].filter(Boolean)),
       close,
-    ]));
+    ];
+
+    if (linode !== LinodeSelect.EMPTY) {
+      actions.splice(1, 0, (volume) =>
+        linodeActions.volumes.one(volume, linode.id, volume.id));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
   render() {

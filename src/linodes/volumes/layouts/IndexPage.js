@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -27,7 +28,10 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, volumes, selectedMap } = this.props;
+    const { dispatch, linodes, volumes: allVolumes, selectedMap } = this.props;
+
+    // Hack because the API is currently returning deleted volumes.
+    const volumes = _.omitBy(allVolumes.volumes, v => v.status === 'deleted');
 
     return (
       <div className="PrimaryPage container">
@@ -43,10 +47,10 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(volumes.volumes).length ?
+          {Object.keys(volumes).length ?
             <VolumesList
               objectType={OBJECT_TYPE}
-              volumes={volumes.volumes}
+              volumes={volumes}
               selectedMap={selectedMap}
               dispatch={dispatch}
               linodes={linodes}
