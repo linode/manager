@@ -152,7 +152,7 @@ export function valueify(object, keys = []) {
 
 export function transform(objects, options = {}) {
   const {
-    filterBy,
+    filterBy = '',
     filterOn,
     sortBy = o => o.label.toLowerCase(),
     groupOn = 'group',

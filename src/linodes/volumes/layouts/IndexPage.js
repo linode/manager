@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -14,8 +15,9 @@ const OBJECT_TYPE = 'volumes';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(volumes.all());
-    dispatch(linodes.all());
+    await Promise.all([
+      linodes, volumes,
+    ].map(o => dispatch(o.all())));
   }
 
   async componentDidMount() {
@@ -26,7 +28,10 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, volumes, selectedMap } = this.props;
+    const { dispatch, linodes, volumes: allVolumes, selectedMap } = this.props;
+
+    // Hack because the API is currently returning deleted volumes.
+    const volumes = _.omitBy(allVolumes.volumes, v => v.status === 'deleted');
 
     return (
       <div className="PrimaryPage container">
@@ -42,12 +47,13 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(volumes.volumes).length ?
+          {Object.keys(volumes).length ?
             <VolumesList
               objectType={OBJECT_TYPE}
-              volumes={volumes.volumes}
+              volumes={volumes}
               selectedMap={selectedMap}
               dispatch={dispatch}
+              linodes={linodes}
             /> :
             <CreateHelper
               label="Volumes"
@@ -72,7 +78,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     volumes: state.api.volumes,
-    linodes: state.api.linodes,
+    linodes: state.api.linodes.linodes,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

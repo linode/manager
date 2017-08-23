@@ -32,6 +32,7 @@ AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
   configsSelectedMap: PropTypes.object.isRequired,
   volumesSelectedMap: PropTypes.object.isRequired,
   disksSelectedMap: PropTypes.object.isRequired,
@@ -39,12 +40,13 @@ AdvancedPage.propTypes = {
 
 function select(state, params) {
   const { linode } = selectLinode(state, params);
-  const { distributions } = state.api;
+  const { distributions, linodes: { linodes } } = state.api;
   const volumesSelectedMap = state.select.selected[Volumes.OBJECT_TYPE] || {};
   const disksSelectedMap = state.select.selected[Disks.OBJECT_TYPE] || {};
   const configsSelectedMap = state.select.selected[Configs.OBJECT_TYPE] || {};
   return {
     linode,
+    linodes,
     distributions,
     disksSelectedMap,
     volumesSelectedMap,

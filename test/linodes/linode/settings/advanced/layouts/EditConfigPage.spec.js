@@ -27,6 +27,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     config: testLinode._configs.configs[12345],
     disks: testLinode._disks.disks,
     kernels: api.kernels,
+    volumes: testLinode._volumes.volumes,
     account: { network_helper: true },
   });
 
@@ -274,12 +275,6 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           devices: {
             sda: { disk_id: 12345 },
             sdb: { disk_id: 12346 },
-            sdc: null,
-            sdd: null,
-            sde: null,
-            sdf: null,
-            sdg: null,
-            sdh: null,
           },
           initrd: null,
           root_device: '/dev/sda',

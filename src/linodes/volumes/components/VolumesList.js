@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import { LinkButton } from 'linode-components/buttons';
 import { Dropdown } from 'linode-components/dropdowns';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
@@ -38,7 +39,7 @@ export default class VolumesList extends Component {
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
       { elements: [{ name: 'Edit', action: () =>
-        AddEditVolume.trigger(dispatch, linodes, undefined, record) }] },
+        AddEditVolume.trigger(dispatch, linodes, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 
@@ -48,6 +49,29 @@ export default class VolumesList extends Component {
           groups={groups}
           analytics={{ title: 'Volume actions' }}
         />
+      </TableCell>
+    );
+  }
+
+  renderAttached = ({ column, record }) => {
+    const { linodes } = this.props;
+    const { linode_id: linodeId } = record;
+
+    let contents = <span>Unattached</span>;
+    let to = linodeId;
+
+    if (to) {
+      const linode = linodes[linodeId];
+      if (linode && linode.label) {
+        to = <LinkButton to={`/linodes/${linode.label}`}>{linode.label}</LinkButton>;
+      }
+
+      contents = <div>Attached to {to}</div>;
+    }
+
+    return (
+      <TableCell column={column} record={record}>
+        {contents}
       </TableCell>
     );
   }
@@ -91,13 +115,13 @@ export default class VolumesList extends Component {
               {
                 cellComponent: LabelCell,
                 headerClassName: 'LabelColumn',
-                label: className ? 'Label' : undefined,
+                label: 'Label',
                 dataKey: 'label',
                 titleKey: 'label',
                 tooltipEnabled: true,
               },
               {
-                label: className ? 'Size' : undefined,
+                label: 'Size',
                 dataFn: (volume) => {
                   const { size } = volume;
                   return `${size} GiB`;
@@ -105,17 +129,12 @@ export default class VolumesList extends Component {
               {
                 cellComponent: RegionCell,
                 headerClassName: 'RegionColumn',
-                label: className ? 'Region' : undefined,
+                label: 'Region',
               },
               {
-                label: className ? 'Attached' : undefined,
-                dataFn: (volume) => {
-                  const { linode_id: linodeId } = volume;
-                  if (!linodeId) {
-                    return 'Unattached';
-                  }
-                  return `Attached to ${linodeId}`;
-                },
+                cellComponent: this.renderAttached,
+                className: 'AttachedCell',
+                label: 'Attached',
               },
               {
                 cellComponent: this.renderVolumeActions,
@@ -124,11 +143,12 @@ export default class VolumesList extends Component {
             ]}
             data={sorted}
             selectedMap={selectedMap}
-            disableHeader
+            disableHeader={!className}
             onToggleSelect={(record) => {
               dispatch(toggleSelected(objectType, record.id));
             }}
-            className={this.props.className}
+            className={className}
+            noDataMessage="No Volumes found."
           />
         </ListBody>
       </List>
