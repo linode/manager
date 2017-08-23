@@ -45,6 +45,7 @@ export default class AddEditVolume extends Component {
     const { dispatch, close, volume: { id } = {} } = this.props;
     const { label, region, size, linode } = this.state;
 
+    console.log(linode);
     const data = id ? { label } : {
       label,
       region,
@@ -104,6 +105,7 @@ export default class AddEditVolume extends Component {
               disabled={/* TODO: undisable this once API support for resizing works */volume}
             />
           </ModalFormGroup>
+          {volume ? null : (
           <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
             <LinodeSelect
               linodes={linodes}
@@ -115,6 +117,7 @@ export default class AddEditVolume extends Component {
               allowNone
             />
           </ModalFormGroup>
+          )}
         </div>
       </FormModalBody>
     );
