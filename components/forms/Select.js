@@ -10,6 +10,13 @@ import { EmitEvent, SELECT_CHANGE } from '../utils';
 VendorSelect.displayName = 'VendorSelect';
 
 export default class Select extends Component {
+  componentWillMount() {
+    const [value, modified] = this.realValue();
+    if (modified) {
+      this.onChange({ target: { value } });
+    }
+  }
+
   onChange = (e) => {
     const rawValue = e.target ? e.target.value : e.value;
     const value = this.props.multi ? e.map(o => o.target ? o.target.value : o.value) : rawValue;
@@ -55,15 +62,7 @@ export default class Select extends Component {
     return [value, false];
   }
 
-  componentWillMount() {
-    const [value, modified] = this.realValue();
-    if (modified) {
-      this.onChange({ target: { value } });
-    }
-  }
-
   render() {
-    const { options } = this.props;
     const [value] = this.realValue();
 
     return (
