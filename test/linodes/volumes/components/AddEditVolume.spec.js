@@ -9,7 +9,7 @@ import { api } from '@/data';
 import { testVolume } from '@/data/volumes';
 
 
-const { linodes: { linodes }, types: { types } } = api;
+const { linodes: { linodes } } = api;
 
 describe('linodes/volumes/components/AddEditVolume', function () {
   const sandbox = sinon.sandbox.create();
@@ -21,7 +21,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
   });
 
   it('creates a volume', async function () {
-    AddEditVolume.trigger(dispatch, linodes, types);
+    AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'my-volume');
@@ -29,8 +29,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     changeInput(modal, 'size', 20);
 
     dispatch.reset();
-
-    modal.find('Form').props().onSubmit();
+    await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/volumes/', {
@@ -44,15 +43,40 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     ], 1);
   });
 
+  it('creates a volume and attaches it', async function () {
+    AddEditVolume.trigger(dispatch, linodes);
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    changeInput(modal, 'label', 'my-volume');
+    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'size', 20);
+    changeInput(modal, 'linode', { id: 12345 });
+
+    dispatch.reset();
+    await modal.find('Form').props().onSubmit();
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+        method: 'POST',
+        body: {
+          label: 'my-volume',
+          region: REGION_MAP.Asia[0],
+          size: 20,
+          linode_id: 12345,
+        },
+      }),
+    ], 2, [{ id: '12345' }]);
+  });
+
   it('updates an existing volume', async function () {
-    AddEditVolume.trigger(dispatch, linodes, types, testVolume);
+    AddEditVolume.trigger(dispatch, linodes, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'my-new-volume-label');
 
     dispatch.reset();
 
-    modal.find('Form').props().onSubmit();
+    await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/volumes/${testVolume.id}`, {

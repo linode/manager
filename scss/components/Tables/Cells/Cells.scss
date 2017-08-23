@@ -18,3 +18,13 @@ td.AuthScopeCell {
 .ActionsCell {
     text-align: right;
 }
+
+.AttachedCell {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    a.btn.btn-link {
+        display: inline;
+        vertical-align: initial;
+    }
+}

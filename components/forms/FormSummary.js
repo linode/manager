@@ -2,11 +2,6 @@ import React, { Component, PropTypes } from 'react';
 
 
 export default class FormSummary extends Component {
-  componentWillReceiveProps() {
-    clearTimeout(this._successTimeout);
-    this.setState({ renderSuccess: true });
-  }
-
   render() {
     const { className, errors, success } = this.props;
 
@@ -21,10 +16,7 @@ export default class FormSummary extends Component {
         </div>
       );
     } else if (Object.keys(errors).length === 1) {
-      if (this.state.renderSuccess) {
-        content = success ? <div className="alert alert-success">{success}</div> : '';
-        this._successTimeout = setTimeout(() => this.setState({ renderSuccess: false }), 3000);
-      }
+      content = success ? <div className="alert alert-success">{success}</div> : '';
     } else if (errors._) {
       content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
     }

@@ -10,7 +10,7 @@ import {
 
 import { rescueLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import DiskSelect from './DiskSelect';
+import DeviceSelect from './DeviceSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
 
@@ -19,33 +19,24 @@ export default class RescueMode extends Component {
     super(props);
 
     this.state = {
-      disks: {},
+      devices: {},
       errors: {},
       loading: false,
     };
-
-    AVAILABLE_DISK_SLOTS.forEach(slot => {
-      this.state.disks[slot];
-    });
   }
 
   onSubmit = () => {
     const { dispatch, linode } = this.props;
-    const { disks } = this.state;
-
-    const disksWithDiskIdOnly = {};
-    Object.keys(disks).forEach(function (key) {
-      disksWithDiskIdOnly[key] = disks[key] ? disks[key].disk_id : null;
-    });
+    const { devices } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => rescueLinode(linode.id, disksWithDiskIdOnly),
+      () => rescueLinode(linode.id, DeviceSelect.format(devices)),
     ]));
   }
 
   render() {
-    const { linode: { _disks: { disks } } } = this.props;
-    const { errors, loading, disks: configuredDisks } = this.state;
+    const { linode: { _disks: { disks }, _volumes: { volumes } } } = this.props;
+    const { errors, loading, devices } = this.state;
 
     return (
       <Card header={<CardHeader title="Rescue mode" />} className="full-height">
@@ -55,16 +46,18 @@ export default class RescueMode extends Component {
           className="RescueMode-form"
         >
           {AVAILABLE_DISK_SLOTS.map((slot, i) => slot === 'sdh' ? null : (
-            <DiskSelect
+            <DeviceSelect
               key={i}
               disks={disks}
-              configuredDisks={configuredDisks}
+              volumes={volumes}
+              configuredDevices={devices}
               slot={slot}
               labelClassName="col-sm-3"
               fieldClassName="col-sm-9"
               onChange={({ target: { value, name } }) =>
-                this.setState({ disks: { ...this.state.disks, [name]: value } })}
+                this.setState({ devices: { ...this.state.devices, [name]: value } })}
               errors={errors}
+              noVolumes
             />
           ))}
           <FormGroup className="row">

@@ -6,21 +6,23 @@ import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { volumes } from '~/api';
+import { actions as linodeActions } from '~/api/configs/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
+import LinodeSelect from '~/linodes/components/LinodeSelect';
 
 
 export default class AddEditVolume extends Component {
-  static trigger(dispatch, linodes, plans, volume) {
+  static trigger(dispatch, linodes, volume, linode) {
     const title = volume ? 'Edit Volume' : 'Add a Volume';
     return dispatch(showModal(title, (
       <AddEditVolume
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
         linodes={linodes}
-        plans={plans}
         volume={volume}
         title={title}
+        linode={linode}
       />
     )));
   }
@@ -28,9 +30,10 @@ export default class AddEditVolume extends Component {
   constructor(props) {
     super(props);
 
-    const { volume = {} } = props;
+    const { volume = {}, linode } = props;
 
     this.state = {
+      linode,
       errors: {},
       label: volume.label || '',
       size: volume.size || 10,
@@ -41,19 +44,31 @@ export default class AddEditVolume extends Component {
 
   onSubmit = () => {
     const { dispatch, close, volume: { id } = {} } = this.props;
-    const { label, region, size } = this.state;
+    const { label, region, size, linode } = this.state;
 
-    const data = id ? { label } : { label, region, size };
+    const data = id ? { label } : {
+      label,
+      region,
+      size,
+      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode.id,
+    };
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
+    const actions = [
       () => volumes[id ? 'put' : 'post'](data, [id].filter(Boolean)),
       close,
-    ]));
+    ];
+
+    if (!id && linode !== LinodeSelect.EMPTY) {
+      actions.splice(1, 0, (volume) =>
+        linodeActions.volumes.one(volume, linode.id, volume.id));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
   render() {
-    const { close, title, volume } = this.props;
-    const { errors, region, label, size } = this.state;
+    const { close, title, volume, linodes } = this.props;
+    const { errors, region, label, size, linode } = this.state;
 
     return (
       <FormModalBody
@@ -97,6 +112,19 @@ export default class AddEditVolume extends Component {
               disabled={/* TODO: undisable this once API support for resizing works */volume}
             />
           </ModalFormGroup>
+          {volume ? null : (
+            <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
+              <LinodeSelect
+                linodes={linodes}
+                value={linode}
+                name="linode"
+                id="linode"
+                onChange={this.onChange}
+                disabled={!!this.props.linode}
+                allowNone
+              />
+            </ModalFormGroup>
+          )}
         </div>
       </FormModalBody>
     );
@@ -108,6 +136,6 @@ AddEditVolume.propTypes = {
   close: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  plans: PropTypes.object,
   volume: PropTypes.object,
+  linode: PropTypes.object,
 };

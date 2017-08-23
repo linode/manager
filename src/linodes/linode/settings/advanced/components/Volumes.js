@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -7,14 +8,15 @@ import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
 
 
 export default function Volumes(props) {
-  const { dispatch, linode, selectedMap } = props;
-  const volumes = Object.values(linode._volumes.volumes);
+  const { dispatch, linode, selectedMap, linodes } = props;
+  // Hack because the API is currently returning deleted volumes.
+  const volumes = _.omitBy(Object.values(linode._volumes.volumes), v => v.status === 'deleted');
 
   const nav = (
     <PrimaryButton
       className="float-right"
       buttonClass="btn-default"
-      onClick={() => AddEditVolume.trigger(dispatch, linode)}
+      onClick={() => AddEditVolume.trigger(dispatch, linodes, undefined, linode)}
     >
       Add a Volume
     </PrimaryButton>
@@ -26,6 +28,7 @@ export default function Volumes(props) {
     <Card header={header}>
       <VolumesList
         objectType={Volumes.OBJECT_TYPE}
+        linodes={linodes}
         volumes={volumes}
         selectedMap={selectedMap}
         dispatch={dispatch}
@@ -42,4 +45,5 @@ Volumes.propTypes = {
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
 };
