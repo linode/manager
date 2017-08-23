@@ -2,7 +2,6 @@ import { mount } from 'enzyme';
 import sinon from 'sinon';
 
 import { REGION_MAP } from '~/constants';
-import { LinodeSelect } from '~/linodes/components';
 import { AddEditVolume } from '~/linodes/volumes/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
@@ -28,7 +27,6 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     changeInput(modal, 'label', 'my-volume');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'size', 20);
-    changeInput(modal, 'linode', LinodeSelect.EMPTY)
 
     dispatch.reset();
     await modal.find('Form').props().onSubmit();

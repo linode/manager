@@ -26,10 +26,10 @@ export default class Select extends Component {
     this.props.onChange({ target: { value, name: this.props.name } });
   }
 
-  render() {
-    const { options } = this.props;
-
+  realValue() {
+    const { options, value } = this.props;
     let defaultValue;
+
     // Putting a try-catch in here as a final resort because this commit is a patch and may not
     // have been thoroughly tested.
     try {
@@ -45,16 +45,26 @@ export default class Select extends Component {
       // Nothing to do.
     }
 
-    let value = this.props.value;
-
     // Update the form so the value with the default value so the state is no longer unset
     // -- unless the default is itself unset (in which case we enter an infinite loop).
     const unset = (v) => [undefined, null].indexOf(v) !== -1;
     if (unset(value) && !unset(defaultValue)) {
-      value = defaultValue;
-      // setState will not be allowed during render, so take it out of the current function.
-      setTimeout(() => this.onChange({ target: { value } }), 0);
+      return [defaultValue, true];
     }
+
+    return [value, false];
+  }
+
+  componentWillMount() {
+    const [value, modified] = this.realValue();
+    if (modified) {
+      this.onChange({ target: { value } });
+    }
+  }
+
+  render() {
+    const { options } = this.props;
+    const [value] = this.realValue();
 
     return (
       <span className={this.props.className}>

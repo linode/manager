@@ -45,7 +45,6 @@ export default class AddEditVolume extends Component {
     const { dispatch, close, volume: { id } = {} } = this.props;
     const { label, region, size, linode } = this.state;
 
-    console.log(linode);
     const data = id ? { label } : {
       label,
       region,
@@ -106,17 +105,17 @@ export default class AddEditVolume extends Component {
             />
           </ModalFormGroup>
           {volume ? null : (
-          <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
-            <LinodeSelect
-              linodes={linodes}
-              value={linode}
-              name="linode"
-              id="linode"
-              onChange={this.onChange}
-              disabled={!!this.props.linode}
-              allowNone
-            />
-          </ModalFormGroup>
+            <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
+              <LinodeSelect
+                linodes={linodes}
+                value={linode}
+                name="linode"
+                id="linode"
+                onChange={this.onChange}
+                disabled={!!this.props.linode}
+                allowNone
+              />
+            </ModalFormGroup>
           )}
         </div>
       </FormModalBody>
