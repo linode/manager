@@ -65,7 +65,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
           linode_id: 12345,
         },
       }),
-    ], 1);
+    ], 2, [{ id: '12345' }]);
   });
 
   it('updates an existing volume', async function () {

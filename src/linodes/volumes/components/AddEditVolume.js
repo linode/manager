@@ -58,7 +58,7 @@ export default class AddEditVolume extends Component {
       close,
     ];
 
-    if (linode !== LinodeSelect.EMPTY) {
+    if (!id && linode !== LinodeSelect.EMPTY) {
       actions.splice(1, 0, (volume) =>
         linodeActions.volumes.one(volume, linode.id, volume.id));
     }
