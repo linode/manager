@@ -49,7 +49,16 @@ describe('linodes/linode/components/RescueMode', () => {
       ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', {
         method: 'POST',
         body: {
-          disks: { sda: 12345, sdb: 12346 },
+          disks: {
+            sda: 12345,
+            sdb: 12346,
+            sdc: null,
+            sdd: null,
+            sde: null,
+            sdf: null,
+            sdg: null,
+            sdh: null,
+          },
         },
       }),
     ], 1);

@@ -29,6 +29,7 @@ export default class RescueMode extends Component {
     const { dispatch, linode } = this.props;
     const { devices } = this.state;
 
+    console.log(DeviceSelect.format(devices));
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => rescueLinode(linode.id, DeviceSelect.format(devices)),
     ]));
@@ -38,6 +39,7 @@ export default class RescueMode extends Component {
     const { linode: { _disks: { disks }, _volumes: { volumes } } } = this.props;
     const { errors, loading, devices } = this.state;
 
+    console.log(errors);
     return (
       <Card header={<CardHeader title="Rescue mode" />} className="full-height">
         <Form

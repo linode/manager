@@ -68,7 +68,7 @@ export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
       }
     }
 
-    this.setState({ loading: false, errors: { _: [] } });
+    this.setState({ loading: false, errors: { _: {} } });
 
     return results;
   };
@@ -181,7 +181,6 @@ export function transform(objects, options = {}) {
     smartFilter = true,
   } = options;
 
-  console.log(objects);
   let filterOnFn = (o) => valueify(o).join('*');
   if (!smartFilter) {
     if (_.isFunction(filterOn)) {

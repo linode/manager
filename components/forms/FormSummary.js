@@ -15,12 +15,13 @@ export default class FormSummary extends Component {
           })}
         </div>
       );
-    } else if (Object.keys(errors).length > 0) {
+    } else if (Object.keys(errors).length > 1) {
       content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
     } else if (errors._) {
       content = success ? <div className="alert alert-success">{success}</div> : '';
     }
 
+    console.log(errors, content);
     return (
       <div className={`FormSummary ${className}`}>{content}</div>
     );

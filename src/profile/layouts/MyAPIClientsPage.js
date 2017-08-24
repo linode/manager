@@ -91,7 +91,7 @@ export class MyAPIClientsPage extends Component {
 
     const { sorted: sortedClients } = transform(clients, {
       filterBy: filter,
-      sortBy: t => clientLabel(t).toLowerCase(),
+      sortBy: t => this.clientLabel(t).toLowerCase(),
     });
 
     return (
