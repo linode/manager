@@ -153,13 +153,16 @@ export function valueify(object, keys = []) {
 export function transform(objects, options = {}) {
   const {
     filterBy = '',
-    filterOn,
-    sortBy = o => o.label.toLowerCase(),
+    filterOn = 'label',
+    sortBy = o => o[filterOn].toLowerCase(),
     groupOn = 'group',
+    smartFilter = true,
   } = options;
 
+  console.log(objects);
+
   let filterOnFn = (o) => valueify(o).join('*');
-  if (filterOn) {
+  if (!smartFilter) {
     if (_.isFunction(filterOn)) {
       filterOnFn = filterOn;
     } else {

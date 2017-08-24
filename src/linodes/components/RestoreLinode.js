@@ -95,7 +95,6 @@ export default class RestoreLinode extends Component {
               name="linode"
               id="linode"
               onChange={this.onLinodeChange}
-              allowNone
             />
             <small className="text-muted">
               Only Linodes with backups enabled and restorable backups available are shown.

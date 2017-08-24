@@ -4,7 +4,7 @@ import React from 'react';
 import { DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { default as toggleSelected } from '~/actions/select';
+import { removeSelected } from '~/actions/select';
 
 
 export function convertUnits(value, units, unitType, fixedNumber = 0) {
@@ -28,7 +28,7 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
         onSubmit={async function() {
           const ids = toDelete.map(o => o[idKey]);
           await Promise.all(ids.map(id => dispatch(deleteFunction(id))));
-          dispatch(toggleSelected(objectType, ids));
+          dispatch(removeSelected(objectType, ids));
           dispatch(hideModal());
         }}
         items={toDelete.map(labelFn)}

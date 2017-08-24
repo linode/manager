@@ -10,7 +10,7 @@ export default function DeviceSelect(props) {
   } = props;
 
   const options = [
-    { value: '', label: '-- None --' },
+    { value: DeviceSelect.EMPTY, label: DeviceSelect.EMPTY },
   ];
 
   const categories = [['disks', disks]];
@@ -52,7 +52,7 @@ export default function DeviceSelect(props) {
           onChange={onChange}
           options={options}
           name={slot}
-          value={configuredDevice}
+          value={configuredDevice === '{}' ? DeviceSelect.EMPTY : configuredDevice}
         />
         <FormGroupError errors={errors} name={slot} />
       </div>
@@ -60,15 +60,17 @@ export default function DeviceSelect(props) {
   );
 }
 
+DeviceSelect.EMPTY = '-- None --';
+
 DeviceSelect.format = function (devices) {
   let formatted = devices;
   try {
-    formatted = _.mapValues(devices, JSON.parse);
+    formatted = _.mapValues(devices, d => d === DeviceSelect.EMPTY ? '' : JSON.parse(d));
   } catch (e) {
     // Pass
   }
 
-  return _.omitBy(formatted, d => !_.isInteger(d) && _.isEmpty(d));
+  return _.mapValues(formatted, d => !_.isInteger(d) && _.isEmpty(d) ? null : d);
 };
 
 DeviceSelect.propTypes = {
@@ -80,5 +82,5 @@ DeviceSelect.propTypes = {
   volumes: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   slot: PropTypes.string.isRequired,
-  noVolumes: PropTypes.bool.isRequired,
+  noVolumes: PropTypes.bool,
 };

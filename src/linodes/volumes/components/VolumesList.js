@@ -15,6 +15,7 @@ import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { detachVolume } from '~/api/volumes';
+
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -31,16 +32,8 @@ export default class VolumesList extends Component {
     this.state = { filter: '' };
   }
 
-  deleteVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    volumes.delete,
-    this.props.objectType).bind(this);
-
-  detachVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    id => async (dispatch, getState) => {
+  removeFromLinodeAndCall(action) {
+    return id => async (dispatch, getState) => {
       try {
         let volumeOnLinode = getState().api.volumes.volumes[id];
         let linodeId;
@@ -63,9 +56,21 @@ export default class VolumesList extends Component {
       } catch (e) {
         // Pass
       } finally {
-        await dispatch(detachVolume(id));
+        await dispatch(action(id));
       }
-    },
+    }
+  }
+
+  deleteVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(volumes.delete),
+    this.props.objectType).bind(this);
+
+  detachVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(detachVolume),
     this.props.objectType,
     undefined,
     'detach',

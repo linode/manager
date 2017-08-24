@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { Link } from 'react-router';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
@@ -50,25 +51,27 @@ export default class AddEditVolume extends Component {
       label,
       region,
       size,
-      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode.id,
+      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
     };
 
     const actions = [
-      () => volumes[id ? 'put' : 'post'](data, [id].filter(Boolean)),
+      () => volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
       close,
     ];
 
     if (!id && linode !== LinodeSelect.EMPTY) {
       actions.splice(1, 0, (volume) =>
-        linodeActions.volumes.one(volume, linode.id, volume.id));
+        linodeActions.volumes.one(volume, linode, volume.id));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
   render() {
-    const { close, title, volume, linodes } = this.props;
+    const { close, title, volume, linode: original, linodes } = this.props;
     const { errors, region, label, size, linode } = this.state;
+
+    const showLinodeAndRegion = !volume && !original;
 
     return (
       <FormModalBody
@@ -80,6 +83,13 @@ export default class AddEditVolume extends Component {
         errors={errors}
       >
         <div>
+          {volume || !original ? null : (
+            <p>
+              Your new volume will be attached to this Linode. If you'd like
+              to create an unattached volume or attach it to another Linode or
+              create it in another region, click <Link to="/volumes">here</Link>.
+            </p>
+          )}
           <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
             <Input
               placeholder="my-volume"
@@ -89,7 +99,7 @@ export default class AddEditVolume extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          {volume ? null : (
+          {!showLinodeAndRegion ? null : (
             <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
               <RegionSelect
                 value={region}
@@ -109,21 +119,23 @@ export default class AddEditVolume extends Component {
               type="number"
               min={0}
               label="GiB"
-              disabled={/* TODO: undisable this once API support for resizing works */volume}
+              disabled={/* TODO: undisable this once API support for resizing works */!!volume}
             />
           </ModalFormGroup>
-          {volume ? null : (
-            <ModalFormGroup label="Attach to" id="linode" apiKey="linode_id" errors={errors}>
-              <LinodeSelect
-                linodes={linodes}
-                value={linode}
-                name="linode"
-                id="linode"
-                onChange={this.onChange}
-                disabled={!!this.props.linode}
-                allowNone
-              />
-            </ModalFormGroup>
+          {!showLinodeAndRegion ? null : (
+            <div>
+              <h3>Attach To</h3>
+              <ModalFormGroup label="Linode" id="linode" apiKey="linode_id" errors={errors}>
+                <LinodeSelect
+                  linodes={linodes}
+                  value={linode}
+                  name="linode"
+                  id="linode"
+                  onChange={this.onChange}
+                  allowNone
+                />
+              </ModalFormGroup>
+            </div>
           )}
         </div>
       </FormModalBody>
