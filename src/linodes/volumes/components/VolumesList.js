@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { LinkButton } from 'linode-components/buttons';
@@ -12,13 +13,14 @@ import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cel
 
 import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
+import { actions as linodeActions } from '~/api/configs/linodes';
+import { detachVolume } from '~/api/volumes';
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
 
 import AddEditVolume from './AddEditVolume';
 import MoreInfo from './MoreInfo';
-import { DetachVolume } from './DetachVolume';
 import AttachVolume from './AttachVolume';
 
 
@@ -35,7 +37,39 @@ export default class VolumesList extends Component {
     volumes.delete,
     this.props.objectType).bind(this);
 
-  detachVolume = DetachVolume(this.props.dispatch, this.props.objectType).bind(this);
+  detachVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    id => async (dispatch, getState) => {
+      try {
+        let volumeOnLinode = getState().api.volumes.volumes[id];
+        let linodeId;
+
+        if (!volumeOnLinode) {
+          Object.values(getState().api.linodes.linodes).forEach(l => {
+            const [volume] = _.filter(Object.values(l._volumes.volumes), v => v.id === id);
+            if (volume) {
+              volumeOnLinode = volume;
+              linodeId = volume.linode_id;
+            }
+          });
+        } else {
+          linodeId = volumeOnLinode.linode_id;
+        }
+
+        if (linodeId) {
+          return dispatch(linodeActions.volumes.delete(linodeId, volumeOnLinode.id));
+        }
+      } catch (e) {
+        // Pass
+      } finally {
+        await dispatch(detachVolume(id));
+      }
+    },
+    this.props.objectType,
+    undefined,
+    'detach',
+    'detaching').bind(this);
 
   renderVolumeActions = ({ column, record }) => {
     const { dispatch, linodes } = this.props;
@@ -47,7 +81,7 @@ export default class VolumesList extends Component {
       { elements: [record.linode_id === null ?
         { name: 'Attach', action: () =>
           AttachVolume.trigger(dispatch, linodes, record) } :
-        { name: 'Detach', action: () => this.detachVolume(record) },
+        { name: 'Detach', action: () => this.detachVolumes(record) },
       ] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
