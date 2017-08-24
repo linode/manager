@@ -57,7 +57,6 @@ describe('linodes/linode/components/RescueMode', () => {
             sde: null,
             sdf: null,
             sdg: null,
-            sdh: null,
           },
         },
       }),
