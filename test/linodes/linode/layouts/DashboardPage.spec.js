@@ -70,7 +70,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         timezone="UTC"
       />);
 
-    expect(page.find('#distro').text()).to.equal(testLinode.distribution.label);
+    expect(page.find('#distro').text()).to.equal(`${testLinode.distribution.label}Rebuild`);
   });
 
   it('renders unknown distribution', () => {
@@ -80,7 +80,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         timezone="UTC"
       />);
 
-    expect(page.find('#distro').text()).to.equal('Unknown');
+    expect(page.find('#distro').text()).to.equal('UnknownRebuild');
   });
 
   it('renders ssh input elements', () => {

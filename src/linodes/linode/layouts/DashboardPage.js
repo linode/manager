@@ -18,6 +18,7 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { convertUnits } from '~/utilities';
 
 import { selectLinode } from '../utilities';
+import { planStats } from '../../components/PlanStyle';
 
 
 function formatData(colors, datasets, legends) {
@@ -190,17 +191,39 @@ export class DashboardPage extends Component {
                 <ul className="list-unstyled" id="ips">
                   <li>{publicIPv4}</li>
                   {linode.ipv6 === 'None/64' ? null : <li className="text-muted">{linode.ipv6}</li>}
-                  <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/networking`}>Networking</Link>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Deployed From</div>
+              <div className="col-sm-8" id="distro">
+                <DistroStyle linode={linode} />
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/rebuild`}>Rebuild</Link>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Type</div>
+              <div className="col-sm-8" id="type">
+                {planStats(linode.type)}
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/resize`}>Resize</Link>
+                  </small>
+                </div>
               </div>
             </div>
             <div className="row">
               <div className="col-sm-4 row-label">Region</div>
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>
-            </div>
-            <div className="row">
-              <div className="col-sm-4 row-label">Deployed From</div>
-              <div className="col-sm-8" id="distro"><DistroStyle linode={linode} /></div>
             </div>
             <div className="row linode-backups">
               <div className="col-sm-4 row-label">Backup</div>

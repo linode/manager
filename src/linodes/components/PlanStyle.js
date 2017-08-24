@@ -21,7 +21,7 @@ export function planStats(plan) {
   const storage = plan.storage / 1024;
   const vcpus = plan.vcpus;
 
-  return `${readable} | ${vcpus} CPU(s) | ${storage}G HD | ${ram}G RAM`;
+  return `${readable}: ${vcpus} CPU(s), ${storage}G HD, ${ram}G RAM`;
 }
 
 export default function PlanStyle(props) {
