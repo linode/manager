@@ -23,7 +23,7 @@ import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cell
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 import { confirmThenDelete } from '~/utilities';
 
-import { planStats } from '../components/PlanStyle';
+import { planStyle } from '../components/PlanStyle';
 import { AddLinode, CloneLinode, RestoreLinode } from '../components';
 
 
@@ -146,7 +146,7 @@ export class IndexPage extends Component {
                       headerClassName: 'LabelColumn',
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                       tooltipEnabled: true,
-                      subtitleFn: linode => planStats(linode.type),
+                      subtitleFn: linode => planStyle(linode.type),
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
