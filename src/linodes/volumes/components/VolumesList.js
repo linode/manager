@@ -18,6 +18,8 @@ import { confirmThenDelete } from '~/utilities';
 
 import AddEditVolume from './AddEditVolume';
 import MoreInfo from './MoreInfo';
+import { DetachVolume } from './DetachVolume';
+import AttachVolume from './AttachVolume';
 
 
 export default class VolumesList extends Component {
@@ -31,7 +33,9 @@ export default class VolumesList extends Component {
     this.props.dispatch,
     'volume',
     volumes.delete,
-    this.props.objectType).bind(this)
+    this.props.objectType).bind(this);
+
+  detachVolume = DetachVolume(this.props.dispatch, this.props.objectType).bind(this);
 
   renderVolumeActions = ({ column, record }) => {
     const { dispatch, linodes } = this.props;
@@ -40,6 +44,11 @@ export default class VolumesList extends Component {
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
       { elements: [{ name: 'Edit', action: () =>
         AddEditVolume.trigger(dispatch, linodes, record) }] },
+      { elements: [record.linode_id === null ?
+        { name: 'Attach', action: () =>
+          AttachVolume.trigger(dispatch, linodes, record) } :
+        { name: 'Detach', action: () => this.detachVolume(record) },
+      ] },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 

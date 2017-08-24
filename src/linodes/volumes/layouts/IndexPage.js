@@ -51,13 +51,14 @@ export class IndexPage extends Component {
             <VolumesList
               objectType={OBJECT_TYPE}
               volumes={volumes}
+              linodes={linodes.linodes}
               selectedMap={selectedMap}
               dispatch={dispatch}
               linodes={linodes}
             /> :
             <CreateHelper
               label="Volumes"
-              onClick={() => {}}
+              onClick={() => AddEditVolume.trigger(dispatch, linodes)}
               linkText="Add a Volume"
             />
           }
