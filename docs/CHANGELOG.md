@@ -6,9 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+# [0.12.0] 2017-8-29
+### Added
+- documentation for mutate #2471
+- documentation for stats #2472
+- more debugging on yaml failure #2371
+### Changed
+- removed old/unused anchor tags #2333
+- updated python docs for region and type #2362
+### Fixed
+- breakage on long endpoints on mobile #2420
+
 ## [0.11.4] 2017-08-14
 ### Fixed
-- volume documentation together and at the correct endpoints 
+- volume documentation together and at the correct endpoints
 
 ## [0.11.3] 2017-08-08
 ### Changed
