@@ -83,12 +83,14 @@ export function expectObjectDeepEquals(initialA, initialB, initialPath) {
  * @param {Object} response - The data that is returned by the fetch call
  * occured to dispatch
  */
-export async function expectRequest(fn, path, expectedRequestData, response = {}, fetchStub = null) {
+export async function expectRequest(fn, path, expectedRequestData, response = {},
+                                    fetchStub = null) {
   const sandbox = sinon.sandbox.create();
   try {
     expect(fn).to.be.a('function');
 
     if (!fetchStub) {
+      // eslint-disable-next-line no-param-reassign
       fetchStub = sandbox.stub(fetch, 'fetch').returns({
         json: () => response,
       });
@@ -104,7 +106,8 @@ export async function expectRequest(fn, path, expectedRequestData, response = {}
       _dispatch.returns(response);
       await dispatch.firstCall.args[0](_dispatch, () => state);
       if (_dispatch.callCount === 1) {
-        return expectRequest(_dispatch.firstCall.args[0], path, expectedRequestData, response, fetchStub);
+        return expectRequest(
+          _dispatch.firstCall.args[0], path, expectedRequestData, response, fetchStub);
       }
 
       return;

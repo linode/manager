@@ -21,7 +21,6 @@ export default class FormSummary extends Component {
       content = success ? <div className="alert alert-success">{success}</div> : '';
     }
 
-    console.log(errors, content);
     return (
       <div className={`FormSummary ${className}`}>{content}</div>
     );

@@ -12,6 +12,7 @@ VendorSelect.displayName = 'VendorSelect';
 export default class Select extends Component {
   componentWillMount() {
     const [value, modified] = this.realValue();
+    console.log(value, modified);
     if (modified) {
       this.onChange({ target: { value } });
     }
@@ -30,6 +31,7 @@ export default class Select extends Component {
       );
     }
 
+    console.log('herreing here', value, this.props.name);
     this.props.onChange({ target: { value, name: this.props.name } });
   }
 
