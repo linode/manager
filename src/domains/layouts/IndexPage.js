@@ -58,7 +58,7 @@ export class IndexPage extends Component {
 
     const { groups, sorted: sortedZones } = transform(zones, {
       filterBy: filter,
-      sortBy: d => d.domain.toLowerCase(),
+      filterOn: 'domain',
     });
 
     return (

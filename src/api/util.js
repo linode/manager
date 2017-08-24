@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import * as api from './';
 import { fullyLoadedObject } from './apiActionReducerGenerator';
-import { reduceErrors } from './errors';
+
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
@@ -13,6 +13,28 @@ export function Error404() {
 }
 
 Error404.prototype = new Error();
+
+export async function reduceErrors(response) {
+  const json = await response.json();
+  const errors = { _: [] };
+  json.errors.forEach(error => {
+    let key = '_';
+    if (error.field) {
+      key = error.field;
+    }
+
+    if (error.field_crumbs) {
+      key += `.${error.field_crumbs}`;
+    }
+
+    const list = errors[key] || [];
+    list.push(error);
+    if (!errors[key]) {
+      errors[key] = list;
+    }
+  });
+  return errors;
+}
 
 export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
   return async (dispatch) => {
@@ -160,7 +182,6 @@ export function transform(objects, options = {}) {
   } = options;
 
   console.log(objects);
-
   let filterOnFn = (o) => valueify(o).join('*');
   if (!smartFilter) {
     if (_.isFunction(filterOn)) {

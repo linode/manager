@@ -130,7 +130,6 @@ export default class VolumesList extends Component {
 
     const { sorted } = transform(volumes, {
       filterBy: filter,
-      sortBy: v => v.label.toLowerCase(),
     });
 
     return (
