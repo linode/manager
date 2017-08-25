@@ -610,6 +610,8 @@ endpoints:
     _group: Invoices
     type: resource
     authenticated: true
+    description: >
+      View the items associated with a specific invoice.
     methods:
       GET:
         response: invoice_items

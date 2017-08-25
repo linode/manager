@@ -6,14 +6,17 @@ schema:
   date:
     _type: String
     _value: "2015-09-29T11:21:01"
+    _filterable: true
     _description: The date the invoice was generated.
   overdue:
     _type: Boolean
     _value: false
+    _filterable: true
     _description: Whether or not the invoice is overdue for payment.
   paid:
     _type: Boolean
     _value: true
+    _filterable: true
     _description: Whether or not the invoice has been paid.
   id:
     _type: integer
@@ -22,6 +25,7 @@ schema:
   total:
     _type: integer
     _value: 120
+    _filterable: true
     _description: The amount of the invoice in U.S. Dollars.
   label:
     _type: string
