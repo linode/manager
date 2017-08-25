@@ -21,7 +21,6 @@ export default function LinodeSelect(props) {
     options.unshift({ label: LinodeSelect.EMPTY, value: LinodeSelect.EMPTY });
   }
 
-  console.log(options);
   return (
     <Select
       {...props}
