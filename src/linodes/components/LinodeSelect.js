@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
@@ -20,6 +21,7 @@ export default function LinodeSelect(props) {
     options.unshift({ label: LinodeSelect.EMPTY, value: LinodeSelect.EMPTY });
   }
 
+  console.log(options);
   return (
     <Select
       {...props}
@@ -31,7 +33,7 @@ export default function LinodeSelect(props) {
 LinodeSelect.EMPTY = '-- None --';
 
 LinodeSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   linodes: PropTypes.object.isRequired,
   thisLinode: PropTypes.object,
   allowNone: PropTypes.bool,
