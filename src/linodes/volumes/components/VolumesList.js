@@ -58,14 +58,14 @@ export default class VolumesList extends Component {
       } finally {
         await dispatch(action(id));
       }
-    }
+    };
   }
 
   deleteVolumes = confirmThenDelete(
     this.props.dispatch,
     'volume',
     this.removeFromLinodeAndCall(volumes.delete),
-    this.props.objectType).bind(this);
+    this.props.objectType).bind(this)
 
   detachVolumes = confirmThenDelete(
     this.props.dispatch,
@@ -74,7 +74,7 @@ export default class VolumesList extends Component {
     this.props.objectType,
     undefined,
     'detach',
-    'detaching').bind(this);
+    'detaching').bind(this)
 
   renderVolumeActions = ({ column, record }) => {
     const { dispatch, linodes } = this.props;
