@@ -612,6 +612,7 @@ endpoints:
     authenticated: true
     methods:
       GET:
+        response: invoice_items
         description: >
           Returns a collection of invoice items.
         examples:

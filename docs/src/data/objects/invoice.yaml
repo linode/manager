@@ -26,7 +26,6 @@ schema:
   label:
     _type: string
     _value: Invoice #1
-    _description: This invoice's label.
     _filterable: true
     _editable: true
     _description: The invoice's display label.
