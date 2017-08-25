@@ -91,7 +91,6 @@ export default class Disks extends Component {
 
     const { sorted } = transform(disks, {
       filterBy: filter,
-      sortBy: v => v.label.toLowerCase(),
     });
 
     const nav = (

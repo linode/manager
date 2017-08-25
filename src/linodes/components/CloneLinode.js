@@ -60,6 +60,7 @@ export default class CloneLinode extends Component {
         errors={errors}
       >
         <div>
+          <h3>Clone from (existing Linode)</h3>
           <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
             <LinodeSelect
               linodes={linodes}
@@ -70,6 +71,7 @@ export default class CloneLinode extends Component {
               allowNone
             />
           </ModalFormGroup>
+          <h3>Clone to (new Linode)</h3>
           <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}

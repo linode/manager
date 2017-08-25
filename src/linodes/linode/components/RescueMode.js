@@ -54,8 +54,8 @@ export default class RescueMode extends Component {
               slot={slot}
               labelClassName="col-sm-3"
               fieldClassName="col-sm-9"
-              onChange={({ target: { value, name } }) =>
-                this.setState({ devices: { ...this.state.devices, [name]: value } })}
+              onChange={({ target: { value } }) =>
+                this.setState((state) => ({ devices: { ...state.devices, [slot]: value } }))}
               errors={errors}
               noVolumes
             />

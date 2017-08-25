@@ -31,6 +31,10 @@ function fullyQualified(resource) {
 }
 
 function parseIntIfActualInt(string) {
+  if (_.isArray(string)) {
+    // eslint-disable-next-line no-console
+    console.error('You sent a list of lists rather than a list of ids.');
+  }
   return isNaN(string) ? string : parseInt(string);
 }
 
@@ -107,7 +111,8 @@ export class ReducerGenerator {
       return action.resource;
     }
 
-    const id = action.ids.length ? action.ids[action.ids.length - 1] :
+    const nonNanActionIds = (action.ids || []).filter(i => !_.isNaN(i));
+    const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
                action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :

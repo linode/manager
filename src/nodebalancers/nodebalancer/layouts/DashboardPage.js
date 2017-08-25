@@ -39,7 +39,7 @@ export class DashboardPage extends Component {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nodebalancerLabel));
 
     try {
-      await dispatch(nodebalancerStats([id]));
+      await dispatch(nodebalancerStats(id));
     } catch (e) {
       // Stats aren't available.
     }

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
@@ -11,6 +12,10 @@ export default function LinodeSelect(props) {
     label: name || '-- No Group --',
     options: data.map(({ label, id }) => ({ label, value: id })),
   }));
+
+  if (props.thisLinode) {
+    options.unshift({ value: props.thisLinode.id, label: 'This Linode' });
+  }
 
   if (props.allowNone) {
     options.unshift({ label: LinodeSelect.EMPTY, value: LinodeSelect.EMPTY });
@@ -27,7 +32,8 @@ export default function LinodeSelect(props) {
 LinodeSelect.EMPTY = '-- None --';
 
 LinodeSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   linodes: PropTypes.object.isRequired,
+  thisLinode: PropTypes.object,
   allowNone: PropTypes.bool,
 };

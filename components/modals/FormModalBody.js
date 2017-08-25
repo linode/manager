@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { CancelButton } from '../buttons';
@@ -6,15 +7,11 @@ import { EmitEvent, MODAL_CANCEL } from '../utils';
 
 
 export default class FormModalBody extends Component {
-  constructor() {
-    super();
-    this.state = { loading: false };
-  }
+  constructor(props) {
+    super(props);
 
-  onSubmit = async () => {
-    this.setState({ loading: true });
-    await this.props.onSubmit();
-    this.setState({ loading: false });
+    this.state = {};
+    this.onSubmit = this.props.onSubmit.bind(this);
   }
 
   onCancel = async () => {
@@ -27,9 +24,13 @@ export default class FormModalBody extends Component {
 
   render() {
     const {
-      className, buttonText, buttonDisabledText, noCancel, children, errors, noSubmitEvent,
+      className, buttonText, buttonDisabledText, noCancel, children, errors: propsErrors,
+      noSubmitEvent,
     } = this.props;
-    const { loading } = this.state;
+    const { loading, errors: stateErrors = {} } = this.state;
+
+    // This may not be needed. No one may send errors to props, but just in case.
+    const errors = _.isEmpty(propsErrors) ? stateErrors : propsErrors;
 
     const analytics = {
       ...this.props.analytics,

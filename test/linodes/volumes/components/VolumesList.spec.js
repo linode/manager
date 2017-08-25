@@ -6,13 +6,13 @@ import sinon from 'sinon';
 import { SHOW_MODAL } from '~/actions/modal';
 import { VolumesList } from '~/linodes/volumes/components';
 
-import { expectRequest } from '@/common.js';
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common.js';
 import { api } from '@/data';
 
 
 const { volumes: { volumes } } = api;
 
-describe('linodes/volumes/layouts/VolumesList', () => {
+describe('linodes/volumes/components/VolumesList', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -81,6 +81,9 @@ describe('linodes/volumes/layouts/VolumesList', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/volumes/38', { method: 'DELETE' });
+
+    await expectDispatchOrStoreErrors(fn, [
+      ([fn]) => expectRequest(fn, '/linode/volumes/38', { method: 'DELETE' }),
+    ]);
   });
 });
