@@ -139,7 +139,16 @@ function genThunkPage(config, actions) {
 
           const updatedAt = hasActualState && existingResourceState.__updatedAt || fetchBeganAt;
           if (updatedAt > now) {
-            return await dispatch(fetchOne([...ids, resource.id]));
+            try {
+              return await dispatch(fetchOne([...ids, resource.id]));
+            } catch (e) {
+              // There's some case where fetching will 404 because there's some item in internal
+              // state that is not returned from the API (or was because the API is returning
+              // deleted items?). Catch that and don't blow up; log for good measure.
+              // eslint-disable-next-line
+              console.trace(e);
+              return Promise.resolve();
+            }
           }
         }
         return resource;

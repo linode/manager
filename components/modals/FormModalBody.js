@@ -24,7 +24,8 @@ export default class FormModalBody extends Component {
 
   render() {
     const {
-      className, buttonText, buttonDisabledText, noCancel, children, errors: propsErrors, noSubmitEvent,
+      className, buttonText, buttonDisabledText, noCancel, children, errors: propsErrors,
+      noSubmitEvent,
     } = this.props;
     const { loading, errors: stateErrors = {} } = this.state;
 

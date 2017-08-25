@@ -34,8 +34,10 @@ export default class VolumesList extends Component {
 
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {
+      let volumeOnLinode = getState().api.volumes.volumes[id];
+      await dispatch(action(id));
+
       try {
-        let volumeOnLinode = getState().api.volumes.volumes[id];
         let linodeId;
 
         if (!volumeOnLinode) {
@@ -55,8 +57,6 @@ export default class VolumesList extends Component {
         }
       } catch (e) {
         // Pass
-      } finally {
-        await dispatch(action(id));
       }
     };
   }
@@ -111,7 +111,11 @@ export default class VolumesList extends Component {
     if (to) {
       const linode = linodes[linodeId];
       if (linode && linode.label) {
-        to = <LinkButton to={`/linodes/${linode.label}`}>{linode.label}</LinkButton>;
+        to = (
+          <LinkButton to={`/linodes/${linode.label}/settings/advanced`}>
+            {linode.label}
+          </LinkButton>
+        );
       }
 
       contents = <div>Attached to {to}</div>;
