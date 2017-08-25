@@ -14,7 +14,7 @@ function loadGA(debug = false) {
 
 function handleEvent(eventName) {
   document.addEventListener(eventName, async function (e) {
-    const objectPath = await store.dispatch((_, getState) => getState().analytics.category);
+    const objectPath = await store.dispatch((_, getState) => getState().analytics.category) || [];
     const { category, action, label, value } = e.detail;
     window.ga('send', 'event', {
       eventCategory: category,

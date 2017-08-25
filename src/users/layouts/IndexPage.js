@@ -69,7 +69,7 @@ export class IndexPage extends Component {
 
     const { sorted: sortedUsers } = transform(users, {
       filterBy: filter,
-      sortBy: u => u.username.toLowerCase(),
+      filterOn: 'username',
     });
 
     return (

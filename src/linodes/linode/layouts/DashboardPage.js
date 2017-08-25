@@ -35,7 +35,7 @@ export class DashboardPage extends Component {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     try {
-      await dispatch(linodeStats([id]));
+      await dispatch(linodeStats(id));
     } catch (e) {
       // Stats aren't available.
     }

@@ -37,7 +37,6 @@ export default class Configs extends Component {
     const configs = Object.values(linode._configs.configs);
     const { sorted } = transform(configs, {
       filterBy: filter,
-      sortBy: v => v.label.toLowerCase(),
     });
 
     const nav = (

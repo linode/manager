@@ -15,6 +15,7 @@ import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { detachVolume } from '~/api/volumes';
+
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -31,18 +32,12 @@ export default class VolumesList extends Component {
     this.state = { filter: '' };
   }
 
-  deleteVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    volumes.delete,
-    this.props.objectType).bind(this);
+  removeFromLinodeAndCall(action) {
+    return id => async (dispatch, getState) => {
+      let volumeOnLinode = getState().api.volumes.volumes[id];
+      await dispatch(action(id));
 
-  detachVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    id => async (dispatch, getState) => {
       try {
-        let volumeOnLinode = getState().api.volumes.volumes[id];
         let linodeId;
 
         if (!volumeOnLinode) {
@@ -62,14 +57,24 @@ export default class VolumesList extends Component {
         }
       } catch (e) {
         // Pass
-      } finally {
-        await dispatch(detachVolume(id));
       }
-    },
+    };
+  }
+
+  deleteVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(volumes.delete),
+    this.props.objectType).bind(this)
+
+  detachVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(detachVolume),
     this.props.objectType,
     undefined,
     'detach',
-    'detaching').bind(this);
+    'detaching').bind(this)
 
   renderVolumeActions = ({ column, record }) => {
     const { dispatch, linodes } = this.props;
@@ -106,7 +111,11 @@ export default class VolumesList extends Component {
     if (to) {
       const linode = linodes[linodeId];
       if (linode && linode.label) {
-        to = <LinkButton to={`/linodes/${linode.label}`}>{linode.label}</LinkButton>;
+        to = (
+          <LinkButton to={`/linodes/${linode.label}/settings/advanced`}>
+            {linode.label}
+          </LinkButton>
+        );
       }
 
       contents = <div>Attached to {to}</div>;
@@ -125,7 +134,6 @@ export default class VolumesList extends Component {
 
     const { sorted } = transform(volumes, {
       filterBy: filter,
-      sortBy: v => v.label.toLowerCase(),
     });
 
     return (
