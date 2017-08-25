@@ -7,7 +7,6 @@ import {
   Form,
   FormGroup,
   FormSummary,
-  Select,
   SubmitButton,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
@@ -15,6 +14,7 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { LinodeSelect } from '~/linodes/components';
 
 
 export default class BackupRestore extends Component {
@@ -70,15 +70,12 @@ export default class BackupRestore extends Component {
       return null;
     }
 
-    const otherLinodes = Object.values(linodes.linodes).filter(
-      l => l.id !== linode.id && l.region.id === linode.region.id);
+    const linodesInRegion = _.pickBy(linodes.linodes, l =>
+      l.id !== linode.id && l.region.id === linode.region.id);
 
-    const restoreTo = [
-      { value: linode.id, label: 'This Linode' },
-      ...otherLinodes.map(l => ({ value: l.id, label: l.label })),
-    ];
-
-    const targetLabel = target === linode.id ? 'This Linode' : linodes.linodes[target].label;
+    const targetLabel = !target || target === linode.id ?
+                        'This Linode' :
+                        linodes.linodes[target].label;
 
     return (
       <Card header={<CardHeader title="Restore" />}>
@@ -91,11 +88,13 @@ export default class BackupRestore extends Component {
               Restore to
             </div>
             <div className="col-sm-9">
-              <Select
+              <LinodeSelect
+                linodes={linodesInRegion}
                 value={target}
                 name="target"
+                id="target"
                 onChange={this.onChange}
-                options={restoreTo}
+                thisLinode={linode}
               />
               <div>
                 <small className="text-muted">

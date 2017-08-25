@@ -12,6 +12,10 @@ export default function LinodeSelect(props) {
     options: data.map(({ label, id }) => ({ label, value: id })),
   }));
 
+  if (props.thisLinode) {
+    options.unshift({ value: props.thisLinode.id, label: 'This Linode' });
+  }
+
   if (props.allowNone) {
     options.unshift({ label: LinodeSelect.EMPTY, value: LinodeSelect.EMPTY });
   }
@@ -29,5 +33,6 @@ LinodeSelect.EMPTY = '-- None --';
 LinodeSelect.propTypes = {
   ...Select.propTypes,
   linodes: PropTypes.object.isRequired,
+  thisLinode: PropTypes.object,
   allowNone: PropTypes.bool,
 };
