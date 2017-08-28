@@ -14,7 +14,6 @@ export const config = genConfig({
         return null;
       }
 
-      console.log(linode.type, linode.memory);
       return {
         label: 'Unknown',
         ...types.types[linode.type] || {},
