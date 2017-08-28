@@ -676,6 +676,23 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/clone
           python: |
             my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
+  /linode/instances/:id/mutate:
+    type: Action
+    authenticated: true
+    description: >
+      Upgrades a Linode to its next generation.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/mutate
+          python: |
+            my_linode.mutate()
   /linode/instances/:id/resize:
     type: Action
     authenticated: true
