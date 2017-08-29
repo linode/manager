@@ -39,8 +39,7 @@ methods:
             '**kwargs':
                 _keyword: false
                 desc: >
-                    Any number of keyword arguments to send to the POST /domains/example.org endpoint.  See
-                    the <a href="/reference#ep-domains-records-POST">endpoint docs</a> for more information.
+                    Any number of keyword arguments to send to the POST /domains/example.org endpoint.
         example: |
             domain_record = domain.create_record('AAAA')
         returns: A new DomainRecord object

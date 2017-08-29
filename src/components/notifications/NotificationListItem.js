@@ -29,16 +29,16 @@ export default function NotificationListItem(props) {
 
   if (timeRemaining !== null && timeRemaining > 0) {
     message = (
-      <span>
-        <span>
+      <div>
+        <div>
           {`${eventOptions.presentTenseAction} `}
           {entity}
-        </span>
+        </div>
         <small className="text-muted">
           {/* TODO: Time remaining estimation */}
           {/* {` ${_rate} Estimated ${_time_remaining}`} */}
         </small>
-      </span>
+      </div>
     );
   } else {
     const timestampMessage = (
@@ -55,13 +55,13 @@ export default function NotificationListItem(props) {
     // TODO: check against upcoming API Change
     if (event.status === 'failed') {
       message = (
-        <span>
-          <span>
+        <div>
+          <div>
             {`${eventOptions.presentTenseAction} `}
             {entity} failed
-          </span>
+          </div>
           {timestampMessage}
-        </span>
+        </div>
       );
     } else if (eventOptions.pastTensePrefix) {
       message = (
@@ -76,13 +76,13 @@ export default function NotificationListItem(props) {
       );
     } else {
       message = (
-        <span>
-          <span>
+        <div>
+          <div>
             {entity}
             {` ${eventOptions.pastTenseAction} `}
-          </span>
+          </div>
           {timestampMessage}
-        </span>
+        </div>
       );
     }
   }

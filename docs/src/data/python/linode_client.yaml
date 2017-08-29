@@ -16,17 +16,17 @@ constructor:
     example: >
             client = LinodeClient('my-token')
 methods:
-    get_datacenters:
+    get_regions:
         desc: >
-            Retrieves a list of Datacenter objects.  This function is filterable - include filters
+            Retrieves a list of Region objects.  This function is filterable - include filters
             in the parameters list to retrieve only specific objects.
         parameters:
             '*filters':
                 desc: Any number of filters to this function
                 _keyword: false
         example: >
-            dc = client.get_datacenters(linode.Datacenter.label.contains("Newark"))[0]
-        returns: A list of Datacenter objects
+            region = client.get_regions(linode.Region.label.contains("Newark"))[0]
+        returns: A list of Region objects
     get_domains:
         desc: >
             Retrieves a list of Domain objects.  This function is filterable - include filters in the
@@ -51,7 +51,7 @@ methods:
             '**kwargs':
                 desc: >
                     Any number of additional keyword arguments to pass to the POST /domains endpoint.  For more information, see
-                    the <a href="/reference/#ep-domains-POST">endpoint docs</a> for complete breakdown.
+                    the endpoint docs for complete breakdown.
                 _keyword: false
         example: |
             z = client.create_domain('example.org')
@@ -74,15 +74,15 @@ groups:
                 returns: A list of Distribution objects
             get_types:
                 desc: >
-                    Retrieves a list of Service objects.  This function is filterable - include filters in
+                    Retrieves a list of Type objects.  This function is filterable - include filters in
                     the parameters list to retrieve only specific objects.
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
                         _keyword: false
                 example: >
-                    service = client.linode.get_services(linode.Services.label == "Linode 1024")[0]
-                returns: A list of Service objects
+                    type = client.linode.get_types(linode.Types.label == "Linode 1024")[0]
+                returns: A list of Type objects
             get_instances:
                 desc: >
                     Retrives a list of Linode objects.  This function is filterable - include filters in
@@ -120,27 +120,27 @@ groups:
             desc: >
                 Creates a new Linode object.  Requires the <code>OAuthScopes.Linodes.create</code> scope.
             parameters:
-                service:
-                    desc:  A Service object which represents the Linode plan to create.  Must be a Linode service.
+                type:
+                    desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
                     _keyword: false
-                datacenter:
-                    desc: A Datacenter object which is the datacenter in which this Linode will be created
+                region:
+                    desc: A Region object which is the region in which this Linode will be created
                     _keyword: false
             example: |
-                serv = client.linode.get_services(linode.Service.label == 'Linode 1024')[0]
-                dc = client.get_datacenters(linode.Datacenter.label.contains('Newark'))[0]
-                l = client.create_linode(serv, dc)
+                type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
+                region = client.get_regions(linode.Region.label.contains('Newark'))[0]
+                l = client.create_linode(type, region)
             returns: A Linode object
         create_instance*:
             desc: >
                 Creates a new Linode object and deploys a Distribution to it.  Requires <code>OAuthScopes.Linodes.create</code>
                 scope.
             parameters:
-                service:
-                    desc:  A Service object which represents the Linode plan to create.  Must be a Linode service.
+                type:
+                    desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
                     _keyword: false
-                datacenter:
-                    desc: A Datacenter object which is the datacenter in which this Linode will be created
+                region:
+                    desc: A Region object which is the region in which this Linode will be created
                     _keyword: false
                 source:
                     desc: >
@@ -150,23 +150,23 @@ groups:
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
-                        source parameter's value.  See the <a href="/reference/#ep-linodes-POST">endpoint docs</a> for more information.
+                        source parameter's value.  See the endpoint docs for more information.
                     _keyword: false
             example: |
-                serv = client.linode.get_services(linode.Service.label == 'Linode 1024')[0]
-                dc = client.get_datacenters(linode.Datacenter.label.contains('Newark'))[0]
+                type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
+                region = client.get_regions(linode.Region.label.contains('Newark'))[0]
                 distro = client.linode.get_distributions(linode.Distribution.vendor == 'Debian')[-1]
-                l = client.create_linode(serv, dc, source=distro)
+                l = client.create_linode(type, region, source=distro)
             returns: A tuple containing the new Linode object and generated root password for the Linode
         create_instance**:
             desc: >
                 Creates a new Linode object from a StackScript.  Requires the <code>OAuthScopes.Linodes.create</code> scope.
             parameters:
-                service:
-                    desc:  A Service object which represents the Linode plan to create.  Must be a Linode service.
+                type:
+                    desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
                     _keyword: false
-                datacenter:
-                    desc: A Datacenter object which is the datacenter in which this Linode will be created
+                region:
+                    desc: A Region object which is the region in which this Linode will be created
                     _keyword: false
                 stackscript_id:
                     desc: >
@@ -186,14 +186,14 @@ groups:
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
-                        source parameter's value.  See the <a href="/reference/#ep-linodes-POST">endpoint docs</a> more information.
+                        source parameter's value.  See the endpoint docs more information.
                     _keyword: false
             example: |
-                serv = client.linode.get_services(linode.Service.label == 'Linode 1024')[0]
-                dc = client.get_datacenters(linode.Datacenter.label.contains('Newark'))[0]
+                type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
+                region = client.get_regions(linode.Region.label.contains('Newark'))[0]
                 distro = client.linode.get_distributions(linode.Distribution.vendor == 'Debian')[-1]
                 stackscirpt = linode.StackScript(client, 'stackscript_123')
-                l = client.create_linode(serv, dc, source=distro, stackscript_id=stackscript.id)
+                l = client.create_linode(type, region, source=distro, stackscript_id=stackscript.id)
             returns: A Linode object
         create_stackscript:
                 desc: >
@@ -219,7 +219,7 @@ groups:
                     '**kwargs':
                         desc: >
                             Any number of additional keyword arguments to pass to the POST /stackscripts endpoint.  For more information,
-                            see the <a href="/reference/#ep-stackscripts-POST">endpoint docs</a> for complete breakdown.
+                            see the endpoint docs for complete breakdown.
                         _keyword: false
                 example: |
                     distros = client.linode.get_distributions(linode.or_(linode.Distribution.vendor == 'Ubuntu', linode.Distribution.vendor == 'Debian'))

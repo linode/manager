@@ -58,3 +58,21 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+@mixin checkbox() {
+    @extends .checkbox;
+
+    line-height: $form-field-height;
+
+    &-input {
+        height: $checkbox-height-width;
+        width: $checkbox-height-width;
+        position: relative;
+        top: 3px;
+    }
+
+    &-label {
+        line-height: $form-field-height;
+        padding: 0 10px;
+    }
+}

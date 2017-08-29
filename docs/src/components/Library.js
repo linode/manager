@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
-
-import { default as Example } from './Example';
+import { Code } from 'linode-components/formats';
 
 
 export default function Library(props) {
@@ -55,7 +54,7 @@ export default function Library(props) {
           <div className="Method-section">
             <p className="Method-description">{method.desc}</p>
           </div>
-          <Example example={method.example} />
+          <Code example={method.example} />
           <div className="Method-section Method-params">
             <h4><b>Parameters</b></h4>
             <Table
@@ -103,9 +102,9 @@ export default function Library(props) {
           <p>{formattedLibraryObject.desc}</p>
         </div>
         <div className="divider"></div>
-        <Example example={formattedLibraryObject.import} language={language} />
+        <Code example={formattedLibraryObject.import} language={language} />
         <h2>Constructor</h2>
-        <Example example={formattedLibraryObject.constructor.example} language={language} />
+        <Code example={formattedLibraryObject.constructor.example} language={language} />
         <div className="Endpoint-body">
           <div>
             <div id="parameters" className="Method">

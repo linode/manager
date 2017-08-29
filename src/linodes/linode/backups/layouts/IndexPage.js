@@ -19,7 +19,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     if (backups.enabled) {
-      await dispatch(linodeBackups([id]));
+      await dispatch(linodeBackups(id));
     }
   }
 
@@ -39,6 +39,7 @@ export class IndexPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => enableBackup(linode.id),
+      () => linodeBackups(linode.id),
     ]));
   }
 

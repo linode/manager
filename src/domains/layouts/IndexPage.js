@@ -9,7 +9,6 @@ import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { DeleteModalBody } from 'linode-components/modals';
 import {
   ButtonCell,
   CheckboxCell,
@@ -17,11 +16,13 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { domains } from '~/api';
 import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
+import { confirmThenDelete } from '~/utilities';
+
+import { AddMaster, AddSlave } from '../components';
 
 
 const OBJECT_TYPE = 'domains';
@@ -34,8 +35,6 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteZones = this.deleteZones.bind(this);
-
     this.state = { filter: '' };
   }
 
@@ -46,26 +45,19 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['domains']));
   }
 
-  deleteZones(zonesToDelete) {
-    const { dispatch } = this.props;
-    const zonesArr = Array.isArray(zonesToDelete) ? zonesToDelete : [zonesToDelete];
+  deleteDomains = confirmThenDelete(
+    this.props.dispatch,
+    'domain',
+    domains.delete,
+    OBJECT_TYPE,
+    'domain').bind(this)
 
-    const selectedDomains = zonesArr.map(l => l.domain);
+  formatStatus(s) {
+    if (s === 'has_errors') {
+      return 'Has Errors';
+    }
 
-    dispatch(showModal('Delete Domain(s)', (
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = zonesArr.map(function (zone) { return zone.id; });
-
-          await Promise.all(ids.map(id => dispatch(domains.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        items={selectedDomains}
-        typeOfItem="Domains"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
+    return _.capitalize(s);
   }
 
   renderZones(zones) {
@@ -73,9 +65,8 @@ export class IndexPage extends Component {
     const { filter } = this.state;
 
     const { groups, sorted: sortedZones } = transform(zones, {
-      filterOn: 'domain',
       filterBy: filter,
-      sortBy: d => d.domain.toLowerCase(),
+      filterOn: 'domain',
     });
 
     return (
@@ -86,7 +77,7 @@ export class IndexPage extends Component {
               data={sortedZones}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteZones },
+                { name: 'Delete', action: this.deleteDomains },
               ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
@@ -117,14 +108,15 @@ export class IndexPage extends Component {
                       tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'status', formatFn: this.formatStatus },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
                       text: 'Delete',
-                      onClick: (zone) => { this.deleteZones(zone); },
+                      onClick: (domain) => { this.deleteDomains([domain]); },
                     },
                   ]}
-                  noDataMessage="No Domains found."
+                  noDataMessage="No domains found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader
@@ -141,12 +133,21 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch, email } = this.props;
+
+    const addMaster = () => AddMaster.trigger(dispatch, email);
+    const addSlave = () => AddSlave.trigger(dispatch);
+
+    const addOptions = [
+      { name: 'Add a Slave Domain', action: addSlave },
+    ];
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Domains</h1>
-            <PrimaryButton to="/domains/create" className="float-sm-right">
+            <h1 className="float-left">Domains</h1>
+            <PrimaryButton onClick={addMaster} options={addOptions} className="float-right">
               Add a Domain
             </PrimaryButton>
           </div>
@@ -154,7 +155,7 @@ export class IndexPage extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.domains.domains).length ?
             this.renderZones(this.props.domains.domains) :
-            <CreateHelper label="Domains" href="/domains/create" linkText="Add a Domain" />}
+            <CreateHelper label="Domains" onClick={addMaster} linkText="Add a Domain" />}
         </div>
       </div>
     );
@@ -164,6 +165,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   domains: PropTypes.object,
+  email: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
 };
 
@@ -172,6 +174,7 @@ function select(state) {
   return {
     domains: state.api.domains,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
+    email: state.api.profile.email,
   };
 }
 

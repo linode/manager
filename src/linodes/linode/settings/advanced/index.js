@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, IndexRoute, IndexRedirect } from 'react-router';
 
-import { AddConfigPage, ConfigsDisksPage, EditConfigPage, IndexPage } from './layouts';
+import { AddConfigPage, AdvancedPage, EditConfigPage, IndexPage } from './layouts';
 
 
 export default (
   <Route path="advanced" component={IndexPage}>
-    <IndexRoute component={ConfigsDisksPage} />
+    <IndexRoute component={AdvancedPage} />
     <Route path="configs">
       <IndexRedirect to=".." />
       <Route path="create" component={AddConfigPage} />

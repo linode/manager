@@ -3,9 +3,9 @@ import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
+import { Code } from 'linode-components/formats';
 
 import { API_VERSION } from '~/constants';
-import { Example } from '~/components';
 
 
 export default function CoreConcepts(props) {
@@ -81,7 +81,7 @@ export default function CoreConcepts(props) {
           so without a timeout is not advised, and is not guaranteed to ever exit. For example,
           this code should <em>not</em> live in a production system:
         </p>
-        <Example
+        <Code
           example={`linode.boot()
 while not linode.state == 'running':
     pass`}

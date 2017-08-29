@@ -35,11 +35,11 @@ function formatData(colors, datasets, legends) {
 }
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { nodebalancerLabel }) {
-    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nodebalancerLabel));
+  static async preload({ dispatch, getState }, { nbLabel }) {
+    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
 
     try {
-      await dispatch(nodebalancerStats([id]));
+      await dispatch(nodebalancerStats(id));
     } catch (e) {
       // Stats aren't available.
     }

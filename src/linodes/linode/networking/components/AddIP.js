@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
-import { Input, ModalFormGroup, Radio } from 'linode-components/forms';
+import { Input, ModalFormGroup } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
@@ -26,27 +26,21 @@ export default class AddIP extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      errors: {},
-      type: 'public',
-    };
+    this.state = { errors: {} };
   }
 
   onSubmit = () => {
     const { dispatch, linode, close } = this.props;
-    const { type } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => addIP(linode.id, type),
+      () => addIP(linode.id, 'public'),
       close,
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
   render() {
     const { close } = this.props;
-    const { errors, type } = this.state;
+    const { errors } = this.state;
 
     return (
       <FormModalBody
@@ -65,28 +59,6 @@ export default class AddIP extends Component {
           </p>
           <ModalFormGroup label="Version">
             <Input disabled value="IPv4" />
-          </ModalFormGroup>
-          <ModalFormGroup label="Type" id="type" apiKey="type">
-            <div>
-              <Radio
-                id="public"
-                name="type"
-                value="public"
-                checked={type === 'public'}
-                onChange={this.onChange}
-                label="Public"
-              />
-            </div>
-            <div>
-              <Radio
-                id="private"
-                name="type"
-                value="private"
-                checked={type === 'private'}
-                onChange={this.onChange}
-                label="Private"
-              />
-            </div>
           </ModalFormGroup>
         </div>
       </FormModalBody>

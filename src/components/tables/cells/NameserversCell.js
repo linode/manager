@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Button } from 'linode-components/buttons';
+import { Dropdown } from 'linode-components/dropdowns';
 import { TableCell } from 'linode-components/tables/cells';
 
 
@@ -15,16 +15,15 @@ export default function NameserversCell(props) {
       <small className="text-muted">Read-only</small>
     );
   } else {
-    actions = (
-      <div>
-        <Button onClick={() => { onEditClick(record); }}>Edit</Button>
-        <Button onClick={() => { onDeleteClick(record); }}>Delete</Button>
-      </div>
-    );
+    const groups = [
+      { elements: [{ name: 'Edit', action: () => onEditClick(record) }] },
+      { elements: [{ name: 'Delete', action: () => onDeleteClick(record) }] },
+    ];
+    actions = <Dropdown groups={groups} analytics={{ title: 'DNS record actions' }} />;
   }
 
   return (
-    <TableCell column={column} record={record}>
+    <TableCell column={column} record={record} className="ActionsCell">
       {actions}
     </TableCell>
   );

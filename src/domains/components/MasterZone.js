@@ -243,7 +243,14 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'target', label: 'Name Server' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Name Server',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
                   {
                     cellComponent: LabelCell,
                     headerClassName: 'LabelColumn',
@@ -285,8 +292,15 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'target', label: 'Mail Server' },
-                  { dataKey: 'priority', label: 'Preference' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Mail Server',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
+                  { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
                   {
                     cellComponent: LabelCell,
                     headerClassName: 'LabelColumn',
@@ -296,16 +310,9 @@ export class MasterZone extends Component {
                     tooltipEnabled: true,
                   },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, target }) =>
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
+                    onDeleteClick: ({ id, target }) =>
                       this.renderDeleteRecord('MX Record', id, target),
                   },
                 ]}
@@ -343,18 +350,12 @@ export class MasterZone extends Component {
                     tooltipEnabled: true,
                   },
                   { headerClassName: 'IPAddressColumn', dataKey: 'target', label: 'IP Address' },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('A/AAAA Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('A/AAAA Record', id, target),
                   },
                 ]}
                 data={aRecords}
@@ -392,20 +393,20 @@ export class MasterZone extends Component {
                     titleKey: 'name',
                     tooltipEnabled: true,
                   },
-                  { dataKey: 'target', label: 'Aliases to' },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Aliases to',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
                   },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('CNAME Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('CNAME Record', id, target),
                   },
                 ]}
                 data={cnameRecords}
@@ -447,19 +448,12 @@ export class MasterZone extends Component {
                     label: 'Value',
                     tooltipEnabled: true,
                   },
-                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Edit',
-                    onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
-                  },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    text: 'Delete',
-                    onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('TXT Record', id, name),
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('TXT Record', id, target),
                   },
                 ]}
                 data={txtRecords}
@@ -486,8 +480,8 @@ export class MasterZone extends Component {
             <Table
               className="Table--secondary"
               columns={[
-                { dataKey: 'name', label: 'Service' },
-                { dataKey: 'priority', label: 'Priority' },
+                { dataKey: 'name', label: 'Service', headerClassName: 'ServiceColumn' },
+                { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
                 {
                   cellComponent: LabelCell,
                   headerClassName: 'LabelColumn',
@@ -496,8 +490,8 @@ export class MasterZone extends Component {
                   titleKey: 'domain',
                   tooltipEnabled: true,
                 },
-                { dataKey: 'weight', label: 'Weight' },
-                { dataKey: 'port', label: 'Port' },
+                { dataKey: 'weight', label: 'Weight', headerClassName: 'WeightColumn' },
+                { dataKey: 'port', label: 'Port', headerClassName: 'PortColumn' },
                 {
                   cellComponent: LabelCell,
                   headerClassName: 'LabelColumn',
@@ -506,18 +500,12 @@ export class MasterZone extends Component {
                   titleKey: 'target',
                   tooltipEnabled: true,
                 },
-                { dataKey: 'ttl_sec', label: 'TTL' },
+                { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                 {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id, name }) => this.renderDeleteRecord('SRV Record', id, name),
+                  cellComponent: NameserversCell,
+                  onEditClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
+                  onDeleteClick: ({ id, target }) =>
+                    this.renderDeleteRecord('SRV Record', id, target),
                 },
               ]}
               data={srvRecords}

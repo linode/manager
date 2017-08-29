@@ -206,9 +206,8 @@ schema:
     _filterable: true
     _limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
   type:
-    _description: The type of Linode.
-    _type: Type
-    _isArray: true
+    _description: The Linode's type as a slug.
+    _type: String
   status:
     _type: Enum
     _subtype: Status

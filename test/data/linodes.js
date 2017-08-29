@@ -96,6 +96,9 @@ function createTestLinode(id) {
     type: testType,
     status: 'running',
     region: apiTestRegion,
+    ram: 2048,
+    storage: 20480,
+    vcpus: 2,
     distribution: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
@@ -187,6 +190,27 @@ function createTestLinode(id) {
         in_progress: null,
       },
       weekly: [],
+    },
+    _volumes: {
+      totalPages: 1,
+      pagesFetched: [0],
+      totalResults: 1,
+      volumes: {
+        38: {
+          id: 38,
+          label: 'test',
+          linode_id: null,
+          status: 'active',
+          created: '2017-08-08T13:55:16',
+          region: {
+            id: 'us-east-1a',
+            label: 'Newark, NJ',
+            country: 'us',
+          },
+          updated: '2017-08-08T04:00:00',
+          size: 20,
+        },
+      },
     },
     _disks: {
       totalPages: 1,

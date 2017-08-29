@@ -1,10 +1,10 @@
 import React from 'react';
-
-import { Table } from 'linode-components/tables';
-
 import { Link } from 'react-router';
 
-import Example from '~/components/Example';
+import { ExternalLink } from 'linode-components/buttons';
+import { Table } from 'linode-components/tables';
+import { Code } from 'linode-components/formats';
+
 import { API_ROOT, API_VERSION } from '~/constants';
 
 
@@ -15,7 +15,7 @@ export default function Introduction() {
       <section>
         <p>
           The Linode APIv4 is an HTTP service that follows (to a large extent)&nbsp;
-          <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">REST</a>
+          <ExternalLink to="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</ExternalLink>
           &nbsp;style. Resources (like Linodes) have predictable URLs that use standard
           HTTP methods to manipulate and return standard HTTP status codes to tell you how
           it went.
@@ -28,7 +28,7 @@ export default function Introduction() {
         <p>
           All APIv4 endpoints are located at:
         </p>
-        <Example example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
+        <Code example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
         <p>
           Occasionally we will add features and improvements to our API -
           only certain changes will trigger a version bump, including:

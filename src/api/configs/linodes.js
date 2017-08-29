@@ -7,6 +7,20 @@ export const config = genConfig({
   plural: 'linodes',
   endpoint: id => `/linode/instances/${id}`,
   supports: [ONE, MANY, PUT, DELETE, POST],
+  properties: {
+    type: (linode) => function (_, getState) {
+      const types = getState().api.types.types || {};
+
+      return {
+        label: 'Unknown',
+        id: linode.type,
+        ...types[linode.type] || {},
+        storage: linode.storage,
+        ram: linode.memory,
+        vcpus: linode.vcpus,
+      };
+    },
+  },
   subresources: {
     _configs: {
       plural: 'configs',
@@ -18,10 +32,10 @@ export const config = genConfig({
       endpoint: (linode, disk) => `/linode/instances/${linode}/disks/${disk}`,
       supports: [ONE, MANY, PUT, DELETE, POST],
     },
-    _backups: {
-      plural: 'backups',
-      endpoint: (linode, backup) => `/linode/instances/${linode}/backups/${backup}`,
-      supports: [ONE, MANY],
+    _volumes: {
+      plural: 'volumes',
+      endpoint: (linode, volume) => `/linode/instances/${linode}/volumes/${volume}`,
+      supports: [ONE, MANY, PUT, DELETE, POST],
     },
   },
 });

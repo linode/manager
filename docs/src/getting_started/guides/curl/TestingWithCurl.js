@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { Code } from 'linode-components/formats';
 
 import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,
 } from '~/constants';
-import Example from '~/components/Example';
 
 
 export default function Introduction(props) {
@@ -25,9 +26,7 @@ export default function Introduction(props) {
       </header>
       <section>
         <p>
-          <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">
-            cURL
-          </a>
+          <ExternalLink to="http://curl.haxx.se/">cURL</ExternalLink>
           &nbsp;is a simple and popular command line tool that allows you to perform various kinds
           of HTTP requests. It may already be installed on your system - run
           <code>curl --version</code> in your shell to check. Once you've confirmed that
@@ -48,11 +47,11 @@ export default function Introduction(props) {
             list supported distributions
           </Link>:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "distributions": [
       {
@@ -86,29 +85,25 @@ export default function Introduction(props) {
         </p>
         <p>
           To generate a personal access token,&nbsp;
-          <a
-            href={`${MANAGER_ROOT}/profile/integrations/tokens`}
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          >
+          <ExternalLink to={`${MANAGER_ROOT}/profile/integrations/tokens`}>
             visit the new manager
-          </a>
+          </ExternalLink>
           . These tokens can be used to make authenticated API requests with your Linode
           account and can have full access to all OAuth scopes. You’ll only see the full
           OAuth token once, so be sure to write it down somewhere. If you’re in the shell,
           running something like this might work well:
         </p>
-        <Example example='token="that token"' name="bash" />
+        <Code example='token="that token"' name="bash" />
       </section>
       <section>
         <h2>Authentication Header</h2>
         <p>
           Now you can make requests with curl using your access token by adding
-          <code>-H "Authorization: token $token"</code>.
+          <code>-H "Authorization: Bearer $token"</code>.
           The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
           requests on the reference page include this header in the curl examples. For example:
         </p>
-        <Example
+        <Code
           example={`curl -H "Authorization: token $token" \\
   ${API_ROOT}/${API_VERSION}/linode/instances`}
           name="bash"
@@ -116,7 +111,7 @@ export default function Introduction(props) {
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "linodes": [
     {

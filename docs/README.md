@@ -13,6 +13,17 @@ Currently this software is *early-access* and is available at [developers.linode
     cd manager/docs
     node --version # should be 7.2.x
     npm install
+
+### Continued Setup
+
+The docs project depends on our components library. Due to limitations somewhere,
+you must remove and reinstall the components package in each dependency project
+to get updates (to all but css changes) in the components library. If you are
+coming back to the docs project after days or weeks, it is likely you'll need
+to reinstall the components package for the docs to work.
+
+Run:
+    npm run rebuild-components
     
 ## Development
 

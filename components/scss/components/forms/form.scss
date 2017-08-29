@@ -1,19 +1,20 @@
 form {
-  h3 {
-    padding: 10px 0;
-  }
+    h3 {
+        padding: 10px 0;
+    }
 }
 
 .col-form-label,
 .form-control,
 .form-control-feedback {
-  @extend .font-normal;
-  padding: $form-field-padding;
+    @extend .font-normal;
+    padding: $form-field-padding;
 }
 
 .col-form-label {
-  color: $light-black;
-  text-align: right;
+    @extend .text-sm-right;
+
+    color: $light-black;
 }
 
 .form-control {
@@ -32,9 +33,12 @@ form {
     padding: 3px 0px;
 }
 
-input[type="checkbox"]:hover,
-input[type="radio"]:hover {
-    cursor: pointer;
+.Checkbox label,
+.Radio {
+    &:hover {
+        cursor: pointer;
+        cursor: hand;
+    }
 }
 
 .Select {

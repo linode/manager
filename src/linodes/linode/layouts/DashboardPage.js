@@ -11,14 +11,14 @@ import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 import LineGraph from '~/components/graphs/LineGraph';
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
-import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { convertUnits } from '~/utilities';
 
 import { selectLinode } from '../utilities';
+import { planStats } from '../../components/PlanStyle';
 
 
 function formatData(colors, datasets, legends) {
@@ -35,7 +35,7 @@ export class DashboardPage extends Component {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     try {
-      await dispatch(linodeStats([id]));
+      await dispatch(linodeStats(id));
     } catch (e) {
       // Stats aren't available.
     }
@@ -175,8 +175,9 @@ export class DashboardPage extends Component {
 
   renderDetails() {
     const { username, linode } = this.props;
-    const plan = (<PlanStyle plan={linode.type} />);
-    const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
+    const lishLink = `${username}@lish-${ZONES[linode.region.id]}.linode.com`;
+
+    const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
 
     return (
       <div className="row">
@@ -188,25 +189,41 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8">
                 <ul className="list-unstyled" id="ips">
-                  <li>{linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0]}</li>
+                  <li>{publicIPv4}</li>
                   {linode.ipv6 === 'None/64' ? null : <li className="text-muted">{linode.ipv6}</li>}
-                  <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/networking`}>Networking</Link>
+                  </small>
+                </div>
               </div>
             </div>
-            {!plan ? null : (
-              <div className="row">
-                <div className="col-sm-4 row-label">Plan</div>
-                <div className="col-sm-8" id="plan">{plan}</div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Deployed From</div>
+              <div className="col-sm-8" id="distro">
+                <DistroStyle linode={linode} />
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/rebuild`}>Rebuild</Link>
+                  </small>
+                </div>
               </div>
-            )}
+            </div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Type</div>
+              <div className="col-sm-8" id="type">
+                {planStats(linode.type)}
+                <div>
+                  <small className="text-muted">
+                    <Link to={`/linodes/${linode.label}/resize`}>Resize</Link>
+                  </small>
+                </div>
+              </div>
+            </div>
             <div className="row">
               <div className="col-sm-4 row-label">Region</div>
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>
-            </div>
-            <div className="row">
-              <div className="col-sm-4 row-label">Distribution</div>
-              <div className="col-sm-8" id="distro"><DistroStyle linode={linode} /></div>
             </div>
             <div className="row linode-backups">
               <div className="col-sm-4 row-label">Backup</div>
@@ -226,11 +243,11 @@ export class DashboardPage extends Component {
                 <div className="input-group">
                   <Input
                     id="ssh-input"
-                    value={`ssh root@${linode.ipv4[0]}`}
+                    value={`ssh root@${publicIPv4}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
+                    <Button href={`ssh://root@${publicIPv4}`}>SSH</Button>
                   </span>
                 </div>
               </div>

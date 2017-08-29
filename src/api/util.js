@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import * as api from './';
 import { fullyLoadedObject } from './apiActionReducerGenerator';
-import { reduceErrors } from './errors';
+
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
@@ -13,6 +13,28 @@ export function Error404() {
 }
 
 Error404.prototype = new Error();
+
+export async function reduceErrors(response) {
+  const json = await response.json();
+  const errors = { _: [] };
+  json.errors.forEach(error => {
+    let key = '_';
+    if (error.field) {
+      key = error.field;
+    }
+
+    if (error.field_crumbs) {
+      key += `.${error.field_crumbs}`;
+    }
+
+    const list = errors[key] || [];
+    list.push(error);
+    if (!errors[key]) {
+      errors[key] = list;
+    }
+  });
+  return errors;
+}
 
 export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
   return async (dispatch) => {
@@ -46,7 +68,7 @@ export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
       }
     }
 
-    this.setState({ loading: false, errors: { _: [] } });
+    this.setState({ loading: false, errors: { _: {} } });
 
     return results;
   };
@@ -90,7 +112,8 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       throw new Error404();
     }
 
-    return response[pluralName][0];
+    const objectsWithAccessors = getState().api[pluralName][pluralName];
+    return objectFromMapByLabel(objectsWithAccessors, label, labelName);
   };
 }
 
@@ -133,15 +156,41 @@ export function createHeaderFilter(filter) {
   };
 }
 
+export function valueify(object, keys = []) {
+  if (object === null || object === undefined) {
+    return [];
+  }
+
+  if (_.isArray(object)) {
+    return _.flatten(object.map((o, i) => valueify(o, [...keys, i])));
+  }
+
+  if (_.isObject(object)) {
+    return _.flatten(Object.keys(object).map(key =>
+      valueify(object[key], [...keys, key])));
+  }
+
+  return `${keys.map(k => `:${k}`).join('')}=${object}`;
+}
+
 export function transform(objects, options = {}) {
   const {
-    filterBy,
+    filterBy = '',
     filterOn = 'label',
-    sortBy = o => o.label.toLowerCase(),
+    sortBy = o => o[filterOn].toLowerCase(),
     groupOn = 'group',
+    smartFilter = true,
   } = options;
 
-  const filterOnFn = _.isFunction(filterOn) ? filterOn : o => o[filterOn];
+  let filterOnFn = (o) => valueify(o).join('*');
+  if (!smartFilter) {
+    if (_.isFunction(filterOn)) {
+      filterOnFn = filterOn;
+    } else {
+      filterOnFn = o => o[filterOn];
+    }
+  }
+
   const filtered = filterBy.length ? _.pickBy(objects, o =>
     filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
   const sorted = _.sortBy(Object.values(filtered), sortBy);

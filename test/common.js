@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -82,17 +83,39 @@ export function expectObjectDeepEquals(initialA, initialB, initialPath) {
  * @param {Object} response - The data that is returned by the fetch call
  * occured to dispatch
  */
-export async function expectRequest(fn, path, expectedRequestData, response) {
+export async function expectRequest(fn, path, expectedRequestData, response = {},
+                                    fetchStub = null) {
   const sandbox = sinon.sandbox.create();
   try {
     expect(fn).to.be.a('function');
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => response || {},
-    });
-    const dispatch = sandbox.spy();
+
+    if (!fetchStub) {
+      // eslint-disable-next-line no-param-reassign
+      fetchStub = sandbox.stub(fetch, 'fetch').returns({
+        json: () => response,
+      });
+    }
+
+    const dispatch = sandbox.stub();
+    dispatch.returns(response);
     await fn(dispatch, () => state);
+
+    // This covers the set of API calls that use the thunkFetch helper to make requests.
+    if (_.isFunction(dispatch.firstCall && dispatch.firstCall.args[0])) {
+      const _dispatch = sandbox.stub();
+      _dispatch.returns(response);
+      await dispatch.firstCall.args[0](_dispatch, () => state);
+      if (_dispatch.callCount === 1 && _.isFunction(_dispatch.firstCall.args[0])) {
+        return expectRequest(
+          _dispatch.firstCall.args[0], path, expectedRequestData, response, fetchStub);
+      }
+
+      return;
+    }
+
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.firstCall.args[1]).to.equal(path);
+
     const requestData = fetchStub.firstCall.args[2];
 
     if (expectedRequestData) {

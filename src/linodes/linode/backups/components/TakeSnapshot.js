@@ -1,45 +1,72 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import { ModalFormGroup, Input } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
+import { FormModalBody } from 'linode-components/modals';
 
+import { showModal, hideModal } from '~/actions/modal';
 import { takeBackup } from '~/api/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { FormSummary } from 'linode-components/forms';
 
 
 export default class TakeSnapshot extends Component {
+  static title = 'Take New Snapshot'
+
+  static trigger(dispatch, linode) {
+    return dispatch(showModal(TakeSnapshot.title, (
+      <TakeSnapshot
+        dispatch={dispatch}
+        linode={linode}
+      />
+    )));
+  }
+
   constructor() {
     super();
 
-    this.state = { errors: {}, loading: false };
+    this.state = {
+      errors: {},
+      label: '',
+    };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch, linode } = this.props;
+    const { label } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => takeBackup(linode.id),
+      () => takeBackup(linode.id, label),
+      ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
     ]));
   }
 
   render() {
-    const { errors, loading } = this.state;
+    const { dispatch } = this.props;
+    const { errors, label } = this.state;
 
     return (
-      <Form
+      <FormModalBody
+        onCancel={() => dispatch(hideModal())}
         onSubmit={this.onSubmit}
-        analytics={{ title: 'Take Snapshot', action: 'add' }}
+        buttonText="Take Snapshot"
+        buttonDisabledText="Taking Snapshot"
+        analytics={{ title: TakeSnapshot.title }}
+        errors={errors}
       >
-        <FormGroup className="row">
-          <div className="offset-sm-3 col-sm-9">
-            <SubmitButton
-              disabled={loading}
-              disabledChildren={"Taking snapshot"}
-            >Take snapshot</SubmitButton>
-            <FormSummary errors={errors} success="Snapshot started." />
-          </div>
-        </FormGroup>
-      </Form>
+        <div>
+          <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
+            <Input
+              id="label"
+              name="label"
+              value={label}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+        </div>
+      </FormModalBody>
     );
   }
 }

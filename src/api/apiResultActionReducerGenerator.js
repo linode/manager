@@ -31,14 +31,28 @@ function fullyQualified(resource) {
 }
 
 function parseIntIfActualInt(string) {
+  if (_.isArray(string)) {
+    // eslint-disable-next-line no-console
+    console.error('You sent a list of lists rather than a list of ids.');
+  }
   return isNaN(string) ? string : parseInt(string);
 }
 
 const actionGenerators = {
-  [ONE]: c => (resource, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(parseIntIfActualInt) }),
-  [MANY]: c => (page, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(parseIntIfActualInt) }),
+  [ONE]: c => (resource, ...ids) => (dispatch) =>
+    dispatch({
+      resource,
+      dispatch,
+      type: `GEN@${fullyQualified(c)}/ONE`,
+      ids: ids.map(parseIntIfActualInt),
+    }),
+  [MANY]: c => (page, ...ids) => (dispatch) =>
+    dispatch({
+      page,
+      dispatch,
+      type: `GEN@${fullyQualified(c)}/MANY`,
+      ids: ids.map(parseIntIfActualInt),
+    }),
   [DELETE]: c => (...ids) =>
     ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
 };
@@ -107,21 +121,33 @@ export class ReducerGenerator {
       return action.resource;
     }
 
-    const id = action.ids.length ? action.ids[action.ids.length - 1] :
+    const nonNanActionIds = (action.ids || []).filter(i => !_.isNaN(i));
+    const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
                action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
                         generateDefaultStateOne(config, action.resource);
 
+    const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
+
+    if (config.properties && action.dispatch) {
+      Object.keys(config.properties).forEach(function (property) {
+        const accessor = config.properties[property];
+
+        const stateWithoutPropertyDefined = newStateOne;
+        if (typeof stateWithoutPropertyDefined[property] !== 'undefined') {
+          Object.defineProperty(combinedStateOne, property, {
+            get: () => action.dispatch(accessor(newStateOne)),
+          });
+        }
+      });
+    }
+
     const newStateMany = {
       ...oldStateMany,
       [config.plural]: {
         ...oldStateMany[config.plural],
-        [id]: {
-          ...oldStateOne,
-          ...newStateOne,
-          __updatedAt: new Date(),
-        },
+        [id]: combinedStateOne,
       },
     };
 
@@ -135,6 +161,7 @@ export class ReducerGenerator {
       ReducerGenerator.one(config, stateAccumulator, {
         ids: [oneObject[config.primaryKey]],
         resource: oneObject,
+        dispatch: action.dispatch,
       }), oldState);
 
     let ids = Object.values(newState[config.plural]).map((obj) => obj[config.primaryKey]);

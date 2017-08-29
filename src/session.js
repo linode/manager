@@ -3,8 +3,6 @@ import { APP_ROOT, LOGIN_ROOT } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
-
-
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRES = 'authentication/expires';
@@ -13,13 +11,26 @@ export function redirect(location) {
   window.location = location;
 }
 
+// Source: https://gist.github.com/jed/982883
+function uuid4(a) {
+  return a ? (
+    a ^ Math.random() * 16 >> a / 4
+  ).toString(16) : (
+    [1e7] + -1e3 + -4e3 + -8e3 + -1e11
+  ).replace(/[018]/g, uuid4);
+}
+
 export function loginAuthorizePath(returnTo) {
+  const nonce = uuid4();
+  const responseType = 'code'; // TODO: response_type should be 'token' for implicit grant flow
+  setStorage('authentication/nonce', nonce);
   /* eslint-disable prefer-template */
   return `${LOGIN_ROOT}/oauth/authorize?` +
          `client_id=${clientId}` +
-         '&scopes=*' +
-         '&response_type=code' + // TODO: response_type should be 'token' for implicit grant flow
-         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
+         '&scope=*' +
+         `&response_type=${responseType}` +
+         (responseType === 'token' ? `&state=${nonce}` : '') +
+         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?${returnTo}`;
   /* eslint-enable prefer-template */
 }
 

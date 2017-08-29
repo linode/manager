@@ -1,8 +1,7 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Regions
 description: >
-  Region endpoints provide a means of viewing <a href="#object-region">
-  region objects</a>.
+  Region endpoints provide a means of viewing region objects.
 endpoints:
   /regions:
     description: >
@@ -12,7 +11,7 @@ endpoints:
         response: region
         paginationKey: regions
         description: >
-          Returns list of <a href="#object-region">regions</a>.
+          Returns list of regions.
         examples:
           curl: |
             curl https://$api_root/$version/regions
@@ -26,8 +25,7 @@ endpoints:
       GET:
         response: region
         description: >
-          Returns information about this <a href="#object-region">
-          region</a>.
+          Returns information about this region.
         examples:
           curl: |
             curl https://$api_root/$version/region/$region_id

@@ -35,7 +35,7 @@ describe('layouts/OAuth', () => {
 
   const exchangeResponse = {
     access_token: 'access_token',
-    scopes: '*',
+    scope: '*',
   };
 
   it('exchanges the code for an OAuth token', async () => {
