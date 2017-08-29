@@ -52,6 +52,14 @@ export class IndexPage extends Component {
     OBJECT_TYPE,
     'domain').bind(this)
 
+  formatStatus(s) {
+    if (s === 'has_errors') {
+      return 'Has Errors';
+    }
+
+    return _.capitalize(s);
+  }
+
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
@@ -100,7 +108,7 @@ export class IndexPage extends Component {
                       tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
-                    { dataKey: 'status', formatFn: _.capitalize },
+                    { dataKey: 'status', formatFn: this.formatStatus },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
