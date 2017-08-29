@@ -134,9 +134,12 @@ export class ReducerGenerator {
       Object.keys(config.properties).forEach(function (property) {
         const accessor = config.properties[property];
 
-        Object.defineProperty(combinedStateOne, property, {
-          get: () => action.dispatch(accessor(newStateOne)),
-        });
+        const stateWithoutPropertyDefined = newStateOne;
+        if (typeof stateWithoutPropertyDefined[property] !== 'undefined') {
+          Object.defineProperty(combinedStateOne, property, {
+            get: () => action.dispatch(accessor(newStateOne)),
+          });
+        }
       });
     }
 
