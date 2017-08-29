@@ -58,5 +58,6 @@ schema:
     filterable: true
 enums:
   Class:
+    nanode: Nanode class
     standard: Standard class
     highmem: High memory class

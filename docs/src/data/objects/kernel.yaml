@@ -31,15 +31,10 @@ schema:
     description: The friendly name of this kernel.
     filterable: true
   version:
-    type: String
-    value: 3.5.2
-    description: Linux Kernel version.
-    filterable: true
-  x64:
-    type: Boolean
-    value: true
-    description: True if this is a 64-bit kernel, false for 32-bit.
-    filterable: true
+    _type: String
+    _value: 3.5.2
+    _description: Linux Kernel version.
+    _filterable: true
   current:
     type: Boolean
     value: true
@@ -51,4 +46,13 @@ schema:
   latest:
     type: Boolean
     value: true
-
+  bitness:
+    _type:enum
+    _subtype: bitness
+    _value: 64
+    _description: the bitness of this distribution
+    _filterable: true
+enums:
+  bitness:
+      64: a 64 bit distribution
+      32: a 32 bit distribution

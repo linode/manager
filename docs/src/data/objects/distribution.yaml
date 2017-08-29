@@ -7,30 +7,38 @@ schema:
   id:
     type: String
     value: linode/Arch2014.10
-  created:
-    type: String
-    value: 2014-12-24T18:00:09
+    _type: String
+    _value: linode/Arch2014.10
+  updated:
+    _type: String
+    _value: 2016-12-24T18:00:09
   label:
-    type: String
-    value: Arch Linux 2014.10
-    description: The user-friendly name of this distribution.
-    filterable: true
-  minimum_storage_size:
-    type: Integer
-    value: 800
-    description: The minimum size required for the distrbution image.
-    filterable: true
+    _type: String
+    _value: Arch Linux 2014.10
+    _description: The user-friendly name of this distribution.
+    _filterable: true
+  disk_minimum:
+    _type: Integer
+    _value: 800
+    _description: The minimum size required for the distribution image.
+    _filterable: true
   deprecated:
     type: Boolean
     value: true
     description: True if this distribution version is deprecated.
     filterable: true
   vendor:
-    type: String
-    value: Arch
-    description: The upstream distribution vendor. Consistent between releases of a distro.
-    filterable: true
-  x64:
-    type: Boolean
-    value: true
-    description: True if this is a 64-bit distribution.
+    _type: String
+    _value: Arch
+    _description: The upstream distribution vendor. Consistent between releases of a distribution.
+    _filterable: true
+  bitness:
+    _type:enum
+    _subtype: bitness
+    _value: 64
+    _description: the bitness of this distribution
+    _filterable: true
+enums:
+  bitness:
+      64: a 64 bit distribution
+      32: a 32 bit distribution

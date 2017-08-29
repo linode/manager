@@ -133,6 +133,11 @@ schema:
     subtype: Hypervisor
     description: The hypervisor this Linode is running on.
     value: kvm
+  disk:
+    _type: Integer
+    _value: 24576
+    _description: Available disk space, in MB.
+    _filterable: false
 enums:
   Status:
     offline: The Linode is powered off.
