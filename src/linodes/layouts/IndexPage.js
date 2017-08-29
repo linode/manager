@@ -32,8 +32,6 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.linodes.all());
-
-    ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
   constructor(props) {
@@ -47,6 +45,8 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     dispatch(setTitle('Linodes'));
     dispatch(setAnalytics(['linodes']));
+
+    ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
   genericAction(actionToDispatch, linodes, confirmType) {

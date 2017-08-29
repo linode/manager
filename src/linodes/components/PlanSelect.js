@@ -33,6 +33,6 @@ export default function PlanSelect(props) {
 }
 
 PlanSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   plans: PropTypes.object.isRequired,
 };

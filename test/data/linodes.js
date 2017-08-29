@@ -96,6 +96,9 @@ function createTestLinode(id) {
     type: testType,
     status: 'running',
     region: apiTestRegion,
+    ram: 2048,
+    storage: 20480,
+    vcpus: 2,
     distribution: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
