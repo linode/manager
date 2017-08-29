@@ -112,7 +112,8 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       throw new Error404();
     }
 
-    return response[pluralName][0];
+    const objectsWithAccessors = getState().api[pluralName][pluralName];
+    return objectFromMapByLabel(objectsWithAccessors, label, labelName);
   };
 }
 

@@ -105,7 +105,7 @@ export async function expectRequest(fn, path, expectedRequestData, response = {}
       const _dispatch = sandbox.stub();
       _dispatch.returns(response);
       await dispatch.firstCall.args[0](_dispatch, () => state);
-      if (_dispatch.callCount === 1) {
+      if (_dispatch.callCount === 1 && _.isFunction(_dispatch.firstCall.args[0])) {
         return expectRequest(
           _dispatch.firstCall.args[0], path, expectedRequestData, response, fetchStub);
       }

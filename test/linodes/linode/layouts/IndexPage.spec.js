@@ -21,18 +21,25 @@ describe('linodes/linode/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  it('preloads the configs', async () => {
+  it('preloads type and configs', async () => {
     const _dispatch = sandbox.stub();
-    _dispatch.returns({ id: 1241 });
+    _dispatch.returns({ id: 1241, type: 'g5-standard-1' });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
                             { linodeLabel: 'test-linode-7' });
 
-    let fn = _dispatch.secondCall.args[0];
+    expect(_dispatch.callCount).to.equal(3);
+
+    const fn1 = _dispatch.secondCall.args[0];
+    let fn2 = _dispatch.thirdCall.args[0];
+    _dispatch.reset();
+    await expectRequest(fn1, '/linode/types/g5-standard-1', { method: 'GET' });
+
     _dispatch.reset();
     _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
-    await fn(_dispatch, () => state);
-    fn = _dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1241/configs/?page=1', undefined, {
+    await fn2(_dispatch, () => state);
+
+    fn2 = _dispatch.firstCall.args[0];
+    await expectRequest(fn2, '/linode/instances/1241/configs/?page=1', { method: 'GET' }, {
       configs: [],
     });
   });

@@ -2,12 +2,11 @@ import React, { PropTypes } from 'react';
 
 
 export function planStyle(plan, withPrice = false) {
-  if (!plan || !plan.label) {
-    return null;
+  if (!plan) {
+    return 'Unknown';
   }
 
-  const [name, number] = plan.label.split(' ');
-  const output = `${name} ${parseInt(number) / 1024}G`;
+  const output = `Linode ${parseInt(plan.ram) / 1024}G`;
   return withPrice ? `${output} ($${plan.monthly_price.toFixed(2)}/mo)` : output;
 }
 
@@ -15,6 +14,10 @@ export function planStats(plan) {
   const readable = planStyle(plan);
   if (!readable) {
     return null;
+  }
+
+  if (readable === 'Unknown') {
+    return readable;
   }
 
   const ram = plan.ram / 1024;
