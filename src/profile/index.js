@@ -8,6 +8,8 @@ import NotificationsPage from './layouts/NotificationsPage';
 import ReferralsPage from './layouts/ReferralsPage';
 import APITokensPage from './layouts/APITokensPage';
 import MyAPIClientsPage from './layouts/MyAPIClientsPage';
+import LishPage from './layouts/LishPage';
+
 
 export default (
   <Route path="/profile" component={IndexPage}>
@@ -17,5 +19,6 @@ export default (
     <Route path="referrals" component={ReferralsPage} />
     <Route path="clients" component={MyAPIClientsPage} />
     <Route path="tokens" component={APITokensPage} />
+    <Route path="lish" component={LishPage} />
   </Route>
 );

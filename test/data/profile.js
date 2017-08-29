@@ -3,7 +3,7 @@ export const profile = {
   two_factor_auth: true,
   timezone: 'US/Eastern',
   email: 'user@example.com',
-  authorized_keys: null,
+  authorized_keys: ['foobar'],
   referrals: {
     completed: 0,
     code: '',

@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { Code } from 'linode-components/formats';
 
-import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
 
 
@@ -43,13 +43,13 @@ export default function Introduction(props) {
           /regions API endpoint. To make an API call against this endpoint over curl, run the
           following command:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
         <p>
           Note that since the region list is public information, you don’t need to send your
           authorization token (although it will still work if you do). The above command will
           return a JSON object like the following:
         </p>
-        <Example
+        <Code
           example={`{
   "regions": [
       {
@@ -81,11 +81,11 @@ export default function Introduction(props) {
           and network transfer). Run the following curl command to retrieve a list of available
           Linode plans:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
         <p>
           The above command will return a JSON object like the following:
         </p>
-        <Example
+        <Code
           example={`{
   "types": [
       {
@@ -128,11 +128,11 @@ export default function Introduction(props) {
           Just like selecting a type and a region, issue a call to the API, this time
           for a list of available distributions:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will provide you with a list of distributions like the following:
         </p>
-        <Example
+        <Code
           example={`{
   "distributions": [
       {
@@ -184,10 +184,10 @@ export default function Introduction(props) {
           and with different characteristics. Customize the following curl command and run it
           when you’re ready to deploy:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances -d '{"type": "g5-standard-1", "region": "us-east-1a", "distribution": "linode/debian8", "root_pass": "$root_pass", "label": "prod-1"}' \\
-  -H "Authorization: token $TOKEN" -H "Content-type: application/json"
+  -H "Authorization: Bearer $TOKEN" -H "Content-type: application/json"
 `}
           name="bash"
         />
@@ -195,7 +195,7 @@ export default function Introduction(props) {
           If all was successful, you should get a response object detailing the newly
           created Linode like the following:
         </p>
-        <Example
+        <Code
           example={`{
   "id": 123456,
   "total_transfer": 2000,
@@ -287,9 +287,9 @@ export default function Introduction(props) {
           following curl command. Also remember to replace <strong>$TOKEN</strong> with your
           authorization token as in the previous API call.
         </p>
-        <Example
+        <Code
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id/boot \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />
@@ -298,13 +298,13 @@ export default function Introduction(props) {
           If the status code is 200, it worked. You can now watch for the Linode’s state field
           to change from "booting" to "running":
         </p>
-        <Example
+        <Code
           example={`curl ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />
-        <Example
+        <Code
           example={`{
   "linode": {
       "id": 123456,
@@ -323,7 +323,7 @@ export default function Introduction(props) {
           Run the SSH command from the Linode response object and enter the root password
           you set in the create Linode step:
         </p>
-        <Example example="ssh root@$public_ip" name="bash" />
+        <Code example="ssh root@$public_ip" name="bash" />
         <p>
           Congratulations! You have now successfully launched a Linode through the API.
         </p>

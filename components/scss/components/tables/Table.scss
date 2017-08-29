@@ -5,9 +5,6 @@
     width: 100%;
 
     &--noHeader {
-        // Make up for th height that doesn't go away
-        margin-top: -10px;
-
         th, td {
             padding: 0;
         }

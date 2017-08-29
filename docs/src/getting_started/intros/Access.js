@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import { Table } from 'linode-components/tables';
-import { Link } from 'react-router';
-import Example from '~/components/Example';
+import { Code } from 'linode-components/formats';
+
 import { LOGIN_ROOT, API_VERSION } from '~/constants';
 
 
@@ -35,7 +36,7 @@ export default function Authentication() {
           a user's authorization. When you want a user to log into your service, you can
           direct them to a URL similar to this:
         </p>
-        <Example
+        <Code
           example={`${LOGIN_ROOT}/oauth/authorize?client_id=client_id`}
           name="bash"
           noclipboard
@@ -107,7 +108,7 @@ export default function Authentication() {
           will need to exchange that access code for an <em>Authorization token</em>. You do this by
           making the following HTTP POST request:
         </p>
-        <Example example={`${LOGIN_ROOT}/oauth/token`} name="bash" noclipboard />
+        <Code example={`${LOGIN_ROOT}/oauth/token`} name="bash" noclipboard />
         <p>
           Make this request as <code>application/x-www-form-urlencoded</code> or
           as <code>multipart/form-data</code> and include the following parameters
@@ -128,7 +129,7 @@ export default function Authentication() {
         <p>
           You'll get a response like this:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
           example={`{
   "scope": "linodes:create",
@@ -148,9 +149,9 @@ export default function Authentication() {
           can proceed to make authenticated HTTP requests with the API by adding
           this header to each request:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
-          example="Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
+          example="Authorization: Bearer 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
           name="bash"
           noclipboard
         />

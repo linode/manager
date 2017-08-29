@@ -103,10 +103,7 @@ schema:
       _type: Boolean
       _value: true
       _description: >
-        Automatically configure static networking
-        <a href="https://www.linode.com/docs/platform/network-helper">
-          (more info)
-        </a>.
+        Automatically configure static networking.
   initrd:
     _editable: true
     _type: Integer

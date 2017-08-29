@@ -42,10 +42,6 @@ describe('api/util', async () => {
         ...defaultMany.linodes,
         { ...testLinode, __updatedAt: null },
       ],
-    }, {
-      headers: {
-        'X-Filter': { label: 'foo-foo-foo' },
-      },
     });
   });
 

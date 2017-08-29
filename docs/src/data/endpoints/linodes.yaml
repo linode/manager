@@ -2,8 +2,7 @@
 name: Linodes
 sort: 0
 description: >
-  Linode endpoints provide a means of managing the <a href="#object-linode">
-  Linode objects</a> on your account.
+  Linode endpoints provide a means of managing the Linode objects on your account.
 endpoints:
   /linode/instances:
     authenticated: true
@@ -15,10 +14,10 @@ endpoints:
         paginationKey: linodes
         oauth: linodes:view
         description: >
-          Returns a list of <a href="#object-linode">Linodes</a>.
+          Returns a list of Linodes.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances
           python: |
             my_linodes = client.linode.get_instances()
@@ -30,12 +29,12 @@ endpoints:
         params:
           region:
             description: >
-              A <a href="#object-region">region</a> ID to provision
+              A region ID to provision
               this Linode in.
             type: Region
           type:
             description: >
-              A <a href="#object-service">Linode type</a> ID to use for this
+              A Linode type ID to use for this
               Linode.
             type: Service
           label:
@@ -51,8 +50,7 @@ endpoints:
           distribution:
             optional: true
             description: >
-              The <a href="#object-distribution">Distribution</a> to deploy this
-              Linode with.  May not be included if 'backup' is sent.
+              The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.
             type: Distribution
           root_pass:
             optional: unless source == "distro"
@@ -81,7 +79,7 @@ endpoints:
           backup_id:
             optional: true
             description: >
-              The <a href="#object-backup">Backup</a> to restore to the newly created
+              The Backup to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
             type: Integer
           with_backup:
@@ -92,7 +90,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "type": "g5-standard-1"
@@ -113,10 +111,10 @@ endpoints:
         response: linode
         oauth: linodes:view
         description: >
-          Returns information about this <a href="#object-linode">Linode</a>.
+          Returns information about this Linode.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode = linode.Linode(client, 123)
@@ -127,7 +125,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "label": "newlabel",
                   "schedule": {
@@ -146,7 +144,7 @@ endpoints:
           Deletes this Linode. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
@@ -162,10 +160,10 @@ endpoints:
         paginationKey: disks
         oauth: linodes:view
         description: >
-          Returns a list of <a href="#object-disk">disks</a>.
+          Returns a list of disks.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             disks = my_linode.disks
@@ -204,7 +202,7 @@ endpoints:
             limit: 1-50 characters
           filesystem:
             description: >
-              A <a href="#object-filesystem-enum">filesystem</a> for this disk.
+              A filesystem for this disk.
             type: String
           read_only:
             optional: true
@@ -227,7 +225,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example Disk",
                     "filesystem": "ext4",
@@ -247,10 +245,10 @@ endpoints:
         response: disk
         oauth: linodes:view
         description: >
-          Returns information about this <a href="#object-disk">disk</a>.
+          Returns information about this disk.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id
@@ -261,7 +259,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "label": "New Disk Label"
                 }' \
@@ -276,7 +274,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
@@ -288,7 +286,7 @@ endpoints:
           Deletes this disk. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
@@ -309,7 +307,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "size": 1024
                 }' \
@@ -332,7 +330,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "password": "hunter2"
                 }' \
@@ -350,11 +348,10 @@ endpoints:
         paginationKey: configs
         oauth: linodes:view
         description: >
-          Returns a list of <a href="#object-linode_config">configs</a> for a
-          given Linode.
+          Returns a list of configs for a given Linode.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             configs = my_linode.configs
@@ -365,7 +362,7 @@ endpoints:
         params:
           kernel:
             description: >
-              A <a href="#object-kernel">kernel</a> ID to boot this Linode with.
+              A kernel ID to boot this Linode with.
             type: Kernel
           label:
             description: >
@@ -374,7 +371,7 @@ endpoints:
             type: String
           disks:
             description: >
-              <a href="#object-disk">Disks</a> attached to this Linode config.
+              Disks attached to this Linode config.
             type: Disks
           comments:
             optional: true
@@ -404,17 +401,17 @@ endpoints:
           run_level:
             optional: true
             description: >
-              Sets the <a href="#object-run_level-enum">run level</a> for Linode boot. Defaults to "default".
+              Sets the run level for Linode boot. Defaults to "default".
             type: Enum
           virt_mode:
             optional: true
             description: >
-              Controls the <a href="#object-virt_mode-enum">virtualization mode</a>. Defaults to "paravirt".
+              Controls the virtualization mode. Defaults to "paravirt".
             type: Enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Arch Linux config",
                     "kernel": "linode/latest_64",
@@ -438,11 +435,10 @@ endpoints:
         response: linode_config
         oauth: linodes:view
         description: >
-          Returns information about this <a href="#object-linode_config">
-          Linode config</a>.
+          Returns information about this Linode config.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id
@@ -453,7 +449,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "label": "Edited config",
                     "kernel": {
@@ -477,7 +473,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
@@ -492,10 +488,10 @@ endpoints:
         paginationKey: volumes
         oauth: linodes:view
         description: >
-          Returns a list of <a href="#object-volume">volumes</a>.
+          Returns a list of volumes.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/volumes
           python: |
             l = linode.Linode(client, 123)
@@ -518,7 +514,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "config": 5567
                 }' \
@@ -537,7 +533,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
@@ -560,7 +556,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "config": 5567
 
@@ -580,7 +576,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
@@ -598,12 +594,12 @@ endpoints:
           disks:
             optional: true
             description: >
-              <a href="#object-disk">Disks</a> to include during Rescue.
+              Disks to include during Rescue.
             type: Disk
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "disks": {
                       "sda": 5567,
@@ -628,19 +624,19 @@ endpoints:
           region:
             optional: true
             description: >
-              A <a href="#object-region">region</a> ID to provision
+              A region ID to provision
               this Linode in. Required when cloning to a new Linode.
             type: Region
           type:
             optional: true
             description: >
-              A <a href="#object-service">Linode type</a> ID to use for this
+              A Linode type ID to use for this
               Linode. Required when cloning to a new Linode.
             type: Service
           linode_id:
             optional: true
             description: >
-              An existing <a href="#object-linode">Linode</a> can be a target clone location.
+              An existing Linode can be a target clone location.
             type: Integer
           label:
             optional: true
@@ -670,7 +666,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "region": "us-east-1a",
                     "type": "g5-standard-1",
@@ -680,11 +676,28 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/clone
           python: |
             my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
+  /linode/instances/:id/mutate:
+    type: Action
+    authenticated: true
+    description: >
+      Upgrades a Linode to its next generation.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/mutate
+          python: |
+            my_linode.mutate()
   /linode/instances/:id/resize:
     type: Action
     authenticated: true
     description: >
-      Resizes a Linode to a new <a href="#object-service">Linode type</a>.
+      Resizes a Linode to a new Linode type.
     methods:
       POST:
         money: true
@@ -693,12 +706,12 @@ endpoints:
         params:
           type:
             description: >
-              A <a href="#object-service">Linode type</a> to use for this Linode.
+              A Linode type to use for this Linode.
             type: Service
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "g5-standard-1"
                     }
@@ -708,18 +721,17 @@ endpoints:
     _group: Backups
     authenticated: true
     description: >
-      Returns information about this Linode's available <a href="#object-backup">backups</a>.
+      Returns information about this Linode's available backups.
     methods:
       GET:
         response: backupsresponse
         paginationKey: backups
         description: >
-          Returns a <a href="#object-backupsresponse">Backups Response</a> with information on this Linode's
-          available backups.
+          Returns a Backups Response with information on this Linode's available backups.
         oauth: linodes:view
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             backups = my_linode.available_backups
@@ -739,7 +751,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Linode123456 snapshot",
                 }' \
@@ -751,7 +763,7 @@ endpoints:
     type: Action
     authenticated: true
     description: >
-       Enables the <a href="#object-backup">backup</a> service on the given Linode.
+       Enables the backup service on the given Linode.
     methods:
       POST:
         money: true
@@ -760,7 +772,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
@@ -770,7 +782,7 @@ endpoints:
     type: Action
     authenticated: true
     description: >
-      Cancels the <a href="#object-backup">backup</a> service on the given Linode.
+      Cancels the backup service on the given Linode.
     methods:
       POST:
         oauth: linodes:delete
@@ -778,7 +790,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
@@ -788,7 +800,7 @@ endpoints:
     type: Action
     authenticated: true
     description: >
-      Restores a <a href="#object-backup">backup</a> to a Linode.
+      Restores a backup to a Linode.
     methods:
       POST:
         oauth: linodes:create
@@ -806,7 +818,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "linode": 123456,
                 }' \
@@ -825,10 +837,10 @@ endpoints:
         response: linodenetworking
         oauth: linodes:view
         description: >
-          Returns a <a href="#object-linodenetworking">Linode Networking Object</a>.
+          Returns a Linode Networking Object.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/ips
       POST:
         money: true
@@ -838,12 +850,12 @@ endpoints:
         params:
           type:
             description: >
-                An <a href="#object-ipaddresstype-enum">IP Address Type</a> for this IP Address. Public IP's incur a monthly cost.
+                An IP Address Type for this IP Address. Public IP's incur a monthly cost.
             type: IPAddressType
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "private"
                 }' \
@@ -862,7 +874,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
@@ -878,11 +890,10 @@ endpoints:
         response: ipaddress
         oauth: linodes:view
         description: >
-          Returns information about this <a href="#object-ipaddress">IPv4</a> or
-          <a href="#object-ipv6-address">IPv6</a> Address.
+          Returns information about this IPv4 or IPv6 Address.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
       PUT:
         oauth: linodes:modify
@@ -891,7 +902,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "rdns":"example.org"
                 }' \
@@ -902,7 +913,7 @@ endpoints:
           Delete a public IPv4 address associated with this Linode
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
   /linode/instances/:id/rebuild:
@@ -910,7 +921,7 @@ endpoints:
     authenticated: true
     description: >
       Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.
-      Returns information about this <a href="#object-linode">Linode</a>.
+      Returns information about this Linode.
     methods:
       POST:
         oauth: linodes:modify
@@ -918,7 +929,7 @@ endpoints:
         params:
           distribution:
             description: >
-                An <a href="#object-ipaddresstype-enum">Distribution</a> to deploy to this Linode.
+                An Distribution to deploy to this Linode.
             type: Distribution
           root_pass:
             description: >
@@ -945,7 +956,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/instances/$linode_id/rebuild \
                 -d '{"distribution":"linode/debian8","root_pass":"hunter7"}'
@@ -960,8 +971,8 @@ endpoints:
         response: stackscript
         paginationKey: stackscripts
         description: >
-          Returns a list of public <a href="#object-stackscript">StackScripts</a>.
-          Results can be <a href="#filtering">filtered</a>.  Include '"mine": true'
+          Returns a list of public StackScripts.
+          Results can be filtered.  Include '"mine": true'
           in the filter dict to see only StackScripts you created.
         examples:
           curl: |
@@ -986,8 +997,7 @@ endpoints:
             type: String
           distributions:
             description: >
-              A list of <a href="#object-distribution">distributions</a>
-              compatible with StackScript.
+              A list of distributions compatible with StackScript.
             type: distribution
           is_public:
             optional: true
@@ -1008,7 +1018,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X POST -d '{
                 "label": "Initial Label",
                 "distributions": ["linode/ubuntu15.4", "linode/ubuntu15.10"],
@@ -1028,12 +1038,11 @@ endpoints:
         response: stackscript
         oauth: stackscripts:view
         description: >
-          Returns information about this <a href="#object-stackscript">
-          StackScript</a>.
+          Returns information about this StackScript.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X GET \
               https://$api_root/$version/linode/stackscripts/$stackscript_id
           python: |
@@ -1046,7 +1055,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token $TOKEN" \
+              -H "Authorization: Bearer $TOKEN" \
               -X PUT -d '{
                 "label": "New Label"
               }' \
@@ -1060,7 +1069,7 @@ endpoints:
           Deletes this StackScript.  This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               -X DELETE \
               https://$api_root/$version/linode/stackscripts/$stackscript_id
           python: |
@@ -1075,7 +1084,7 @@ endpoints:
         response: distributions
         paginationKey: distributions
         description: >
-          Returns a list of <a href="#object-distribution">distributions</a>.
+          Returns a list of distributions.
         examples:
           curl: |
             curl https://$api_root/$version/linode/distributions
@@ -1090,8 +1099,7 @@ endpoints:
       GET:
         response: distributions
         description: >
-          Returns information about this <a href="#object-distribution">
-          distribution</a>.
+          Returns information about this distribution.
         examples:
           curl: |
             curl https://$api_root/$version/linode/distributions/$distribution_id
@@ -1106,7 +1114,7 @@ endpoints:
         response: kernels
         paginationKey: kernels
         description: >
-          Returns list of <a href="#object-kernel">kernels</a>.
+          Returns list of kernels.
         examples:
           curl: |
             curl https://$api_root/$version/linode/kernels
@@ -1121,7 +1129,7 @@ endpoints:
       GET:
         response: kernels
         description: >
-          Returns information about this <a href="#object-kernel">kernel</a>.
+          Returns information about this kernel.
         examples:
           curl: |
             curl https://$api_root/$version/linode/kernels/$kernel_id
@@ -1171,7 +1179,7 @@ endpoints:
           Returns a list of volumes.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/volumes
           python: |
             volumes = client.linode.get_volumes()
@@ -1234,7 +1242,7 @@ endpoints:
           Returns information about this Volume.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
             v = linode.Volume(client, 123)
@@ -1244,7 +1252,7 @@ endpoints:
           Removes a volume from your account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/volumes/$volume_id
           python: |
@@ -1339,9 +1347,42 @@ endpoints:
           Detach a volume from a Linode
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 https://$api_root/$version/linode/volumes/$volume_id/detach
           python: |
             v = linode.Volume(client, 123)
             v.detach()
+  /linode/instances/:id/stats:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for the last 24 hours.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+           Returns statistics for the last 24 hours.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats
+  /linode/instances/:id/stats/:year/:month:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for a specific month.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+          Returns statistics for the requested month. The last 30 days of 
+          available data will be returned if the current month is requested.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats/2017/08

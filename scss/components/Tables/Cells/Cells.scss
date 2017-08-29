@@ -1,0 +1,30 @@
+td.AuthScopeCell {
+    text-align: center;
+    padding: 0;
+
+    .fa {
+        padding-right: 5px;
+    }
+
+    .fa-check {
+        color: $green;
+    }
+
+    .fa-times {
+        color: $red;
+    }
+}
+
+.ActionsCell {
+    text-align: right;
+}
+
+.AttachedCell {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    a.btn.btn-link {
+        display: inline;
+        vertical-align: initial;
+    }
+}

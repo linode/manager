@@ -3,18 +3,6 @@
         padding: 25px;
     }
 
-    &-body {
-
-    }
-
-    &-methods {
-
-    }
-
-    &-methodsLabel {
-
-    }
-
     &-methodsList {
         display: inline;
         list-style-type: none;
@@ -29,5 +17,36 @@
 
     .divider {
         border-top: $border;
+    }
+}
+
+.Endpoint .Tabs {
+    .TabList {
+        border: 0;
+
+        .Tab {
+            &.ReactTabs__Tab--selected {
+                background: white;
+                border-bottom: 1px solid white;
+                position: relative;
+                top: 1px;
+                z-index: 1;
+            }
+
+            &:not(.ReactTabs__Tab--selected) {
+                color: $black;
+            }
+
+            &:not(:last-of-type) {
+                margin-right: 1px;
+            }
+        }
+    }
+}
+
+.Tabs-container .Code,
+.MethodResponseExample .Code {
+    &-clipboardButton {
+        top: 7px;
     }
 }

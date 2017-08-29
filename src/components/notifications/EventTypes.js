@@ -58,8 +58,8 @@ export function getVolumesRedirectUrl() {
   return '/volumes';
 }
 
-export function getVolumeRedirectUrl(entity) {
-  return `${getVolumesRedirectUrl()}/${entity.id}`;
+export function getVolumeRedirectUrl() {
+  return getVolumesRedirectUrl();
 }
 
 const EventTypeMap = {
@@ -90,12 +90,6 @@ const EventTypeMap = {
     presentTenseAction: 'Rebooting',
     pastTenseAction: 'rebooted',
     linodeStatus: 'running',
-    redirectUrl: getLinodeRedirectUrl,
-  },
-  linode_snapshot: {
-    presentTenseAction: 'Taking a snapshot of',
-    pastTenseAction: 'taken',
-    pastTensePrefix: 'Snapshot of',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_addip: {
@@ -161,6 +155,12 @@ const EventTypeMap = {
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
 
+  linode_snapshot: {
+    presentTenseAction: 'Taking a snapshot of',
+    pastTenseAction: 'taken',
+    pastTensePrefix: 'Snapshot of',
+    redirectUrl: getLinodeBackupRedirectUrl,
+  },
   backups_enable: {
     presentTenseAction: 'Enabling backups service',
     pastTenseAction: 'backups enabled',

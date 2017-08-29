@@ -1,12 +1,19 @@
 import React, { PropTypes } from 'react';
 
 import { Table } from 'linode-components/tables';
-import { CheckboxCell } from 'linode-components/tables/cells';
+import { CheckboxCell, LabelCell } from 'linode-components/tables/cells';
 
 
 export default function PermissionsTable(props) {
   const { onCellChange, parentKey, columns, objects, title } = props;
-  const headerColumn = { dataKey: 'label', label: title };
+  const headerColumn = {
+    cellComponent: LabelCell,
+    headerClassName: 'LabelColumn',
+    dataKey: 'label',
+    label: title,
+    titleKey: 'label',
+    tooltipEnabled: true,
+  };
 
   const maybeCheckboxCell = (col) => !col ? {} : {
     cellComponent: col ? CheckboxCell : null,

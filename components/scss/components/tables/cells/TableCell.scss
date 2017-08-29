@@ -1,9 +1,16 @@
-// default checkbox rows with labels to use font-large for the label
-.CheckboxCell + .TableCell.LinkCell,
-.CheckboxCell + .TableCell.LabelCell,
-.ThumbnailCell + .TableCell.LinkCell,
-.ThumbnailCell + .TableCell.LabelCell {
-    @extend .font-large;
+.CheckboxCell .Checkbox-input {
+    top: 2px;
+}
+
+.Table:not(.Table--secondary) {
+    // default checkbox rows with labels to use font-large for the label
+    .TableCell.LinkCell:first-of-type,
+    .CheckboxCell + .TableCell.LinkCell,
+    .CheckboxCell + .TableCell.LabelCell,
+    .ThumbnailCell + .TableCell.LinkCell,
+    .ThumbnailCell + .TableCell.LabelCell {
+        @extend .font-large;
+    }
 }
 
 .LinkCell.TooltipEnabled .TableCell-content a,

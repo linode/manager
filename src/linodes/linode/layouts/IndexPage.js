@@ -6,17 +6,24 @@ import { Link } from 'react-router';
 import { Tabs } from 'linode-components/tabs';
 
 import { setAnalytics, setTitle } from '~/actions';
-import { linodes } from '~/api';
+import { linodes, types } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { GroupLabel } from '~/components';
+import { planStyle } from '~/linodes/components/PlanStyle';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
 
+
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-    await dispatch(linodes.configs.all([id]));
+    const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    const requests = [
+      types.one([type.id]),
+      linodes.configs.all([id]),
+    ];
+
+    await Promise.all(requests.map(dispatch));
   }
 
   constructor(props) {
@@ -59,6 +66,7 @@ export class IndexPage extends Component {
                   <GroupLabel object={linode} />
                 </Link>
               </h1>
+              <div>{planStyle(linode.type)}</div>
             </div>
             <span className="float-sm-right">
               <StatusDropdown

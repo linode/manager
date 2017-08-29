@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Table } from 'linode-components/tables';
 
-import Example from '~/components/Example';
+import { Table } from 'linode-components/tables';
+import { Code } from 'linode-components/formats';
+
 import { API_ROOT, API_VERSION } from '~/constants';
 
 
@@ -19,7 +20,7 @@ export default function Filtering() {
           and are formated as JSON objects.  Here is a request for
           all distributions whose vendor is "Debian":
         </p>
-        <Example
+        <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
     "vendor": "Debian"
@@ -27,11 +28,11 @@ export default function Filtering() {
           name="bash"
         />
         <p>
-            The filter object's keys are the keys of the object you're filtering,
-            and the values are accepted values. You can add multiple filters by
+          The filter object's keys are the keys of the object you're filtering,
+          and the values are accepted values. You can add multiple filters by
           including more than one key (in this case, all recommended Debians):
         </p>
-        <Example
+        <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
     "vendor": "Debian",
@@ -44,7 +45,7 @@ export default function Filtering() {
           However, if you wanted either Debian or recommended distributions,
           you can add an operator:
         </p>
-        <Example
+        <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
     "+or": [
@@ -59,7 +60,7 @@ export default function Filtering() {
           and all conditions in it are combined with an "and"
           operator as they were in the first example. Other operators are available:
         </p>
-        <Example
+        <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
     "minimum_storage_size": {
@@ -73,7 +74,7 @@ export default function Filtering() {
           give me all distributions which are either recommended or whose vendor is Debian,
           or who have a minimum_storage_size between 100 and 500 (inclusive).
         </p>
-        <Example
+        <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
     "+or": [

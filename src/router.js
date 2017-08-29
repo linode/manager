@@ -146,7 +146,7 @@ export class LoadingRouterContext extends RouterContext {
         <div className="Layout">
           <Header />
           <div className="AppLoader">
-            <div className="AppLoader-text">Loading the Manager...</div>
+            <div className="AppLoader-text font-medium">Loading the Manager...</div>
             <div className="AppLoader-loader"></div>
           </div>
           {this.props.location.pathname === '/oauth/callback' ? super.render() : null}

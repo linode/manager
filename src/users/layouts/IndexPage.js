@@ -8,7 +8,6 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import {
   ButtonCell,
@@ -18,13 +17,15 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { users as api } from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
+import { confirmThenDelete } from '~/utilities';
+
+import { AddUser } from '../components';
 
 
 const OBJECT_TYPE = 'users';
@@ -39,8 +40,8 @@ export class IndexPage extends Component {
     await dispatch(api.all());
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }
@@ -52,35 +53,23 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['users']));
   }
 
-  deleteUsers = (users) => {
-    const { dispatch } = this.props;
-    const usersArr = Array.isArray(users) ? users : [users];
-    const title = 'Delete User(s)';
-
-    dispatch(showModal(title,
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = usersArr.map(user => user.username);
-
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        onCancel={() => dispatch(hideModal())}
-        items={usersArr.map(n => n.username)}
-        typeOfItem="Users"
-      />
-    ));
-  }
+  deleteUsers = confirmThenDelete(
+    this.props.dispatch,
+    'user',
+    api.delete,
+    OBJECT_TYPE,
+    'username',
+    'delete',
+    'deleting',
+    'username').bind(this)
 
   renderUsers(users) {
     const { dispatch, selectedMap, profile: { username: currentUsername } } = this.props;
     const { filter } = this.state;
 
     const { sorted: sortedUsers } = transform(users, {
-      filterOn: 'username',
       filterBy: filter,
-      sortBy: u => u.username.toLowerCase(),
+      filterOn: 'username',
     });
 
     return (
@@ -151,12 +140,16 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch } = this.props;
+
+    const addUser = () => AddUser.trigger(dispatch);
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">Users</h1>
-            <PrimaryButton to="/users/create" className="float-sm-right">
+            <h1 className="float-left">Users</h1>
+            <PrimaryButton onClick={addUser} className="float-right">
               Add a User
             </PrimaryButton>
           </div>
@@ -164,7 +157,7 @@ export class IndexPage extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.users.users).length ?
             this.renderUsers(this.props.users.users) :
-            <CreateHelper label="Users" href="/users/create" linkText="Add a User" />}
+            <CreateHelper label="Users" onClick={addUser} linkText="Add a User" />}
         </div>
       </div>
     );
