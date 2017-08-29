@@ -9,14 +9,12 @@ export const config = genConfig({
   supports: [ONE, MANY, PUT, DELETE, POST],
   properties: {
     type: (linode) => function (_, getState) {
-      const types = getState().api.types;
-      if (!types) {
-        return null;
-      }
+      const types = getState().api.types.types || {};
 
       return {
         label: 'Unknown',
-        ...types.types[linode.type] || {},
+        id: linode.type,
+        ...types[linode.type] || {},
         storage: linode.storage,
         ram: linode.memory,
         vcpus: linode.vcpus,
