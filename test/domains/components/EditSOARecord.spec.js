@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import React from 'react';
@@ -17,7 +18,7 @@ describe('domains/components/EditSOARecord', () => {
   });
 
   it('renders fields correctly', () => {
-    const currentZone = api.domains.domains['1'];
+    const currentZone = api.domains.domains[1];
     const page = mount(
       <EditSOARecord
         dispatch={() => {}}
@@ -50,7 +51,7 @@ describe('domains/components/EditSOARecord', () => {
 
   it('submits data onsubmit and closes modal', async () => {
     const dispatch = sandbox.spy();
-    const currentZone = api.domains.domains['1'];
+    const currentZone = api.domains.domains[1];
     const close = sandbox.spy();
     const page = mount(
       <EditSOARecord
@@ -89,4 +90,33 @@ describe('domains/components/EditSOARecord', () => {
       }),
     ]);
   });
+
+  it('doesnt send status when domain has errors', async () => {
+    const dispatch = sandbox.spy();
+    const currentZone = api.domains.domains[3];
+    const close = sandbox.spy();
+    const page = mount(
+      <EditSOARecord
+        dispatch={dispatch}
+        domains={currentZone}
+        close={() => close}
+      />
+    );
+
+    await page.find('Form').props().onSubmit();
+
+    const internalNestedObjects = ['_records', '_polling'];
+    const unsubmittedFields = ['description', 'id', 'type'];
+    const regularZoneSubmission = _.omit(currentZone,
+                                         [...internalNestedObjects, ...unsubmittedFields]);
+    const expectedZoneSubmission = _.omit(regularZoneSubmission, 'status');
+
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}`, {
+        method: 'PUT',
+        body: expectedZoneSubmission,
+      }),
+    ]);
+  })
 });
