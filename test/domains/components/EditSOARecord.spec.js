@@ -118,5 +118,5 @@ describe('domains/components/EditSOARecord', () => {
         body: expectedZoneSubmission,
       }),
     ]);
-  })
+  });
 });
