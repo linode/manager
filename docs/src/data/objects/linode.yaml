@@ -63,8 +63,43 @@ schema:
         type: String
         value: "W20"
     last_backup:
-      description: If enabled, the last backup that was successfully taken.
-      type: backup
+      _description: If enabled, the last backup that was successfully taken.
+      _type: Backup
+      id:
+        _type: Integer
+        _value: 123456
+      label:
+        _type: String
+        _value: A label for your snapshot
+        _description: Human-friendly backup name.
+        _filterable: false
+        _limit: 1-255 characters
+      status:
+        _type: Enum
+        _subtype: Status
+        _value: successful
+        _description: Status of the backup.
+        _filterable: false
+      type:
+        _type: Enum
+        _subtype: Type
+        _value: snapshot
+        _description: Whether this is a snapshot or an auto backup.
+      region:
+        _type: String
+        _value: us-east-1a
+        _filterable: false
+        _description: This backup region.
+      created:
+        _type: String
+        _value: "2015-09-29T11:21:01"
+      updated:
+        _type: String
+        _value: "2015-09-29T11:21:01"
+      finished:
+        _type: String
+        _value: "2015-09-29T11:21:01"
+        _description: An ISO 8601 datetime of when the backup completed.
     snapshot:
       description: If enabled, the last snapshot that was successfully taken.
       type: backup
@@ -78,10 +113,10 @@ schema:
     description: This Linode's region.
     value: us-east-1a
   distribution:
-    description: The distribution that this Linode booted to last.
-    type: Distribution
-    seeAlso: "/reference/endpoints/linode/distributions"
-    filterable: true
+    _description: The distribution that this Linode booted to last.
+    _type: String
+    _value: linode/debian9
+    _filterable: true
   group:
     editable: true
     type: String

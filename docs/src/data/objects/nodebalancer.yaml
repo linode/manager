@@ -1,4 +1,4 @@
-# vim: set et ts=2 sw=2 tw=80 :
+e vim: set et ts=2 sw=2 tw=80 :
 name: NodeBalancer
 prefix: lnde
 description: >
@@ -19,7 +19,11 @@ schema:
     value: 'nb-69-164-223-4.us-east-1a.nodebalancer.linode.com'
     description: The NodeBalancer's hostname.
   client_conn_throttle:
-    editable: true
-    type: Integer
-    value: 10
-    description: Throttle connections per second. 0 to disable, max of 20.
+    _editable: true
+    _type: Integer
+    _value: 10
+    _description: Throttle connections per second. 0 to disable, max of 20.
+  region:
+    _type: String
+    _value: us-east-1a
+    _description: The region this Nodebalancer is in

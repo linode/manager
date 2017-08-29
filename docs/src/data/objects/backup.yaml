@@ -25,9 +25,9 @@ schema:
     value: snapshot
     description: Whether this is a snapshot or an auto backup.
   region:
-      type: region
-      filterable: false
-      description: This backup region.
+      _type: String
+      _filterable: false
+      _description: This backup region.
   created:
     type: string
     value: "2015-09-29T11:21:01"

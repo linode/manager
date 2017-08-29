@@ -23,12 +23,16 @@ schema:
     value: Installs the Linode API bindings
     filterable: true
   distributions:
-    description: A list of distributions this StackScript is compatible with.
-    type: distribution
-    isArray: true
-    seeAlso: "/reference/endpoints/linode/distributions"
-    editable: true
-    filterable: true
+    _description: A list of distributions this StackScript is compatible with.
+    _type: object
+    _isArray: true
+    _seeAlso: "/reference/endpoints/linode/distributions"
+    _editable: true
+    _subtype: String
+    _filterable: true
+    _value:
+      - linode/debian8
+      - linode/debian9
   deployments_total:
     description: The total number of times this StackScript has been deployed.
     type: Integer
