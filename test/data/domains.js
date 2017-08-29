@@ -104,4 +104,9 @@ export const domains = {
     domain: 'example1.com',
     _records: { records: {} },
   },
+  3: {
+    ...testDomain,
+    id: 3,
+    status: 'has_errors',
+  },
 };
