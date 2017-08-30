@@ -35,8 +35,7 @@ export default function Endpoint(props) {
             {methods.map(function (method, index) {
               return (
                 <li key={index}>
-                  {/* TODO: check this */}
-                  <Link to={`#${method.name}`}>{method.name}</Link>
+                  <Link to={`${window.location.pathname}#${method.name}`}>{method.name}</Link>
                 </li>
               );
             })}
