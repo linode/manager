@@ -172,7 +172,7 @@ endpoints:
       Manage the collection of Domain Records your account may access.
     methods:
       GET:
-        response: domainrecords
+        response: domainrecord
         paginationKey: records
         oauth: domains:view
         description: >

@@ -41,49 +41,84 @@ schema:
       _value: false
       _description: If this user may cancel the account.
   stackscript:
-    _type: object
+    _type: Object
     _isArray: true
     _description: Individual grants to StackScripts you own.  Grants include all, use, edit and delete
+    all:
+      _type: Boolean
+      _value: false
+    edit:
+      _type: Boolean
+      _value: true
+    delete:
+      _type: Boolean
+      _value: false
+    id:
+      _type: Boolean
+      _value: 123
+    label:
+      _type: string
+      _value: Wordpress
+    use:
+      _type: Boolean
+      _value: false
   nodebalancer:
     _type: object
     _isArray: true
     _description: Individual grants to NodeBalancers you own.  Grants inlcude all, access, and delete
+    all:
+      _type: Boolean
+      _value: false
+    access:
+      _type: Boolean
+      _value: true
+    delete:
+      _type: Boolean
+      _value: false
+    id:
+      _type: Integer
+      _value: 123
+    label:
+      _type: String
+      _value: linode123
   linode:
     _type: object
     _isArray: true
-    _description: Individual grants to a Linode you own.  Grants incldue all, access, resize, and delete
-    _value:
-      - all:
-          _type: Boolean
-          _value: false
-        access:
-          _type: Boolean
-          _value: true
-        delete:
-          _type: Boolean
-          _value: false
-        id:
-          _type: Integer
-          _value: 123
-        label:
-          _type: String
-          _value: linode123
-      - all:
-          _type: Boolean
-          _value: true
-        access:
-          _type: Boolean
-          _value: false
-        delete:
-          _type: Boolean
-          _value: false
-        id:
-          _type: Integer
-          _value: 324
-        label:
-          _type: String
-          _value: linode324
+    _description: Individual grants to a Linode you own.  Grants include all, access, resize, and delete
+    all:
+      _type: Boolean
+      _value: false
+    access:
+      _type: Boolean
+      _value: true
+    resize:
+      _type: Boolean
+      _value: true
+    delete:
+      _type: Boolean
+      _value: false
+    id:
+      _type: Integer
+      _value: 123
+    label:
+      _type: String
+      _value: linode123
   domain:
     _type: object
     _isArray: true
     _description: Individual grants to a Domain you own.  Grants include all, access and delete
+    all:
+      _type: Boolean
+      _value: false
+    access:
+      _type: Boolean
+      _value: true
+    delete:
+      _type: Boolean
+      _value: false
+    id:
+      _type: Boolean
+      _value: 123
+    label:
+      _type: Boolean
+      _value: example.com

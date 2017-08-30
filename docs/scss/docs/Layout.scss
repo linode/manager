@@ -4,28 +4,23 @@ $sidebar-width: 250px;
     height: 100%;
 
     &-container {
-        height: calc(100% - #{$nav-height});
         margin: 0 auto;
     }
 
     &-navigationContainer {
-        position: absolute;
+        position: fixed;
         background-color: $light-gray;
-        border-left: $border;
-        border-right: $border;
-        height: 100%;
-        overflow-y: auto;
+        border: $border;
         width: $sidebar-width;
     }
 
     &-content {
         background-color: $white;
-        margin-left: $sidebar-width;
+        margin-left: $sidebar-width - 1px;
         // Subtract the bootstrap margin too.
         width: calc(100% - #{$sidebar-width} - 30px);
-        border-right: $border;
-        height: 100%;
-        overflow-y: auto;
+        border: $border;
+        margin-bottom: 30px;
     }
 
     @media screen and (max-width: #{$sidebar-breakpoint}) {
@@ -39,10 +34,14 @@ $sidebar-width: 250px;
             display: none; 
             overflow-y: visible;
             border: $border;
+            position: absolute;
+            top: 0;
+            border-top: 0;
+            border-right: 0;
 
             &--show {
-                display: inline;
-                z-index: 9000;
+                display: block;
+                z-index: 1;
                 right: 0;
             }
 
@@ -55,6 +54,8 @@ $sidebar-width: 250px;
             margin-left: 0;
             width: 100%;
             border: 0;
+            padding-bottom: 15px;
+            margin-bottom: 0;
         }
     }
 
