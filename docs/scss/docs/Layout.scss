@@ -43,6 +43,7 @@ $sidebar-width: 250px;
             &--show {
                 display: inline;
                 z-index: 9000;
+                right: 0;
             }
 
             &--hide {
