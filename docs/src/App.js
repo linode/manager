@@ -110,8 +110,11 @@ function logPageView() {
 }
 
 // https://github.com/ReactTraining/react-router/issues/394#issuecomment-220221604
-function hashLinkScroll() {
+const scrollHistory = [];
+browserHistory.listen(function (location) {
+  const { body } = document;
   const { hash } = window.location;
+
   if (hash !== '') {
     // Push onto callback queue so it runs after the DOM is updated,
     // this is required when navigating from a different page so that
@@ -123,12 +126,8 @@ function hashLinkScroll() {
         document.body.scrollTop = element.getBoundingClientRect().top;
       }
     }, 0);
+    return;
   }
-}
-
-const scrollHistory = [];
-browserHistory.listen(function (location) {
-  const { body } = document;
 
   if (location.action === 'POP') {
     const pos = scrollHistory.pop();
@@ -163,7 +162,6 @@ function updateTitle() {
 
 function onRouterUpdate() {
   logPageView();
-  hashLinkScroll();
   updateTitle();
 }
 
@@ -238,6 +236,4 @@ export function init() {
     </Router>,
     document.getElementById('root')
   );
-
-  hashLinkScroll();
 }
