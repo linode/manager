@@ -1081,7 +1081,7 @@ endpoints:
       View the collection of distributions.
     methods:
       GET:
-        response: distributions
+        response: distribution
         paginationKey: distributions
         description: >
           Returns a list of distributions.
@@ -1097,7 +1097,7 @@ endpoints:
       Returns information about a specific distribution.
     methods:
       GET:
-        response: distributions
+        response: distribution
         description: >
           Returns information about this distribution.
         examples:
@@ -1111,7 +1111,7 @@ endpoints:
       Returns collection of kernels.
     methods:
       GET:
-        response: kernels
+        response: kernel
         paginationKey: kernels
         description: >
           Returns list of kernels.
@@ -1127,7 +1127,7 @@ endpoints:
       Returns information about a specific kernel.
     methods:
       GET:
-        response: kernels
+        response: kernel
         description: >
           Returns information about this kernel.
         examples:
@@ -1141,7 +1141,7 @@ endpoints:
       Returns collection of types.
     methods:
       GET:
-        response: types
+        response: type
         paginationKey: types
         description: >
           Returns list of types.
@@ -1157,7 +1157,7 @@ endpoints:
       Returns information about a specific Linode type offered by Linode.
     methods:
       GET:
-        response: types
+        response: type
         description: >
           Returns information about this type.
         examples:
@@ -1306,7 +1306,6 @@ endpoints:
   /linode/volumes/:id/attach:
     _group: Volumes
     authenticated: true
-    resource: volume
     methods:
       POST:
         oauth: volume:modify

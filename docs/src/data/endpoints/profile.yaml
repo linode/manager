@@ -7,7 +7,6 @@ endpoints:
   /profile:
     _group: Profile
     type: resource
-    resource: profile
     description: >
       Manage your user information.
     methods:

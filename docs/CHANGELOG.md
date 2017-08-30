@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-# [0.12.0] 2017-8-29
+# [0.12.1] 2017-08-30
+### Fixed
+- missing docs GET responses in many pages #2486
+
+# [0.12.0] 2017-08-29
 ### Added
 - documentation for mutate #2471
 - documentation for stats #2472

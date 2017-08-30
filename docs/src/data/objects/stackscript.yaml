@@ -32,55 +32,11 @@ schema:
     _filterable: true
   distributions:
     _description: A list of distributions this StackScript is compatible with.
-    _type: object
+    _type: distribution
     _isArray: true
     _seeAlso: "/reference/endpoints/linode/distributions"
     _editable: true
-    _subtype: distribution
     _filterable: true
-    _value:
-      - id:
-          _type: String
-          _value: linode/debian8
-        label:
-          _type: String
-          _value: Debian 8.1
-        vendor:
-          _type: String
-          _value: Debian
-        x64:
-          _type: Boolean
-          _value: true
-        recommended:
-          _type: Boolean
-          _value: true
-        created:
-          _type: Datetime
-          _value: 2015-04-27T16:26:41
-        minimum_storage_size:
-          _type: Integer
-          _value: 900
-      - id:
-          _type: String
-          _value: linode/debian7
-        label:
-          _type: String
-          _value: Debian 7
-        vendor:
-          _type: String
-          _value: Debian
-        x64:
-          _type: Boolean
-          _value: true
-        recommended:
-          _type: Boolean
-          _value: true
-        created:
-          _type: Datetime
-          _value: 2014-09-24T13:59:32
-        minimum_storage_size:
-          _type: Integer
-          _value: 600
   deployments_total:
     _description: The total number of times this StackScript has been deployed.
     _type: Integer
@@ -119,28 +75,18 @@ schema:
     _description: Variables that can be set to customize the script per deployment.
     _type: object
     _isArray: true
-    _value:
-      - name:
-          _type: String
-          _value: var1
-        label:
-          _type: String
-          _value: A question
-        example:
-          _type: String
-          _value: An example value
-        default:
-          _type: String
-          _value: Default value
-      - name:
-          _type: String
-          _value: var2
-        label:
-          _type: String
-          _value: Another question
-        example:
-          _type: String
-          _value: possible
-        oneof:
-          _type: String
-          _value: possible,enum,values
+    name:
+      _type: String
+      _value: var1
+    label:
+      _type: String
+      _value: A question
+    example:
+      _type: String
+      _value: An example value
+    default:
+      _type: String
+      _value: Default value
+    oneof:
+      _type: String
+      _value: possible,enum,values

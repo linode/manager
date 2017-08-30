@@ -327,7 +327,7 @@ endpoints:
             description: The user's password.
           restricted:
             optinoal: true
-            type: Bool
+            type: Boolean
             description: If false, this user has access to the entire account.  Defaults to true.
         examples:
           curl: |
@@ -553,7 +553,6 @@ endpoints:
   /account/events/:id/seen:
     _group: Events
     type: resource
-    resource: events
     authenticated: true
     methods:
       POST:
@@ -567,7 +566,6 @@ endpoints:
   /account/events/:id/read:
     _group: Events
     type: resource
-    resource: events
     authenticated: true
     methods:
       POST:
