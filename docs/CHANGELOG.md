@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+# [0.12.2] 2017-08-30
+### Fixed
+- remember scroll history and # jump links work #2486
+
 # [0.12.1] 2017-08-30
 ### Fixed
 - missing docs GET responses in many pages #2486
