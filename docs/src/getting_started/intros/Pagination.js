@@ -43,7 +43,8 @@ export default function Pagination() {
         <p>
           Some objects contain lists of other objects, which you can get at
           <code>/::type/::subtype/::id/::subtype</code>.
-          You can get an individual sub-object at <code>/::type/::subtype/::id/::subtype/::id</code>.
+          You can get an individual sub-object
+          at <code>/::type/::subtype/::id/::subtype/::id</code>.
         </p>
         <p>
           For example, you can list your Linodes at <code>/linode/instances</code>, and get
