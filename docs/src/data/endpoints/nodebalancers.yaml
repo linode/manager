@@ -255,7 +255,7 @@ endpoints:
       Manage the nodes for a specified NodeBalancer config.
     methods:
       GET:
-        response: nodebalancer_config_nodes
+        response: nodebalancer_config_node
         paginationKey: nodes
         oauth: nodebalancers:view
         description: >
@@ -303,7 +303,7 @@ endpoints:
       Manage a particular NodeBalancer config node.
     methods:
       GET:
-        response: nodebalancer_config_nodes
+        response: nodebalancer_config_node
         oauth: nodebalancers:view
         description: >
           Returns information about this node..

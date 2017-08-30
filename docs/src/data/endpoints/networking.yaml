@@ -12,7 +12,7 @@ endpoints:
     methods:
       GET:
         response: ipaddress
-        paginationKey: ipv4s
+        paginationKey: ipv4
         oauth: ips:view
         description: >
           Returns a list of IPv4 Addresses.

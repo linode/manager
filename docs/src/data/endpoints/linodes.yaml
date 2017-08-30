@@ -676,6 +676,23 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/clone
           python: |
             my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
+  /linode/instances/:id/mutate:
+    type: Action
+    authenticated: true
+    description: >
+      Upgrades a Linode to its next generation.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/mutate
+          python: |
+            my_linode.mutate()
   /linode/instances/:id/resize:
     type: Action
     authenticated: true
@@ -1064,7 +1081,7 @@ endpoints:
       View the collection of distributions.
     methods:
       GET:
-        response: distributions
+        response: distribution
         paginationKey: distributions
         description: >
           Returns a list of distributions.
@@ -1080,7 +1097,7 @@ endpoints:
       Returns information about a specific distribution.
     methods:
       GET:
-        response: distributions
+        response: distribution
         description: >
           Returns information about this distribution.
         examples:
@@ -1094,7 +1111,7 @@ endpoints:
       Returns collection of kernels.
     methods:
       GET:
-        response: kernels
+        response: kernel
         paginationKey: kernels
         description: >
           Returns list of kernels.
@@ -1110,7 +1127,7 @@ endpoints:
       Returns information about a specific kernel.
     methods:
       GET:
-        response: kernels
+        response: kernel
         description: >
           Returns information about this kernel.
         examples:
@@ -1124,7 +1141,7 @@ endpoints:
       Returns collection of types.
     methods:
       GET:
-        response: types
+        response: type
         paginationKey: types
         description: >
           Returns list of types.
@@ -1140,7 +1157,7 @@ endpoints:
       Returns information about a specific Linode type offered by Linode.
     methods:
       GET:
-        response: types
+        response: type
         description: >
           Returns information about this type.
         examples:
@@ -1289,7 +1306,6 @@ endpoints:
   /linode/volumes/:id/attach:
     _group: Volumes
     authenticated: true
-    resource: volume
     methods:
       POST:
         oauth: volume:modify
@@ -1336,3 +1352,36 @@ endpoints:
           python: |
             v = linode.Volume(client, 123)
             v.detach()
+  /linode/instances/:id/stats:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for the last 24 hours.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+           Returns statistics for the last 24 hours.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats
+  /linode/instances/:id/stats/:year/:month:
+    _group: Stats
+    type: Action
+    authenticated: true
+    description: >
+      Returns CPU, IO, IPv4, and IPv6 stats for a specific month.
+    methods:
+      GET:
+        response: stats
+        oauth: linodes:view
+        description: >
+          Returns statistics for the requested month. The last 30 days of 
+          available data will be returned if the current month is requested.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/stats/2017/08

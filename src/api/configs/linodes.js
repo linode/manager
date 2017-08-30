@@ -7,6 +7,20 @@ export const config = genConfig({
   plural: 'linodes',
   endpoint: id => `/linode/instances/${id}`,
   supports: [ONE, MANY, PUT, DELETE, POST],
+  properties: {
+    type: (linode) => function (_, getState) {
+      const types = getState().api.types.types || {};
+
+      return {
+        label: 'Unknown',
+        id: linode.type,
+        ...types[linode.type] || {},
+        storage: linode.storage,
+        ram: linode.memory,
+        vcpus: linode.vcpus,
+      };
+    },
+  },
   subresources: {
     _configs: {
       plural: 'configs',

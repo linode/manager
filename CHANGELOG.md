@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.13.0] 2017-08-29
+### Added
+- set a label when taking a snapshot #2366
+- handle oauth token errors #2323
+- enable private IP button separate from public #2370
+- dns zone status on dns zone list page #2368
+- plan visible on Linode list #2364
+- add create Linode from backup #2380
+- display all block storage volumes #2406
+- Lish settings page #2365
+- indeterminate checkbox state #2407
+- support for implicit OAuth flow #2402
+- attachments shown in tickets #2428
+- input auto focus when enabling TFA #2419
+- advanced filter for all lists #2416
+- volumes shown on Linode advanced page #2408
+- support for volumes in configs #2440
+### Changed
+- Linode, domain, NodeBalancer, and user creates are modals #2352
+- use Bearer token type in OAuth flow #2280
+- PAT creation defaults to no access #2421
+- creating a ticket can now reference volumes and "Other" #2415
+### Fixed
+- stop long notifications from overflowing #2381
+- stop secondary tables from overflowing #2379
+- prevent public stackscripts from appearing to be privatizable #2378
+- stop notifications in header from breaking on small screens #2363
+- show correct links in CONTRIBUTING.md #2409
+- show public ipv4 in SSH line in Access section #2429
+- notification hover and dropdown fixes for Firefox #2426
+- error formatting when snapshots fail #2425
+- misc fixes for support tickets #2437
+- crashing when no distro is selected in add disk modal #2438
+
 ## [0.12.7] 2017-08-08
 ### Added
 - volume event formatters #2403

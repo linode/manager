@@ -84,6 +84,10 @@ export default class EditSOARecord extends Component {
       delete data.soa_email;
     }
 
+    if (data.status === 'has_errors') {
+      delete data.status;
+    }
+
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),
