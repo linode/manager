@@ -133,7 +133,7 @@ browserHistory.listen(function (location) {
   if (location.action === 'POP') {
     const pos = scrollHistory.pop();
     // Allows the body to render first otherwise it will not have full height.
-    setTimeout(() => body.scrollTop = pos, 0);
+    setTimeout(function () { body.scrollTop = pos; }, 0);
   } else {
     scrollHistory.push(body.scrollTop);
     body.scrollTop = 0;
