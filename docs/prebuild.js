@@ -182,6 +182,12 @@ function formatSchemaField(schemaField, enumMap) {
     nestedSchema = formatSchema(schemaField, enumMap);
   }
 
+  // TODO: remove enum, datetime, and array from here
+  const nonNestedTypes = ['boolean', 'integer', 'float', 'string', 'enum', 'datetime', 'array'];
+  if (nestedSchema === null && nonNestedTypes.indexOf(lowerType) === -1) {
+    throw new Error(`Unknown object '${name}': got '${lowerType}'`);
+  }
+
   typeLabel = _.capitalize(typeLabel);
   if (isArray) {
     typeLabel = `Array[${_.capitalize(typeLabel)}]`;
@@ -282,7 +288,11 @@ function formatMethodResponse(methodObj) {
 
     schema = resourceObject.schema;
     if (schema) {
-      resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
+      try {
+        resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
+      } catch (e) {
+        throw new Error(`Error rendering object '${response}':\n${e.message}`);
+      }
       resourceObject.example = formatSchemaExample(resourceObject.schema, methodObj.paginationKey);
     }
   }
@@ -372,7 +382,12 @@ allEndpoints.forEach(function(endpointContainer) {
     let methods = null;
     if (endpoint.methods) {
       methods = Object.keys(endpoint.methods).map(function(method) {
-        return formatMethod(endpoint, method);
+        try {
+          return formatMethod(endpoint, method);
+        } catch (e) {
+          const msg = `Error rendering api.js for ${method} of ${path} in ${endpointContainer.name}:\n${e.message}\n\n`;
+          throw new Error(msg);
+        }
       });
     }
 
