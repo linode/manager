@@ -24,7 +24,7 @@ schema:
     _value: false
     _description: Populates the /dev directory early during boot without udev.
   disks:
-    _type: Disks
+    _type: object
     _description: Disks attached to this Linode config.
     _seeAlso: "/reference/endpoints/linode/instances/:id/disks"
     _editable: true
