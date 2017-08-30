@@ -52,7 +52,7 @@ endpoints:
                 https://$api_root/$version/nodebalancers
           python: |
             new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)
-  /nodebalancers/:id:
+  /nodebalancers/::id:
     type: resource
     authenticated: true
     description: >
@@ -101,7 +101,7 @@ endpoints:
          python: |
            my_nodebalancer = linode.NodeBalancer(client, 123)
            my_nodebalancer.delete()
-  /nodebalancers/:id/configs:
+  /nodebalancers/::id/configs:
     _group: Configs
     authenticated: true
     description: >
@@ -196,7 +196,7 @@ endpoints:
                     algorithm='roundrobin', stickiness='none', check='http_body', check_interval=5, check_timeout=3,
                     check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',
                     cipher_suite='legacy')
-  /nodebalancers/:id/configs/:id:
+  /nodebalancers/::id/configs/::id:
     _group: Configs
     type: resource
     authenticated: true
@@ -227,7 +227,7 @@ endpoints:
           python: |
             nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id
             nb_config.delete()
-  /nodebalancers/:id/configs/:id/ssl:
+  /nodebalancers/::id/configs/::id/ssl:
     _group: Configs
     type: resource
     authenticated: true
@@ -248,7 +248,7 @@ endpoints:
                 https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl
           python: |
             # currently unimplemented
-  /nodebalancers/:id/configs/:id/nodes:
+  /nodebalancers/::id/configs/::id/nodes:
     _group: Configs
     authenticated: true
     description: >
@@ -295,7 +295,7 @@ endpoints:
                   "mode": "accept"
               }' \
               https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
-  /nodebalancers/:id/configs/:id/nodes/:id:
+  /nodebalancers/::id/configs/::id/nodes/::id:
     _group: Configs
     type: resource
     authenticated: true

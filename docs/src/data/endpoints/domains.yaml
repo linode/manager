@@ -113,7 +113,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id:
+  /domains/::id:
     authenticated: true
     methods:
       GET:
@@ -166,7 +166,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id/records:
+  /domains/::id/records:
     authenticated: true
     description: >
       Manage the collection of Domain Records your account may access.
@@ -254,7 +254,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id/records/:id:
+  /domains/::id/records/::id:
     authenticated: true
     methods:
       GET:
