@@ -19,15 +19,6 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
     const labelFn = _.isFunction(labelKey) ? labelKey : (o) => o[labelKey];
     const toDelete = Array.isArray(_toDelete) ? _toDelete : [_toDelete];
 
-    const toDeleteGrouped = _.groupBy(toDelete, labelFn);
-    const toDeleteLabels = _.map(toDeleteGrouped, function (items, label) {
-      if (items.length > 1) {
-        return `${label} (x${items.length})`;
-      }
-
-      return label;
-    });
-
     let title = `Delete ${_.capitalize(objectLabel)}`;
     if (toDelete.length > 1) {
       title += 's';
@@ -36,18 +27,20 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
     dispatch(showModal(title, (
       <DeleteModalBody
         onSubmit={function () {
-          const ids = toDelete.map(o => o[idKey]);
+            const ids = toDelete.map(o => o[idKey]);
+            console.log(this.state);
           return dispatch(dispatchOrStoreErrors.call(this, [
             () => (dispatch) => Promise.all(ids.map(id => dispatch(deleteFunction(id)))),
             () => removeSelected(objectType, ids),
             hideModal,
           ]));
         }}
-        items={toDeleteLabels}
+        items={toDelete.map(labelFn)}
         typeOfItem={`${objectLabel}s`}
         onCancel={() => dispatch(hideModal())}
         deleteAction={deleteAction}
         deleteActionPending={deleteActionPending}
+        boldItems={false}
       />
     )));
   };
