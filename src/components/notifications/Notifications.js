@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -100,7 +99,7 @@ export class Notifications extends Component {
 
     const currentOldestCreatedDate = events.events[events.ids[events.ids.length - 1]].created;
     this.setState({ loading: true });
-    fetchEventsPage(createHeaderFilter({
+    this.fetchEventsPage(createHeaderFilter({
       seen: true,
       ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
     }));
@@ -131,6 +130,7 @@ Notifications.propTypes = {
   dispatch: PropTypes.func.isRequired,
   events: PropTypes.object,
   notifications: PropTypes.object.isRequired,
+  eventTriggeringRequests: PropTypes.number.isRequired,
 };
 
 
