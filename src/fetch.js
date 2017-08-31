@@ -47,9 +47,8 @@ export function fetch(token, _path, _options) {
   const path = API_ROOT + _path;
 
   const { method = 'get' } = options;
-  
+
   if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
-    console.log('resetting events poll');
     store.dispatch(resetEventsPoll());
   }
 
