@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -23,6 +24,15 @@ export default class RescueMode extends Component {
       errors: {},
       loading: false,
     };
+  }
+
+  componentWillMount() {
+    // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
+    const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
+    const devices = sortedDisks.reduce(function (devices, disk, index) {
+      return { ...devices, [AVAILABLE_DISK_SLOTS[index]]: disk.id };
+    }, {});
+    this.setState({ devices });
   }
 
   onSubmit = () => {
