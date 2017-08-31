@@ -13,7 +13,6 @@ export default function DeleteModalBody(props) {
     typeOfItem,
     deleteAction,
     deleteActionPending,
-    boldItems,
   } = props;
 
   const groupedItems = _.groupBy(items);
@@ -74,11 +73,9 @@ DeleteModalBody.propTypes = {
   typeOfItem: PropTypes.string.isRequired,
   deleteAction: PropTypes.string.isRequired,
   deleteActionPending: PropTypes.string.isRequired,
-  boldItems: PropTypes.bool.isRequired,
 };
 
 DeleteModalBody.defaultProps = {
   deleteAction: 'delete',
   deleteActionPending: 'deleting',
-  boldItems: true,
 };
