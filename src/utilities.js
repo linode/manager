@@ -27,8 +27,7 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
     dispatch(showModal(title, (
       <DeleteModalBody
         onSubmit={function () {
-            const ids = toDelete.map(o => o[idKey]);
-            console.log(this.state);
+          const ids = toDelete.map(o => o[idKey]);
           return dispatch(dispatchOrStoreErrors.call(this, [
             () => (dispatch) => Promise.all(ids.map(id => dispatch(deleteFunction(id)))),
             () => removeSelected(objectType, ids),
