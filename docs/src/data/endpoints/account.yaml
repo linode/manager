@@ -61,7 +61,7 @@ endpoints:
           python: |
             from linode import OAuthScopes
             new_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])
-  /account/tokens/::id:
+  /account/tokens/$id:
     _group: Tokens
     type: resource
     description: >
@@ -193,7 +193,7 @@ endpoints:
                 https://$api_root/$version/account/clients
           python: |
             new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
-  /account/clients/::id:
+  /account/clients/$id:
     _group: Clients
     type: resource
     authenticated: true
@@ -240,7 +240,7 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
-  /account/clients/::id/reset_secret:
+  /account/clients/$id/reset_secret:
     _group: Clients
     type: Action
     authenticated: true
@@ -259,7 +259,7 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
-  /account/clients/::id/thumbnail:
+  /account/clients/$id/thumbnail:
     _group: Clients
     type: Action
     authenticated: true
@@ -341,7 +341,7 @@ endpoints:
                 https://$api_root/$version/account/users
           python: |
             # currently unimplemented
-  /account/users/::username:
+  /account/users/$username:
     _group: Users
     type: resource
     description: >
@@ -381,7 +381,7 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.delete()
-  /account/users/::username/password:
+  /account/users/$username/password:
     _group: Users
     type: Action
     description: >
@@ -403,7 +403,7 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.change_password('hunter7')
-  /account/users/::username/grants:
+  /account/users/$username/grants:
     _group: Users
     type: resource
     description: >
@@ -479,7 +479,7 @@ endpoints:
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
                 https://$api_root/$version/account/clients
-  /account/clients/::id:
+  /account/clients/$id:
     _group: Clients
     type: resource
     authenticated: true
@@ -534,7 +534,7 @@ endpoints:
             curl https://$api_root/$version/account/events
           python: |
             my_events = client.account.get_events()
-  /account/events/::id:
+  /account/events/$id:
     _group: Events
     type: resource
     authenticated: true
@@ -550,7 +550,7 @@ endpoints:
             curl https://$api_root/$version/account/event/123
           python: |
             event = linode.Event(client, 123)
-  /account/events/::id/seen:
+  /account/events/$id/seen:
     _group: Events
     type: resource
     authenticated: true
@@ -563,7 +563,7 @@ endpoints:
             curl https://$api_root/$version/account/event/123/seen
           python: |
             client.mark_lask_seen_event(event)
-  /account/events/::id/read:
+  /account/events/$id/read:
     _group: Events
     type: resource
     authenticated: true

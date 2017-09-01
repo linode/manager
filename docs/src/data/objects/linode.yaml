@@ -65,7 +65,7 @@ schema:
         _description: Transfer Quota % (Range 0-400, default 80).
   backups:
     _type: Object
-    _seeAlso: "/reference/endpoints/linode/instances/::id/backups"
+    _seeAlso: "/reference/endpoints/linode/instances/$id/backups"
     _description: >
       Displays if backups are enabled, last backup datetime if applicable, and
       the day/window your backups will occur. Window is prefixed by a "W" and an
@@ -190,13 +190,13 @@ schema:
     _type: string
     _isArray: true
     _description: This Linode's IPv4 addresses.
-    _seeAlso: ["/reference/endpoints/linode/instances/::id/ips", "/reference/endpoints/networking/ipv4"]
+    _seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv4"]
     _value: ["97.107.143.8", "192.168.149.108"]
   ipv6:
     _editable: false
     _type: String
     _description: This Linode's IPv6 slaac address.
-    _seeAlso: ["/reference/endpoints/linode/instances/::id/ips", "/reference/endpoints/networking/ipv6"]
+    _seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv6"]
     _value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
   label:
     _editable: true

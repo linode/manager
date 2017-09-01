@@ -59,7 +59,7 @@ endpoints:
                     "linode_id": 123,
                 }' \
                 https://$api_root/$version/support/tickets
-  /support/tickets/::id:
+  /support/tickets/$id:
     type: resource
     authenticated: true
     description: >
@@ -74,7 +74,7 @@ endpoints:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/ticket/$ticket_id
-  /support/tickets/::id/replies:
+  /support/tickets/$id/replies:
     paginationKey: replies
     authenticated: true
     description: >
@@ -106,7 +106,7 @@ endpoints:
                     "description": "More details about the ticket",
                 }' \
                 https://$api_root/$version/support/tickets/$ticket_id/replies
-  /support/tickets/::id/attachments:
+  /support/tickets/$id/attachments:
     authenticated: true
     methods:
       POST:

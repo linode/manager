@@ -101,7 +101,7 @@ endpoints:
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
             ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribution=distro)
-  /linode/instances/::id:
+  /linode/instances/$id:
     type: resource
     authenticated: true
     description: >
@@ -149,7 +149,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode.delete()
-  /linode/instances/::id/disks:
+  /linode/instances/$id/disks:
     _group: Disks
     authenticated: true
     description: >
@@ -234,7 +234,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')
-  /linode/instances/::id/disks/::id:
+  /linode/instances/$id/disks/$id:
     _group: Disks
     type: resource
     authenticated: true
@@ -291,7 +291,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk.delete()
-  /linode/instances/::id/disks/::id/resize:
+  /linode/instances/$id/disks/$id/resize:
     _group: Disks
     type: Strange
     authenticated: true
@@ -312,7 +312,7 @@ endpoints:
                     "size": 1024
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
-  /linode/instances/::id/disks/::id/password:
+  /linode/instances/$id/disks/$id/password:
     _group: Disks
     type: Strange
     authenticated: true
@@ -337,7 +337,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
           python: |
             disk.reset_root_password('hunter2')
-  /linode/instances/::id/configs:
+  /linode/instances/$id/configs:
     _group: Configs
     authenticated: true
     description: >
@@ -424,7 +424,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')
-  /linode/instances/::id/configs/::id:
+  /linode/instances/$id/configs/$id:
     _group: Configs
     type: resource
     authenticated: true
@@ -478,7 +478,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
-  /linode/instances/::id/volumes:
+  /linode/instances/$id/volumes:
     authenticated: true
     description: >
         View Block Storage Volumes attached to this Linode.
@@ -496,7 +496,7 @@ endpoints:
           python: |
             l = linode.Linode(client, 123)
             volumes_for_linode = l.volumes
-  /linode/instances/::id/boot:
+  /linode/instances/$id/boot:
     type: Action
     authenticated: true
     description: >
@@ -521,7 +521,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/boot
           python: |
             my_linode.boot()
-  /linode/instances/::id/shutdown:
+  /linode/instances/$id/shutdown:
     type: Action
     authenticated: true
     description: >
@@ -538,7 +538,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
             my_linode.shutdown()
-  /linode/instances/::id/reboot:
+  /linode/instances/$id/reboot:
     type: Action
     authenticated: true
     description: >
@@ -564,7 +564,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/reboot
           python: |
             my_linode.reboot()
-  /linode/instances/::id/kvmify:
+  /linode/instances/$id/kvmify:
     type: Action
     authenticated: true
     description: >
@@ -581,7 +581,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
             my_linode.kvmify()
-  /linode/instances/::id/rescue:
+  /linode/instances/$id/rescue:
     type: Action
     authenticated: true
     description: >
@@ -610,7 +610,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
-  /linode/instances/::id/clone:
+  /linode/instances/$id/clone:
     type: Action
     authenticated: true
     description: >
@@ -676,7 +676,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/clone
           python: |
             my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
-  /linode/instances/::id/mutate:
+  /linode/instances/$id/mutate:
     type: Action
     authenticated: true
     description: >
@@ -693,7 +693,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/mutate
           python: |
             my_linode.mutate()
-  /linode/instances/::id/resize:
+  /linode/instances/$id/resize:
     type: Action
     authenticated: true
     description: >
@@ -717,7 +717,7 @@ endpoints:
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/resize
-  /linode/instances/::id/backups:
+  /linode/instances/$id/backups:
     _group: Backups
     authenticated: true
     description: >
@@ -758,7 +758,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             my_linode.snapshot()
-  /linode/instances/::id/backups/enable:
+  /linode/instances/$id/backups/enable:
     _group: Backups
     type: Action
     authenticated: true
@@ -777,7 +777,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
             my_linode.enable_backups()
-  /linode/instances/::id/backups/cancel:
+  /linode/instances/$id/backups/cancel:
     _group: Backups
     type: Action
     authenticated: true
@@ -795,7 +795,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
             my_linode.cancel_backups()
-  /linode/instances/::id/backups/::id/restore:
+  /linode/instances/$id/backups/$id/restore:
     _group: Backups
     type: Action
     authenticated: true
@@ -826,7 +826,7 @@ endpoints:
           python: |
             backup = my_linode.available_backups.daily
             backup.restore()
-  /linode/instances/::id/ips:
+  /linode/instances/$id/ips:
     _group: IPs
     type: Strange
     authenticated: true
@@ -860,7 +860,7 @@ endpoints:
                     "type": "private"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips
-  /linode/instances/::id/ips/sharing:
+  /linode/instances/$id/ips/sharing:
     _group: IPs
     methods:
       POST:
@@ -879,7 +879,7 @@ endpoints:
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/sharing
-  /linode/instances/::id/ips/::ip_address:
+  /linode/instances/$id/ips/$ip_address:
     _group: IPs
     type: Action
     authenticated: true
@@ -916,7 +916,7 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
-  /linode/instances/::id/rebuild:
+  /linode/instances/$id/rebuild:
     type: Action
     authenticated: true
     description: >
@@ -1028,7 +1028,7 @@ endpoints:
           python: |
             import stackscript
             TODO
-  /linode/stackscripts/::id:
+  /linode/stackscripts/$id:
     _group: StackScripts
     authenticated: true
     description: >
@@ -1090,7 +1090,7 @@ endpoints:
             curl https://$api_root/$version/linode/distributions
           python: |
             client.linode.get_distributions()
-  /linode/distributions/::id:
+  /linode/distributions/$id:
     _group: Distributions
     type: resource
     description: >
@@ -1120,7 +1120,7 @@ endpoints:
             curl https://$api_root/$version/linode/kernels
           python: |
             client.linode.get_kernels()
-  /linode/kernels/::id:
+  /linode/kernels/$id:
     _group: Kernels
     type: resource
     description: >
@@ -1150,7 +1150,7 @@ endpoints:
             curl https://$api_root/$version/linode/types
           python: |
             client.linode.get_types()
-  /linode/types/::id:
+  /linode/types/$id:
     _group: Types
     type: resource
     description: >
@@ -1228,7 +1228,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /linode/volumes/::id:
+  /linode/volumes/$id:
     _group: Volumes
     type: resource
     authenticated: true
@@ -1303,7 +1303,7 @@ endpoints:
           python: |
             import linode
             TODO 
-  /linode/volumes/::id/attach:
+  /linode/volumes/$id/attach:
     _group: Volumes
     authenticated: true
     methods:
@@ -1335,7 +1335,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /linode/volumes/::id/detach:
+  /linode/volumes/$id/detach:
     _group: Volumes
     type: resource
     authenticated: true
@@ -1352,7 +1352,7 @@ endpoints:
           python: |
             v = linode.Volume(client, 123)
             v.detach()
-  /linode/instances/::id/stats:
+  /linode/instances/$id/stats:
     _group: Stats
     type: Action
     authenticated: true
@@ -1368,7 +1368,7 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/stats
-  /linode/instances/::id/stats/::year/::month:
+  /linode/instances/$id/stats/$year/$month:
     _group: Stats
     type: Action
     authenticated: true
