@@ -28,7 +28,7 @@ export default class Layout extends Component {
     const { route } = this.props;
     const { verticalNav } = this.state;
     const { childParentMap, indices } = route;
-    const path = this.props.location.pathname;
+    const path = this.props.location.pathname + this.props.location.hash;
 
     const verticalNavShow = verticalNav ?
       'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';

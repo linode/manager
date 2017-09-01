@@ -40,13 +40,15 @@
         }
     }
 
-    a {
-        color: $light-black;
-        text-decoration: none;
-    }
+    li {
+        a {
+            color: $light-black;
+            text-decoration: none;
+        }
 
-    a:hover,
-    &.active a {
-        color: $blue;
-    } 
+        a:hover,
+        &.active > a {
+            color: $blue;
+        }
+    }
 }
