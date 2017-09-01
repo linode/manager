@@ -50,7 +50,7 @@ export default class VerticalNavSection extends Component {
       );
     });
   }
-  
+
   render() {
     const { title } = this.props;
 
