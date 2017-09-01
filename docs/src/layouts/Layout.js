@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { Header, VerticalNav, VerticalNavSection } from 'linode-components/navigation';
+import { Header } from 'linode-components/navigation';
 
 import { LinodeLogoImgSrc } from '~/assets';
-
 import { API_VERSION } from '~/constants';
+import { VerticalNav, VerticalNavSection } from '~/components';
 
 
 export default class Layout extends Component {
@@ -81,9 +81,9 @@ export default class Layout extends Component {
                   return (href === path || href === childParentMap[path]);
                 }}
                 path={path}
-                navItems={indices.map(function (endpointIndex) {
-                  return { label: endpointIndex.name, href: endpointIndex.routePath };
-                })}
+                navItems={indices.map(endpointIndex => ({
+                  ...endpointIndex, label: endpointIndex.name, href: endpointIndex.routePath,
+                }))}
               />
               <VerticalNavSection
                 title="Libraries"
