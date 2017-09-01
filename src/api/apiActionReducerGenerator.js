@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { fetch } from '~/fetch';
 
 import {
