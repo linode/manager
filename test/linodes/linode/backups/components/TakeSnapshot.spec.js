@@ -33,7 +33,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.label}/backups`, {
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/backups`, {
         method: 'POST',
         body: {
           label: 'foobar',
@@ -53,7 +53,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.label}/backups`, {
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/backups`, {
         method: 'POST',
         body: {},
       }, { id: 1 }),
