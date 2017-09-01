@@ -86,6 +86,8 @@ export function expectObjectDeepEquals(initialA, initialB, initialPath) {
 export async function expectRequest(fn, path, expectedRequestData, response = {},
                                     fetchStub = null) {
   const sandbox = sinon.sandbox.create();
+  let checkedRequestData = false;
+
   try {
     expect(fn).to.be.a('function');
 
@@ -106,27 +108,40 @@ export async function expectRequest(fn, path, expectedRequestData, response = {}
       _dispatch.returns(response);
       await dispatch.firstCall.args[0](_dispatch, () => state);
       if (_dispatch.callCount === 1 && _.isFunction(_dispatch.firstCall.args[0])) {
-        return expectRequest(
+        await expectRequest(
           _dispatch.firstCall.args[0], path, expectedRequestData, response, fetchStub);
+        checkedRequestData = true;
+      }
+    }
+
+    if (!checkedRequestData) {
+      expect(fetchStub.callCount).to.equal(1);
+      expect(fetchStub.firstCall.args[1]).to.equal(path);
+
+      const requestData = fetchStub.firstCall.args[2];
+
+      if (expectedRequestData) {
+        Object.keys(expectedRequestData).map(key => {
+          const value = requestData[key];
+          const nativeValue = key === 'body' ? JSON.parse(value) : value;
+          expectObjectDeepEquals(nativeValue, expectedRequestData[key], key);
+        });
       }
 
-      return;
+      checkedRequestData = true;
     }
 
-    expect(fetchStub.callCount).to.equal(1);
-    expect(fetchStub.firstCall.args[1]).to.equal(path);
-
-    const requestData = fetchStub.firstCall.args[2];
-
-    if (expectedRequestData) {
-      Object.keys(expectedRequestData).map(key => {
-        const value = requestData[key];
-        const nativeValue = key === 'body' ? JSON.parse(value) : value;
-        expectObjectDeepEquals(nativeValue, expectedRequestData[key], key);
-      });
+    if (!checkedRequestData) {
+      throw new Error(`Failed to check response data:\n${JSON.stringify(expectedRequestData)}`);
     }
-  } finally {
+
     sandbox.restore();
+  } catch (e) {
+    try {
+      sandbox.restore();
+    } catch (e) { /* pass */ }
+
+    throw new Error(`Error testing call ${path}:\n\t${e.message}`);
   }
 }
 

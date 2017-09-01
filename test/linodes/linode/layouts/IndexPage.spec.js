@@ -23,7 +23,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
 
   it('preloads type and configs', async () => {
     const _dispatch = sandbox.stub();
-    _dispatch.returns({ id: 1241, type: 'g5-standard-1' });
+    _dispatch.returns({ id: 1241, type: { id: 'g5-standard-1' } });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
                             { linodeLabel: 'test-linode-7' });
 

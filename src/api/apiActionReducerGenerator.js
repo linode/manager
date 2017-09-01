@@ -98,9 +98,10 @@ export function filterResources(config, resources, resourceFilter) {
 }
 
 function genThunkOne(config, actions) {
-  return (ids = [], options) => async (dispatch, getState) => {
+  return (ids = [], options = {}) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids), options);
+    const fetchOptions = { method: 'GET', ...options };
+    const response = await fetch(token, config.endpoint(...ids), fetchOptions);
     const resource = await response.json();
     dispatch(actions.one(resource, ...ids));
     return resource;
@@ -119,7 +120,7 @@ function genThunkPage(config, actions) {
       const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
-      const fetchOptions = _.merge({}, config.options, options);
+      const fetchOptions = { method: 'GET', ...config.options, ...options };
       const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
 
