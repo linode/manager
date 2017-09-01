@@ -29,7 +29,8 @@ export default class RescueMode extends Component {
   componentWillMount() {
     // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
     const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
-    const devices = sortedDisks.reduce(function (devices, disk, index) {
+    const someDisks = sortedDisks.slice(0, AVAILABLE_DISK_SLOTS.length - 1);
+    const devices = someDisks.reduce(function (devices, disk, index) {
       return { ...devices, [AVAILABLE_DISK_SLOTS[index]]: disk.id };
     }, {});
     this.setState({ devices });
