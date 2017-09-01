@@ -62,4 +62,32 @@ describe('linodes/linode/components/RescueMode', () => {
       }),
     ], 1);
   });
+
+  it('rescue disks are auto-populated in filesystem order', async () => {
+    const page = mount(
+      <RescueMode
+        dispatch={dispatch}
+        linode={testLinode}
+      />);
+
+    await page.find('Form').props().onSubmit();
+
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', {
+        method: 'POST',
+        body: {
+          disks: {
+            sda: 12345,
+            sdb: 12346,
+            sdc: null,
+            sdd: null,
+            sde: null,
+            sdf: null,
+            sdg: null,
+          },
+        },
+      }),
+    ], 1);
+  });
 });
