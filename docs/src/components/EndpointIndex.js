@@ -21,7 +21,7 @@ export default function EndpointIndex(props) {
       <div>
         {endpointIndex.groups.map(function (group) {
           return (
-            <div className="EndpointIndex-group">
+            <div className="EndpointIndex-group" id={group.label.toLowerCase()}>
               {group.label === 'default' ? null : <h3>{group.label}</h3>}
               <Table
                 className="Table--secondary"

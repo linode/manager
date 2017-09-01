@@ -7,18 +7,26 @@ export default class VerticalNavSection extends Component {
     super(props);
 
     this.state = { expanded: {} };
+
+    this.componentWillReceiveProps = this.componentWillMount;
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.checkActiveItem(props.path, props.item.href)) {
-      this.setState({ expanded: true });
-    }
+  componentWillMount(nextProps) {
+    const props = nextProps || this.props;
+
+    props.navItems.forEach((item) => {
+      if (this.props.checkActiveItem(props.path, item.href)) {
+        this.setState({ expanded: { [item.label]: true } });
+      }
+    });
   }
 
   renderNavListItems() {
     const { navItems, path, checkActiveItem } = this.props;
 
     return navItems.map((item, index) => {
+      const groups = (item.groups || []).filter(g => g.label !== 'default');
+
       let nameOfClass;
       if (checkActiveItem) {
         nameOfClass = checkActiveItem(path, item.href) ? 'active' : '';
@@ -27,18 +35,24 @@ export default class VerticalNavSection extends Component {
       }
 
       return (
-        <li
-          key={index}
-          className={nameOfClass}
-        >
+        <li key={index} className={nameOfClass}>
           <Link to={item.href} id={`NavLink-${index}`}>{item.label}</Link>
+          {!groups.length || !this.state.expanded[item.label] ? null : (
+            <ul className="VerticalNav-subsection">
+              {groups.map(group => group.label === 'default' ? null : (
+                <li key={group.label}>
+                  <Link to={`${item.href}#${group.label.toLowerCase()}`}>{group.label}</Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       );
     });
   }
   
   render() {
-    const { title } = props;
+    const { title } = this.props;
 
     const navListItems = this.renderNavListItems();
 
