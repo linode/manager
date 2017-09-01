@@ -22,13 +22,13 @@ export default class VerticalNavSection extends Component {
   }
 
   renderNavListItems() {
-    const { navItems, path, checkActiveItem } = this.props;
+    const { navItems } = this.props;
 
     return navItems.map((item, index) => {
       const groups = (item.groups || []).filter(g => g.label !== 'default');
 
       const isExpanded = this.state.expanded[item.label];
-      const expandedClass = isExpanded ? 'active' : ''
+      const expandedClass = isExpanded ? 'active' : '';
 
       return (
         <li key={index} className={expandedClass}>

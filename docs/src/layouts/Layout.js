@@ -111,5 +111,6 @@ Layout.propTypes = {
   route: PropTypes.object,
   location: PropTypes.shape({
     pathname: PropTypes.string,
+    hash: PropTypes.string,
   }),
 };
