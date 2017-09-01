@@ -28,10 +28,9 @@ export default class Code extends Component {
   }
 
   render() {
-    const { collapsed, example, language, noclipboard } = this.props;
+    const { example, language, noclipboard } = this.props;
     const { clipboardIcon } = this.state;
 
-    const collapsedClass = collapsed ? 'collapse' : '';
     const lowerCaseLanguage = language.toLowerCase();
     const languageName = languageMap[lowerCaseLanguage] ?
       languageMap[lowerCaseLanguage] : lowerCaseLanguage;
@@ -51,7 +50,7 @@ export default class Code extends Component {
 
     // TODO: replace this Highlight component... It's tiny and terrible.
     return (
-      <div className={`Code ${collapsedClass}`}>
+      <div className="Code">
         <Highlight className={`language-${languageName} hljs`}>
           {example}
         </Highlight>
@@ -62,7 +61,6 @@ export default class Code extends Component {
 }
 
 Code.propTypes = {
-  collapsed: PropTypes.bool,
   example: PropTypes.string,
   language: PropTypes.string,
   noclipboard: PropTypes.bool,
