@@ -87,6 +87,12 @@ endpoints:
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
             type: Boolean
+          booted:
+            optional: true
+            description: >
+              Whether the instance should be booted upon completion of creation.
+              This defaults to true if created with a distribution.
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -953,6 +959,12 @@ endpoints:
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
             type: String
+          booted:
+            optional: true
+            description: >
+              Whether the instance should be booted upon completion of rebuild.
+              This defaults to true.
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
