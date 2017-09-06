@@ -1,29 +1,36 @@
 .MethodResponseExample {
-    &-header {
-        border-bottom: $border;
-        padding: 10px;
+    &-toggle {
+        cursor: pointer;
+        cursor: hand;
 
-        &:hover {
-            background: $medium-gray;
-            cursor: pointer;
+        .fa {
+            margin-left: 10px;
         }
     }
 
-    &-header h3,
-    &-headerControl {
-        display: inline;
+    &-example {
+        height: 200px;
+        overflow-y: hidden;
+        border: $border;
+        position: relative;
+
+        &--full {
+            height: 100%;
+        }
+
+        .Code {
+            border: 0;
+        }
     }
 
-    &-headerControl {
-        display: inline;
-        float: right;
-    }
-
-    &-headerIcon {
-        margin-left: 10px;
-    }
-
-    .Example {
-        padding: 0;
+    &-toggle {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px 0;
+        background: rgba(0, 0, 0, .2);
+        color: $light-black;
+        text-align: center;
     }
 }

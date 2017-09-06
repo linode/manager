@@ -21,23 +21,28 @@ export default class MethodResponseExample extends Component {
     const { response } = this.props;
     const { collapsed } = this.state;
 
-    const caretClass = collapsed ? 'fa-caret-right' : 'fa-caret-down';
-    const collapsedDenotation = collapsed ? '(show)' : '(hide)';
+    const exampleJson = JSON.stringify(response.example, null, 2);
+    const allowCollapsed = exampleJson.split('\n').length > 7;
+    const iconType = collapsed ? 'fa-caret-down' : 'fa-caret-up';
+    const showHideText = collapsed ? 'Show more' : 'Show less';
+    const exampleState = collapsed && allowCollapsed ? '' : 'MethodResponseExample-example--full';
+
     return (
       <div className="Method-section MethodResponseExample">
-        <div className="MethodResponseExample-header" onClick={this.onClick}>
-          <h3>Example</h3>
-          <span className="MethodResponseExample-headerControl">
-            {collapsedDenotation}
-            <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} />
-          </span>
+        <h5 className="">Example</h5>
+        <div className={`MethodResponseExample-example ${exampleState}`}>
+          <Code
+            example={exampleJson}
+            name="json"
+            noclipboard
+          />
+          {!allowCollapsed ? null : (
+            <div className="MethodResponseExample-toggle" onClick={this.onClick}>
+              {showHideText}
+              <i className={`fa ${iconType}`} />
+            </div>
+          )}
         </div>
-        <Code
-          example={JSON.stringify(response.example, null, 2)}
-          name="json"
-          noclipboard
-          collapsed={collapsed}
-        />
       </div>
     );
   }
