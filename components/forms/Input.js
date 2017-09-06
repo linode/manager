@@ -5,6 +5,7 @@ export default function Input(props) {
     <span className={`Input ${props.className}`}>
       <input
         {...props}
+        id={props.id || props.name}
         className="form-control"
       />
       {!props.label ? null : <label className="Input-label">{props.label}</label>}

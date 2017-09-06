@@ -1199,8 +1199,8 @@ endpoints:
           size:
             optional: true
             description: >
-              The size in GBs that you wish to make your new volume.
-              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+              The size in GiBs that you wish to make your new volume.
+              Defaults to 20 GiB, can be as large as 1024 GiB (1 TiB).
             type: Integer
           linode_id:
             optional: true
@@ -1274,8 +1274,8 @@ endpoints:
           size:
             optional: true
             description: >
-              The size in GBs that you wish to make your new volume.
-              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+              The size in GiBs that you wish to make your new volume.
+              Defaults to 20 GiB, can be as large as 1024 GiB (1 TiB).
             type: Integer
           linode_id:
             optional: true
