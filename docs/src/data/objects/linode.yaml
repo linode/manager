@@ -20,49 +20,29 @@ schema:
       <li>Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)</li></ul>
     cpu:
       _description: Average CPU usage over 2 hours exceeding this value triggers this alert.
-      enabled:
-        _type: Boolean
-        _value: true
-      threshold:
-        _type: Integer
-        _value: 90
-        _description: CPU Usage % (Range 0-2000, default 90).
+      _type: Integer
+      _value: 90
+      _description: CPU Usage % (Range 0-2000, default 90). 0 to disable.
     io:
       _description: Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.
-      enabled:
-        _type: Boolean
-        _value: true
-      threshold:
-        _type: Integer
-        _value: 10000
-        _description: Disk IO Rate ops/sec (Range 0-100000, default 10000).
+      _type: Integer
+      _value: 10000
+      _description: Disk IO Rate ops/sec (Range 0-100000, default 10000). 0 to disable.
     transfer_in:
       _description: Average incoming traffic over a 2 hour period exceeding this value triggers this alert.
-      enabled:
-        _type: Boolean
-        _value: true
-      threshold:
-        _type: Integer
-        _value: 10
-        _description: Incoming Traffic Mbit/s (Range 0-40000, default 10).
+      _type: Integer
+      _value: 0
+      _description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
     transfer_out:
       _description: Average outbound traffic over a 2 hour period exceeding this value triggers this alert.
-      enabled:
-        _type: Boolean
-        _value: true
-      threshold:
-        _type: Integer
-        _value: 10
-        _description: Outbound Traffic Mbit/s (Range 0-10000, default 10).
+      _type: Integer
+      _value: 10
+      _description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
     transfer_quota:
       _description: Percentage of network transfer quota used being greater than this value will trigger this alert.
-      enabled:
-        _type: Boolean
-        _value: true
-      threshold:
-        _type: Integer
-        _value: 80
-        _description: Transfer Quota % (Range 0-400, default 80).
+      _type: Integer
+      _value: 80
+      _description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
   backups:
     _type: Object
     _seeAlso: "/reference/endpoints/linode/instances/$id/backups"
