@@ -26,7 +26,7 @@ schema:
   disks:
     _type: object
     _description: Disks attached to this Linode config.
-    _seeAlso: "/reference/endpoints/linode/instances/:id/disks"
+    _seeAlso: "/reference/endpoints/linode/instances/$id/disks"
     _editable: true
     sda:
       _type: Disk
