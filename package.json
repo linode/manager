@@ -114,6 +114,7 @@
     "rd3": "^0.6.3",
     "react": "^15.1.0",
     "react-ace": "^5.1.1",
+    "react-clipboard": "^1.1.2",
     "react-dom": "^15.1.0",
     "react-guard": "^0.4.0",
     "react-redux": "^4.0.6",
