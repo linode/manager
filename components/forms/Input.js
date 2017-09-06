@@ -21,6 +21,8 @@ Input.propTypes = {
   label: PropTypes.string,
   className: PropTypes.string,
   multiple: PropTypes.bool,
+  id: PropTypes.string,
+  name: PropTypes.string,
 };
 
 Input.defaultProps = {
