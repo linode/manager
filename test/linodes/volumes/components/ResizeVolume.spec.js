@@ -1,7 +1,6 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { REGION_MAP } from '~/constants';
 import { ResizeVolume } from '~/linodes/volumes/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
