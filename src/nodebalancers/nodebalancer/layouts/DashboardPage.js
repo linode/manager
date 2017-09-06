@@ -16,23 +16,17 @@ import { showModal, hideModal } from '~/actions/modal';
 import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
 import { nodebalancerStats } from '~/api/nodebalancers';
 import { nodebalancers } from '~/api';
+import {
+  GraphGroup,
+  makeConnectionsGraphMetadata,
+  makeTrafficGraphMetadata,
+} from '~/components/graphs/GraphGroup';
 import Region from '~/linodes/components/Region';
 import { dispatchOrStoreErrors } from '~/api/util';
-import LineGraph from '~/components/graphs/LineGraph';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
-import { convertUnits } from '~/utilities';
 
-
-const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
-const NETWORK_UNITS = [' bits', 'K bits', 'M bits'];
-
-function formatData(colors, datasets, legends) {
-  const x = datasets[0].map(([x]) => x);
-  const ys = datasets.map(dataset => dataset.map(([, y]) => y));
-  return LineGraph.formatData(x, ys, colors, legends);
-}
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
@@ -45,26 +39,10 @@ export class DashboardPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      source: 'connections',
-      units: 0,
-    };
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
-
-  shouldComponentUpdate(newProps, newState) {
-    // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
-  }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   deleteNodeBalancerConfig(nodebalancer, config) {
     const { dispatch } = this.props;
@@ -87,81 +65,21 @@ export class DashboardPage extends Component {
     ));
   }
 
-  renderUnitSelect() {
-    const { units, source } = this.state;
-
-    const _units = source === 'connections' ? CONNECTION_UNITS : NETWORK_UNITS;
-
-    return (
-      <div className="Menu-item clearfix">
-        <label className="col-form-label float-sm-left">Units:</label>
-        <Select
-          className="float-sm-left"
-          value={units}
-          name="units"
-          onChange={this.onChange}
-          options={_units.map((label, value) => ({ label, value }))}
-        />
-      </div>
-    );
-  }
-
   renderGraphs() {
     const { timezone, nodebalancer: { _stats: stats } } = this.props;
-    const { units } = this.state;
 
-    if (stats) {
-      this.graphs = {
-        connections: {
-          title: 'Connections',
-          yAxis: {
-            label: `${CONNECTION_UNITS[units]} per second`,
-            format: v => convertUnits(v, units, CONNECTION_UNITS, 1),
-          },
-          data: formatData(['990066'], [stats.connections]),
-          tooltipFormat: v => convertUnits(v, units, CONNECTION_UNITS, 1),
-        },
-        traffic: {
-          title: 'Traffic',
-          yAxis: {
-            label: `${NETWORK_UNITS[units]} per second`,
-            format: v => convertUnits(v, units, NETWORK_UNITS, 1),
-          },
-          data: formatData(['0033CC', '32CD32'],
-                           [stats.traffic.in, stats.traffic.out],
-                           ['In', 'Out']),
-          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS, 1),
-        },
-      };
+    if (!stats) {
+      return <p>No graphs are available.</p>;
     }
 
-    const options = [
-      { value: 'connections', label: 'Connections' },
-      { value: 'traffic', label: 'Traffic' },
+    const allGraphData = [
+      makeConnectionsGraphMetadata(stats.connections),
+      makeTrafficGraphMetadata(stats.traffic),
     ];
 
     return (
-      <Card header={<CardHeader title="Graphs" />}>
-        {!this.graphs ? <p>No graphs are available.</p> : (
-          <div>
-            <div className="Menu">
-              <div className="Menu-item">
-                <Select
-                  value={this.state.source}
-                  name="source"
-                  onChange={this.onChange}
-                  options={options}
-                />
-              </div>
-              {this.renderUnitSelect()}
-              <div className="Menu-item Menu-item--right">Last 24 Hours</div>
-            </div>
-            <LineGraph
-              timezone={timezone}
-              {...this.graphs[this.state.source]}
-            />
-          </div>
-        )}
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        <GraphGroup timezone={timezone} allGraphData={allGraphData} />
       </Card>
     );
   }

@@ -57,7 +57,7 @@ export default class LineGraph extends Component {
 
   renderChart({ timezone, data, title, yAxis, tooltipFormat }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
-    const ctx = thisDOMNode.getContext('2d');
+    const ctx = thisDOMNode.querySelector('canvas').getContext('2d');
     const config = {
       // The data will be mutated! We need to preserve the original data.
       data: _.cloneDeep(data),
@@ -153,7 +153,10 @@ export default class LineGraph extends Component {
 
   render() {
     return (
-      <canvas className="LineGraph" />
+      <div>
+        <h4 className="text-sm-center">{this.props.label}</h4>
+        <canvas className="LineGraph" />
+      </div>
     );
   }
 }
