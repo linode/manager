@@ -39,6 +39,7 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
         onCancel={() => dispatch(hideModal())}
         deleteAction={deleteAction}
         deleteActionPending={deleteActionPending}
+        boldItems={false}
       />
     )));
   };
