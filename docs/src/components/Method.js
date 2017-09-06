@@ -19,12 +19,7 @@ export default function Method(props) {
   } = method;
 
   // TODO: Break these out if needed
-  let methodParams = null;
-  if (params) {
-    methodParams = (
-      <MethodParams params={params} />
-    );
-  }
+  const methodParams = <MethodParams params={params} />;
 
   let methodRequest = (
     <MethodRequest examples={examples} />

@@ -17,7 +17,7 @@ export default function MethodRequest(props) {
 
   return (
     <div className="Method-section Method-request">
-      <h3>Request</h3>
+      <h5>Example</h5>
       <Tabs tabs={tabs} />
     </div>
   );
