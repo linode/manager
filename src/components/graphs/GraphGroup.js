@@ -7,10 +7,12 @@ import { onChange } from 'linode-components/forms/utilities';
 import LineGraph from './LineGraph';
 
 
-const UNITS = [' ', 'K', 'M'];
+const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
+const IO_UNITS = [' blocks', 'K blocks', 'M blocks'];
+const NETWORK_UNITS = [' bits', 'K bits', 'M bits'];
 
-export function convertUnits(value, units, unitType, fixedNumber = 0) {
-  return `${value.toFixed(fixedNumber) / Math.pow(1000, units)}${unitType[units]}/s`;
+export function convertUnits(value, currentUnit, unitType, fixedNumber = 0) {
+  return `${value.toFixed(fixedNumber) / Math.pow(1000, currentUnit)}${unitType[currentUnit]}/s`;
 }
 
 function formatData(colors, datasets, legends) {
@@ -23,7 +25,7 @@ export function makeCPUGraphMetadata(graphData) {
   return {
     title: 'CPU',
     yAxis: {
-      label: 'Percentage of CPU(s) used',
+      label: currentUnit => 'Percentage of CPU(s) used',
       format: p => `${p.toFixed(1)}%`,
     },
     data: formatData(['0033CC'], [graphData]),
@@ -32,103 +34,110 @@ export function makeCPUGraphMetadata(graphData) {
 }
 
 export function makeIOGraphMetadata(graphData) {
-  return (units) => ({
+  const UNITS = IO_UNITS;
+
+  return {
     title: 'IO',
     yAxis: {
-      label: `${UNITS[units]} per second`,
-      format: v => convertUnits(v, units, UNITS, 1),
+      label: currentUnit => `${UNITS[currentUnit]} per second`,
+      format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     },
     data: formatData(['FFD04B', 'FA373E'],
                      [graphData.io, graphData.swap],
                      ['Disk', 'Swap']),
-    tooltipFormat: v => convertUnits(v, units, UNITS, 1),
-  });
+    tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
+    units: UNITS,
+  };
 }
 
 export function makeNetv4GraphMetadata(graphData) {
-  return (units) => ({
+  const UNITS = NETWORK_UNITS;
+
+  return {
     title: 'IPv4 Network',
     yAxis: {
-      label: `${UNITS[units]} per second`,
-      format: v => convertUnits(v, units, UNITS),
+      label: currentUnit => `${UNITS[currentUnit]} per second`,
+      format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                      [graphData.in, graphData.private_in,
                       graphData.out, graphData.private_out],
                      ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                       'Public IPv4 Outbound', 'Private IPv4 Outbound']),
-    tooltipFormat: v => convertUnits(v, units, UNITS),
-  });
+    tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
+    units: UNITS,
+  };
 }
 
 export function makeNetv6GraphMetadata(graphData) {
-  return (units) => ({
+  const UNITS = NETWORK_UNITS;
+
+  return {
     title: 'IPv6 Network',
     yAxis: {
-      label: `${UNITS[units]} per second`,
-      format: v => convertUnits(v, units, UNITS),
+      label: currentUnit => `${UNITS[currentUnit]} per second`,
+      format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                      [graphData.in, graphData.private_in,
                       graphData.out, graphData.private_out],
                      ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                       'Public IPv6 Outbound', 'Private IPv6 Outbound']),
-    tooltipFormat: v => convertUnits(v, units, UNITS),
-  });
+    tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
+    units: UNITS,
+  };
 }
 
 export function makeConnectionsGraphMetadata(graphData) {
-  return (units) => ({
+  const UNITS = CONNECTION_UNITS;
+
+  return {
     title: 'Connections',
     yAxis: {
-      label: `${UNITS[units]} per second`,
-      format: v => convertUnits(v, units, UNITS, 1),
+      label: currentUnit => `${UNITS[currentUnit]} per second`,
+      format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     },
     data: formatData(['990066'], [graphData]),
-    tooltipFormat: v => convertUnits(v, units, UNITS, 1),
-  });
+    tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
+    units: UNITS,
+  };
 }
   
 export function makeTrafficGraphMetadata(graphData) {
-  return (units) => ({
+  const UNITS = NETWORK_UNITS;
+
+  return {
     title: 'Traffic',
     yAxis: {
-      label: `${UNITS[units]} per second`,
-      format: v => convertUnits(v, units, UNITS, 1),
+      label: currentUnit => `${UNITS[currentUnit]} per second`,
+      format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     },
     data: formatData(['0033CC', '32CD32'],
                      [graphData.in, graphData.out],
                      ['In', 'Out']),
-    tooltipFormat: v => convertUnits(v, units, UNITS, 1),
-  });
+    tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
+    units: UNITS,
+  };
 }
 
 export class GraphGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { units: 0, displayMode: 'small' };
+    this.state = { displayMode: 'small' };
 
     this.onChange = onChange.bind(this);
   }
 
-  shouldComponentUpdate(newProps, newState) {
-    // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
-  }
-
-  renderUnitSelect() {
-    const { units } = this.state;
-
+  renderUnitSelect(units, currentUnit, name) {
     return (
-      <div className="Menu-item clearfix">
-        <label className="col-form-label float-sm-left">Units:</label>
+      <div>
+        <label className="Menu-itemLabel">Units:</label>
         <Select
-          className="float-sm-left"
-          value={units}
-          name="units"
+          value={currentUnit}
+          name={name}
           onChange={this.onChange}
-          options={UNITS.map((label, value) => ({ label, value }))}
+          options={units.map((label, value) => ({ label, value }))}
         />
       </div>
     );
@@ -136,33 +145,39 @@ export class GraphGroup extends Component {
 
   render() {
     const { timezone, allGraphData } = this.props;
-    const { units, displayMode } = this.state;
+    const { displayMode } = this.state;
 
-    const graphs = allGraphData.map(function(data) {
-      if (_.isFunction(data)) {
-        data = data(units);
-      }
+    const graphs = allGraphData.map((data) => {
+      const currentUnit = this.state[data.title] || 0;
 
       const className = displayMode === 'big' ? 'col-sm-12' : 'col-sm-6';
 
       return (
-        <div key={data.title} className={className}>
-          <LineGraph timezone={timezone} label={data.title} {...data} />
+        <div key={data.title} className={`GraphGroup-graph ${className}`}>
+          <div className="Menu">
+            <div className="Menu-item"><h4>{data.title}</h4></div>
+            {!data.units ? null : (
+              <div className="Menu-item--right">
+                {this.renderUnitSelect(data.units, currentUnit, data.title)}
+              </div>
+            )}
+          </div>
+          <LineGraph timezone={timezone} currentUnit={currentUnit} {...data} />
         </div>
       );
     });
 
     return (
-      <div>
+      <div className="GraphGroup">
         <div className="Menu">
-          <div className="Menu-item--right">Last 24 Hours</div>
-          <div className="Menu-item--right">
+          <div className="Menu-item Menu-item--right">Last 24 Hours</div>
+          <div className="Menu-item Menu-item--right">
             <label className="Menu-itemLabel">Display:</label>
             <Select
               value={displayMode}
               name="displayMode"
               onChange={this.onChange}
-              options={[{ label: '1 x 4', value: 'big' }, { label: '2 x 2', value: 'small' }]}
+              options={[{ label: '2 x 2', value: 'small' }, { label: '1 x 4', value: 'big' }]}
             />
           </div>
         </div>

@@ -46,6 +46,11 @@ export default class LineGraph extends Component {
     this._chart.destroy();
   }
 
+  shouldComponentUpdate(newProps, newState) {
+    // Prevents graph animation from happening multiple times for unchanged data.
+    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
+  }
+
   formatTicks(timezone, d, i) {
     // This is probably a temporary function until someone needs to pass in their own format.
     if (i % 10 === 0) {
@@ -55,9 +60,9 @@ export default class LineGraph extends Component {
     return undefined;
   }
 
-  renderChart({ timezone, data, title, yAxis, tooltipFormat }) {
+  renderChart({ timezone, data, title, yAxis, tooltipFormat, currentUnit }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
-    const ctx = thisDOMNode.querySelector('canvas').getContext('2d');
+    const ctx = thisDOMNode.getContext('2d');
     const config = {
       // The data will be mutated! We need to preserve the original data.
       data: _.cloneDeep(data),
@@ -102,7 +107,7 @@ export default class LineGraph extends Component {
               if (label) {
                 label += ': ';
               }
-              label += tooltipFormat(tooltipItem.yLabel);
+              label += tooltipFormat(tooltipItem.yLabel, currentUnit);
               return label;
             },
           },
@@ -128,11 +133,11 @@ export default class LineGraph extends Component {
             display: true,
             scaleLabel: {
               display: true,
-              labelString: yAxis.label,
+              labelString: yAxis.label(currentUnit),
             },
             ticks: {
               display: true,
-              callback: yAxis.format,
+              callback: (v) => yAxis.format(v, currentUnit),
               beginAtZero: true,
             },
           }],
@@ -152,12 +157,7 @@ export default class LineGraph extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <h4 className="text-sm-center">{this.props.label}</h4>
-        <canvas className="LineGraph" />
-      </div>
-    );
+    return <canvas className="LineGraph" />;
   }
 }
 
@@ -177,4 +177,5 @@ LineGraph.propTypes = {
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     Format: PropTypes.func,
   }),
+  currentUnit: PropTypes.number,
 };
