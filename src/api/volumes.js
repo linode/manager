@@ -24,5 +24,6 @@ export function attachVolume(volumeId, linodeId, configId = null) {
 export function resizeVolume(volumeId, size) {
   return async function(dispatch) {
     await dispatch(thunkFetch.post(`/linode/volumes/${volumeId}/resize`, { size }));
+    dispatch(actions.one({ size: size }, volumeId));
   }
 }
