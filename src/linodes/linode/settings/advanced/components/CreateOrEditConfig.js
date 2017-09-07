@@ -48,13 +48,14 @@ export default class CreateOrEditConfig extends Component {
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
+      isCustomRoot: AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].indexOf(
         config.root_device.replace('/dev/', '')) === -1,
       isMaxRam: config.ram_limit === 0,
       enableDistroHelper: config.helpers.enable_distro_helper,
       enableNetworkHelper: config.helpers.enable_network_helper,
       enableModulesDepHelper: config.helpers.enable_modules_dep_helper,
       disableUpdatedb: config.helpers.disable_updatedb,
+      ...this.state,
     });
 
     if (!config.id) {
@@ -113,7 +114,6 @@ export default class CreateOrEditConfig extends Component {
       },
     ];
   }
-
   render() {
     const { linode, config } = this.props;
     const {
@@ -121,6 +121,8 @@ export default class CreateOrEditConfig extends Component {
       runLevel, ramLimit, isMaxRam, devices, enableDistroHelper, enableNetworkHelper,
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
+    const defaultRootDevice = `/dev/${AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor][0]}`;
+
 
     return (
       <Form
@@ -247,7 +249,7 @@ export default class CreateOrEditConfig extends Component {
           </div>
         </FormGroup>
         <h3 className="sub-header">Block Device Assignment</h3>
-        {AVAILABLE_DISK_SLOTS.map((slot, i) => (
+        {AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].map((slot, i) => (
           <DeviceSelect
             key={i}
             errors={errors}
@@ -284,14 +286,14 @@ export default class CreateOrEditConfig extends Component {
                 radioChecked={isCustomRoot === false}
                 radioOnChange={() => this.setState({
                   isCustomRoot: false,
-                  rootDevice: '/dev/sda',
+                  rootDevice: defaultRootDevice,
                 })}
                 radioLabel="Standard"
                 selectId="root-device-select"
-                selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
+                selectValue={isCustomRoot ? defaultRootDevice : rootDevice}
                 selectDisabled={isCustomRoot}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                selectOptions={AVAILABLE_DISK_SLOTS.map((slot) => ({
+                selectOptions={AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].map((slot) => ({
                   value: `/dev/${slot}`, label: `/dev/${slot}`,
                 }))}
               />
@@ -304,10 +306,10 @@ export default class CreateOrEditConfig extends Component {
                 radioChecked={isCustomRoot === true}
                 radioOnChange={() => this.setState({
                   isCustomRoot: true,
-                  rootDevice: '/dev/sda',
+                  rootDevice: defaultRootDevice,
                 })}
                 inputId="custom-root-device"
-                inputPlaceholder="/dev/sda"
+                inputPlaceholder={defaultRootDevice}
                 inputValue={isCustomRoot ? rootDevice : ''}
                 inputDisabled={isCustomRoot === false}
                 inputType="text"
@@ -403,8 +405,11 @@ CreateOrEditConfig.propTypes = {
 
 CreateOrEditConfig.defaultProps = {
   config: {
-    devices: AVAILABLE_DISK_SLOTS.reduce((disks, slot) => ({ ...disks, [slot]: null }), {}),
-    root_device: '/dev/sda',
+    devices: {
+      ..._.reduce(AVAILABLE_DISK_SLOTS.kvm, (disks, slot) => ({ ...disks, [slot]: null }), {}),
+      ..._.reduce(AVAILABLE_DISK_SLOTS.xen, (disks, slot) => ({ ...disks, [slot]: null }), {}),
+    },
+    root_device: '',
     helpers: {
       enable_distro_helper: true,
       enable_network_helper: true,
