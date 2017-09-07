@@ -26,7 +26,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
 import { AddLinode, CloneLinode, RestoreLinode } from '../components';
-import TransferPool from '../components';
+import { TransferPool } from '../../components';
 
 
 const OBJECT_TYPE = 'linodes';
@@ -232,6 +232,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   linodes: PropTypes.object.isRequired,
+  transfer: PropTypes.object.isRequired,
   types: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
