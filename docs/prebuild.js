@@ -415,11 +415,10 @@ allEndpoints = Object.keys(endpointMap).map(function (key) {
 
   // alphabetically sort groups and endpoints in groups
   return _.merge(endpointIndex, {
-    groups: _.sortBy(endpointIndex.group, g => g.label.toLowerCase()).map(group => ({
-      group: _.merge(group, {
-        endpoints: _.sort(group.endpoints, 'path'),
-      }),
-    })),
+    groups: _.sortBy(endpointIndex.groups, g => g.label.toLowerCase()).map(
+      group => _.merge(group, {
+        endpoints: _.sortBy(group.endpoints, 'path'),
+      })),
   });
 }).filter(Boolean);
 
