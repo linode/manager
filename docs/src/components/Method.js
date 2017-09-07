@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 
-import { default as MethodParams } from './MethodParams';
-import { default as MethodRequest } from './MethodRequest';
-import { default as MethodResponse } from './MethodResponse';
-import { default as MethodResponseExample } from './MethodResponseExample';
+import { default as UseExample } from './UseExample';
+import { default as SpecExample } from './SpecExample';
+import { default as Spec } from './Spec';
 
 
 export default function Method(props) {
@@ -11,31 +10,28 @@ export default function Method(props) {
   const {
     name,
     description,
-    examples,
     money,
     oauth,
+    examples,
     params,
     response,
   } = method;
 
-  // TODO: Break these out if needed
-  const methodParams = <MethodParams params={params} />;
-
-  let methodRequest = (
-    <MethodRequest examples={examples} />
+  const methodRequest = !params.schema ? null : (
+    <div className="Method-section">
+      <h3>Request</h3>
+      <Spec schema={params.schema} />
+      <SpecExample example={params.example} type="Request" />
+    </div>
   );
 
-  let methodResponse = null;
-  let methodResponseExample = null;
-
-  const responseSchema = response.schema;
-  if (responseSchema) {
-    methodResponse = (<MethodResponse schema={responseSchema} />);
-
-    if (response.example) {
-      methodResponseExample = (<MethodResponseExample response={response} />);
-    }
-  }
+  const methodResponse = !response.schema ? null : (
+    <div className="Method-section">
+      <h3>Response</h3>
+      <Spec schema={response.schema} />
+      <SpecExample example={response.example} />
+    </div>
+  );
 
   return (
     <div id={name} className="Method">
@@ -56,11 +52,11 @@ export default function Method(props) {
           </div>
         </div>
         {!description ? null : <p>{description}</p>}
+        <h4>Basic Usage:</h4>
+        <UseExample examples={examples} />
       </div>
-      {methodParams}
       {methodRequest}
       {methodResponse}
-      {methodResponseExample}
     </div>
   );
 }

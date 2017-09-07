@@ -68,47 +68,16 @@ function getResourceObjByName(name) {
   return resourceObject;
 }
 
-function formatMethodParams(methodObj) {
-  let params = methodObj.params;
-
-  let formattedParams;
-  if (params) {
-    formattedParams = Object.keys(params).map(function(paramName) {
-      const param = params[paramName];
-
-      param.description = convertUlToArray(param.description);
-
-      let type = param.type;
-      if (type) {
-        const resourceObj = getResourceObjByName(param.type);
-        if (resourceObj) {
-          if (Array.isArray(resourceObj.schema)) {
-            type = resourceObj.schema.filter(function(schemaObj) { return schemaObj.name === 'id'; })[0]._type;
-          } else {
-            type = resourceObj.schema.id._type;
-          }
-        }
-      }
-
-      const required = !param.optional;
-      return _.merge({}, param, {
-        name: paramName,
-        type: type,
-        required: required
-      });
-    });
-  }
-
-  return formattedParams;
-}
-
-function formatMethodExamples(methodObj) {
+function formatMethodExamples(methodObj, specExample) {
   let examples;
   if (methodObj.examples) {
     examples = Object.keys(methodObj.examples).map(function(example) {
       return {
         name: example,
-        value: methodObj.examples[example].replace(/https:\/\/\$api_root/g, API_ROOT).replace(/\$version/g, API_VERSION),
+        value: methodObj.examples[example]
+          .replace(/https:\/\/\$api_root/g, API_ROOT)
+          .replace(/\$version/g, API_VERSION)
+          .replace(/\$SUB_SPEC_EXAMPLE/g, JSON.stringify(specExample, null, 2)),
       };
     });
   }
@@ -127,7 +96,7 @@ function formatSchemaExample(schema, paginationKey) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
       // Pagination key represents an array of objects that we need to look up.
-      if (obj.name === paginationKey) {
+      if (obj.name === paginationKey || obj.isArray) {
         schemaExample[obj.name] = [schemaExample[obj.name]];
       }
     } else {
@@ -150,47 +119,50 @@ function formatSchemaExample(schema, paginationKey) {
 
 function formatSchemaField(schemaField, enumMap) {
   let description;
-  if (schemaField._description) {
-    description = schemaField._description;
+  if (schemaField.description) {
+    description = schemaField.description;
   } else {
     description = schemaField.description;
   }
   description = convertUlToArray(description);
 
   const name = schemaField.name;
-  const seeAlso = schemaField._seeAlso;
-  const editable = schemaField._editable;
-  const filterable = schemaField._filterable;
-  const type = schemaField._type;
-  const lowerType = type ? type.toLowerCase() : null;
-  const subType = schemaField._subtype;
-  const isArray = schemaField._isArray;
-  let value = schemaField._value;
-
-  let typeLabel = schemaField._typeLabel || type || 'object';
+  const seeAlso = schemaField.seeAlso;
+  const editable = schemaField.editable;
+  const filterable = schemaField.filterable;
+  const type = schemaField.type;
+  let lowerType = type && _.isString(type) ? type.toLowerCase() : 'object';
+  const subType = schemaField.subtype;
+  const isArray = schemaField.isArray;
+  let value = schemaField.value;
 
   let nestedSchema = null;
   if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
     nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
-    typeLabel = 'object';
+    lowerType = 'object';
   } else if (lowerType === 'enum' && enumMap[subType]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
   } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' || !lowerType) {
-    // is of the the checked types, or no type provided (currently undocumented)
-    nestedSchema = formatSchema(schemaField, enumMap);
+    // is of the checked types, or no type provided (currently undocumented)
+      nestedSchema = formatSchema(schemaField, enumMap);
+      if (nestedSchema) {
+          if (nestedSchema[0].name === 'type') {
+              nestedSchema = nestedSchema[0].schema;
+          }
+      }
   }
 
-  // TODO: remove enum, datetime, and array from here
-  const nonNestedTypes = ['boolean', 'integer', 'float', 'string', 'enum', 'datetime', 'array'];
+  // TODO: remove enum, datetime, array, and object from here
+  const nonNestedTypes = ['boolean', 'integer', 'float', 'string', 'enum', 'datetime', 'array', 'object'];
   if (nestedSchema === null && nonNestedTypes.indexOf(lowerType) === -1) {
     throw new Error(`Unknown object '${name}': got '${lowerType}'`);
   }
 
-  typeLabel = _.capitalize(typeLabel);
+  lowerType = _.capitalize(lowerType);
   if (isArray) {
-    typeLabel = `Array[${_.capitalize(typeLabel)}]`;
+    lowerType = `Array[${_.capitalize(lowerType)}]`;
   }
 
   // don't show filters for nestedSchemas
@@ -201,24 +173,25 @@ function formatSchemaField(schemaField, enumMap) {
   }
 
   return {
-    name: name,
-    seeAlso: seeAlso,
-    description: description,
-    editable: editable,
-    filterable: filterable,
-    type: typeLabel,
-    subType: subType,
-    value: value,
+    name,
+    seeAlso,
+    description,
+    editable,
+    filterable,
+    subType,
+    value,
+    isArray,
+    type: lowerType,
     schema: nestedSchema
   };
 }
 
 function createPaginationSchema(paginationKey, resourceType) {
   return {
-    total_pages: { _type: 'integer', description: 'The total number of pages of results.', _value: 1 },
-    total_results: { _type: 'integer', description: 'The total number of results.', _value: 1 },
-    [paginationKey]: { _type: resourceType, _isArray: true, description: 'All results for the current page.' },
-    page: { _type: 'integer', description: 'The current page in the results.', _value: 1 },
+    total_pages: { type: 'integer', description: 'The total number of pages of results.', value: 1 },
+    total_results: { type: 'integer', description: 'The total number of results.', value: 1 },
+    [paginationKey]: { type: resourceType, isArray: true, description: 'All results for the current page.' },
+    page: { type: 'integer', description: 'The current page in the results.', value: 1 },
   };
 }
 
@@ -231,12 +204,12 @@ function formatSchema(schema, enumMap={}, paginationKey=null, resourceType=null)
     return formatSchema(createPaginationSchema(paginationKey, resourceType), enumMap);
   }
 
-  const filteredSchemas = Object.keys(schema).map(function (schemaName) {
+  const filteredSchemas = _.flatten(Object.keys(schema).map(function (schemaName) {
     const val = schema[schemaName];
     if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
-      return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
+        return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
     }
-  }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+  })).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
 
   // do not represent array types without nested objects in the schema tables
   if (!filteredSchemas.length) {
@@ -263,8 +236,8 @@ function createEnumMap(enums) {
   return enumMap;
 }
 
-function formatMethodResponse(methodObj) {
-  let response = methodObj.response;
+function formatMethodThing(methodObj, key) {
+  let response = methodObj[key];
 
   let resourceObject;
   if (typeof response === 'string') {
@@ -303,16 +276,16 @@ function formatMethodResponse(methodObj) {
 function formatMethod(endpoint, method) {
   const methodObj = endpoint.methods[method];
 
-  const params = formatMethodParams(methodObj);
-  const response = formatMethodResponse(methodObj);
+  const params = formatMethodThing(methodObj, 'params');
+  const response = formatMethodThing(methodObj, 'response');
 
-  const examples = formatMethodExamples(methodObj);
+  const examples = formatMethodExamples(methodObj, params.example);
 
   return _.merge({}, methodObj, {
     name: method,
-    examples: examples,
+    examples,
     params: params,
-    response: response
+    response: response,
   });
 }
 
@@ -401,22 +374,22 @@ allEndpoints.forEach(function(endpointContainer) {
 
   // map groups from endpoint definitions, pushing each endpoint into it's group
   endpoints.forEach(function(endpoint) {
-    if (!endpoint._group) {
-      endpoint._group = 'default';
+    if (!endpoint.group) {
+      endpoint.group = 'default';
     }
 
     if (!endpointMap[containerName]) {
       throw new Error(`'${containerName}' undefined in the endpoint map. check the file name against the endpointMap in prebuild.`);
     }
 
-    if (!endpointMap[containerName].groups[endpoint._group]) {
-      endpointMap[containerName].groups[endpoint._group] = {
-        label: endpoint._group,
+    if (!endpointMap[containerName].groups[endpoint.group]) {
+      endpointMap[containerName].groups[endpoint.group] = {
+        label: endpoint.group,
         endpoints: []
       };
     }
 
-    endpointMap[containerName].groups[endpoint._group].endpoints.push(endpoint);
+    endpointMap[containerName].groups[endpoint.group].endpoints.push(endpoint);
   });
 });
 
