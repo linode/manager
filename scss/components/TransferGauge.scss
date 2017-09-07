@@ -1,0 +1,19 @@
+.transfer {
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+    h2 {
+        width: 100%;
+    }
+    .TransferGauge {
+        width: 300px;
+        border: $border;
+        height: $input-height;
+        margin: auto;
+        background-color: $light-gray;
+        &-bar {
+            background-color: $green;
+            height: 100%;
+        }
+    }
+}

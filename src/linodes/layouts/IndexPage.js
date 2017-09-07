@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 import { Input } from 'linode-components/forms';
 import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -16,6 +17,7 @@ import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import * as api from '~/api';
+import { transferPool } from '~/api/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
@@ -32,6 +34,7 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.linodes.all());
+    await dispatch(transferPool());
   }
 
   constructor(props) {
@@ -183,7 +186,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, distributions, types } = this.props;
+    const { dispatch, linodes, distributions, types, transfer } = this.props;
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
@@ -217,6 +220,23 @@ export class IndexPage extends Component {
             />
           )}
         </div>
+				<Card
+					header={<CardHeader title="This Month's Network Transfer Pool" />}
+					className="transfer col-lg-6 col-md-12 col-sm-12"
+				>
+			  	<div className="TransferGauge">
+				  	<div className="TransferGauge-bar" 
+							style={{ width: `${Math.ceil(transfer.used/transfer.quota)}%` }}
+						>
+						</div>
+	  			</div>
+					<div>
+            {transfer.used}GB Used,
+            {transfer.quota-transfer.used}GB Remaining,
+            {transfer.quota}GB Quota
+					</div>
+					<small className='text-muted'>Your transfer is prorated and will reset next month</small>
+				</Card>
       </div>
     );
   }
@@ -234,11 +254,13 @@ function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const distributions = state.api.distributions.distributions;
   const types = state.api.types.types;
+	const transfer = state.api.account._transferpool;
 
   return {
     linodes,
     distributions,
     types,
+		transfer,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
