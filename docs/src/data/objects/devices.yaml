@@ -1,0 +1,28 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Linode Devices
+prefix: devices
+schema:
+  sda:
+    type: device
+    description: The device mapped to /dev/sda. Can be null.
+  sdb:
+    type: device
+    description: The device mapped to /dev/sdb. Can be null.
+  sdc:
+    type: device
+    description: The device mapped to /dev/sdc. Can be null.
+  sdd:
+    type: device
+    description: The device mapped to /dev/sdd. Can be null.
+  sde:
+    type: device
+    description: The device mapped to /dev/sde. Can be null.
+  sdf:
+    type: device
+    description: The device mapped to /dev/sdf. Can be null.
+  sdg:
+    type: device
+    description: The device mapped to /dev/sdg. Can be null.
+  sdh:
+    type: device
+    description: The device mapped to /dev/sdh. Can be null.
