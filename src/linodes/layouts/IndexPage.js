@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
 import { Input } from 'linode-components/forms';
 import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -27,6 +26,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
 import { AddLinode, CloneLinode, RestoreLinode } from '../components';
+import TransferPool from '../components';
 
 
 const OBJECT_TYPE = 'linodes';
@@ -220,23 +220,10 @@ export class IndexPage extends Component {
             />
           )}
         </div>
-				<Card
-					header={<CardHeader title="This Month's Network Transfer Pool" />}
-					className="transfer col-lg-6 col-md-12 col-sm-12"
-				>
-			  	<div className="TransferGauge">
-				  	<div className="TransferGauge-bar" 
-							style={{ width: `${Math.ceil(transfer.used/transfer.quota)}%` }}
-						>
-						</div>
-	  			</div>
-					<div>
-            {transfer.used}GB Used,
-            {transfer.quota-transfer.used}GB Remaining,
-            {transfer.quota}GB Quota
-					</div>
-					<small className='text-muted'>Your transfer is prorated and will reset next month</small>
-				</Card>
+        <TransferPool
+          used={transfer.used}
+          quota={transfer.quota}
+        />
       </div>
     );
   }
