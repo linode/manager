@@ -53,6 +53,7 @@ export default class SpecExample extends Component {
 
 SpecExample.propTypes = {
   example: PropTypes.string,
+  type: PropTypes.string,
 };
 
 SpecExample.defaultProps = {

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { Table, TableRow } from 'linode-components/tables';
@@ -114,11 +115,11 @@ export default class Spec extends Component {
   }
 
   render() {
-    const { schema, request = false } = this.props;
+    const { schema, request } = this.props;
 
     const columns = _.cloneDeep(defaultColumns);
     if (request) {
-      columns[0] = { cellComponent: ParamFieldCell, label: 'Field', headerClassName: 'FieldColumn' };
+      columns[0].cellComponent = ParamFieldCell;
     }
 
     if (!schema) {
@@ -130,5 +131,6 @@ export default class Spec extends Component {
 }
 
 Spec.propTypes = {
+  request: PropTypes.bool,
   schema: PropTypes.arrayOf(PropTypes.object),
 };
