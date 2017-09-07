@@ -174,7 +174,7 @@ LineGraph.propTypes = {
   }),
   title: PropTypes.string,
   yAxis: PropTypes.shape({
-    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    label: PropTypes.func,
     Format: PropTypes.func,
   }),
   currentUnit: PropTypes.number,
