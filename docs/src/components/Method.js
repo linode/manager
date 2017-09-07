@@ -52,11 +52,13 @@ export default function Method(props) {
           </div>
         </div>
         {!description ? null : <p>{description}</p>}
-        <h4>Basic Usage:</h4>
-        <UseExample examples={examples} />
       </div>
       {methodRequest}
       {methodResponse}
+      <div className="Method-section">
+        <h3 className="Method-header">Basic Usage:</h3>
+        <UseExample examples={examples} />
+      </div>
     </div>
   );
 }

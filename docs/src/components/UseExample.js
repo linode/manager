@@ -16,7 +16,11 @@ export default function UseExample({ examples }) {
     };
   });
 
-  return <Tabs tabs={tabs} />;
+  return (
+    <div className="UseExample">
+      <Tabs tabs={tabs} />
+    </div>
+  );
 }
 
 UseExample.propTypes = {

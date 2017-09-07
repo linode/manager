@@ -32,7 +32,7 @@ export default class SpecExample extends Component {
 
     return (
       <div className="Example">
-        <h4>Example JSON {type} Body</h4>
+        <small className="Method-header">Example JSON {type} Body</small>
         <div className={`Example-example ${exampleState}`}>
           <Code
             example={exampleJson}

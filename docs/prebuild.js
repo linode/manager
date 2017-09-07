@@ -72,12 +72,13 @@ function formatMethodExamples(methodObj, specExample) {
   let examples;
   if (methodObj.examples) {
     examples = Object.keys(methodObj.examples).map(function(example) {
+      const json = JSON.stringify(specExample, null, 2);
       return {
         name: example,
         value: methodObj.examples[example]
           .replace(/https:\/\/\$api_root/g, API_ROOT)
           .replace(/\$version/g, API_VERSION)
-          .replace(/\$SUB_SPEC_EXAMPLE/g, JSON.stringify(specExample, null, 2)),
+          .replace(/\$SUB_SPEC_EXAMPLE/g, json),
       };
     });
   }
