@@ -123,7 +123,7 @@ browserHistory.listen(function (location) {
       const id = hash.replace('#', '');
       const element = document.getElementById(id);
       if (element) {
-        document.body.scrollTop = element.getBoundingClientRect().top;
+        document.body.scrollTop = element.getBoundingClientRect().top + window.pageYOffset;
       }
     }, 0);
     return;
