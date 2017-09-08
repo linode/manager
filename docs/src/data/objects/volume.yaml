@@ -50,4 +50,4 @@ enums:
     creating: creating
     active: active
     resizing: resizing
-    contact_support: contact_support
+    offline: offline
