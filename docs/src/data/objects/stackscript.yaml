@@ -9,10 +9,6 @@ schema:
     _description: A unique ID for the StackScript.
     _type: Integer
     _value: 37
-  customer_id:
-    _description: The customer that created this StackScript.
-    _type: Integer
-    _value: 123
   user_id:
     _description: The user account that created this StackScript.
     _type: Integer
