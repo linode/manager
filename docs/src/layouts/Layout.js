@@ -78,7 +78,11 @@ export default class Layout extends Component {
               <VerticalNavSection
                 title="Reference"
                 checkActiveItem={function (path, href) {
-                  return (href === path || href === childParentMap[path]);
+                  let pathWithoutHash = path;
+                  if (href.indexOf('#') === -1 && path.indexOf('#') !== -1) {
+                    pathWithoutHash = path.substring(0, path.indexOf('#'));
+                  }
+                  return (href === pathWithoutHash || href === childParentMap[pathWithoutHash]);
                 }}
                 path={path}
                 navItems={indices.map(endpointIndex => ({

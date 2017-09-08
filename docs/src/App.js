@@ -115,6 +115,10 @@ browserHistory.listen(function (location) {
   const { body } = document;
   const { hash } = window.location;
 
+  [].forEach.call(document.querySelectorAll('.highlight'), function (highlighted) {
+    highlighted.classList.remove('highlight');
+  });
+
   if (hash !== '') {
     // Push onto callback queue so it runs after the DOM is updated,
     // this is required when navigating from a different page so that
@@ -123,6 +127,7 @@ browserHistory.listen(function (location) {
       const id = hash.replace('#', '');
       const element = document.getElementById(id);
       if (element) {
+        element.classList.add('highlight');
         document.body.scrollTop = element.getBoundingClientRect().top + window.pageYOffset;
       }
     }, 0);

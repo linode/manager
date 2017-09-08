@@ -30,13 +30,20 @@ export default class VerticalNavSection extends Component {
       const isExpanded = this.state.expanded[item.label];
       const expandedClass = isExpanded ? 'active' : '';
 
+      const nestedClassname = (group, item) => {
+        const itemHref = `${item.href}#${group.label.toLowerCase()}`;
+        return this.props.checkActiveItem(this.props.path, itemHref) ? 'active' : '';
+      };
+
       return (
         <li key={index} className={expandedClass}>
           <Link to={item.href} id={`NavLink-${index}`}>{item.label}</Link>
           {!groups.length || !this.state.expanded[item.label] ? null : (
             <ul className="VerticalNav-subsection">
               {groups.map(group => group.label === 'default' ? null : (
-                <li key={group.label}>
+                <li
+                  key={group.label}
+                  className={nestedClassname(group, item)}>
                   <Link to={`${item.href}#${group.label.toLowerCase()}`}>{group.label}</Link>
                 </li>
               ))}
