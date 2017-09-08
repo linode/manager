@@ -94,7 +94,7 @@
     "xunit-file": "^0.0.9"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",

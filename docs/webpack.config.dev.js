@@ -46,6 +46,7 @@ module.exports = {
         include: [
           path.join(__dirname, 'src'),
           path.resolve(__dirname, './node_modules/linode-components'),
+          path.resolve(__dirname, '../components'),
         ]
       },
       {

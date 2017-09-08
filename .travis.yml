@@ -2,9 +2,11 @@ language: node_js
 node_js:
     - "6"
 install:
-    - npm install
-    - (cd docs && npm install)
-    - (cd components && npm install)
+    - apt-get install yarn
+    - (cd components && yarn link)
+    - yarn link linode-components && yarn
+    - (cd docs && yarn link linode-components && yarn)
+    - (cd components && yarn)
 script:
     - set -e
     - |
@@ -14,9 +16,9 @@ script:
         EOF
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
-        npm run lint
-        (cd docs && npm run lint)
-        (cd components && npm run lint)
-        npm test
+        yarn run lint
+        (cd docs && yarn run lint)
+        (cd components && yarn run lint)
+        yarn test
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi
