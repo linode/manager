@@ -2,5 +2,11 @@ body {
     background-color: $gray;
 }
 
+.highlight > h3,
+.highlight .Title-heading {
+    background: $yellow;
+    transition: background .5s;
+}
+
 $sidebar-breakpoint: 1000px;
 $table-breakpoint: 768px;

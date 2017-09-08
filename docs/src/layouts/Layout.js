@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { Header, VerticalNav, VerticalNavSection } from 'linode-components/navigation';
+import { Header } from 'linode-components/navigation';
 
 import { LinodeLogoImgSrc } from '~/assets';
-
 import { API_VERSION } from '~/constants';
+import { VerticalNav, VerticalNavSection } from '~/components';
 
 
 export default class Layout extends Component {
@@ -28,7 +28,7 @@ export default class Layout extends Component {
     const { route } = this.props;
     const { verticalNav } = this.state;
     const { childParentMap, indices } = route;
-    const path = this.props.location.pathname;
+    const path = this.props.location.pathname + this.props.location.hash;
 
     const verticalNavShow = verticalNav ?
       'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
@@ -78,12 +78,16 @@ export default class Layout extends Component {
               <VerticalNavSection
                 title="Reference"
                 checkActiveItem={function (path, href) {
-                  return (href === path || href === childParentMap[path]);
+                  let pathWithoutHash = path;
+                  if (href.indexOf('#') === -1 && path.indexOf('#') !== -1) {
+                    pathWithoutHash = path.substring(0, path.indexOf('#'));
+                  }
+                  return (href === pathWithoutHash || href === childParentMap[pathWithoutHash]);
                 }}
                 path={path}
-                navItems={indices.map(function (endpointIndex) {
-                  return { label: endpointIndex.name, href: endpointIndex.routePath };
-                })}
+                navItems={indices.map(endpointIndex => ({
+                  ...endpointIndex, label: endpointIndex.name, href: endpointIndex.routePath,
+                }))}
               />
               <VerticalNavSection
                 title="Libraries"
@@ -111,5 +115,6 @@ Layout.propTypes = {
   route: PropTypes.object,
   location: PropTypes.shape({
     pathname: PropTypes.string,
+    hash: PropTypes.string,
   }),
 };
