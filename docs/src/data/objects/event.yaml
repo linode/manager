@@ -84,11 +84,6 @@ schema:
   updated:
     _type: Datetime
     _value: 2014-12-24T19:00:09
-  user_id:
-    _type: Integer
-    _value: 234567
-    _description: >
-      The ID of the user who initiated this event.
 enums:
   EventType:
     linode_boot: Linode boot
