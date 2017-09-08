@@ -360,10 +360,6 @@ endpoints:
         description: >
           Creates a new config for a given Linode.
         params:
-          kernel:
-            description: >
-              A kernel ID to boot this Linode with.
-            type: Kernel
           label:
             description: >
               The user-friendly label to name this config.
@@ -373,6 +369,12 @@ endpoints:
             description: >
               Disks attached to this Linode config.
             type: Disks
+          kernel:
+            optional: true
+            description: >
+              Optional kernel ID to boot this Linode with.
+              Defaults to "linode/latest-64bit"
+            type: Kernel
           comments:
             optional: true
             description: >
