@@ -12,13 +12,14 @@ The following buzzwords are involved in this project:
 * [Webpack](https://webpack.github.io/)
 * ES6/ES7 (via [Babel](https://babeljs.io/))
 * [SCSS](http://sass-lang.com)
+* [Yarn](https://yarnpkg.com/)
 
 ## Setup
 
     git clone https://github.com/Linode/manager.git
     cd manager
     node --version # should be 6.x - 7.2.1
-    (cd components && yarn link)
+    (cd components && yarn link) # brew install yarn # on mac
     yarn link linode-components
     yarn
 
