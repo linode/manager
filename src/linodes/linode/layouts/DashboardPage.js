@@ -7,8 +7,10 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { getObjectByLabelLazily } from '~/api/util';
+import { transferPool } from '~/api/account';
 import { linodeStats } from '~/api/linodes';
+import { getObjectByLabelLazily } from '~/api/util';
+import { TransferPool } from '~/components';
 import {
   GraphGroup,
   makeCPUGraphMetadata,
@@ -27,6 +29,7 @@ import { planStats } from '../../components/PlanStyle';
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
+    await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     try {
@@ -179,6 +182,7 @@ export class DashboardPage extends Component {
             {this.renderGraphs()}
           </div>
         </div>
+        <TransferPool transfer={this.props.transfer} />
       </div>
     );
   }
@@ -194,7 +198,8 @@ DashboardPage.propTypes = {
 function select(state, props) {
   const { linode } = selectLinode(state, props);
   const { username, timezone } = state.api.profile;
-  return { linode, username, timezone };
+  const transfer = state.api.account._transferpool;
+  return { linode, username, timezone, transfer };
 }
 
 export default connect(select)(DashboardPage);

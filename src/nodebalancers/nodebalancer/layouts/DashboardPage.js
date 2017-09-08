@@ -11,9 +11,11 @@ import { DeleteModalBody } from 'linode-components/modals';
 
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
-import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
-import { nodebalancerStats } from '~/api/nodebalancers';
 import { nodebalancers } from '~/api';
+import { transferPool } from '~/api/account';
+import { nodebalancerStats } from '~/api/nodebalancers';
+import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
+import { TransferPool } from '~/components';
 import {
   GraphGroup,
   makeConnectionsGraphMetadata,
@@ -28,6 +30,7 @@ import {
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
+    await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
 
     try {
@@ -178,6 +181,7 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         {this.renderGraphs()}
+        <TransferPool transfer={this.props.transfer} />
       </div>
     );
   }
@@ -193,10 +197,10 @@ function select(state, ownProps) {
   const params = ownProps.params;
   const nbLabel = params.nbLabel;
   const { timezone } = state.api.profile;
-
+  const transfer = state.api.account._transferpool;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
 
-  return { nodebalancer, timezone };
+  return { nodebalancer, timezone, transfer };
 }
 
 export default connect(select)(DashboardPage);

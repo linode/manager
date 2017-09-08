@@ -220,9 +220,7 @@ export class IndexPage extends Component {
             />
           )}
         </div>
-        <TransferPool
-          transfer={transfer}
-        />
+        <TransferPool transfer={transfer} />
       </div>
     );
   }

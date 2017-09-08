@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Card } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 
 
 export default function TransferPool(props) {
@@ -8,20 +8,18 @@ export default function TransferPool(props) {
 
   return (
     <Card
-      header={<h3 className="sub-header">This Month's Network Transfer Pool</h3>}
-      className="transfer col-lg-6 col-md-12 col-sm-12"
+      header={<CardHeader title="This Month's Network Transfer Pool" />}
+      className="TransferPool offset-md-3 col-md-6 text-center"
     >
-      <div className="TransferGauge">
+      <div className="TransferPool-gauge">
         <div
-          className="TransferGauge-bar"
+          className="TransferPool-bar"
           style={{ width: `${Math.ceil(used / quota)}%` }}
         >
         </div>
       </div>
       <div>
-        {used}GB Used,
-        {quota - used}GB Remaining,
-        {quota}GB Quota
+        {used}GB Used, {quota - used}GB Remaining, {quota}GB Quota
       </div>
       <small className="text-muted">Your transfer is prorated and will reset next month</small>
     </Card>
