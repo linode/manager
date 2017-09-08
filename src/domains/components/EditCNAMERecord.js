@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+import DomainInput from './DomainInput';
 import SelectDNSSeconds from './SelectDNSSeconds';
 
 
@@ -13,27 +15,29 @@ export default class EditCNAMERecord extends Component {
   constructor(props) {
     super();
 
-    const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
+    const { id, zone: { domain, ttl_sec: defaultTTL } } = props;
     const {
-      target: alias,
-      name: hostname,
+      target,
+      name,
       ttl_sec: ttl,
     } = props.zone._records.records[id] || {};
 
+    const hostname = DomainInput.stripBase(name, domain);
     this.state = {
       errors: {},
-      zone,
       defaultTTL,
       ttl,
       hostname,
-      alias,
+      alias: target,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, close, zone } = this.props;
     const { ttl, hostname, alias } = this.state;
-    const ids = [this.props.zone.id, id].filter(Boolean);
+    const ids = [zone.id, id].filter(Boolean);
     const data = {
       ttl_sec: +ttl,
       name: hostname,
@@ -47,10 +51,8 @@ export default class EditCNAMERecord extends Component {
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
   render() {
-    const { close, title, id } = this.props;
+    const { close, title, id, zone } = this.props;
     const { errors, defaultTTL, ttl, hostname, alias } = this.state;
 
     const analytics = { title, action: id ? 'edit' : 'add' };
@@ -66,20 +68,19 @@ export default class EditCNAMERecord extends Component {
       >
         <div>
           <ModalFormGroup errors={errors} id="hostname" label="Hostname" apiKey="name">
-            <Input
-              id="hostname"
+            <DomainInput
               name="hostname"
               value={hostname}
-              placeholder="www.thisdomain.com"
+              placeholder="www2"
+              base={zone.domain}
               onChange={this.onChange}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Aliases to" id="alias" apiKey="target" errors={errors}>
             <Input
-              id="alias"
               name="alias"
               value={alias}
-              placeholder="www.otherdomain.com"
+              placeholder={`www3.${zone.domain}`}
               onChange={this.onChange}
             />
           </ModalFormGroup>

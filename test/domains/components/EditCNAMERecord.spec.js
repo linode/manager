@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
+import DomainInput from '~/domains/components/DomainInput';
 import EditCNAMERecord from '~/domains/components/EditCNAMERecord';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
@@ -28,8 +29,9 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
+    const hostnameVal = DomainInput.stripBase(currentRecord.name, currentZone.domain);
     const hostname = page.find('#hostname');
-    expect(hostname.props().value).to.equal(currentRecord.name);
+    expect(hostname.props().value).to.equal(hostnameVal);
 
     const alias = page.find('#alias');
     expect(alias.props().value).to.equal(currentRecord.target);
@@ -41,7 +43,7 @@ describe('domains/components/EditCNAMERecord', () => {
   it('saves an existing CNAME record', async () => {
     const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
-    const currentRecord = currentZone._records.records[4];
+    const currentRecord = currentZone._records.records[2];
     const close = sandbox.spy();
     const page = mount(
       <EditCNAMERecord
@@ -52,8 +54,8 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    changeInput(page, 'hostname', 'www.tester1234.com');
-    changeInput(page, 'alias', 'www.othertester1234.com');
+    changeInput(page, 'hostname', 'www2');
+    changeInput(page, 'alias', 'www.tester1234.com');
     changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
@@ -63,8 +65,8 @@ describe('domains/components/EditCNAMERecord', () => {
       ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
         method: 'PUT',
         body: {
-          name: 'www.tester1234.com',
-          target: 'www.othertester1234.com',
+          name: 'www2',
+          target: 'www.tester1234.com',
           ttl_sec: 3600,
           type: 'CNAME',
         },
@@ -86,7 +88,7 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    changeInput(page, 'hostname', 'www.tester1234.com');
+    changeInput(page, 'hostname', 'www');
     changeInput(page, 'alias', 'www.othertester1234.com');
     changeInput(page, 'ttl', 3600);
 
@@ -97,7 +99,7 @@ describe('domains/components/EditCNAMERecord', () => {
       ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
         method: 'POST',
         body: {
-          name: 'www.tester1234.com',
+          name: 'www',
           target: 'www.othertester1234.com',
           ttl_sec: 3600,
           type: 'CNAME',

@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
+import DomainInput from '~/domains/components/DomainInput';
 import EditSRVRecord from '~/domains/components/EditSRVRecord';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
@@ -34,8 +35,9 @@ describe('domains/components/EditSRVRecord', () => {
     const protocol = page.find('#protocol');
     expect(protocol.props().value).to.equal(currentRecord.protocol);
 
+    const targetVal = DomainInput.stripBase(currentRecord.target, currentZone.domain);
     const target = page.find('#target');
-    expect(target.props().value).to.equal(currentRecord.target);
+    expect(target.props().value).to.equal(targetVal);
 
     const priority = page.find('#priority');
     expect(priority.props().value).to.equal(currentRecord.priority);
