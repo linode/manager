@@ -193,6 +193,7 @@ DashboardPage.propTypes = {
   username: PropTypes.string,
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
+  transfer: PropTypes.object.isRequired,
 };
 
 function select(state, props) {

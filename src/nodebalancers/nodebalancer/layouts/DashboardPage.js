@@ -191,6 +191,7 @@ DashboardPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
   timezone: PropTypes.string,
+  transfer: PropTypes.object.isRequired,
 };
 
 function select(state, ownProps) {
