@@ -7,7 +7,10 @@ import TableCell from './TableCell';
 export default function ThumbnailCell(props) {
   const { column, record } = props;
 
-  const src = column.srcFn(record);
+  let src = column.srcFn(record);
+  if (!src) {
+    src = '/assets/default/cube.png';
+  }
 
   return (
     <TableCell className="ThumbnailCell" column={column} record={record}>
