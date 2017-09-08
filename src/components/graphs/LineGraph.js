@@ -42,13 +42,13 @@ export default class LineGraph extends Component {
     this.renderChart(nextProps);
   }
 
-  componentWillUnmount() {
-    this._chart.destroy();
-  }
-
   shouldComponentUpdate(newProps, newState) {
     // Prevents graph animation from happening multiple times for unchanged data.
     return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
+  }
+
+  componentWillUnmount() {
+    this._chart.destroy();
   }
 
   formatTicks(timezone, d, i) {

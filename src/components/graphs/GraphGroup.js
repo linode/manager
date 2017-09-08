@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
@@ -25,7 +24,7 @@ export function makeCPUGraphMetadata(graphData) {
   return {
     title: 'CPU',
     yAxis: {
-      label: currentUnit => 'Percentage of CPU(s) used',
+      label: () => 'Percentage of CPU(s) used',
       format: p => `${p.toFixed(1)}%`,
     },
     data: formatData(['0033CC'], [graphData]),
@@ -102,7 +101,7 @@ export function makeConnectionsGraphMetadata(graphData) {
     units: UNITS,
   };
 }
-  
+
 export function makeTrafficGraphMetadata(graphData) {
   const UNITS = NETWORK_UNITS;
 
@@ -186,3 +185,8 @@ export class GraphGroup extends Component {
     );
   }
 }
+
+GraphGroup.propTypes = {
+  allGraphData: PropTypes.array.isRequired,
+  timezone: PropTypes.string.isRequired,
+};

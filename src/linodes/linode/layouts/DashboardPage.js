@@ -1,11 +1,10 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input, Select } from 'linode-components/forms';
+import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';

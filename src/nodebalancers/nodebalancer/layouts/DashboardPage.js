@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -8,7 +7,6 @@ import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
-import { Select } from 'linode-components/forms';
 import { DeleteModalBody } from 'linode-components/modals';
 
 import { setSource } from '~/actions/source';
