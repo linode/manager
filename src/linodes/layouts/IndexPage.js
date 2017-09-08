@@ -221,8 +221,7 @@ export class IndexPage extends Component {
           )}
         </div>
         <TransferPool
-          used={transfer.used}
-          quota={transfer.quota}
+          transfer={transfer}
         />
       </div>
     );
@@ -242,13 +241,13 @@ function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const distributions = state.api.distributions.distributions;
   const types = state.api.types.types;
-	const transfer = state.api.account._transferpool;
+  const transfer = state.api.account._transferpool;
 
   return {
     linodes,
     distributions,
     types,
-		transfer,
+    transfer,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

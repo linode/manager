@@ -140,8 +140,7 @@ export class IndexPage extends Component {
           )}
         </div>
         <TransferPool
-          used={transfer.used}
-          quota={transfer.quota}
+          transfer={transfer}
         />
       </div>
     );
@@ -157,10 +156,10 @@ IndexPage.propTypes = {
 
 
 function select(state) {
-	const transfer = state.api.account._transferpool;
+  const transfer = state.api.account._transferpool;
 
   return {
-		transfer,
+    transfer,
     nodebalancers: state.api.nodebalancers,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
