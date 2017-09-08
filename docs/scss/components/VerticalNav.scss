@@ -19,23 +19,36 @@
         }
 
         li {
+            @extend .font-medium;
+
             margin: 0 0 5px 0;
             padding: 0;
 
             &:last-child {
                 margin-bottom: 0;
             }
+        }
+    }
 
-            a {
-                @extend .font-medium;
-                color: $light-black;
-                text-decoration: none;
-            }
+    ul#{&}-subsection {
+        padding: 5px 15px;
+        border-left: $border;
+        border-width: 3px;
 
-            a:hover,
-            &.active a {
-                color: $blue;
-            }
+        li {
+            @extend .font-small;
+        }
+    }
+
+    li {
+        a {
+            color: $light-black;
+            text-decoration: none;
+        }
+
+        a:hover,
+        &.active > a {
+            color: $blue;
         }
     }
 }
