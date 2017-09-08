@@ -1,34 +1,29 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input, Select } from 'linode-components/forms';
+import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
-import LineGraph from '~/components/graphs/LineGraph';
+import {
+  GraphGroup,
+  makeCPUGraphMetadata,
+  makeIOGraphMetadata,
+  makeNetv4GraphMetadata,
+  makeNetv6GraphMetadata,
+} from '~/components/graphs/GraphGroup';
 import { ZONES } from '~/constants';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
-import { convertUnits } from '~/utilities';
 
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
 
-
-function formatData(colors, datasets, legends) {
-  const x = datasets[0].map(([x]) => x);
-  const ys = datasets.map(dataset => dataset.map(([, y]) => y));
-  return LineGraph.formatData(x, ys, colors, legends);
-}
-
-const IO_UNITS = [' blocks', 'K blocks', 'M blocks'];
-const NETWORK_UNITS = [' bits', 'K bits', 'M bits'];
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -41,134 +36,28 @@ export class DashboardPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      source: 'cpu',
-      units: 0,
-    };
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
   }
 
-  shouldComponentUpdate(newProps, newState) {
-    // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
-  }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
-  renderUnitSelect() {
-    const { units, source } = this.state;
-
-    if (source === 'cpu') {
-      return null;
-    }
-
-    const _units = source === 'io' ? IO_UNITS : NETWORK_UNITS;
-
-    return (
-      <div className="Menu-item clearfix">
-        <label className="col-form-label float-sm-left">Units:</label>
-        <Select
-          className="float-sm-left"
-          value={units}
-          name="units"
-          onChange={this.onChange}
-          options={_units.map((label, value) => ({ label, value }))}
-        />
-      </div>
-    );
-  }
-
   renderGraphs() {
     const { timezone, linode: { _stats: stats } } = this.props;
-    const { units } = this.state;
 
-    if (stats) {
-      this.graphs = {
-        cpu: {
-          title: 'CPU',
-          yAxis: {
-            label: 'Percentage of CPU(s) used',
-            format: p => `${p.toFixed(1)}%`,
-          },
-          data: formatData(['0033CC'], [stats.cpu]),
-          tooltipFormat: v => `${v}%`,
-        },
-        io: {
-          title: 'IO',
-          yAxis: {
-            label: `${IO_UNITS[units]} per second`,
-            format: v => convertUnits(v, units, IO_UNITS, 1),
-          },
-          data: formatData(['FFD04B', 'FA373E'],
-                           [stats.io.io, stats.io.swap],
-                           ['Disk', 'Swap']),
-          tooltipFormat: v => convertUnits(v, units, IO_UNITS, 1),
-        },
-        netv4: {
-          title: 'IPv4 Network',
-          yAxis: {
-            label: `${NETWORK_UNITS[units]} per second`,
-            format: v => convertUnits(v, units, NETWORK_UNITS),
-          },
-          data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-                           [stats.netv4.in, stats.netv4.private_in,
-                            stats.netv4.out, stats.netv4.private_out],
-                           ['Public IPv4 Inbound', 'Private IPv4 Inbound',
-                            'Public IPv4 Outbound', 'Private IPv4 Outbound']),
-          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS),
-        },
-        netv6: {
-          title: 'IPv6 Network',
-          yAxis: {
-            label: `${NETWORK_UNITS[units]} per second`,
-            format: v => convertUnits(v, units, NETWORK_UNITS),
-          },
-          data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-                           [stats.netv6.in, stats.netv6.private_in,
-                            stats.netv6.out, stats.netv6.private_out],
-                           ['Public IPv6 Inbound', 'Private IPv6 Inbound',
-                            'Public IPv6 Outbound', 'Private IPv6 Outbound']),
-          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS),
-        },
-      };
+    if (!stats) {
+      return <p>No graphs are available.</p>;
     }
 
-    const options = [
-      { value: 'cpu', label: 'CPU' },
-      { value: 'io', label: 'IO' },
-      { value: 'netv4', label: 'IPv4' },
-      { value: 'netv6', label: 'IPv6' },
+    const allGraphData = [
+      makeCPUGraphMetadata(stats.cpu),
+      makeIOGraphMetadata(stats.io),
+      makeNetv4GraphMetadata(stats.netv4),
+      makeNetv6GraphMetadata(stats.netv6),
     ];
 
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
-        {!this.graphs ? <p>No graphs are available.</p> : (
-          <div>
-            <div className="Menu">
-              <div className="Menu-item">
-                <Select
-                  value={this.state.source}
-                  name="source"
-                  onChange={this.onChange}
-                  options={options}
-                />
-              </div>
-              {this.renderUnitSelect()}
-              <div className="Menu-item--right">Last 24 Hours</div>
-            </div>
-            <LineGraph
-              timezone={timezone}
-              {...this.graphs[this.state.source]}
-            />
-          </div>
-        )}
+        <GraphGroup timezone={timezone} allGraphData={allGraphData} />
       </Card>
     );
   }
