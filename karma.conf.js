@@ -26,6 +26,7 @@ module.exports = function(config) {
               path.join(__dirname, 'src'),
               path.join(__dirname, 'test'),
               path.resolve(__dirname, 'node_modules/linode-components'),
+              path.resolve(__dirname, 'components'),
               path.resolve(__dirname, 'node_modules/linode-styleguide')
             ]
           },
