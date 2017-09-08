@@ -121,7 +121,7 @@ export default class CreateOrEditConfig extends Component {
       runLevel, ramLimit, isMaxRam, devices, enableDistroHelper, enableNetworkHelper,
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
-    const defaultRootDevice = `/dev/${AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor][0]}`;
+    const defaultRootDevice = `/dev/${AVAILABLE_DISK_SLOTS[linode.hypervisor][0]}`;
 
 
     return (
@@ -249,7 +249,7 @@ export default class CreateOrEditConfig extends Component {
           </div>
         </FormGroup>
         <h3 className="sub-header">Block Device Assignment</h3>
-        {AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].map((slot, i) => (
+        {AVAILABLE_DISK_SLOTS[linode.hypervisor].map((slot, i) => (
           <DeviceSelect
             key={i}
             errors={errors}
@@ -293,7 +293,7 @@ export default class CreateOrEditConfig extends Component {
                 selectValue={isCustomRoot ? defaultRootDevice : rootDevice}
                 selectDisabled={isCustomRoot}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                selectOptions={AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].map((slot) => ({
+                selectOptions={AVAILABLE_DISK_SLOTS[linode.hypervisor].map((slot) => ({
                   value: `/dev/${slot}`, label: `/dev/${slot}`,
                 }))}
               />
@@ -405,10 +405,7 @@ CreateOrEditConfig.propTypes = {
 
 CreateOrEditConfig.defaultProps = {
   config: {
-    devices: {
-      ..._.reduce(AVAILABLE_DISK_SLOTS.kvm, (disks, slot) => ({ ...disks, [slot]: null }), {}),
-      ..._.reduce(AVAILABLE_DISK_SLOTS.xen, (disks, slot) => ({ ...disks, [slot]: null }), {}),
-    },
+    devices: {},
     root_device: '',
     helpers: {
       enable_distro_helper: true,
