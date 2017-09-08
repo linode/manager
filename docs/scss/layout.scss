@@ -2,7 +2,8 @@ body {
     background-color: $gray;
 }
 
-.highlight h3 {
+.highlight > h3,
+.highlight .Title-heading {
     background: $yellow;
     transition: background .5s;
 }
