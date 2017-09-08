@@ -43,7 +43,8 @@ export default class VerticalNavSection extends Component {
               {groups.map(group => group.label === 'default' ? null : (
                 <li
                   key={group.label}
-                  className={nestedClassname(group, item)}>
+                  className={nestedClassname(group, item)}
+                >
                   <Link to={`${item.href}#${group.label.toLowerCase()}`}>{group.label}</Link>
                 </li>
               ))}
