@@ -8,10 +8,6 @@ import { removeSelected } from '~/actions/select';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
-export function convertUnits(value, units, unitType, fixedNumber = 0) {
-  return `${value.toFixed(fixedNumber) / Math.pow(1000, units)}${unitType[units]}/s`;
-}
-
 export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectType,
                                   labelKey = 'label', deleteAction = 'delete',
                                   deleteActionPending = 'deleting', idKey = 'id') {
