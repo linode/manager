@@ -66,18 +66,18 @@ export class DashboardPage extends Component {
   renderGraphs() {
     const { timezone, nodebalancer: { _stats: stats } } = this.props;
 
-    if (!stats) {
-      return <p>No graphs are available.</p>;
+    let body = <p>No graphs are available.</p>;
+    if (stats) {
+      const allGraphData = [
+        makeConnectionsGraphMetadata(stats.connections),
+        makeTrafficGraphMetadata(stats.traffic),
+      ];
+      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
     }
-
-    const allGraphData = [
-      makeConnectionsGraphMetadata(stats.connections),
-      makeTrafficGraphMetadata(stats.traffic),
-    ];
 
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
-        <GraphGroup timezone={timezone} allGraphData={allGraphData} />
+        {body}
       </Card>
     );
   }

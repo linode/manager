@@ -44,20 +44,20 @@ export class DashboardPage extends Component {
   renderGraphs() {
     const { timezone, linode: { _stats: stats } } = this.props;
 
-    if (!stats) {
-      return <p>No graphs are available.</p>;
+    let body = <p>No graphs are available.</p>;
+    if (stats) {
+      const allGraphData = [
+        makeCPUGraphMetadata(stats.cpu),
+        makeIOGraphMetadata(stats.io),
+        makeNetv4GraphMetadata(stats.netv4),
+        makeNetv6GraphMetadata(stats.netv6),
+      ];
+      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
     }
-
-    const allGraphData = [
-      makeCPUGraphMetadata(stats.cpu),
-      makeIOGraphMetadata(stats.io),
-      makeNetv4GraphMetadata(stats.netv4),
-      makeNetv6GraphMetadata(stats.netv6),
-    ];
 
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
-        <GraphGroup timezone={timezone} allGraphData={allGraphData} />
+        {body}
       </Card>
     );
   }
