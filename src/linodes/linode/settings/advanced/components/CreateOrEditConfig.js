@@ -36,7 +36,7 @@ export default class CreateOrEditConfig extends Component {
   }
 
   componentWillMount(nextProps) {
-    const { config, account } = nextProps || this.props;
+    const { config, account, linode } = nextProps || this.props;
 
     this.setState({
       label: config.label,
@@ -48,7 +48,7 @@ export default class CreateOrEditConfig extends Component {
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      isCustomRoot: AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor].indexOf(
+      isCustomRoot: AVAILABLE_DISK_SLOTS[linode.hypervisor].indexOf(
         config.root_device.replace('/dev/', '')) === -1,
       isMaxRam: config.ram_limit === 0,
       enableDistroHelper: config.helpers.enable_distro_helper,
