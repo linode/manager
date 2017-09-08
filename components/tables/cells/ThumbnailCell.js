@@ -8,7 +8,7 @@ export default function ThumbnailCell(props) {
   const { column, record } = props;
 
   let src = column.srcFn(record);
-  if(!src) {
+  if (!src) {
     src = '/assets/default/cube.png';
   }
 
