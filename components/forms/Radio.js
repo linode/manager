@@ -5,7 +5,7 @@ export default function Radio(props) {
     <div className={`Radio ${props.className}`}>
       <label>
         <input
-          id={props.id}
+          id={props.id || props.name}
           name={props.name}
           type="radio"
           className="Radio-input"

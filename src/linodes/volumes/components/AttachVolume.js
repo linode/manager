@@ -11,7 +11,7 @@ import { LinodeSelect } from '~/linodes/components';
 
 
 export default class AttachVolume extends Component {
-  static title = 'Attach a Volume';
+  static title = 'Attach Volume';
 
   static trigger(dispatch, linodes, volume) {
     return dispatch(showModal(this.title, (
@@ -20,7 +20,6 @@ export default class AttachVolume extends Component {
         close={() => dispatch(hideModal())}
         linodes={linodes}
         volume={volume}
-        title={this.title}
       />
     )));
   }
@@ -44,7 +43,7 @@ export default class AttachVolume extends Component {
   }
 
   render() {
-    const { close, title, linodes } = this.props;
+    const { close, linodes } = this.props;
     const { errors, linode } = this.state;
 
     return (
@@ -53,20 +52,17 @@ export default class AttachVolume extends Component {
         onCancel={close}
         buttonText="Attach Volume"
         buttonDisabledText="Attaching Volume"
-        analytics={{ title, action: 'attach' }}
+        analytics={{ title: this.title, action: 'attach' }}
         errors={errors}
       >
-        <div>
-          <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
-            <LinodeSelect
-              linodes={linodes}
-              value={linode}
-              name="linode"
-              id="linode"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-        </div>
+        <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
+          <LinodeSelect
+            linodes={linodes}
+            value={linode}
+            name="linode"
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
       </FormModalBody>
     );
   }
@@ -77,5 +73,4 @@ AttachVolume.propTypes = {
   linodes: PropTypes.object.isRequired,
   volume: PropTypes.object,
   close: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
 };
