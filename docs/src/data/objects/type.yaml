@@ -8,6 +8,7 @@ schema:
   id:
     _type: String
     _value: linode2048.5
+    _description: The service plan type.
   storage:
     _type: Integer
     _value: 24576
