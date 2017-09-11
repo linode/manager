@@ -74,7 +74,7 @@ export default class RescueMode extends Component {
             />
           ))}
           <FormGroup className="row">
-            <label className="col-sm-3 row-label">/dev/sdh</label>
+            <label className="col-sm-3 row-label">/dev/{slots[slots.length - 1]}</label>
             <div className="col-sm-9">Finnix Media</div>
           </FormGroup>
           <FormGroup className="row">
