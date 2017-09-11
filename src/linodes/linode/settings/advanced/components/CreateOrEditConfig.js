@@ -37,19 +37,20 @@ export default class CreateOrEditConfig extends Component {
 
   componentWillMount(nextProps) {
     const { config, account, linode } = nextProps || this.props;
+    const slots = AVAILABLE_DISK_SLOTS[linode.hypervisor];
+    const rootSansDev = config.root_device.substring('/dev/'.length);
 
     this.setState({
       label: config.label,
       comments: config.comments,
       kernel: config.kernel,
       initrd: config.initrd || '',
-      rootDevice: config.root_device,
+      rootDevice: config.root_device || `/dev/${slots[0]}`,
       devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      isCustomRoot: AVAILABLE_DISK_SLOTS[linode.hypervisor].indexOf(
-        config.root_device.replace('/dev/', '')) === -1,
+      isCustomRoot: !!config.root_device.length && (slots.indexOf(rootSansDev) === -1),
       isMaxRam: config.ram_limit === 0,
       enableDistroHelper: config.helpers.enable_distro_helper,
       enableNetworkHelper: config.helpers.enable_network_helper,
@@ -406,6 +407,7 @@ CreateOrEditConfig.propTypes = {
 CreateOrEditConfig.defaultProps = {
   config: {
     devices: {},
+    isCustomRoot: false,
     root_device: '',
     helpers: {
       enable_distro_helper: true,
