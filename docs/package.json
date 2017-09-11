@@ -62,7 +62,7 @@
     "xunit-file": "^0.0.9"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "clipboard": "^1.6.1",
     "fontawesome": "^4.5.0",
     "highlight.js": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.12.0.tgz",
