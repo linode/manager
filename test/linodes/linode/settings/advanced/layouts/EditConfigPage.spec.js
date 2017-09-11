@@ -243,8 +243,9 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     const device = page.findWhere(
       o => o.name() === 'Select' && o.props().id === 'root-device-select');
     const { options } = device.props();
-    expect(options.length).to.equal(AVAILABLE_DISK_SLOTS.length);
-    AVAILABLE_DISK_SLOTS.forEach((slot, i) => expect(options[i].value).to.equal(`/dev/${slot}`));
+    expect(options.length).to.equal(AVAILABLE_DISK_SLOTS.kvm.length);
+    const slots = AVAILABLE_DISK_SLOTS.kvm;
+    slots.forEach((slot, i) => expect(options[i].value).to.equal(`/dev/${slot}`));
   });
 
   it('commits changes to the API', async () => {
