@@ -98,7 +98,12 @@ module.exports = function(config) {
       require("karma-sourcemap-loader"),
       require("karma-coverage")
     ],
-    browserNoActivityTimeout: 100000
+    browserNoActivityTimeout: 100000,
+    resolve: {
+      alias: {
+        'react': path.join(__dirname, 'node_modules', 'react')
+      }
+    }
   };
 
   option.files = [

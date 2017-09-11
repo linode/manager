@@ -73,5 +73,10 @@ module.exports = {
         include: path.join(__dirname, 'node_modules')
       }
     ]
+  },
+  resolve: {
+    alias: {
+      'react': path.join(__dirname, 'node_modules', 'react')
+    }
   }
 };

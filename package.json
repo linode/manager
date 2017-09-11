@@ -93,6 +93,9 @@
     "webpack-hot-middleware": "^2.6.4",
     "xunit-file": "^0.0.9"
   },
+  "peerDependencies": {
+    "react": "^15.1.0"
+  },
   "dependencies": {
     "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
@@ -112,7 +115,6 @@
     "qrious": "^2.2.0",
     "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
-    "react": "^15.1.0",
     "react-ace": "^5.1.1",
     "react-dom": "^15.1.0",
     "react-guard": "^0.4.0",
