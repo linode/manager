@@ -2,9 +2,8 @@ install:
     - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
     - sudo apt-get update && sudo apt-get install yarn
-    - (cd components && yarn link)
-    - yarn link linode-components && yarn
-    - (cd docs && yarn link linode-components && yarn)
+    - yarn
+    - (cd docs && yarn)
     - (cd components && yarn)
 script:
     - set -e
