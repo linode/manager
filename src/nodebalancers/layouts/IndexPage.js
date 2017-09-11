@@ -22,10 +22,12 @@ import { MassEditControl } from 'linode-components/lists/controls';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
+import { transferPool } from '~/api/account';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
+import { TransferPool } from '../../components';
 
 
 const OBJECT_TYPE = 'nodebalancers';
@@ -33,6 +35,7 @@ const OBJECT_TYPE = 'nodebalancers';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
+    await dispatch(transferPool());
   }
 
   constructor(props) {
@@ -55,7 +58,7 @@ export class IndexPage extends Component {
     OBJECT_TYPE).bind(this)
 
   render() {
-    const { dispatch, nodebalancers, selectedMap } = this.props;
+    const { dispatch, nodebalancers, selectedMap, transfer } = this.props;
     const { filter } = this.state;
 
     const { sorted } = transform(nodebalancers.nodebalancers, {
@@ -136,6 +139,9 @@ export class IndexPage extends Component {
             />
           )}
         </div>
+        <TransferPool
+          transfer={transfer}
+        />
       </div>
     );
   }
@@ -143,13 +149,17 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
+  transfer: PropTypes.object.isRequired,
   nodebalancers: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
 };
 
 
 function select(state) {
+  const transfer = state.api.account._transferpool;
+
   return {
+    transfer,
     nodebalancers: state.api.nodebalancers,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };

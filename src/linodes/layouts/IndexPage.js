@@ -16,6 +16,7 @@ import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import * as api from '~/api';
+import { transferPool } from '~/api/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
@@ -25,6 +26,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
 import { AddLinode, CloneLinode, RestoreLinode } from '../components';
+import { TransferPool } from '../../components';
 
 
 const OBJECT_TYPE = 'linodes';
@@ -32,6 +34,7 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.linodes.all());
+    await dispatch(transferPool());
   }
 
   constructor(props) {
@@ -183,7 +186,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, distributions, types } = this.props;
+    const { dispatch, linodes, distributions, types, transfer } = this.props;
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
@@ -217,6 +220,7 @@ export class IndexPage extends Component {
             />
           )}
         </div>
+        <TransferPool transfer={transfer} />
       </div>
     );
   }
@@ -225,6 +229,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   linodes: PropTypes.object.isRequired,
+  transfer: PropTypes.object.isRequired,
   types: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
@@ -234,11 +239,13 @@ function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const distributions = state.api.distributions.distributions;
   const types = state.api.types.types;
+  const transfer = state.api.account._transferpool;
 
   return {
     linodes,
     distributions,
     types,
+    transfer,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

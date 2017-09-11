@@ -1,0 +1,26 @@
+.TransferPool {
+    margin-top: 15px;
+
+    &-gauge {
+        width: 300px;
+        border: $border;
+        height: $input-height;
+        margin: auto;
+        background-color: $light-gray;
+    }
+
+    &-bar {
+        background-color: $green;
+        height: 100%;
+    }
+
+    .CardHeader {
+        text-align: center;
+
+        &-title {
+            @extend .font-large;
+            float: none !important;
+            margin-bottom: -10px;
+        }
+    }
+}
