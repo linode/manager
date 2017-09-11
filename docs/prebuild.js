@@ -414,12 +414,13 @@ allEndpoints = Object.keys(endpointMap).map(function (key) {
   const endpointIndex = endpointMap[key];
 
   // alphabetically sort groups and endpoints in groups
-  return _.merge(endpointIndex, {
+    const t = _.assign(endpointIndex,  {
     groups: _.sortBy(endpointIndex.groups, g => g.label.toLowerCase()).map(
-      group => _.merge(group, {
-        endpoints: _.sortBy(group.endpoints, 'path'),
+        group => _.assign(group, {
+          endpoints: _.sortBy(group.endpoints, 'path'),
       })),
   });
+    return t;
 }).filter(Boolean);
 
 const data = JSON.stringify(allEndpoints, null, 2);
