@@ -83,8 +83,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders unknown distribution', () => {
     const page = mount(
       <DashboardPage
-        {...{ ...props, linode: testLinode1246} }
-      />);
+        {...{ ...props, linode: testLinode1246 }}
+      />
+    );
 
     expect(page.find('#distro').text()).to.equal('UnknownRebuild');
   });
