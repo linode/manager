@@ -4,14 +4,13 @@
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
-    "build:webpack": "npm run prebuild && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build:webpack": "yarn run prebuild && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "prebuild": "node prebuild.js",
-    "build": "npm run clean && npm run build:webpack",
-    "rebuild-components": "rm -fr node_modules/linode-components && npm install",
+    "build": "yarn run clean && yarn run build:webpack",
     "lint": "eslint --max-warnings=0 src prebuild.js",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run prebuild && node devServer.js"
+    "start": "yarn run prebuild && node devServer.js"
   },
   "author": "",
   "license": "ISC",
