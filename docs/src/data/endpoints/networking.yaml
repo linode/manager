@@ -40,7 +40,7 @@ endpoints:
                 https://$api_root/$version/networking/ipv4
           python: |
             # presently unsupported
-  /networking/ipv4/:address:
+  /networking/ipv4/$address:
     _group: IPv4
     type: resource
     authenticated: true
@@ -98,7 +98,7 @@ endpoints:
                 https://$api_root/$version/networking/ipv6
           python: |
             my_ipv6s = client.networking.get_ipv6()
-  /networking/ipv6/:address:
+  /networking/ipv6/$address:
     _group: IPv6
     type: resource
     authenticated: true

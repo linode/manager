@@ -1,7 +1,11 @@
 .Docs .MethodResponse {
-    h3 {
+    h3, h4 {
         margin-bottom: 5px;
     }
+
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: $border;
 }
 
 tr.NestedSchemaParent {
