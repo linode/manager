@@ -390,7 +390,7 @@ allEndpoints.forEach(function (endpointContainer) {
   endpoints.forEach(function (endpoint) {
     if (!endpoint.group) {
       // eslint-disable-next-line no-param-reassign
-      endpoint.group = 'default';
+      endpoint.group = '';
     }
 
     if (!endpointMap[containerName]) {
