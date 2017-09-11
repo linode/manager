@@ -89,6 +89,7 @@ function createTestLinode(id) {
   return {
     id,
     group: 'Test Group',
+    hypervisor: 'kvm',
     label: `test-linode-${id}`,
     ipv4: [ipv4.address, secondIPv4.address],
     ipv6: ipv6.address,
