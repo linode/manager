@@ -1,0 +1,28 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Linode Disks
+prefix: disks
+schema:
+  sda:
+    type: disk
+    description: The disk mapped to /dev/sda.
+  sdb:
+    type: disk
+    description: The disk mapped to /dev/sdb.
+  sdc:
+    type: disk
+    description: The disk mapped to /dev/sdc.
+  sdd:
+    type: disk
+    description: The disk mapped to /dev/sdd.
+  sde:
+    type: disk
+    description: The disk mapped to /dev/sde.
+  sdf:
+    type: disk
+    description: The disk mapped to /dev/sdf.
+  sdg:
+    type: disk
+    description: The disk mapped to /dev/sdg.
+  sdh:
+    type: disk
+    description: The disk mapped to /dev/sdh.

@@ -80,12 +80,14 @@ endpoints:
             optional: true
             description: >
               An array of IP addresses for this Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           axfr_ips:
             optional: true
             description: >
               An array of IP addresses allowed to AXFR the entire Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           group:
             optional: true
             description: >

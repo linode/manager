@@ -20,7 +20,7 @@
     }
 }
 
-.Endpoint .Tabs {
+.Tabs {
     .TabList {
         border: 0;
 
@@ -41,12 +41,5 @@
                 margin-right: 1px;
             }
         }
-    }
-}
-
-.Tabs-container .Code,
-.MethodResponseExample .Code {
-    &-clipboardButton {
-        top: 7px;
     }
 }

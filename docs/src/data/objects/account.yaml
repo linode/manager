@@ -4,42 +4,42 @@ prefix: account/settings
 description:
 schema:
   address_1:
-    _value: 123 Main St.
-    _type: string
+    value: 123 Main St.
+    type: string
   address_2:
-    _value: Suite 101
-    _type: string
+    value: Suite 101
+    type: string
   city:
-    _value: Philadelphia
-    _type: string
+    value: Philadelphia
+    type: string
   company:
-    _value: My Company LLC
-    _type: string
+    value: My Company LLC
+    type: string
   country:
-    _value: US
-    _type: string
+    value: US
+    type: string
   email:
-    _value: jsmith@mycompany.com
-    _type: string
+    value: jsmith@mycompany.com
+    type: string
   first_name:
-    _value: John
-    _type: string
+    value: John
+    type: string
   last_name:
-    _value: Smith
-    _type: string
+    value: Smith
+    type: string
   network_helper:
-    _value: true
-    _type: boolean
-    _description: Enables network helper by default across all users.
+    value: true
+    type: boolean
+    description: Enables network helper by default across all users.
   phone:
-    _value: 555-555-1212
-    _type: string
+    value: 555-555-1212
+    type: string
   state:
-    _value: PA
-    _type: string
+    value: PA
+    type: string
   zip:
-    _value: 19102
-    _type: string
+    value: 19102
+    type: string
   balance:
-    _value: 0.00
-    _type: float
+    value: 0.00
+    type: float

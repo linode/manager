@@ -5,32 +5,32 @@ description: >
   Distribution objects describe a Linux distribution supported by Linode.
 schema:
   id:
-    _type: String
-    _value: linode/Arch2014.10
+    type: String
+    value: linode/Arch2014.10
   created:
-    _type: String
-    _value: 2014-12-24T18:00:09
+    type: String
+    value: 2014-12-24T18:00:09
   label:
-    _type: String
-    _value: Arch Linux 2014.10
-    _description: The user-friendly name of this distribution.
-    _filterable: true
+    type: String
+    value: Arch Linux 2014.10
+    description: The user-friendly name of this distribution.
+    filterable: true
   minimum_storage_size:
-    _type: Integer
-    _value: 800
-    _description: The minimum size required for the distrbution image.
-    _filterable: true
+    type: Integer
+    value: 800
+    description: The minimum size required for the distrbution image.
+    filterable: true
   deprecated:
-    _type: Boolean
-    _value: true
-    _description: True if this distribution version is deprecated.
-    _filterable: true
+    type: Boolean
+    value: true
+    description: True if this distribution version is deprecated.
+    filterable: true
   vendor:
-    _type: String
-    _value: Arch
-    _description: The upstream distribution vendor. Consistent between releases of a distro.
-    _filterable: true
+    type: String
+    value: Arch
+    description: The upstream distribution vendor. Consistent between releases of a distro.
+    filterable: true
   x64:
-    _type: Boolean
-    _value: true
-    _description: True if this is a 64-bit distribution.
+    type: Boolean
+    value: true
+    description: True if this is a 64-bit distribution.

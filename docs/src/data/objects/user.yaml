@@ -5,17 +5,17 @@ description: >
   User information associated with an account.
 schema:
   username:
-    _type: String
-    _value: example_user
-    _description: >
+    type: String
+    value: example_user
+    description: >
       The username of the user.
   email:
-    _type: String
-    _value: "person@place.com"
-    _description: >
+    type: String
+    value: "person@place.com"
+    description: >
       The email address of the user.
   restricted:
-    _type: Boolean
-    _value: true
-    _description: >
+    type: Boolean
+    value: true
+    description: >
       Whether or not the user has access restrictions.

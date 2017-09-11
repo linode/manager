@@ -1,19 +1,19 @@
 name: Domain
 import: from linode import Domain
-_object: domain
+object: domain
 desc: >
     Represents a Domain in the API.
 _pylib_attributes:
     records:
-        _description: A list of DomainRecords belonging to this Domain
+        description: A list of DomainRecords belonging to this Domain
 constructor:
     name: Domain
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This Domain's ID.
     example: >
         domain = linode.Domain(client, "example.org")
@@ -34,10 +34,10 @@ methods:
         desc: Creates a new DomainRecord for this Domain
         parameters:
             record_type:
-                _keyword: false
+                keyword: false
                 desc: The type of record to create (A, AAAA, etc.)
             '**kwargs':
-                _keyword: false
+                keyword: false
                 desc: >
                     Any number of keyword arguments to send to the POST /domains/example.org endpoint.
         example: |

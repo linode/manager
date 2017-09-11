@@ -5,21 +5,21 @@ description: >
   NodeBalancer objects describe a single NodeBalancer on your account.
 schema:
   id:
-    _type: Integer
-    _value: 123456
-    _description: An integer.
+    type: Integer
+    value: 123456
+    description: An integer.
   label:
-    _editable: true
-    _type: String
-    _value: 'nodebalancer12345'
-    _description: The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.
+    editable: true
+    type: String
+    value: 'nodebalancer12345'
+    description: The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.
   hostname:
-    _editable: false
-    _type: String
-    _value: 'nb-69-164-223-4.us-east-1a.nodebalancer.linode.com'
-    _description: The NodeBalancer's hostname.
+    editable: false
+    type: String
+    value: 'nb-69-164-223-4.us-east-1a.nodebalancer.linode.com'
+    description: The NodeBalancer's hostname.
   client_conn_throttle:
-    _editable: true
-    _type: Integer
-    _value: 10
-    _description: Throttle connections per second. 0 to disable, max of 20.
+    editable: true
+    type: Integer
+    value: 10
+    description: Throttle connections per second. 0 to disable, max of 20.

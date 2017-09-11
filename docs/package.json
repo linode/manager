@@ -8,7 +8,7 @@
     "prebuild": "node prebuild.js",
     "build": "npm run clean && npm run build:webpack",
     "rebuild-components": "rm -fr node_modules/linode-components && npm install",
-    "lint": "eslint --max-warnings=0 src",
+    "lint": "eslint --max-warnings=0 src prebuild.js",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run prebuild && node devServer.js"

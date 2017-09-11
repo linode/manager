@@ -4,90 +4,90 @@ description: >
   Describes a configuration for a NodeBalancer.
 schema:
   id:
-    _editable: false
-    _type: Integer
-    _value: 804
-    _description: An integer
+    editable: false
+    type: Integer
+    value: 804
+    description: An integer
   label:
-    _editable: true
-    _type: String
-    _value: balancerconfig123
-    _description: Unique label for your NodeBalancer config
+    editable: true
+    type: String
+    value: balancerconfig123
+    description: Unique label for your NodeBalancer config
   port:
-    _editable: true
-    _type: Integer
-    _value: 80
-    _description: Port to bind to on the public interfaces. 1-65534
+    editable: true
+    type: Integer
+    value: 80
+    description: Port to bind to on the public interfaces. 1-65534
   protocol:
-    _editable: true
-    _type: Enum
-    _subtype: protocol
-    _value: 'https'
-    _description: The protocol used for the config.
+    editable: true
+    type: Enum
+    subtype: protocol
+    value: 'https'
+    description: The protocol used for the config.
   algorithm:
-    _editable: true
-    _type: Enum
-    _subtype: algorithm
-    _value: 'roundrobin'
-    _description: Balancing algorithm
+    editable: true
+    type: Enum
+    subtype: algorithm
+    value: 'roundrobin'
+    description: Balancing algorithm
   stickiness:
-    _editable: true
-    _type: Enum
-    _subtype: stickiness
-    _value: 'table'
-    _description: Session persistence. Route subsequent requests from a client to the same backend.
+    editable: true
+    type: Enum
+    subtype: stickiness
+    value: 'table'
+    description: Session persistence. Route subsequent requests from a client to the same backend.
   check:
-    _editable: true
-    _type: Enum
-    _subtype: check
-    _value: 'connection'
-    _description: Perform active health checks on the backend nodes.
+    editable: true
+    type: Enum
+    subtype: check
+    value: 'connection'
+    description: Perform active health checks on the backend nodes.
   check_interval:
-    _editable: true
-    _type: Integer
-    _value: 5
-    _description: Seconds between health check probes.
+    editable: true
+    type: Integer
+    value: 5
+    description: Seconds between health check probes.
   check_timeout:
-    _editable: true
-    _type: Integer
-    _value: 3
-    _description: Seconds to wait before considering the probe a failure. 1-30. Must be less than check_interval.
+    editable: true
+    type: Integer
+    value: 3
+    description: Seconds to wait before considering the probe a failure. 1-30. Must be less than check_interval.
   check_attempts:
-    _editable: true
-    _type: Integer
-    _value: 20
-    _description: Number of failed probes before taking a node out of rotation. 1-30.
+    editable: true
+    type: Integer
+    value: 20
+    description: Number of failed probes before taking a node out of rotation. 1-30.
   check_path:
-    _editable: true
-    _type: String
-    _value: "/"
-    _description: When check is "http", the path to request.
+    editable: true
+    type: String
+    value: "/"
+    description: When check is "http", the path to request.
   check_body:
-    _editable: true
-    _type: String
-    _value:
-    _description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
+    editable: true
+    type: String
+    value: 
+    description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
   check_passive:
-    _editable: true
-    _type: Boolean
-    _value: true
-    _description: Enable passive checks based on observing communication with back-end nodes.
+    editable: true
+    type: Boolean
+    value: true
+    description: Enable passive checks based on observing communication with back-end nodes.
   ssl_cert:
-    _editable: true
-    _type: String
-    _value:
-    _description: SSL certificate served by the NodeBalancer when the protocol is "https".
+    editable: true
+    type: String
+    value: 
+    description: SSL certificate served by the NodeBalancer when the protocol is "https".
   ssl_key:
-    _editable: true
-    _type: String
-    _value:
-    _description: Unpassphrased private key for the SSL certificate when the protocol is "https".
+    editable: true
+    type: String
+    value: 
+    description: Unpassphrased private key for the SSL certificate when the protocol is "https".
   cipher_suite:
-    _editable: true
-    _type: Enum
-    _subtype: cipher_suite
-    _value: recommended
-    _description: SSL cipher suite to enforce.
+    editable: true
+    type: Enum
+    subtype: cipher_suite
+    value: recommended
+    description: SSL cipher suite to enforce.
 enums:
   protocol:
     http: http

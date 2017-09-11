@@ -1,9 +1,10 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { Table, TableRow } from 'linode-components/tables';
 import { Code } from 'linode-components/formats';
 
-import { DescriptionCell, FieldCell, NestedParentCell } from './tables/cells';
+import { DescriptionCell, FieldCell, ParamFieldCell, NestedParentCell } from './tables/cells';
 
 
 const defaultColumns = [
@@ -17,8 +18,7 @@ const enumColumns = [
   { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' },
 ];
 
-export default class MethodResponse extends Component {
-
+export default class Spec extends Component {
   constructor() {
     super();
 
@@ -59,6 +59,9 @@ export default class MethodResponse extends Component {
 
   renderSchemaTable(schemaData, columns) {
     const { activeSchemaIds } = this.state;
+
+    const type = this.props.request ? 'request parameters' : 'response';
+    const noDataMessage = `No ${type} documented.`;
 
     return (
       <Table
@@ -106,23 +109,28 @@ export default class MethodResponse extends Component {
         className="Table--secondary"
         columns={columns}
         data={schemaData}
-        noDataMessage="No response documented."
+        noDataMessage={noDataMessage}
       />
     );
   }
 
   render() {
-    const { schema } = this.props;
+    const { schema, request } = this.props;
 
-    return (
-      <div className="Method-section MethodResponse">
-        <h3>Response</h3>
-        {this.renderSchemaTable(schema, defaultColumns)}
-      </div>
-    );
+    const columns = _.cloneDeep(defaultColumns);
+    if (request) {
+      columns[0].cellComponent = ParamFieldCell;
+    }
+
+    if (!schema) {
+      return null;
+    }
+
+    return this.renderSchemaTable(schema, defaultColumns);
   }
 }
 
-MethodResponse.propTypes = {
+Spec.propTypes = {
+  request: PropTypes.bool,
   schema: PropTypes.arrayOf(PropTypes.object),
 };

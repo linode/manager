@@ -1,16 +1,16 @@
 name: Region
 import: from linode import Region
-_object: region
+object: region
 desc: >
     Represents a Region in the API.
 constructor:
     name: Region
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This Region's ID.
     example: >
         region = linode.Region(client, "us-east-1a")

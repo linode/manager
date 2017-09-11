@@ -6,76 +6,76 @@ description: >
   depending on what type of record it is.
 schema:
   id:
-    _type: Integer
-    _value: 468
+    type: Integer
+    value: 468
   type:
-    _type: String
-    _value: A
-    _description: >
+    type: String
+    value: A
+    description: >
       Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).
   name:
-    _type: String
-    _value: sub.example.com
-    _editable: true
-    _optional: true
-    _filterable: true
-    _description: >
+    type: String
+    value: sub.example.com
+    editable: true
+    optional: true
+    filterable: true
+    description: >
       The hostname or FQDN. When type=MX the subdomain to delegate to the
       Target MX server.
-    _limit: 1-100 characters
+    limit: 1-100 characters
   target:
-    _type: String
-    _value: sub
-    _editable: true
-    _optional: true
-    _filterable: true
-    _description: >
+    type: String
+    value: sub
+    editable: true
+    optional: true
+    filterable: true
+    description: >
       When type=MX the hostname. When type=CNAME the target of the alias.
       When type=TXT the value of the record.
       When type=A or AAAA the token of '[remote_addr]' will be substituted
       with the IP address of the request.
   priority:
-    _type: Integer
-    _value: 10
-    _editable: true
-    _optional: true
-    _description: >
+    type: Integer
+    value: 10
+    editable: true
+    optional: true
+    description: >
       Priority for MX and SRV records.
   weight:
-    _type: Integer
-    _value: 20
-    _editable: true
-    _optional: true
-    _description: >
+    type: Integer
+    value: 20
+    editable: true
+    optional: true
+    description: >
       A relative weight for records with the same priority,
       higher value means more preferred.
   port:
-    _type: Integer
-    _value: 80
-    _editable: true
-    _optional: true
-    _description: >
+    type: Integer
+    value: 80
+    editable: true
+    optional: true
+    description: >
       The TCP or UDP port on which the service is to be found.
   service:
-    _type: String
-    _value: _sip
-    _editable: true
-    _optional: true
-    _description: >
+    type: String
+    value: _sip
+    editable: true
+    optional: true
+    description: >
       The service to append to an SRV record. Must conform to RFC2782 standards.
   protocol:
-    _type: String
-    _value: _tcp
-    _editable: true
-    _optional: true
-    _description: >
+    type: String
+    value: _tcp
+    editable: true
+    optional: true
+    description: >
       The protocol to append to an SRV record. Must conform to RFC2782 standards.
   ttl_sec:
-    _type: Integer
-    _value: 86400
-    _editable: true
-    _optional: true
-    _description: >
+    type: Integer
+    value: 86400
+    editable: true
+    optional: true
+    description: >
       Time interval that the resource record may be cached before
       it should be discarded, in seconds. Leave as 0 to accept
       our default.
