@@ -52,10 +52,10 @@ export default class CreateOrEditConfig extends Component {
       ramLimit: config.ram_limit,
       isCustomRoot: !!config.root_device.length && (slots.indexOf(rootSansDev) === -1),
       isMaxRam: config.ram_limit === 0,
-      enableDistroHelper: config.helpers.enable_distro_helper,
-      enableNetworkHelper: config.helpers.enable_network_helper,
-      enableModulesDepHelper: config.helpers.enable_modules_dep_helper,
-      disableUpdatedb: config.helpers.disable_updatedb,
+      enableDistroHelper: config.helpers.distro_helper_enabled,
+      enableNetworkHelper: config.helpers.network_helper_enabled,
+      enableModulesDepHelper: config.helpers.modules_dep_helper_enabled,
+      disableUpdatedb: config.helpers.updatedb_disabled,
       ...this.state,
     });
 
@@ -79,10 +79,10 @@ export default class CreateOrEditConfig extends Component {
       run_level: this.state.runLevel,
       ram_limit: this.state.isMaxRam ? 0 : parseInt(this.state.ramLimit),
       helpers: {
-        enable_distro_helper: this.state.enableDistroHelper,
-        enable_network_helper: this.state.enableNetworkHelper,
-        enable_modules_dep_helper: this.state.enableModulesDepHelper,
-        disable_updatedb: this.state.disableUpdatedb,
+        distro_helper_enabled: this.state.enableDistroHelper,
+        network_helper_enabled: this.state.enableNetworkHelper,
+        modules_dep_helper_enabled: this.state.enableModulesDepHelper,
+        updatedb_disabled: this.state.disableUpdatedb,
       },
     };
 
@@ -410,10 +410,10 @@ CreateOrEditConfig.defaultProps = {
     isCustomRoot: false,
     root_device: '',
     helpers: {
-      enable_distro_helper: true,
-      enable_network_helper: true,
-      enable_modules_dep_helper: true,
-      disable_updatedb: true,
+      distro_helper_enabled: true,
+      network_helper_enabled: true,
+      modules_dep_helper_enabled: true,
+      updatedb_disabled: true,
     },
     kernel: 'linode/latest-64bit',
     virt_mode: 'paravirt',

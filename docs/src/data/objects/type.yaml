@@ -21,7 +21,7 @@ schema:
   class:
     type: Enum
     subtype: Class
-  hourly_price:
+  price_hourly:
     type: Float
     value: 1.44
     description: Cost (in cents) per hour.
@@ -36,7 +36,7 @@ schema:
     value: 125
     description: If applicable, Mbits outbound bandwidth.
     filterable: true
-  monthly_price:
+  price_monthly:
     type: Integer
     value: 1000
     description: Cost (in US dollars) per month.
