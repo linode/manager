@@ -175,7 +175,7 @@ export class DashboardPage extends Component {
 
   renderDetails() {
     const { username, linode } = this.props;
-    const lishLink = `${username}@lish-${ZONES[linode.region.id]}.linode.com`;
+    const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
 
