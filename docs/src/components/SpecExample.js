@@ -25,7 +25,7 @@ export default class SpecExample extends Component {
     }
 
     const exampleJson = JSON.stringify(example, null, 2);
-    const allowCollapsed = exampleJson.split('\n').length > 7;
+    const allowCollapsed = exampleJson.split('\n').length > 10;
     const iconType = collapsed ? 'fa-caret-down' : 'fa-caret-up';
     const showHideText = collapsed ? 'Show more' : 'Show less';
     const exampleState = collapsed && allowCollapsed ? '' : 'Example-example--full';

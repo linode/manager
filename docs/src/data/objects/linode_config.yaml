@@ -23,63 +23,11 @@ schema:
     type: Boolean
     value: false
     description: Populates the /dev directory early during boot without udev.
-  disks:
-    type: object
-    description: Disks attached to this Linode config.
-    seeAlso: "/reference/endpoints/linode/instances/$id/disks"
+  devices:
+    type: devices
+    description: Disks and volumes attached to this Linode config.
+    seeAlso: ["/reference/endpoints/linode/instances/$id/disks", "/reference/endpoints/linode/instances/$id/volumes"]
     editable: true
-    sda:
-      type: Disk
-      description: The disk mapped to /dev/sda.
-      id:
-        type: Integer
-        value: 456
-      label:
-        type: String
-        value: openSUSE 13.2 Disk
-      size:
-        type: Integer
-        value: 4000
-      filesystem:
-        type: String
-        value: ext4
-      state:
-        type: String
-        value: ok
-      created:
-        type: Datetime
-        value: 2016-05-12T13:36:42
-      updated:
-        type: Datetime
-        value: 2016-05-12T16:13:42
-    sdb:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdb.
-    sdc:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdc.
-    sdd:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdd.
-    sde:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sde.
-    sdf:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdf.
-    sdg:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdg.
-    sdh:
-      type: Disk
-      value: "null"
-      description: The disk mapped to /dev/sdh.
   helpers:
     type: Object
     description: Helpers enabled when booting to this Linode config.
