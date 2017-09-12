@@ -414,7 +414,7 @@ allEndpoints = Object.keys(endpointMap).map(function (key) {
   const endpointIndex = endpointMap[key];
 
   // alphabetically sort groups and endpoints in groups
-    return _.assign(endpointIndex, {
+  return _.assign(endpointIndex, {
     groups: _.sortBy(endpointIndex.groups, g => g.label.toLowerCase()).map(
       group => _.assign(group, {
         endpoints: _.sortBy(group.endpoints, 'path'),
