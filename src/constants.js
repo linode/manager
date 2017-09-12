@@ -216,8 +216,10 @@ export const NODEBALANCER_CONFIG_CHECKS = new Map([
   ['http_body', 'HTTP Body Regex'],
 ]);
 
-export const AVAILABLE_DISK_SLOTS =
-  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+export const AVAILABLE_DISK_SLOTS = {
+  kvm: [...'abcdefgh'].map(letter => `sd${letter}`),
+  xen: [...'abcdefgh'].map(letter => `xvd${letter}`),
+};
 
 export const IPV4_DNS_RESOLVERS = [
   '66.228.42.5',

@@ -3,6 +3,7 @@
 
     &-item {
         float: left;
+        line-height: $form-field-height;
 
         &--right {
             float: right;
@@ -11,5 +12,15 @@
         & + &:not(&--right) {
             padding-left: 15px;
         }
+
+        &--right + & {
+            padding-right: 15px;
+        }
+    }
+
+    &-itemLabel {
+        float: left;
+        line-height: $form-field-height;
+        padding-right: 7px;
     }
 }

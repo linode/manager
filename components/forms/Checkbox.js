@@ -5,7 +5,7 @@ export default function Checkbox(props) {
     <div className={`Checkbox ${props.className}`}>
       <label>
         <input
-          id={props.id}
+          id={props.id || props.name}
           type="checkbox"
           value={props.value}
           checked={props.checked}

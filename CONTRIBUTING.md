@@ -12,13 +12,16 @@ The following buzzwords are involved in this project:
 * [Webpack](https://webpack.github.io/)
 * ES6/ES7 (via [Babel](https://babeljs.io/))
 * [SCSS](http://sass-lang.com)
+* [Yarn](https://yarnpkg.com/)
 
 ## Setup
 
     git clone https://github.com/Linode/manager.git
     cd manager
-    node --version # should be 6.x - 7.2.1
-    npm install
+    node --version # should be 8.4.0
+    (cd components && yarn link) # brew install yarn # on mac
+    yarn
+    yarn link linode-components
 
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
@@ -64,7 +67,7 @@ for comments to the [(#linode-next channel on irc.oftc.net)](https://webchat.oft
 
 Run:
 
-    npm start
+    yarn start
 
 to start the development server. Connect to
 [localhost:3000](https://localhost:3000) to try it out. Most of the changes you
@@ -76,7 +79,7 @@ redux dev tools to track the state of the application, and Ctrl+Q to move them
 around the screen if necessary. If you'd rather disable the devtools, you can
 set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false:
 
-    DEVTOOLS_DISABLED=true npm start
+    DEVTOOLS_DISABLED=true yarn start
 
 ## Git workflows
 
@@ -91,8 +94,8 @@ When creating a new feature:
 1. `git checkout develop`
 2. `git checkout -b my-feature-name`
 3. stage and commit changes to your feature branch
-4. `npm run lint` # to lint your code
-5. `npm test` # to test your code, see 
+4. `yarn run lint` # to lint your code
+5. `yarn test` # to test your code, see 
 6. `git push -u your-remote my-feature-name` # push to your remote and --set-upstream-to
 7. `git checkout develop` and `git pull origin develop` # make sure you're up to date
 8. `git rebase develop` or `git rebase -i develop` # rebase and cleanup your changes if desired
@@ -110,7 +113,7 @@ Creating a hotfix:
 2. `git pull origin master`
 3. `git checkout -b hf-v0.9.1` # create a hotfix branch
 4. stage and commit your hotfix change
-5. `npm --no-git-tag version patch` # bump a patch version, updating both the `package.json` and `npm-shrinkwrap.json`
+5. `yarn --no-git-tag version patch` # bump a patch version, updating both the `package.json` and `TODO: lockfile`
 6. Manually update the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) to represent changes for the patch version
 7. stage and commit the version bump and changelog addition
 8. `git push -u your-remote hf-v0.9.1`
@@ -124,7 +127,7 @@ Creating a release candidate:
 2. `git pull origin develop` # make sure your local develop is up to date
 3. `git checkout -b rc-v0.9.0` # create a release candidate branch
 4. stage and commit your hotfix change
-5. `npm --no-git-tag version minor|major` # bump a minor or major version, updating both the `package.json` and `npm-shrinkwrap.json`
+5. `yarn --no-git-tag version minor|major` # bump a minor or major version, updating both the `package.json` and `yarn-shrinkwrap.json`
 6. Manually update the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) to represent changes for the version
 7. stage and commit the version bump and changelog addition
 8. `git push -u your-remote rc-v0.9.0`
@@ -136,7 +139,7 @@ Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/
 **Tip**: set up your local git repository to lint before every commit.
 ```sh
 echo '#!/usr/bin/env bash' > .git/hooks/pre-commit
-echo 'npm run lint' >> .git/hooks/pre-commit
+echo 'yarn run lint' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
@@ -144,15 +147,15 @@ chmod +x .git/hooks/pre-commit
 
 To run tests:
 
-    npm test
+    yarn test
 
 To automatically re-run tests when you make changes:
 
-    npm run test:watch
+    yarn run test:watch
     
 To automatically re-run tests on a single test file:
 
-    npm run test:watch --single_file=**/name.spec.js
+    yarn run test:watch --single_file=**/name.spec.js
 
 Our tests live in test/**.spec.js. They're based on
 [Mocha](https://mochajs.org/) and do assertions with
@@ -182,7 +185,6 @@ system, browser, device, etc.). Thanks!
 
 ### References
 - http://nvie.com/posts/a-successful-git-branching-model/
-- https://docs.npmjs.com/cli/version
 - http://keepachangelog.com/en/0.3.0/
 - https://help.github.com/articles/merging-a-pull-request/
 - https://help.github.com/articles/about-pull-request-merges/

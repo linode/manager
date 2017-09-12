@@ -3,19 +3,19 @@ description: >
   This represents a reply to a support ticket.
 schema:
   id:
-    _type: Integer
-    _value: 1234
-    _description: This ticket's ID
+    type: Integer
+    value: 1234
+    description: This ticket's ID
   description:
-    _type: String
-    _value: More details about the ticket.
-    _description: The body of this ticket reply.
-    _limit: 1-65535 characters
+    type: String
+    value: More details about the ticket.
+    description: The body of this ticket reply.
+    limit: 1-65535 characters
   created:
-    _type: Datetime
-    _value: "2017-02-23T11:21:01"
-    _description: A timestamp for when the reply was submitted.
+    type: Datetime
+    value: "2017-02-23T11:21:01"
+    description: A timestamp for when the reply was submitted.
   created_by:
-    _type: String
-    _value: some_other_user
-    _description: The user who submitted this reply.
+    type: String
+    value: some_other_user
+    description: The user who submitted this reply.

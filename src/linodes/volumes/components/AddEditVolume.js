@@ -71,7 +71,9 @@ export default class AddEditVolume extends Component {
     const { close, title, volume, linode: original, linodes } = this.props;
     const { errors, region, label, size, linode } = this.state;
 
+    const newVolumeOnLinode = !volume && original;
     const showLinodeAndRegion = !volume && !original;
+    const existingVolume = !!volume;
 
     return (
       <FormModalBody
@@ -83,7 +85,7 @@ export default class AddEditVolume extends Component {
         errors={errors}
       >
         <div>
-          {volume || !original ? null : (
+          {!newVolumeOnLinode ? null : (
             <p>
               Your new volume will be attached to this Linode. If you'd like
               to create an unattached volume or attach it to another Linode or
@@ -109,19 +111,20 @@ export default class AddEditVolume extends Component {
               />
             </ModalFormGroup>
           )}
-          <ModalFormGroup label="Size" id="size" apiKey="size" errors={errors}>
-            <Input
-              placeholder="20"
-              value={size}
-              name="size"
-              id="size"
-              onChange={this.onChange}
-              type="number"
-              min={0}
-              label="GiB"
-              disabled={/* TODO: undisable this once API support for resizing works */!!volume}
-            />
-          </ModalFormGroup>
+          {existingVolume ? null : (
+            <ModalFormGroup label="Size" id="size" apiKey="size" errors={errors}>
+              <Input
+                placeholder="20"
+                value={size}
+                name="size"
+                id="size"
+                onChange={this.onChange}
+                type="number"
+                min={0}
+                label="GiB"
+              />
+            </ModalFormGroup>
+          )}
           {!showLinodeAndRegion ? null : (
             <div>
               <h3>Attach To</h3>
