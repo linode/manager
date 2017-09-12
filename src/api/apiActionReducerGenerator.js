@@ -121,6 +121,7 @@ function genThunkPage(config, actions) {
       const fetchOptions = { method: 'GET', ...config.options, ...options };
       const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
+      resources[config.plural] = resources.data;
 
       const now = fetchBeganAt || new Date();
 
