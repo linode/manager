@@ -1,10 +1,10 @@
-language: node_js
-node_js:
-    - "6"
 install:
-    - npm install
-    - (cd docs && npm install)
-    - (cd components && npm install)
+    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    - sudo apt-get update && sudo apt-get install yarn
+    - yarn
+    - (cd docs && yarn)
+    - (cd components && yarn)
 script:
     - set -e
     - |
@@ -14,9 +14,9 @@ script:
         EOF
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
-        npm run lint
-        (cd docs && npm run lint)
-        (cd components && npm run lint)
-        npm test
+        yarn run lint
+        (cd docs && yarn run lint && yarn run prebuild)
+        (cd components && yarn run lint)
+        yarn test
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi

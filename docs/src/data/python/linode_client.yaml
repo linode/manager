@@ -6,13 +6,13 @@ constructor:
     name: LinodeClient
     parameters:
         token:
-            _keyword: false
+            keyword: false
             desc: >
                 The OAuth Token to use when talking to the the API
         base_url:
-            _keyword: true
+            keyword: true
             desc: Who this LinodeClient should talk to.
-            _default: "'https://api.linode.com/v4'"
+            default: "'https://api.linode.com/v4'"
     example: >
             client = LinodeClient('my-token')
 methods:
@@ -23,7 +23,7 @@ methods:
         parameters:
             '*filters':
                 desc: Any number of filters to this function
-                _keyword: false
+                keyword: false
         example: >
             region = client.get_regions(linode.Region.label.contains("Newark"))[0]
         returns: A list of Region objects
@@ -34,7 +34,7 @@ methods:
         parameters:
             '*filters':
                 desc: Any number of filters to this function
-                _keyword: false
+                keyword: false
         example: >
             domains = client.get_domains()
         returns: A list of Domain objects
@@ -43,16 +43,16 @@ methods:
         parameters:
             domain:
                 desc: The Domain we are managing
-                _keyword: false
+                keyword: false
             master:
                 desc: Is this the master Domain record?
-                _keyword: true
-                _default: 'True'
+                keyword: true
+                default: 'True'
             '**kwargs':
                 desc: >
                     Any number of additional keyword arguments to pass to the POST /domains endpoint.  For more information, see
                     the endpoint docs for complete breakdown.
-                _keyword: false
+                keyword: false
         example: |
             z = client.create_domain('example.org')
 groups:
@@ -68,7 +68,7 @@ groups:
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
-                        _keyword: false
+                        keyword: false
                 example: >
                     distros = client.linode.get_distributions(linode.Distribution.vendor == "Debian")
                 returns: A list of Distribution objects
@@ -79,7 +79,7 @@ groups:
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
-                        _keyword: false
+                        keyword: false
                 example: >
                     type = client.linode.get_types(linode.Types.label == "Linode 1024")[0]
                 returns: A list of Type objects
@@ -90,7 +90,7 @@ groups:
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
-                        _keyword: false
+                        keyword: false
                 example: >
                     linodes = client.linode.get_instances(linode.Linode.group == "production")
                 returns: A list of Linode objects
@@ -101,7 +101,7 @@ groups:
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
-                        _keyword: false
+                        keyword: false
                 example: >
                     stackscripts = client.linode.get_stackscripts()
                 returns: A list of StackScript objects
@@ -112,7 +112,7 @@ groups:
                 parameters:
                     '*filters':
                         desc: Any number of filters to this function
-                        _keyword: false
+                        keyword: false
                 example: >
                     kernels = client.linode.get_kernels(linode.Kernel.kvm == True)
                 returns: A list of Kernel objects
@@ -122,10 +122,10 @@ groups:
             parameters:
                 type:
                     desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
-                    _keyword: false
+                    keyword: false
                 region:
                     desc: A Region object which is the region in which this Linode will be created
-                    _keyword: false
+                    keyword: false
             example: |
                 type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
                 region = client.get_regions(linode.Region.label.contains('Newark'))[0]
@@ -138,20 +138,20 @@ groups:
             parameters:
                 type:
                     desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
-                    _keyword: false
+                    keyword: false
                 region:
                     desc: A Region object which is the region in which this Linode will be created
-                    _keyword: false
+                    keyword: false
                 source:
                     desc: >
                         A Distribution object to deiploy to this Linode.
-                    _keyword: true
-                    _default: None
+                    keyword: true
+                    default: None
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
                         source parameter's value.  See the endpoint docs for more information.
-                    _keyword: false
+                    keyword: false
             example: |
                 type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
                 region = client.get_regions(linode.Region.label.contains('Newark'))[0]
@@ -164,30 +164,30 @@ groups:
             parameters:
                 type:
                     desc:  A Type object which represents the Linode plan to create.  Must be a Linode type.
-                    _keyword: false
+                    keyword: false
                 region:
                     desc: A Region object which is the region in which this Linode will be created
-                    _keyword: false
+                    keyword: false
                 stackscript_id:
                     desc: >
                         The StackScript to deploy this Linode with.
-                    _keyword: true
-                    _default: None
+                    keyword: true
+                    default: None
                 stackscript_data:
                     desc: >
                         A dict containing values for all StackScript user-defined fields.
-                    _keyword: true
-                    _default: None
+                    keyword: true
+                    default: None
                 source:
                     desc: >
                         The Distribution to deploy to this Linode.  Must be a Distribution the given StackScript supports.
-                    _keyword: true
-                    _default: None
+                    keyword: true
+                    default: None
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
                         source parameter's value.  See the endpoint docs more information.
-                    _keyword: false
+                    keyword: false
             example: |
                 type = client.linode.get_types(linode.Type.label == 'Linode 1024')[0]
                 region = client.get_regions(linode.Region.label.contains('Newark'))[0]
@@ -201,26 +201,26 @@ groups:
                 parameters:
                     label:
                         desc: The label for this StackScript
-                        _keyword: false
+                        keyword: false
                     script:
                         desc: Either the script in its entirety, or a path to a file containing the script
-                        _keyword: false
+                        keyword: false
                     distros:
                         desc: Either one or a list of Distribution objects this StackScript runs on
-                        _keyword: false
+                        keyword: false
                     desc:
                         desc: The description of this StackScrip
-                        _keyword: true
-                        _default: None
+                        keyword: true
+                        default: None
                     public:
                         desc: Whether or not this StackScript should be public
-                        _keyword: true
-                        _default: 'False'
+                        keyword: true
+                        default: 'False'
                     '**kwargs':
                         desc: >
                             Any number of additional keyword arguments to pass to the POST /stackscripts endpoint.  For more information,
                             see the endpoint docs for complete breakdown.
-                        _keyword: false
+                        keyword: false
                 example: |
                     distros = client.linode.get_distributions(linode.or_(linode.Distribution.vendor == 'Ubuntu', linode.Distribution.vendor == 'Debian'))
                     s = client.create_stackscript('my-stackscript', '~/stackscripts/my-stackscript.sh', distros)
