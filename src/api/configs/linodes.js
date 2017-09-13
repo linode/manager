@@ -2,6 +2,8 @@ import {
   genConfig, ReducerGenerator, genActions,
   ONE, MANY, PUT, DELETE, POST,
 } from '~/api/apiResultActionReducerGenerator';
+import { ZONES } from '~/constants';
+
 
 export const config = genConfig({
   plural: 'linodes',
@@ -15,10 +17,15 @@ export const config = genConfig({
         label: 'Unknown',
         id: linode.type,
         ...types[linode.type] || {},
-        storage: linode.storage,
-        ram: linode.memory,
+        disk: linode.disk,
+        memory: linode.memory,
         vcpus: linode.vcpus,
       };
+    },
+    distribution: (linode) => function (_, getState) {
+      const distributions = getState().api.distributions.distributions || {};
+
+      return distributions[linode.distribution];
     },
   },
   subresources: {

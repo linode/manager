@@ -92,11 +92,11 @@ export default function Introduction(props) {
           "id": "g5-standard-1",
           "label": "Linode 2048",
           "vcpus": 1,
-          "mbits_out": 125,
-          "storage": 24576,
+          "network_out": 125,
+          "disk": 24576,
           "price_hourly": 1,
           "class": "standard",
-          "ram": 2048,
+          "memory": 2048,
           "price_monthly": 1000,
           "backups_price": 250,
           "transfer": 2000
@@ -141,7 +141,7 @@ export default function Introduction(props) {
           "vendor": "Debian",
           "x64": true,
           "recommended": true,
-          "minimum_storage_size": 900,
+          "disk_minimum": 900,
           "created": "2015-04-27T16:26:41"
       }
       /* and so on */
@@ -214,15 +214,15 @@ export default function Introduction(props) {
   },
   "type": [
     {
-       "ram": 2048,
+       "memory": 2048,
        "label": "Linode 2048",
        "price_monthly": 1000,
        "transfer": 2000,
        "class": "standard",
-       "storage": 24576,
+       "disk": 24576,
        "id": "g5-standard-1",
        "backups_price": 250,
-       "mbits_out": 125,
+       "network_out": 125,
        "price_hourly": 1,
        "vcpus": 1
     }
@@ -234,7 +234,7 @@ export default function Introduction(props) {
     "id": "linode/debian8",
     "label": "Debian 8.1",
     "vendor": "Debian",
-    "minimum_storage_size": 900
+    "disk_minimum": 900
   },
   "alerts": {
     "cpu": {

@@ -8,7 +8,7 @@ schema:
   id:
     type: String
     value: linode2048.5
-  storage:
+  disk:
     type: Integer
     value: 24576
     description: If applicable, disk space in MB.
@@ -31,7 +31,7 @@ schema:
     value: Linode 2048
     description: Human-friendly name of this type.
     filterable: true
-  mbits_out:
+  network_out:
     type: Integer
     value: 125
     description: If applicable, Mbits outbound bandwidth.
@@ -41,7 +41,7 @@ schema:
     value: 1000
     description: Cost (in US dollars) per month.
     filterable: true
-  ram:
+  memory:
     type: Integer
     value: 2048
     description: Amount of RAM included in this type.

@@ -96,9 +96,9 @@ function createTestLinode(id) {
     created: '2016-07-06T16:47:27',
     type: testType,
     status: 'running',
-    region: apiTestRegion,
-    ram: 2048,
-    storage: 20480,
+    region: apiTestRegion.id,
+    memory: 2048,
+    disk: 20480,
     vcpus: 2,
     distribution: {
       id: 'linode/ubuntu15.10',
@@ -106,26 +106,11 @@ function createTestLinode(id) {
       label: 'Ubuntu 15.10',
     },
     alerts: {
-      cpu: {
-        enabled: true,
-        threshold: 90,
-      },
-      io: {
-        enabled: true,
-        threshold: 5000,
-      },
-      transfer_in: {
-        enabled: true,
-        threshold: 5,
-      },
-      transfer_out: {
-        enabled: true,
-        threshold: 5,
-      },
-      transfer_quota: {
-        enabled: true,
-        threshold: 80,
-      },
+      cpu: 90,
+      io: 5000,
+      transfer_in 5,
+      transfer_out: 5,
+      transfer_quota: 80,
     },
     backups: {
       enabled: true,
@@ -160,7 +145,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       },
       snapshot: {
         current: {
@@ -186,7 +171,7 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          region: apiTestRegion,
+          region: apiTestRegion.id,
         },
         in_progress: null,
       },
@@ -203,11 +188,7 @@ function createTestLinode(id) {
           linode_id: null,
           status: 'active',
           created: '2017-08-08T13:55:16',
-          region: {
-            id: 'us-east-1a',
-            label: 'Newark, NJ',
-            country: 'us',
-          },
+          region: 'us-east-1a',
           updated: '2017-08-08T04:00:00',
           size: 20,
         },
@@ -339,7 +320,7 @@ export const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       }, {
         finished: '2017-01-31T07:30:03',
         label: null,
@@ -363,7 +344,7 @@ export const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       },
     ],
   },

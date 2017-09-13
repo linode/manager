@@ -36,7 +36,7 @@ export default class Disks extends Component {
   freeSpace() {
     const { linode } = this.props;
     const disks = Object.values(linode._disks.disks);
-    const total = linode.type.storage;
+    const total = linode.type.disk;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     return total - used;
   }

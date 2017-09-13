@@ -55,10 +55,10 @@ export default function Introduction(props) {
           example={`{
   "distributions": [
       {
-          "created": "2014-10-24T15:48:04",
+          "updated": "2014-10-24T15:48:04",
           "id": "linode/ubuntu14.10",
           "label": "Ubuntu 14.10",
-          "minimum_storage_size": 650,
+          "disk_minimum": 650,
           "recommended": true,
           "vendor": "Ubuntu",
           "x64": true
@@ -138,9 +138,9 @@ export default function Introduction(props) {
        "hypervisor": "kvm",
        "created": "2016-11-10T19:38:00",
        "distribution": {
-          "minimum_storage_size": 900,
+          "disk_minimum": 900,
           "id": "linode/debian8",
-          "created": "2015-04-27T16:26:41",
+          "updated": "2015-04-27T16:26:41",
           "recommended": true,
           "vendor": "Debian",
           "label": "Debian 8.1",
@@ -172,14 +172,14 @@ export default function Introduction(props) {
           {
              "backups_price": 2.5,
              "label": "Linode 2048",
-             "storage": 24576,
+             "disk": 24576,
              "transfer": 2000,
              "vcpus": 1,
              "id": "g5-standard-1",
              "price_hourly": 1,
-             "ram": 2048,
+             "memory": 2048,
              "price_monthly": 10.0,
-             "mbits_out": 125,
+             "network_out": 125,
              "class": "standard"
           }
        ],

@@ -1,6 +1,5 @@
 export const apiTestStackScript = {
   id: 37,
-  user_id: 456,
   label: 'Example StackScript',
   description: 'Installs the Linode API bindings',
   distributions: [

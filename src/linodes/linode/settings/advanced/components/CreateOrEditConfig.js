@@ -230,7 +230,7 @@ export default class CreateOrEditConfig extends Component {
                 checked={isMaxRam}
                 id="isMaxRam-true"
                 onChange={this.onChange}
-                label={`Maximum (${linode.type.ram} MB)`}
+                label={`Maximum (${linode.type.memory} MB)`}
               />
             </div>
             <div>
