@@ -30,9 +30,7 @@ export default class Disks extends Component {
   }
 
   poweredOff() {
-    return [
-      'offline', 'contact_support', 'provisioning',
-    ].indexOf(this.props.linode.status) !== -1;
+    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
   }
 
   freeSpace() {
