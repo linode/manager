@@ -89,6 +89,7 @@ function createTestLinode(id) {
   return {
     id,
     group: 'Test Group',
+    hypervisor: 'kvm',
     label: `test-linode-${id}`,
     ipv4: [ipv4.address, secondIPv4.address],
     ipv6: ipv6.address,
@@ -263,10 +264,10 @@ function createTestLinode(id) {
             sdh: null,
           },
           helpers: {
-            disable_updatedb: true,
-            enable_distro_helper: true,
-            enable_modules_dep_helper: true,
-            enable_network_helper: true,
+            updatedb_disabled: true,
+            distro_helper_enabled: true,
+            modules_dep_helper_enabled: true,
+            network_helper_enabled: true,
           },
           created: '2015-09-29 11:21:38 +0000',
           updated: '2015-09-29 11:21:38 +0000',

@@ -85,7 +85,7 @@
 .DeleteModalBody {
     word-wrap: break-word;
 
-    li {
-        font-weight: bold;
+    &--bold li {
+        font-weight: 400;
     }
 }

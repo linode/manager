@@ -66,8 +66,8 @@ export default function Introduction(props) {
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 2,
-  "total_results": 34
+  "pages": 2,
+  "results": 34
 }`}
           name="json"
           noclipboard
@@ -176,21 +176,21 @@ export default function Introduction(props) {
              "transfer": 2000,
              "vcpus": 1,
              "id": "g5-standard-1",
-             "hourly_price": 1,
+             "price_hourly": 1,
              "ram": 2048,
-             "monthly_price": 10.0,
+             "price_monthly": 10.0,
              "mbits_out": 125,
              "class": "standard"
           }
        ],
-       "total_transfer": 2000,
+       "transfer_total": 2000,
        "updated": "2016-11-10T19:39:36"
     }
     /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard

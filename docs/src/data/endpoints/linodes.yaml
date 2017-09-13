@@ -31,12 +31,11 @@ endpoints:
             description: >
               A region ID to provision
               this Linode in.
-            type: Region
+            type: string
+            value: us-east-1a
           type:
-            description: >
-              A Linode type ID to use for this
-              Linode.
-            type: Service
+            description: A Linode type ID to use for this Linode.
+            type: string
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
@@ -51,7 +50,7 @@ endpoints:
             optional: true
             description: >
               The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.
-            type: Distribution
+            type: string
           root_pass:
             optional: unless source == "distro"
             description: >
@@ -82,7 +81,7 @@ endpoints:
               The Backup to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
             type: Integer
-          with_backup:
+          backups_enabled:
             optional: true
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
@@ -91,17 +90,14 @@ endpoints:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
-                -X POST -d '{
-                    "region": "us-east-1a",
-                    "type": "g5-standard-1"
-                }' \
+                -X POST -d '$SUB_SPEC_EXAMPLE' \
                 https://$api_root/$version/linode/instances
           python: |
             my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
             ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribution=distro)
-  /linode/instances/:id:
+  /linode/instances/$id:
     type: resource
     authenticated: true
     description: >
@@ -149,8 +145,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode.delete()
-  /linode/instances/:id/disks:
-    _group: Disks
+  /linode/instances/$id/disks:
+    group: Disks
     authenticated: true
     description: >
       Manage the disks associated with this Linode.
@@ -234,8 +230,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')
-  /linode/instances/:id/disks/:id:
-    _group: Disks
+  /linode/instances/$id/disks/$id:
+    group: Disks
     type: resource
     authenticated: true
     description: >
@@ -291,8 +287,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk.delete()
-  /linode/instances/:id/disks/:id/resize:
-    _group: Disks
+  /linode/instances/$id/disks/$id/resize:
+    group: Disks
     type: Strange
     authenticated: true
     description: Resizes the disk.
@@ -312,8 +308,8 @@ endpoints:
                     "size": 1024
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
-  /linode/instances/:id/disks/:id/password:
-    _group: Disks
+  /linode/instances/$id/disks/$id/password:
+    group: Disks
     type: Strange
     authenticated: true
     description: >
@@ -337,8 +333,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
           python: |
             disk.reset_root_password('hunter2')
-  /linode/instances/:id/configs:
-    _group: Configs
+  /linode/instances/$id/configs:
+    group: Configs
     authenticated: true
     description: >
       Manage the boot configs on this Linode.
@@ -361,24 +357,29 @@ endpoints:
           Creates a new config for a given Linode.
         params:
           kernel:
+            optional: true
             description: >
               A kernel ID to boot this Linode with.
-            type: Kernel
+              Defaults to "linode/latest-64bit".
+            type: string
+            value: linode/latest-64bit
           label:
             description: >
               The user-friendly label to name this config.
             limit: 1-48 characters
-            type: String
-          disks:
+            type: string
+            value: My config
+          devices:
             description: >
               Disks attached to this Linode config.
-            type: Disks
+            type: devices
           comments:
             optional: true
             description: >
               Optional field for arbitrary user comments on this config.
             limit: 1-255 characters
             type: String
+            value: This is my config.
           ram_limit:
             optional: true
             description: >
@@ -411,21 +412,13 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: Bearer $TOKEN" \
-                -X POST -d '{
-                    "label": "Arch Linux config",
-                    "kernel": "linode/latest_64",
-                    "disks": {
-                      "sda": 5567,
-                      "sdb": 5568
-                      }
-                    }
-                }' \
-                https://$api_root/$version/linode/instances/$linode_id/configs
+              -H "Authorization: Bearer $TOKEN" \
+              -X POST -d '$SUB_SPEC_EXAMPLE' \
+              https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')
-  /linode/instances/:id/configs/:id:
-    _group: Configs
+  /linode/instances/$id/configs/$id:
+    group: Configs
     type: resource
     authenticated: true
     description: >
@@ -478,7 +471,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
-  /linode/instances/:id/volumes:
+  /linode/instances/$id/volumes:
     authenticated: true
     description: >
         View Block Storage Volumes attached to this Linode.
@@ -496,7 +489,7 @@ endpoints:
           python: |
             l = linode.Linode(client, 123)
             volumes_for_linode = l.volumes
-  /linode/instances/:id/boot:
+  /linode/instances/$id/boot:
     type: Action
     authenticated: true
     description: >
@@ -521,7 +514,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/boot
           python: |
             my_linode.boot()
-  /linode/instances/:id/shutdown:
+  /linode/instances/$id/shutdown:
     type: Action
     authenticated: true
     description: >
@@ -538,7 +531,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
             my_linode.shutdown()
-  /linode/instances/:id/reboot:
+  /linode/instances/$id/reboot:
     type: Action
     authenticated: true
     description: >
@@ -564,7 +557,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/reboot
           python: |
             my_linode.reboot()
-  /linode/instances/:id/kvmify:
+  /linode/instances/$id/kvmify:
     type: Action
     authenticated: true
     description: >
@@ -581,7 +574,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
             my_linode.kvmify()
-  /linode/instances/:id/rescue:
+  /linode/instances/$id/rescue:
     type: Action
     authenticated: true
     description: >
@@ -610,7 +603,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
-  /linode/instances/:id/clone:
+  /linode/instances/$id/clone:
     type: Action
     authenticated: true
     description: >
@@ -626,13 +619,14 @@ endpoints:
             description: >
               A region ID to provision
               this Linode in. Required when cloning to a new Linode.
-            type: Region
+            type: string
+            value: us-east-1a
           type:
             optional: true
             description: >
               A Linode type ID to use for this
               Linode. Required when cloning to a new Linode.
-            type: Service
+            type: string
           linode_id:
             optional: true
             description: >
@@ -657,12 +651,14 @@ endpoints:
             optional: true
             description: >
               A list of disk ID's to include in the clone process. All disks attached to configs will be cloned from the source Linode if not provided.
-            type: Array[object]
+            type: string
+            isArray: true
           configs:
             optional: true
             description: >
               A list of config ID's to include in the clone process. All configs will be cloned from the source Linode if not provided.
-            type: Array[object]
+            type: string
+            isArray: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -676,7 +672,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/clone
           python: |
             my_linode.clone(region="us-east-1a", type="g5-standard-1", disks=[2450])
-  /linode/instances/:id/mutate:
+  /linode/instances/$id/mutate:
     type: Action
     authenticated: true
     description: >
@@ -693,7 +689,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/mutate
           python: |
             my_linode.mutate()
-  /linode/instances/:id/resize:
+  /linode/instances/$id/resize:
     type: Action
     authenticated: true
     description: >
@@ -707,7 +703,7 @@ endpoints:
           type:
             description: >
               A Linode type to use for this Linode.
-            type: Service
+            type: string
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -717,8 +713,8 @@ endpoints:
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/resize
-  /linode/instances/:id/backups:
-    _group: Backups
+  /linode/instances/$id/backups:
+    group: Backups
     authenticated: true
     description: >
       Returns information about this Linode's available backups.
@@ -758,8 +754,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             my_linode.snapshot()
-  /linode/instances/:id/backups/enable:
-    _group: Backups
+  /linode/instances/$id/backups/enable:
+    group: Backups
     type: Action
     authenticated: true
     description: >
@@ -777,8 +773,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
             my_linode.enable_backups()
-  /linode/instances/:id/backups/cancel:
-    _group: Backups
+  /linode/instances/$id/backups/cancel:
+    group: Backups
     type: Action
     authenticated: true
     description: >
@@ -795,8 +791,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
             my_linode.cancel_backups()
-  /linode/instances/:id/backups/:id/restore:
-    _group: Backups
+  /linode/instances/$id/backups/$id/restore:
+    group: Backups
     type: Action
     authenticated: true
     description: >
@@ -826,8 +822,8 @@ endpoints:
           python: |
             backup = my_linode.available_backups.daily
             backup.restore()
-  /linode/instances/:id/ips:
-    _group: IPs
+  /linode/instances/$id/ips:
+    group: IPs
     type: Strange
     authenticated: true
     description: >
@@ -851,7 +847,7 @@ endpoints:
           type:
             description: >
                 An IP Address Type for this IP Address. Public IP's incur a monthly cost.
-            type: IPAddressType
+            type: string
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -860,15 +856,15 @@ endpoints:
                     "type": "private"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips
-  /linode/instances/:id/ips/sharing:
-    _group: IPs
+  /linode/instances/$id/ips/sharing:
+    group: IPs
     methods:
       POST:
         description: >
             Sets IP Sharing for this Linode.
         params:
           ips:
-            subtype: String
+            type: string
             description: >
               A list of IP Addresses this Linode will share.
         examples:
@@ -879,8 +875,8 @@ endpoints:
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/sharing
-  /linode/instances/:id/ips/:ip_address:
-    _group: IPs
+  /linode/instances/$id/ips/$ip_address:
+    group: IPs
     type: Action
     authenticated: true
     description: >
@@ -916,7 +912,7 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
-  /linode/instances/:id/rebuild:
+  /linode/instances/$id/rebuild:
     type: Action
     authenticated: true
     description: >
@@ -963,7 +959,7 @@ endpoints:
           python: |
             my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')
   /linode/stackscripts:
-    _group: StackScripts
+    group: StackScripts
     description: >
       View public StackScripts.
     methods:
@@ -1028,8 +1024,8 @@ endpoints:
           python: |
             import stackscript
             TODO
-  /linode/stackscripts/:id:
-    _group: StackScripts
+  /linode/stackscripts/$id:
+    group: StackScripts
     authenticated: true
     description: >
       Manage a particular StackScript.
@@ -1076,7 +1072,7 @@ endpoints:
             import stackscript
             TODO
   /linode/distributions:
-    _group: Distributions
+    group: Distributions
     description: >
       View the collection of distributions.
     methods:
@@ -1090,8 +1086,8 @@ endpoints:
             curl https://$api_root/$version/linode/distributions
           python: |
             client.linode.get_distributions()
-  /linode/distributions/:id:
-    _group: Distributions
+  /linode/distributions/$id:
+    group: Distributions
     type: resource
     description: >
       Returns information about a specific distribution.
@@ -1106,7 +1102,7 @@ endpoints:
           python: |
             distro = linode.Distribution(client, 'linode/debian8')
   /linode/kernels:
-    _group: Kernels
+    group: Kernels
     description: >
       Returns collection of kernels.
     methods:
@@ -1120,8 +1116,8 @@ endpoints:
             curl https://$api_root/$version/linode/kernels
           python: |
             client.linode.get_kernels()
-  /linode/kernels/:id:
-    _group: Kernels
+  /linode/kernels/$id:
+    group: Kernels
     type: resource
     description: >
       Returns information about a specific kernel.
@@ -1136,7 +1132,7 @@ endpoints:
           python: |
             kernel = linode.Kernel(client, 'linode/latest')
   /linode/types:
-    _group: Types
+    group: Types
     description: >
       Returns collection of types.
     methods:
@@ -1150,8 +1146,8 @@ endpoints:
             curl https://$api_root/$version/linode/types
           python: |
             client.linode.get_types()
-  /linode/types/:id:
-    _group: Types
+  /linode/types/$id:
+    group: Types
     type: resource
     description: >
       Returns information about a specific Linode type offered by Linode.
@@ -1166,7 +1162,7 @@ endpoints:
           python: |
             type = linode.Type(client, 'g5-standard=1')
   /linode/volumes:
-    _group: Volumes
+    group: Volumes
     authenticated: true
     description: >
         Manage your Block Storage Volumes.
@@ -1196,11 +1192,12 @@ endpoints:
             description: >
               Which region the new volume should be created in.
             type: String
+            value: us-east-1a
           size:
             optional: true
             description: >
-              The size in GBs that you wish to make your new volume.
-              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+              The size in GiBs that you wish to make your new volume.
+              Defaults to 20 GiB, can be as large as 1024 GiB (1 TiB).
             type: Integer
           linode_id:
             optional: true
@@ -1228,8 +1225,8 @@ endpoints:
           python: |
             import linode
             TODO
-  /linode/volumes/:id:
-    _group: Volumes
+  /linode/volumes/$id:
+    group: Volumes
     type: resource
     authenticated: true
     description: >
@@ -1271,11 +1268,12 @@ endpoints:
             description: >
               Which region the new volume should be created in.
             type: String
+            value: us-east-1a
           size:
             optional: true
             description: >
-              The size in GBs that you wish to make your new volume.
-              Defaults to 20 GB, can be as large as 1024 GB (1 TB).
+              The size in GiBs that you wish to make your new volume.
+              Defaults to 20 GiB, can be as large as 1024 GiB (1 TiB).
             type: Integer
           linode_id:
             optional: true
@@ -1303,8 +1301,8 @@ endpoints:
           python: |
             import linode
             TODO 
-  /linode/volumes/:id/attach:
-    _group: Volumes
+  /linode/volumes/$id/attach:
+    group: Volumes
     authenticated: true
     methods:
       POST:
@@ -1335,8 +1333,8 @@ endpoints:
           python: |
             import linode
             TODO
-  /linode/volumes/:id/detach:
-    _group: Volumes
+  /linode/volumes/$id/detach:
+    group: Volumes
     type: resource
     authenticated: true
     methods:
@@ -1352,8 +1350,8 @@ endpoints:
           python: |
             v = linode.Volume(client, 123)
             v.detach()
-  /linode/instances/:id/stats:
-    _group: Stats
+  /linode/instances/$id/stats:
+    group: Stats
     type: Action
     authenticated: true
     description: >
@@ -1368,8 +1366,8 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/stats
-  /linode/instances/:id/stats/:year/:month:
-    _group: Stats
+  /linode/instances/$id/stats/$year/$month:
+    group: Stats
     type: Action
     authenticated: true
     description: >

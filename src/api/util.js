@@ -108,7 +108,7 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       },
     }));
 
-    if (!response.total_results) {
+    if (!response.results) {
       throw new Error404();
     }
 

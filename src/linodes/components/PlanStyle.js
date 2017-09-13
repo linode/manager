@@ -7,7 +7,7 @@ export function planStyle(plan, withPrice = false) {
   }
 
   const output = `Linode ${parseInt(plan.ram) / 1024}G`;
-  return withPrice ? `${output} ($${plan.monthly_price.toFixed(2)}/mo)` : output;
+  return withPrice ? `${output} ($${plan.price_monthly.toFixed(2)}/mo)` : output;
 }
 
 export function planStats(plan) {

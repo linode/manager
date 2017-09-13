@@ -60,8 +60,8 @@ export default function Introduction(props) {
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 7
+  "pages": 1,
+  "results": 7
 }`}
           name="json"
           noclipboard
@@ -94,18 +94,18 @@ export default function Introduction(props) {
           "vcpus": 1,
           "mbits_out": 125,
           "storage": 24576,
-          "hourly_price": 1,
+          "price_hourly": 1,
           "class": "standard",
           "ram": 2048,
-          "monthly_price": 1000,
+          "price_monthly": 1000,
           "backups_price": 250,
           "transfer": 2000
       }
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard
@@ -147,8 +147,8 @@ export default function Introduction(props) {
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard
@@ -198,7 +198,7 @@ export default function Introduction(props) {
         <Code
           example={`{
   "id": 123456,
-  "total_transfer": 2000,
+  "transfer_total": 2000,
   "label": "prod-1",
   "status": "provisioning",
   "group": "",
@@ -216,14 +216,14 @@ export default function Introduction(props) {
     {
        "ram": 2048,
        "label": "Linode 2048",
-       "monthly_price": 1000,
+       "price_monthly": 1000,
        "transfer": 2000,
        "class": "standard",
        "storage": 24576,
        "id": "g5-standard-1",
        "backups_price": 250,
        "mbits_out": 125,
-       "hourly_price": 1,
+       "price_hourly": 1,
        "vcpus": 1
     }
   ],

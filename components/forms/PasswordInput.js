@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Input } from './';
+import Input from './Input';
 
 
 const str = ['an extremely weak', 'a very weak', 'a weak', 'a strong', 'a very strong'];

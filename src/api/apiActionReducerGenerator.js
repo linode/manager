@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { fetch } from '~/fetch';
 
 import {
@@ -98,9 +96,10 @@ export function filterResources(config, resources, resourceFilter) {
 }
 
 function genThunkOne(config, actions) {
-  return (ids = [], options) => async (dispatch, getState) => {
+  return (ids = [], options = {}) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids), options);
+    const fetchOptions = { method: 'GET', ...options };
+    const response = await fetch(token, config.endpoint(...ids), fetchOptions);
     const resource = await response.json();
     dispatch(actions.one(resource, ...ids));
     return resource;
@@ -119,7 +118,7 @@ function genThunkPage(config, actions) {
       const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
-      const fetchOptions = _.merge({}, config.options, options);
+      const fetchOptions = { method: 'GET', ...config.options, ...options };
       const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
 
@@ -194,7 +193,7 @@ function genThunkAll(config, actions, fetchPage) {
       // Grab all pages we know about. If state.invalid, don't save the result
       // in the redux store until we've got all the results.
       const requests = [];
-      for (let i = 1; i < resources[0].total_pages; i += 1) {
+      for (let i = 1; i < resources[0].pages; i += 1) {
         requests.push(fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
       }
 
@@ -205,7 +204,7 @@ function genThunkAll(config, actions, fetchPage) {
       const numFetchedResources = resources.map(
         resource => resource[config.plural].length
       ).reduce((a, b) => a + b);
-      const numExpectedResources = resources[resources.length - 1].total_results;
+      const numExpectedResources = resources[resources.length - 1].results;
       if (numFetchedResources !== numExpectedResources) {
         return await dispatch(fetchAll(ids, resourceFilter));
       }

@@ -6,87 +6,83 @@ description: >
   deployment of new Linodes.
 schema:
   id:
-    _description: A unique ID for the StackScript.
-    _type: Integer
-    _value: 37
-  customer_id:
-    _description: The customer that created this StackScript.
-    _type: Integer
-    _value: 123
+    description: A unique ID for the StackScript.
+    type: Integer
+    value: 37
   user_id:
-    _description: The user account that created this StackScript.
-    _type: Integer
-    _value: 456
+    description: The user account that created this StackScript.
+    type: Integer
+    value: 456
   label:
-    _description: This StackScript's display label.
-    _type: String
-    _editable: true
-    _value: Example StackScript
-    _filterable: true
-    _limit: 3-128 characters
+    description: This StackScript's display label.
+    type: String
+    editable: true
+    value: Example StackScript
+    filterable: true
+    limit: 3-128 characters
   description:
-    _description: In-depth information on what this StackScript does.
-    _type: String
-    _editable: true
-    _value: Installs the Linode API bindings
-    _filterable: true
+    description: In-depth information on what this StackScript does.
+    type: String
+    editable: true
+    value: Installs the Linode API bindings
+    filterable: true
   distributions:
-    _description: A list of distributions this StackScript is compatible with.
-    _type: distribution
-    _isArray: true
-    _seeAlso: "/reference/endpoints/linode/distributions"
-    _editable: true
-    _filterable: true
+    description: A list of distributions this StackScript is compatible with.
+    type: distribution
+    isArray: true
+    seeAlso: "/reference/endpoints/linode/distributions"
+    editable: true
+    filterable: true
   deployments_total:
-    _description: The total number of times this StackScript has been deployed.
-    _type: Integer
-    _value: 150
+    description: The total number of times this StackScript has been deployed.
+    type: Integer
+    value: 150
   deployments_active:
-    _description: The total number of active deployments.
-    _type: Integer
-    _value: 42
+    description: The total number of active deployments.
+    type: Integer
+    value: 42
   is_public:
-    _description: >
+    description: >
       Publicize StackScript in the Linode StackScript library.
       Note that StackScripts cannot be changed to private after they have been public.
-    _type: Boolean
-    _editable: true
-    _value: true
-    _filterable: true
+    type: Boolean
+    editable: true
+    value: true
+    filterable: true
   created:
-    _description: When the StackScript was initially created.
-    _type: Datetime
-    _value: "2015-09-29T11:21:01"
+    description: When the StackScript was initially created.
+    type: Datetime
+    value: "2015-09-29T11:21:01"
   updated:
-    _description: When the StackScript was last updated.
-    _type: Datetime
-    _value: "2015-10-15T10:02:01"
+    description: When the StackScript was last updated.
+    type: Datetime
+    value: "2015-10-15T10:02:01"
   rev_note:
-    _description: The most recent note about what was changed for this revision.
-    _type: String
-    _editable: true
-    _value: Initial import
+    description: The most recent note about what was changed for this revision.
+    type: String
+    editable: true
+    value: Initial import
   script:
-    _description: The actual script body to be executed.
-    _type: String
-    _value: "#!/bin/bash"
-    _editable: true
+    description: The actual script body to be executed.
+    type: String
+    value: "#!/bin/bash"
+    editable: true
   user_defined_fields:
-    _description: Variables that can be set to customize the script per deployment.
-    _type: object
-    _isArray: true
+    description: Variables that can be set to customize the script per deployment.
+    type: object
+    isArray: true
     name:
-      _type: String
-      _value: var1
+      type: String
+      value: var1
     label:
-      _type: String
-      _value: A question
+      type: String
+      value: A question
     example:
-      _type: String
-      _value: An example value
+      type: String
+      value: An example value
     default:
-      _type: String
-      _value: Default value
+      type: String
+      value: Default value
     oneof:
-      _type: String
-      _value: possible,enum,values
+      type: String
+      value: possible,enum,values

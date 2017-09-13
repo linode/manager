@@ -23,7 +23,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
 
   it('preloads type and configs', async () => {
     const _dispatch = sandbox.stub();
-    _dispatch.returns({ id: 1241, type: 'g5-standard-1' });
+    _dispatch.returns({ id: 1241, type: { id: 'g5-standard-1' } });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
                             { linodeLabel: 'test-linode-7' });
 
@@ -35,7 +35,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     await expectRequest(fn1, '/linode/types/g5-standard-1', { method: 'GET' });
 
     _dispatch.reset();
-    _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
+    _dispatch.returns({ pages: 1, configs: [], results: 0 });
     await fn2(_dispatch, () => state);
 
     fn2 = _dispatch.firstCall.args[0];
