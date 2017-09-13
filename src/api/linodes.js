@@ -121,7 +121,7 @@ export function cloneLinode(linodeId, regionId, planId, backups, label,
   return async function (dispatch) {
     const clonedLinode = await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,
-      with_backups: backups,
+      backups_enabled: backups,
       label: label,
       type: planId,
       disks: disks.length ? disks : undefined,

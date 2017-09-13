@@ -3,9 +3,9 @@ export const apiTestDistro = {
   recommended: true,
   vendor: 'Arch',
   label: 'Arch Linux 2016.05',
-  created: '2009-08-17T00:00:00',
-  x64: true,
-  minimum_storage_size: 550,
+  updated: '2009-08-17T00:00:00',
+  bitness: 64,
+  disk_minimum: 550,
 };
 
 export const testDistro = {

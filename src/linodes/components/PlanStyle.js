@@ -6,8 +6,8 @@ export function planStyle(plan, withPrice = false) {
     return 'Unknown';
   }
 
-  const output = `Linode ${parseInt(plan.ram) / 1024}G`;
-  return withPrice ? `${output} ($${plan.monthly_price.toFixed(2)}/mo)` : output;
+  const output = `Linode ${parseInt(plan.memory) / 1024}G`;
+  return withPrice ? `${output} ($${plan.price_monthly.toFixed(2)}/mo)` : output;
 }
 
 export function planStats(plan) {
@@ -20,8 +20,8 @@ export function planStats(plan) {
     return readable;
   }
 
-  const ram = plan.ram / 1024;
-  const storage = plan.storage / 1024;
+  const ram = plan.memory / 1024;
+  const storage = plan.disk / 1024;
   const vcpus = plan.vcpus;
 
   return `${readable}: ${vcpus} CPU(s), ${storage}G Storage, ${ram}G RAM`;
