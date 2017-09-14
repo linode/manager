@@ -33,7 +33,7 @@ schema:
     _description: The upstream distribution vendor. Consistent between releases of a distribution.
     _filterable: true
   bitness:
-    _type:enum
+    _type: enum
     _subtype: bitness
     _value: 64
     _description: the bitness of this distribution
