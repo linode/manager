@@ -13,19 +13,22 @@ schema:
     value: 24576
     description: If applicable, disk space in MB.
     filterable: true
-  backups_price:
-    type: Float
-    value: 2.5
-    description: Cost (in US dollars) per month if backups are enabled.
-    filterable: false
   class:
     type: Enum
     subtype: Class
-  price_hourly:
-    type: Float
-    value: 1.44
-    description: Cost (in cents) per hour.
-    filterable: true
+  backups_option:
+    type: Object
+    description: Cost of enabling backups for this type.
+    price_hourly:
+      type: Float
+      value: 0.004
+      description: Cost (in cents) per hour.
+      filterable: true
+    price_monthly:
+      type: Integer
+      value: 2.5
+      description: Cost (in US dollars) per month.
+      filterable: true
   label:
     type: String
     value: Linode 2048
