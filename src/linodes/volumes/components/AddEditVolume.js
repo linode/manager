@@ -30,11 +30,11 @@ export default class AddEditVolume extends Component {
 
   constructor(props) {
     super(props);
-
     const { volume = {}, linode } = props;
 
     this.state = {
       linode,
+      config: 0,
       errors: {},
       label: volume.label || '',
       size: volume.size || 10,
@@ -77,8 +77,7 @@ export default class AddEditVolume extends Component {
 
       if (!allConfigs[linodeId]) {
         const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
-        const linodeConfigs = Object.keys(configs.configs).map(function (key) {
-          const config = configs.configs[key];
+        const linodeConfigs = Object.values(configs.configs).map(function (config) {
           return {
             label: config.label,
             value: config.id,
@@ -99,10 +98,22 @@ export default class AddEditVolume extends Component {
       errors, region, label, size, linode, config, allConfigs, fetchingConfigs,
     } = this.state;
 
+    const configs = this.props.linode ?
+      Object.values(linodes[linode]._configs.configs).map(function (config) {
+        return {
+          label: config.label,
+          value: config.id,
+        };
+      }
+    ) : null;
+
     const newVolumeOnLinode = !volume && original;
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
-    const linodeConfigs = [{ label: '-- None --', value: 0 }, ...allConfigs[linode] || {}];
+    const linodeConfigs = [
+      { label: '-- None --', value: 0 },
+      ...allConfigs[linode] || configs || {},
+    ];
 
     return (
       <FormModalBody
@@ -167,18 +178,18 @@ export default class AddEditVolume extends Component {
                   allowNone
                 />
               </ModalFormGroup>
-              <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
-                <Select
-                  options={linodeConfigs}
-                  value={config}
-                  name="config"
-                  id="config"
-                  onChange={this.onChange}
-                  disabled={fetchingConfigs}
-                />
-              </ModalFormGroup>
             </div>
           )}
+          <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+            <Select
+              options={linodeConfigs}
+              value={config}
+              name="config"
+              id="config"
+              onChange={this.onChange}
+              disabled={fetchingConfigs}
+            />
+          </ModalFormGroup>
         </div>
       </FormModalBody>
     );
