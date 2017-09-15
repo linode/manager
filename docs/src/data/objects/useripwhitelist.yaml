@@ -1,0 +1,22 @@
+name: UserIPWhitelist
+description: >
+    An entry a the User's IP Whitelist.
+schema:
+  id:
+    type: Integer
+    value: 123456
+    description: This entry's ID
+  address:
+    type: String
+    value: 123.45.67.89
+    description: The address (either v4 or v6) that is whitelisted.
+  netmask:
+    type: String
+    value: 255.255.255.0
+    description: |
+        For IPv4 entries, the netmask to apply to the address for whitelisting.
+        For IPv6 entries, the prefix length to consider whitelisted.
+  note:
+    type: String
+    value: Home Office
+    description: The note included when adding this whitelist entry.
