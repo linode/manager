@@ -2,8 +2,6 @@ import {
   genConfig, ReducerGenerator, genActions,
   ONE, MANY, PUT, DELETE, POST,
 } from '~/api/apiResultActionReducerGenerator';
-import { ZONES } from '~/constants';
-
 
 export const config = genConfig({
   plural: 'linodes',

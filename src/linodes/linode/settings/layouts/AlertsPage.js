@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  CheckboxInputCombo,
+  Input,
   Form,
   FormGroup,
   FormGroupError,
