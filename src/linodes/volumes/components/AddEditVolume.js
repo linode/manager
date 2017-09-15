@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
-import { Input, ModalFormGroup } from 'linode-components/forms';
+import { Input, ModalFormGroup, Select } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { volumes } from '~/api';
+import { volumes, linodes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
@@ -38,6 +38,8 @@ export default class AddEditVolume extends Component {
       errors: {},
       label: volume.label || '',
       size: volume.size || 10,
+      allConfigs: {},
+      configs: false,
     };
 
     this.onChange = onChange.bind(this);
@@ -45,13 +47,13 @@ export default class AddEditVolume extends Component {
 
   onSubmit = () => {
     const { dispatch, close, volume: { id } = {} } = this.props;
-    const { label, region, size, linode } = this.state;
-
+    const { label, region, size, linode, config } = this.state;
     const data = id ? { label } : {
       label,
       region,
       size,
       linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
+      config_id: config,
     };
 
     const actions = [
@@ -67,13 +69,40 @@ export default class AddEditVolume extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
+  onLinodeChange = (e) => {
+    this.onChange(e);
+    this.setState({ fetchingConfigs: true }, async () => {
+      const linodeId = e.target.value;
+      const { allConfigs } = this.state;
+
+      if (!allConfigs[linodeId]) {
+        const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
+        const linodeConfigs = Object.keys(configs.configs).map(function (key) {
+          const config = configs.configs[key];
+          return {
+            label: config.label,
+            value: config.id,
+          };
+        });
+
+        this.setState({
+          fetchingConfigs: false,
+          allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
+        });
+      }
+    });
+  }
+
   render() {
     const { close, title, volume, linode: original, linodes } = this.props;
-    const { errors, region, label, size, linode } = this.state;
+    const {
+      errors, region, label, size, linode, config, allConfigs, fetchingConfigs,
+    } = this.state;
 
     const newVolumeOnLinode = !volume && original;
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
+    const linodeConfigs = [{ label: '-- None --', value: 0 }, ...allConfigs[linode] || {}];
 
     return (
       <FormModalBody
@@ -134,8 +163,18 @@ export default class AddEditVolume extends Component {
                   value={linode}
                   name="linode"
                   id="linode"
-                  onChange={this.onChange}
+                  onChange={this.onLinodeChange}
                   allowNone
+                />
+              </ModalFormGroup>
+              <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+                <Select
+                  options={linodeConfigs}
+                  value={config}
+                  name="config"
+                  id="config"
+                  onChange={this.onChange}
+                  disabled={fetchingConfigs}
                 />
               </ModalFormGroup>
             </div>
