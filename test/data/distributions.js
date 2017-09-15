@@ -4,7 +4,7 @@ export const apiTestDistro = {
   vendor: 'Arch',
   label: 'Arch Linux 2016.05',
   updated: '2009-08-17T00:00:00',
-  bitness: 64,
+  architecture: 'x86_64',
   disk_minimum: 550,
 };
 

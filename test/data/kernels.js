@@ -7,7 +7,7 @@ export const apiTestKernel = {
   kvm: true,
   label: '4.0.1-x86_64-linode55',
   version: '4.0.1',
-  bitness: 64,
+  architecture: 'x86_64',
   xen: false,
 };
 
@@ -22,6 +22,6 @@ export const kernels = {
     ...testKernel,
     id: 'linode/latest',
     label: '4.0.1-x86-linode55',
-    bitness: 32,
+    architecture: 'x86_64',
   },
 };
