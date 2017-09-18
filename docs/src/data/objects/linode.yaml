@@ -215,10 +215,10 @@ schema:
     _value: running
     _filterable: true
     _pylib_volatile: true
-  total_transfer:
-    _type: Integer
-    _description: The amount of outbound traffic used this month.
-    _value: 20000
+  transfer_total:
+    type: Integer
+    description: The amount of outbound traffic used this month.
+    value: 20000
   updated:
     _type: Datetime
     _value: 2015-10-27T09:59:26

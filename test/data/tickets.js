@@ -16,7 +16,6 @@ function createTestTicket(id) {
     updated_by: 'tdude',
     id: id,
     status: 'new',
-    closed_by: 'tdude',
     description: 'Hullo!',
     closed: null,
     entity: {

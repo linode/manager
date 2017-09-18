@@ -15,7 +15,7 @@ schema:
     _value: Arch Linux 2014.10
     _description: The user-friendly name of this distribution.
     _filterable: true
-  minimum_storage_size:
+  disk_minimum:
     _type: Integer
     _value: 800
     _description: The minimum size required for the distrbution image.

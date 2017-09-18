@@ -9,13 +9,13 @@ export function ipv4s(region) {
     const ips = await dispatch(thunkFetch.get(
       '/networking/ipv4',
       undefined,
-      createHeaderFilter({ region: region.id }).headers));
+      createHeaderFilter({ region }).headers));
 
     // We'll save all IPs at once at the end of organizing them.
     const _ipsByLinode = {};
     const { linodes } = getState().api.linodes;
 
-    Object.values(ips.ipv4).forEach(function (ip) {
+    Object.values(ips.data).forEach(function (ip) {
       const id = ip.linode_id;
 
       // We need to retain all ipv6s.

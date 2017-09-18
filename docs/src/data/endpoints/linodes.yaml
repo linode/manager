@@ -82,7 +82,7 @@ endpoints:
               The Backup to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
             type: Integer
-          with_backup:
+          backups_enabled:
             optional: true
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".

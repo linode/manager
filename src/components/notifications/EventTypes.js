@@ -291,6 +291,11 @@ const EventTypeMap = {
     pastTenseAction: 'created',
     redirectUrl: getVolumeRedirectUrl,
   },
+  blockstorage_resize: {
+    presentTenseAction: 'Resizing',
+    pastTenseAction: 'resized',
+    redirectUrl: getVolumeRedirectUrl,
+  },
 };
 
 export default EventTypeMap;

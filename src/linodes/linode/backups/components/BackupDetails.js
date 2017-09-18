@@ -5,6 +5,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
 import TimeDisplay from '~/components/TimeDisplay';
+import Region from '~/linodes/components/Region';
 
 import TakeSnapshot from './TakeSnapshot';
 
@@ -64,7 +65,7 @@ export default function BackupDetails(props) {
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Region</div>
-        <div className="col-sm-9" id="region">{backup.region.label}</div>
+        <div className="col-sm-9" id="region"><Region obj={backup} /></div>
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Config Profiles</div>

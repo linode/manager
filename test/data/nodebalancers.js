@@ -3,7 +3,7 @@ import { apiTestRegion } from './regions';
 function createTestNodeBalancer(id) {
   return {
     label: `nodebalancer-${id}`,
-    region: apiTestRegion,
+    region: apiTestRegion.id,
     status: 'new_active',
     updated: '2017-03-06T22:00:48',
     created: '2017-03-03T18:08:44',

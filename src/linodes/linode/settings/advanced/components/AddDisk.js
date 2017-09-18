@@ -61,7 +61,7 @@ export default class AddDisk extends Component {
 
     let minimumStorageSize = 8;
     if (distributions[distribution]) {
-      minimumStorageSize = distributions[distribution].minimum_storage_size;
+      minimumStorageSize = distributions[distribution].disk_minimum;
     }
 
     const filesystemOptions = [

@@ -7,7 +7,11 @@ import { IPRdnsCell } from '~/components/tables/cells';
 
 export default function IPList(props) {
   const { linode, checked, onChange } = props;
-  const transferableIps = Object.values(linode._ips).filter(
+  const ips = linode._ips;
+
+  if (!ips) return null;
+
+  const transferableIps = Object.values(ips).filter(
     ip => ip.version === 'ipv4' && ip.type === 'public');
 
   return (
