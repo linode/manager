@@ -45,6 +45,8 @@ describe('linodes/components/CloneLinode', function () {
         body: {
           region: REGION_MAP.Asia[0],
           type: testType.id,
+          label: 'clonedLinode',
+          backups_enabled: true,
         },
       }, { id: 1 }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),

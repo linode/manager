@@ -57,7 +57,7 @@ export class IndexPage extends Component {
           >
             <p>
               Backups not enabled. Enable backups for
-              ${(linode.type.backups_price).toFixed(2)}/mo.
+              ${(linode.type.backups_option.price_monthly).toFixed(2)}/mo.
             </p>
             <SubmitButton
               className="btn-primary"
