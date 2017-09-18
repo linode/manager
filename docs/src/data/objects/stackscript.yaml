@@ -31,14 +31,14 @@ schema:
     value: Installs the Linode API bindings
     filterable: true
   distributions:
-    _description: A list of distributions this StackScript is compatible with.
-    _type: object
-    _isArray: true
-    _seeAlso: "/reference/endpoints/linode/distributions"
-    _editable: true
-    _subtype: String
-    _filterable: true
-    _value:
+    description: A list of distributions this StackScript is compatible with.
+    type: object
+    isArray: true
+    seeAlso: "/reference/endpoints/linode/distributions"
+    editable: true
+    subtype: String
+    filterable: true
+    value:
       - linode/debian8
       - linode/debian9
   deployments_total:

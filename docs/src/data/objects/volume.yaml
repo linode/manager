@@ -23,10 +23,10 @@ schema:
     value: 102400
     description: This volume's size, in MB.
   region:
-      _type: String
-      _value: us-east-1a
-      _filterable: true
-      _description: The region this volume exists in.
+    type: String
+    value: us-east-1a
+    filterable: true
+    description: The region this volume exists in.
   created:
     type: datetime
     value: "2017-06-20T11:21:01"

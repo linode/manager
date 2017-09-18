@@ -29,11 +29,11 @@ schema:
     value: null
     description: Reverse DNS address for this IP Address. Null to reset.
   linode_id:
-    _type: Integer
-    _value: 42
+    type: Integer
+    value: 42
   region:
-    _type: String
-    _value: us-east-1a
+    type: String
+    value: us-east-1a
 enums:
   IPAddressType:
     public: Public IP Address

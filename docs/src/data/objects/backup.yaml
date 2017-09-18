@@ -25,9 +25,9 @@ schema:
     value: snapshot
     description: Whether this is a snapshot or an auto backup.
   region:
-      _type: String
-      _filterable: false
-      _description: This backup region.
+    type: String
+    filterable: false
+    description: This backup region.
   created:
     type: string
     value: "2015-09-29T11:21:01"
@@ -42,7 +42,7 @@ schema:
     type: string
     isArray: true
     description: Config labels that were included in this backup.
-    value: 
+    value:
       - "My Debian8 Profile"
   disks:
     type: Disk

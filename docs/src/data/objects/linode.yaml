@@ -63,43 +63,43 @@ schema:
         type: String
         value: "W20"
     last_backup:
-      _description: If enabled, the last backup that was successfully taken.
-      _type: Backup
+      description: If enabled, the last backup that was successfully taken.
+      type: Backup
       id:
-        _type: Integer
-        _value: 123456
+        type: Integer
+        value: 123456
       label:
-        _type: String
-        _value: A label for your snapshot
-        _description: Human-friendly backup name.
-        _filterable: false
-        _limit: 1-255 characters
+        type: String
+        value: A label for your snapshot
+        description: Human-friendly backup name.
+        filterable: false
+        limit: 1-255 characters
       status:
-        _type: Enum
-        _subtype: Status
-        _value: successful
-        _description: Status of the backup.
-        _filterable: false
+        type: Enum
+        subtype: Status
+        value: successful
+        description: Status of the backup.
+        filterable: false
       type:
-        _type: Enum
-        _subtype: Type
-        _value: snapshot
-        _description: Whether this is a snapshot or an auto backup.
+        type: Enum
+        subtype: Type
+        value: snapshot
+        description: Whether this is a snapshot or an auto backup.
       region:
-        _type: String
-        _value: us-east-1a
-        _filterable: false
-        _description: This backup region.
+        type: String
+        value: us-east-1a
+        filterable: false
+        description: This backup region.
       created:
-        _type: String
-        _value: "2015-09-29T11:21:01"
+        type: String
+        value: "2015-09-29T11:21:01"
       updated:
-        _type: String
-        _value: "2015-09-29T11:21:01"
+        type: String
+        value: "2015-09-29T11:21:01"
       finished:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-        _description: An ISO 8601 datetime of when the backup completed.
+        type: String
+        value: "2015-09-29T11:21:01"
+        description: An ISO 8601 datetime of when the backup completed.
     snapshot:
       description: If enabled, the last snapshot that was successfully taken.
       type: backup
@@ -113,10 +113,10 @@ schema:
     description: This Linode's region.
     value: us-east-1a
   distribution:
-    _description: The distribution that this Linode booted to last.
-    _type: String
-    _value: linode/debian9
-    _filterable: true
+    description: The distribution that this Linode booted to last.
+    type: String
+    value: linode/debian9
+    filterable: true
   group:
     editable: true
     type: String
@@ -169,10 +169,10 @@ schema:
     description: The hypervisor this Linode is running on.
     value: kvm
   disk:
-    _type: Integer
-    _value: 24576
-    _description: Available disk space, in MB.
-    _filterable: false
+    type: Integer
+    value: 24576
+    description: Available disk space, in MB.
+    filterable: false
 enums:
   Status:
     offline: The Linode is powered off.

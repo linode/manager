@@ -5,8 +5,8 @@ description: >
   Region objects describe the regions available for Linode services.
 schema:
   id:
-    _type: String
-    _value: us-east-1a
+    type: String
+    value: us-east-1a
   country:
     type: String
     value: US

@@ -7,6 +7,6 @@ schema:
     value: 2600:3c01::2:5000/64
     description: The IP Address.
   region:
-    _type: String
-    _value: us-east-1a
-    _description: The Region this pool is available in.
+    type: String
+    value: us-east-1a
+    description: The Region this pool is available in.
