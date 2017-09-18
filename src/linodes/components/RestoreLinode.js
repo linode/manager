@@ -44,7 +44,7 @@ export default class RestoreLinode extends Component {
     const { dispatch } = this.props;
     const { label, backup, region, plan, backups } = this.state;
 
-    const data = { label, region, backup_id: backup, with_backups: backups, type: plan };
+    const data = { label, region, backup_id: backup, backups_enabled: backups, type: plan };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),

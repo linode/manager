@@ -46,7 +46,7 @@ export default class AddLinode extends Component {
       distribution,
       region,
       type: plan,
-      with_backups: backups,
+      backups_enabled: backups,
       root_pass: password,
     };
 

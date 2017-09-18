@@ -30,10 +30,6 @@ schema:
     type: Datetime
     value: "2017-02-25T03:20:00"
     filterable: true
-  closed_by:
-    type: String
-    value: some_user
-    description: The user who closed this ticket.
   updated:
     type: Datetime
     value: "2017-02-23T11:21:01"

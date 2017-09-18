@@ -31,27 +31,26 @@ schema:
   helpers:
     type: Object
     description: Helpers enabled when booting to this Linode config.
-    disable_updatedb:
+    updatedb_disabled:
       editable: true
       type: Boolean
       value: true
       description: Disables updatedb cron job to avoid disk thrashing.
-    enable_distro_helper:
+    distro_helper_enabled:
       editable: true
       type: Boolean
       value: true
       description: Helps maintain correct inittab/upstart console device.
-    enable_modules_dep_helper:
+    modules_dep_helper_enabled:
       editable: true
       type: Boolean
       value: true
       description: Creates a modules dependency file for the kernel you run.
-    enable_network_helper:
+    network_helper_enabled:
       editable: true
       type: Boolean
       value: true
-      description: >
-        Automatically configure static networking.
+      description: Automatically configure static networking.
   initrd:
     editable: true
     type: Integer

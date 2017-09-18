@@ -43,7 +43,6 @@ Volumes.OBJECT_TYPE = 'linode-volumes';
 Volumes.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
-  distributions: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
 };

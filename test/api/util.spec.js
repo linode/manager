@@ -23,14 +23,14 @@ describe('api/util', async () => {
   });
 
   it('preloads a linode when it is not already in the state', async () => {
-    dispatch.returns({ linodes: [], total_results: 1 });
+    dispatch.returns({ linodes: [], results: 1 });
     await getObjectByLabelLazily('linodes', 'foo-foo-foo')(dispatch, () => state);
     expect(dispatch.callCount).to.equal(1);
     let fn = dispatch.firstCall.args[0];
     dispatch.reset();
 
     // Call to fetch all
-    dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
+    dispatch.returns({ pages: 1, linodes: [], results: 0 });
     await fn(dispatch, () => state);
     fn = dispatch.firstCall.args[0];
     dispatch.reset();
@@ -46,7 +46,7 @@ describe('api/util', async () => {
   });
 
   it('throws a 404 when the resource is not found', async () => {
-    dispatch.returns({ linodes: [], total_results: 0 });
+    dispatch.returns({ linodes: [], results: 0 });
     // Could not for the life of me get `expect(async () => await getOb...).to.throw(Error404)`
     // to work.
     try {

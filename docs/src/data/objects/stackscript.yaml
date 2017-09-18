@@ -9,10 +9,6 @@ schema:
     description: A unique ID for the StackScript.
     type: Integer
     value: 37
-  user_id:
-    description: The user account that created this StackScript.
-    type: Integer
-    value: 456
   label:
     description: This StackScript's display label.
     type: String

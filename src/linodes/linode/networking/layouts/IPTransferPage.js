@@ -30,7 +30,7 @@ export class IPTransferPage extends Component {
 
     await Promise.all([
       ipv4s(region),
-      linodes.all([], undefined, createHeaderFilter({ region: region.id })),
+      linodes.all([], undefined, createHeaderFilter({ region })),
     ].map(dispatch));
   }
 

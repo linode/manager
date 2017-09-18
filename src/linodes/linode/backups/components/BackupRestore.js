@@ -72,7 +72,7 @@ export default class BackupRestore extends Component {
     }
 
     const linodesInRegion = _.pickBy(linodes.linodes, l =>
-      l.id !== linode.id && l.region.id === linode.region.id);
+      l.id !== linode.id && l.region === linode.region);
 
     const targetLabel = !target || target === linode.id ?
                         'This Linode' :

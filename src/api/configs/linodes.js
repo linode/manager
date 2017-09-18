@@ -15,10 +15,15 @@ export const config = genConfig({
         label: 'Unknown',
         id: linode.type,
         ...types[linode.type] || {},
-        storage: linode.storage,
-        ram: linode.memory,
+        disk: linode.disk,
+        memory: linode.memory,
         vcpus: linode.vcpus,
       };
+    },
+    distribution: (linode) => function (_, getState) {
+      const distributions = getState().api.distributions.distributions || {};
+
+      return distributions[linode.distribution];
     },
   },
   subresources: {

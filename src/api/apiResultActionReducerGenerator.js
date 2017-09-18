@@ -173,8 +173,8 @@ export class ReducerGenerator {
     return {
       ...newState,
       ids,
-      totalPages: page.total_pages,
-      totalResults: page.total_results,
+      totalPages: page.pages,
+      totalResults: page.results,
     };
   }
 
