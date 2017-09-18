@@ -49,12 +49,12 @@ export default class CreateOrEditConfig extends Component {
       devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
-      ramLimit: config.ram_limit,
+      ramLimit: config.memory_limit,
       isCustomRoot: !!config.root_device.length && (slots.indexOf(rootSansDev) === -1),
-      isMaxRam: config.ram_limit === 0,
-      enableDistroHelper: config.helpers.distro_helper_enabled,
-      enableNetworkHelper: config.helpers.network_helper_enabled,
-      enableModulesDepHelper: config.helpers.modules_dep_helper_enabled,
+      isMaxRam: config.memory_limit === 0,
+      enableDistroHelper: config.helpers.distro,
+      enableNetworkHelper: config.helpers.network,
+      enableModulesDepHelper: config.helpers.modules_dep,
       disableUpdatedb: config.helpers.updatedb_disabled,
       ...this.state,
     });
@@ -77,11 +77,11 @@ export default class CreateOrEditConfig extends Component {
       root_device: this.state.rootDevice,
       virt_mode: this.state.virtMode,
       run_level: this.state.runLevel,
-      ram_limit: this.state.isMaxRam ? 0 : parseInt(this.state.ramLimit),
+      memory_limit: this.state.isMaxRam ? 0 : parseInt(this.state.ramLimit),
       helpers: {
-        distro_helper_enabled: this.state.enableDistroHelper,
-        network_helper_enabled: this.state.enableNetworkHelper,
-        modules_dep_helper_enabled: this.state.enableModulesDepHelper,
+        distro: this.state.enableDistroHelper,
+        network: this.state.enableNetworkHelper,
+        modules_dep: this.state.enableModulesDepHelper,
         updatedb_disabled: this.state.disableUpdatedb,
       },
     };
@@ -221,7 +221,7 @@ export default class CreateOrEditConfig extends Component {
             </Checkboxes>
           </div>
         </FormGroup>
-        <FormGroup errors={errors} name="ram_limit" className="row">
+        <FormGroup errors={errors} name="memory_limit" className="row">
           <label className="col-sm-2 col-form-label">Memory limit</label>
           <div className="col-sm-10">
             <div>
@@ -245,7 +245,7 @@ export default class CreateOrEditConfig extends Component {
                 inputValue={ramLimit}
                 inputOnChange={e => this.setState({ ramLimit: e.target.value })}
               />
-              <FormGroupError errors={errors} name="ram_limit" />
+              <FormGroupError errors={errors} name="memory_limit" />
             </div>
           </div>
         </FormGroup>
@@ -418,6 +418,6 @@ CreateOrEditConfig.defaultProps = {
     kernel: 'linode/latest-64bit',
     virt_mode: 'paravirt',
     run_level: 'default',
-    ram_limit: 0,
+    memory_limit: 0,
   },
 };

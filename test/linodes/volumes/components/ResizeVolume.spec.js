@@ -20,6 +20,7 @@ describe('linodes/volumes/components/ResizeVolume', function () {
     ResizeVolume.trigger(dispatch, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
+    console.log(modal.debug());
     changeInput(modal, 'size', 20);
 
     dispatch.reset();

@@ -246,9 +246,9 @@ function createTestLinode(id) {
           },
           helpers: {
             updatedb_disabled: true,
-            distro_helper_enabled: true,
-            modules_dep_helper_enabled: true,
-            network_helper_enabled: true,
+            distro: true,
+            modules_dep: true,
+            network: true,
           },
           created: '2015-09-29 11:21:38 +0000',
           updated: '2015-09-29 11:21:38 +0000',
