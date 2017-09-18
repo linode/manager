@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+# [0.12.4] 2017-09-18
+### Fixed
+- regression after API breaking changes #2548
+
 # [0.12.3] 2017-09-18
 ### Added
 - documentation for API breaking changes #2547
