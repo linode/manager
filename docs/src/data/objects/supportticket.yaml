@@ -3,67 +3,63 @@ description: >
   Support ticket objects describe requests to the Linode support team.
 schema:
   id:
-    _type: Integer
-    _value: 1234
-    _description: This ticket's ID
+    type: Integer
+    value: 1234
+    description: This ticket's ID
   summary:
-    _type: String
-    _value: A summary of the ticket.
-    _description: This is summary or title for the ticket.
-    _limit: 1-64 characters
+    type: String
+    value: A summary of the ticket.
+    description: This is summary or title for the ticket.
+    limit: 1-64 characters
   description:
-    _type: String
-    _value: More details about the ticket.
-    _description: The full details of the issue or question.
-    _limit: 1-65535 characters
+    type: String
+    value: More details about the ticket.
+    description: The full details of the issue or question.
+    limit: 1-65535 characters
   status:
-    _type: Enum
-    _subtype: Status
-    _value: open
-    _description: The status of the ticket.
-    _filterable: true
+    type: Enum
+    subtype: Status
+    value: open
+    description: The status of the ticket.
+    filterable: true
   opened:
-    _type: Datetime
-    _value: "2017-02-23T11:21:01"
-    _filterable: true
+    type: Datetime
+    value: "2017-02-23T11:21:01"
+    filterable: true
   closed:
-    _type: Datetime
-    _value: "2017-02-25T03:20:00"
-    _filterable: true
-  closed_by:
-    _type: String
-    _value: some_user
-    _description: The user who closed this ticket.
+    type: Datetime
+    value: "2017-02-25T03:20:00"
+    filterable: true
   updated:
-    _type: Datetime
-    _value: "2017-02-23T11:21:01"
-    _filterable: true
+    type: Datetime
+    value: "2017-02-23T11:21:01"
+    filterable: true
   updated_by:
-    _type: String
-    _value: some_other_user
-    _description: The user who last updated this ticket.
+    type: String
+    value: some_other_user
+    description: The user who last updated this ticket.
   entity:
-    _description: The entity this ticket was opened regarding
-    _type: Object
+    description: The entity this ticket was opened regarding
+    type: Object
     id:
-      _type: Integer
-      _value: 9302
-      _description: >
+      type: Integer
+      value: 9302
+      description: >
         The entity's ID that this event is for.  This is meaningless without a type.
     label:
-      _type: String
-      _value: linode123
-      _description: >
+      type: String
+      value: linode123
+      description: >
         The current label of this object.  This will reflect changes in label.
     type:
-      _type: String
-      _value: linode
-      _description: >
+      type: String
+      value: linode
+      description: >
         The type of entity this is related to.
     url:
-      _type: String
-      _value: /v4/linode/instances/123
-      _description: >
+      type: String
+      value: /v4/linode/instances/123
+      description: >
         The URL where you can access the object this event is for.  If a relative URL, it is
         relative to the domain you retrieved the event from.
 enums:

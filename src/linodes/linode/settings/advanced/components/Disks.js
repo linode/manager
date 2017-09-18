@@ -30,15 +30,13 @@ export default class Disks extends Component {
   }
 
   poweredOff() {
-    return [
-      'offline', 'contact_support', 'provisioning',
-    ].indexOf(this.props.linode.status) !== -1;
+    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
   }
 
   freeSpace() {
     const { linode } = this.props;
     const disks = Object.values(linode._disks.disks);
-    const total = linode.type.storage;
+    const total = linode.type.disk;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     return total - used;
   }
@@ -70,7 +68,7 @@ export default class Disks extends Component {
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
         EditDisk.trigger(dispatch, linode, record, free) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteDisk(record) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
     ];
 
     return (

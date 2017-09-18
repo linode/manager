@@ -102,7 +102,7 @@ endpoints:
            my_nodebalancer = linode.NodeBalancer(client, 123)
            my_nodebalancer.delete()
   /nodebalancers/$id/configs:
-    _group: Configs
+    group: Configs
     authenticated: true
     description: >
       Manage the configs on this NodeBalancer.
@@ -197,7 +197,7 @@ endpoints:
                     check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',
                     cipher_suite='legacy')
   /nodebalancers/$id/configs/$id:
-    _group: Configs
+    group: Configs
     type: resource
     authenticated: true
     description: >
@@ -228,7 +228,7 @@ endpoints:
             nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id
             nb_config.delete()
   /nodebalancers/$id/configs/$id/ssl:
-    _group: Configs
+    group: Configs
     type: resource
     authenticated: true
     description: >
@@ -249,7 +249,7 @@ endpoints:
           python: |
             # currently unimplemented
   /nodebalancers/$id/configs/$id/nodes:
-    _group: Configs
+    group: Configs
     authenticated: true
     description: >
       Manage the nodes for a specified NodeBalancer config.
@@ -296,7 +296,7 @@ endpoints:
               }' \
               https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
   /nodebalancers/$id/configs/$id/nodes/$id:
-    _group: Configs
+    group: Configs
     type: resource
     authenticated: true
     description: >

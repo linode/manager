@@ -28,10 +28,11 @@ export default class RescueMode extends Component {
 
   componentWillMount() {
     // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
+    const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
     const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
-    const someDisks = sortedDisks.slice(0, AVAILABLE_DISK_SLOTS.length - 1);
+    const someDisks = sortedDisks.slice(0, slots.length - 0);
     const devices = someDisks.reduce(function (devices, disk, index) {
-      return { ...devices, [AVAILABLE_DISK_SLOTS[index]]: disk.id };
+      return { ...devices, [slots[index]]: disk.id };
     }, {});
     this.setState({ devices });
   }
@@ -48,6 +49,7 @@ export default class RescueMode extends Component {
   render() {
     const { linode: { _disks: { disks }, _volumes: { volumes } } } = this.props;
     const { errors, loading, devices } = this.state;
+    const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
 
     return (
       <Card header={<CardHeader title="Rescue mode" />} className="full-height">
@@ -56,7 +58,7 @@ export default class RescueMode extends Component {
           title="Rescue mode"
           className="RescueMode-form"
         >
-          {AVAILABLE_DISK_SLOTS.map((slot, i) => slot === 'sdh' ? null : (
+          {slots.map((slot, i) => i === (slots.length - 1) ? null : (
             <DeviceSelect
               key={i}
               disks={disks}
@@ -72,7 +74,7 @@ export default class RescueMode extends Component {
             />
           ))}
           <FormGroup className="row">
-            <label className="col-sm-3 row-label">/dev/sdh</label>
+            <label className="col-sm-3 row-label">/dev/{slots[slots.length - 1]}</label>
             <div className="col-sm-9">Finnix Media</div>
           </FormGroup>
           <FormGroup className="row">

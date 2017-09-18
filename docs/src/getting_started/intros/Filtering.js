@@ -63,7 +63,7 @@ export default function Filtering() {
         <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
   -H 'X-Filter: {
-    "minimum_storage_size": {
+    "disk_minimum": {
       "+lte": 500
     }
 }'`}
@@ -72,7 +72,7 @@ export default function Filtering() {
         <p>
           You can combine and nest operators to construct arbitrarily-complex queries - say,
           give me all distributions which are either recommended or whose vendor is Debian,
-          or who have a minimum_storage_size between 100 and 500 (inclusive).
+          or who have a disk_minimum between 100 and 500 (inclusive).
         </p>
         <Code
           example={`curl "${API_ROOT}/${API_VERSION}/linode/distributions" \\
@@ -91,12 +91,12 @@ export default function Filtering() {
       {
         "+and": [
           {
-            "minimum_storage_size": {
+            "disk_minimum": {
               "+lte": 500
             }
           },
           {
-            "minimum_storage_size": {
+            "disk_minimum": {
               "+gte": 100
             }
           }

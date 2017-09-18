@@ -3,31 +3,31 @@ description: >
   OAuth Client objects describe an OAuth client application owned by your account.
 schema:
   id:
-    _type: String
-    _value: 0123456789abcdef0123
-    _description: This application's OAuth client ID
+    type: String
+    value: 0123456789abcdef0123
+    description: This application's OAuth client ID
   name:
-    _type: String
-    _value: Example OAuth app
-    _description: Human-friendly client name.
-    _filterable: true
-    _limit: 1-128 characters
-    _editable: true
+    type: String
+    value: Example OAuth app
+    description: Human-friendly client name.
+    filterable: true
+    limit: 1-128 characters
+    editable: true
   secret:
-    _type: String
-    _value: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-    _description: The app's client secret, used in the OAuth flow. Visible only on app creation.
+    type: String
+    value: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    description: The app's client secret, used in the OAuth flow. Visible only on app creation.
   redirect_uri:
-    _type: String
-    _value: https://oauthreturn.example.org/
-    _description: The URL to redirect to after the OAuth flow.
-    _limit: 1-512 characters
-    _editable: true
+    type: String
+    value: https://oauthreturn.example.org/
+    description: The URL to redirect to after the OAuth flow.
+    limit: 1-512 characters
+    editable: true
   status:
-    _type: Enum
-    _subtype: Status
-    _value: active
-    _description: The status of the client application.
+    type: Enum
+    subtype: Status
+    value: active
+    description: The status of the client application.
 enums:
   Status:
     active: The client application is active and accepting OAuth logins.

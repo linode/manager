@@ -9,13 +9,13 @@ export function ipv4s(region) {
     const ips = await dispatch(thunkFetch.get(
       '/networking/ipv4',
       undefined,
-      createHeaderFilter({ region: region.id }).headers));
+      createHeaderFilter({ region }).headers));
 
     // We'll save all IPs at once at the end of organizing them.
     const _ipsByLinode = {};
     const { linodes } = getState().api.linodes;
 
-    Object.values(ips.ipv4).forEach(function (ip) {
+    Object.values(ips.data).forEach(function (ip) {
       const id = ip.linode_id;
 
       // We need to retain all ipv6s.
@@ -101,8 +101,8 @@ export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
     const { linode_id: linodeId, address } = ip;
     const rawAddress = address.split('/')[0].trim();
-    const { rdns: resultingRDNS } = await dispatch(
-      thunkFetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`, { rdns }));
+    await dispatch(thunkFetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
+                                  { rdns }));
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
 
@@ -110,9 +110,10 @@ export function setRDNS(ip, rdns) {
     return dispatch(actions.one({
       _ips: {
         ..._ips,
-        [address]: {
+        [rawAddress]: {
           ...ip,
-          rdns: resultingRDNS,
+          address: rawAddress,
+          rdns,
         },
       },
     }, linodeId));

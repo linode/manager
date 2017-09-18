@@ -50,7 +50,7 @@ export class Weblish extends Component {
     const { linode } = this.state;
     const { lish_token: token } = await dispatch(lishToken(linode.id));
     const socket = new WebSocket(
-      `wss://${ZONES[linode.region.id]}.webconsole.linode.com:8181/${token}/weblish`);
+      `wss://${ZONES[linode.region]}.webconsole.linode.com:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
       this.setState({ renderingLish: true }, this.renderTerminal(socket)));
   }

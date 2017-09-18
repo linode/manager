@@ -1,17 +1,16 @@
 {
   "name": "linode-manager",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
     "copy-assets": "./bin/copy-assets.sh",
-    "build:webpack": "npm run copy-assets && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
-    "build": "npm run clean && npm run build:webpack",
-    "rebuild-components": "rm -fr node_modules/linode-components && npm install",
+    "build:webpack": "yarn run copy-assets && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build": "yarn run clean && yarn run build:webpack",
     "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
-    "start": "npm run copy-assets && node devServer.js",
+    "start": "yarn run copy-assets && node devServer.js",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
     "test:watch": "NODE_ENV=test karma start karma.conf.js",
     "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
@@ -93,8 +92,11 @@
     "webpack-hot-middleware": "^2.6.4",
     "xunit-file": "^0.0.9"
   },
+  "peerDependencies": {
+    "react": "^15.1.0"
+  },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",
@@ -112,7 +114,6 @@
     "qrious": "^2.2.0",
     "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
-    "react": "^15.1.0",
     "react-ace": "^5.1.1",
     "react-dom": "^15.1.0",
     "react-guard": "^0.4.0",
