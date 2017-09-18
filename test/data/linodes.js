@@ -230,7 +230,7 @@ function createTestLinode(id) {
           initrd: '',
           virt_mode: 'paravirt',
           run_level: 'default',
-          ram_limit: 1024,
+          memory_limit: 1024,
           root_device: '/dev/sda',
           root_device_ro: false,
           devtmpfs_automount: false,
