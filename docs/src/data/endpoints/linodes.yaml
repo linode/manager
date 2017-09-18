@@ -642,7 +642,7 @@ endpoints:
             description: The group to assign this Linode when cloning to a new Linode. Defaults to "empty".
             type: String
             limit: 0-50 characters
-          with_backup:
+          backups_enabled:
             optional: true
             description: >
               Subscribes this Linode with the Backup service when cloning to a new Linode. (Additional charges apply.) Defaults to "false".
