@@ -139,7 +139,7 @@ schema:
     value: running
     filterable: true
     _pylib_volatile: true
-  total_transfer:
+  transfer:
     type: Integer
     description: The amount of outbound traffic used this month.
     value: 20000
