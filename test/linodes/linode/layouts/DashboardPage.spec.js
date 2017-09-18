@@ -60,7 +60,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         timezone="UTC"
       />);
 
-    expect(page.find('#region').text()).to.equal(testLinode.region.id);
+    expect(page.find('#region').text()).to.equal(testLinode.region);
   });
 
   it('renders distribution', () => {

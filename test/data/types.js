@@ -9,7 +9,7 @@ export const apiTestType = {
   disk: 24576,
   transfer: 2000,
   vcpus: 2,
-  backups_price: 2.5,
+  backups_option: { price_monthly: 2.5 },
   class: 'standard',
 };
 
@@ -21,7 +21,7 @@ export const testType = {
 export const types = {
   'g5-nanode-1': {
     network_out: 1000,
-    backups_price: 2.0,
+    backups_option: { price_monthly: 2.0 },
     id: 'g5-nanode-1',
     disk: 20480,
     memory: 1024,
@@ -43,13 +43,13 @@ export const types = {
     disk: 24576,
     transfer: 1000,
     vcpus: 1,
-    backups_price: 2.0,
+    backups_option: { price_monthly: 2.0 },
     class: 'standard',
   },
   'linode2048.5': testType,
   'g5-highmem-1': {
     network_out: 1000,
-    backups_price: 5.0,
+    backups_option: { price_monthly: 5.0 },
     id: 'g5-highmem-1',
     disk: 20480,
     memory: 16384,

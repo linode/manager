@@ -122,7 +122,7 @@ function genThunkPage(config, actions) {
       const fetchOptions = _.merge({}, config.options, options);
       const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
-      resources[config.plural] = resources.data;
+      resources[config.plural] = resources.data || [];
 
       const now = fetchBeganAt || new Date();
 
@@ -199,7 +199,10 @@ function genThunkAll(config, actions, fetchPage) {
         requests.push(fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
       }
 
-      (await Promise.all(requests.map(r => dispatch(r)))).map(response => resources.push(response));
+      const allPages = await Promise.all(requests.map(r => dispatch(r)));
+      allPages.forEach(function (response) {
+        resources.push(response);
+      });
 
       // If the number of total results returned by the last page is different
       // than the total number of results we have, restart.

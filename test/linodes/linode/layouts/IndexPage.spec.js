@@ -35,7 +35,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     await expectRequest(fn1, '/linode/types/g5-standard-1', { method: 'GET' });
 
     _dispatch.reset();
-    _dispatch.returns({ pages: 1, data: [], results: 0 });
+    _dispatch.returns({ pages: 1, configs: [], results: 0 });
     await fn2(_dispatch, () => state);
 
     fn2 = _dispatch.firstCall.args[0];

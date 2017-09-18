@@ -15,7 +15,7 @@ export function ipv4s(region) {
     const _ipsByLinode = {};
     const { linodes } = getState().api.linodes;
 
-    Object.values(ips.ipv4).forEach(function (ip) {
+    Object.values(ips.data).forEach(function (ip) {
       const id = ip.linode_id;
 
       // We need to retain all ipv6s.
