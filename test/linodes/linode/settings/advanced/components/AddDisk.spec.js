@@ -51,7 +51,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
 
     changeInput(modal, 'distribution', distro.id);
     expect(modal.find('[type="number"]').props())
-      .to.have.property('min').that.equals(distro.minimum_storage_size);
+      .to.have.property('min').that.equals(distro.disk_minimum);
   });
 
   it('should dismiss the modal when Cancel is clicked', async () => {

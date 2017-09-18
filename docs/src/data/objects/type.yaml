@@ -8,7 +8,7 @@ schema:
   id:
     type: String
     value: linode2048.5
-  storage:
+  disk:
     type: Integer
     value: 24576
     description: If applicable, disk space in MB.
@@ -21,7 +21,7 @@ schema:
   class:
     type: Enum
     subtype: Class
-  hourly_price:
+  price_hourly:
     type: Float
     value: 1.44
     description: Cost (in cents) per hour.
@@ -31,17 +31,17 @@ schema:
     value: Linode 2048
     description: Human-friendly name of this type.
     filterable: true
-  mbits_out:
+  network_out:
     type: Integer
     value: 125
     description: If applicable, Mbits outbound bandwidth.
     filterable: true
-  monthly_price:
+  price_monthly:
     type: Integer
     value: 1000
     description: Cost (in US dollars) per month.
     filterable: true
-  ram:
+  memory:
     type: Integer
     value: 2048
     description: Amount of RAM included in this type.
