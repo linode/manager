@@ -269,7 +269,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
         body: {
           label: 'new label',
           comments: 'Test comments',
-          ram_limit: 0,
+          memory_limit: 0,
           run_level: 'default',
           virt_mode: 'paravirt',
           kernel: 'linode/latest_64',
@@ -287,9 +287,9 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           root_device: '/dev/sda',
           helpers: {
             updatedb_disabled: true,
-            distro_helper_enabled: true,
-            network_helper_enabled: true,
-            modules_dep_helper_enabled: true,
+            distro: true,
+            network: true,
+            modules_dep: true,
           },
         },
       }),
