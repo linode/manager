@@ -23,6 +23,7 @@ import { confirmThenDelete } from '~/utilities';
 import AddEditVolume from './AddEditVolume';
 import MoreInfo from './MoreInfo';
 import AttachVolume from './AttachVolume';
+import ResizeVolume from './ResizeVolume';
 
 
 export default class VolumesList extends Component {
@@ -83,6 +84,7 @@ export default class VolumesList extends Component {
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
       { elements: [{ name: 'Edit', action: () =>
         AddEditVolume.trigger(dispatch, linodes, record) }] },
+      { elements: [{ name: 'Resize', action: () => ResizeVolume.trigger(dispatch, record) }] },
       { elements: [record.linode_id === null ?
         { name: 'Attach', action: () =>
           AttachVolume.trigger(dispatch, linodes, record) } :

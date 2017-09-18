@@ -36,25 +36,27 @@ export default class CreateOrEditConfig extends Component {
   }
 
   componentWillMount(nextProps) {
-    const { config, account } = nextProps || this.props;
+    const { config, account, linode } = nextProps || this.props;
+    const slots = AVAILABLE_DISK_SLOTS[linode.hypervisor];
+    const rootSansDev = config.root_device.substring('/dev/'.length);
 
     this.setState({
       label: config.label,
       comments: config.comments,
       kernel: config.kernel,
       initrd: config.initrd || '',
-      rootDevice: config.root_device,
+      rootDevice: config.root_device || `/dev/${slots[0]}`,
       devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
-        config.root_device.replace('/dev/', '')) === -1,
+      isCustomRoot: !!config.root_device.length && (slots.indexOf(rootSansDev) === -1),
       isMaxRam: config.ram_limit === 0,
-      enableDistroHelper: config.helpers.enable_distro_helper,
-      enableNetworkHelper: config.helpers.enable_network_helper,
-      enableModulesDepHelper: config.helpers.enable_modules_dep_helper,
-      disableUpdatedb: config.helpers.disable_updatedb,
+      enableDistroHelper: config.helpers.distro_helper_enabled,
+      enableNetworkHelper: config.helpers.network_helper_enabled,
+      enableModulesDepHelper: config.helpers.modules_dep_helper_enabled,
+      disableUpdatedb: config.helpers.updatedb_disabled,
+      ...this.state,
     });
 
     if (!config.id) {
@@ -77,10 +79,10 @@ export default class CreateOrEditConfig extends Component {
       run_level: this.state.runLevel,
       ram_limit: this.state.isMaxRam ? 0 : parseInt(this.state.ramLimit),
       helpers: {
-        enable_distro_helper: this.state.enableDistroHelper,
-        enable_network_helper: this.state.enableNetworkHelper,
-        enable_modules_dep_helper: this.state.enableModulesDepHelper,
-        disable_updatedb: this.state.disableUpdatedb,
+        distro_helper_enabled: this.state.enableDistroHelper,
+        network_helper_enabled: this.state.enableNetworkHelper,
+        modules_dep_helper_enabled: this.state.enableModulesDepHelper,
+        updatedb_disabled: this.state.disableUpdatedb,
       },
     };
 
@@ -113,7 +115,6 @@ export default class CreateOrEditConfig extends Component {
       },
     ];
   }
-
   render() {
     const { linode, config } = this.props;
     const {
@@ -121,6 +122,8 @@ export default class CreateOrEditConfig extends Component {
       runLevel, ramLimit, isMaxRam, devices, enableDistroHelper, enableNetworkHelper,
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
+    const defaultRootDevice = `/dev/${AVAILABLE_DISK_SLOTS[linode.hypervisor][0]}`;
+
 
     return (
       <Form
@@ -227,7 +230,7 @@ export default class CreateOrEditConfig extends Component {
                 checked={isMaxRam}
                 id="isMaxRam-true"
                 onChange={this.onChange}
-                label={`Maximum (${linode.type.ram} MB)`}
+                label={`Maximum (${linode.type.memory} MB)`}
               />
             </div>
             <div>
@@ -247,7 +250,7 @@ export default class CreateOrEditConfig extends Component {
           </div>
         </FormGroup>
         <h3 className="sub-header">Block Device Assignment</h3>
-        {AVAILABLE_DISK_SLOTS.map((slot, i) => (
+        {AVAILABLE_DISK_SLOTS[linode.hypervisor].map((slot, i) => (
           <DeviceSelect
             key={i}
             errors={errors}
@@ -284,14 +287,14 @@ export default class CreateOrEditConfig extends Component {
                 radioChecked={isCustomRoot === false}
                 radioOnChange={() => this.setState({
                   isCustomRoot: false,
-                  rootDevice: '/dev/sda',
+                  rootDevice: defaultRootDevice,
                 })}
                 radioLabel="Standard"
                 selectId="root-device-select"
-                selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
+                selectValue={isCustomRoot ? defaultRootDevice : rootDevice}
                 selectDisabled={isCustomRoot}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                selectOptions={AVAILABLE_DISK_SLOTS.map((slot) => ({
+                selectOptions={AVAILABLE_DISK_SLOTS[linode.hypervisor].map((slot) => ({
                   value: `/dev/${slot}`, label: `/dev/${slot}`,
                 }))}
               />
@@ -304,10 +307,10 @@ export default class CreateOrEditConfig extends Component {
                 radioChecked={isCustomRoot === true}
                 radioOnChange={() => this.setState({
                   isCustomRoot: true,
-                  rootDevice: '/dev/sda',
+                  rootDevice: defaultRootDevice,
                 })}
                 inputId="custom-root-device"
-                inputPlaceholder="/dev/sda"
+                inputPlaceholder={defaultRootDevice}
                 inputValue={isCustomRoot ? rootDevice : ''}
                 inputDisabled={isCustomRoot === false}
                 inputType="text"
@@ -403,13 +406,14 @@ CreateOrEditConfig.propTypes = {
 
 CreateOrEditConfig.defaultProps = {
   config: {
-    devices: AVAILABLE_DISK_SLOTS.reduce((disks, slot) => ({ ...disks, [slot]: null }), {}),
-    root_device: '/dev/sda',
+    devices: {},
+    isCustomRoot: false,
+    root_device: '',
     helpers: {
-      enable_distro_helper: true,
-      enable_network_helper: true,
-      enable_modules_dep_helper: true,
-      disable_updatedb: true,
+      distro_helper_enabled: true,
+      network_helper_enabled: true,
+      modules_dep_helper_enabled: true,
+      updatedb_disabled: true,
     },
     kernel: 'linode/latest-64bit',
     virt_mode: 'paravirt',

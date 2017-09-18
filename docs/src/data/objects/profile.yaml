@@ -5,77 +5,77 @@ description: >
   Your User profile information.
 schema:
   username:
-    _type: String
-    _value: example_user
-    _description: >
+    type: String
+    value: example_user
+    description: >
       The username of the user.
   email:
-    _type: String
-    _value: "person@place.com"
-    _description: >
+    type: String
+    value: "person@place.com"
+    description: >
       The email address of the user.
-    _editable: true
+    editable: true
   timezone:
-    _type: String
-    _value: "US/Eastern"
-    _description: The selected timezone of the user location.
-    _editable: true
+    type: String
+    value: "US/Eastern"
+    description: The selected timezone of the user location.
+    editable: true
   email_notifications:
-   _type: Boolean
-   _value: true
-   _description: Toggles to determine if the user receives email notifications
-   _editable: true
+   type: Boolean
+   value: true
+   description: Toggles to determine if the user receives email notifications
+   editable: true
   referrals:
-    _type: Object
-    _description: >
+    type: Object
+    description: >
       Displays information related to referral signups attributed to the user.
     code:
-      _type: String
-      _value: rcg3340777c21fa49a5beb971ca1aec44bc584333
-      _description: an alphanumeric code unique to each user for use in creating referral URLs.
+      type: String
+      value: rcg3340777c21fa49a5beb971ca1aec44bc584333
+      description: an alphanumeric code unique to each user for use in creating referral URLs.
     url:
-      _type: String
-      _value: https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333
-      _description: referral URL based on `code`.
+      type: String
+      value: https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333
+      description: referral URL based on `code`.
     total:
-      _type: Integer
-      _value: 10
-      _description: total number of referrals attributed to user.
+      type: Integer
+      value: 10
+      description: otal number of referrals attributed to user.
     completed:
-      _type: Integer
-      _value: 8
-      _description: total number of referrals attributed to user that have converted to full accounts.
+      type: Integer
+      value: 8
+      description: otal number of referrals attributed to user that have converted to full accounts.
     pending:
-      _type: Integer
-      _value: 2
-      _description: total number of referrals attributed to user that have not yet converted to full accounts.
+      type: Integer
+      value: 2
+      description: otal number of referrals attributed to user that have not yet converted to full accounts.
     credit:
-      _type: Integer
-      _value: 160
-      _description: dollar amount of credit based on completed referrals.
+      type: Integer
+      value: 160
+      description: dollar amount of credit based on completed referrals.
   ip_whitelist_enabled:
-    _type: Boolean
-    _value: true
-    _description: >
+    type: Boolean
+    value: true
+    description: >
       When enabled, you can only log in from an IP address on your whitelist.
-    _editable: true
+    editable: true
   lish_auth_method:
-    _type: Enum
-    _subtype: LishSetting
-    _value: "password_keys"
-    _description: >
+    type: Enum
+    subtype: LishSetting
+    value: "password_keys"
+    description: >
       Controls what authentication methods are allowed to connect to the Lish console servers.
-    _editable: true
+    editable: true
   authorized_keys:
-    _type: String
-    _value: "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com"
-    _description: Comma-delimited list of authorized SSH public keys
-    _editable: true
+    type: String
+    value: "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com"
+    description: Comma-delimited list of authorized SSH public keys
+    editable: true
   two_factor_auth:
-    _type: Boolean
-    _value: true
-    _description: Toggles whether two factor authentication (TFA) is enabled or disabled.
-    _editable: true
+    type: Boolean
+    value: true
+    description: Toggles whether two factor authentication (TFA) is enabled or disabled.
+    editable: true
 enums:
   LishSetting:
     password_keys: Allow both password and key authentication

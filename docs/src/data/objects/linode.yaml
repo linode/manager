@@ -5,12 +5,12 @@ description: >
   Linode objects describe a single Linode on your account.
 schema:
   id:
-    _type: Integer
-    _value: 123456
-    _description: This Linode's ID
+    type: Integer
+    value: 123456
+    description: This Linode's ID
   alerts:
-    _type: Object
-    _description: >
+    type: Object
+    description: >
       Toggle and set thresholds for receiving email alerts.
       <ul>
       <li>CPU Usage - % - Average CPU usage over 2 hours exceeding this value triggers this alert. (Range 0-2000, default 90)</li>
@@ -19,196 +19,120 @@ schema:
       <li>Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)</li>
       <li>Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)</li></ul>
     cpu:
-      _description: Average CPU usage over 2 hours exceeding this value triggers this alert.
-      _type: Integer
-      _value: 90
-      _description: CPU Usage % (Range 0-2000, default 90). 0 to disable.
+      description: Average CPU usage over 2 hours exceeding this value triggers this alert.
+      type: Integer
+      value: 90
+      description: CPU Usage % (Range 0-2000, default 90). 0 to disable.
     io:
-      _description: Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.
-      _type: Integer
-      _value: 10000
-      _description: Disk IO Rate ops/sec (Range 0-100000, default 10000). 0 to disable.
+      description: Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.
+      type: Integer
+      value: 10000
+      description: Disk IO Rate ops/sec (Range 0-100000, default 10000). 0 to disable.
     transfer_in:
-      _description: Average incoming traffic over a 2 hour period exceeding this value triggers this alert.
-      _type: Integer
-      _value: 0
-      _description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
+      description: Average incoming traffic over a 2 hour period exceeding this value triggers this alert.
+      type: Integer
+      value: 0
+      description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
     transfer_out:
-      _description: Average outbound traffic over a 2 hour period exceeding this value triggers this alert.
-      _type: Integer
-      _value: 10
-      _description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
+      description: Average outbound traffic over a 2 hour period exceeding this value triggers this alert.
+      type: Integer
+      value: 10
+      description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
     transfer_quota:
-      _description: Percentage of network transfer quota used being greater than this value will trigger this alert.
-      _type: Integer
-      _value: 80
-      _description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
+      description: Percentage of network transfer quota used being greater than this value will trigger this alert.
+      type: Integer
+      value: 80
+      description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
   backups:
-    _type: Object
-    _seeAlso: "/reference/endpoints/linode/instances/$id/backups"
-    _description: >
+    type: Object
+    seeAlso: "/reference/endpoints/linode/instances/$id/backups"
+    description: >
       Displays if backups are enabled, last backup datetime if applicable, and
       the day/window your backups will occur. Window is prefixed by a "W" and an
       integer representing the two-hour window in 24-hour UTC time format. For
       example, 2AM is represented as "W2", 8PM as "W20", etc. (W0, W2, W4...W22)
     enabled:
-      _type: Boolean
-      _value: true
+      type: Boolean
+      value: true
     schedule:
-      _description: The day and window of a Linode's automatic backups.
+      description: The day and window of a Linode's automatic backups.
       day:
-        _type: String
-        _value: "Tuesday"
+        type: String
+        value: "Tuesday"
       window:
-        _type: String
-        _value: "W20"
+        type: String
+        value: "W20"
     last_backup:
-      _description: If enabled, the last backup that was successfully taken.
-      _type: Backup
-      id:
-        _type: Integer
-        _value: 123456
-      label:
-        _type: String
-        _value: A label for your snapshot
-        _description: Human-friendly backup name.
-        _filterable: false
-        _limit: 1-255 characters
-      status:
-        _type: Enum
-        _subtype: Status
-        _value: successful
-        _description: Status of the backup.
-        _filterable: false
-      type:
-        _type: Enum
-        _subtype: Type
-        _value: snapshot
-        _description: Whether this is a snapshot or an auto backup.
-      region:
-        _type: Region
-        _filterable: false
-        _description: This backup region.
-      created:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-      updated:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-      finished:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-        _description: An ISO 8601 datetime of when the backup completed.
+      description: If enabled, the last backup that was successfully taken.
+      type: backup
     snapshot:
-      _description: If enabled, the last snapshot that was successfully taken.
-      _type: Object
-      id:
-        _type: Integer
-        _value: 123456
-      label:
-        _type: String
-        _value: A label for your snapshot
-        _description: Human-friendly backup name.
-        _filterable: false
-        _limit: 1-255 characters
-      status:
-        _type: Enum
-        _subtype: Status
-        _value: successful
-        _description: Status of the backup.
-        _filterable: false
-      type:
-        _type: Enum
-        _subtype: Type
-        _value: snapshot
-        _description: Whether this is a snapshot or an auto backup.
-      region:
-        _type: Region
-        _filterable: false
-        _description: This backup region.
-      created:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-      updated:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-      finished:
-        _type: String
-        _value: "2015-09-29T11:21:01"
-        _description: An ISO 8601 datetime of when the backup completed.
+      description: If enabled, the last snapshot that was successfully taken.
+      type: backup
   created:
-    _type: String
-    _value: "2015-09-29T11:21:01"
+    type: String
+    value: "2015-09-29T11:21:01"
   region:
-    _type: Object
-    _filterable: true
-    _seeAlso: "/reference/endpoints/regions"
-    _description: This Linode's region.
-    id:
-      _type: String
-      _value: us-east-1a
-    label:
-      _type: String
-      _value: Newark, NJ
-    country:
-      _type: String
-      _value: US
+    type: String
+    filterable: true
+    seeAlso: "/reference/endpoints/regions"
+    description: This Linode's region.
+    value: us-east-1a
   distribution:
-    _description: The distribution that this Linode booted to last.
-    _type: Distribution
-    _seeAlso: "/reference/endpoints/linode/distributions"
-    _filterable: true
+    description: The distribution that this Linode booted to last.
+    type: Distribution
+    seeAlso: "/reference/endpoints/linode/distributions"
+    filterable: true
   group:
-    _editable: true
-    _type: String
-    _description: This Linode's display group.
-    _value: Example
-    _filterable: true
+    editable: true
+    type: String
+    description: This Linode's display group.
+    value: Example
+    filterable: true
     limit: 0-50 characters
   ipv4:
-    _editable: false
-    _type: string
-    _isArray: true
-    _description: This Linode's IPv4 addresses.
-    _seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv4"]
-    _value: ["97.107.143.8", "192.168.149.108"]
+    editable: false
+    type: string
+    isArray: true
+    description: This Linode's IPv4 addresses.
+    seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv4"]
+    value: ["97.107.143.8", "192.168.149.108"]
   ipv6:
-    _editable: false
-    _type: String
-    _description: This Linode's IPv6 slaac address.
-    _seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv6"]
-    _value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
+    editable: false
+    type: String
+    description: This Linode's IPv6 slaac address.
+    seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv6"]
+    value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
   label:
-    _editable: true
-    _type: String
-    _description: This Linode's display label.
-    _value: Example Linode
-    _filterable: true
-    _limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+    editable: true
+    type: String
+    description: This Linode's display label.
+    value: Example Linode
+    filterable: true
+    limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
   type:
-    _description: The Linode's type as a slug.
-    _type: String
+    description: The Linode's type as a slug.
+    type: String
   status:
-    _type: Enum
-    _subtype: Status
-    _description: The current state of this Linode.
-    _value: running
-    _filterable: true
+    type: Enum
+    subtype: Status
+    description: The current state of this Linode.
+    value: running
+    filterable: true
     _pylib_volatile: true
-  total_transfer:
-    _type: Integer
-    _description: The amount of outbound traffic used this month.
-    _value: 20000
+  transfer:
+    type: Integer
+    description: The amount of outbound traffic used this month.
+    value: 20000
   updated:
-    _type: Datetime
-    _value: 2015-10-27T09:59:26
+    type: Datetime
+    value: 2015-10-27T09:59:26
     _pylib_volatile: true
-    _description: The last updated datetime for this Linode record.
+    description: The last updated datetime for this Linode record.
   hypervisor:
-    _type: Enum
-    _subtype: Hypervisor
-    _description: The hypervisor this Linode is running on.
-    _value: kvm
+    type: Enum
+    subtype: Hypervisor
+    description: The hypervisor this Linode is running on.
+    value: kvm
 enums:
   Status:
     offline: The Linode is powered off.

@@ -1,29 +1,29 @@
 name: Linode
 import: from linode import Linode
-_object: linode
+object: linode
 desc: >
     A Linode.  Create linodes with <code>LinodeClient.create_linode</code>.  This class holds all attributes of a Linode
     and methods for managing it.
 _pylib_attributes:
     disks:
-        _description: A list of Disks belonging to this Linode
+        description: A list of Disks belonging to this Linode
     configs:
-        _description: A list of Configs belonging to this Linode
+        description: A list of Configs belonging to this Linode
     recent_backups:
-        _description: A list of recent Backups for this Linode.  This is for record keeping only, you may not be able to restore all of them.
+        description: A list of recent Backups for this Linode.  This is for record keeping only, you may not be able to restore all of them.
     ips:
-        _type: Object
-        _description: >
+        type: Object
+        description: >
             A response object containing "ipv4" and "ipv6" attributes, both of which contain a list of the relevant type of
             IP Address for this Linode.
 constructor:
     name: Linode
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This Linode's ID.
     example: >
         l = linode.Linode(client, "123456")
@@ -34,11 +34,11 @@ methods:
              you should check the <code>state</code> attribute to see when the Linode has actually booted.
         parameters:
             config:
-                _keyword: true
+                keyword: true
                 desc: >
                     The <code>Config</code> object to use when booting this Linode. By default, uses the only
                     or last booted config.
-                _default: None
+                default: None
         example: >
             l.boot()
         returns: True if boot request succeeded
@@ -82,18 +82,18 @@ methods:
             working config for you.
         parameters:
             kernel:
-                _keyword: false
+                keyword: false
                 desc: The <code>Kernel</code> to use with this Config
             label:
-                _keyword: true
+                keyword: true
                 desc: The label for this Config
-                _default: None
+                default: None
             disks:
-                _keyword: true
+                keyword: true
                 desc: A list of <code>Disks</code> for this Config.  The first disk is sda, the second sdb, etc.
-                _default: None
+                default: None
             '**kwargs':
-                _keyword: false
+                keyword: false
                 desc: >
                     Any number of other keyword arguments to pass to the POST /linodes/12345/configs endpoint.
         example: |
@@ -105,20 +105,20 @@ methods:
             Creates a new Disk of a given size.  This disk can be created raw or given a filesystem.
         parameters:
             size:
-                _keyword: false
+                keyword: false
                 desc: The size of the new Disk
             label:
-                _keyword: true
+                keyword: true
                 desc: The label for the new Disk
-                _default: None
+                default: None
             filesystem:
-                _keyword: true
+                keyword: true
                 desc: The type of filesystem to deploy to the new disk (e.g. 'ext4', 'swap').  If None, creates a raw disk.
-                _default: None
+                default: None
             read_only:
-                _keyword: true
+                keyword: true
                 desc: If this disk should be created read-only
-                _default: 'False'
+                default: 'False'
         example: |
             disk = l.create_disk(2048, label='other_disk' filesystem='ext4')
         returns: A new Disk object
@@ -127,26 +127,26 @@ methods:
             Creates a Disk and deploys a <code>Distribution</code> to it.
         parameters:
             size:
-                _keyword: false
+                keyword: false
                 desc: The size of the new Disk
             label:
-                _keyword: true
+                keyword: true
                 desc: The label for the new Disk
-                _default: None
+                default: None
             distribution:
-                _keyword: true
+                keyword: true
                 desc: A Distribution object to deploy to this disk upon creation.
-                _default: None
+                default: None
             root_key:
-                _keyword: true
+                keyword: true
                 desc: >
                     The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
                     distribution was given as well.
-                _default: None
+                default: None
             stackscript:
-                _keyword: true
+                keyword: true
                 desc: The StackScript to deploy to this disk.
-                _default: None
+                default: None
             '**stackscrit_args':
                 keyword: false
                 desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.
@@ -159,32 +159,32 @@ methods:
             Creates a Disk and deploys a <code>Distribution</code> to it, using the provided password for the root user.
         parameters:
             size:
-                _keyword: false
+                keyword: false
                 desc: The size of the new Disk
             label:
-                _keyword: true
+                keyword: true
                 desc: The label for the new Disk
-                _default: None
+                default: None
             distribution:
-                _keyword: true
+                keyword: true
                 desc: A Distribution object to deploy to this disk upon creation.
-                _default: None
+                default: None
             root_pass:
-                _keyword: true
+                keyword: true
                 desc: >
                     The password for the root user in this disk's filesystem.  Only include if you are including a distribution as well.
                     If a distribution is given and no root_pass is provided, one will be generated and returned along with the Disk.
-                _default: None
+                default: None
             root_key:
-                _keyword: true
+                keyword: true
                 desc: >
                     The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
                     distribution was giben as well.
-                _default: None
+                default: None
             stackscript:
-                _keyword: true
+                keyword: true
                 desc: The StackScript to deploy to this disk.
-                _default: None
+                default: None
             '**stackscrit_args':
                 keyword: false
                 desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.
@@ -197,9 +197,9 @@ methods:
             Allocates a new IPv4 Address for this Linode.
         parameters:
             public:
-                _keyword: true
+                keyword: true
                 desc: If True, allocate a Public IP address, else allocate a Private IP address.
-                _default: False
+                default: False
         example:
             l.allocate_ip()
         returns: True if the delete succueeded.
@@ -208,25 +208,25 @@ methods:
             Deletes all Disks and Configs for this Linode, then deploys a Distribution to it.
         parameters:
             distribution:
-                _keyword: true
+                keyword: true
                 desc: A Distribution object to deploy to this disk upon creation.
-                _default: None
+                default: None
             root_pass:
-                _keyword: true
+                keyword: true
                 desc: >
                     The password for the root user in this disk's filesystem.  Only include if you are including a distribution as well.
                     If a distribution is given and no root_pass is provided, one will be generated and returned along with the Disk.
-                _default: None
+                default: None
             root_key:
-                _keyword: true
+                keyword: true
                 desc: >
                     The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
                     distribution was giben as well.
-                _default: None
+                default: None
             stackscript:
-                _keyword: true
+                keyword: true
                 desc: The StackScript to deploy to this disk.
-                _default: None
+                default: None
             '**stackscrit_args':
                 keyword: false
                 desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.

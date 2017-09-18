@@ -7,158 +7,105 @@ description: >
   will be replaced by <code>xvd*</code> for deprecated Xen Linodes.
 schema:
   id:
-    _type: Integer
-    _value: 804
+    type: Integer
+    value: 804
   comments:
-    _editable: true
-    _type: String
-    _value: Example Linode configuration
-    _description: User-supplied comments about this config.
-    _limit: 1-255 characters
+    editable: true
+    type: String
+    value: Example Linode configuration
+    description: User-supplied comments about this config.
+    limit: 1-255 characters
   created:
-    _type: Datetime
-    _value: 2015-09-29T11:21:38
+    type: Datetime
+    value: 2015-09-29T11:21:38
   devtmpfs_automount:
-    _editable: true
-    _type: Boolean
-    _value: false
-    _description: Populates the /dev directory early during boot without udev.
-  disks:
-    _type: object
-    _description: Disks attached to this Linode config.
-    _seeAlso: "/reference/endpoints/linode/instances/$id/disks"
-    _editable: true
-    sda:
-      _type: Disk
-      _description: The disk mapped to /dev/sda.
-      id:
-        _type: Integer
-        _value: 456
-      label:
-        _type: String
-        _value: openSUSE 13.2 Disk
-      size:
-        _type: Integer
-        _value: 4000
-      filesystem:
-        _type: String
-        _value: ext4
-      state:
-        _type: String
-        _value: ok
-      created:
-        _type: Datetime
-        _value: 2016-05-12T13:36:42
-      updated:
-        _type: Datetime
-        _value: 2016-05-12T16:13:42
-    sdb:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdb.
-    sdc:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdc.
-    sdd:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdd.
-    sde:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sde.
-    sdf:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdf.
-    sdg:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdg.
-    sdh:
-      _type: Disk
-      _value: "null"
-      _description: The disk mapped to /dev/sdh.
+    editable: true
+    type: Boolean
+    value: false
+    description: Populates the /dev directory early during boot without udev.
+  devices:
+    type: devices
+    description: Disks and volumes attached to this Linode config.
+    seeAlso: ["/reference/endpoints/linode/instances/$id/disks", "/reference/endpoints/linode/instances/$id/volumes"]
+    editable: true
   helpers:
-    _type: Object
-    _description: Helpers enabled when booting to this Linode config.
-    disable_updatedb:
-      _editable: true
-      _type: Boolean
-      _value: true
-      _description: Disables updatedb cron job to avoid disk thrashing.
-    enable_distro_helper:
-      _editable: true
-      _type: Boolean
-      _value: true
-      _description: Helps maintain correct inittab/upstart console device.
-    enable_modules_dep_helper:
-      _editable: true
-      _type: Boolean
-      _value: true
-      _description: Creates a modules dependency file for the kernel you run.
-    enable_network_helper:
-      _editable: true
-      _type: Boolean
-      _value: true
-      _description: >
-        Automatically configure static networking.
+    type: Object
+    description: Helpers enabled when booting to this Linode config.
+    updatedb_disabled:
+      editable: true
+      type: Boolean
+      value: true
+      description: Disables updatedb cron job to avoid disk thrashing.
+    distro_helper_enabled:
+      editable: true
+      type: Boolean
+      value: true
+      description: Helps maintain correct inittab/upstart console device.
+    modules_dep_helper_enabled:
+      editable: true
+      type: Boolean
+      value: true
+      description: Creates a modules dependency file for the kernel you run.
+    network_helper_enabled:
+      editable: true
+      type: Boolean
+      value: true
+      description: Automatically configure static networking.
   initrd:
-    _editable: true
-    _type: Integer
-    _value: "null"
-    _description: An initrd disk attached to this Linode config.
+    editable: true
+    type: Integer
+    value: "null"
+    description: An initrd disk attached to this Linode config.
   kernel:
-    _editable: true
-    _type: Kernel
+    editable: true
+    type: Kernel
     id:
-      _type: String
-      _value: linode/latest_64
+      type: String
+      value: linode/latest_64
     label:
-      _type: String
-      _value: Latest 64 bit (4.1.0-x86_64-linode59)
+      type: String
+      value: Latest 64 bit (4.1.0-x86_64-linode59)
     current:
-      _type: Boolean
-      _value: true
+      type: Boolean
+      value: true
   label:
-    _editable: true
-    _type: String
-    _value: "My openSUSE 13.2 Profile"
-    _description: Human-friendly label for this config.
-    _filterable: true
-    _limit: 1-48 characters
+    editable: true
+    type: String
+    value: "My openSUSE 13.2 Profile"
+    description: Human-friendly label for this config.
+    filterable: true
+    limit: 1-48 characters
   ram_limit:
-    _editable: true
-    _type: Integer
-    _value: 512
-    _description: Optional RAM limit in MB for uncommon operating systems.
-    _limit: between 0 and the Linode's total RAM
+    editable: true
+    type: Integer
+    value: 512
+    description: Optional RAM limit in MB for uncommon operating systems.
+    limit: between 0 and the Linode's total RAM
   root_device:
-    _editable: true
-    _type: String
-    _value: "/dev/sda"
-    _description: Root device to boot. Corresponding disk must be attached.
+    editable: true
+    type: String
+    value: "/dev/sda"
+    description: Root device to boot. Corresponding disk must be attached.
   root_device_ro:
-    _editable: true
-    _type: Boolean
-    _value: false
-    _description: Controls whether to mount the root disk read-only.
+    editable: true
+    type: Boolean
+    value: false
+    description: Controls whether to mount the root disk read-only.
   run_level:
-    _editable: true
-    _type: Enum
-    _subtype: run_level
-    _value: default
-    _description: Sets the run level for Linode boot.
+    editable: true
+    type: Enum
+    subtype: run_level
+    value: default
+    description: Sets the run level for Linode boot.
   updated:
-    _type: Datetime
-    _value: 2015-09-29T11:21:38
+    type: Datetime
+    value: 2015-09-29T11:21:38
   virt_mode:
-    _editable: true
-    _type: Enum
-    _subtype: virt_mode
-    _value: paravirt
-    _description: Controls the virtualization mode.
+    editable: true
+    type: Enum
+    subtype: virt_mode
+    value: paravirt
+    description: Controls the virtualization mode.
 enums:
   run_level:
     default: Normal multi-user boot mode
