@@ -30,13 +30,13 @@ schema:
     value: Arch
     description: The upstream distribution vendor. Consistent between releases of a distribution.
     filterable: true
-  bitness:
+  architecture:
     type: enum
-    subtype: bitness
+    subtype: architecture
     value: 64
-    description: the bitness of this distribution
+    description: the architecture of this distribution
     filterable: true
 enums:
-  bitness:
-      64: a 64 bit distribution
-      32: a 32 bit distribution
+  architecture:
+      x86_64: a 64 bit distribution
+      i386: a 32 bit distribution
