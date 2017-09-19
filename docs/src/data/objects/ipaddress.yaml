@@ -31,6 +31,9 @@ schema:
   linode_id:
     type: Integer
     value: 42
+  region:
+    type: String
+    value: us-east-1a
 enums:
   IPAddressType:
     public: Public IP Address

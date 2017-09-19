@@ -8,6 +8,5 @@ schema:
     description: The IP Address.
   region:
     type: String
-    subtype: Region
     value: us-east-1a
     description: The Region this pool is available in.

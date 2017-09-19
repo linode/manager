@@ -51,7 +51,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "regions": [
+  "data": [
       {
           "id": "us-east-1a",
           "label": "Newark, NJ",
@@ -87,7 +87,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "types": [
+  "data": [
       {
           "id": "g5-standard-1",
           "label": "Linode 2048",
@@ -134,7 +134,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "distributions": [
+  "data": [
       {
           "id": "linode/debian8",
           "label": "Debian 8",

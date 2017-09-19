@@ -1,4 +1,3 @@
-# vim: set et ts=2 sw=2 tw=80 :
 name: NodeBalancer
 prefix: lnde
 description: >
@@ -23,3 +22,7 @@ schema:
     type: Integer
     value: 10
     description: Throttle connections per second. 0 to disable, max of 20.
+  region:
+    type: String
+    value: us-east-1a
+    description: The region this Nodebalancer is in

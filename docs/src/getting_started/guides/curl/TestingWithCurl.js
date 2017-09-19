@@ -53,7 +53,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "distributions": [
+  "data": [
       {
           "updated": "2014-10-24T15:48:04",
           "id": "linode/ubuntu14.10",
@@ -113,7 +113,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "linodes": [
+  "data": [
     {
        "id": 2019697,
        "label": "prod-1",

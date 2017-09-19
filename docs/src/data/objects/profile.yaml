@@ -55,9 +55,10 @@ schema:
       description: dollar amount of credit based on completed referrals.
   ip_whitelist_enabled:
     type: Boolean
-    value: true
+    value: false
     description: >
-      When enabled, you can only log in from an IP address on your whitelist.
+        If enabled, logins are only allowed from IPs included on this user's IP
+        Whitelist.  This may not be set to enabled.
     editable: true
   lish_auth_method:
     type: Enum

@@ -9,6 +9,14 @@ schema:
     description: A unique ID for the StackScript.
     type: Integer
     value: 37
+  username:
+      description: The user that created this StackScript.
+      type: String
+      value: linode
+  user_gravatar_id:
+      description: The gravatar ID to show for this user.
+      type: String
+      value: 08e2a99f31420a3f38753b07e23af7d6
   label:
     description: This StackScript's display label.
     type: String
@@ -24,11 +32,15 @@ schema:
     filterable: true
   distributions:
     description: A list of distributions this StackScript is compatible with.
-    type: distribution
+    type: object
     isArray: true
     seeAlso: "/reference/endpoints/linode/distributions"
     editable: true
+    subtype: String
     filterable: true
+    value:
+      - linode/debian8
+      - linode/debian9
   deployments_total:
     description: The total number of times this StackScript has been deployed.
     type: Integer

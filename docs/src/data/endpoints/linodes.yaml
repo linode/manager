@@ -197,8 +197,9 @@ endpoints:
             type: String
             limit: 1-50 characters
           filesystem:
+            optional: true
             description: >
-              A filesystem for this disk.
+              A filesystem for this disk. Defaults to "ext4".
             type: String
           read_only:
             optional: true

@@ -23,18 +23,10 @@ schema:
     value: 102400
     description: This volume's size, in MB.
   region:
-      type: region
-      filterable: true
-      description: The region this volume exists in.
-      id:
-        type: string
-        value: us-east-1a
-      label:
-        type: string
-        value: Newark, NJ
-      country:
-        type: string
-        value: us
+    type: String
+    value: us-east-1a
+    filterable: true
+    description: The region this volume exists in.
   created:
     type: datetime
     value: "2017-06-20T11:21:01"
