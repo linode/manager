@@ -34,6 +34,7 @@ describe('linodes/components/RestoreLinode', function () {
     changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'plan', testType.id);
+    changeInput(modal, 'booted', false);
 
     dispatch.reset();
 
@@ -48,6 +49,7 @@ describe('linodes/components/RestoreLinode', function () {
           region: REGION_MAP.Asia[0],
           type: testType.id,
           backups_enabled: false,
+          booted: false,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
@@ -77,6 +79,7 @@ describe('linodes/components/RestoreLinode', function () {
           region: REGION_MAP.Asia[1],
           type: testType.id,
           backups_enabled: true,
+          booted: true,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),

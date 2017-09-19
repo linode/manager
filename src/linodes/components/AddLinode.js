@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
+import { Input, ModalFormGroup, PasswordInput, Checkbox } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -32,14 +32,14 @@ export default class AddLinode extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, password: '' };
+    this.state = { errors: {}, password: '', booted: true };
 
     this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, distribution, region, plan, backups, password } = this.state;
+    const { label, distribution, region, plan, backups, password, booted } = this.state;
 
     const data = {
       label,
@@ -48,11 +48,13 @@ export default class AddLinode extends Component {
       type: plan,
       backups_enabled: backups,
       root_pass: password,
+      booted,
     };
 
     if (distribution === 'none') {
       delete data.root_pass;
       delete data.distribution;
+      delete data.booted;
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -63,7 +65,7 @@ export default class AddLinode extends Component {
 
   render() {
     const { close, distributions, plans } = this.props;
-    const { errors, label, distribution, region, plan, backups, password } = this.state;
+    const { errors, label, distribution, region, plan, backups, password, booted } = this.state;
 
     return (
       <FormModalBody
@@ -132,6 +134,16 @@ export default class AddLinode extends Component {
               checked={backups}
               name="backups"
               id="backups"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Booted" id="booted" apiKey="booted" errors={errors}>
+            <Checkbox
+              label="Boot Linode after created"
+              checked={distribution === 'none' ? false : booted}
+              disabled={distribution === 'none'}
+              name="booted"
+              id="booted"
               onChange={this.onChange}
             />
           </ModalFormGroup>
