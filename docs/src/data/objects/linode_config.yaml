@@ -98,7 +98,7 @@ schema:
       _type: Boolean
       _value: true
       _description: Automatically configure static networking.
-    devtmpfs_aoutmount:
+    devtmpfs_automount:
       _editable: true
       _type: Boolean
       _value: false
