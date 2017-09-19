@@ -1,4 +1,4 @@
-e vim: set et ts=2 sw=2 tw=80
+# vim: set et ts=2 sw=2 tw=80 :
 name: NodeBalancer
 prefix: lnde
 description: >
