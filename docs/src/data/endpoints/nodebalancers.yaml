@@ -336,7 +336,7 @@ endpoints:
       DELETE:
         oauth: nodebalancers:modify
         description: >
-          Deletes a NodeBalancer config. This action cannot be undone.
+          Deletes a NodeBalancer config node. This action cannot be undone.
         dangerous: true
         examples:
           curl: |

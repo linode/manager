@@ -31,7 +31,6 @@ endpoints:
                     "email": "jsmith@mycompany.com",
                     "timezone": "US/Eastern",
                     "email_notifications": true,
-                    "ip_whitelist_enabled": true,
                     "lish_auth_method": "password_keys",
                     "authorized_keys": ""
                   }
@@ -41,7 +40,6 @@ endpoints:
             my_profile.email = 'jsmith@mycompany.com'
             my_profile.timezone = 'US/Eastern'
             my_profile.email_notifications = True
-            my_profile.ip_whitelist_enabled = True
             my_profile.lish_auth_method = 'password_keys'
             my_profile.save()
   /profile/password:
@@ -142,3 +140,71 @@ endpoints:
           python: |
             my_profile = client.get_profile()
             my_grants = my_profile.grants
+  /profile/whitelist:
+      _group: Whitelist
+      description: >
+          Manage your user's IP Whitelist. This is not allowed if the user's IP
+          Whistlist is not enabled.
+      methods:
+        GET:
+          description: Return all entries in your user's IP Whitelist.
+          response: useripwhitelist
+          oauth: account:view
+          examples:
+            curl: |
+              curl -H "Authorication: Bearer $TOKEN" \
+                  https://$api_root/$version/profile/whitelist
+            python: |
+              # coming soon
+        POST:
+          description: |
+              Adds an entry to your user's IP Whitelist.  This is not allowed if
+              the IP Whitelist is not enabled.
+          oauth: account:modify
+          params:
+            address:
+              type: String
+              description: >
+                  The address, either v4 or v6, to allow logins from.
+            netmask:
+              type: String
+              description: >
+                  If adding a v4 address, the netmask in the form of "255.255.255.0".
+                  If adding a v6 address, the prefix length ('/64') as an integer.
+            note:
+              type: String
+              description: A note to add alongside this entry.
+          examples:
+            curl: |
+              curl -H "Authorization: Bearer $TOKEN" \
+                  -X POST -H "Content-Type: application/json" \
+                  -D '{ "address": "123.45.67.89", "netmask": "255.255.255.0" }' \
+                  https://$api_root/$version/profile/grants
+            python: |
+              # coming soon
+  /profile/whitelist/:id:
+    group: Whitelist
+    description: >
+      Manage individual entries in your IP Whitelist.  This is not allowed if
+      your user's IP Whitelist is disabled.
+    methods:
+      GET:
+        description: Access an individual entry in your IP Whitelist.
+        response: useripwhitelist
+        oauth: account:view
+        examples:
+          curl: |
+            curl -H "Authorication: Bearer $TOKEN" \
+                https://$api_root/$version/profile/whitelist/123
+          python: |
+            # coming soon
+      DELETE:
+        description: Remove an entry for your user's IP Whitelist.
+        oauth: account:delete
+        examples:
+          curl: |
+            curl -H "Authorication: Bearer $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/profile/whitelist/123
+          python: |
+            # coming soon

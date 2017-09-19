@@ -15,7 +15,7 @@ export default function Pagination() {
         </p>
         <Code
           example={`{
-  "linodes": [ ... ],
+  "data": [ ... ],
   "page": 1,
   "pages": 10,
   "results": 248

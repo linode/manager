@@ -13,11 +13,6 @@ schema:
     _value: 24576
     _description: If applicable, disk space in MB.
     _filterable: true
-  backups_price:
-    _type: Float
-    _value: 2.5
-    _description: Cost (in US dollars) per month if backups are enabled.
-    _filterable: false
   class:
     _type: Enum
     _subtype: Class
@@ -31,6 +26,19 @@ schema:
     _value: Linode 2048
     _description: Human-friendly name of this type.
     _filterable: true
+  backups_option:
+    _type: Object
+    _description: Cost of enabling backups for this type.
+    price_hourly:
+      _type: Float
+      _value: 0.004
+      _description: Cost (in cents) per hour.
+      _filterable: true
+    price_monthly:
+      _type: Integer
+      _value: 2.5
+      _description: Cost (in US dollars) per month.
+      _filterable: true
   network_out:
     _type: Integer
     _value: 125
@@ -58,5 +66,6 @@ schema:
     _filterable: true
 enums:
   Class:
+    nanode: Nanode class
     standard: Standard class
     highmem: High memory class
