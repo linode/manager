@@ -34,6 +34,7 @@ schema:
   region:
     _type: String
     _value: us-east-1a
+    _description: The region this IP is in
 enums:
   IPAddressType:
     public: Public IP Address
