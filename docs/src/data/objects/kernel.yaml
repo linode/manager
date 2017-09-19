@@ -35,9 +35,10 @@ schema:
     _value: 3.5.2
     _description: Linux Kernel version.
     _filterable: true
-  x64:
-    _type: Boolean
-    _value: true
+  architecture:
+    _type: enum
+    _subtype: architecture
+    _value: x86_64
     _description: True if this is a 64-bit kernel, false for 32-bit.
     _filterable: true
   current:
@@ -51,4 +52,7 @@ schema:
   latest:
     _type: Boolean
     _value: true
-
+enums:
+  architecture:
+      x86_64: a 64 bit distribution
+      i386: a 32 bit distribution

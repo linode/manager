@@ -57,7 +57,8 @@ schema:
     _type: Boolean
     _value: true
     _description: >
-      When enabled, you can only log in from an IP address on your whitelist.
+      If enabled, logins are only allowed from IPs included on this user's IP
+      Whitelist.  This may not be set to enabled.
     _editable: true
   lish_auth_method:
     _type: Enum

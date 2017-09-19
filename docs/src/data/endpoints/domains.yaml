@@ -38,7 +38,6 @@ endpoints:
               Domain type as master or slave.
             type: Enum
           soa_email:
-            optional: true
             description: >
               Start of Authority (SOA) contact email.
             type: String

@@ -38,7 +38,7 @@ export default function Introduction(props) {
       <section>
         <h2>Selecting a region</h2>
         <p>
-          A <Link to={`/${API_VERSION}/reference/endpoints/regions`}>region</Link> is a physical
+          A <Link to={`/${API_VERSION}/reference/endpoints/dataregions`}>region</Link> is a physical
           location that contains Linodes. To retrieve a list of available region, you can use the
           /regions API endpoint. To make an API call against this endpoint over curl, run the
           following command:
@@ -51,7 +51,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "regions": [
+  "data": [
       {
           "id": "us-east-1a",
           "label": "Newark, NJ",
@@ -87,7 +87,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "types": [
+  "data": [
       {
           "id": "g5-standard-1",
           "label": "Linode 2048",
@@ -98,7 +98,10 @@ export default function Introduction(props) {
           "class": "standard",
           "memory": 2048,
           "price_monthly": 1000,
-          "backups_price": 250,
+          "backups_option": {
+            "price_hourly": 0.004,
+            "price_monthly": 2.5
+          },
           "transfer": 2000
       }
       /* and so on */
@@ -134,7 +137,7 @@ export default function Introduction(props) {
         </p>
         <Code
           example={`{
-  "distributions": [
+  "data": [
       {
           "id": "linode/debian8",
           "label": "Debian 8",
@@ -227,15 +230,7 @@ export default function Introduction(props) {
        "vcpus": 1
     }
   ],
-  "distribution": {
-    "recommended": true,
-    "x64": true,
-    "created": "2015-04-27T16:26:41",
-    "id": "linode/debian8",
-    "label": "Debian 8.1",
-    "vendor": "Debian",
-    "disk_minimum": 900
-  },
+  "distribution": "linode/debian8",
   "alerts": {
     "cpu": {
        "threshold": 90,

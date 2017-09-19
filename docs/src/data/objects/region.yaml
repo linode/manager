@@ -7,11 +7,6 @@ schema:
   id:
     _type: String
     _value: us-east-1a
-  label:
-    _type: String
-    _value: Newark, NJ
-    _description: Human-friendly region name.
-    _filterable: true
   country:
     _type: String
     _value: US
