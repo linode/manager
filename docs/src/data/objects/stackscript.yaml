@@ -32,11 +32,10 @@ schema:
     _filterable: true
   distributions:
     _description: A list of distributions this StackScript is compatible with.
-    _type: array
+    _type: String
     _isArray: true
     _seeAlso: "/reference/endpoints/linode/distributions"
     _editable: true
-    _subtype: String
     _filterable: true
     _value:
       - linode/debian8

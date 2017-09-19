@@ -61,7 +61,7 @@ export default function Introduction(props) {
           "disk_minimum": 650,
           "recommended": true,
           "vendor": "Ubuntu",
-          "x64": true
+          "architecture": "x86_64"
       }
       /* and so on */
   ],
@@ -136,7 +136,7 @@ export default function Introduction(props) {
        "status": "running",
        "group": "",
        "hypervisor": "kvm",
-       "created": "2016-11-10T19:38:00",
+       "updated": "2016-11-10T19:38:00",
        "distribution": {
           "disk_minimum": 900,
           "id": "linode/debian8",
@@ -144,7 +144,7 @@ export default function Introduction(props) {
           "recommended": true,
           "vendor": "Debian",
           "label": "Debian 8.1",
-          "x64": true
+          "architecture": "x86_64"
        },
        "alerts": {
           "io": {

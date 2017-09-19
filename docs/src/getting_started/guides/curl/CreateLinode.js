@@ -142,10 +142,10 @@ export default function Introduction(props) {
           "id": "linode/debian8",
           "label": "Debian 8",
           "vendor": "Debian",
-          "x64": true,
+          "architecture": "x86_64",
           "recommended": true,
           "disk_minimum": 900,
-          "created": "2015-04-27T16:26:41"
+          "updated": "2015-04-27T16:26:41"
       }
       /* and so on */
   ],
@@ -210,52 +210,17 @@ export default function Introduction(props) {
   "hypervisor": "kvm",
   "ipv4": "97.107.143.56",
   "ipv6": "2600:3c03::f03c:91ff:fe0a:18ab/64",
-  "region": {
-    "id": "us-east-1a",
-    "country": "us",
-    "label": "Newark, NJ"
-  },
-  "type": [
-    {
-       "memory": 2048,
-       "label": "Linode 2048",
-       "price_monthly": 1000,
-       "transfer": 2000,
-       "class": "standard",
-       "disk": 24576,
-       "id": "g5-standard-1",
-       "backups_price": 250,
-       "network_out": 125,
-       "price_hourly": 1,
-       "vcpus": 1
-    }
-  ],
+  "region": "us-east-1a",
+  "type":  "g5-standard-1",
   "distribution": "linode/debian8",
   "alerts": {
-    "cpu": {
-       "threshold": 90,
-       "enabled": true
-    },
-    "transfer_out": {
-       "enabled": true,
-       "threshold": 10
-    },
-    "io": {
-       "threshold": 10000,
-       "enabled": true
-    },
-    "transfer_quota": {
-       "threshold": 80,
-       "enabled": true
-    },
-    "transfer_in": {
-       "enabled": true,
-       "threshold": 10
-    }
+    "cpu":  90,
+    "transfer_out": 10,
+    "io": 10000,
+    "transfer_quota": 80,
+    "transfer_in": 10
   },
   "backups": {
-    "snapshot": null,
-    "last_backup": null,
     "enabled": false,
     "schedule": {
        "day": null,
