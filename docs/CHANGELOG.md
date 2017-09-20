@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+# [0.12.6] 2017-09-20
+### Added
+- Changelog page
+
 # [0.12.5] 2017-09-19
 ### Added
 - changes to document api release
