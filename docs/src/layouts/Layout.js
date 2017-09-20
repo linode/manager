@@ -67,13 +67,13 @@ export default class Layout extends Component {
                 }}
                 path={path}
                 navItems={[
-                  { label: 'Changelogs', href: `/${API_VERSION}/changelogs` },
                   { label: 'Introduction', href: `/${API_VERSION}/introduction` },
                   { label: 'Access', href: `/${API_VERSION}/access` },
                   { label: 'Pagination', href: `/${API_VERSION}/pagination` },
                   { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
                   { label: 'Errors', href: `/${API_VERSION}/errors` },
                   { label: 'Guides', href: `/${API_VERSION}/guides` },
+                  { label: 'Changelogs', href: `/${API_VERSION}/changelogs` },
                 ]}
               />
               <VerticalNavSection
