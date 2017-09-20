@@ -6,7 +6,7 @@ import { ExternalLink } from 'linode-components/buttons';
 import { Code } from 'linode-components/formats';
 
 import { API_VERSION,
-  MANAGER_ROOT
+  MANAGER_ROOT,
 } from '~/constants';
 
 
