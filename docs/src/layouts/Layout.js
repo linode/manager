@@ -67,6 +67,7 @@ export default class Layout extends Component {
                 }}
                 path={path}
                 navItems={[
+                  { label: 'Changelogs', href: `/${API_VERSION}/changelogs` },
                   { label: 'Introduction', href: `/${API_VERSION}/introduction` },
                   { label: 'Access', href: `/${API_VERSION}/access` },
                   { label: 'Pagination', href: `/${API_VERSION}/pagination` },

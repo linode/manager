@@ -13,6 +13,10 @@ import {
   Errors,
 } from './intros';
 
+import {
+  Changelogs,
+} from './changelogs';
+
 import { default as GuidesIndex } from './guides/GuidesIndex';
 
 
@@ -21,6 +25,7 @@ export default function GettingStartedRoutes(guides, crumbs) {
     <Route component={IndexLayout}>
       <IndexRedirect to="introduction" />
       <Redirect from="reference" to="introduction" />
+      <Route path="changelogs" components={Changelogs} />
       <Route path="introduction" component={Introduction} />
       <Route path="access" component={Access} />
       <Route path="pagination" component={Pagination} />
