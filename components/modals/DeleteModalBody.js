@@ -15,8 +15,17 @@ export default function DeleteModalBody(props) {
     deleteActionPending,
   } = props;
 
+  const groupedItems = _.groupBy(items);
+  const groupedDOMItems = _.map(groupedItems, function (items, label) {
+    if (items.length > 1) {
+      return <span><strong>{label}</strong> (x{items.length})</span>;
+    }
+
+    return <strong>{label}</strong>;
+  });
+
   let body;
-  if (items.length > 1) {
+  if (groupedDOMItems.length > 1) {
     body = (
       <div>
         <p>
@@ -24,15 +33,18 @@ export default function DeleteModalBody(props) {
           Are you sure you want to <strong>permanently</strong> {deleteAction} these {items.length} {typeOfItem}?
           {/* eslint-enable max-len */}
         </p>
-        <ScrollingList items={items} />
+        <ScrollingList items={groupedDOMItems} />
         <p>This operation cannot be undone.</p>
       </div>
     );
   } else {
+    let domItem = groupedDOMItems[0];
+    domItem = React.isValidElement(domItem) ? domItem : <strong>{domItem}</strong>;
+
     body = (
       <p>
         Are you sure you want
-        to <strong>permanently</strong> {deleteAction} <strong>{items[0]}</strong>?
+        to <strong>permanently</strong> {deleteAction} {domItem}?
       </p>
     );
   }
@@ -56,7 +68,7 @@ export default function DeleteModalBody(props) {
 
 DeleteModalBody.propTypes = {
   onSubmit: PropTypes.func,
-  items: PropTypes.arrayOf(PropTypes.string),
+  items: PropTypes.arrayOf(PropTypes.node),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string.isRequired,
   deleteAction: PropTypes.string.isRequired,

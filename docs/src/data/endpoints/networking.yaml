@@ -5,7 +5,7 @@ description: >
   Networking endpoints provide a means of viewing networking objects.
 endpoints:
   /networking/ipv4:
-    _group: IPv4
+    group: IPv4
     authenticated: true
     description: >
       View and manage IPv4 Addresses you own.
@@ -40,8 +40,8 @@ endpoints:
                 https://$api_root/$version/networking/ipv4
           python: |
             # presently unsupported
-  /networking/ipv4/:address:
-    _group: IPv4
+  /networking/ipv4/$address:
+    group: IPv4
     type: resource
     authenticated: true
     description: >
@@ -81,7 +81,7 @@ endpoints:
                 -X DELETE \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
   /networking/ipv6:
-    _group: IPv6
+    group: IPv6
     authenticated: true
     description: >
       Manage IPv6 Global Pools.
@@ -98,8 +98,8 @@ endpoints:
                 https://$api_root/$version/networking/ipv6
           python: |
             my_ipv6s = client.networking.get_ipv6()
-  /networking/ipv6/:address:
-    _group: IPv6
+  /networking/ipv6/$address:
+    group: IPv6
     type: resource
     authenticated: true
     description: >
@@ -131,7 +131,7 @@ endpoints:
             my_ipv6.rdns = 'example.org'
             my_ipv6.save()
   /networking/ip-assign:
-    _group: IPv4
+    group: IPv4
     type: Strange
     authenticated: true
     description: >
@@ -145,22 +145,24 @@ endpoints:
             description: >
               The region where the IPv4 address
               and Linode are located.
-            type: Region
+            type: string
+            value: us-east-1a
           assignments:
             description: >
               An array of IPv4 addresses and the Linode IDs they will be assigned to
-            type: Array[object]
+            isArray: true
+            type:
+              address:
+                type: string
+                value: 210.111.22.94
+              linode_id:
+                type: integer
+                value: 123405
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
-                -X POST -d '{
-                    "region": "us-east-1a",
-                    "assignments": [
-                      {"address": "210.111.22.95", "linode_id": 134504},
-                      {"address": "190.12.207.11", "linode_id": 119034},
-                    ]
-                }' \
+                -X POST -d '$SUB_SPEC_EXAMPLE' \
             https://$api_root/$version/networking/ip-assign
           python: |
             linode_1 = linode.Linode(client, 134504)

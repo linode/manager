@@ -1,6 +1,10 @@
 .Select {
     display: inline-block;
 
+    &-control, &-value, &-input {
+        height: $form-field-height;
+    }
+
     &-label {
         display: inline;
     }

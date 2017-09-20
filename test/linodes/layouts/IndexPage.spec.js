@@ -24,6 +24,7 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
+        transfer={{ used: 1, quota: 5 }}
         linodes={linodes.linodes}
       />
     );
@@ -37,6 +38,7 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1234: true }}
+        transfer={{ used: 1, quota: 5 }}
         linodes={linodes.linodes}
       />);
 
