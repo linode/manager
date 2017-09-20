@@ -9,10 +9,9 @@ export default function Authentication() {
       <h1>Changelogs</h1>
       <section>
         <p>
-        The API V4 is currently in beta, and there will be regular releases that
-        may introduce breaking changes.  This is where we will document changes
-        in each release.  If you are using the API V4, please check here regularly
-        for updates.
+        The API V4 is currently in beta.  There will be regular releases that may
+        introduce breaking changes.  The Developers site contains all changes to
+        API V4 since 2017-09-18.  Please check here regularly for updates.
         </p>
       </section>
       <section>
