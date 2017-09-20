@@ -8,7 +8,7 @@ import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/account';
-import { linodeStats } from '~/api/linodes';
+import { linodeStats, kvmifyLinode } from '~/api/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 import { TransferPool } from '~/components';
 import {
@@ -113,6 +113,19 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </div>
+            {linode.hypervisor === 'kvm-t' ? null : (
+              <div className="row">
+                <div className="col-sm-4 row-label">Hypervisor</div>
+                <div className="col-sm-8" id="hypervisor">
+                  Xen
+                  <div>
+                    <small className="text-muted">
+                      <Link to={kvmifyLinode(linode.id)}>Upgrade to KVM</Link>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="row">
               <div className="col-sm-4 row-label">Region</div>
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>
