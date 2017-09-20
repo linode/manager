@@ -70,7 +70,7 @@ export default class EditCNAMERecord extends Component {
               id="hostname"
               name="hostname"
               value={hostname}
-              placeholder="www.thisdomain.com"
+              placeholder="www"
               onChange={this.onChange}
             />
           </ModalFormGroup>

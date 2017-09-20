@@ -3,10 +3,10 @@ description: >
   A Public IPv6 Pool, available to an entire Region
 schema:
   range:
-    _type: String
-    _value: 2600:3c01::2:5000/64
-    _description: The IP Address.
+    type: String
+    value: 2600:3c01::2:5000/64
+    description: The IP Address.
   region:
-    _type: String
-    _value: us-east-1a
-    _description: The Region this pool is available in.
+    type: String
+    value: us-east-1a
+    description: The Region this pool is available in.

@@ -5,90 +5,85 @@ description: >
   Event objects describe a notification on a user's account timeline.
 schema:
   id:
-    _type: Integer
-    _value: 1234
+    type: Integer
+    value: 1234
   entity:
-    _type: Object
-    _description: >
+    description: >
       Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.
-    id:
-      _type: Integer
-      _value: 9302
-      _description: >
-        The entity's ID that this event is for.  This is meaningless without a type.
-    label:
-      _type: String
-      _value: linode123
-      _description: >
-        The current label of this object.  This will reflect changes in label.
     type:
-      _type: String
-      _value: linode
-      _description: >
-        The type of entity this is related to.
-    url:
-      _type: String
-      _value: /v4/linode/instances/123
-      _description: >
-        The URL where you can access the object this event is for.  If a relative URL, it is
-        relative to the domain you retrieved the event from.
+      id:
+        type: Integer
+        value: 9302
+        description: >
+          The entity's ID that this event is for.  This is meaningless without a type.
+      label:
+        type: String
+        value: linode123
+        description: >
+          The current label of this object.  This will reflect changes in label.
+      type:
+        type: String
+        value: linode
+        description: >
+          The type of entity this is related to.
+      url:
+        type: String
+        value: /v4/linode/instances/123
+        description: >
+          The URL where you can access the object this event is for.  If a relative URL, it is
+          relative to the domain you retrieved the event from.
   action:
-    _type: Enum
-    _subtype: EventType
-    _value: linode_reboot
-    _description: >
+    type: Enum
+    subtype: EventType
+    value: linode_reboot
+    description: >
       The action that caused this event.
   username:
-    _type: String
-    _type: String
-    _value: example_user
-    _description: >
+    type: String
+    type: String
+    value: example_user
+    description: >
       The username of the user who initiated this event.
   status:
-    _type: Enum
-    _subtype: EventStatus
-    _value: finished
-    _description: >
+    type: Enum
+    subtype: EventStatus
+    value: finished
+    description: >
       The current status of this event.  
   percent_complete:
-    _type: Integer
-    _value: 20
-    _description: >
+    type: Integer
+    value: 20
+    description: >
       A percentage estimating the amount of time remaining for an event.  Returns
       null for notification events.
-    _filterable: false
+    filterable: false
   rate:
-    _type: String
-    _value: null
-    _description: >
+    type: String
+    value: null
+    description: >
       The rate of completion of the event.  Currently only returned for
       migration and resize events.
   time_remaining:
-    _type: String
-    _value: null
-    _description: >
+    type: String
+    value: null
+    description: >
       The estimated time remaining until the completion of this event.  Currently
       only returned for in progress migrations or resizes.
   seen:
-    _type: Boolean
-    _value: false
-    _description: If this event has been seen.
+    type: Boolean
+    value: false
+    description: If this event has been seen.
   read:
-    _type: Boolean
-    _value: false
-    _description: If this event has been read.
+    type: Boolean
+    value: false
+    description: If this event has been read.
   created:
-    _type: Datetime
-    _value: 2014-12-24T18:00:09
-    _filterable: true
+    type: Datetime
+    value: 2014-12-24T18:00:09
+    filterable: true
   updated:
-    _type: Datetime
-    _value: 2014-12-24T19:00:09
-  user_id:
-    _type: Integer
-    _value: 234567
-    _description: >
-      The ID of the user who initiated this event.
+    type: Datetime
+    value: 2014-12-24T19:00:09
 enums:
   EventType:
     linode_boot: Linode boot

@@ -1,0 +1,42 @@
+.Code {
+    &-clipboardButton {
+        top: 7px;
+    }
+}
+
+.Example {
+    &-toggle {
+        cursor: pointer;
+        cursor: hand;
+
+        .fa {
+            margin-left: 10px;
+        }
+    }
+
+    &-example {
+        height: 200px;
+        overflow-y: hidden;
+        border: $border;
+        position: relative;
+
+        &--full {
+            height: 100%;
+        }
+
+        .Code {
+            border: 0;
+        }
+    }
+
+    &-toggle {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px 0;
+        background: rgba(0, 0, 0, .2);
+        color: $light-black;
+        text-align: center;
+    }
+}

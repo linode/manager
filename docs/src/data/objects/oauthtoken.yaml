@@ -4,48 +4,48 @@ description: >
   An OAuth Token granting access to your user.
 schema:
   id:
-    _type: Integer
-    _value: 123
-    _description: >
+    type: Integer
+    value: 123
+    description: >
       This token's ID.
   client:
-    _type: Oauthclient
-    _description: >
+    type: Oauthclient
+    description: >
       The OAuthClient this token is associated with, or null if this is a
       Personal Access Token.
-    _value: null
+    value: null
   type:
-    _type: Enum
-    _subtype: OAuthTokenType
-    _description: >
+    type: Enum
+    subtype: OAuthTokenType
+    description: >
       If this is a Client Token or a Personal Access Token.
-    _value: personal_access_token
+    value: personal_access_token
   scopes:
-    _type: String
-    _description: >
+    type: String
+    description: >
       The OAuth Scopes this token has.
-    _value: '*'
+    value: '*'
   label:
-    _type: String
-    _description: >
+    type: String
+    description: >
       The label given to this token.
-    _value: cli-token
+    value: cli-token
   created:
-    _type: Datetime
-    _descripton: >
+    type: Datetime
+    descripton: >
       When this token was created.
-    _value: 2017-01-01 13:46:32
+    value: 2017-01-01 13:46:32
   token:
-    _type: String
-    _description: >
+    type: String
+    description: >
       The OAuth Token that you can use in API requests.  Except for the inital
       creation of the token, this field is truncated to 16 characters.
-    _value: cd224292c853fe27...
+    value: cd224292c853fe27...
   expiry:
-    _type: Datetime
-    _description: >
+    type: Datetime
+    description: >
       When this token expires.
-    _value: 2018-01-01 13:46:32
+    value: 2018-01-01 13:46:32
 enums:
   OAuthTokenType:
     client_token: A token created by a client application with an OAuth Authentication flow.

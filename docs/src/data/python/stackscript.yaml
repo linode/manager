@@ -1,16 +1,16 @@
 name: StackScript
 import: from linode import StackScript
-_object: stackscript
+object: stackscript
 desc: >
     Represents a StackScript in the API.
 constructor:
     name: StackScript
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This StackScript's ID.
     example: >
         stackscript = StackScript(client, 6)

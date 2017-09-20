@@ -6,7 +6,7 @@ description: >
   OAuth Clients and Tokens, and Events.
 endpoints:
   /account/tokens:
-    _group: Tokens
+    group: Tokens
     description: >
       Manage OAuth Tokens created for your user.
     methods:
@@ -61,8 +61,8 @@ endpoints:
           python: |
             from linode import OAuthScopes
             new_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])
-  /account/tokens/:id:
-    _group: Tokens
+  /account/tokens/$id:
+    group: Tokens
     type: resource
     description: >
       Manage individual OAuth Tokens for your user.
@@ -105,7 +105,7 @@ endpoints:
           python: |
             my_token.delete()
   /account/settings:
-    _group: Settings
+    group: Settings
     type: resource
     description: >
       Manage your account settings.
@@ -152,7 +152,7 @@ endpoints:
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
   /account/clients:
-    _group: Clients
+    group: Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -193,8 +193,8 @@ endpoints:
                 https://$api_root/$version/account/clients
           python: |
             new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
-  /account/clients/:id:
-    _group: Clients
+  /account/clients/$id:
+    group: Clients
     type: resource
     authenticated: true
     description: >
@@ -240,8 +240,8 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
-  /account/clients/:id/reset_secret:
-    _group: Clients
+  /account/clients/$id/reset_secret:
+    group: Clients
     type: Action
     authenticated: true
     description: >
@@ -259,8 +259,8 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
-  /account/clients/:id/thumbnail:
-    _group: Clients
+  /account/clients/$id/thumbnail:
+    group: Clients
     type: Action
     authenticated: true
     description: >
@@ -300,7 +300,7 @@ endpoints:
                 img = f.read()
             my_client.set_thumbnail(img)
   /account/users:
-    _group: Users
+    group: Users
     description: >
       Returns a list of User objects associated with your account.
     methods:
@@ -341,8 +341,8 @@ endpoints:
                 https://$api_root/$version/account/users
           python: |
             # currently unimplemented
-  /account/users/:username:
-    _group: Users
+  /account/users/$username:
+    group: Users
     type: resource
     description: >
       Returns information about a specific user associated with your account.
@@ -381,8 +381,8 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.delete()
-  /account/users/:username/password:
-    _group: Users
+  /account/users/$username/password:
+    group: Users
     type: Action
     description: >
       Update a user's password
@@ -403,8 +403,8 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.change_password('hunter7')
-  /account/users/:username/grants:
-    _group: Users
+  /account/users/$username/grants:
+    group: Users
     type: resource
     description: >
       Manage grants for restricted users.  It is an error to call this endpoint for unrestrcited users.  Only unrestricted
@@ -442,7 +442,7 @@ endpoints:
             my_user.grants.global.add_linodes = True
             my_user.grants.save()
   /account/clients:
-    _group: Clients
+    group: Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -479,8 +479,8 @@ endpoints:
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
                 https://$api_root/$version/account/clients
-  /account/clients/:id:
-    _group: Clients
+  /account/clients/$id:
+    group: Clients
     type: resource
     authenticated: true
     description: >
@@ -519,7 +519,7 @@ endpoints:
                 -X DELETE \
                 https://$api_root/$version/account/clients/$client_id
   /account/events:
-    _group: Events
+    group: Events
     authenticated: true
     description: >
       View the collection of events.
@@ -534,8 +534,8 @@ endpoints:
             curl https://$api_root/$version/account/events
           python: |
             my_events = client.account.get_events()
-  /account/events/:id:
-    _group: Events
+  /account/events/$id:
+    group: Events
     type: resource
     authenticated: true
     description: >
@@ -550,8 +550,8 @@ endpoints:
             curl https://$api_root/$version/account/event/123
           python: |
             event = linode.Event(client, 123)
-  /account/events/:id/seen:
-    _group: Events
+  /account/events/$id/seen:
+    group: Events
     type: resource
     authenticated: true
     methods:
@@ -563,8 +563,8 @@ endpoints:
             curl https://$api_root/$version/account/event/123/seen
           python: |
             client.mark_lask_seen_event(event)
-  /account/events/:id/read:
-    _group: Events
+  /account/events/$id/read:
+    group: Events
     type: resource
     authenticated: true
     methods:

@@ -1,19 +1,19 @@
 name: NodeBalancer
 import: from linode import NodeBalancer
-_object: nodebalancer
+object: nodebalancer
 desc: >
     Represents a NodeBalancer
 _pylib_attributes:
     configs:
-        _description: A list of configs existing on this NodeBalancer
+        description: A list of configs existing on this NodeBalancer
 constructor:
     name: NodeBalancer
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This NodeBalancer's ID
     example: >
         nodebalancer = linode.NodeBalancer(client, 1234)
@@ -34,13 +34,13 @@ methods:
         desc: Creates a new NodeBalancerConfig for this NodeBalancer
         parameters:
             label:
-                _keyword: true
+                keyword: true
                 desc: A label for this config
             port:
-                _keyword: true
+                keyword: true
                 desc: The port for this NodeBalancerConfig
             '**kwargs':
-                _keyword: false
+                keyword: false
                 desc: >
                     Any number of keyword arguments to send to the POST /nodebalancers/123/configs endpoint.
         example: |

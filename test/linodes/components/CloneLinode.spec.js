@@ -31,9 +31,11 @@ describe('linodes/components/CloneLinode', function () {
     CloneLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
+    changeInput(modal, 'label', 'clonedLinode');
     changeInput(modal, 'linode', testLinode.id);
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'plan', testType.id);
+    changeInput(modal, 'backups', true);
 
     dispatch.reset();
 

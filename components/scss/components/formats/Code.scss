@@ -1,9 +1,10 @@
 .Code {
     position: relative;
+    border: $border;
 
     pre {
         padding: 0;
-        border: $border;
+        margin: 0;
     }
 
     &-clipboardButton {

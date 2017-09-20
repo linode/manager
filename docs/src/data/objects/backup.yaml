@@ -5,54 +5,54 @@ description: >
   Backup objects represent a specific backup of a Linode.
 schema:
   id:
-    _type: Integer
-    _value: 123456
+    type: Integer
+    value: 123456
   label:
-    _type: String
-    _value: A label for your snapshot
-    _description: Human-friendly backup name.
-    _filterable: false
-    _limit: 1-255 characters
+    type: String
+    value: A label for your snapshot
+    description: Human-friendly backup name.
+    filterable: false
+    limit: 1-255 characters
   status:
-    _type: Enum
-    _subtype: Status
-    _value: successful
-    _description: Status of the backup.
-    _filterable: false
+    type: Enum
+    subtype: Status
+    value: successful
+    description: Status of the backup.
+    filterable: false
   type:
-    _type: Enum
-    _subtype: Type
-    _value: snapshot
-    _description: Whether this is a snapshot or an auto backup.
+    type: Enum
+    subtype: Type
+    value: snapshot
+    description: Whether this is a snapshot or an auto backup.
   region:
-      _type: String
-      _filterable: false
-      _description: This backup region.
+    type: String
+    filterable: false
+    description: This backup region.
   created:
-    _type: string
-    _value: "2015-09-29T11:21:01"
+    type: string
+    value: "2015-09-29T11:21:01"
   updated:
-    _type: string
-    _value: "2015-09-29T11:21:01"
+    type: string
+    value: "2015-09-29T11:21:01"
   finished:
-    _type: string
-    _value: "2015-09-29T11:21:01"
-    _description: An ISO 8601 datetime of when the backup completed.
+    type: string
+    value: "2015-09-29T11:21:01"
+    description: An ISO 8601 datetime of when the backup completed.
   configs:
-    _type: string
-    _isArray: true
-    _description: Config labels that were included in this backup.
-    _value:
+    type: string
+    isArray: true
+    description: Config labels that were included in this backup.
+    value:
       - "My Debian8 Profile"
   disks:
-    _type: Disk
-    _isArray: true
-    _description: The disks included in this backup.
+    type: Disk
+    isArray: true
+    description: The disks included in this backup.
   availability:
-    _type: Enum
-    _subtype: BackupAvailability
-    _value: daily
-    _description: If this backup is available, which backup slot it is in.  Otherwise, unavailable.
+    type: Enum
+    subtype: BackupAvailability
+    value: daily
+    description: If this backup is available, which backup slot it is in.  Otherwise, unavailable.
 enums:
   Status:
     paused: Backup job is currently suspended.

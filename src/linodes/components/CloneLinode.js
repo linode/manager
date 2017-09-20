@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { ModalFormGroup } from 'linode-components/forms';
+import { Input, ModalFormGroup } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -12,6 +12,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import LinodeSelect from './LinodeSelect';
 import PlanSelect from './PlanSelect';
 import { RegionSelect } from '../../components';
+import BackupsCheckbox from './BackupsCheckbox';
 
 
 export default class CloneLinode extends Component {
@@ -38,17 +39,17 @@ export default class CloneLinode extends Component {
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { linode, region, plan } = this.state;
+    const { label, linode, region, plan, backups } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => cloneLinode(linode, region, plan),
+      () => cloneLinode(linode, region, plan, backups, label),
       ({ label }) => push(`/linodes/${label}`),
     ]));
   }
 
   render() {
     const { close, plans, linodes } = this.props;
-    const { errors, region, plan, linode } = this.state;
+    const { errors, label, region, plan, linode, backups } = this.state;
 
     return (
       <FormModalBody
@@ -72,6 +73,15 @@ export default class CloneLinode extends Component {
             />
           </ModalFormGroup>
           <h3>Clone to (new Linode)</h3>
+          <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
+            <Input
+              placeholder="my-linode"
+              value={label}
+              name="label"
+              id="label"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
           <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}
@@ -86,6 +96,16 @@ export default class CloneLinode extends Component {
               value={plan}
               name="plan"
               id="plan"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
+            <BackupsCheckbox
+              plans={plans}
+              plan={plan}
+              checked={backups}
+              name="backups"
+              id="backups"
               onChange={this.onChange}
             />
           </ModalFormGroup>

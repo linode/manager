@@ -6,64 +6,64 @@ description: >
   the request.
 schema:
   id:
-    _type: String
-    _value: linode2048.5
+    type: String
+    value: linode2048.5
   disk:
-    _type: Integer
-    _value: 24576
-    _description: If applicable, disk space in MB.
-    _filterable: true
+    type: Integer
+    value: 24576
+    description: If applicable, disk space in MB.
+    filterable: true
   class:
-    _type: Enum
-    _subtype: Class
+    type: Enum
+    subtype: Class
   price_hourly:
-    _type: Float
-    _value: 1.44
-    _description: Cost (in cents) per hour.
-    _filterable: true
+    type: Float
+    value: 1.44
+    description: Cost (in cents) per hour.
+    filterable: true
   label:
-    _type: String
-    _value: Linode 2048
-    _description: Human-friendly name of this type.
-    _filterable: true
+    type: String
+    value: Linode 2048
+    description: Human-friendly name of this type.
+    filterable: true
   backups_option:
-    _type: Object
-    _description: Cost of enabling backups for this type.
+    type: Object
+    description: Cost of enabling backups for this type.
     price_hourly:
-      _type: Float
-      _value: 0.004
-      _description: Cost (in cents) per hour.
-      _filterable: true
+      type: Float
+      value: 0.004
+      description: Cost (in cents) per hour.
+      filterable: true
     price_monthly:
-      _type: Integer
-      _value: 2.5
-      _description: Cost (in US dollars) per month.
-      _filterable: true
+      type: Integer
+      value: 2.5
+      description: Cost (in US dollars) per month.
+      filterable: true
   network_out:
-    _type: Integer
-    _value: 125
-    _description: If applicable, Mbits outbound bandwidth.
-    _filterable: true
+    type: Integer
+    value: 125
+    description: If applicable, Mbits outbound bandwidth.
+    filterable: true
   price_monthly:
-    _type: Integer
-    _value: 1000
-    _description: Cost (in US dollars) per month.
-    _filterable: true
+    type: Integer
+    value: 1000
+    description: Cost (in US dollars) per month.
+    filterable: true
   memory:
-    _type: Integer
-    _value: 2048
-    _description: Amount of RAM included in this type.
-    _filterable: true
+    type: Integer
+    value: 2048
+    description: Amount of RAM included in this type.
+    filterable: true
   transfer:
-    _type: Integer
-    _value: 2000
-    _description: If applicable, outbound transfer in MB.
-    _filterable: true
+    type: Integer
+    value: 2000
+    description: If applicable, outbound transfer in MB.
+    filterable: true
   vcpus:
-    _type: Integer
-    _value: 2
-    _description: If applicable, number of CPU cores.
-    _filterable: true
+    type: Integer
+    value: 2
+    description: If applicable, number of CPU cores.
+    filterable: true
 enums:
   Class:
     nanode: Nanode class
