@@ -36,7 +36,7 @@ export default function Introduction(props) {
           In order to make requests to the API, you're going to need an OAuth Token.
           You can make a personal access token at&nbsp;
           <ExternalLink
-            to="https://cloud.linode.com/profile/integrations/tokens"
+            to="https://cloud.linode.com/profile/tokens"
           >cloud.linode.com</ExternalLink>.
         </p>
       </section>
