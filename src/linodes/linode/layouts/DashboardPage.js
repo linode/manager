@@ -8,7 +8,7 @@ import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/account';
-import { linodeStats, kvmifyLinode } from '~/api/linodes';
+import { linodeStats } from '~/api/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 import { TransferPool } from '~/components';
 import {
@@ -25,6 +25,7 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
+import { ConvertToKVM } from '../components';
 
 
 export class DashboardPage extends Component {
@@ -66,7 +67,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode } = this.props;
+    const { username, linode, dispatch } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -113,14 +114,17 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </div>
-            {linode.hypervisor === 'kvm-t' ? null : (
+            {linode.hypervisor === 'kvm' ? null : (
               <div className="row">
                 <div className="col-sm-4 row-label">Hypervisor</div>
                 <div className="col-sm-8" id="hypervisor">
                   Xen
                   <div>
                     <small className="text-muted">
-                      <Link to={kvmifyLinode(linode.id)}>Upgrade to KVM</Link>
+                      <Link
+                        className="force-link"
+                        onClick={() => ConvertToKVM.trigger(dispatch, linode)}
+                      >Upgrade to KVM</Link>
                     </small>
                   </div>
                 </div>
