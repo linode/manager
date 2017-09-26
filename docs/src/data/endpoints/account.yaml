@@ -576,3 +576,45 @@ endpoints:
             curl https://$api_root/$version/account/event/123/read
           python: |
             event.mark_read()
+  /account/invoices:
+    _group: Invoices
+    authenticated: true
+    description: >
+      View the collection of invoices.
+    methods:
+      GET:
+        response: invoice
+        paginationKey: invoice
+        description: >
+          Returns a list of invoices.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices
+  /account/invoices/:id:
+    _group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      Returns information about a specific invoice.
+    methods:
+      GET:
+        response: invoices
+        description: >
+          Returns information about this invoice.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123
+  /account/invoices/:id/items:
+    _group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      View the items associated with a specific invoice.
+    methods:
+      GET:
+        response: invoice_items
+        description: >
+          Returns a collection of invoice items.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123/items

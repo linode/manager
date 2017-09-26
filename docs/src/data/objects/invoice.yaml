@@ -1,0 +1,35 @@
+name: Invoice
+prefix: invoice
+description: >
+    An Invoice
+schema:
+  date:
+    _type: String
+    _value: "2015-09-29T11:21:01"
+    _filterable: true
+    _description: The date the invoice was generated.
+  overdue:
+    _type: Boolean
+    _value: false
+    _filterable: true
+    _description: Whether or not the invoice is overdue for payment.
+  paid:
+    _type: Boolean
+    _value: true
+    _filterable: true
+    _description: Whether or not the invoice has been paid.
+  id:
+    _type: integer
+    _value: 123
+    _description: The invoice's ID.
+  total:
+    _type: integer
+    _value: 120
+    _filterable: true
+    _description: The amount of the invoice in U.S. Dollars.
+  label:
+    _type: string
+    _value: Invoice #1
+    _filterable: true
+    _editable: true
+    _description: The invoice's display label.
