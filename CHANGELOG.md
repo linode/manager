@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.14.0] 2017-09-26
+### Added
+- Transfer pool is shown (#2508)
+- (Docs) Add a sidebar (#2494)
+- Add Volume resize (#2500)
+- Option to clone with label and backup (#2482)
+### Changed
+- Use Yarn rather than NPM (#2520)
+- More graph options (#2501)
+- show number of duplicates when deleting (#2484)
+- set an initial disk array for rescue configs (#2491)
+- (Docs) Bumped to 0.13.0
+- (Docs) removed extraneous "\_" from properties
+- (Docs) Show more of example up front
+- (Docs) Smarter height on collapsed examples
+### Fixed
+- More fixes for API changes (#2549)
+- Fix IP setRDNS creating duplicate (#2542)
+- Fix disk delete (#2543)
+- Fixes for docs and manager regressions (#2526)
+- fix default root device in new linode configs (#2523)
+- handle xen disk labels correctly (xvda-xvdh) (#2510)
+- Render no graphs message correctly (#2518)
+- CNAME hostname placeholder should not be a FQDN (#2514)
+- Give tooltip a max width (#2513)
+- Restart polling on actions
+
+
 ## [0.13.1] 2017-09-18
 ### Fixed
 - API breaking changes #2547

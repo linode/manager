@@ -1,17 +1,16 @@
 {
   "name": "linode-api-docs",
-  "version": "0.12.5",
+  "version": "0.13.0",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
-    "build:webpack": "npm run prebuild && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build:webpack": "yarn run prebuild && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "prebuild": "node prebuild.js",
-    "build": "npm run clean && npm run build:webpack",
-    "rebuild-components": "rm -fr node_modules/linode-components && npm install",
-    "lint": "eslint --max-warnings=0 src",
+    "build": "yarn run clean && yarn run build:webpack",
+    "lint": "eslint --max-warnings=0 src prebuild.js",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run prebuild && node devServer.js"
+    "start": "yarn run prebuild && node devServer.js"
   },
   "author": "",
   "license": "ISC",
@@ -62,7 +61,7 @@
     "xunit-file": "^0.0.9"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "4.0.0-alpha.6",
     "clipboard": "^1.6.1",
     "fontawesome": "^4.5.0",
     "highlight.js": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.12.0.tgz",
@@ -71,10 +70,12 @@
     "lodash": "^4.16.4",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
-    "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.2",
     "react-router": "^2.4.1",
     "react-tabs": "^0.7.0"
+  },
+  "peerDependencies": {
+    "react": "^15.1.0"
   }
 }

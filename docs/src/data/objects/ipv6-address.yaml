@@ -3,34 +3,34 @@ description: >
     An IPv6 Address
 schema:
   address:
-    _type: String
-    _value: "2600:3c01::2:5001"
-    _description: The IPv6 Address.
+    type: String
+    value: "2600:3c01::2:5001"
+    description: The IPv6 Address.
   gateway:
-    _type: String
-    _value: "fe80::1"
-    _description: The default gateway.
+    type: String
+    value: "fe80::1"
+    description: The default gateway.
   range:
-    _type: String
-    _value: "2600:3c01::2:5000"
-    _description: The IPv6 range.
+    type: String
+    value: "2600:3c01::2:5000"
+    description: The IPv6 range.
   rdns:
-    _type: String
-    _value: "example.org"
-    _description: Optional reverse DNS address for this IPv6 Address.
+    type: String
+    value: "example.org"
+    description: Optional reverse DNS address for this IPv6 Address.
   prefix:
-    _type: Integer
-    _value: 116
-    _description: The network prefix.
+    type: Integer
+    value: 116
+    description: The network prefix.
   subnet_mask:
-    _type: String
-    _value: "ffff:ffff:ffff:ffff:ffff:ffff:ffff:f000"
-    _description: The subnet mask.
+    type: String
+    value: "ffff:ffff:ffff:ffff:ffff:ffff:ffff:f000"
+    description: The subnet mask.
   type:
-    _type: Enum
-    _subtype: IPv6AddressType
-    _value: public
-    _description: The type of IP Address, either public or private.
+    type: Enum
+    subtype: IPv6AddressType
+    value: public
+    description: The type of IP Address, either public or private.
 enums:
   IPv6AddressType:
     public: Public IP Address

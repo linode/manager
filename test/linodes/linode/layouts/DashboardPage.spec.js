@@ -19,14 +19,21 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     sandbox.restore();
   });
 
+  const props = {
+    dispatch,
+    linode: testLinode,
+    timezone: 'UTC',
+    transfer: { usage: 1, quota: 5 },
+    username: 'tdude',
+  };
+
   it('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
-        dispatch={dispatch}
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     const ipSection = page.find('#ips');
     expect(ipSection.find('li').at(0).text()).to.equal(ipv4[0]);
@@ -36,9 +43,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups not enabled', () => {
     const page = mount(
       <DashboardPage
-        linode={{ ...testLinode, backups: { enabled: false } }}
-        timezone="UTC"
-      />);
+        {...{ ...props, linode: { ...testLinode, backups: { enabled: false } } }}
+      />
+    );
 
     expect(page.find('#backup-status').text()).to.equal('Enable Backups');
   });
@@ -46,9 +53,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups enabled', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#backup-status').text()).to.equal('View Backups');
   });
@@ -56,9 +63,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders region', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#region').text()).to.equal(testLinode.region);
   });
@@ -66,9 +73,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders distribution', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#distro').text()).to.equal(`${testLinode.distribution.label}Rebuild`);
   });
@@ -76,9 +83,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders unknown distribution', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode1246}
-        timezone="UTC"
-      />);
+        {...{ ...props, linode: testLinode1246 }}
+      />
+    );
 
     expect(page.find('#distro').text()).to.equal('UnknownRebuild');
   });
@@ -98,8 +105,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const sshPath = `ssh root@${ipv4[0]}`;
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#ssh-input').props().value).to.equal(sshPath);
   });
@@ -107,8 +115,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders lish input elements', () => {
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('.input-group').at(1).find('Input').length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
@@ -123,9 +132,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       }.linode.com`;
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-        username="tdude"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#lish-input').props())
       .to.have.property('value')

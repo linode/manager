@@ -79,12 +79,14 @@ endpoints:
             optional: true
             description: >
               An array of IP addresses for this Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           axfr_ips:
             optional: true
             description: >
               An array of IP addresses allowed to AXFR the entire Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           group:
             optional: true
             description: >
@@ -112,7 +114,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id:
+  /domains/$id:
     authenticated: true
     methods:
       GET:
@@ -165,7 +167,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id/records:
+  /domains/$id/records:
     authenticated: true
     description: >
       Manage the collection of Domain Records your account may access.
@@ -253,7 +255,7 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id/records/:id:
+  /domains/$id/records/$id:
     authenticated: true
     methods:
       GET:

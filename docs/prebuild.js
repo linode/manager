@@ -15,44 +15,44 @@ const pythonFiles = fs.readdirSync(pythonPath);
 
 const objectsPath = path.join(BASE_PATH, 'objects');
 const apiObjectMap = {};
-fs.readdirSync(objectsPath).filter(function(fileName) {
+fs.readdirSync(objectsPath).filter(function (fileName) {
   return path.extname(fileName) === '.yaml';
-}).forEach(function(fileName) {
+}).forEach(function (fileName) {
   const filePath = path.join(objectsPath, fileName);
-  apiObjectMap[fileName.split('.')[0].toLowerCase()] = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+  const objectName = fileName.split('.')[0].toLowerCase();
+  apiObjectMap[objectName] = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
 });
 
 const endpointsPath = path.join(BASE_PATH, 'endpoints');
 const files = fs.readdirSync(endpointsPath);
 
-let allEndpoints = files.filter(function(fileName) {
+let allEndpoints = files.filter(function (fileName) {
   return path.extname(fileName) === '.yaml';
-}).map(function(fileName) {
+}).map(function (fileName) {
   const filePath = path.join(endpointsPath, fileName);
   let endpoint;
   try {
     endpoint = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
   } catch (e) {
-    console.log(`File [${filePath}] could not be read: ${e}`);
-    process.exit();
+    throw new Error(`File [${filePath}] could not be read:\n${e.message}`);
   }
 
   return endpoint;
 });
 
 function convertUlToArray(description) {
-  let matches;
-  const listItems = [];
-  let descText;
   if (description) {
-    if (typeof description === "string") {
+    if (typeof description === 'string') {
       if (description.match(/<ul>/)) {
-        descText = description.replace(/<ul>.*/, '');
-        matches = description.match(/<li>.*?<\/li>/g);
-        matches.forEach(function(mat) {
-          listItems.push(mat.replace(/<li>/, '').replace(/<\/li>/, ''));
+        const descText = description.replace(/<ul>.*/, '');
+        const matches = description.match(/<li>.*?<\/li>/g);
+        const listItems = [];
+
+        matches.forEach(function (match) {
+          listItems.push(match.replace(/<li>/, '').replace(/<\/li>/, ''));
         });
-        description = {descText, listItems};
+
+        return { descText, listItems };
       }
     }
   }
@@ -60,7 +60,7 @@ function convertUlToArray(description) {
 }
 
 function getResourceObjByName(name) {
-  let resourceName = name.toLowerCase();
+  const resourceName = name.toLowerCase();
   let resourceObject = apiObjectMap[resourceName];
   if (!resourceObject && (resourceName.charAt(resourceName.length - 1) === 's')) {
     resourceObject = apiObjectMap[resourceName.substr(0, resourceName.length - 1)];
@@ -68,47 +68,17 @@ function getResourceObjByName(name) {
   return resourceObject;
 }
 
-function formatMethodParams(methodObj) {
-  let params = methodObj.params;
-
-  let formattedParams;
-  if (params) {
-    formattedParams = Object.keys(params).map(function(paramName) {
-      const param = params[paramName];
-
-      param.description = convertUlToArray(param.description);
-
-      let type = param.type;
-      if (type) {
-        const resourceObj = getResourceObjByName(param.type);
-        if (resourceObj) {
-          if (Array.isArray(resourceObj.schema)) {
-            type = resourceObj.schema.filter(function(schemaObj) { return schemaObj.name === 'id'; })[0]._type;
-          } else {
-            type = resourceObj.schema.id._type;
-          }
-        }
-      }
-
-      const required = !param.optional;
-      return _.merge({}, param, {
-        name: paramName,
-        type: type,
-        required: required
-      });
-    });
-  }
-
-  return formattedParams;
-}
-
-function formatMethodExamples(methodObj) {
+function formatMethodExamples(methodObj, specExample) {
   let examples;
   if (methodObj.examples) {
-    examples = Object.keys(methodObj.examples).map(function(example) {
+    examples = Object.keys(methodObj.examples).map(function (example) {
+      const json = JSON.stringify(specExample, null, 2);
       return {
         name: example,
-        value: methodObj.examples[example].replace(/https:\/\/\$api_root/g, API_ROOT).replace(/\$version/g, API_VERSION),
+        value: methodObj.examples[example]
+          .replace(/https:\/\/\$api_root/g, API_ROOT)
+          .replace(/\$version/g, API_VERSION)
+          .replace(/\$SUB_SPEC_EXAMPLE/g, json),
       };
     });
   }
@@ -123,17 +93,17 @@ function formatSchemaExample(schema, paginationKey) {
     return schemaExample;
   }
 
-  schema.forEach(function(obj) {
+  schema.forEach(function (obj) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
       // Pagination key represents an array of objects that we need to look up.
-      if (obj.name === paginationKey) {
+      if (obj.name === paginationKey || obj.isArray) {
         schemaExample[obj.name] = [schemaExample[obj.name]];
       }
     } else {
       let value = obj.value;
       if (Array.isArray(value)) {
-        value = value.map(function(obj) {
+        value = value.map(function (obj) {
           if (typeof obj === 'object' && obj !== null) {
             return formatSchemaExample(obj);
           }
@@ -150,95 +120,95 @@ function formatSchemaExample(schema, paginationKey) {
 
 function formatSchemaField(schemaField, enumMap) {
   let description;
-  if (schemaField._description) {
-    description = schemaField._description;
+  if (schemaField.description) {
+    description = schemaField.description;
   } else {
     description = schemaField.description;
   }
   description = convertUlToArray(description);
 
-  const name = schemaField.name;
-  const seeAlso = schemaField._seeAlso;
-  const editable = schemaField._editable;
-  const filterable = schemaField._filterable;
-  const type = schemaField._type;
-  const lowerType = type ? type.toLowerCase() : null;
-  const subType = schemaField._subtype;
-  const isArray = schemaField._isArray;
-  let value = schemaField._value;
-
-  let typeLabel = schemaField._typeLabel || type || 'object';
+  const { name, seeAlso, editable, filterable, type, subtype, isArray, value } = schemaField;
+  let lowerType = type && _.isString(type) ? type.toLowerCase() : 'object';
 
   let nestedSchema = null;
   if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
+    // eslint-disable-next-line no-use-before-define
     nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
-    typeLabel = 'object';
-  } else if (lowerType === 'enum' && enumMap[subType]) {
+    lowerType = 'object';
+  } else if (lowerType === 'enum' && enumMap[subtype]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
-    nestedSchema = enumMap[subType]; // already formatted
-  } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' || !lowerType) {
-    // is of the the checked types, or no type provided (currently undocumented)
+    nestedSchema = enumMap[subtype]; // already formatted
+  } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' ||
+             !lowerType) {
+    // is of the checked types, or no type provided (currently undocumented)
+    // eslint-disable-next-line no-use-before-define
     nestedSchema = formatSchema(schemaField, enumMap);
+    if (nestedSchema) {
+      if (nestedSchema[0].name === 'type') {
+        nestedSchema = nestedSchema[0].schema;
+      }
+    }
   }
 
-  // TODO: remove enum, datetime, and array from here
-  const nonNestedTypes = ['boolean', 'integer', 'float', 'string', 'enum', 'datetime', 'array'];
+  // TODO: remove enum, datetime, array, and object from here
+  const nonNestedTypes = [
+    'boolean', 'integer', 'float', 'string', 'enum', 'datetime', 'array', 'object',
+  ];
   if (nestedSchema === null && nonNestedTypes.indexOf(lowerType) === -1) {
     throw new Error(`Unknown object '${name}': got '${lowerType}'`);
   }
 
-  typeLabel = _.capitalize(typeLabel);
+  lowerType = _.capitalize(lowerType);
   if (isArray) {
-    typeLabel = `Array[${_.capitalize(typeLabel)}]`;
+    lowerType = `Array[${_.capitalize(lowerType)}]`;
   }
 
   // don't show filters for nestedSchemas
   if (Array.isArray(nestedSchema)) {
-    nestedSchema.forEach(function(obj) {
-      delete obj['filterable'];
-    });
+    nestedSchema = nestedSchema.map(obj => _.omit(obj, 'filterable'));
   }
 
   return {
-    name: name,
-    seeAlso: seeAlso,
-    description: description,
-    editable: editable,
-    filterable: filterable,
-    type: typeLabel,
-    subType: subType,
-    value: value,
-    schema: nestedSchema
+    name,
+    seeAlso,
+    description,
+    editable,
+    filterable,
+    subType: subtype,
+    value,
+    isArray,
+    type: lowerType,
+    schema: nestedSchema,
   };
 }
 
 function createPaginationSchema(paginationKey, resourceType) {
   return {
     pages: {
-      _type: 'integer',
-      _description: 'The total number of pages of results.',
+      type: 'integer',
+      description: 'The total number of pages of results.',
       value: 1,
     },
     results: {
-      _type: 'integer',
+      type: 'integer',
       description: 'The total number of results.',
-      _value: 1,
+      value: 1,
     },
     data: {
-      _type: resourceType,
-      _isArray: true,
+      type: resourceType,
+      isArray: true,
       description: 'All results for the current page.',
     },
     page: {
-      _type: 'integer',
+      type: 'integer',
       description: 'The current page in the results.',
-      _value: 1,
+      value: 1,
     },
   };
 }
 
-function formatSchema(schema, enumMap={}, paginationKey=null, resourceType=null) {
+function formatSchema(schema, enumMap = {}, paginationKey = null, resourceType = null) {
   if (Array.isArray(schema)) {
     return schema;
   }
@@ -247,12 +217,12 @@ function formatSchema(schema, enumMap={}, paginationKey=null, resourceType=null)
     return formatSchema(createPaginationSchema(paginationKey, resourceType), enumMap);
   }
 
-  const filteredSchemas = Object.keys(schema).map(function (schemaName) {
+  const filteredSchemas = _.flatten(Object.keys(schema).map(function (schemaName) {
     const val = schema[schemaName];
     if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
       return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
     }
-  }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+  })).filter(Boolean);
 
   // do not represent array types without nested objects in the schema tables
   if (!filteredSchemas.length) {
@@ -265,13 +235,13 @@ function formatSchema(schema, enumMap={}, paginationKey=null, resourceType=null)
 function createEnumMap(enums) {
   const enumMap = {};
 
-  Object.keys(enums).map(function(enumName) {
+  Object.keys(enums).map(function (enumName) {
     const enumList = enums[enumName];
 
-    enumMap[enumName] = Object.keys(enumList).map(function(key) {
+    enumMap[enumName] = Object.keys(enumList).map(function (key) {
       return {
         name: key,
-        description: enumList[key]
+        description: enumList[key],
       };
     });
   });
@@ -279,12 +249,12 @@ function createEnumMap(enums) {
   return enumMap;
 }
 
-function formatMethodResponse(methodObj) {
-  let response = methodObj.response;
+function formatMethodThing(methodObj, key) {
+  const response = methodObj[key];
 
   let resourceObject;
   if (typeof response === 'string') {
-    let resourceName = response;
+    const resourceName = response;
 
     // Paginated endpoints will modify the schema, so we need to be using a copy of the data.
     resourceObject = _.cloneDeep(getResourceObjByName(resourceName));
@@ -305,7 +275,8 @@ function formatMethodResponse(methodObj) {
     schema = resourceObject.schema;
     if (schema) {
       try {
-        resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
+        resourceObject.schema = formatSchema(
+          schema, enumMap, methodObj.paginationKey, methodObj.response);
       } catch (e) {
         throw new Error(`Error rendering object '${response}':\n${e.message}`);
       }
@@ -319,72 +290,72 @@ function formatMethodResponse(methodObj) {
 function formatMethod(endpoint, method) {
   const methodObj = endpoint.methods[method];
 
-  const params = formatMethodParams(methodObj);
-  const response = formatMethodResponse(methodObj);
+  const params = formatMethodThing(methodObj, 'params');
+  const response = formatMethodThing(methodObj, 'response');
 
-  const examples = formatMethodExamples(methodObj);
+  const examples = formatMethodExamples(methodObj, params.example);
 
   return _.merge({}, methodObj, {
     name: method,
-    examples: examples,
+    examples,
     params: params,
-    response: response
+    response: response,
   });
 }
 
 // map and nest
-let endpointMap = {
+const endpointMap = {
   linodes: {
     name: 'Linodes',
     path: '/linode',
     routePath: `${ROUTE_BASE_PATH}/linode`,
-    groups: {}
+    groups: {},
   },
   domains: {
     name: 'Domains',
     path: '/domains',
     routePath: `${ROUTE_BASE_PATH}/domains`,
-    groups: {}
+    groups: {},
   },
   nodebalancers: {
     name: 'NodeBalancers',
     path: '/nodebalancers',
     routePath: `${ROUTE_BASE_PATH}/nodebalancers`,
-    groups: {}
+    groups: {},
   },
   networking: {
     name: 'Networking',
     path: '/networking',
     routePath: `${ROUTE_BASE_PATH}/networking`,
-    groups: {}
+    groups: {},
   },
   regions: {
     name: 'Regions',
     path: '/regions',
     routePath: `${ROUTE_BASE_PATH}/regions`,
-    groups: {}
+    groups: {},
   },
   support: {
     name: 'Support',
     path: '/support',
     routePath: `${ROUTE_BASE_PATH}/support`,
-    groups: {}
+    groups: {},
   },
   account: {
     name: 'Account',
     path: '/account',
     routePath: `${ROUTE_BASE_PATH}/account`,
-    groups: {}
+    groups: {},
   },
   profile: {
     name: 'Profile',
     path: '/profile',
     routePath: `${ROUTE_BASE_PATH}/profile`,
-    groups: {}
+    groups: {},
   },
 };
 
-allEndpoints.forEach(function(endpointContainer) {
+allEndpoints.forEach(function (endpointContainer) {
   const containerName = endpointContainer.name.toLowerCase();
   const rawEndpoints = endpointContainer.endpoints;
 
@@ -392,77 +363,64 @@ allEndpoints.forEach(function(endpointContainer) {
     throw new Error(`No endpoints defined in ${containerName}, define at least 1 endpoint.`);
   }
 
-  const endpoints = Object.keys(rawEndpoints).map(function(path) {
+  const endpoints = Object.keys(rawEndpoints).map(function (path) {
     const endpoint = rawEndpoints[path];
 
     let methods = null;
     if (endpoint.methods) {
-      methods = Object.keys(endpoint.methods).map(function(method) {
+      methods = Object.keys(endpoint.methods).map(function (method) {
         try {
           return formatMethod(endpoint, method);
         } catch (e) {
-          const msg = `Error rendering api.js for ${method} of ${path} in ${endpointContainer.name}:\n${e.message}\n\n`;
+          const msg = `Error rendering api.js for ${method} of ${path} in
+ ${endpointContainer.name}:\n${e.message}\n\n`;
           throw new Error(msg);
         }
       });
     }
 
-    return _.merge({}, endpoint, {
-      description: endpoint.description,
+    return _.merge(endpoint, {
       path: path,
       routePath: `${ROUTE_BASE_PATH}/endpoints${path}`,
-      methods: methods
+      methods: methods,
     });
   });
 
   // map groups from endpoint definitions, pushing each endpoint into it's group
-  endpoints.forEach(function(endpoint) {
-    if (!endpoint._group) {
-      endpoint._group = 'default';
+  endpoints.forEach(function (endpoint) {
+    if (!endpoint.group) {
+      // eslint-disable-next-line no-param-reassign
+      endpoint.group = '';
     }
 
     if (!endpointMap[containerName]) {
-      throw new Error(`'${containerName}' undefined in the endpoint map. check the file name against the endpointMap in prebuild.`);
+      throw new Error(`'${containerName}' undefined in the endpoint map.
+ Check the file name against the endpointMap in prebuild.`);
     }
 
-    if (!endpointMap[containerName].groups[endpoint._group]) {
-      endpointMap[containerName].groups[endpoint._group] = {
-        label: endpoint._group,
-        endpoints: []
+    if (!endpointMap[containerName].groups[endpoint.group]) {
+      endpointMap[containerName].groups[endpoint.group] = {
+        label: endpoint.group,
+        endpoints: [],
       };
     }
 
-    endpointMap[containerName].groups[endpoint._group].endpoints.push(endpoint);
+    endpointMap[containerName].groups[endpoint.group].endpoints.push(endpoint);
   });
 });
 
-// covert to arrays and sort
-allEndpoints = Object.keys(endpointMap).map(function(key) {
+// convert to arrays and sort
+allEndpoints = Object.keys(endpointMap).map(function (key) {
   const endpointIndex = endpointMap[key];
 
-  // convert groups to an array
-  endpointIndex.groups = Object.values(endpointIndex.groups);
-
-  // alphabetically sort groups
-  endpointIndex.groups = endpointIndex.groups.sort(function(a, b) {
-    var nameA = a.label.toLowerCase();
-    var nameB = b.label.toLowerCase();
-    if ((nameA === 'default') || nameA < nameB) { return -1; }
-    if (nameA > nameB) { return 1; }
-    return 0;
+  // alphabetically sort groups and endpoints in groups
+  return _.assign(endpointIndex, {
+    groups: _.sortBy(endpointIndex.groups, g => g.label.toLowerCase()).map(
+      group => _.assign(group, {
+        endpoints: _.sortBy(group.endpoints, 'path'),
+      })),
   });
-
-  // alphabetically sort endpoints in groups
-  endpointIndex.groups.forEach(function(group) {
-    group.endpoints = group.endpoints.sort(function(a, b) {
-      if (a.path < b.path) { return -1; }
-      if (a.path > b.path) { return 1; }
-      return 0;
-    });
-  });
-
-  return endpointIndex;
-}).filter(function(endpoint) { return endpoint; });
+}).filter(Boolean);
 
 const data = JSON.stringify(allEndpoints, null, 2);
 const endpointModule = `
@@ -478,108 +436,108 @@ fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
  */
 
 function convertPythonYaml() {
-  let pythonObjects = pythonFiles.filter(function(fileName) {
+  const pythonObjects = pythonFiles.filter(function (fileName) {
     return path.extname(fileName) === '.yaml';
-  }).map(function(fileName) {
+  }).map(function (fileName) {
     const filePath = path.join(pythonPath, fileName);
     const pythonObject = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
 
     return pythonObject;
   });
 
-  let pythonObjectMap = {
-    'LinodeLoginClient': {
+  const pythonObjectMap = {
+    LinodeLoginClient: {
       name: 'LinodeLoginClient',
       path: '/linode-login-client',
       langauge: 'python',
       routePath: '/v4/libraries/python/linode-login-client',
       formattedPythonObject: [],
     },
-    'LinodeClient': {
+    LinodeClient: {
       name: 'LinodeClient',
       path: '/linode-client',
       langauge: 'python',
       routePath: '/v4/libraries/python/linode-client',
       formattedPythonObject: [],
     },
-    'Linode': {
+    Linode: {
       name: 'Linode',
       path: '/linode',
       langauge: 'python',
       routePath: '/v4/libraries/python/linode',
       formattedPythonObject: [],
     },
-    'Config': {
+    Config: {
       name: 'Config',
       path: '/config',
       langauge: 'python',
       routePath: '/v4/libraries/python/config',
       formattedPythonObject: [],
     },
-    'Disk': {
+    Disk: {
       name: 'Disk',
       path: '/disk',
       langauge: 'python',
       routePath: '/v4/libraries/python/disk',
       formattedPythonObject: [],
     },
-    'Region': {
+    Region: {
       name: 'Region',
       path: '/region',
       langauge: 'python',
       routePath: '/v4/libraries/python/region',
       formattedPythonObject: [],
     },
-    'Distribution': {
+    Distribution: {
       name: 'Distribution',
       path: '/distribution',
       langauge: 'python',
       routePath: '/v4/libraries/python/distribution',
       formattedPythonObject: [],
     },
-    'Backup': {
+    Backup: {
       name: 'Backup',
       path: '/backup',
       langauge: 'python',
       routePath: '/v4/libraries/python/backup',
       formattedPythonObject: [],
     },
-    'IPAddress': {
+    IPAddress: {
       name: 'IPAddress',
       path: '/ipaddress',
       langauge: 'python',
       routePath: '/v4/libraries/python/ipaddress',
       formattedPythonObject: [],
     },
-    'IPv6Address': {
+    IPv6Address: {
       name: 'IPv6Address',
       path: '/ipv6address',
       langauge: 'python',
       routePath: '/v4/libraries/python/ipv6address',
       formattedPythonObject: [],
     },
-    'Kernel': {
+    Kernel: {
       name: 'Kernel',
       path: '/kernel',
       langauge: 'python',
       routePath: '/v4/libraries/python/kernel',
       formattedPythonObject: [],
     },
-    'Service': {
+    Service: {
       name: 'Service',
       path: '/service',
       langauge: 'python',
       routePath: '/v4/libraries/python/service',
       formattedPythonObject: [],
     },
-    'StackScript': {
+    StackScript: {
       name: 'StackScript',
       path: '/stackscript',
       langauge: 'python',
       routePath: '/v4/libraries/python/stackscript',
       formattedPythonObject: [],
     },
-    'Domain': {
+    Domain: {
       name: 'Domain',
       path: '/domain',
       langauge: 'python',
@@ -595,7 +553,7 @@ function convertPythonYaml() {
     },
   };
 
-  pythonObjects.forEach(function(pythonObject) {
+  pythonObjects.forEach(function (pythonObject) {
     if (pythonObjectMap[pythonObject.name]) {
       pythonObjectMap[pythonObject.name].formattedPythonObject = pythonObject;
     }

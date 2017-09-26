@@ -3,38 +3,38 @@ description: >
     An IPv4 Address
 schema:
   address:
-    _type: String
-    _value: 97.107.143.8
-    _description: The IP Address.
+    type: String
+    value: 97.107.143.8
+    description: The IP Address.
   gateway:
-    _type: String
-    _value: 97.107.143.1
-    _description: The default gateway. Gateways for private IP's are always null.
+    type: String
+    value: 97.107.143.1
+    description: The default gateway. Gateways for private IP's are always null.
   subnet_mask:
-    _type: String
-    _value: 255.255.255.0
-    _description: The subnet mask.
+    type: String
+    value: 255.255.255.0
+    description: The subnet mask.
   prefix:
-    _type: String
-    _value: 24
-    _description: The network prefix.
+    type: String
+    value: 24
+    description: The network prefix.
   type:
-    _type: Enum
-    _subtype: IPAddressType
-    _value: public
-    _description: The type of IP Address, either public or private
+    type: Enum
+    subtype: IPAddressType
+    value: public
+    description: The type of IP Address, either public or private
   rdns:
-    _editable: true
-    _type: String
-    _value: null
-    _description: Reverse DNS address for this IP Address. Null to reset.
+    editable: true
+    type: String
+    value: null
+    description: Reverse DNS address for this IP Address. Null to reset.
   linode_id:
-    _type: Integer
-    _value: 42
+    type: Integer
+    value: 42
   region:
-    _type: String
-    _value: us-east-1a
-    _description: The region this IP is in
+    type: String
+    value: us-east-1a
+    description: The region this IP is in
 enums:
   IPAddressType:
     public: Public IP Address

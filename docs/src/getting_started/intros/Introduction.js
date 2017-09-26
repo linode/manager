@@ -29,6 +29,12 @@ export default function Introduction() {
           All APIv4 endpoints are located at:
         </p>
         <Code example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
+        <div className="alert alert-warning" role="alert">
+          We will regularly be making releases, some of which will contain breaking
+          changes. <Link to={`/${API_VERSION}/changelogs`}>
+            Please look at the changelogs
+          </Link> to keep up to date with recent changes.
+        </div>
         <p>
           Occasionally we will add features and improvements to our API -
           only certain changes will trigger a version bump, including:
