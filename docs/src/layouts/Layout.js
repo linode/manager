@@ -73,6 +73,7 @@ export default class Layout extends Component {
                   { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
                   { label: 'Errors', href: `/${API_VERSION}/errors` },
                   { label: 'Guides', href: `/${API_VERSION}/guides` },
+                  { label: 'Changelogs', href: `/${API_VERSION}/changelogs` },
                 ]}
               />
               <VerticalNavSection
