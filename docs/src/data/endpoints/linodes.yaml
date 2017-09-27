@@ -1181,7 +1181,7 @@ endpoints:
           python: |
             volumes = client.linode.get_volumes()
       POST:
-        oauth: volume:create
+        oauth: volumes:create
         description: >
           Create a new Block Storage Volume
         params:
@@ -1219,7 +1219,7 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{
                   "label": "a_fancy_new_volume",
-                  "datacenter": "newark",
+                  "region": "us-east-1a",
                   "size": "100"
                 }'
                 https://$api_root/$version/volumes
@@ -1257,7 +1257,7 @@ endpoints:
             v = linode.Volume(client, 123)
             v.delete()
       POST:
-        oauth: volume:create
+        oauth: volumes:create
         description: >
           Create a new Block Storage Volume
         params:
@@ -1295,21 +1295,49 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{
                   "label": "a_fancy_new_volume",
-                  "datacenter": "newark",
+                  "region": "us-east-1a",
                   "size": "100"
                 }'
                 https://$api_root/$version/volumes
           python: |
             import linode
-            TODO 
+            TODO
+  /linode/volumes/$id/clone:
+    group: Volumes
+    type: resource
+    authenticated: true
+    description: >
+      Clone a Block Storage Volume.
+    methods:
+      POST:
+        oauth: volumes:create
+        description: >
+          Clone a volume
+        params:
+          label:
+            description: >
+              A unique label to identify your new clone volume.
+            type: String
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                  "label": "Clone Label"
+                }' \
+                https://$api_root/$version/linode/volumes/$volume_id/clone
+          python: |
+            import linode
+            TODO
   /linode/volumes/$id/attach:
     group: Volumes
     authenticated: true
+    description: >
+      Attach a Block Storage Volume to a Linode.
     methods:
       POST:
-        oauth: volume:modify
+        oauth: volumes:modify
         description: >
-          Attach a Block Storage Volume to a Linode
+          Attach a Block Storage Volume to a Linode.
         params:
           linode_id:
             description: >
@@ -1338,11 +1366,13 @@ endpoints:
     group: Volumes
     type: resource
     authenticated: true
+    description: >
+      Detach a Block Storage Volume from a Linode.
     methods:
       POST:
         oauth: volumes:modify,linodes:modify
         description: >
-          Detach a volume from a Linode
+          Detach a Block Storage Volume from a Linode.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
