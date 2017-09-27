@@ -1,0 +1,41 @@
+name: InvoiceItems
+prefix: invoiceitems
+description: >
+    An individual item from an Invoice
+schema:
+  to:
+    type: String
+    value: "2015-09-01T00:00:01"
+    description: The date the invoice item started, based on month.
+  from:
+    type: String
+    value: "2015-09-30T11:59:59:59"
+    description: The date the invoice item ended, based on month.
+  type:
+    type: Enum
+    subtype: Type
+    value: prepay
+    description: The type of service, either 'prepay' or 'misc'
+  amount:
+    type: integer
+    value: 20
+    description: The price, in U.S. Dollars, of unitprice multiplied by quantity.
+  unitprice:
+    type: integer
+    value: 10
+    description: The monthly service fee (in US Dollars) for this item.
+  label:
+    type: string
+    value: Linode 123
+    description: This invoice item's display label.
+    filterable: true
+    editable: true
+  quantity:
+    type: integer
+    value: 1
+    description: The quantity of this item for the specified invoice.
+enums:
+  Type:
+    prepay: The invoice was pre-paid.
+    misc: The invoice was not pre-paid.
+
