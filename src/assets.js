@@ -30,5 +30,7 @@ export const flags = {
 };
 
 import logo from 'file-loader!../assets/logo/logo.svg';
+import cube from 'file-loader!../assets/default/cube.png';
 
 export const LinodeLogoImgSrc = logo;
+export const DefaultClientThumb = cube;
