@@ -1384,3 +1384,18 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/linode/instances/$linode_id/stats/2017/08
+  /linode/instances/$id/status:
+    type: resource
+    authenticated: true
+    description: >
+      Return the status of particular Linode your account may access.
+    methods:
+      GET:
+        response: linode_status
+        oauth: linodes:view
+        description: >
+          Returns the status of this Linode.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/status
