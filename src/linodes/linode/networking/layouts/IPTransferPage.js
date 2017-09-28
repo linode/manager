@@ -80,7 +80,7 @@ export class IPTransferPage extends Component {
     });
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => assignIPs(linode.region.id, assignments),
+      () => assignIPs(linode.region, assignments),
       // This setState is important so that old checked IPs that have transferred don't break
       // things.
       () => this.setState({ checkedA: {}, checkedB: {} }),
@@ -89,7 +89,7 @@ export class IPTransferPage extends Component {
 
   otherLinodes() {
     const { linodes, linode } = this.props;
-    return Object.values(_.pickBy(linodes, l => l.region.id === linode.region.id))
+    return Object.values(_.pickBy(linodes, l => l.region === linode.region))
       .filter(l => l.id !== linode.id);
   }
 
