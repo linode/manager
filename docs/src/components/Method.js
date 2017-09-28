@@ -20,7 +20,7 @@ export default function Method(props) {
   const methodRequest = !params.schema ? null : (
     <div className="Method-section">
       <h3>Request</h3>
-      <Spec schema={params.schema} />
+      <Spec schema={params.schema} request="true" />
       <SpecExample example={params.example} type="Request" />
     </div>
   );
