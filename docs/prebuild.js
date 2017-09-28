@@ -118,7 +118,7 @@ function formatSchemaExample(schema, paginationKey) {
   return schemaExample;
 }
 
-function formatSchemaField(schemaField, enumMap) {
+function formatSchemaField(schemaField, enumMap, filterDepth, iteration = 1) {
   let description;
   if (schemaField.description) {
     description = schemaField.description;
@@ -134,7 +134,13 @@ function formatSchemaField(schemaField, enumMap) {
   if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
     // eslint-disable-next-line no-use-before-define
-    nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
+    nestedSchema = formatSchema(
+      getResourceObjByName(lowerType).schema,
+      enumMap,
+      null,
+      null,
+      iteration + 1
+    );
     lowerType = 'object';
   } else if (lowerType === 'enum' && enumMap[subtype]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
@@ -143,7 +149,7 @@ function formatSchemaField(schemaField, enumMap) {
              !lowerType) {
     // is of the checked types, or no type provided (currently undocumented)
     // eslint-disable-next-line no-use-before-define
-    nestedSchema = formatSchema(schemaField, enumMap);
+    nestedSchema = formatSchema(schemaField, enumMap, null, null, iteration + 1);
     if (nestedSchema) {
       if (nestedSchema[0].name === 'type') {
         nestedSchema = nestedSchema[0].schema;
@@ -165,7 +171,7 @@ function formatSchemaField(schemaField, enumMap) {
   }
 
   // don't show filters for nestedSchemas
-  if (Array.isArray(nestedSchema)) {
+  if (Array.isArray(nestedSchema) && (iteration >= filterDepth)) {
     nestedSchema = nestedSchema.map(obj => _.omit(obj, 'filterable'));
   }
 
@@ -208,19 +214,27 @@ function createPaginationSchema(paginationKey, resourceType) {
   };
 }
 
-function formatSchema(schema, enumMap = {}, paginationKey = null, resourceType = null) {
+// eslint-disable-next-line max-len
+function formatSchema(schema, enumMap = {}, paginationKey = null, resourceType = null, iteration = 1) {
   if (Array.isArray(schema)) {
     return schema;
   }
 
   if (paginationKey) {
-    return formatSchema(createPaginationSchema(paginationKey, resourceType), enumMap);
+    return formatSchema(
+      createPaginationSchema(paginationKey, resourceType),
+      enumMap,
+      null,
+      null,
+      iteration
+    );
   }
 
   const filteredSchemas = _.flatten(Object.keys(schema).map(function (schemaName) {
     const val = schema[schemaName];
     if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
-      return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
+      const filterDepth = 2;
+      return formatSchemaField(_.merge(val, { name: schemaName }), enumMap, filterDepth, iteration);
     }
   })).filter(Boolean);
 
