@@ -1,0 +1,22 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: LinodeStatus
+description: >
+  The status of a single Linode on your account.
+schema:
+  status:
+    type: Enum
+    subtype: Status
+    description: The current state of this Linode.
+    value: running
+    filterable: true
+    _pylib_volatile: true
+enums:
+  Status:
+    offline: The Linode is powered off.
+    booting: The Linode is currently booting up.
+    running: The Linode is currently running.
+    shutting_down: The Linode is currently shutting down.
+    rebooting: The Linode is rebooting.
+    provisioning: The Linode is being created.
+    deleting: The Linode is being deleted.
+    migrating: The Linode is being migrated to a new host/region.
