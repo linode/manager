@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.1] 2017-09-28
+### Fixed
+- Request parameters should render required/optional labels
+
+## [0.13.0] 2017-09-26
+### Added
+- Add a sidebar (#2494)
+### Changed
+- Use Yarn rather than NPM (#2520)
+- removed extraneous "\_" from properties
+- Show more of example up front
+- Smarter height on collapsed examples
+
 # [0.12.6] 2017-09-20
 ### Added
 - Changelog page
