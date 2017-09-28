@@ -22,7 +22,7 @@ export default class ConfigSelectModalBody extends Component {
 
   onSubmit = () => {
     const { dispatch, linode, action } = this.props;
-    const { configId } = this.state;
+    const { configId } = parseInt(this.state.configId);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => action(linode.id, configId),
