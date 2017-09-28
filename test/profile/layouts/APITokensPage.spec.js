@@ -3,9 +3,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { API_ROOT } from '~/constants';
 import { APITokensPage } from '~/profile/layouts/APITokensPage';
-
 import { expectRequest } from '@/common.js';
 import { api } from '@/data';
 
