@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.14.1] 2017-09-28
+### Fixed
+- Oauth Client default image renders properly
+- IP Transfer didn't send region correctly
+- Rebooting did not work when multiple configs exist
+- Reset RDNS did not show the default value after reset
+- Reset RDNS should not be offered when default is in use
+- (Docs) Updated to 0.13.1
+
 ## [0.14.0] 2017-09-26
 ### Added
 - Transfer pool is shown (#2508)

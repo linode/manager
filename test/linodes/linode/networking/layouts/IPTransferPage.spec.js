@@ -125,7 +125,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
       ([fn]) => expectRequest(fn, '/networking/ip-assign', {
         method: 'POST',
         body: {
-          region: testLinode.region.id,
+          region: testLinode.region,
           assignments: [
             { address: ipA.address, linode_id: ipB.linode_id },
             { address: ipB.address, linode_id: ipA.linode_id },

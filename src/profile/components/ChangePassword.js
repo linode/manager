@@ -13,7 +13,7 @@ import {
 import { setPassword } from '~/api/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
-import SelectExpiration from '../components/SelectExpiration';
+import SelectExpiration from './SelectExpiration';
 
 
 export default class ChangePassword extends Component {
@@ -22,7 +22,7 @@ export default class ChangePassword extends Component {
 
     this.state = {
       password: '',
-      expires: null,
+      expires: '',
       errors: {},
       loading: false,
     };
@@ -34,7 +34,7 @@ export default class ChangePassword extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setPassword(password, SelectExpiration.map(expires)),
-      () => this.setState({ password: '', expires: null }),
+      () => this.setState({ password: '', expires: '' }),
     ]));
   }
 
