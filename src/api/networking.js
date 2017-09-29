@@ -113,7 +113,7 @@ export function setRDNS(ip, rdns) {
         [rawAddress]: {
           ...ip,
           address: rawAddress,
-          rdns,
+          rdns: _ips[address].rdns,
         },
       },
     }, linodeId));

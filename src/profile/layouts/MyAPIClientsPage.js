@@ -18,6 +18,7 @@ import { clients as api } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { transform } from '~/api/util';
 import { API_ROOT } from '~/constants';
+import { DefaultClientThumb } from '~/assets';
 import { confirmThenDelete } from '~/utilities';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
@@ -38,7 +39,10 @@ export class MyAPIClientsPage extends Component {
   }
 
   thumbnailSrc(client) {
-    return `${API_ROOT}/account/clients/${client.id}/thumbnail`;
+    if (client.thumbnail_url) {
+      return API_ROOT.concat(client.thumbnail_url);
+    }
+    return DefaultClientThumb;
   }
 
   deleteClients = confirmThenDelete(

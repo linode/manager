@@ -116,7 +116,6 @@ export default class Spec extends Component {
 
   render() {
     const { schema, request } = this.props;
-
     const columns = _.cloneDeep(defaultColumns);
     if (request) {
       columns[0].cellComponent = ParamFieldCell;
@@ -126,7 +125,7 @@ export default class Spec extends Component {
       return null;
     }
 
-    return this.renderSchemaTable(schema, defaultColumns);
+    return this.renderSchemaTable(schema, columns);
   }
 }
 

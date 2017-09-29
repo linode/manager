@@ -75,7 +75,7 @@ export class SummaryPage extends Component {
         { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record) },
       ] });
 
-      if (record.rdns) {
+      if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
         groups[1].elements.push({
           name, action: () => this.resetRDNS(record),
