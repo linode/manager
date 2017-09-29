@@ -483,6 +483,19 @@ export const testLinode1246 = {
   distribution: null,
 };
 
+const rdnsIP1247 = { ...createTestIPv4(1247), rdns: 'host.rdns.tld' };
+export const testLinode1247 = {
+  ...createTestLinode(1247),
+  ipv4: [rdnsIP1247.address],
+  _ips: {
+    [rdnsIP1247.address]: rdnsIP1247,
+    ipv4: {
+      public: [rdnsIP1247],
+      private: [],
+    },
+  },
+};
+
 export const linodes = [
   testLinode,
   testLinode1233,
@@ -497,4 +510,5 @@ export const linodes = [
   testLinode1243,
   testLinode1245,
   testLinode1246,
+  testLinode1247,
 ].reduce((object, linode) => ({ ...object, [linode.id]: linode }), {});
