@@ -7,7 +7,7 @@ import { SHOW_MODAL } from '~/actions/modal';
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 
 import { expectRequest } from '@/common';
-import { testLinode } from '@/data/linodes';
+import { testLinode, testLinode1247 } from '@/data/linodes';
 
 
 describe('linodes/linode/networking/layouts/SummaryPage', () => {
@@ -144,14 +144,24 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
-        linode={testLinode}
+        linode={testLinode1247}
       />
     );
-
     dispatch.reset();
     page.find('#reset-rdns').at(0).props()
         .onMouseDown();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
+  });
+
+  it('hides reset rdns on click if members.linode.com', function () {
+    const page = mount(
+      <SummaryPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+
+    expect(page.find('#reset-rdns')).to.have.length(0);
   });
 });
