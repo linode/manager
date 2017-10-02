@@ -132,3 +132,11 @@ export function cloneLinode(linodeId, regionId, planId, backups, label,
     return clonedLinode;
   };
 }
+
+export function kvmifyLinode(linodeId) {
+  return async function (dispatch) {
+    const kvmifiedLinode = await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/kvmify`));
+    dispatch(actions.one(kvmifiedLinode, kvmifiedLinode.id));
+    return kvmifiedLinode;
+  };
+}
