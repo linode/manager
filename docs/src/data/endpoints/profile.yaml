@@ -241,7 +241,7 @@ endpoints:
           python: |
             my_token.delete()
   /profile/whitelist:
-      _group: Whitelist
+      group: Whitelist
       description: >
           Manage your user's IP Whitelist. This is not allowed if the user's IP
           Whistlist is not enabled.
