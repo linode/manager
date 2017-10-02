@@ -576,3 +576,87 @@ endpoints:
             curl https://$api_root/$version/account/event/123/read
           python: |
             event.mark_read()
+  /account/invoices:
+    group: Invoices
+    authenticated: true
+    description: >
+      View the collection of invoices.
+    methods:
+      GET:
+        response: invoice
+        paginationKey: invoice
+        description: >
+          Returns a list of invoices.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices
+  /account/invoices/:id:
+    group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      Returns information about a specific invoice.
+    methods:
+      GET:
+        response: invoices
+        description: >
+          Returns information about this invoice.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123
+  /account/invoices/:id/items:
+    group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      View the items associated with a specific invoice.
+    methods:
+      GET:
+        response: invoice_items
+        description: >
+          Returns a collection of invoice items.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123/items
+  /account/payments:
+    group: Payments
+    type: Resource
+    authenticated: true
+    description: >
+      View the collection of payments.
+    methods:
+      GET:
+        response: payment
+        description: >
+          Returns information about this payment.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/payments
+      POST:
+        oauth: account:modify
+        response: payment
+        description: >
+          Make a payment.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "usd": 100,
+                }' \
+                https://$api_root/$version/account/payments
+  /account/payments/:id:
+    group: Payments
+    type: Resource
+    authenticated: true
+    description: >
+      Returns information about a specific payment.
+    methods:
+      GET:
+        response: payment
+        description: >
+          Returns information about this payment.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/payments/123
+
