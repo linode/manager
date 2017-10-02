@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup } from 'linode-components/forms';
+import { Input, ModalFormGroup, Checkbox } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -35,16 +35,16 @@ export default class RestoreLinode extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, allBackups: {}, backups: false };
+    this.state = { errors: {}, allBackups: {}, backups: false, booted: true };
 
     this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, backup, region, plan, backups } = this.state;
+    const { label, backup, region, plan, backups, booted } = this.state;
 
-    const data = { label, region, backup_id: backup, backups_enabled: backups, type: plan };
+    const data = { label, region, backup_id: backup, backups_enabled: backups, type: plan, booted };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
@@ -71,7 +71,7 @@ export default class RestoreLinode extends Component {
   render() {
     const { close, linodes, plans } = this.props;
     const {
-      errors, label, linode, region, plan, backup, backups, allBackups, fetchingBackups,
+      errors, label, linode, region, plan, backup, backups, allBackups, fetchingBackups, booted,
     } = this.state;
 
     const linodesWithBackups = _.pickBy(linodes, (l) => l.backups.enabled);
@@ -144,6 +144,15 @@ export default class RestoreLinode extends Component {
               checked={backups}
               name="backups"
               id="backups"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Booted" id="booted" apiKey="booted" errors={errors}>
+            <Checkbox
+              label="Boot Linode after created"
+              checked={booted}
+              name="booted"
+              id="booted"
               onChange={this.onChange}
             />
           </ModalFormGroup>
