@@ -585,20 +585,20 @@ endpoints:
         oauth: linodes:modify
         dangerous: false
         params:
-          disks:
+          devices:
             optional: true
-            description: >
-              Disks to include during Rescue.
-            type: Disk
+            type: devicesrescue
+            description: Disks and volumes attached to this Linode config. Note that "sdh" is reserved and unavailable for rescue.
+            seeAlso: ["/reference/endpoints/linode/instances/$id/disks", "/reference/endpoints/linode/instances/$id/volumes"]
+            editable: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "disks": {
-                      "sda": 5567,
-                      "sdb": 5568
-                      }
+                    "devices": {
+                      "sda": {"disk_id": 123456},
+                      "sdb": {"volume_id": 120394}
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/rescue

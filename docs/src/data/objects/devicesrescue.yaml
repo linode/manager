@@ -1,6 +1,6 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Linode Devices
-prefix: devices
+prefix: devicesrescue
 schema:
   sda:
     type: device
@@ -18,17 +18,13 @@ schema:
     value: null
   sde:
     type: device
-    description: The device mapped to /dev/sde. Can be null. Unavailable in "fullvirt" virt_mode.
+    description: The device mapped to /dev/sde. Can be null.
     value: null
   sdf:
     type: device
-    description: The device mapped to /dev/sdf. Can be null. Unavailable in "fullvirt" virt_mode.
+    description: The device mapped to /dev/sdf. Can be null.
     value: null
   sdg:
     type: device
-    description: The device mapped to /dev/sdg. Can be null. Unavailable in "fullvirt" virt_mode.
-    value: null
-  sdh:
-    type: device
-    description: The device mapped to /dev/sdh. Can be null. Unavailable in "fullvirt" virt_mode.
+    description: The device mapped to /dev/sdg. Can be null.
     value: null
