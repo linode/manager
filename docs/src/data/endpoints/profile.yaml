@@ -308,3 +308,43 @@ endpoints:
                 https://$api_root/$version/profile/whitelist/123
           python: |
             # coming soon
+  /profile/apps:
+    group: Authorized Applications
+    description: >
+      These are OAuth Applications that you have authorized to access
+      resources on behalf of your user. These include Third-party applications
+      as well as applications that you have created and authorized yourself.
+    methods:
+      GET:
+        description: >
+          Returns all application allowed to access your user's resources.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $TOKEN" \
+              https://$api_root/$version/profile/apps
+          python: |
+            # coming soon
+  /profile/apps/$id:
+    group: Authorized Applications
+    description: Manage OAuth Applications for your user
+    methods:
+      GET:
+        description: Returns information about a specific OAuth Application.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $TOKEN" \
+              https://$api_root/$version/profile/apps/123
+          python: |
+            # coming soon
+      DELETE:
+        description: Deauthorize an OAuth Application
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $TOKEN" \
+              -X DELETE \
+              https://$api_root/$version/profile/apps/123
+          python: |
+            # coming soon
