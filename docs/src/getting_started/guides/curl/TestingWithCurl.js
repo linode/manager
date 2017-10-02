@@ -85,7 +85,7 @@ export default function Introduction(props) {
         </p>
         <p>
           To generate a personal access token,&nbsp;
-          <ExternalLink to={`${MANAGER_ROOT}/profile/integrations/tokens`}>
+          <ExternalLink to={`${MANAGER_ROOT}/profile/tokens`}>
             visit the new manager
           </ExternalLink>
           . These tokens can be used to make authenticated API requests with your Linode

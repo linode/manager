@@ -5,7 +5,7 @@ import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { ExternalLink } from 'linode-components/buttons';
 import { Code } from 'linode-components/formats';
 
-import { API_VERSION } from '~/constants';
+import { API_VERSION, MANAGER_ROOT } from '~/constants';
 
 
 export default function Introduction(props) {
@@ -35,9 +35,9 @@ export default function Introduction(props) {
         <p>
           In order to make requests to the API, you're going to need an OAuth Token.
           You can make a personal access token at&nbsp;
-          <ExternalLink
-            to="https://cloud.linode.com/profile/integrations/tokens"
-          >cloud.linode.com</ExternalLink>.
+          <ExternalLink to={`${MANAGER_ROOT}/profile/tokens`}>
+            cloud.linode.com
+          </ExternalLink>.
         </p>
       </section>
       <section>
