@@ -25,7 +25,7 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
-import { ConvertToKVM } from '../components';
+import { UpgradeToKVM } from '../components';
 
 
 export class DashboardPage extends Component {
@@ -123,7 +123,7 @@ export class DashboardPage extends Component {
                     <small className="text-muted">
                       <Link
                         className="force-link"
-                        onClick={() => ConvertToKVM.trigger(dispatch, linode)}
+                        onClick={() => UpgradeToKVM.trigger(dispatch, linode)}
                       >Upgrade to KVM</Link>
                     </small>
                   </div>

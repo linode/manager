@@ -7,11 +7,11 @@ import { kvmifyLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
-export default class ConvertToKVM extends Component {
-  static title = 'Convert to KVM';
+export default class UpgradeToKVM extends Component {
+  static title = 'Upgrade to KVM';
   static trigger(dispatch, linode) {
-    return dispatch(showModal(ConvertToKVM.title, (
-      <ConvertToKVM
+    return dispatch(showModal(UpgradeToKVM.title, (
+      <UpgradeToKVM
         dispatch={dispatch}
         linode={linode}
       />
@@ -36,22 +36,22 @@ export default class ConvertToKVM extends Component {
           hideModal,
         ]))}
         onCancel={() => dispatch(hideModal())}
-        analytics={{ title: ConvertToKVM.title }}
+        analytics={{ title: UpgradeToKVM.title }}
         errors={errors}
       >
         <div>
           <p>
             Linode will need to shut down and migrate to KVM before receiving plan upgrade.
-            Specific changes from Xen to KVM will be detailed in
-            our <ExternalLink to="https://www.linode.com/docs/platform/kvm">
-              KVM Reference guide
-            </ExternalLink>.
+            Specific changes from Xen to KVM are detailed in
+            our <ExternalLink to="https://www.linode.com/docs/platform/kvm">KVM Reference guide</ExternalLink>.
           </p>
           <p>
             Are you sure you want to <strong>permanently</strong> convert {linode.label} to KVM?
           </p>
           <p>
-            To migrate {linode.disk} MB of disks will take about {migrateEst} minutes to complete.
+            {/* eslint-disable max-len */}
+            To migrate {(linode.disk / 1024)} GiB worth of disks will take about {migrateEst} minutes to complete.
+            {/* eslint-enable max-len */}
           </p>
         </div>
       </FormModalBody>
@@ -59,7 +59,7 @@ export default class ConvertToKVM extends Component {
   }
 }
 
-ConvertToKVM.propTypes = {
+UpgradeToKVM.propTypes = {
   linode: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
