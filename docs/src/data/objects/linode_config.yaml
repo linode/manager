@@ -87,11 +87,6 @@ schema:
     type: String
     value: "/dev/sda"
     description: Root device to boot. Corresponding disk must be attached.
-  root_device_ro:
-    editable: true
-    type: Boolean
-    value: false
-    description: Controls whether to mount the root disk read-only.
   run_level:
     editable: true
     type: Enum

@@ -16,38 +16,44 @@ schema:
   class:
     type: Enum
     subtype: Class
-  price_hourly:
-    type: Float
-    value: 1.44
-    description: Cost (in cents) per hour.
-    filterable: true
+  price:
+    type: Object
+    description: Cost (in US dollars) for this type.
+    hourly:
+      type: Float
+      value: 1.44
+      description: Cost (in cents) per hour.
+      filterable: true
+    monthly:
+      type: Integer
+      value: 1000
+      description: Cost (in US dollars) per month.
+      filterable: true
   label:
     type: String
     value: Linode 2048
     description: Human-friendly name of this type.
     filterable: true
-  backups_option:
+  addons:
     type: Object
-    description: Cost of enabling backups for this type.
-    price_hourly:
-      type: Float
-      value: 0.004
-      description: Cost (in cents) per hour.
-      filterable: true
-    price_monthly:
-      type: Integer
-      value: 2.5
-      description: Cost (in US dollars) per month.
-      filterable: true
+    description: Cost of enabling addon services for this type.
+    price:
+      type: Object
+      description: Cost of enabling backups for this type.
+      hourly:
+        type: Float
+        value: 0.004
+        description: Cost (in cents) per hour.
+        filterable: true
+      monthly:
+        type: Integer
+        value: 2.5
+        description: Cost (in US dollars) per month.
+        filterable: true
   network_out:
     type: Integer
     value: 125
     description: If applicable, Mbits outbound bandwidth.
-    filterable: true
-  price_monthly:
-    type: Integer
-    value: 1000
-    description: Cost (in US dollars) per month.
     filterable: true
   memory:
     type: Integer

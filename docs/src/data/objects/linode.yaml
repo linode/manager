@@ -26,18 +26,21 @@ schema:
       type: Integer
       value: 10000
       description: Disk IO Rate ops/sec (Range 0-100000, default 10000). 0 to disable.
-    transfer_in:
-      type: Integer
-      value: 0
-      description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
-    transfer_out:
-      type: Integer
-      value: 10
-      description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
-    transfer_quota:
-      type: Integer
-      value: 80
-      description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
+    transfer:
+      type: Object
+      description: Thresholds for sending email alerts.
+      in:
+        type: Integer
+        value: 0
+        description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
+      out:
+        type: Integer
+        value: 10
+        description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
+      quota:
+        type: Integer
+        value: 80
+        description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
   backups:
     type: Object
     seeAlso: "/reference/endpoints/linode/instances/$id/backups"
@@ -114,10 +117,6 @@ schema:
     value: running
     filterable: true
     _pylib_volatile: true
-  transfer_total:
-    type: Integer
-    description: The amount of outbound traffic used this month.
-    value: 20000
   updated:
     type: Datetime
     value: 2015-10-27T09:59:26
@@ -128,11 +127,26 @@ schema:
     subtype: Hypervisor
     description: The hypervisor this Linode is running on.
     value: kvm
-  disk:
-    type: Integer
-    value: 24576
-    description: Available disk space, in MB
-    filterable: false
+  specs:
+    type: Object
+    description: Specifications for this Linode.
+    disk:
+      type: Integer
+      value: 24576
+      description: Available disk space, in MB
+      filterable: false
+    memory:
+      type: Integer
+      value: 1024
+      description: Total RAM for this Linode.
+    vcpus:
+      type: Integer
+      value: 1
+      description: Number of VCPUs for this Linode.
+    transfer:
+      type: Integer
+      description: The amount of outbound traffic used this month.
+      value: 20000
 enums:
   Status:
     offline: The Linode is powered off.
