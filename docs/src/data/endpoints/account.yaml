@@ -381,6 +381,12 @@ endpoints:
             description: A URL to redirect to after the OAuth flow has completed.
             type: string
             limit: "1-512 characters"
+          public:
+            optional: true
+            description: >
+              If true, this client uses the implicit OAuth flow and does not
+              use a client secret.
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
