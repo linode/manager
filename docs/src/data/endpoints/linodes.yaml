@@ -394,12 +394,6 @@ endpoints:
               Controls whether to mount the root disk read-only. Defaults
               to false.
             type: Boolean
-          devtmpfs_automount:
-            optional: true
-            description: >
-              Populates the /dev directory early during boot without udev.
-              Defaults to false.
-            type: Boolean
           run_level:
             optional: true
             description: >
@@ -410,6 +404,36 @@ endpoints:
             description: >
               Controls the virtualization mode. Defaults to "paravirt".
             type: Enum
+          helpers:
+            type: Object
+            description: Helpers enabled when booting to this Linode config.
+            updatedb_disabled:
+              editable: true
+              type: Boolean
+              value: true
+              description: Disables updatedb cron job to avoid disk thrashing.
+            distro:
+              editable: true
+              type: Boolean
+              value: true
+              description: Helps maintain correct inittab/upstart console device.
+            modules_dep:
+              editable: true
+              type: Boolean
+              value: true
+              description: Creates a modules dependency file for the kernel you run.
+            network:
+              editable: true
+              type: Boolean
+              value: true
+              description: >
+                Automatically configure static networking.
+            devtmpfs_automount:
+              optional: true
+              description: >
+                Populates the /dev directory early during boot without udev.
+                Defaults to false.
+              type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
