@@ -25,6 +25,7 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
+import { UpgradeToKVM } from '../components';
 
 
 export class DashboardPage extends Component {
@@ -66,7 +67,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode } = this.props;
+    const { username, linode, dispatch } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -113,6 +114,22 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </div>
+            {linode.hypervisor === 'kvm' ? null : (
+              <div className="row">
+                <div className="col-sm-4 row-label">Hypervisor</div>
+                <div className="col-sm-8" id="hypervisor">
+                  Xen
+                  <div>
+                    <small className="text-muted">
+                      <Link
+                        className="force-link"
+                        onClick={() => UpgradeToKVM.trigger(dispatch, linode)}
+                      >Upgrade to KVM</Link>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="row">
               <div className="col-sm-4 row-label">Region</div>
               <div className="col-sm-8" id="region"><Region obj={linode} /></div>
