@@ -52,8 +52,8 @@ endpoints:
             my_settings.country = 'US'
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
-  /account/clients:
-    group: Clients
+  /account/oauth-clients:
+    group: OAuth Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -63,11 +63,13 @@ endpoints:
         paginationKey: clients
         oauth: clients:view
         description: >
-          Returns a list of clients.
+          Returns a list of OAuth clients for your user. If you are an admin
+          user, you will see all OAuth clients associated with all users on your
+          account.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/account/clients
+                https://$api_root/$version/account/oauth-clients
           python: |
             my_clients = client.account.get_oauth_clients()
       POST:
@@ -83,6 +85,11 @@ endpoints:
             description: A URL to redirect to after the OAuth flow has completed.
             type: String
             limit: "1-512 characters"
+          public:
+            description: Whether this client is intended will use the implicit
+              OAuth flow because it cannot safely store the client_secrete.
+              An example of this would be a Single-Page Application (SPA) for
+              the Web.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -91,15 +98,16 @@ endpoints:
                     "label": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
-                https://$api_root/$version/account/clients
+                https://$api_root/$version/account/oauth-clients
           python: |
             new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
-  /account/clients/$id:
-    group: Clients
+  /account/oauth-clients/$id:
+    group: OAuth Clients
     type: resource
     authenticated: true
     description: >
       Manage a particular OAuth client application your account may access.
+      Admin users can manage any OAuth client associated with this account.
     methods:
       GET:
         response: client
@@ -109,7 +117,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client = linode.OAuthClient(client, 123)
       PUT:
@@ -124,7 +132,7 @@ endpoints:
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
                 }' \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client.name = 'Updated app name'
             my_client.save()
@@ -133,16 +141,18 @@ endpoints:
         dangerous: true
         description: >
           Delete this OAuth application. This action cannot be undone.
+          Once an OAuth Application is deleted, all associated OAuth
+          tokens that were generated on its behalf are expired as well.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
-  /account/clients/$id/reset_secret:
-    group: Clients
+  /account/oauth-clients/$id/reset_secret:
+    group: OAuth Clients
     type: Action
     authenticated: true
     description: >
@@ -156,12 +166,12 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST \
-                https://$api_root/$version/account/clients/$client_id/reset_secret
+                https://$api_root/$version/account/oauth-clients/$client_id/reset_secret
           python: |
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
-  /account/clients/$id/thumbnail:
-    group: Clients
+  /account/oauth-clients/$id/thumbnail:
+    group: OAuth Clients
     type: Action
     authenticated: true
     description: >
@@ -174,7 +184,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id/thumbnail
+                https://$api_root/$version/account/oauth-clients/$client_id/thumbnail
           python: |
             img = my_client.get_thumbnail()
 
@@ -191,7 +201,7 @@ endpoints:
                 -H "Authorization: Bearer $TOKEN" \
                 -X PUT \
                 --data-binary "@/path/to/image"
-                https://$api_root/$version/account/clients/$client_id/thumbnail
+                https://$api_root/$version/account/oauth-clients/$client_id/thumbnail
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.set_thumbnail('/path/to/image')
@@ -342,8 +352,8 @@ endpoints:
 
             my_user.grants.global.add_linodes = True
             my_user.grants.save()
-  /account/clients:
-    group: Clients
+  /account/oauth-clients:
+    group: OAuth Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -357,7 +367,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/account/clients
+                https://$api_root/$version/account/oauth-clients
       POST:
         oauth: clients:create
         description: >
@@ -379,9 +389,9 @@ endpoints:
                     "name": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
-                https://$api_root/$version/account/clients
-  /account/clients/$id:
-    group: Clients
+                https://$api_root/$version/account/oauth-clients
+  /account/oauth-clients/$id:
+    group: OAuth Clients
     type: resource
     authenticated: true
     description: >
@@ -395,7 +405,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
       PUT:
         oauth: clients:modify
         description: >
@@ -408,7 +418,7 @@ endpoints:
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
                 }' \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
       DELETE:
         oauth: clients:delete
         dangerous: true
@@ -418,7 +428,7 @@ endpoints:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
   /account/events:
     group: Events
     authenticated: true
