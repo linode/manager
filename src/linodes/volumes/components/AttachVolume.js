@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
-import { ModalFormGroup } from 'linode-components/forms';
+import { ModalFormGroup, Select } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { attachVolume } from '~/api/volumes';
+import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { LinodeSelect } from '~/linodes/components';
 
@@ -27,9 +28,36 @@ export default class AttachVolume extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {} };
+    this.state = {
+      config: 0,
+      allConfigs: {},
+      errors: {},
+    };
 
     this.onChange = onChange.bind(this);
+  }
+
+  onLinodeChange = (e) => {
+    this.onChange(e);
+    this.setState({ fetchingConfigs: true }, async () => {
+      const linodeId = e.target.value;
+      const { allConfigs } = this.state;
+
+      if (!allConfigs[linodeId]) {
+        const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
+        const linodeConfigs = Object.values(configs.configs).map(function (config) {
+          return {
+            label: config.label,
+            value: config.id,
+          };
+        });
+
+        this.setState({
+          fetchingConfigs: false,
+          allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
+        });
+      }
+    });
   }
 
   onSubmit = () => {
@@ -44,7 +72,21 @@ export default class AttachVolume extends Component {
 
   render() {
     const { close, linodes } = this.props;
-    const { errors, linode } = this.state;
+    const { errors, linode, allConfigs, config, fetchingConfigs } = this.state;
+
+    const configs = linode ?
+      Object.values(linodes[linode]._configs.configs).map(function (config) {
+        return {
+          label: config.label,
+          value: config.id,
+        };
+      }
+    ) : null;
+
+    const linodeConfigs = [
+      { label: '-- None --', value: 0 },
+      ...allConfigs[linode] || configs || {},
+    ];
 
     return (
       <FormModalBody
@@ -60,7 +102,17 @@ export default class AttachVolume extends Component {
             linodes={linodes}
             value={linode}
             name="linode"
+            onChange={this.onLinodeChange}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+          <Select
+            options={linodeConfigs}
+            value={config}
+            name="config"
+            id="config"
             onChange={this.onChange}
+            disabled={fetchingConfigs}
           />
         </ModalFormGroup>
       </FormModalBody>
