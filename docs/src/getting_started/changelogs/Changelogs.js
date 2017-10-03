@@ -23,7 +23,7 @@ export default function Authentication() {
           <li> Changed POST linode/instances/:id/configs
             <ul>
               <li> Removed root_device_ro </li>
-              <li> Now accepts "helpers", a dict containing accepting any/all of "updatedb_disabled",
+              <li> Now accepts "helpers", a dict accepting any/all of "updatedb_disabled",
                    "distro", "modules_dep", "network", and "devtmpfs_automount" </li>
               <li> Removed devtmpfs_automount (now in helpers envelope) </li>
             </ul>
@@ -57,8 +57,6 @@ export default function Authentication() {
               <li> Moved "disk", "memory", "storage", "transfer_total", and "vcpus" into a
                "specs" envelope </li>
               <li> transfer_total => transfer in linode specs </li>
-              <li> Moved "transfer_in", "transfer_out", and "transfer_quota" into a "transfer"
-                   envelope within the "alerts" envelope </li>
               <li> transfer_in => network_in </li>
               <li> transfer_out => network_out </li>
             </ul>
@@ -103,7 +101,7 @@ export default function Authentication() {
               <li> Collection of authorized third-party applications </li>
             </ul>
           </li>
-          <li> OAuthClient now has a "public" attributre
+          <li> OAuthClient now has a "public" attribute
             <ul>
               <li> "public" is an optional argument to POST account/clients that defaults to False </li>
             </ul>
