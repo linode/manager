@@ -316,6 +316,7 @@ endpoints:
       as well as applications that you have created and authorized yourself.
     methods:
       GET:
+        response: oauthapp
         description: >
           Returns all application allowed to access your user's resources.
         examples:
