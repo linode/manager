@@ -26,21 +26,18 @@ schema:
       type: Integer
       value: 10000
       description: Disk IO Rate ops/sec (Range 0-100000, default 10000). 0 to disable.
-    transfer:
-      type: Object
-      description: Thresholds for sending email alerts.
-      in:
-        type: Integer
-        value: 0
-        description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
-      out:
-        type: Integer
-        value: 10
-        description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
-      quota:
-        type: Integer
-        value: 80
-        description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
+    network_in:
+      type: Integer
+      value: 0
+      description: Incoming Traffic Mbit/s (Range 0-40000, default 10). 0 to disable.
+    network_out:
+      type: Integer
+      value: 10
+      description: Outbound Traffic Mbit/s (Range 0-10000, default 10). 0 to disable.
+    transfer_quota:
+      type: Integer
+      value: 80
+      description: Transfer Quota % (Range 0-400, default 80). 0 to disable.
   backups:
     type: Object
     seeAlso: "/reference/endpoints/linode/instances/$id/backups"
