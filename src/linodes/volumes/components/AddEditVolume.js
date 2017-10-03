@@ -34,7 +34,7 @@ export default class AddEditVolume extends Component {
 
     this.state = {
       linode,
-      config: 0,
+      config: null,
       errors: {},
       label: volume.label || '',
       size: volume.size || 10,
@@ -53,8 +53,17 @@ export default class AddEditVolume extends Component {
       region,
       size,
       linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
-      config_id: config === 0 ? undefined : config,
+      config_id: config,
     };
+    
+    if (!data.linode_id) {
+      delete data.linode_id;
+    }
+
+    if (!data.config_id) {
+      delete data.config_id;
+    }
+
 
     const actions = [
       () => volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
@@ -85,18 +94,30 @@ export default class AddEditVolume extends Component {
         });
 
         this.setState({
+          config: undefined,
           fetchingConfigs: false,
           allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
         });
       }
+      this.defaultToConfig(linodeId);
     });
   }
+
+  defaultToConfig(linodeId) {
+    const { allConfigs } = this.state;
+
+    if (allConfigs[linodeId].length === 1) {
+      this.setState({ config: allConfigs[linodeId][0].id });
+    }
+  }
+
 
   render() {
     const { close, title, volume, linode: original, linodes } = this.props;
     const {
-      errors, region, label, size, linode, config, allConfigs, fetchingConfigs,
+      errors, region, label, size, linode, allConfigs, fetchingConfigs,
     } = this.state;
+    let { config } = this.state;
 
     const configs = this.props.linode ?
       Object.values(linodes[linode]._configs.configs).map(function (config) {
@@ -111,9 +132,13 @@ export default class AddEditVolume extends Component {
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
     const linodeConfigs = [
-      { label: '-- None --', value: 0 },
       ...allConfigs[linode] || configs || {},
     ];
+
+    if (config === undefined && linodeConfigs[0]) {
+      config = linodeConfigs[0].value;
+      this.setState({ config });
+    }
 
     return (
       <FormModalBody
@@ -180,16 +205,18 @@ export default class AddEditVolume extends Component {
               </ModalFormGroup>
             </div>
           )}
-          <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
-            <Select
-              options={linodeConfigs}
-              value={config}
-              name="config"
-              id="config"
-              onChange={this.onChange}
-              disabled={fetchingConfigs}
-            />
-          </ModalFormGroup>
+          {linodeConfigs.length === 1 ? null :
+            <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+              <Select
+                options={linodeConfigs}
+                value={config}
+                name="config"
+                id="config"
+                onChange={this.onChange}
+                disabled={fetchingConfigs}
+              />
+            </ModalFormGroup>
+          }
         </div>
       </FormModalBody>
     );
