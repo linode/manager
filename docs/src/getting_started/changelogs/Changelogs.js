@@ -24,38 +24,38 @@ export default function Authentication() {
             <ul>
               <li> Removed root_device_ro </li>
               <li> Now accepts "helpers", a dict accepting any/all of "updatedb_disabled",
-                   "distro", "modules_dep", "network", and "devtmpfs_automount" </li>
+              "distro", "modules_dep", "network", and "devtmpfs_automount" </li>
               <li> Removed devtmpfs_automount (now in helpers envelope) </li>
             </ul>
           </li>
           <li> Changed POST linode/instances/:id/disks
             <ul>
               <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
-                   of a single string key </li>
+              of a single string key </li>
             </ul>
           </li>
           <li> Changed POST linode/instances
             <ul>
               <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
-                   of a single string key </li>
+              of a single string key </li>
             </ul>
           </li>
           <li> Changed POST linode/instances/:id/rebuild
             <ul>
               <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
-                   of a single string key </li>
+              of a single string key </li>
             </ul>
           </li>
           <li> Changed POST linode/instances/:id/rescue
             <ul>
               <li> disks changed to "devices", now accepts device mappings in the same format
-                   as POST linode/instances/:id/configs </li>
+              as POST linode/instances/:id/configs </li>
             </ul>
           </li>
           <li> Changed Linode object
             <ul>
               <li> Moved "disk", "memory", "storage", "transfer_total", and "vcpus" into a
-               "specs" envelope </li>
+              "specs" envelope </li>
               <li> transfer_total => transfer in linode specs </li>
               <li> transfer_in => network_in </li>
               <li> transfer_out => network_out </li>
@@ -90,7 +90,7 @@ export default function Authentication() {
             <ul>
               <li> Endpoint moved to account/oauth-clients </li>
               <li> Collection now allows access to all clients for all users on your account
-                   if you are an unrestricted user </li>
+              if you are an unrestricted user </li>
             </ul>
           </li>
         </ul>
@@ -103,7 +103,8 @@ export default function Authentication() {
           </li>
           <li> OAuthClient now has a "public" attribute
             <ul>
-              <li> "public" is an optional argument to POST account/clients that defaults to False </li>
+              <li> "public" is an optional argument to POST account/clients that
+              defaults to False </li>
             </ul>
           </li>
           <li> Added POST account/credit-card
@@ -127,7 +128,7 @@ export default function Authentication() {
               <li> Now always one of "ready", "not ready", or "deleting" </li>
             </ul>
           </li>
-      </ul>
+        </ul>
       </section>
       <section>
         <h2>2017-09-18</h2>
