@@ -169,7 +169,7 @@ export class IndexPage extends Component {
           {Object.keys(this.props.stackscripts.stackscripts).length ?
             this.renderScripts(this.props.stackscripts.stackscripts) :
             <CreateHelper
-              label="StackStripts"
+              label="StackScripts"
               onClick={() => AddStackScript.trigger(dispatch)}
               linkText="Add a StackScript"
             />
