@@ -8,6 +8,7 @@ schema:
   id:
     type: String
     value: linode2048.5
+    description: The service plan type.
   disk:
     type: Integer
     value: 24576
