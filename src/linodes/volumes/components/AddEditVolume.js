@@ -55,7 +55,7 @@ export default class AddEditVolume extends Component {
       linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
       config_id: config,
     };
-    
+
     if (!data.linode_id) {
       delete data.linode_id;
     }
