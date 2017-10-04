@@ -15,6 +15,122 @@ export default function Authentication() {
         </p>
       </section>
       <section>
+        <h2>2017-10-04</h2>
+        <hr /><br />
+        <b>Breaking Changes:</b><br />
+        <ul>
+          <li> EventType has changed from "blockstorage_*" to "volume_*"</li>
+          <li> Changed POST linode/instances/:id/configs
+            <ul>
+              <li> Removed root_device_ro </li>
+              <li> Now accepts "helpers", a dict accepting any/all of "updatedb_disabled",
+              "distro", "modules_dep", "network", and "devtmpfs_automount" </li>
+              <li> Removed devtmpfs_automount (now in helpers envelope) </li>
+            </ul>
+          </li>
+          <li> Changed POST linode/instances/:id/disks
+            <ul>
+              <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
+              of a single string key </li>
+            </ul>
+          </li>
+          <li> Changed POST linode/instances
+            <ul>
+              <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
+              of a single string key </li>
+            </ul>
+          </li>
+          <li> Changed POST linode/instances/:id/rebuild
+            <ul>
+              <li> root_ssh_key changed to "authorized_keys", now accepts a list of keys instead
+              of a single string key </li>
+            </ul>
+          </li>
+          <li> Changed POST linode/instances/:id/rescue
+            <ul>
+              <li> disks changed to "devices", now accepts device mappings in the same format
+              as POST linode/instances/:id/configs </li>
+            </ul>
+          </li>
+          <li> Changed Linode object
+            <ul>
+              <li> Moved "disk", "memory", "storage", "transfer_total", and "vcpus" into a
+              "specs" envelope </li>
+              <li> transfer_total => transfer in linode specs </li>
+              <li> transfer_in => network_in </li>
+              <li> transfer_out => network_out </li>
+            </ul>
+          </li>
+          <li> Changed LinodeConfig object
+            <ul>
+              <li> Removed root_device_ro </li>
+            </ul>
+          </li>
+          <li> Changed LinodeType object
+            <ul>
+              <li> Moved backups_option.price_hourly to addons.backups.price.hourly </li>
+              <li> Moved backups_option.price_monthly to addons.backups.price.monthly </li>
+              <li> Moved price_hourly to price.hourly </li>
+              <li> Moved price_monthly to price.monthly </li>
+            </ul>
+          </li>
+          <li> Changed OAuthToken
+            <ul>
+              <li> Removed client envelope </li>
+              <li> Removed type </li>
+            </ul>
+          </li>
+          <li> Changed account/tokens
+            <ul>
+              <li> Endpoint moved to profile/tokens </li>
+              <li> GET now only returns Personal Access Tokens </li>
+            </ul>
+          </li>
+          <li> Changed account/clients
+            <ul>
+              <li> Endpoint moved to account/oauth-clients </li>
+              <li> Collection now allows access to all clients for all users on your account
+              if you are an unrestricted user </li>
+            </ul>
+          </li>
+        </ul>
+        <b>Changes:</b><br />
+        <ul>
+          <li> Added profile/apps
+            <ul>
+              <li> Collection of authorized third-party applications </li>
+            </ul>
+          </li>
+          <li> OAuthClient now has a "public" attribute
+            <ul>
+              <li> "public" is an optional argument to POST account/clients that
+              defaults to False </li>
+            </ul>
+          </li>
+          <li> Added POST account/credit-card
+            <ul>
+              <li> Updates current payment method on file </li>
+            </ul>
+          </li>
+          <li> Added GET account/payments
+            <ul>
+              <li> Returns a list of all payments made for your account </li>
+            </ul>
+          </li>
+          <li> Added GET account/payments/:id
+            <ul>
+              <li> Returns information about a single payment made for your account </li>
+            </ul>
+          </li>
+          <li> Added POST linode/volumes/:id/clone </li>
+          <li> Changed Disk Status
+            <ul>
+              <li> Now always one of "ready", "not ready", or "deleting" </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section>
         <h2>2017-09-18</h2>
         <hr /><br />
         <b>Breaking Changes:</b><br />
