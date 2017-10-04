@@ -28,7 +28,7 @@ export default class UpgradeToKVM extends Component {
     const { dispatch, linode } = this.props;
     const { errors } = this.state;
     const migrateEst = Math.round(linode.specs.disk / (4000 / 60) / 60);
-    console.log(linode);
+
     return (
       <ConfirmModalBody
         onSubmit={() => dispatch(dispatchOrStoreErrors.call(this, [
@@ -42,8 +42,8 @@ export default class UpgradeToKVM extends Component {
       >
         <div>
           <p>
-            <strong>{linode.label}</strong> will need to shut down and migrate to KVM before receiving plan upgrade.
-            Specific changes from Xen to KVM are detailed in
+            <strong>{linode.label}</strong> will need to shut down and migrate to KVM before
+            receiving plan upgrade. Specific changes from Xen to KVM are detailed in
             our <ExternalLink to="https://www.linode.com/docs/platform/kvm">KVM Reference guide</ExternalLink>.
           </p>
           <p>
