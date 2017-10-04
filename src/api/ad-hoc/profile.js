@@ -1,13 +1,14 @@
-import { actions } from './configs/profile';
-import { thunkFetch } from './apiActionReducerGenerator';
+import { actions } from '../configs/profile';
+import { fetch } from '../fetch';
+
 
 export function setPassword(password, expires) {
-  return thunkFetch.post('/profile/password', { password, expires });
+  return fetch.post('/profile/password', { password, expires });
 }
 
 export function toggleTFA(enable) {
   return async (dispatch, getState) => {
-    const result = await dispatch(thunkFetch.post(
+    const result = await dispatch(fetch.post(
       `/profile/tfa-${enable ? 'enable' : 'disable'}`));
     if (!enable) {
       const { profile } = getState().api;
@@ -19,7 +20,7 @@ export function toggleTFA(enable) {
 
 export function confirmTFA(code) {
   return async (dispatch, getState) => {
-    const result = await dispatch(thunkFetch.post('/profile/tfa-enable-confirm', {
+    const result = await dispatch(fetch.post('/profile/tfa-enable-confirm', {
       tfa_code: code,
     }));
     const { profile } = getState().api;

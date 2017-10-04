@@ -1,6 +1,6 @@
 import {
   genConfig, ReducerGenerator, genActions, ONE, MANY, POST,
-} from '~/api/apiResultActionReducerGenerator';
+} from '~/api/internal';
 
 export const config = genConfig({
   plural: 'tickets',

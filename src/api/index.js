@@ -16,7 +16,7 @@ import * as usersModule from './configs/users';
 import * as ticketsModule from './configs/tickets';
 import * as appsModule from './configs/apps';
 
-import apiActionReducerGenerator from './apiActionReducerGenerator';
+import apiActionReducerGenerator from './external';
 
 export const distributions = apiActionReducerGenerator(distributionsModule.config,
                                                        distributionsModule.actions);

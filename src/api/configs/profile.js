@@ -1,6 +1,6 @@
 import {
   genConfig, ReducerGenerator, genActions, ONE, PUT,
-} from '~/api/apiResultActionReducerGenerator';
+} from '~/api/internal';
 
 export const config = genConfig({
   singular: 'profile',

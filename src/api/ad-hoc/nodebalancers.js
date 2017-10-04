@@ -1,14 +1,15 @@
-import { thunkFetch } from './apiActionReducerGenerator';
-import { actions } from './configs/nodebalancers';
+import { actions } from '../configs/nodebalancers';
+import { fetch } from '../fetch';
+
 
 export function updateConfigSSL(data, nodebalancerId, configId) {
-  return thunkFetch.post(`/nodebalancers/${nodebalancerId}/configs/${configId}/ssl`, data);
+  return fetch.post(`/nodebalancers/${nodebalancerId}/configs/${configId}/ssl`, data);
 }
 
 export function nodebalancerStats(nodebalancerId) {
   return async (dispatch) => {
     const { data: _stats } = await dispatch(
-      thunkFetch.get(`/nodebalancers/${nodebalancerId}/stats`)
+      fetch.get(`/nodebalancers/${nodebalancerId}/stats`)
     );
     dispatch(actions.one({ _stats }, nodebalancerId));
   };

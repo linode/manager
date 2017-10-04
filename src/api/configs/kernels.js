@@ -1,7 +1,7 @@
 import {
   genConfig, ReducerGenerator, genActions,
   ONE, MANY,
-} from '~/api/apiResultActionReducerGenerator';
+} from '~/api/internal';
 
 export const config = genConfig({
   plural: 'kernels',

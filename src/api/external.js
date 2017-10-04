@@ -2,7 +2,7 @@ import { fetch } from '~/fetch';
 
 import {
   ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
-} from './apiResultActionReducerGenerator';
+} from './internal';
 
 
 // Sometimes the object will have sub-objects of it created before the object actually
@@ -315,38 +315,3 @@ export default function apiActionReducerGenerator(config, actions) {
   }
   return thunks;
 }
-
-// Helper function when making calls outside of the ability of the above thunks.
-function _thunkFetch(method, stringifyBody = true) {
-  return (url, body, headers = {}) =>
-    async (dispatch, getState) => {
-      const state = getState();
-      const { token } = state.authentication;
-
-      const result = await fetch(token, url, {
-        method,
-        headers,
-        body: stringifyBody ? JSON.stringify(body) : body,
-      });
-
-      return await result.json();
-    };
-}
-
-export const thunkFetch = {
-  post: _thunkFetch('POST'),
-  put: _thunkFetch('PUT'),
-  get: _thunkFetch('GET'),
-  delete: _thunkFetch('DELETE'),
-};
-
-function _thunkFetchFile(method) {
-  const _fetch = _thunkFetch(method, false);
-  return (url, attachment, type = 'image/png') =>
-    _fetch(url, attachment, { 'Content-Type': type });
-}
-
-export const thunkFetchFile = {
-  post: _thunkFetchFile('POST'),
-  put: _thunkFetchFile('PUT'),
-};

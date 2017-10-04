@@ -1,12 +1,13 @@
 import _ from 'lodash';
-import { actions } from './configs/linodes';
-import { thunkFetch } from './apiActionReducerGenerator';
-import { createHeaderFilter } from './util';
+
+import { actions } from '../configs/linodes';
+import { fetch } from '../fetch';
+import { createHeaderFilter } from '../util';
 
 
 export function ipv4s(region) {
   return async (dispatch, getState) => {
-    const ips = await dispatch(thunkFetch.get(
+    const ips = await dispatch(fetch.get(
       '/networking/ipv4',
       undefined,
       createHeaderFilter({ region }).headers));
@@ -81,7 +82,7 @@ export function assignIPs(region, assignments) {
       };
     });
 
-    await dispatch(thunkFetch.post('/networking/ip-assign', data));
+    await dispatch(fetch.post('/networking/ip-assign', data));
 
     // Only change state after post above succeeds.
     await Promise.all(Object.keys(_ipsByLinode).map(function (id) {
@@ -101,7 +102,7 @@ export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
     const { linode_id: linodeId, address } = ip;
     const rawAddress = address.split('/')[0].trim();
-    await dispatch(thunkFetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
+    await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
                                   { rdns }));
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
@@ -125,7 +126,7 @@ export function addIP(linodeId, type) {
     const { _ips } = getState().api.linodes.linodes[linodeId];
 
     const ip = await dispatch(
-      thunkFetch.post(`/linode/instances/${linodeId}/ips`, { type }));
+      fetch.post(`/linode/instances/${linodeId}/ips`, { type }));
 
     return dispatch(actions.one({
       _ips: {
@@ -141,7 +142,7 @@ export function addIP(linodeId, type) {
 
 export function getIPs(linodeId) {
   return async function (dispatch) {
-    const ips = await dispatch(thunkFetch.get(`/linode/instances/${linodeId}/ips`));
+    const ips = await dispatch(fetch.get(`/linode/instances/${linodeId}/ips`));
 
     const _ips = {};
     [...ips.ipv4.public, ...ips.ipv4.private].forEach(function (ip) {
@@ -192,7 +193,7 @@ export function getIPs(linodeId) {
 export function setShared(linodeId, ips) {
   return async function (dispatch) {
     const data = { ips: ips.map(({ address }) => address) };
-    await dispatch(thunkFetch.post(`/linode/instances/${linodeId}/ips/sharing`, data));
+    await dispatch(fetch.post(`/linode/instances/${linodeId}/ips/sharing`, data));
 
     dispatch(actions.one({ _shared: ips }, linodeId));
   };
@@ -200,7 +201,7 @@ export function setShared(linodeId, ips) {
 
 export function deleteIP(ip) {
   return async function (dispatch, getState) {
-    await dispatch(thunkFetch.delete(`/networking/ipv4/${ip.address}`));
+    await dispatch(fetch.delete(`/networking/ipv4/${ip.address}`));
 
     const linode = getState().api.linodes.linodes[ip.linode_id];
     const _ips = _.omitBy(linode._ips, (_, key) => key === ip.address);

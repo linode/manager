@@ -1,5 +1,6 @@
-import { fetch } from '~/fetch';
-import { actions } from './configs/events';
+import { actions } from '../configs/events';
+import { fetch } from '../fetch';
+
 
 export function eventAction(action) {
   return (eventId) => async (dispatch, getState) => {
@@ -19,8 +20,7 @@ export function eventAction(action) {
       await dispatch(actions.one({ ...event, [action]: true }, eventId));
     }
 
-    const { token } = state.authentication;
-    fetch(token, `/account/events/${eventId}/${action}`, { method: 'POST' });
+    return dispatch(fetch.post(`/account/events/${eventId}/${action}`));
   };
 }
 
