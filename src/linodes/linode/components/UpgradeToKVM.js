@@ -42,13 +42,13 @@ export default class UpgradeToKVM extends Component {
       >
         <div>
           <p>
-            <strong>{linode.label}</strong> will need to shut down and migrate to KVM before
-            receiving plan upgrade. Specific changes from Xen to KVM are detailed in
+            <strong>{linode.label}</strong> will be shut down, migrated to a KVM box, and then booted
+            back up. Specific changes from Xen to KVM are detailed in
             our <ExternalLink to="https://www.linode.com/docs/platform/kvm">KVM Reference guide</ExternalLink>.
           </p>
           <p>
             {/* eslint-disable max-len */}
-            To migrate {(linode.specs.disk / 1024)} GiB worth of disks will take about {migrateEst} minutes to complete.
+            To migrate {(linode.specs.disk / 1024)} GiB of disks will take about {migrateEst} minutes to complete.
             {/* eslint-enable max-len */}
           </p>
         </div>
