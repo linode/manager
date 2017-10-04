@@ -1175,7 +1175,8 @@ endpoints:
   /linode/types:
     group: Types
     description: >
-      Returns collection of types.
+      Returns collection of Linode types, including pricing and specifications
+      for each type.  These are used when creating or resizing Linodes.
     methods:
       GET:
         response: type
@@ -1191,7 +1192,8 @@ endpoints:
     group: Types
     type: resource
     description: >
-      Returns information about a specific Linode type offered by Linode.
+      Returns information about a specific Linode type, including pricing and
+      specifications.  This is used when creating or resizing a Linode.
     methods:
       GET:
         response: type
