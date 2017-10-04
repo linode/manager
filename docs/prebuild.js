@@ -127,7 +127,8 @@ function formatSchemaField(schemaField, enumMap, filterDepth, iteration = 1) {
   }
   description = convertUlToArray(description);
 
-  const { name, seeAlso, editable, filterable, type, subtype, isArray, value } = schemaField;
+  // eslint-disable-next-line max-len
+  const { name, seeAlso, editable, filterable, optional, type, subtype, isArray, value } = schemaField;
   let lowerType = type && _.isString(type) ? type.toLowerCase() : 'object';
 
   let nestedSchema = null;
@@ -183,6 +184,7 @@ function formatSchemaField(schemaField, enumMap, filterDepth, iteration = 1) {
     filterable,
     subType: subtype,
     value,
+    required: ! optional,
     isArray,
     type: lowerType,
     schema: nestedSchema,
