@@ -40,8 +40,8 @@ describe('linodes/linode/components/RescueMode', () => {
         linode={testLinode}
       />);
 
-    changeInput(page, 'sda', 12345);
-    changeInput(page, 'sdb', 12346);
+    changeInput(page, 'sda', JSON.stringify({ disk_id: 12345 }));
+    changeInput(page, 'sdb', JSON.stringify({ disk_id: 12346 }));
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
@@ -49,9 +49,9 @@ describe('linodes/linode/components/RescueMode', () => {
       ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', {
         method: 'POST',
         body: {
-          disks: {
-            sda: 12345,
-            sdb: 12346,
+          devices: {
+            sda: { disk_id: 12345 },
+            sdb: { disk_id: 12346 },
             sdc: null,
             sdd: null,
             sde: null,
@@ -77,9 +77,9 @@ describe('linodes/linode/components/RescueMode', () => {
       ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', {
         method: 'POST',
         body: {
-          disks: {
-            sda: 12345,
-            sdb: 12346,
+          devices: {
+            sda: { disk_id: 12345 },
+            sdb: { disk_id: 12346 },
             sdc: null,
             sdd: null,
             sde: null,
