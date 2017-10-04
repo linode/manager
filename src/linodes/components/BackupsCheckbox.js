@@ -7,7 +7,7 @@ import { Checkbox } from 'linode-components/forms';
 export default function BackupsCheckbox(props) {
   let label = 'Enable';
   if (props.plan) {
-    const backupsPrice = props.plans[props.plan].backups_option.price_monthly;
+    const backupsPrice = props.plans[props.plan].addons.backups.price.monthly;
     label = `Enable ($${backupsPrice.toFixed(2)}/mo)`;
   }
 

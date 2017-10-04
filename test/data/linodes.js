@@ -108,9 +108,9 @@ function createTestLinode(id) {
     alerts: {
       cpu: 90,
       io: 5000,
-      transfer_in: 5,
-      transfer_out: 5,
-      transfer_quota: 80,
+      network_in: 5,
+      network_out: 5,
+      tranfer_quota: 80,
     },
     backups: {
       enabled: true,
@@ -232,8 +232,6 @@ function createTestLinode(id) {
           run_level: 'default',
           memory_limit: 1024,
           root_device: '/dev/sda',
-          root_device_ro: false,
-          devtmpfs_automount: false,
           devices: {
             sda: { disk_id: 12345 },
             sdb: { disk_id: 12346 },
@@ -249,6 +247,7 @@ function createTestLinode(id) {
             distro: true,
             modules_dep: true,
             network: true,
+            devtmpfs_automount: false,
           },
           created: '2015-09-29 11:21:38 +0000',
           updated: '2015-09-29 11:21:38 +0000',

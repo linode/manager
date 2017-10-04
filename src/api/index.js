@@ -14,6 +14,7 @@ import * as tokensModule from './configs/tokens';
 import * as clientsModule from './configs/clients';
 import * as usersModule from './configs/users';
 import * as ticketsModule from './configs/tickets';
+import * as appsModule from './configs/apps';
 
 import apiActionReducerGenerator from './apiActionReducerGenerator';
 
@@ -37,3 +38,4 @@ export const clients = apiActionReducerGenerator(clientsModule.config, clientsMo
 export const users = apiActionReducerGenerator(usersModule.config, usersModule.actions);
 export const tickets = apiActionReducerGenerator(ticketsModule.config, ticketsModule.actions);
 export const account = apiActionReducerGenerator(accountModule.config, accountModule.actions);
+export const apps = apiActionReducerGenerator(appsModule.config, appsModule.actions);

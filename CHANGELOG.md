@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.14.2] 2017-10-04
+### Changes
+- Changes to work with the latest API changes
+- (Docs) Updated to 0.13.2
+
 ## [0.14.1] 2017-09-28
 ### Fixed
 - Oauth Client default image renders properly

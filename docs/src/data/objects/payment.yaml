@@ -1,0 +1,19 @@
+name: Payment
+prefix: payment
+description: >
+    A Payment
+schema:
+  date:
+    type: String
+    value: "2015-09-29T11:21:01"
+    filterable: true
+    description: The date the payment was processed.
+  id:
+    type: integer
+    value: 123
+    description: The payment's ID.
+  amount:
+    type: integer
+    value: 120
+    filterable: true
+    description: The amount (in US Dollars) of the payment.

@@ -31,8 +31,8 @@ export function rebootLinode(id, configId = null) {
     actions.one({ status: 'rebooting' }, id));
 }
 
-export function rescueLinode(id, disks = null) {
-  return linodeAction(id, 'rescue', JSON.stringify({ disks }), () =>
+export function rescueLinode(id, devices = null) {
+  return linodeAction(id, 'rescue', JSON.stringify({ devices }), () =>
     // Add this manually so StatusDropdown will start polling.
     actions.one({ status: 'rebooting' }, id));
 }
