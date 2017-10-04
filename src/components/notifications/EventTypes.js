@@ -271,27 +271,27 @@ const EventTypeMap = {
     redirectUrl: getTicketRedirectUrl,
   },
 
-  blockstorage_create: {
+  volume_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getVolumeRedirectUrl,
   },
-  blockstorage_attach: {
+  volume_attach: {
     presentTenseAction: 'Attaching',
     pastTenseAction: 'attached',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
-  blockstorage_delete: {
+  volume_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: getVolumesRedirectUrl,
   },
-  blockstorage_detach: {
+  volume_detach: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getVolumeRedirectUrl,
   },
-  blockstorage_resize: {
+  volume_resize: {
     presentTenseAction: 'Resizing',
     pastTenseAction: 'resized',
     redirectUrl: getVolumeRedirectUrl,

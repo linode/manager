@@ -6,17 +6,14 @@ import { FormGroup, FormGroupError, Select } from 'linode-components/forms';
 
 export default function DeviceSelect(props) {
   const {
-    errors, labelClassName, fieldClassName, configuredDevices, disks, volumes, slot, noVolumes,
+    errors, labelClassName, fieldClassName, configuredDevices, disks, volumes, slot,
   } = props;
 
   const options = [
     { value: DeviceSelect.EMPTY, label: DeviceSelect.EMPTY },
   ];
 
-  const categories = [['disks', disks]];
-  if (!noVolumes) {
-    categories.push(['volumes', volumes]);
-  }
+  const categories = [['disks', disks], ['volumes', volumes]];
 
   for (const [type, objects] of categories) {
     if (Object.values(objects).length) {
@@ -30,7 +27,7 @@ export default function DeviceSelect(props) {
         const valueKey = `${type.slice(0, -1)}_id`;
         options[options.length - 1].options.push({
           label: o.label,
-          value: noVolumes ? o.id : JSON.stringify({ [valueKey]: o.id }),
+          value: JSON.stringify({ [valueKey]: o.id }),
         });
       });
     }
@@ -70,7 +67,7 @@ DeviceSelect.format = function (devices) {
     // Pass
   }
 
-  return _.mapValues(formatted, d => !_.isInteger(d) && _.isEmpty(d) ? null : d);
+  return _.mapValues(formatted, d => _.isEmpty(d) ? null : d);
 };
 
 DeviceSelect.propTypes = {
@@ -82,5 +79,4 @@ DeviceSelect.propTypes = {
   volumes: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   slot: PropTypes.string.isRequired,
-  noVolumes: PropTypes.bool,
 };

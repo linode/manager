@@ -8,7 +8,7 @@ import { expectRequest } from '@/common.js';
 import { api } from '@/data';
 
 
-const { tokens } = api;
+const { tokens, apps } = api;
 
 describe('profile/layouts/APITokensPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,17 +19,19 @@ describe('profile/layouts/APITokensPage', () => {
 
   const dispatch = sandbox.spy();
 
+  const tokensAndApps = { ...tokens.tokens, ...apps.apps };
+
   it('renders a list of Tokens', () => {
     const page = mount(
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{}}
-        tokens={tokens}
+        tokens={tokensAndApps}
       />
     );
 
     const token = page.find('.TableRow');
-    expect(token.length).to.equal(Object.keys(tokens.tokens).length);
+    expect(token.length).to.equal(Object.keys(tokensAndApps).length);
     const firstToken = token.at(1);
     expect(firstToken.find('td').at(1).text())
       .to.equal('Test client');
@@ -42,7 +44,7 @@ describe('profile/layouts/APITokensPage', () => {
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
-        tokens={tokens}
+        tokens={tokensAndApps}
       />
     );
 
@@ -55,6 +57,6 @@ describe('profile/layouts/APITokensPage', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/tokens/1', { method: 'DELETE' });
+    await expectRequest(fn, '/profile/tokens/1', { method: 'DELETE' });
   });
 });
