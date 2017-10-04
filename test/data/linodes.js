@@ -108,9 +108,9 @@ function createTestLinode(id) {
     alerts: {
       cpu: 90,
       io: 5000,
-      transfer_in: 5,
-      transfer_out: 5,
-      transfer_quota: 80,
+      network_in: 5,
+      network_out: 5,
+      tranfer_quota: 80,
     },
     backups: {
       enabled: true,

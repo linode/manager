@@ -15,9 +15,7 @@ export const config = genConfig({
         label: 'Unknown',
         id: linode.type,
         ...types[linode.type] || {},
-        disk: linode.disk,
-        memory: linode.memory,
-        vcpus: linode.vcpus,
+        ...linode.specs,
       };
     },
     distribution: (linode) => function (_, getState) {
