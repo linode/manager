@@ -13,6 +13,7 @@ import { nodebalancers } from './nodebalancers';
 import { events } from './events';
 import { clients } from './clients';
 import { tokens } from './tokens';
+import { apps } from './apps';
 import { users } from './users';
 import { tickets } from './tickets';
 import { volumes } from './volumes';
@@ -65,6 +66,7 @@ export const api = fakeAPI([
   [events, 'event', 'events'],
   [clients, 'client', 'clients'],
   [tokens, 'token', 'tokens'],
+  [apps, 'apps', 'apps'],
   [users, 'user', 'users'],
   [tickets, 'ticket', 'tickets'],
   [volumes, 'volume', 'volumes'],

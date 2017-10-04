@@ -8,7 +8,7 @@ import { expectRequest } from '@/common.js';
 import { api } from '@/data';
 
 
-const { tokens } = api;
+const { tokens, apps } = api;
 
 describe('profile/layouts/APITokensPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -24,7 +24,7 @@ describe('profile/layouts/APITokensPage', () => {
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{}}
-        tokens={tokens}
+        tokens={{ ...tokens.tokens, ...apps.apps }}
       />
     );
 
@@ -42,7 +42,7 @@ describe('profile/layouts/APITokensPage', () => {
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
-        tokens={tokens}
+        tokens={{ ...tokens.tokens, ...apps.apps }}
       />
     );
 
@@ -55,6 +55,6 @@ describe('profile/layouts/APITokensPage', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/tokens/1', { method: 'DELETE' });
+    await expectRequest(fn, '/profile/tokens/1', { method: 'DELETE' });
   });
 });

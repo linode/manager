@@ -69,13 +69,9 @@ export class APITokensPage extends Component {
     'token',
     this.revoke,
     OBJECT_TYPE,
-    this.tokenLabel,
+    (t) => t.label,
     'revoke',
     'revoking').bind(this)
-
-  tokenLabel(token) {
-    return token.client ? token.client.label : token.label;
-  }
 
   renderTokens = () => {
     const { dispatch, selectedMap, tokens } = this.props;
@@ -83,7 +79,6 @@ export class APITokensPage extends Component {
 
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
-      sortBy: t => this.tokenLabel(t).toLowerCase(),
       groupOn: d => this.isApp(d) ? d.label : 'Personal Access Tokens',
     });
 
@@ -120,7 +115,7 @@ export class APITokensPage extends Component {
                 columns={[
                   { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                   {
-                    dataFn: this.tokenLabel,
+                    dataKey: 'label',
                     tooltipEnabled: true,
                     label: 'Label',
                   },
