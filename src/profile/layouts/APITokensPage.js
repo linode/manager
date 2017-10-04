@@ -11,7 +11,7 @@ import { Table } from 'linode-components/tables';
 import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
 
 import toggleSelected from '~/actions/select';
-import { tokens as api } from '~/api';
+import { tokens, apps } from '~/api';
 import { transform } from '~/api/util';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -25,13 +25,24 @@ const OBJECT_TYPE = 'tokens';
 
 export class APITokensPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await Promise.all([tokens, apps].map(c => dispatch(c.all())));
   }
 
   constructor(props) {
     super(props);
 
     this.state = { filter: '' };
+  }
+
+  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
+
+  revoke = (tokenOrAppId) => {
+    const tokenOrApp = this.props.tokens[tokenOrAppId];
+    if (this.isApp(tokenOrApp)) {
+      return apps.delete(tokenOrAppId);
+    }
+
+    return tokens.delete(tokenOrAppId);
   }
 
   createDropdownGroups = (token) => {
@@ -42,7 +53,7 @@ export class APITokensPage extends Component {
       { elements: [{ name: 'Revoke', action: () => this.revokeTokens(token) }] },
     ];
 
-    if (!token.client) {
+    if (!this.isApp(token)) {
       groups.splice(1, 0, {
         elements: [
           { name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) },
@@ -56,7 +67,7 @@ export class APITokensPage extends Component {
   revokeTokens = confirmThenDelete(
     this.props.dispatch,
     'token',
-    api.delete,
+    this.revoke,
     OBJECT_TYPE,
     this.tokenLabel,
     'revoke',
@@ -67,13 +78,13 @@ export class APITokensPage extends Component {
   }
 
   renderTokens = () => {
-    const { dispatch, selectedMap, tokens: { tokens } } = this.props;
+    const { dispatch, selectedMap, tokens } = this.props;
     const { filter } = this.state;
 
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
       sortBy: t => this.tokenLabel(t).toLowerCase(),
-      groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
+      groupOn: d => this.isApp(d) ? d.label : 'Personal Access Tokens',
     });
 
     return (
@@ -169,8 +180,13 @@ APITokensPage.propTypes = {
 };
 
 function select(state) {
+  const tokens = {
+    ...state.api.tokens.tokens,
+    ...state.api.apps.apps,
+  };
+
   return {
-    tokens: state.api.tokens,
+    tokens,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
