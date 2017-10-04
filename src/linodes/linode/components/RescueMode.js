@@ -32,7 +32,7 @@ export default class RescueMode extends Component {
     const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
     const someDisks = sortedDisks.slice(0, slots.length - 0);
     const devices = someDisks.reduce(function (devices, disk, index) {
-      return { ...devices, [slots[index]]: JSON.stringify({ disk_id: disk.id  }) };
+      return { ...devices, [slots[index]]: JSON.stringify({ disk_id: disk.id }) };
     }, {});
     this.setState({ devices });
   }
@@ -41,7 +41,6 @@ export default class RescueMode extends Component {
     const { dispatch, linode } = this.props;
     const { devices } = this.state;
 
-    console.log(devices);
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => rescueLinode(linode.id, DeviceSelect.format(devices)),
     ]));

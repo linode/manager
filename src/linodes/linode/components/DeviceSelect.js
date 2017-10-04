@@ -13,7 +13,7 @@ export default function DeviceSelect(props) {
     { value: DeviceSelect.EMPTY, label: DeviceSelect.EMPTY },
   ];
 
-  const categories = [['disks', disks]];
+  const categories = [['disks', disks], ['volumes', volumes]];
 
   for (const [type, objects] of categories) {
     if (Object.values(objects).length) {
