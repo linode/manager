@@ -37,19 +37,22 @@ schema:
   addons:
     type: Object
     description: Cost of enabling addon services for this type.
-    price:
+    backups:
       type: Object
-      description: Cost of enabling backups for this type.
-      hourly:
-        type: Float
-        value: 0.004
-        description: Cost (in cents) per hour.
-        filterable: true
-      monthly:
-        type: Integer
-        value: 2.5
-        description: Cost (in US dollars) per month.
-        filterable: true
+      description: Information about the optional Backups service offered for Linodes.
+      price:
+        type: Object
+        description: Cost of enabling backups for this type.
+        hourly:
+          type: Float
+          value: 0.004
+          description: Cost (in cents) per hour.
+          filterable: true
+        monthly:
+          type: Integer
+          value: 2.5
+          description: Cost (in US dollars) per month.
+          filterable: true
   network_out:
     type: Integer
     value: 125
