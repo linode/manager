@@ -15,7 +15,7 @@ import { EmitEvent } from 'linode-components/utils';
 import { hideModal, showModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { clients as api } from '~/api';
-import { resetSecret } from '~/api/clients';
+import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
 import { API_ROOT } from '~/constants';
 import { DefaultClientThumb } from '~/assets';

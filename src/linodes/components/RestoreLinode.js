@@ -8,7 +8,7 @@ import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { linodeBackups } from '~/api/linodes';
+import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import BackupsCheckbox from './BackupsCheckbox';

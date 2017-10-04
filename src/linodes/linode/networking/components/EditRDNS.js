@@ -5,7 +5,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { setRDNS } from '~/api/networking';
+import { setRDNS } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

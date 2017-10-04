@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 import { events } from '~/api';
-import { eventRead } from '~/api/events';
+import { eventRead } from '~/api/ad-hoc/events';
 import Polling from '~/api/polling';
 import {
   createHeaderFilter,

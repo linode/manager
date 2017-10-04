@@ -7,8 +7,8 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { transferPool } from '~/api/account';
-import { linodeStats } from '~/api/linodes';
+import { transferPool } from '~/api/ad-hoc//account';
+import { linodeStats } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 import { TransferPool } from '~/components';
 import {

@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as thunks from '~/api/apiActionReducerGenerator';
-import * as gen from '~/api/apiResultActionReducerGenerator';
+import * as thunks from '~/api/external';
+import * as gen from '~/api/internal';
 import { testLinode } from '@/data/linodes';
 
 describe('api/apiActionReducerGenerator', () => {

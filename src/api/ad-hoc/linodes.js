@@ -54,7 +54,7 @@ export function rebuildLinode(id, config = null) {
     };
   }
 
-  return linodeAction(id, 'rebuild', JSON.stringify(config), handleRsp);
+  return linodeAction(id, 'rebuild', config, handleRsp);
 }
 
 export function lishToken(linodeId) {
@@ -69,7 +69,7 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   return async (dispatch) => {
     dispatch(actions.disks.one({ id: diskId, size }, linodeId, diskId));
     await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
-                                   { size }));
+                              { size }));
     // TODO: fetch until complete
   };
 }

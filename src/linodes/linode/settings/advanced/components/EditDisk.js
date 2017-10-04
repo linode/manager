@@ -6,7 +6,7 @@ import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { resizeLinodeDisk } from '~/api/linodes';
+import { resizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

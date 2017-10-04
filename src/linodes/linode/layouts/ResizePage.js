@@ -14,7 +14,7 @@ import { onChange } from 'linode-components/forms/utilities';
 
 import { setSource } from '~/actions/source';
 import { types } from '~/api';
-import { resizeLinode } from '~/api/linodes';
+import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';

@@ -6,7 +6,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { confirmTFA } from '~/api/profile';
+import { confirmTFA } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

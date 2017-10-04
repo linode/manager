@@ -10,7 +10,7 @@ import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/commo
 import { testLinode1236 } from '@/data/linodes';
 
 
-describe('linodes/linode/settings/components/EditDisk', () => {
+describe('linodes/linode/settings/advanced/components/EditDisk', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

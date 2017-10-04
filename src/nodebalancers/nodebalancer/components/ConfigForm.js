@@ -15,7 +15,7 @@ import {
 import { onChange } from 'linode-components/forms/utilities';
 
 import { nodebalancers } from '~/api';
-import { updateConfigSSL } from '~/api/nodebalancers';
+import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';
 import { dispatchOrStoreErrors } from '~/api/util';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,

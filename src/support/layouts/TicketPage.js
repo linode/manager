@@ -16,7 +16,7 @@ import { onChange } from 'linode-components/forms/utilities';
 
 import { tickets } from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
-import { addTicketAttachment } from '~/api/tickets';
+import { addTicketAttachment } from '~/api/ad-hoc/tickets';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 

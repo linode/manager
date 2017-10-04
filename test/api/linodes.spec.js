@@ -1,5 +1,7 @@
 import sinon from 'sinon';
-import * as linodes from '~/api/linodes';
+
+import * as linodes from '~/api/ad-hoc/linodes';
+
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common.js';
 

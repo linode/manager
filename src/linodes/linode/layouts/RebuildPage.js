@@ -11,7 +11,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { distributions } from '~/api';
-import { rebuildLinode } from '~/api/linodes';
+import { rebuildLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 

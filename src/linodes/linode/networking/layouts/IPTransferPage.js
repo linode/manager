@@ -13,7 +13,7 @@ import {
 
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
-import { ipv4s, assignIPs } from '~/api/networking';
+import { ipv4s, assignIPs } from '~/api/ad-hoc/networking';
 import {
   createHeaderFilter,
   dispatchOrStoreErrors,

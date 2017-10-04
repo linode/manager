@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { powerOnLinode, rebootLinode } from '~/api/linodes';
+import { powerOnLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 
 import { changeInput, expectDispatchOrStoreErrors } from '@/common';

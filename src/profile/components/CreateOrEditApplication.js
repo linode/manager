@@ -6,7 +6,7 @@ import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { clients } from '~/api';
-import { updateClientThumbnail } from '~/api/clients';
+import { updateClientThumbnail } from '~/api/ad-hoc/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 

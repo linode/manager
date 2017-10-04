@@ -22,7 +22,7 @@ import { MassEditControl } from 'linode-components/lists/controls';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
-import { transferPool } from '~/api/account';
+import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 

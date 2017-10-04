@@ -12,8 +12,8 @@ import { DeleteModalBody } from 'linode-components/modals';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers } from '~/api';
-import { transferPool } from '~/api/account';
-import { nodebalancerStats } from '~/api/nodebalancers';
+import { transferPool } from '~/api/ad-hoc/account';
+import { nodebalancerStats } from '~/api/ad-hoc/nodebalancers';
 import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
 import { TransferPool } from '~/components';
 import {

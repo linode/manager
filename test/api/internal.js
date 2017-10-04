@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as gen from '~/api/apiResultActionReducerGenerator';
+import * as gen from '~/api/internal';
 import { testLinode } from '@/data/linodes';
 import { api } from '@/data';
 
