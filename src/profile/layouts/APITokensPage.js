@@ -120,7 +120,7 @@ export class APITokensPage extends Component {
                     label: 'Label',
                   },
                   {
-                    dataFn: t => t.client ? 'OAuth Client Token' : 'Personal Access Token',
+                    dataFn: t => this.isApp(t) ? 'OAuth Client Token' : 'Personal Access Token',
                     label: 'Type',
                   },
                   {

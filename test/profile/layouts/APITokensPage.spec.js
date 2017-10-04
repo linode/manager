@@ -19,17 +19,19 @@ describe('profile/layouts/APITokensPage', () => {
 
   const dispatch = sandbox.spy();
 
+  const tokensAndApps = { ...tokens.tokens, ...apps.apps };
+
   it('renders a list of Tokens', () => {
     const page = mount(
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{}}
-        tokens={{ ...tokens.tokens, ...apps.apps }}
+        tokens={tokensAndApps}
       />
     );
 
     const token = page.find('.TableRow');
-    expect(token.length).to.equal(Object.keys(tokens.tokens).length);
+    expect(token.length).to.equal(Object.keys(tokensAndApps).length);
     const firstToken = token.at(1);
     expect(firstToken.find('td').at(1).text())
       .to.equal('Test client');
@@ -42,7 +44,7 @@ describe('profile/layouts/APITokensPage', () => {
       <APITokensPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
-        tokens={{ ...tokens.tokens, ...apps.apps }}
+        tokens={tokensAndApps}
       />
     );
 
