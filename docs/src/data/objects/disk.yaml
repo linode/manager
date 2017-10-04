@@ -19,7 +19,7 @@ schema:
   status:
     type: Enum
     subtype: Status
-    value: ok
+    value: ready
     description: Status of the disk.
     filterable: false
   size:
@@ -41,17 +41,9 @@ schema:
     value: "2015-09-29T11:21:01"
 enums:
   Status:
-    ok: No disk jobs are running.
+    ready: No disk jobs are running.
+    not ready: This disk is temporarily busy.
     deleting: This disk is being deleted.
-    creating: This disk is being created.
-    migrating: This disk is being migrated.
-    cancelling-migration: The disk migration is being cancelled.
-    duplicating: This disk is being duplicated.
-    resizing: This disk is being resized.
-    restoring: This disk is being restored.
-    copying: This disk is being copied.
-    freezing: This disk is being frozen.
-    thawing: This disk is being thawed.
   Filesystem:
     raw: No filesystem, just a raw binary stream.
     swap: Linux swap area

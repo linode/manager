@@ -394,12 +394,6 @@ endpoints:
               Controls whether to mount the root disk read-only. Defaults
               to false.
             type: Boolean
-          devtmpfs_automount:
-            optional: true
-            description: >
-              Populates the /dev directory early during boot without udev.
-              Defaults to false.
-            type: Boolean
           run_level:
             optional: true
             description: >
@@ -410,6 +404,36 @@ endpoints:
             description: >
               Controls the virtualization mode. Defaults to "paravirt".
             type: Enum
+          helpers:
+            type: Object
+            description: Helpers enabled when booting to this Linode config.
+            updatedb_disabled:
+              editable: true
+              type: Boolean
+              value: true
+              description: Disables updatedb cron job to avoid disk thrashing.
+            distro:
+              editable: true
+              type: Boolean
+              value: true
+              description: Helps maintain correct inittab/upstart console device.
+            modules_dep:
+              editable: true
+              type: Boolean
+              value: true
+              description: Creates a modules dependency file for the kernel you run.
+            network:
+              editable: true
+              type: Boolean
+              value: true
+              description: >
+                Automatically configure static networking.
+            devtmpfs_automount:
+              optional: true
+              description: >
+                Populates the /dev directory early during boot without udev.
+                Defaults to false.
+              type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -585,20 +609,20 @@ endpoints:
         oauth: linodes:modify
         dangerous: false
         params:
-          disks:
+          devices:
             optional: true
-            description: >
-              Disks to include during Rescue.
-            type: Disk
+            type: devicesrescue
+            description: Disks and volumes attached to this Linode config. Note that "sdh" is reserved and unavailable for rescue.
+            seeAlso: ["/reference/endpoints/linode/instances/$id/disks", "/reference/endpoints/linode/instances/$id/volumes"]
+            editable: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "disks": {
-                      "sda": 5567,
-                      "sdb": 5568
-                      }
+                    "devices": {
+                      "sda": {"disk_id": 123456},
+                      "sdb": {"volume_id": 120394}
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/rescue
@@ -1181,7 +1205,7 @@ endpoints:
           python: |
             volumes = client.linode.get_volumes()
       POST:
-        oauth: volume:create
+        oauth: volumes:create
         description: >
           Create a new Block Storage Volume
         params:
@@ -1219,7 +1243,7 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{
                   "label": "a_fancy_new_volume",
-                  "datacenter": "newark",
+                  "region": "us-east-1a",
                   "size": "100"
                 }'
                 https://$api_root/$version/volumes
@@ -1257,7 +1281,7 @@ endpoints:
             v = linode.Volume(client, 123)
             v.delete()
       POST:
-        oauth: volume:create
+        oauth: volumes:create
         description: >
           Create a new Block Storage Volume
         params:
@@ -1295,21 +1319,49 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{
                   "label": "a_fancy_new_volume",
-                  "datacenter": "newark",
+                  "region": "us-east-1a",
                   "size": "100"
                 }'
                 https://$api_root/$version/volumes
           python: |
             import linode
-            TODO 
+            TODO
+  /linode/volumes/$id/clone:
+    group: Volumes
+    type: resource
+    authenticated: true
+    description: >
+      Clone a Block Storage Volume.
+    methods:
+      POST:
+        oauth: volumes:create
+        description: >
+          Clone a volume
+        params:
+          label:
+            description: >
+              A unique label to identify your new clone volume.
+            type: String
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                  "label": "Clone Label"
+                }' \
+                https://$api_root/$version/linode/volumes/$volume_id/clone
+          python: |
+            import linode
+            TODO
   /linode/volumes/$id/attach:
     group: Volumes
     authenticated: true
+    description: >
+      Attach a Block Storage Volume to a Linode.
     methods:
       POST:
-        oauth: volume:modify
+        oauth: volumes:modify
         description: >
-          Attach a Block Storage Volume to a Linode
+          Attach a Block Storage Volume to a Linode.
         params:
           linode_id:
             description: >
@@ -1338,11 +1390,13 @@ endpoints:
     group: Volumes
     type: resource
     authenticated: true
+    description: >
+      Detach a Block Storage Volume from a Linode.
     methods:
       POST:
         oauth: volumes:modify,linodes:modify
         description: >
-          Detach a volume from a Linode
+          Detach a Block Storage Volume from a Linode.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
