@@ -28,6 +28,10 @@ schema:
     subtype: Status
     value: active
     description: The status of the client application.
+  public:
+    type: Boolean
+    value: false
+    description: If this client is public.  Public clients use the implicit OAuth flow.
 enums:
   Status:
     active: The client application is active and accepting OAuth logins.

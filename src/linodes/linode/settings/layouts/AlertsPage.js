@@ -28,8 +28,8 @@ export class AlertsPage extends Component {
       alerts: props.linode.alerts || {
         cpu: 0,
         io: 0,
-        transfer_in: 0,
-        transfer_out: 0,
+        network_in: 0,
+        network_out: 0,
         transfer_quota: 0,
       },
     };
@@ -88,7 +88,7 @@ export class AlertsPage extends Component {
   }
 
   render() {
-    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
+    const { cpu, io, network_in, network_out, transfer_quota } = this.state.alerts;
     const { loading, errors } = this.state;
     const alerts = [
       {
@@ -100,11 +100,11 @@ export class AlertsPage extends Component {
         text: 'average disk IOPS over 2 hours',
       },
       {
-        name: 'Incoming Traffic', key: 'transfer_in', value: transfer_in,
+        name: 'Incoming Traffic', key: 'network_in', value: network_in,
         label: 'Mbit/s', text: 'average incoming traffic over a 2 hour period',
       },
       {
-        name: 'Outbound Traffic', key: 'transfer_out', value: transfer_out,
+        name: 'Outbound Traffic', key: 'network_out', value: network_out,
         label: 'Mbit/s', text: 'average outbound traffic over a 2 hour period',
       },
       {

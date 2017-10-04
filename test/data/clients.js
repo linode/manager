@@ -4,7 +4,7 @@ export const apiTestClient = {
   id: '1',
   redirect_uri: 'http://localhost:3000/oauth/callback',
   secret: '<REDACTED>',
-  thumbnail_url: '/account/clients/1/thumbnail',
+  thumbnail_url: '/account/oauth-clients/1/thumbnail',
 };
 
 export const testClient = {
