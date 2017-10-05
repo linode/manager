@@ -1,6 +1,6 @@
 import { resetEventsPoll } from '~/actions/events';
 import { API_ROOT } from '~/constants';
-import * as rawFetch from '~/fetch';
+import { rawFetch } from '~/fetch';
 import * as session from '~/session';
 
 
@@ -34,7 +34,7 @@ function gatherOptions(token, method, body, headers) {
   return options;
 }
 
-export function partialFetch(method = 'GET') {
+function partialFetch(method = 'GET') {
   return function (url, body, headers = {}) {
     return async function (dispatch, getState) {
       const state = getState();
@@ -48,9 +48,9 @@ export function partialFetch(method = 'GET') {
       }
 
       return new Promise((accept, _reject) => {
-        const reject = (response) => _reject({ response, request: { path, options }  });
-        
-        rawFetch.rawFetch(path, options).then(async (response) => {
+        const reject = (response) => _reject({ response, request: { path, options } });
+
+        rawFetch(path, options).then(async (response) => {
           const { status, headers } = response;
           const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
           if (status >= 400 || inMaintenanceMode) {
@@ -77,10 +77,8 @@ export const fetch = {
 };
 
 function partialFetchFile(method) {
-  return (url, attachment, type = 'image/png') => {
-    console.log(fetch[method]);
-    return fetch[method](url, attachment, { 'Content-Type': type });
-  }
+  return (url, attachment, type = 'image/png') =>
+    (dispatch) => dispatch(fetch[method](url, attachment, { 'Content-Type': type }));
 }
 
 export const fetchFile = {

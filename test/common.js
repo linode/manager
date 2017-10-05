@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import * as fetch from '~/api/fetch';
+import { fetch } from '~/api/fetch';
 
 import { state } from '@/data';
 
@@ -89,6 +89,7 @@ export async function expectRequest(fn, path, expectedRequestData = {}, response
   let checkedRequestData = false;
 
   const { method = 'get' } = expectedRequestData;
+  // eslint-disable-next-line no-param-reassign
   delete expectedRequestData.method;
 
   try {
@@ -96,8 +97,7 @@ export async function expectRequest(fn, path, expectedRequestData = {}, response
 
     if (!fetchStub) {
       // eslint-disable-next-line no-param-reassign
-      console.log(method);
-      fetchStub = sandbox.stub(fetch.fetch, method.toLowerCase()).returns({
+      fetchStub = sandbox.stub(fetch, method.toLowerCase()).returns({
         json: () => response,
       });
     }

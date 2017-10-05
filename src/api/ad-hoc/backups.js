@@ -25,8 +25,9 @@ export function takeBackup(id, label) {
 }
 
 export function restoreBackup(linodeId, targetLinode, backupId, overwrite = false) {
-  return fetch.post(`/linode/instances/${linodeId}/backups/${backupId}/restore`, {
-    overwrite,
-    linode_id: targetLinode,
-  });
+  return (dispatch) =>
+    dispatch(fetch.post(`/linode/instances/${linodeId}/backups/${backupId}/restore`, {
+      overwrite,
+      linode_id: targetLinode,
+    }));
 }

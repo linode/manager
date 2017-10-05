@@ -58,11 +58,12 @@ export function rebuildLinode(id, config = null) {
 }
 
 export function lishToken(linodeId) {
-  return fetch.post(`/linode/instances/${linodeId}/lish_token`);
+  return (dispatch) => dispatch(fetch.post(`/linode/instances/${linodeId}/lish_token`));
 }
 
 export function resetPassword(linodeId, diskId, password) {
-  return fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/password`, { password });
+  return (dispatch) =>
+    dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/password`, { password }));
 }
 
 export function resizeLinodeDisk(linodeId, diskId, size) {
@@ -75,7 +76,7 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
 }
 
 export function resizeLinode(linodeId, type) {
-  return fetch.post(`/linode/instances/${linodeId}/resize`, { type });
+  return (dispatch) => dispatch(fetch.post(`/linode/instances/${linodeId}/resize`, { type }));
 }
 
 export function linodeBackups(linodeId) {

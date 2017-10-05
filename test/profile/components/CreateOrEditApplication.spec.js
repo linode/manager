@@ -3,17 +3,14 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { CreateOrEditApplication } from '~/profile/components';
 
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '@/common';
-import { state } from '@/data';
 
 
 describe('profile/components/CreateOrEditApplication', () => {

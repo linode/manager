@@ -3,7 +3,8 @@ import { fetch } from '../fetch';
 
 
 export function updateConfigSSL(data, nodebalancerId, configId) {
-  return fetch.post(`/nodebalancers/${nodebalancerId}/configs/${configId}/ssl`, data);
+  return (dispatch) =>
+    dispatch(fetch.post(`/nodebalancers/${nodebalancerId}/configs/${configId}/ssl`, data));
 }
 
 export function nodebalancerStats(nodebalancerId) {

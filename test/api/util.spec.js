@@ -63,7 +63,7 @@ describe('api/util', async () => {
   it('provides a header structure utility function', function () {
     const emptyHeader = createHeaderFilter({});
 
-    expectObjectDeepEquals(emptyHeader['X-Filter'], {})
+    expectObjectDeepEquals(emptyHeader['X-Filter'], {});
   });
 
   it('provides createHeaderFilter which assigns an object to X-Filter', function () {

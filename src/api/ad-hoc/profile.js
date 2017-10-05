@@ -3,7 +3,7 @@ import { fetch } from '../fetch';
 
 
 export function setPassword(password, expires) {
-  return fetch.post('/profile/password', { password, expires });
+  return (dispatch) => dispatch(fetch.post('/profile/password', { password, expires }));
 }
 
 export function toggleTFA(enable) {
