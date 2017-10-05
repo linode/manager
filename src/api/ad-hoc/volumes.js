@@ -1,4 +1,4 @@
-import { actions } from '../configs/volumes';
+import { actions } from '../generic/volumes';
 import { fetch } from '../fetch';
 
 

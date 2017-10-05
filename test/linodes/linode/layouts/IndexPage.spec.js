@@ -39,7 +39,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     await fn2(_dispatch, () => state);
 
     fn2 = _dispatch.firstCall.args[0];
-    await expectRequest(fn2, '/linode/instances/1241/configs/?page=1', { method: 'GET' }, {
+    await expectRequest(fn2, '/linode/instances/1241/generic/?page=1', { method: 'GET' }, {
       configs: [],
     });
   });

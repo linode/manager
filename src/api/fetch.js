@@ -1,37 +1,81 @@
-import { fetch as genericFetch } from '~/fetch';
+import { resetEventsPoll } from '~/actions/events';
+import { API_ROOT } from '~/constants';
+import rawFetch from '~/fetch';
+import * as session from '~/session';
 
 
-// Helper function when making calls outside of the ability of the above thunks.
-function _fetch(method, stringifyBody = true) {
-  return (url, body, headers = {}) =>
-    async (dispatch, getState) => {
+function gatherOptions(token, method, body, headers) {
+  const options = {
+    method,
+    mode: 'cors',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      ...headers,
+    },
+  };
+
+  if (options.body instanceof FormData) {
+    delete options.headers['Content-Type'];
+  }
+
+  if (options.headers['X-Filter']) {
+    options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);
+  }
+
+  return options;
+}
+
+export function partialFetch(method = 'GET', stringifyBody = true) {
+  return function (url, body, headers = {}) {
+    return async function (dispatch, getState) {
       const state = getState();
       const { token } = state.authentication;
 
-      const result = await genericFetch(token, url, {
-        method,
-        headers,
-        body: stringifyBody ? JSON.stringify(body) : body,
-      });
+      const encodedBody = stringifyBody ? JSON.stringify(body) : body;
+      const options = gatherOptions(token, method, encodedBody, headers);
 
-      return await result.json();
+      const path = API_ROOT + url;
+
+      if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
+        dispatch(resetEventsPoll());
+      }
+
+      return new Promise((accept, reject) => {
+        rawFetch(path, options).then(async (response) => {
+          const { status, headers } = response;
+          const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
+          if (status >= 400 || inMaintenanceMode) {
+            if (status === 401 || inMaintenanceMode) {
+              dispatch(session.expireAndReAuth);
+            }
+
+            reject(response);
+          } else {
+            const json = await response.json();
+            accept(json);
+          }
+        }, reject);
+      });
     };
+  };
 }
 
 export const fetch = {
-  post: _fetch('POST'),
-  put: _fetch('PUT'),
-  get: _fetch('GET'),
-  delete: _fetch('DELETE'),
+  post: partialFetch('POST'),
+  put: partialFetch('PUT'),
+  get: partialFetch('GET'),
+  delete: partialFetch('DELETE'),
 };
 
-function _fetchFile(method) {
-  const _fetchPartial = _fetch(method, false);
+function partialFetchFile(method) {
+  const partialFetchPartial = partialFetch(method, false);
   return (url, attachment, type = 'image/png') =>
-    _fetchPartial(url, attachment, { 'Content-Type': type });
+    partialFetchPartial(url, attachment, { 'Content-Type': type });
 }
 
 export const fetchFile = {
-  post: _fetchFile('POST'),
-  put: _fetchFile('PUT'),
+  post: partialFetchFile('POST'),
+  put: partialFetchFile('PUT'),
 };

@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 
 import { generateDefaultStateFull } from '~/api/internal';
-import { config as linodeConfig } from '~/api/configs/linodes';
+import { config as linodeConfig } from '~/api/generic/linodes';
 import {
   getObjectByLabelLazily,
   Error404,

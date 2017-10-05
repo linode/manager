@@ -7,7 +7,7 @@ import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
-import { actions } from '~/api/configs/linodes';
+import { actions } from '~/api/generic/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import Polling from '~/api/polling';
 import { createHeaderFilter } from '~/api/util';

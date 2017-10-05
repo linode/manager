@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { actions } from '../configs/linodes';
+import { actions } from '../generic/linodes';
 import { fetch } from '../fetch';
 import { createHeaderFilter } from '../util';
 
@@ -10,7 +10,7 @@ export function ipv4s(region) {
     const ips = await dispatch(fetch.get(
       '/networking/ipv4',
       undefined,
-      createHeaderFilter({ region }).headers));
+      createHeaderFilter({ region })));
 
     // We'll save all IPs at once at the end of organizing them.
     const _ipsByLinode = {};

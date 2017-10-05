@@ -43,7 +43,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/generic/${id}`, {
         method: 'PUT',
         body: {
           check_timeout: 30,
@@ -89,14 +89,14 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn1]) => expectRequest(fn1, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}/ssl`, {
+      ([fn1]) => expectRequest(fn1, `/nodebalancers/${genericNodeBalancer.id}/generic/${id}/ssl`, {
         method: 'POST',
         body: {
           ssl_cert: 'Some ssl cert',
           ssl_key: 'Some ssl key',
         },
       }),
-      ([fn2]) => expectRequest(fn2, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
+      ([fn2]) => expectRequest(fn2, `/nodebalancers/${genericNodeBalancer.id}/generic/${id}`, {
         method: 'PUT',
         body: {
           check_timeout: 30,

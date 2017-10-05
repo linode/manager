@@ -1,6 +1,6 @@
 import { linodeBackups } from './linodes';
 import { fetch } from '../fetch';
-import { actions } from '../configs/linodes';
+import { actions } from '../generic/linodes';
 
 
 function makeBackupAction(action) {

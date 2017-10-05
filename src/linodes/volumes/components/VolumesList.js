@@ -13,7 +13,7 @@ import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cel
 
 import { default as toggleSelected } from '~/actions/select';
 import { volumes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
+import { actions as linodeActions } from '~/api/generic/linodes';
 import { detachVolume } from '~/api/ad-hoc/volumes';
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';

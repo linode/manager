@@ -1,4 +1,4 @@
-import { actions } from '../configs/profile';
+import { actions } from '../generic/profile';
 import { fetch } from '../fetch';
 
 

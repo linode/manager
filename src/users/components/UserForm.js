@@ -9,7 +9,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { users } from '~/api';
 import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { actions } from '~/api/configs/users';
+import { actions } from '~/api/generic/users';
 import { FormSummary } from 'linode-components/forms';
 
 

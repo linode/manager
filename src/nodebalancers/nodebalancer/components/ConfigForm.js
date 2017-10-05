@@ -88,7 +88,7 @@ export default class ConfigForm extends Component {
     calls.push(() => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
 
     if (!config.id) {
-      calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
+      calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/generic/${id}`));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, calls));

@@ -249,7 +249,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/generic/12345`, {
         method: 'PUT',
         body: {
           label: 'new label',

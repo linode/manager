@@ -1,20 +1,20 @@
-import * as distributionsModule from './configs/distributions';
-import * as regionsModule from './configs/regions';
-import * as typesModule from './configs/types';
-import * as linodesModule from './configs/linodes';
-import * as volumesModule from './configs/volumes';
-import * as stackscriptsModule from './configs/stackscripts';
-import * as kernelsModule from './configs/kernels';
-import * as domainsModule from './configs/domains';
-import * as nodebalancersModule from './configs/nodebalancers';
-import * as profileModule from './configs/profile';
-import * as accountModule from './configs/account';
-import * as eventsModule from './configs/events';
-import * as tokensModule from './configs/tokens';
-import * as clientsModule from './configs/clients';
-import * as usersModule from './configs/users';
-import * as ticketsModule from './configs/tickets';
-import * as appsModule from './configs/apps';
+import * as distributionsModule from './generic/distributions';
+import * as regionsModule from './generic/regions';
+import * as typesModule from './generic/types';
+import * as linodesModule from './generic/linodes';
+import * as volumesModule from './generic/volumes';
+import * as stackscriptsModule from './generic/stackscripts';
+import * as kernelsModule from './generic/kernels';
+import * as domainsModule from './generic/domains';
+import * as nodebalancersModule from './generic/nodebalancers';
+import * as profileModule from './generic/profile';
+import * as accountModule from './generic/account';
+import * as eventsModule from './generic/events';
+import * as tokensModule from './generic/tokens';
+import * as clientsModule from './generic/clients';
+import * as usersModule from './generic/users';
+import * as ticketsModule from './generic/tickets';
+import * as appsModule from './generic/apps';
 
 import apiActionReducerGenerator from './external';
 

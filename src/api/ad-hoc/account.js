@@ -1,5 +1,5 @@
 import { fetch } from '../fetch';
-import { actions } from '../configs/account';
+import { actions } from '../generic/account';
 
 export function transferPool() {
   return async (dispatch) => {

@@ -1,5 +1,4 @@
-import { fetch } from '~/fetch';
-
+import { fetch } from './fetch';
 import {
   ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
 } from './internal';
@@ -16,13 +15,13 @@ export function fullyLoadedObject(object) {
  * the particular object we are talking about.
  *
  * Examples:
- *   getStateOfSpecificResource(require('~/api/configs/linodes').config.configs,
+ *   getStateOfSpecificResource(require('~/api/generic/linodes').config.generic,
  *                              store.api, ['1234'])
- *   returns store.api.linodes.linodes['1234']._configs.configs
+ *   returns store.api.linodes.linodes['1234']._generic.generic
  *
- *   getStateOfSpecificResource(require('~/api/configs/linodes').config.configs,
+ *   getStateOfSpecificResource(require('~/api/generic/linodes').config.generic,
  *                              store.api, ['1234', '1'])
- *   returns store.api.linodes.linodes['1234']._configs.configs['1']
+ *   returns store.api.linodes.linodes['1234']._generic.generic['1']
  */
 export function getStateOfSpecificResource(config, state, ids) {
   const path = [];
@@ -96,11 +95,9 @@ export function filterResources(config, resources, resourceFilter) {
 }
 
 function genThunkOne(config, actions) {
-  return (ids = [], options = {}) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const fetchOptions = { method: 'GET', ...options };
-    const response = await fetch(token, config.endpoint(...ids), fetchOptions);
-    const resource = await response.json();
+  return (ids = [], headers = {}) => async (dispatch) => {
+    const endpoint = config.endpoint(...ids);
+    const resource = await dispatch(fetch.get(endpoint, undefined, headers));
     dispatch(actions.one(resource, ...ids));
     return resource;
   };
@@ -113,14 +110,11 @@ function genThunkOne(config, actions) {
  */
 function genThunkPage(config, actions) {
   function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
-                     fetchBeganAt, options) {
+                     fetchBeganAt, headers) {
     return async (dispatch, getState) => {
-      const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
-      const fetchOptions = { method: 'GET', ...config.options, ...options };
-      const response = await fetch(token, endpoint, fetchOptions);
-      const resources = await response.json();
+      const resources = await dispatch(fetch.get(endpoint, undefined, headers));
       resources[config.plural] = resources.data || [];
 
       const now = fetchBeganAt || new Date();
@@ -236,24 +230,18 @@ function genThunkAll(config, actions, fetchPage) {
 }
 
 function genThunkDelete(config, actions) {
-  return (...ids) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids),
-      { method: 'DELETE' });
-    const json = await response.json();
+  return (...ids) => async (dispatch) => {
+    const endpoint = config.endpoint(...ids);
+    const json = await dispatch(fetch.delete(endpoint));
     dispatch(actions.delete(...ids));
     return json;
   };
 }
 
 function genThunkPut(config, actions) {
-  return (resource, ...ids) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids), {
-      method: 'PUT',
-      body: JSON.stringify(resource),
-    });
-    const json = await response.json();
+  return (resource, ...ids) => async (dispatch) => {
+    const endpoint = config.endpoint(...ids);
+    const json = await dispatch(fetch.put(endpoint, resource));
     dispatch(actions.one(json, ...ids));
     return json;
   };
@@ -261,13 +249,9 @@ function genThunkPut(config, actions) {
 
 function genThunkPost(config, actions) {
   return (resource, ...ids) => {
-    return async (dispatch, getState) => {
-      const { token } = getState().authentication;
-      const response = await fetch(token, config.endpoint(...ids, ''), {
-        method: 'POST',
-        body: JSON.stringify(resource),
-      });
-      const json = await response.json();
+    return async (dispatch) => {
+      const endpoint = config.endpoint(...ids, '');
+      const json = await dispatch(fetch.post(endpoint, resource));
       dispatch(actions.one(json, ...ids));
       return json;
     };

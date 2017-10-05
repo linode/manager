@@ -1,4 +1,4 @@
-import { actions } from '../configs/events';
+import { actions } from '../generic/events';
 import { fetch } from '../fetch';
 
 
