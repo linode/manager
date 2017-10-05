@@ -28,7 +28,9 @@ export default function Introduction() {
         <p>
           All APIv4 endpoints are located at:
         </p>
-        <Code example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
+        <section>
+          <Code example={`${API_ROOT}/${API_VERSION}/*`} name="bash" noclipboard />
+        </section>
         <div className="alert alert-warning" role="alert">
           We will regularly be making releases, some of which will contain breaking
           changes. <Link to={`/${API_VERSION}/changelogs`}>
