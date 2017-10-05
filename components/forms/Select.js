@@ -10,6 +10,13 @@ import { EmitEvent, SELECT_CHANGE } from '../utils';
 VendorSelect.displayName = 'VendorSelect';
 
 export default class Select extends Component {
+  componentWillMount() {
+    const [value, modified] = this.realValue();
+    if (modified) {
+      this.onChange({ target: { value } });
+    }
+  }
+
   onChange = (e) => {
     const rawValue = e.target ? e.target.value : e.value;
     const value = this.props.multi ? e.map(o => o.target ? o.target.value : o.value) : rawValue;
@@ -26,10 +33,10 @@ export default class Select extends Component {
     this.props.onChange({ target: { value, name: this.props.name } });
   }
 
-  render() {
-    const { options } = this.props;
-
+  realValue() {
+    const { options, value } = this.props;
     let defaultValue;
+
     // Putting a try-catch in here as a final resort because this commit is a patch and may not
     // have been thoroughly tested.
     try {
@@ -45,23 +52,25 @@ export default class Select extends Component {
       // Nothing to do.
     }
 
-    let value = this.props.value;
-
     // Update the form so the value with the default value so the state is no longer unset
     // -- unless the default is itself unset (in which case we enter an infinite loop).
     const unset = (v) => [undefined, null].indexOf(v) !== -1;
     if (unset(value) && !unset(defaultValue)) {
-      value = defaultValue;
-      // setState will not be allowed during render, so take it out of the current function.
-      setTimeout(() => this.onChange({ target: { value } }), 0);
+      return [defaultValue, true];
     }
+
+    return [value, false];
+  }
+
+  render() {
+    const [value] = this.realValue();
 
     return (
       <span className={this.props.className}>
         {/* This allows us to use this in tests like a normal input. */}
         <input
           type="hidden"
-          id={this.props.id}
+          id={this.props.id || this.props.name}
           name={this.props.name}
           onChange={this.onChange}
           value={value}

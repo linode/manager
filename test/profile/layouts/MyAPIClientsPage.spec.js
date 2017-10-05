@@ -34,7 +34,7 @@ describe('profile/layouts/MyAPIClientsPage', () => {
     expect(client.length).to.equal(Object.keys(clients.clients).length);
     const firstClient = client.at(0);
     expect(firstClient.find('td img').props().src)
-      .to.equal(`${API_ROOT}/account/clients/1/thumbnail`);
+      .to.equal(`${API_ROOT}/account/oauth-clients/1/thumbnail`);
     expect(firstClient.find('td').at(2).text())
       .to.equal('My client');
     expect(firstClient.find('td').at(3).text())
@@ -54,7 +54,7 @@ describe('profile/layouts/MyAPIClientsPage', () => {
 
     dispatch.reset();
 
-    const actions = page.find('Dropdown').at(0).props().groups[0].elements;
+    const actions = page.find('MassEditControl').find('Dropdown').props().groups[0].elements;
     actions.find(a => a && a.name === 'Delete').action();
 
     const modal = mount(dispatch.firstCall.args[0].body);
@@ -62,6 +62,6 @@ describe('profile/layouts/MyAPIClientsPage', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/clients/1', { method: 'DELETE' });
+    await expectRequest(fn, '/account/oauth-clients/1', { method: 'DELETE' });
   });
 });

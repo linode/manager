@@ -58,8 +58,8 @@ export function getVolumesRedirectUrl() {
   return '/volumes';
 }
 
-export function getVolumeRedirectUrl(entity) {
-  return `${getVolumesRedirectUrl()}/${entity.id}`;
+export function getVolumeRedirectUrl() {
+  return getVolumesRedirectUrl();
 }
 
 const EventTypeMap = {
@@ -90,12 +90,6 @@ const EventTypeMap = {
     presentTenseAction: 'Rebooting',
     pastTenseAction: 'rebooted',
     linodeStatus: 'running',
-    redirectUrl: getLinodeRedirectUrl,
-  },
-  linode_snapshot: {
-    presentTenseAction: 'Taking a snapshot of',
-    pastTenseAction: 'taken',
-    pastTensePrefix: 'Snapshot of',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_addip: {
@@ -161,6 +155,12 @@ const EventTypeMap = {
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
 
+  linode_snapshot: {
+    presentTenseAction: 'Taking a snapshot of',
+    pastTenseAction: 'taken',
+    pastTensePrefix: 'Snapshot of',
+    redirectUrl: getLinodeBackupRedirectUrl,
+  },
   backups_enable: {
     presentTenseAction: 'Enabling backups service',
     pastTenseAction: 'backups enabled',
@@ -271,24 +271,29 @@ const EventTypeMap = {
     redirectUrl: getTicketRedirectUrl,
   },
 
-  blockstorage_create: {
+  volume_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getVolumeRedirectUrl,
   },
-  blockstorage_attach: {
+  volume_attach: {
     presentTenseAction: 'Attaching',
     pastTenseAction: 'attached',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
-  blockstorage_delete: {
+  volume_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: getVolumesRedirectUrl,
   },
-  blockstorage_detach: {
+  volume_detach: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
+    redirectUrl: getVolumeRedirectUrl,
+  },
+  volume_resize: {
+    presentTenseAction: 'Resizing',
+    pastTenseAction: 'resized',
     redirectUrl: getVolumeRedirectUrl,
   },
 };

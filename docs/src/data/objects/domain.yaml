@@ -5,107 +5,107 @@ description: >
   Domains
 schema:
   id:
-    _type: Integer
-    _value: 357
+    type: Integer
+    value: 357
   domain:
-    _editable: true
-    _type: String
-    _value: example.com
-    _filterable: true
-    _description: >
+    editable: true
+    type: String
+    value: example.com
+    filterable: true
+    description: >
       The Domain name.
   soa_email:
-    _editable: true
-    _type: String
-    _value: admin@example.com
-    _optional: true
-    _description: >
+    editable: true
+    type: String
+    value: admin@example.com
+    optional: true
+    description: >
       Start of Authority (SOA) contact email.
   description:
-    _editable: true
-    _type: String
-    _value: Example Description
-    _optional: true
-    _description: >
+    editable: true
+    type: String
+    value: Example Description
+    optional: true
+    description: >
       A description to keep track of this Domain.
   refresh_sec:
-    _editable: true
-    _type: Integer
-    _value: 14400
-    _optional: true
-    _description: >
+    editable: true
+    type: Integer
+    value: 14400
+    optional: true
+    description: >
       Time interval before the Domain should be refreshed, in seconds.
   retry_sec:
-    _editable: true
-    _type: Integer
-    _value: 3600
-    _optional: true
-    _description: >
+    editable: true
+    type: Integer
+    value: 3600
+    optional: true
+    description: >
       Time interval that should elapse before a failed refresh should
       be retried, in seconds.
   expire_sec:
-    _editable: true
-    _type: Integer
-    _value: 604800
-    _optional: true
-    _description: >
+    editable: true
+    type: Integer
+    value: 604800
+    optional: true
+    description: >
       Time value that specifies the upper limit on
       the time interval that can elapse before the Domain is no
       longer authoritative, in seconds.
   ttl_sec:
-    _editable: true
-    _type: Integer
-    _value: 3600
-    _optional: true
-    _description: >
+    editable: true
+    type: Integer
+    value: 3600
+    optional: true
+    description: >
       Time interval that the resource record may be cached before
         it should be discarded, in seconds.
   status:
-    _editable: true
-    _type: Enum
-    _subtype: status
-    _value: active
-    _optional: true
-    _description: >
+    editable: true
+    type: Enum
+    subtype: status
+    value: active
+    optional: true
+    description: >
       The status of the Domain it can be disabled, active, or edit_mode.
   master_ips:
-    _editable: true
-    _type: string
-    _isArray: true
-    _subtype: string
-    _filterable: true
-    _value:
+    editable: true
+    type: string
+    isArray: true
+    subtype: string
+    filterable: true
+    value: 
       - "127.0.0.1"
       - "255.255.255.1"
       - "123.123.123.7"
-    _optional: true
-    _description: >
+    optional: true
+    description: >
       An array of IP addresses for this Domain.
   axfr_ips:
-    _editable: true
-    _type: string
-    _isArray: true
-    _subtype: string
-    _value:
+    editable: true
+    type: string
+    isArray: true
+    subtype: string
+    value: 
       - "44.55.66.77"
-    _optional: true
-    _description: >
+    optional: true
+    description: >
       An array of IP addresses allowed to AXFR the entire Domain.
   group:
-    _editable: true
-    _value: Example Display Group
-    _type: String
-    _optional: true
-    _filterable: true
-    _description: >
+    editable: true
+    value: Example Display Group
+    type: String
+    optional: true
+    filterable: true
+    description: >
       A display group to keep track of this Domain.
   type:
-    _editable: false
-    _value: master
-    _type: Enum
-    _filterable: true
-    _subtype: domain_type
-    _description: Controls the Domain type.
+    editable: false
+    value: master
+    type: Enum
+    filterable: true
+    subtype: domain_type
+    description: Controls the Domain type.
 enums:
   status:
     active : Turn on serving of this Domain.

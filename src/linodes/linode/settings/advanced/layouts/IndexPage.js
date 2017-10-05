@@ -13,6 +13,7 @@ export class IndexPage extends Component {
 
     const requests = [
       linodes.disks.all([id]),
+      linodes.volumes.all([id]),
       kernels.page(0),
     ];
 

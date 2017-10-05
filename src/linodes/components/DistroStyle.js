@@ -19,7 +19,7 @@ export default function DistroStyle(props) {
         alt={linode.distribution.vendor}
         width="15" height="15"
       />
-      <span>{linode.distribution.vendor}</span>
+      <span>{linode.distribution.label}</span>
     </span>
   );
 }

@@ -5,7 +5,7 @@ import {
 
 export const config = genConfig({
   plural: 'clients',
-  endpoint: id => `/account/clients/${id}`,
+  endpoint: id => `/account/oauth-clients/${id}`,
   supports: [ONE, MANY, POST, PUT, DELETE],
 });
 

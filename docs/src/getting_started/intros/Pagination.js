@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { API_VERSION } from '~/constants';
 
-import Example from '~/components/Example';
+import { Code } from 'linode-components/formats';
 
 
 export default function Pagination() {
@@ -13,12 +13,12 @@ export default function Pagination() {
         <p>
           Resource lists are always paginated. The response will look similar to this:
         </p>
-        <Example
+        <Code
           example={`{
-  "linodes": [ ... ],
+  "data": [ ... ],
   "page": 1,
-  "total_pages": 10,
-  "total_results": 248
+  "pages": 10,
+  "results": 248
 }`}
           name="json"
           noclipboard
@@ -37,13 +37,14 @@ export default function Pagination() {
           There are generally two kinds of resources you can retrieve with a GET
           request: objects and lists. An object is a representation of an individual resource.
           It has an ID that can be used to retrieve it directly. A list is a collection of objects.
-          You'll generally find lists of objects at <code>/:type/:subtype</code>,
-          and an individual object at <code>/:type/:subtype/:id</code>.
+          You'll generally find lists of objects at <code>/$type/$subtype</code>,
+          and an individual object at <code>/$type/$subtype/$id</code>.
         </p>
         <p>
           Some objects contain lists of other objects, which you can get at
-          <code>/:type/:subtype/:id/:subtype</code>.
-          You can get an individual sub-object at <code>/:type/:subtype/:id/:subtype/:id</code>.
+          <code>/$type/$subtype/$id/$subtype</code>.
+          You can get an individual sub-object
+          at <code>/$type/$subtype/$id/$subtype/$id</code>.
         </p>
         <p>
           For example, you can list your Linodes at <code>/linode/instances</code>, and get

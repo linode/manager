@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -18,6 +17,18 @@ import NotificationList from './NotificationList';
 
 const MIN_SHOWN_EVENTS = 10;
 const POLLING_ID = 'events';
+const FIVE_MINUTES = 5 * 60 * 1000;
+
+let filterOptions = { seen: false };
+const fetchAllEvents = () => (dispatch) =>
+  dispatch(events.all([], null, createHeaderFilter(filterOptions)));
+
+const POLLING = Polling({
+  apiRequestFn: fetchAllEvents,
+  timeout: EVENT_POLLING_DELAY,
+  backoff: true,
+  maxBackoffTimeout: FIVE_MINUTES,
+});
 
 export class Notifications extends Component {
   constructor(props) {
@@ -25,14 +36,6 @@ export class Notifications extends Component {
 
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowMore = this.onClickShowMore.bind(this);
-
-    this._filterOptions = { seen: false };
-    this._polling = Polling({
-      apiRequestFn: this.fetchAllEvents.bind(this),
-      timeout: EVENT_POLLING_DELAY,
-      backoff: true,
-      maxBackoffTimeout: (5 * 60 * 1000), // 5 minutes
-    });
     this.state = { loadingMore: false };
   }
 
@@ -45,7 +48,7 @@ export class Notifications extends Component {
     }
 
     // begin by fetching all unseen events
-    await dispatch(this.fetchAllEvents(createHeaderFilter({ seen: false })));
+    await dispatch(fetchAllEvents());
 
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
@@ -54,27 +57,32 @@ export class Notifications extends Component {
     }
 
     // initialize polling for unseen events
-    dispatch(this._polling.start(POLLING_ID));
+    dispatch(POLLING.start(POLLING_ID));
   }
 
   componentWillUpdate(nextProps) {
-    const { events } = nextProps;
+    const { dispatch } = this.props;
+    const { events, eventTriggeringRequests } = nextProps;
 
+    const actionExpectingEvent = eventTriggeringRequests > this.props.eventTriggeringRequests;
     // total results is relative to the last filtered request
     // TODO: review api structure to account for totalResults seen all time vs in last request
-    if (events.totalResults > 0) {
+    if (events.totalResults > 0 || actionExpectingEvent) {
       const latest = events.events[events.ids[0]];
-      this._filterOptions = _.merge(
-        {},
-        this._filterOptions,
-        greaterThanDatetimeFilter('created', latest.created)
-      );
-      this._polling.reset();
+      filterOptions = {
+        ...filterOptions,
+        ...greaterThanDatetimeFilter('created', latest.created),
+      };
+      POLLING.reset();
+    }
+
+    if (actionExpectingEvent) {
+      dispatch(POLLING.start(POLLING_ID));
     }
   }
 
   componentWillUnmount() {
-    this._polling.stop(POLLING_ID);
+    POLLING.stop(POLLING_ID);
   }
 
   async onClickItem(event) {
@@ -85,31 +93,22 @@ export class Notifications extends Component {
     }
   }
 
-  async onClickShowMore(e) {
+  onClickShowMore(e) {
     e.stopPropagation(); // don't let the toggle close the list
     const { events } = this.props;
 
     const currentOldestCreatedDate = events.events[events.ids[events.ids.length - 1]].created;
     this.setState({ loading: true });
-    await this.fetchEventsPage(
-      createHeaderFilter(
-        _.merge(
-          { seen: true },
-          lessThanDatetimeFilter('created', currentOldestCreatedDate)
-        )
-      )
-    );
+    this.fetchEventsPage(createHeaderFilter({
+      seen: true,
+      ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
+    }));
     this.setState({ loading: false });
   }
 
-  async fetchEventsPage(options = null) {
+  fetchEventsPage(options = null) {
     const { dispatch } = this.props;
-    await dispatch(events.page(0, [], null, true, null, options));
-  }
-
-  fetchAllEvents() {
-    return async (dispatch) =>
-      await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
+    return dispatch(events.page(0, [], null, true, null, options));
   }
 
   render() {
@@ -131,11 +130,13 @@ Notifications.propTypes = {
   dispatch: PropTypes.func.isRequired,
   events: PropTypes.object,
   notifications: PropTypes.object.isRequired,
+  eventTriggeringRequests: PropTypes.number.isRequired,
 };
 
 
 function select(state) {
   return {
+    eventTriggeringRequests: state.events.eventTriggeringRequests,
     notifications: state.notifications,
     events: state.api.events,
   };

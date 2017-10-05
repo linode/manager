@@ -4,6 +4,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.14.2] 2017-10-04
+### Changes
+- Changes to work with the latest API changes
+- (Docs) Updated to 0.13.2
+
+## [0.14.1] 2017-09-28
+### Fixed
+- Oauth Client default image renders properly
+- IP Transfer didn't send region correctly
+- Rebooting did not work when multiple configs exist
+- Reset RDNS did not show the default value after reset
+- Reset RDNS should not be offered when default is in use
+- (Docs) Updated to 0.13.1
+
+## [0.14.0] 2017-09-26
+### Added
+- Transfer pool is shown (#2508)
+- (Docs) Add a sidebar (#2494)
+- Add Volume resize (#2500)
+- Option to clone with label and backup (#2482)
+### Changed
+- Use Yarn rather than NPM (#2520)
+- More graph options (#2501)
+- show number of duplicates when deleting (#2484)
+- set an initial disk array for rescue configs (#2491)
+- (Docs) Bumped to 0.13.0
+- (Docs) removed extraneous "\_" from properties
+- (Docs) Show more of example up front
+- (Docs) Smarter height on collapsed examples
+### Fixed
+- More fixes for API changes (#2549)
+- Fix IP setRDNS creating duplicate (#2542)
+- Fix disk delete (#2543)
+- Fixes for docs and manager regressions (#2526)
+- fix default root device in new linode configs (#2523)
+- handle xen disk labels correctly (xvda-xvdh) (#2510)
+- Render no graphs message correctly (#2518)
+- CNAME hostname placeholder should not be a FQDN (#2514)
+- Give tooltip a max width (#2513)
+- Restart polling on actions
+
+
+## [0.13.1] 2017-09-18
+### Fixed
+- API breaking changes #2547
+
+## [0.13.0] 2017-08-29
+### Added
+- set a label when taking a snapshot #2366
+- handle oauth token errors #2323
+- enable private IP button separate from public #2370
+- dns zone status on dns zone list page #2368
+- plan visible on Linode list #2364
+- add create Linode from backup #2380
+- display all block storage volumes #2406
+- Lish settings page #2365
+- indeterminate checkbox state #2407
+- support for implicit OAuth flow #2402
+- attachments shown in tickets #2428
+- input auto focus when enabling TFA #2419
+- advanced filter for all lists #2416
+- volumes shown on Linode advanced page #2408
+- support for volumes in configs #2440
+### Changed
+- Linode, domain, NodeBalancer, and user creates are modals #2352
+- use Bearer token type in OAuth flow #2280
+- PAT creation defaults to no access #2421
+- creating a ticket can now reference volumes and "Other" #2415
+### Fixed
+- stop long notifications from overflowing #2381
+- stop secondary tables from overflowing #2379
+- prevent public stackscripts from appearing to be privatizable #2378
+- stop notifications in header from breaking on small screens #2363
+- show correct links in CONTRIBUTING.md #2409
+- show public ipv4 in SSH line in Access section #2429
+- notification hover and dropdown fixes for Firefox #2426
+- error formatting when snapshots fail #2425
+- misc fixes for support tickets #2437
+- crashing when no distro is selected in add disk modal #2438
+
 ## [0.12.7] 2017-08-08
 ### Added
 - volume event formatters #2403

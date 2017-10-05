@@ -1,0 +1,45 @@
+.Backup {
+    &--disabled {
+        cursor: not-allowed;
+    }
+
+    a:hover,
+    a:focus {
+        text-decoration: none;
+    }
+
+    &-block {
+        border: $border;
+        color: $black;
+        height: 140px;
+
+        &--clickable:hover {
+            @extend .selected;
+        }
+
+        button {
+            margin-top: 5px;
+        }
+    }
+
+    &-title {
+        text-align: center;
+        background-color: $light-gray;
+        border-bottom: $border;
+        height: 30px;
+        padding: 3px 0px 3px 0px;
+    }
+
+    &-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 5px;
+        height: calc(100% - 30px);
+    }
+
+    .FormSummary .alert {
+        margin-top: 5px;
+    }
+}

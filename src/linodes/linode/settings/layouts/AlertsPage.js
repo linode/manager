@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  CheckboxInputCombo,
+  Input,
   Form,
   FormGroup,
   FormGroupError,
@@ -26,11 +26,11 @@ export class AlertsPage extends Component {
       loading: false,
       errors: {},
       alerts: props.linode.alerts || {
-        cpu: { threshold: 0, enabled: false },
-        io: { threshold: 0, enabled: false },
-        transfer_in: { threshold: 0, enabled: false },
-        transfer_out: { threshold: 0, enabled: false },
-        transfer_quota: { threshold: 0, enabled: false },
+        cpu: 0,
+        io: 0,
+        network_in: 0,
+        network_out: 0,
+        transfer_quota: 0,
       },
     };
   }
@@ -50,18 +50,15 @@ export class AlertsPage extends Component {
 
   renderAlertRow = ({ key, name, value, label, text }) => {
     const { errors } = this.state;
-    const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
-      this.setState({ alerts: {
-        ...this.state.alerts,
-        [key]: { ...value, threshold: int(e.target.value) } },
+      this.setState({
+        alerts: {
+          ...this.state.alerts,
+          [key]: int(e.target.value),
+        },
       });
-    const enabledChange = e =>
-      this.setState({ alerts: {
-        ...this.state.alerts,
-        [key]: { ...value, enabled: e.target.checked } },
-      });
+
     const crumbs = `alerts.${key}`;
 
     return (
@@ -70,14 +67,11 @@ export class AlertsPage extends Component {
         <div className="col-sm-10">
           <div className="clearfix">
             <div className="float-sm-left">
-              <CheckboxInputCombo
-                checkboxLabel="Enable"
-                checkboxChecked={enabled}
-                checkboxOnChange={enabledChange}
-                inputType="number"
-                inputValue={threshold}
-                inputOnChange={thresholdChange}
-                inputLabel={label}
+              <Input
+                type="number"
+                value={value}
+                onChange={thresholdChange}
+                label={label}
               />
             </div>
             <FormGroupError
@@ -94,7 +88,7 @@ export class AlertsPage extends Component {
   }
 
   render() {
-    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
+    const { cpu, io, network_in, network_out, transfer_quota } = this.state.alerts;
     const { loading, errors } = this.state;
     const alerts = [
       {
@@ -106,11 +100,11 @@ export class AlertsPage extends Component {
         text: 'average disk IOPS over 2 hours',
       },
       {
-        name: 'Incoming Traffic', key: 'transfer_in', value: transfer_in,
+        name: 'Incoming Traffic', key: 'network_in', value: network_in,
         label: 'Mbit/s', text: 'average incoming traffic over a 2 hour period',
       },
       {
-        name: 'Outbound Traffic', key: 'transfer_out', value: transfer_out,
+        name: 'Outbound Traffic', key: 'network_out', value: network_out,
         label: 'Mbit/s', text: 'average outbound traffic over a 2 hour period',
       },
       {

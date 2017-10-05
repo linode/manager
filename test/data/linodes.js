@@ -89,39 +89,28 @@ function createTestLinode(id) {
   return {
     id,
     group: 'Test Group',
+    hypervisor: 'kvm',
     label: `test-linode-${id}`,
     ipv4: [ipv4.address, secondIPv4.address],
     ipv6: ipv6.address,
     created: '2016-07-06T16:47:27',
     type: testType,
     status: 'running',
-    region: apiTestRegion,
+    region: apiTestRegion.id,
+    memory: 2048,
+    disk: 20480,
+    vcpus: 2,
     distribution: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
       label: 'Ubuntu 15.10',
     },
     alerts: {
-      cpu: {
-        enabled: true,
-        threshold: 90,
-      },
-      io: {
-        enabled: true,
-        threshold: 5000,
-      },
-      transfer_in: {
-        enabled: true,
-        threshold: 5,
-      },
-      transfer_out: {
-        enabled: true,
-        threshold: 5,
-      },
-      transfer_quota: {
-        enabled: true,
-        threshold: 80,
-      },
+      cpu: 90,
+      io: 5000,
+      network_in: 5,
+      network_out: 5,
+      tranfer_quota: 80,
     },
     backups: {
       enabled: true,
@@ -156,7 +145,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       },
       snapshot: {
         current: {
@@ -182,11 +171,28 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          region: apiTestRegion,
+          region: apiTestRegion.id,
         },
         in_progress: null,
       },
       weekly: [],
+    },
+    _volumes: {
+      totalPages: 1,
+      pagesFetched: [0],
+      totalResults: 1,
+      volumes: {
+        38: {
+          id: 38,
+          label: 'test',
+          linode_id: null,
+          status: 'active',
+          created: '2017-08-08T13:55:16',
+          region: 'us-east-1a',
+          updated: '2017-08-08T04:00:00',
+          size: 20,
+        },
+      },
     },
     _disks: {
       totalPages: 1,
@@ -224,10 +230,8 @@ function createTestLinode(id) {
           initrd: '',
           virt_mode: 'paravirt',
           run_level: 'default',
-          ram_limit: 1024,
+          memory_limit: 1024,
           root_device: '/dev/sda',
-          root_device_ro: false,
-          devtmpfs_automount: false,
           devices: {
             sda: { disk_id: 12345 },
             sdb: { disk_id: 12346 },
@@ -239,10 +243,11 @@ function createTestLinode(id) {
             sdh: null,
           },
           helpers: {
-            disable_updatedb: true,
-            enable_distro_helper: true,
-            enable_modules_dep_helper: true,
-            enable_network_helper: true,
+            updatedb_disabled: true,
+            distro: true,
+            modules_dep: true,
+            network: true,
+            devtmpfs_automount: false,
           },
           created: '2015-09-29 11:21:38 +0000',
           updated: '2015-09-29 11:21:38 +0000',
@@ -314,7 +319,7 @@ export const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       }, {
         finished: '2017-01-31T07:30:03',
         label: null,
@@ -338,7 +343,7 @@ export const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        region: apiTestRegion,
+        region: apiTestRegion.id,
       },
     ],
   },
@@ -477,6 +482,19 @@ export const testLinode1246 = {
   distribution: null,
 };
 
+const rdnsIP1247 = { ...createTestIPv4(1247), rdns: 'host.rdns.tld' };
+export const testLinode1247 = {
+  ...createTestLinode(1247),
+  ipv4: [rdnsIP1247.address],
+  _ips: {
+    [rdnsIP1247.address]: rdnsIP1247,
+    ipv4: {
+      public: [rdnsIP1247],
+      private: [],
+    },
+  },
+};
+
 export const linodes = [
   testLinode,
   testLinode1233,
@@ -491,4 +509,5 @@ export const linodes = [
   testLinode1243,
   testLinode1245,
   testLinode1246,
+  testLinode1247,
 ].reduce((object, linode) => ({ ...object, [linode.id]: linode }), {});

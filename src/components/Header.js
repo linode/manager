@@ -126,7 +126,7 @@ export default class Header extends Component {
         <this.renderLink to="/support" label="Support" />
         {!username ? null : (
           <div
-            className="MainHeader-session float-sm-right"
+            className="MainHeader-session"
             onClick={this.toggleSession}
           >
             <span className="MainHeader-username">
@@ -143,7 +143,7 @@ export default class Header extends Component {
         )}
         {!username ? null : (
           <div
-            className="MainHeader-notifications float-sm-right"
+            className="MainHeader-notifications"
             onClick={this.toggleNotifications}
           >
             <i className="fa fa-bell-o" />

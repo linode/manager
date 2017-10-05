@@ -13,6 +13,10 @@ import {
   Errors,
 } from './intros';
 
+import {
+  Changelogs,
+} from './changelogs';
+
 import { default as GuidesIndex } from './guides/GuidesIndex';
 
 
@@ -27,6 +31,7 @@ export default function GettingStartedRoutes(guides, crumbs) {
       <Route path="filtering" component={Filtering} />
       <Route path="errors" component={Errors} />
       <Route path="guides" component={GuidesIndex} crumbs={crumbs} />
+      <Route path="changelogs" components={Changelogs} />
       {guides.map(function (guide) {
         return (<Route path={guide.routePath} component={guide.component} crumbs={guide.crumbs} />);
       })}

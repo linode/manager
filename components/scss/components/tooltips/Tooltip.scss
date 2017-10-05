@@ -3,6 +3,9 @@
     border-radius: 0 !important;
     padding: 6px 8px !important;
     pointer-events: auto !important;
+    max-width: 300px;
+    overflow-x: hidden;
+    word-wrap: break-word;
 
     &:after {
         border-top-color: $black !important;

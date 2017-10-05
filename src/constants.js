@@ -21,17 +21,18 @@ export const LinodeStates = {
     'deleting',
     'rebuilding',
     'restoring',
+    'cloning',
   ],
 };
 
-export const regionMap = {
+export const REGION_MAP = {
   'North America': ['us-east-1a', 'us-south-1a', 'us-west-1a', 'us-southeast-1a'],
   Europe: ['eu-central-1a', 'eu-west-1a'],
   Asia: ['ap-northeast-1a', 'ap-south-1a', 'ap-northeast-1b'],
 };
 
 // Still necessary for older DNS lookups.
-export const DATACENTERS = {
+export const ZONES = {
   'us-east-1a': 'newark',
   'us-south-1a': 'dallas',
   'us-west-1a': 'fremont',
@@ -43,11 +44,10 @@ export const DATACENTERS = {
   'ap-south-1a': 'singapore',
 };
 
-export const UNAVAILABLE_DATACENTERS = ['ap-northeast-1a'];
+export const UNAVAILABLE_ZONES = ['ap-northeast-1a'];
 
 export const LinodeStatesReadable = {
   shutting_down: 'Powering Off',
-  contact_support: 'Error',
   offline: 'Offline',
   running: 'Running',
   booting: 'Powering On',
@@ -215,8 +215,10 @@ export const NODEBALANCER_CONFIG_CHECKS = new Map([
   ['http_body', 'HTTP Body Regex'],
 ]);
 
-export const AVAILABLE_DISK_SLOTS =
-  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+export const AVAILABLE_DISK_SLOTS = {
+  kvm: [...'abcdefgh'].map(letter => `sd${letter}`),
+  xen: [...'abcdefgh'].map(letter => `xvd${letter}`),
+};
 
 export const IPV4_DNS_RESOLVERS = [
   '66.228.42.5',

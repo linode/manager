@@ -8,8 +8,8 @@ export function eventAction(action) {
     if (action === 'seen') {
       // Mark all events seen. Using many to avoid a dispatch per event.
       const page = {
-        total_pages: state.api.events.totalPages,
-        total_results: state.api.events.totalResults,
+        pages: state.api.events.totalPages,
+        results: state.api.events.totalResults,
         events: Object.values(state.api.events.events).reduce(
           (unseen, e) => e.seen ? unseen : [...unseen, { ...e, seen: true }], []) || [],
       };

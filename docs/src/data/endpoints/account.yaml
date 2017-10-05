@@ -5,107 +5,8 @@ description: >
   Account endpoints provide a means of manipulating your account, including users,
   OAuth Clients and Tokens, and Events.
 endpoints:
-  /account/tokens:
-    _group: Tokens
-    description: >
-      Manage OAuth Tokens created for your user.
-    methods:
-      GET:
-        response: oauthtoken
-        paginationKey: tokens
-        oauth: tokens:view
-        description: >
-          Get a list of all OAuth Tokens active for your user.  This includes first-party (manager) tokens,
-          third-party OAuth Tokens, and Personal Access Tokens.
-        examples:
-          curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/tokens
-          python: |
-            my_tokens = client.account.get_tokens()
-      POST:
-        oauth: tokens:create
-        dangerous: true
-        description: >
-          Creates a new Personal Access Token for your user with the given scopes and expiry.  This token
-          can subsequently be used to access the API and make any requests it has OAuth Scopes for.
-        params:
-          label:
-            type: String
-            value: my-token
-            optional: true
-            description: >
-              The label for this Personal Access Token.  For your reference only.
-          expiry:
-            type: Datetime
-            value: 2017-12-31 01:00:00
-            optional: true
-            description: >
-              If provided, when this Personal Access Token will expire.  If omitted, the resulting
-              token will be valid until it is revoked.
-          scopes:
-            type: String
-            value: linodes:view
-            optional: true
-            description: >
-              The OAuth Scopes this token will be created with.  If omitted, the resulting token
-              will have all OAuth Scopes.
-        examples:
-          curl: |
-            curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
-                -X POST -d '{
-                  "scopes": "linodes:view;domains:view"
-                }' \
-                https://$api_root/$version/account/tokens
-          python: |
-            from linode import OAuthScopes
-            new_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])
-  /account/tokens/:id:
-    _group: Tokens
-    type: resource
-    description: >
-      Manage individual OAuth Tokens for your user.
-    methods:
-      GET:
-        response: oauthtoken
-        oauth: tokens:view
-        description: >
-          Get a single token.
-        examples:
-          curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/tokens/123
-          python: |
-            my_token = linode.OAuthToken(client, 123)
-      PUT:
-        oauth: tokens:modify
-        description: >
-          Edit a token's label.
-        examples:
-          curl: |
-            curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
-                -X PUT -d '{
-                  "label": "test-new-label"
-                }' \
-                https://$api_root/$version/account/tokens/123
-          python: |
-            my_token.label = 'test-new-label'
-            my_token.save()
-      DELETE:
-        oauth: tokens:delete
-        description: >
-          Expire an OAuth Token for your user.
-        examples:
-          curl: |
-            curl -H "Authorization: token $TOKEN" \
-                -X DELETE \
-                https://$api_root/$version/account/tokens/123
-          python: |
-            my_token.delete()
   /account/settings:
-    _group: Settings
+    group: Settings
     type: resource
     description: >
       Manage your account settings.
@@ -125,7 +26,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                   "address_1": "123 Main St.",
                   "address_2": "Suite 101",
@@ -151,8 +52,8 @@ endpoints:
             my_settings.country = 'US'
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
-  /account/clients:
-    _group: Clients
+  /account/oauth-clients:
+    group: OAuth Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -162,11 +63,13 @@ endpoints:
         paginationKey: clients
         oauth: clients:view
         description: >
-          Returns a list of <a href="#object-client">clients</a>.
+          Returns a list of OAuth clients for your user. If you are an admin
+          user, you will see all OAuth clients associated with all users on your
+          account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/clients
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/oauth-clients
           python: |
             my_clients = client.account.get_oauth_clients()
       POST:
@@ -182,48 +85,54 @@ endpoints:
             description: A URL to redirect to after the OAuth flow has completed.
             type: String
             limit: "1-512 characters"
+          public:
+            description: Whether this client is intended will use the implicit
+              OAuth flow because it cannot safely store the client_secrete.
+              An example of this would be a Single-Page Application (SPA) for
+              the Web.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
-                https://$api_root/$version/account/clients
+                https://$api_root/$version/account/oauth-clients
           python: |
             new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
-  /account/clients/:id:
-    _group: Clients
+  /account/oauth-clients/$id:
+    group: OAuth Clients
     type: resource
     authenticated: true
     description: >
       Manage a particular OAuth client application your account may access.
+      Admin users can manage any OAuth client associated with this account.
     methods:
       GET:
         response: client
         oauth: clients:view
         description: >
-          Returns information about this <a href="#object-client">OAuth client</a>.
+          Returns information about this OAuth client.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client = linode.OAuthClient(client, 123)
       PUT:
         oauth: clients:modify
         description: >
-          Edits this <a href="#object-client">OAuth client</a>.
+          Edits this OAuth client.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
                 }' \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client.name = 'Updated app name'
             my_client.save()
@@ -232,16 +141,18 @@ endpoints:
         dangerous: true
         description: >
           Delete this OAuth application. This action cannot be undone.
+          Once an OAuth Application is deleted, all associated OAuth
+          tokens that were generated on its behalf are expired as well.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
-  /account/clients/:id/reset_secret:
-    _group: Clients
+  /account/oauth-clients/$id/reset_secret:
+    group: OAuth Clients
     type: Action
     authenticated: true
     description: >
@@ -253,14 +164,14 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
-                https://$api_root/$version/account/clients/$client_id/reset_secret
+                https://$api_root/$version/account/oauth-clients/$client_id/reset_secret
           python: |
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
-  /account/clients/:id/thumbnail:
-    _group: Clients
+  /account/oauth-clients/$id/thumbnail:
+    group: OAuth Clients
     type: Action
     authenticated: true
     description: >
@@ -272,8 +183,8 @@ endpoints:
           Retrieve the OAuth application's current thumbnail image.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id/thumbnail
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/oauth-clients/$client_id/thumbnail
           python: |
             img = my_client.get_thumbnail()
 
@@ -287,10 +198,10 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: image/png" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT \
                 --data-binary "@/path/to/image"
-                https://$api_root/$version/account/clients/$client_id/thumbnail
+                https://$api_root/$version/account/oauth-clients/$client_id/thumbnail
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.set_thumbnail('/path/to/image')
@@ -300,9 +211,9 @@ endpoints:
                 img = f.read()
             my_client.set_thumbnail(img)
   /account/users:
-    _group: Users
+    group: Users
     description: >
-      Returns a list of <a href="#object-user">User objects</a> associated with your account.
+      Returns a list of User objects associated with your account.
     methods:
       GET:
         response: user
@@ -327,12 +238,12 @@ endpoints:
             description: The user's password.
           restricted:
             optinoal: true
-            type: Bool
+            type: Boolean
             description: If false, this user has access to the entire account.  Defaults to true.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "username": "testguy",
                     "password": "hunter7",
@@ -341,8 +252,8 @@ endpoints:
                 https://$api_root/$version/account/users
           python: |
             # currently unimplemented
-  /account/users/:username:
-    _group: Users
+  /account/users/$username:
+    group: Users
     type: resource
     description: >
       Returns information about a specific user associated with your account.
@@ -360,7 +271,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "email": "newemail@linode.com"
                   }
@@ -375,14 +286,14 @@ endpoints:
           Deletes a user.  May not delete the last unrestricted user on the account.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/users/testguy
           python: |
             my_user = linode.User(client, 'username')
             my_user.delete()
-  /account/users/:username/password:
-    _group: Users
+  /account/users/$username/password:
+    group: Users
     type: Action
     description: >
       Update a user's password
@@ -395,7 +306,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "password": "hunter7",
                 }' \
@@ -403,8 +314,8 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.change_password('hunter7')
-  /account/users/:username/grants:
-    _group: Users
+  /account/users/$username/grants:
+    group: Users
     type: resource
     description: >
       Manage grants for restricted users.  It is an error to call this endpoint for unrestrcited users.  Only unrestricted
@@ -415,7 +326,7 @@ endpoints:
         description: Get grants for a restricted user.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/account/users/testguy/grants
           python: |
             my_user = linode.User(client, 'username')
@@ -428,7 +339,7 @@ endpoints:
           Update grants for a restricted user.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "global": {
                         "add_linodes": true
@@ -441,8 +352,8 @@ endpoints:
 
             my_user.grants.global.add_linodes = True
             my_user.grants.save()
-  /account/clients:
-    _group: Clients
+  /account/oauth-clients:
+    group: OAuth Clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -452,11 +363,11 @@ endpoints:
         paginationKey: clients
         oauth: clients:view
         description: >
-          Returns a list of <a href="#object-client">clients</a>.
+          Returns a list of clients.
         examples:
           curl: |
-            curl -H "Authorization; token $TOKEN" \
-                https://$api_root/$version/account/clients
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/oauth-clients
       POST:
         oauth: clients:create
         description: >
@@ -470,17 +381,23 @@ endpoints:
             description: A URL to redirect to after the OAuth flow has completed.
             type: string
             limit: "1-512 characters"
+          public:
+            optional: true
+            description: >
+              If true, this client uses the implicit OAuth flow and does not
+              use a client secret.
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "name": "Example app",
                     "redirect_uri": "https://oauthreturn.example.org/",
                 }' \
-                https://$api_root/$version/account/clients
-  /account/clients/:id:
-    _group: Clients
+                https://$api_root/$version/account/oauth-clients
+  /account/oauth-clients/$id:
+    group: OAuth Clients
     type: resource
     authenticated: true
     description: >
@@ -490,24 +407,24 @@ endpoints:
         response: client
         oauth: clients:view
         description: >
-          Returns information about this <a href="#object-client">OAuth client</a>.
+          Returns information about this OAuth client.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
-                https://$api_root/$version/account/clients/$client_id
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/oauth-clients/$client_id
       PUT:
         oauth: clients:modify
         description: >
-          Edits this <a href="#object-client">OAuth client</a>.
+          Edits this OAuth client.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X PUT -d '{
                     "name": "Updated app name",
                     "redirect_uri": "https://newredirect.example.org/",
                 }' \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
       DELETE:
         oauth: clients:delete
         dangerous: true
@@ -515,11 +432,11 @@ endpoints:
           Delete this OAuth application. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
-                https://$api_root/$version/account/clients/$client_id
+                https://$api_root/$version/account/oauth-clients/$client_id
   /account/events:
-    _group: Events
+    group: Events
     authenticated: true
     description: >
       View the collection of events.
@@ -528,14 +445,14 @@ endpoints:
         response: event
         paginationKey: events
         description: >
-          Returns a list of <a href="#object-event">events</a>.
+          Returns a list of events.
         examples:
           curl: |
             curl https://$api_root/$version/account/events
           python: |
             my_events = client.account.get_events()
-  /account/events/:id:
-    _group: Events
+  /account/events/$id:
+    group: Events
     type: resource
     authenticated: true
     description: >
@@ -544,38 +461,119 @@ endpoints:
       GET:
         response: events
         description: >
-          Returns information about this <a href="#object-event">
-          event</a>.
+          Returns information about this event.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123
           python: |
             event = linode.Event(client, 123)
-  /account/events/:id/seen:
-    _group: Events
+  /account/events/$id/seen:
+    group: Events
     type: resource
-    resource: events
     authenticated: true
     methods:
       POST:
         description: >
-          Marks all <a href="#object-event">events</a> up to and including :id as seen.
+          Marks all events up to and including :id as seen.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/seen
           python: |
             client.mark_lask_seen_event(event)
-  /account/events/:id/read:
-    _group: Events
+  /account/events/$id/read:
+    group: Events
     type: resource
-    resource: events
     authenticated: true
     methods:
       POST:
         description: >
-          Updates specific <a href="#object-event">event</a> to designate that it has been read.
+          Updates specific event to designate that it has been read.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/read
           python: |
             event.mark_read()
+  /account/invoices:
+    group: Invoices
+    authenticated: true
+    description: >
+      View the collection of invoices.
+    methods:
+      GET:
+        response: invoice
+        paginationKey: invoice
+        description: >
+          Returns a list of invoices.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices
+  /account/invoices/:id:
+    group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      Returns information about a specific invoice.
+    methods:
+      GET:
+        response: invoices
+        description: >
+          Returns information about this invoice.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123
+  /account/invoices/:id/items:
+    group: Invoices
+    type: resource
+    authenticated: true
+    description: >
+      View the items associated with a specific invoice.
+    methods:
+      GET:
+        response: invoice_items
+        description: >
+          Returns a collection of invoice items.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/invoices/123/items
+  /account/payments:
+    group: Payments
+    type: Resource
+    authenticated: true
+    description: >
+      View the collection of payments.
+    methods:
+      GET:
+        response: payment
+        description: >
+          Returns information about this payment.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/payments
+      POST:
+        oauth: account:modify
+        response: payment
+        description: >
+          Make a payment.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "usd": 100,
+                }' \
+                https://$api_root/$version/account/payments
+  /account/payments/:id:
+    group: Payments
+    type: Resource
+    authenticated: true
+    description: >
+      Returns information about a specific payment.
+    methods:
+      GET:
+        response: payment
+        description: >
+          Returns information about this payment.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/payments/123
+

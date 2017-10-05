@@ -24,6 +24,7 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
+        transfer={{ used: 1, quota: 5 }}
         linodes={linodes.linodes}
       />
     );
@@ -37,11 +38,12 @@ describe('linodes/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1234: true }}
+        transfer={{ used: 1, quota: 5 }}
         linodes={linodes.linodes}
       />);
 
     dispatch.reset();
-    const { groups } = page.find('Dropdown').first().props();
+    const { groups } = page.find('MassEditControl').find('Dropdown').props();
     groups[2].elements[0].action();
     const modal = mount(dispatch.firstCall.args[0].body);
 

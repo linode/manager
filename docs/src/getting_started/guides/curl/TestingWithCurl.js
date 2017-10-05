@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { Code } from 'linode-components/formats';
 
 import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,
 } from '~/constants';
-import Example from '~/components/Example';
 
 
 export default function Introduction(props) {
@@ -25,9 +26,7 @@ export default function Introduction(props) {
       </header>
       <section>
         <p>
-          <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">
-            cURL
-          </a>
+          <ExternalLink to="http://curl.haxx.se/">cURL</ExternalLink>
           &nbsp;is a simple and popular command line tool that allows you to perform various kinds
           of HTTP requests. It may already be installed on your system - run
           <code>curl --version</code> in your shell to check. Once you've confirmed that
@@ -48,27 +47,27 @@ export default function Introduction(props) {
             list supported distributions
           </Link>:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "distributions": [
       {
-          "created": "2014-10-24T15:48:04",
+          "updated": "2014-10-24T15:48:04",
           "id": "linode/ubuntu14.10",
           "label": "Ubuntu 14.10",
-          "minimum_storage_size": 650,
+          "disk_minimum": 650,
           "recommended": true,
           "vendor": "Ubuntu",
-          "x64": true
+          "architecture": "x86_64"
       }
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 2,
-  "total_results": 34
+  "pages": 2,
+  "results": 34
 }`}
           name="json"
           noclipboard
@@ -86,29 +85,25 @@ export default function Introduction(props) {
         </p>
         <p>
           To generate a personal access token,&nbsp;
-          <a
-            href={`${MANAGER_ROOT}/profile/integrations/tokens`}
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-          >
+          <ExternalLink to={`${MANAGER_ROOT}/profile/integrations/tokens`}>
             visit the new manager
-          </a>
+          </ExternalLink>
           . These tokens can be used to make authenticated API requests with your Linode
           account and can have full access to all OAuth scopes. You’ll only see the full
           OAuth token once, so be sure to write it down somewhere. If you’re in the shell,
           running something like this might work well:
         </p>
-        <Example example='token="that token"' name="bash" />
+        <Code example='token="that token"' name="bash" />
       </section>
       <section>
         <h2>Authentication Header</h2>
         <p>
           Now you can make requests with curl using your access token by adding
-          <code>-H "Authorization: token $token"</code>.
+          <code>-H "Authorization: Bearer $token"</code>.
           The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
           requests on the reference page include this header in the curl examples. For example:
         </p>
-        <Example
+        <Code
           example={`curl -H "Authorization: token $token" \\
   ${API_ROOT}/${API_VERSION}/linode/instances`}
           name="bash"
@@ -116,7 +111,7 @@ export default function Introduction(props) {
         <p>
           This will give you a response like this:
         </p>
-        <Example
+        <Code
           example={`{
   "linodes": [
     {
@@ -141,15 +136,15 @@ export default function Introduction(props) {
        "status": "running",
        "group": "",
        "hypervisor": "kvm",
-       "created": "2016-11-10T19:38:00",
+       "updated": "2016-11-10T19:38:00",
        "distribution": {
-          "minimum_storage_size": 900,
+          "disk_minimum": 900,
           "id": "linode/debian8",
-          "created": "2015-04-27T16:26:41",
+          "updated": "2015-04-27T16:26:41",
           "recommended": true,
           "vendor": "Debian",
           "label": "Debian 8.1",
-          "x64": true
+          "architecture": "x86_64"
        },
        "alerts": {
           "io": {
@@ -177,25 +172,25 @@ export default function Introduction(props) {
           {
              "backups_price": 2.5,
              "label": "Linode 2048",
-             "storage": 24576,
+             "disk": 24576,
              "transfer": 2000,
              "vcpus": 1,
              "id": "g5-standard-1",
-             "hourly_price": 1,
-             "ram": 2048,
-             "monthly_price": 10.0,
-             "mbits_out": 125,
+             "price_hourly": 1,
+             "memory": 2048,
+             "price_monthly": 10.0,
+             "network_out": 125,
              "class": "standard"
           }
        ],
-       "total_transfer": 2000,
+       "transfer_total": 2000,
        "updated": "2016-11-10T19:39:36"
     }
     /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard

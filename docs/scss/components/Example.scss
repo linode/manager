@@ -1,56 +1,42 @@
+.Code {
+    &-clipboardButton {
+        top: 7px;
+    }
+}
+
 .Example {
-    position: relative;
+    &-toggle {
+        cursor: pointer;
+        cursor: hand;
 
-    pre {
-        padding: 0;
+        .fa {
+            margin-left: 10px;
+        }
     }
 
-    &-clipboardButton {
-        background: transparent;
-        border: transparent;
+    &-example {
+        height: 200px;
+        overflow-y: hidden;
+        border: $border;
+        position: relative;
+
+        &--full {
+            height: 100%;
+        }
+
+        .Code {
+            border: 0;
+        }
+    }
+
+    &-toggle {
         position: absolute;
-        top: 7px;
-        right: 4px;
-
-        i {
-            color: $white;
-        }
-
-        &:focus {
-            outline: none;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-}
-
-.Endpoint .Tabs {
-    .TabList {
-        border: 0;
-
-        .Tab {
-            background: #292b2c;
-            border-color: #292b2c;
-            color: white;
-
-            &:not(.ReactTabs__Tab--selected) {
-                background: $white;
-                color: $black;
-                border-color: $black;
-            }
-
-            &:not(:last-of-type) {
-                margin-right: 1px;
-            }
-        }
-    }
-}
-
-.Tabs-container .Example,
-.MethodResponseExample .Example {
-    &-clipboardButton {
-        top: 7px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px 0;
+        background: rgba(0, 0, 0, .2);
+        color: $light-black;
+        text-align: center;
     }
 }

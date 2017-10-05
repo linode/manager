@@ -27,6 +27,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     config: testLinode._configs.configs[12345],
     disks: testLinode._disks.disks,
     kernels: api.kernels,
+    volumes: testLinode._volumes.volumes,
     account: { network_helper: true },
   });
 
@@ -242,8 +243,9 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     const device = page.findWhere(
       o => o.name() === 'Select' && o.props().id === 'root-device-select');
     const { options } = device.props();
-    expect(options.length).to.equal(AVAILABLE_DISK_SLOTS.length);
-    AVAILABLE_DISK_SLOTS.forEach((slot, i) => expect(options[i].value).to.equal(`/dev/${slot}`));
+    expect(options.length).to.equal(AVAILABLE_DISK_SLOTS.kvm.length);
+    const slots = AVAILABLE_DISK_SLOTS.kvm;
+    slots.forEach((slot, i) => expect(options[i].value).to.equal(`/dev/${slot}`));
   });
 
   it('commits changes to the API', async () => {
@@ -267,7 +269,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
         body: {
           label: 'new label',
           comments: 'Test comments',
-          ram_limit: 0,
+          memory_limit: 0,
           run_level: 'default',
           virt_mode: 'paravirt',
           kernel: 'linode/latest_64',
@@ -284,10 +286,10 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           initrd: null,
           root_device: '/dev/sda',
           helpers: {
-            disable_updatedb: true,
-            enable_distro_helper: true,
-            enable_network_helper: true,
-            enable_modules_dep_helper: true,
+            updatedb_disabled: true,
+            distro: true,
+            network: true,
+            modules_dep: true,
           },
         },
       }),

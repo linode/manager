@@ -2,35 +2,27 @@ import React, { Component, PropTypes } from 'react';
 
 
 export default class FormSummary extends Component {
-  componentWillReceiveProps() {
-    clearTimeout(this._successTimeout);
-    this.setState({ renderSuccess: true });
-  }
-
   render() {
-    const { errors, success } = this.props;
+    const { className, errors, success } = this.props;
 
     let content;
     if (errors._ && errors._.length) {
       content = (
         <div className="alert alert-danger">
           {errors._.map(error => {
-            const text = error.hasOwnProperty('reason') ? error.reason : error;
+            const text = error.reason || error;
             return (<div key={text}>{text}</div>);
           })}
         </div>
       );
-    } else if (Object.keys(errors).length === 1) {
-      if (this.state.renderSuccess) {
-        content = success ? <div className="alert alert-success">{success}</div> : '';
-        this._successTimeout = setTimeout(() => this.setState({ renderSuccess: false }), 3000);
-      }
-    } else if (errors._) {
+    } else if (Object.keys(errors).length > 1) {
       content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
+    } else if (errors._) {
+      content = success ? <div className="alert alert-success">{success}</div> : '';
     }
 
     return (
-      <div className="FormSummary">{content}</div>
+      <div className={`FormSummary ${className}`}>{content}</div>
     );
   }
 }
@@ -38,4 +30,9 @@ export default class FormSummary extends Component {
 FormSummary.propTypes = {
   errors: PropTypes.object.isRequired,
   success: PropTypes.string,
+  className: PropTypes.string,
+};
+
+FormSummary.defaultProps = {
+  className: '',
 };

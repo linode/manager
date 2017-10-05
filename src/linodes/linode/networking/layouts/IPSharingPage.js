@@ -45,7 +45,7 @@ export class IPSharingPage extends Component {
     // Although we only explicitly looked up all linodes in the current dc,
     // other linodes may already exist in the state.
     const linodesInRegion = Object.values(linodes).filter(l =>
-      l.region.id === linode.region.id);
+      l.region === linode.region);
 
     this.setState({ linodesInRegion }, () => {
       const checked = {};

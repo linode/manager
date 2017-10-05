@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
-import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -21,10 +20,14 @@ import {
 import { MassEditControl } from 'linode-components/lists/controls';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { nodebalancers as api } from '~/api';
+import { transferPool } from '~/api/account';
 import { transform } from '~/api/util';
+import { confirmThenDelete } from '~/utilities';
+
+import { AddNodeBalancer } from '../components';
+import { TransferPool } from '../../components';
 
 
 const OBJECT_TYPE = 'nodebalancers';
@@ -32,12 +35,11 @@ const OBJECT_TYPE = 'nodebalancers';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
+    await dispatch(transferPool());
   }
 
   constructor(props) {
     super(props);
-
-    this.deleteNodeBalancers = this.deleteNodeBalancers.bind(this);
 
     this.state = { filter: '' };
   }
@@ -49,29 +51,14 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['nodebalancers']));
   }
 
-  deleteNodeBalancers(nodebalancers) {
-    const { dispatch } = this.props;
-    const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
-    const title = 'Delete NodeBalancer(s)';
-
-    dispatch(showModal(title,
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
-
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        onCancel={() => dispatch(hideModal())}
-        items={nodebalancersArr.map(n => n.label)}
-        typeOfItem="NodeBalancers"
-      />
-    ));
-  }
+  deleteNodeBalancers = confirmThenDelete(
+    this.props.dispatch,
+    'NodeBalancer',
+    api.delete,
+    OBJECT_TYPE).bind(this)
 
   render() {
-    const { dispatch, nodebalancers, selectedMap } = this.props;
+    const { dispatch, nodebalancers, selectedMap, transfer } = this.props;
     const { filter } = this.state;
 
     const { sorted } = transform(nodebalancers.nodebalancers, {
@@ -110,12 +97,12 @@ export class IndexPage extends Component {
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
                 tooltipEnabled: true,
               },
-              { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+              { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
               { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',
-                onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
+                onClick: (nodebalancer) => { this.deleteNodeBalancers([nodebalancer]); },
                 text: 'Delete',
               },
             ]}
@@ -131,12 +118,14 @@ export class IndexPage extends Component {
       </List>
     );
 
+    const addNodeBalancer = () => AddNodeBalancer.trigger(dispatch);
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">NodeBalancers</h1>
-            <PrimaryButton to="/nodebalancers/create" className="float-sm-right">
+            <h1 className="float-left">NodeBalancers</h1>
+            <PrimaryButton onClick={addNodeBalancer} className="float-right">
               Add a NodeBalancer
             </PrimaryButton>
           </div>
@@ -145,11 +134,14 @@ export class IndexPage extends Component {
           {Object.values(nodebalancers.nodebalancers).length ? renderNodeBalancers() : (
             <CreateHelper
               label="NodeBalancers"
-              href="/nodebalancers/create"
               linkText="Add a NodeBalancer"
+              onClick={addNodeBalancer}
             />
           )}
         </div>
+        <TransferPool
+          transfer={transfer}
+        />
       </div>
     );
   }
@@ -157,13 +149,17 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
+  transfer: PropTypes.object.isRequired,
   nodebalancers: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
 };
 
 
 function select(state) {
+  const transfer = state.api.account._transferpool;
+
   return {
+    transfer,
     nodebalancers: state.api.nodebalancers,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };

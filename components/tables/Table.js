@@ -43,7 +43,7 @@ export default function Table(props) {
     tableContent = (
       <table id={id} className={`Table ${disableHeader ? 'Table--noHeader' : ''} ${className}`}>
         <thead>
-          <TableHeaderRow columns={columns} />
+          <TableHeaderRow columns={columns} disableHeader={disableHeader} />
         </thead>
         <tbody>
           {renderRowsFn(columns, data, onToggleSelect, selectedMap)}

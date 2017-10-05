@@ -111,7 +111,13 @@ export default class Settings extends Component {
               value={isPublic}
               id="isPublic"
               name="isPublic"
+              disabled={isPublic}
             />
+            <div>
+              <small className="text-muted">
+                Once you've made a StackScript public, you cannot make it private.
+              </small>
+            </div>
           </div>
         </FormGroup>
         <FormGroup>

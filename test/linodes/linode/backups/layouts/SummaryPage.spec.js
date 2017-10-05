@@ -8,7 +8,7 @@ import { TimeDisplay } from '~/components';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
-import { testLinode1235, testLinode1236 } from '@/data/linodes';
+import { testLinode, testLinode1235, testLinode1236 } from '@/data/linodes';
 
 
 describe('linodes/linode/backups/layouts/SummaryPage', () => {
@@ -83,12 +83,30 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
     dispatch.reset();
     page.find('Form').props().onSubmit({ preventDefault() {} });
-
     expect(dispatch.callCount).to.equal(1);
+
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+    modal.find('Form').props().onSubmit();
+    expect(dispatch.callCount).to.equal(1);
+
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' }),
       ([pushResult]) => expectObjectDeepEquals(
         pushResult, push(`/linodes/${testLinode1236.label}/backups/1`)),
     ], 2, [{ id: '1' }]);
+  });
+
+  it('does not show take snapshot button for an auto backup', () => {
+    const page = mount(
+      <SummaryPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+
+    const takeSnapshot = page.find('button[name="takeSnapshot"]');
+    expect(takeSnapshot.length).to.equal(0);
   });
 });

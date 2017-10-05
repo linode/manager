@@ -1,5 +1,9 @@
 .PrimaryButton {
+    background: transparent !important;
+
     .btn {
+        @extend .font-medium;
+
         padding: 10px 15px;
         height: auto;
     }
@@ -8,6 +12,35 @@
         padding-right: 10px;
         position: relative;
         top: 1px;
-        color: inherit;
+    }
+
+    .Dropdown {
+        height: auto;
+
+        &-toggle {
+            padding: 0;
+        }
+    }
+
+    &.btn-primary .Dropdown {
+        background: transparent;
+
+        &-first, &-toggle {
+            @extend .btn-primary;
+
+            .fa {
+                color: $white;
+            }
+
+            &:hover {
+                .fa {
+                    color: $blue;
+                }
+            }
+        }
+
+        &-toggle {
+            margin-left: 1px;
+        }
     }
 }

@@ -15,7 +15,7 @@ describe('fetch', () => {
     mode: 'cors',
     headers: {
       Accept: 'application/json',
-      Authorization: `token ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   };

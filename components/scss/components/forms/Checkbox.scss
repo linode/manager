@@ -1,4 +1,6 @@
 .Checkbox {
+    @include checkbox();
+
     display: inline;
 
     &-label {

@@ -9,16 +9,19 @@ Currently this software is *early-access* and is available at [developers.linode
 
 ## Setup
 
+    brew install yarn
     git clone https://github.com/Linode/manager.git
     cd manager/docs
-    node --version # should be 7.2.x
-    npm install
-    
+    node --version # should be 8.4.0
+    yarn
+    (../components && yarn link)
+    yarn link linode-components
+
 ## Development
 
 Run:
 
-    npm start
+    yarn start
 
 to run the prebuild script and start the development server. Connect to
 [localhost:5000](https://localhost:5000) to try it out. Most of the changes you

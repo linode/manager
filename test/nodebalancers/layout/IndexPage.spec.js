@@ -26,6 +26,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
+        transfer={{ used: 1, quota: 5 }}
         nodebalancers={nodebalancers}
       />
     );
@@ -47,6 +48,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
+        transfer={{ used: 1, quota: 5 }}
         nodebalancers={nodebalancers}
       />
     );
@@ -64,6 +66,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
+        transfer={{ used: 1, quota: 5 }}
         nodebalancers={nodebalancers}
       />
     );

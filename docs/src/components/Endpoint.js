@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
@@ -34,7 +35,7 @@ export default function Endpoint(props) {
             {methods.map(function (method, index) {
               return (
                 <li key={index}>
-                  <a href={`#${method.name}`}>{method.name}</a>
+                  <Link to={`${window.location.pathname}#${method.name}`}>{method.name}</Link>
                 </li>
               );
             })}

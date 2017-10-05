@@ -6,9 +6,69 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.2] 2017-10-04
+### Added
+- Changelog for 2017-10-04
+### Changed
+- Endpoint docs for pricing, disks, config, volume, oauthclient
+### Added
+- documentation for account/credit-card
+- documentation for account/payments
+- documentation for linode/volumes/:id/clone
+- documentation for profile/apps
+
+
+## [0.13.1] 2017-09-28
+### Fixed
+- Request parameters should render required/optional labels
+
+## [0.13.0] 2017-09-26
+### Added
+- Add a sidebar (#2494)
+### Changed
+- Use Yarn rather than NPM (#2520)
+- removed extraneous "\_" from properties
+- Show more of example up front
+- Smarter height on collapsed examples
+
+# [0.12.6] 2017-09-20
+### Added
+- Changelog page
+
+# [0.12.5] 2017-09-19
+### Added
+- changes to document api release
+
+# [0.12.4] 2017-09-18
+### Fixed
+- regression after API breaking changes #2548
+
+# [0.12.3] 2017-09-18
+### Added
+- documentation for API breaking changes #2547
+
+# [0.12.2] 2017-08-30
+### Fixed
+- remember scroll history and # jump links work #2486
+
+# [0.12.1] 2017-08-30
+### Fixed
+- missing docs GET responses in many pages #2486
+
+# [0.12.0] 2017-08-29
+### Added
+- documentation for mutate #2471
+- documentation for stats #2472
+- more debugging on yaml failure #2371
+### Changed
+- removed old/unused anchor tags #2333
+- updated python docs for region and type #2362
+### Fixed
+- breakage on long endpoints on mobile #2420
+
 ## [0.11.4] 2017-08-14
 ### Fixed
-- volume documentation together and at the correct endpoints 
+- volume documentation together and at the correct endpoints
 
 ## [0.11.3] 2017-08-08
 ### Changed

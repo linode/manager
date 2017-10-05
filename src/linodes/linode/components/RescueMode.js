@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -10,7 +11,7 @@ import {
 
 import { rescueLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import DiskSelect from './DiskSelect';
+import DeviceSelect from './DeviceSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
 
@@ -19,33 +20,36 @@ export default class RescueMode extends Component {
     super(props);
 
     this.state = {
-      disks: {},
+      devices: {},
       errors: {},
       loading: false,
     };
+  }
 
-    AVAILABLE_DISK_SLOTS.forEach(slot => {
-      this.state.disks[slot];
-    });
+  componentWillMount() {
+    // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
+    const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
+    const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
+    const someDisks = sortedDisks.slice(0, slots.length - 0);
+    const devices = someDisks.reduce(function (devices, disk, index) {
+      return { ...devices, [slots[index]]: JSON.stringify({ disk_id: disk.id }) };
+    }, {});
+    this.setState({ devices });
   }
 
   onSubmit = () => {
     const { dispatch, linode } = this.props;
-    const { disks } = this.state;
-
-    const disksWithDiskIdOnly = {};
-    Object.keys(disks).forEach(function (key) {
-      disksWithDiskIdOnly[key] = disks[key] ? disks[key].disk_id : null;
-    });
+    const { devices } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => rescueLinode(linode.id, disksWithDiskIdOnly),
+      () => rescueLinode(linode.id, DeviceSelect.format(devices)),
     ]));
   }
 
   render() {
-    const { linode: { _disks: { disks } } } = this.props;
-    const { errors, loading, disks: configuredDisks } = this.state;
+    const { linode: { _disks: { disks }, _volumes: { volumes } } } = this.props;
+    const { errors, loading, devices } = this.state;
+    const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
 
     return (
       <Card header={<CardHeader title="Rescue mode" />} className="full-height">
@@ -54,21 +58,22 @@ export default class RescueMode extends Component {
           title="Rescue mode"
           className="RescueMode-form"
         >
-          {AVAILABLE_DISK_SLOTS.map((slot, i) => slot === 'sdh' ? null : (
-            <DiskSelect
+          {slots.map((slot, i) => i === (slots.length - 1) ? null : (
+            <DeviceSelect
               key={i}
               disks={disks}
-              configuredDisks={configuredDisks}
+              volumes={volumes}
+              configuredDevices={devices}
               slot={slot}
               labelClassName="col-sm-3"
               fieldClassName="col-sm-9"
-              onChange={({ target: { value, name } }) =>
-                this.setState({ disks: { ...this.state.disks, [name]: value } })}
+              onChange={({ target: { value } }) =>
+                this.setState((state) => ({ devices: { ...state.devices, [slot]: value } }))}
               errors={errors}
             />
           ))}
           <FormGroup className="row">
-            <label className="col-sm-3 row-label">/dev/sdh</label>
+            <label className="col-sm-3 row-label">/dev/{slots[slots.length - 1]}</label>
             <div className="col-sm-9">Finnix Media</div>
           </FormGroup>
           <FormGroup className="row">

@@ -14,6 +14,7 @@ export default function LinkCell(props) {
     idKey = 'id',
     textKey = 'label',
     textFn,
+    subtitleFn,
     tooltipEnabled = false,
   } = column;
 
@@ -60,6 +61,7 @@ export default function LinkCell(props) {
         {children}
       </Link>
       {tooltipComponent}
+      {subtitleFn ? <div><small>{subtitleFn(record)}</small></div> : null}
     </TableCell>
   );
 }
@@ -74,6 +76,7 @@ LinkCell.propTypes = {
     textKey: PropTypes.string,
     // TODO: consider generalizing textFn for formatting
     textFn: PropTypes.func,
+    subtitleFn: PropTypes.func,
   }).isRequired,
   record: PropTypes.object.isRequired,
 };

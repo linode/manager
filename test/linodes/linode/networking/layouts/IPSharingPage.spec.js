@@ -67,20 +67,10 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async function ([fn]) {
-        const _dispatch = sinon.stub();
-        await fn(_dispatch, () => state);
-
-        expect(_dispatch.callCount).to.equal(2);
-
-        expectRequest(
-          _dispatch.firstCall.args[0],
-          `/linode/instances/${testLinode.id}/ips/sharing`,
-          {
-            method: 'POST',
-            body: { ips: [someIP.address] },
-          });
-      },
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips/sharing`, {
+        method: 'POST',
+        body: { ips: [someIP.address] },
+      }),
     ]);
   });
 });

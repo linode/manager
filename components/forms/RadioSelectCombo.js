@@ -5,8 +5,9 @@ import Select from './Select';
 
 export default function RadioSelectCombo(props) {
   return (
-    <div className="RadioSelectCombo">
+    <div className="RadioSelectCombo clearfix">
       <Radio
+        className="float-sm-left"
         value={props.radioValue}
         checked={props.radioChecked}
         onChange={props.radioOnChange}

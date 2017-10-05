@@ -25,6 +25,7 @@ export class AddConfigPage extends Component {
           kernels={kernels}
           account={account}
           disks={linode._disks.disks}
+          volumes={linode._volumes.volumes}
           dispatch={dispatch}
           submitText="Add Config"
           submitDisabledText="Adding Config"

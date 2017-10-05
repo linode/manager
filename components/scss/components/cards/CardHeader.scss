@@ -2,7 +2,8 @@
     padding: 15px 20px 0 20px;
 
     &-title {
-        text-align: center;
+        @extend .text-sm-center;
+
         overflow: hidden;
         color: $black;
     }

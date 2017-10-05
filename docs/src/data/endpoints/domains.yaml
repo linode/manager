@@ -1,8 +1,7 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Domains
 description: >
-  Domain endpoints provide a means of managing the <a href="#object-domain">
-  Domain objects</a> on your account.
+  Domain endpoints provide a means of managing the Domain objects on your account.
 
   Note: the validation rules for domain records are too complicated to document
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
@@ -17,10 +16,10 @@ endpoints:
         paginationKey: domains
         oauth: domains:view
         description: >
-          Returns a list of <a href="#object-domain">Domains</a>.
+          Returns a list of Domains.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains
           python: |
             import linode
@@ -36,10 +35,9 @@ endpoints:
             type: String
           type:
             description: >
-              Domain <a href="#object-domain_type-enum">type</a> as master or slave.
+              Domain type as master or slave.
             type: Enum
           soa_email:
-            optional: true
             description: >
               Start of Authority (SOA) contact email.
             type: String
@@ -81,12 +79,14 @@ endpoints:
             optional: true
             description: >
               An array of IP addresses for this Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           axfr_ips:
             optional: true
             description: >
               An array of IP addresses allowed to AXFR the entire Domain.
-            type: Array[string]
+            isArray: true
+            type: string
           group:
             optional: true
             description: >
@@ -95,7 +95,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "domain": "example.com",
                     "type": "master",
@@ -114,18 +114,17 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id:
+  /domains/$id:
     authenticated: true
     methods:
       GET:
         response: domain
         oauth: domains:view
         description: >
-          Returns information for the <a href="#object-domain">Domain</a>
-          identified by :id.
+          Returns information for the Domain identified by :id.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains/$domain_id
           python: |
             import linode
@@ -137,7 +136,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token TOKEN" \
+              -H "Authorization: Bearer TOKEN" \
               -X PUT -d '{
                 "domain": "examplechange.com",
                 "description": "The changed description",
@@ -162,26 +161,26 @@ endpoints:
           Deletes the Domain. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE
                 https://$api_root/$version/domains/$domain_id
           python: |
             import linode
             TODO
-  /domains/:id/records:
+  /domains/$id/records:
     authenticated: true
     description: >
       Manage the collection of Domain Records your account may access.
     methods:
       GET:
-        response: domainrecords
+        response: domainrecord
         paginationKey: records
         oauth: domains:view
         description: >
-          Returns a list of <a href="#object-domainrecord">Domain Records</a>.
+          Returns a list of Domain Records.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/domains/$domain_id/records
           python: |
             import linode
@@ -193,7 +192,7 @@ endpoints:
         params:
           type:
             description: >
-              <a href="#object-zone-record-types-enum">Type</a> of record.
+              Type of record.
             type: Enum
           name:
             optional: true
@@ -246,7 +245,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "type": "A",
                     "target": "123.456.789.101",
@@ -256,18 +255,17 @@ endpoints:
           python: |
             import linode
             TODO
-  /domains/:id/records/:id:
+  /domains/$id/records/$id:
     authenticated: true
     methods:
       GET:
         response: domainrecord
         oauth: domains:view
         description: >
-          Returns information for the <a href="#object-domainrecord">Domain
-          Record</a> identified by ":id".
+          Returns information for the Domain Record identified by ":id".
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               https://$api_root/$version/domains/$domain_id/records/$record_id
           python: |
             import linode
@@ -279,7 +277,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-              -H "Authorization: token TOKEN" \
+              -H "Authorization: Bearer TOKEN" \
               -X PUT -d '{
                     "target": "123.456.789.102",
                     "name": "sub2.example.com"
@@ -295,7 +293,7 @@ endpoints:
           Deletes the Domain Record. This action cannot be undone.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
               -X DELETE
               https://$api_root/$version/domains/$domain_id/records/$record_id
           python: |

@@ -4,7 +4,7 @@ import Button from './Button';
 
 export default function CancelButton(props) {
   return (
-    <Button {...props} >
+    <Button {...props} buttonClass="btn-link btn-cancel">
       {props.children}
     </Button>
   );

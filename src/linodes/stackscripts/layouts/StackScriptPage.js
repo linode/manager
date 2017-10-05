@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
@@ -57,7 +58,7 @@ export class StackScriptPage extends Component {
               </section>
               <Card header={<CardHeader title="Tips" />}>
                 <p>
-                  Check out the StackScript <a href="https://www.linode.com/docs/platform/stackscripts">documentation</a>. But keep in mind:
+                  Check out the StackScript <ExternalLink to="https://www.linode.com/docs/platform/stackscripts">documentation</ExternalLink>. But keep in mind:
                 </p>
                 <ul>
                   <li>

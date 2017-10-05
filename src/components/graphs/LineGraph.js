@@ -42,6 +42,11 @@ export default class LineGraph extends Component {
     this.renderChart(nextProps);
   }
 
+  shouldComponentUpdate(newProps, newState) {
+    // Prevents graph animation from happening multiple times for unchanged data.
+    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
+  }
+
   componentWillUnmount() {
     this._chart.destroy();
   }
@@ -55,7 +60,7 @@ export default class LineGraph extends Component {
     return undefined;
   }
 
-  renderChart({ timezone, data, title, yAxis, tooltipFormat }) {
+  renderChart({ timezone, data, title, yAxis, tooltipFormat, currentUnit }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
     const ctx = thisDOMNode.getContext('2d');
     const config = {
@@ -102,7 +107,7 @@ export default class LineGraph extends Component {
               if (label) {
                 label += ': ';
               }
-              label += tooltipFormat(tooltipItem.yLabel);
+              label += tooltipFormat(tooltipItem.yLabel, currentUnit);
               return label;
             },
           },
@@ -128,11 +133,11 @@ export default class LineGraph extends Component {
             display: true,
             scaleLabel: {
               display: true,
-              labelString: yAxis.label,
+              labelString: yAxis.label(currentUnit),
             },
             ticks: {
               display: true,
-              callback: yAxis.format,
+              callback: (v) => yAxis.format(v, currentUnit),
               beginAtZero: true,
             },
           }],
@@ -152,9 +157,7 @@ export default class LineGraph extends Component {
   }
 
   render() {
-    return (
-      <canvas className="LineGraph" />
-    );
+    return <canvas className="LineGraph" />;
   }
 }
 
@@ -171,7 +174,8 @@ LineGraph.propTypes = {
   }),
   title: PropTypes.string,
   yAxis: PropTypes.shape({
-    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    label: PropTypes.func,
     Format: PropTypes.func,
   }),
+  currentUnit: PropTypes.number,
 };

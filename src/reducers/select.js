@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import {
   TOGGLE_SELECTED,
+  REMOVE_SELECTED,
 } from '~/actions/select';
 
 /**
@@ -57,6 +58,17 @@ export default function select(_state = null, action) {
         selected: {
           ...state.selected,
           [objectType]: selectedMap,
+        },
+      };
+    }
+    case REMOVE_SELECTED: {
+      const { selectedIds = [], objectType } = action;
+
+      return {
+        ...state,
+        selected: {
+          [objectType]: _.omitBy(state.selected[objectType],
+                                 (_, key) => selectedIds.indexOf(+key) >= 0),
         },
       };
     }

@@ -1,7 +1,7 @@
 .Radio {
-    @extend .Checkbox;
+    @include checkbox();
 
-    &-label {
-        @extend .Checkbox-label;
+    &-input {
+        top: initial;
     }
 }

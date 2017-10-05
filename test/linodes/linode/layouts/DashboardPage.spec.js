@@ -4,7 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 
 import { testLinode, testLinode1246 } from '@/data/linodes';
@@ -19,14 +19,21 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     sandbox.restore();
   });
 
+  const props = {
+    dispatch,
+    linode: testLinode,
+    timezone: 'UTC',
+    transfer: { usage: 1, quota: 5 },
+    username: 'tdude',
+  };
+
   it('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
-        dispatch={dispatch}
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     const ipSection = page.find('#ips');
     expect(ipSection.find('li').at(0).text()).to.equal(ipv4[0]);
@@ -36,9 +43,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups not enabled', () => {
     const page = mount(
       <DashboardPage
-        linode={{ ...testLinode, backups: { enabled: false } }}
-        timezone="UTC"
-      />);
+        {...{ ...props, linode: { ...testLinode, backups: { enabled: false } } }}
+      />
+    );
 
     expect(page.find('#backup-status').text()).to.equal('Enable Backups');
   });
@@ -46,51 +53,41 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups enabled', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#backup-status').text()).to.equal('View Backups');
-  });
-
-  it('renders plan', () => {
-    const page = mount(
-      <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
-
-    expect(page.find('#plan').text()).to.equal('Linode 2G');
   });
 
   it('renders region', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
-    expect(page.find('#region').text()).to.equal(testLinode.region.label);
+    expect(page.find('#region').text()).to.equal(testLinode.region);
   });
 
   it('renders distribution', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode}
-        timezone="UTC"
-      />);
+        {...props}
+      />
+    );
 
-    expect(page.find('#distro').text()).to.equal(testLinode.distribution.vendor);
+    expect(page.find('#distro').text()).to.equal(`${testLinode.distribution.label}Rebuild`);
   });
 
   it('renders unknown distribution', () => {
     const page = mount(
       <DashboardPage
-        linode={testLinode1246}
-        timezone="UTC"
-      />);
+        {...{ ...props, linode: testLinode1246 }}
+      />
+    );
 
-    expect(page.find('#distro').text()).to.equal('Unknown');
+    expect(page.find('#distro').text()).to.equal('UnknownRebuild');
   });
 
   it('renders ssh input elements', () => {
@@ -108,8 +105,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const sshPath = `ssh root@${ipv4[0]}`;
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#ssh-input').props().value).to.equal(sshPath);
   });
@@ -117,8 +115,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders lish input elements', () => {
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('.input-group').at(1).find('Input').length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
@@ -129,13 +128,13 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        DATACENTERS[testLinode.region.id]
+        ZONES[testLinode.region]
       }.linode.com`;
     const page = shallow(
       <DashboardPage
-        linode={testLinode}
-        username="tdude"
-      />);
+        {...props}
+      />
+    );
 
     expect(page.find('#lish-input').props())
       .to.have.property('value')

@@ -14,10 +14,10 @@ endpoints:
         paginationKey: tickets
         oauth: tickets:view
         description: >
-          Returns a list of <a href="#object-supportticket">Support Tickets</a>.
+          Returns a list of Support Tickets.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/tickets
       POST:
         oauth: tickets:create
@@ -52,44 +52,42 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "summary": "A question about a Linode",
                     "description": "More details about the question",
                     "linode_id": 123,
                 }' \
                 https://$api_root/$version/support/tickets
-  /support/tickets/:id:
+  /support/tickets/$id:
     type: resource
-    resource: supportticket
     authenticated: true
     description: >
       Manage a particular support ticket your account can access.
     methods:
       GET:
+        response: supportticket
         oauth: tickets:view
         description: >
-          Returns information about this
-          <a href="#object-supportticket">support ticket</a>.
+          Returns information about this support ticket.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/ticket/$ticket_id
-  /support/tickets/:id/replies:
-    resource: supportticketreply
+  /support/tickets/$id/replies:
     paginationKey: replies
     authenticated: true
     description: >
       Manage the replies to a particular support ticket.
     methods:
       GET:
+        response: supportticketreply
         oauth: tickets:view
         description: >
-          Returns a list of
-          <a href="#object-supportticketreply">support ticket replies</a>.
+          Returns a list of support ticket replies.
         examples:
           curl: |
-            curl -H "Authorization: token $TOKEN" \
+            curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/support/tickets/$ticket_id/replies
       POST:
         oauth: tickets:modify
@@ -103,13 +101,12 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "description": "More details about the ticket",
                 }' \
                 https://$api_root/$version/support/tickets/$ticket_id/replies
-  /support/tickets/:id/attachments:
-    resource: supportticket
+  /support/tickets/$id/attachments:
     authenticated: true
     methods:
       POST:
@@ -124,7 +121,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Content-Type: multipart/form-data" \
-                -H "Authorization: token $TOKEN" \
+                -H "Authorization: Bearer $TOKEN" \
                 -X POST \
                 -F file=@/path/to/file \
                 https://$api_root/$version/support/tickets/$ticket_id/attachments

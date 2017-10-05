@@ -1,0 +1,39 @@
+.GraphGroup {
+    margin-bottom: -30px;
+
+    h4 {
+        line-height: inherit;
+    }
+
+    &-graph {
+        margin-bottom: 30px;
+
+        .Menu-item, .Menu-itemLabel {
+            @extend .font-small;
+            line-height: 20px;
+        }
+
+        .Select {
+            width: 150px;
+            &, &-control, &-input {
+                @extend .font-small;
+                height: 20px;
+                line-height: 20px;
+            }
+
+            &-input {
+                display: block !important;
+
+                & > input {
+                    padding: 0 !important;
+                    line-height: inherit;
+                }
+            }
+
+            &-value {
+                height: 20px !important;
+                line-height: 20px !important;
+            }
+        }
+    }
+}

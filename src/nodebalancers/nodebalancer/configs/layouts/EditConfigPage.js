@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Card } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
@@ -29,7 +30,7 @@ export class EditConfigPage extends Component {
           <p>
             {/* eslint-disable max-len */}
             Configure how your NodeBalancer listens for incoming traffic
-            and connects to backend nodes. <a href="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer" target="_blank">Learn more.</a>
+            and connects to backend nodes. <ExternalLink to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer">Learn more.</ExternalLink>
             {/* eslint-enable max-len */}
           </p>
         </div>

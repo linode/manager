@@ -2,6 +2,7 @@ import * as distributionsModule from './configs/distributions';
 import * as regionsModule from './configs/regions';
 import * as typesModule from './configs/types';
 import * as linodesModule from './configs/linodes';
+import * as volumesModule from './configs/volumes';
 import * as stackscriptsModule from './configs/stackscripts';
 import * as kernelsModule from './configs/kernels';
 import * as domainsModule from './configs/domains';
@@ -13,6 +14,7 @@ import * as tokensModule from './configs/tokens';
 import * as clientsModule from './configs/clients';
 import * as usersModule from './configs/users';
 import * as ticketsModule from './configs/tickets';
+import * as appsModule from './configs/apps';
 
 import apiActionReducerGenerator from './apiActionReducerGenerator';
 
@@ -22,6 +24,7 @@ export const regions = apiActionReducerGenerator(regionsModule.config,
                                                  regionsModule.actions);
 export const types = apiActionReducerGenerator(typesModule.config, typesModule.actions);
 export const linodes = apiActionReducerGenerator(linodesModule.config, linodesModule.actions);
+export const volumes = apiActionReducerGenerator(volumesModule.config, volumesModule.actions);
 export const stackscripts = apiActionReducerGenerator(stackscriptsModule.config,
                                                        stackscriptsModule.actions);
 export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsModule.actions);
@@ -35,3 +38,4 @@ export const clients = apiActionReducerGenerator(clientsModule.config, clientsMo
 export const users = apiActionReducerGenerator(usersModule.config, usersModule.actions);
 export const tickets = apiActionReducerGenerator(ticketsModule.config, ticketsModule.actions);
 export const account = apiActionReducerGenerator(accountModule.config, accountModule.actions);
+export const apps = apiActionReducerGenerator(appsModule.config, appsModule.actions);

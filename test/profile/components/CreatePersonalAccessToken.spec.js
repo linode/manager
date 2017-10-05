@@ -35,11 +35,11 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     // One call to save the data, one call to show secret.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/tokens/', {
+      ([fn]) => expectRequest(fn, '/profile/tokens/', {
         method: 'POST',
         body: {
           label: 'My sweet new token',
-          scopes: OAUTH_SCOPES.map(scope => `${scope}:delete`).join(','),
+          scopes: '',
           // Can't actually check on expiry because it's based off of $NOW which
           // leads to test failure
         },
@@ -52,7 +52,7 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     ], 2, [{ token: 'the-new-token' }]);
   });
 
-  it('creates a new token with no access', async () => {
+  it('creates a new token with all access', async () => {
     const page = shallow(
       <CreatePersonalAccessToken
         dispatch={dispatch}
@@ -62,7 +62,7 @@ describe('profile/components/CreatePersonalAccessToken', () => {
 
     changeInput(page, 'label', 'My sweet new token');
     changeInput(page, 'expiry', 0);
-    OAUTH_SCOPES.forEach(scope => changeInput(page, scope, ''));
+    OAUTH_SCOPES.forEach(scope => changeInput(page, scope, 'delete'));
 
     dispatch.reset();
     await page.props().onSubmit();
@@ -70,11 +70,11 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     // One call to save the data, one call to show secret.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/tokens/', {
+      ([fn]) => expectRequest(fn, '/profile/tokens/', {
         method: 'POST',
         body: {
           label: 'My sweet new token',
-          scopes: '',
+          scopes: OAUTH_SCOPES.map(scope => `${scope}:delete`).join(','),
           // Can't actually check on expiry because it's based off of $NOW which
           // leads to test failure
         },

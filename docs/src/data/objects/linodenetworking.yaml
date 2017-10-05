@@ -2,35 +2,35 @@ name: Linode Networking Response
 description: Comprehensive information about a Linode's networking.
 schema:
   ipv4:
-    _description: >
+    description: >
       The Linode's IPv4 networking data.
     public:
-      _type: ipaddress
-      _isArray: true
-      _description: The public IPv4 Addresses assigned to this Linode.
+      type: ipaddress
+      isArray: true
+      description: The public IPv4 Addresses assigned to this Linode.
     private:
-      _type: ipaddress
-      _isArray: true
-      _description: >
+      type: ipaddress
+      isArray: true
+      description: >
         The private IPv4 Addresses assigned to this Linode.
     shared:
-      _type: ipaddress
-      _isArray: true
+      type: ipaddress
+      isArray: true
   ipv6:
-    _description: The Linode's IPv6 networking data.
+    description: The Linode's IPv6 networking data.
     addresses:
-      _type: ipv6-address
-      _isArray: true
+      type: ipv6-address
+      isArray: true
     slaac:
-      _type: String
-      _value: 2a01:7e00::f03c:91ff:fe96
-      _description: >
+      type: String
+      value: 2a01:7e00::f03c:91ff:fe96
+      description: >
         This Linode's slaac range.
     link_local:
-      _type: String
-      _value: f300::f03c:91ff:fe96:46da
-      _description: >
+      type: String
+      value: f300::f03c:91ff:fe96:46da
+      description: >
         This Linode's link-local range.
     global:
-      _type: ipv6pool
-      _description: Global IPv6 Pools that route to this Linode.
+      type: ipv6pool
+      description: Global IPv6 Pools that route to this Linode.

@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { API_VERSION, LOGIN_ROOT } from '~/constants';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { ExternalLink } from 'linode-components/buttons';
+
+import { API_VERSION, LOGIN_ROOT } from '~/constants';
 
 
 export default function BasicSetup(props) {
@@ -23,9 +25,7 @@ export default function BasicSetup(props) {
           The Python Library includes an OAuth Client tailored to Linode's OAuth 2 implementation,
           making it easy to allow users to authenticate against Linode and grant your applications
           certain rights to their account. All communication between&nbsp;
-          <a href={LOGIN_ROOT} target="_blank" rel="nofollow noopener noreferrer">
-            {LOGIN_ROOT}
-          </a>
+          <ExternalLink to={LOGIN_ROOT}>{LOGIN_ROOT}</ExternalLink>
           &nbsp;and your application is handled by the <code>LinodeLoginClient</code>.
         </p>
       </section>

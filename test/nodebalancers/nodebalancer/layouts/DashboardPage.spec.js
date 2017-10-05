@@ -20,6 +20,7 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
       <DashboardPage
         dispatch={dispatch}
         nodebalancer={genericNodeBalancer}
+        transfer={{ used: 1, quota: 5 }}
       />
     );
     const firstRow = page.find('tr').at(1);

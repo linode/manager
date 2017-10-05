@@ -45,7 +45,7 @@ describe('linodes/linode/backups/components/BackupDetails', () => {
     expect(duration.text()).to.equal('(1 minute)');
 
     const region = page.find('#region');
-    expect(region.text()).to.equal('Newark, NJ');
+    expect(region.text()).to.equal('us-east-1a');
 
     const configs = page.find('#configs');
     expect(configs.text()).to.equal('Ubuntu Disk');

@@ -1,9 +1,12 @@
 import * as isomorphicFetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
-import { store } from '~/store';
 import * as session from '~/session';
+import { store } from '~/store';
+import { resetEventsPoll } from '~/actions/events';
+
 import { API_ROOT } from './constants';
+
 
 /*
  * Sinon cannot stub out a function in a function-only module.
@@ -28,7 +31,7 @@ export function fetch(token, _path, _options) {
     mode: 'cors',
     headers: {
       Accept: 'application/json',
-      Authorization: `token ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   }, _options);
@@ -42,6 +45,13 @@ export function fetch(token, _path, _options) {
   }
 
   const path = API_ROOT + _path;
+
+  const { method = 'get' } = options;
+
+  if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
+    store.dispatch(resetEventsPoll());
+  }
+
   return new Promise((accept, reject) => {
     fetchRef(path, options).then((response) => {
       const { status } = response;

@@ -24,7 +24,7 @@ describe('components/modal/FormModalBody', () => {
       </FormModalBody>
     );
 
-    expect(modal.find('.btn-default').at(1).text()).to.equal('OK button text');
+    expect(modal.find('.btn-default').text()).to.equal('OK button text');
     expect(modal.find('.bodytext').length).to.equal(1);
   });
 

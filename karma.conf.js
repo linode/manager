@@ -26,6 +26,7 @@ module.exports = function(config) {
               path.join(__dirname, 'src'),
               path.join(__dirname, 'test'),
               path.resolve(__dirname, 'node_modules/linode-components'),
+              path.resolve(__dirname, 'components'),
               path.resolve(__dirname, 'node_modules/linode-styleguide')
             ]
           },
@@ -97,7 +98,12 @@ module.exports = function(config) {
       require("karma-sourcemap-loader"),
       require("karma-coverage")
     ],
-    browserNoActivityTimeout: 100000
+    browserNoActivityTimeout: 100000,
+    resolve: {
+      alias: {
+        'react': path.join(__dirname, 'node_modules', 'react')
+      }
+    }
   };
 
   option.files = [

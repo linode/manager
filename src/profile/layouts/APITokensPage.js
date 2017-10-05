@@ -1,23 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { DropdownCell, CheckboxCell, ThumbnailCell } from 'linode-components/tables/cells';
-import { EmitEvent } from 'linode-components/utils';
+import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
 
-import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import { tokens as api } from '~/api';
+import { tokens, apps } from '~/api';
 import { transform } from '~/api/util';
 import { TimeCell } from '~/components/tables/cells';
-import { API_ROOT } from '~/constants';
+import { confirmThenDelete } from '~/utilities';
 
 import TokenMoreInfo from '../components/TokenMoreInfo';
 import EditPersonalAccessToken from '../components/EditPersonalAccessToken';
@@ -28,21 +25,24 @@ const OBJECT_TYPE = 'tokens';
 
 export class APITokensPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await Promise.all([tokens, apps].map(c => dispatch(c.all())));
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = { filter: '' };
   }
 
-  thumbnailSrc(token) {
-    if (token.client) {
-      return `${API_ROOT}/account/clients/${token.client.id}/thumbnail`;
+  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
+
+  revoke = (tokenOrAppId) => {
+    const tokenOrApp = this.props.tokens[tokenOrAppId];
+    if (this.isApp(tokenOrApp)) {
+      return apps.delete(tokenOrAppId);
     }
 
-    return null;
+    return tokens.delete(tokenOrAppId);
   }
 
   createDropdownGroups = (token) => {
@@ -53,7 +53,7 @@ export class APITokensPage extends Component {
       { elements: [{ name: 'Revoke', action: () => this.revokeTokens(token) }] },
     ];
 
-    if (!token.client) {
+    if (!this.isApp(token)) {
       groups.splice(1, 0, {
         elements: [
           { name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) },
@@ -64,46 +64,22 @@ export class APITokensPage extends Component {
     return groups;
   }
 
-  revokeTokens = (tokens) => {
-    const { dispatch } = this.props;
-    const tokensArr = Array.isArray(tokens) ? tokens : [tokens];
-    const title = 'Revoke Token(s)';
-
-    dispatch(showModal(title,
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = tokensArr.map(function (token) { return token.id; });
-
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          EmitEvent('modal:submit', 'Modal', 'delete', title);
-          dispatch(hideModal());
-        }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
-        items={tokensArr.map(n => this.tokenLabel(n))}
-        typeOfItem="Tokens"
-        deleteAction="revoke"
-        deleteActionPending="revoking"
-      />
-    ));
-  }
-
-  tokenLabel(token) {
-    return token.client ? token.client.label : token.label;
-  }
+  revokeTokens = confirmThenDelete(
+    this.props.dispatch,
+    'token',
+    this.revoke,
+    OBJECT_TYPE,
+    (t) => t.label,
+    'revoke',
+    'revoking').bind(this)
 
   renderTokens = () => {
-    const { dispatch, selectedMap, tokens: { tokens } } = this.props;
+    const { dispatch, selectedMap, tokens } = this.props;
     const { filter } = this.state;
 
     const { groups, sorted: sortedTokens } = transform(tokens, {
       filterBy: filter,
-      filterOn: this.tokenLabel,
-      sortBy: t => this.tokenLabel(t).toLowerCase(),
-      groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
+      groupOn: d => this.isApp(d) ? d.label : 'Personal Access Tokens',
     });
 
     return (
@@ -139,17 +115,12 @@ export class APITokensPage extends Component {
                 columns={[
                   { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                   {
-                    cellComponent: ThumbnailCell,
-                    headerClassName: 'ThumbnailColumn',
-                    srcFn: this.thumbnailSrc,
-                  },
-                  {
-                    dataFn: this.tokenLabel,
+                    dataKey: 'label',
                     tooltipEnabled: true,
                     label: 'Label',
                   },
                   {
-                    dataFn: t => t.client ? 'OAuth Client Token' : 'Personal Access Token',
+                    dataFn: t => this.isApp(t) ? 'OAuth Client Token' : 'Personal Access Token',
                     label: 'Type',
                   },
                   {
@@ -185,10 +156,11 @@ export class APITokensPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button
+          <PrimaryButton
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}
-            className="float-sm-right"
-          >Create a Personal Access Token</Button>
+            className="float-right"
+            buttonClass="btn-secondary"
+          >Create a Personal Access Token</PrimaryButton>
         </header>
         {this.renderTokens()}
       </div>
@@ -203,8 +175,13 @@ APITokensPage.propTypes = {
 };
 
 function select(state) {
+  const tokens = {
+    ...state.api.tokens.tokens,
+    ...state.api.apps.apps,
+  };
+
   return {
-    tokens: state.api.tokens,
+    tokens,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

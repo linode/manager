@@ -1,19 +1,19 @@
 name: IPAddress
 import: from linode import IPAddress
-_object: ipaddress
+object: ipaddress
 desc: >
     An IPv4 Address
 constructor:
     name: IPAddress
     parameters:
         client:
-            _keyword: false
+            keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
-            _keyword: false
+            keyword: false
             desc: This IPAddress' ID.
         parent_id:
-            _keyword: false
+            keyword: false
             desc: The <code>Linode</code> object's ID who owns this IPAddress.
     example: >
         ipaddress = linode.IPAddress(client, 764, 123)

@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
+import { Code } from 'linode-components/formats';
 
-import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
 
 
@@ -43,15 +43,15 @@ export default function Introduction(props) {
           /regions API endpoint. To make an API call against this endpoint over curl, run the
           following command:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
         <p>
           Note that since the region list is public information, you don’t need to send your
           authorization token (although it will still work if you do). The above command will
           return a JSON object like the following:
         </p>
-        <Example
+        <Code
           example={`{
-  "regions": [
+  "data": [
       {
           "id": "us-east-1a",
           "label": "Newark, NJ",
@@ -60,8 +60,8 @@ export default function Introduction(props) {
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 7
+  "pages": 1,
+  "results": 7
 }`}
           name="json"
           noclipboard
@@ -81,31 +81,34 @@ export default function Introduction(props) {
           and network transfer). Run the following curl command to retrieve a list of available
           Linode plans:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
         <p>
           The above command will return a JSON object like the following:
         </p>
-        <Example
+        <Code
           example={`{
-  "types": [
+  "data": [
       {
           "id": "g5-standard-1",
           "label": "Linode 2048",
           "vcpus": 1,
-          "mbits_out": 125,
-          "storage": 24576,
-          "hourly_price": 1,
+          "network_out": 125,
+          "disk": 24576,
+          "price_hourly": 1,
           "class": "standard",
-          "ram": 2048,
-          "monthly_price": 1000,
-          "backups_price": 250,
+          "memory": 2048,
+          "price_monthly": 1000,
+          "backups_option": {
+            "price_hourly": 0.004,
+            "price_monthly": 2.5
+          },
           "transfer": 2000
       }
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard
@@ -128,27 +131,27 @@ export default function Introduction(props) {
           Just like selecting a type and a region, issue a call to the API, this time
           for a list of available distributions:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
+        <Code example={`curl ${API_ROOT}/${API_VERSION}/linode/distributions`} name="bash" />
         <p>
           This will provide you with a list of distributions like the following:
         </p>
-        <Example
+        <Code
           example={`{
-  "distributions": [
+  "data": [
       {
           "id": "linode/debian8",
           "label": "Debian 8",
           "vendor": "Debian",
-          "x64": true,
+          "architecture": "x86_64",
           "recommended": true,
-          "minimum_storage_size": 900,
-          "created": "2015-04-27T16:26:41"
+          "disk_minimum": 900,
+          "updated": "2015-04-27T16:26:41"
       }
       /* and so on */
   ],
   "page": 1,
-  "total_pages": 1,
-  "total_results": 1
+  "pages": 1,
+  "results": 1
 }`}
           name="json"
           noclipboard
@@ -184,10 +187,10 @@ export default function Introduction(props) {
           and with different characteristics. Customize the following curl command and run it
           when you’re ready to deploy:
         </p>
-        <Example
+        <Code
           // eslint-disable-next-line max-len
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances -d '{"type": "g5-standard-1", "region": "us-east-1a", "distribution": "linode/debian8", "root_pass": "$root_pass", "label": "prod-1"}' \\
-  -H "Authorization: token $TOKEN" -H "Content-type: application/json"
+  -H "Authorization: Bearer $TOKEN" -H "Content-type: application/json"
 `}
           name="bash"
         />
@@ -195,10 +198,10 @@ export default function Introduction(props) {
           If all was successful, you should get a response object detailing the newly
           created Linode like the following:
         </p>
-        <Example
+        <Code
           example={`{
   "id": 123456,
-  "total_transfer": 2000,
+  "transfer_total": 2000,
   "label": "prod-1",
   "status": "provisioning",
   "group": "",
@@ -207,60 +210,17 @@ export default function Introduction(props) {
   "hypervisor": "kvm",
   "ipv4": "97.107.143.56",
   "ipv6": "2600:3c03::f03c:91ff:fe0a:18ab/64",
-  "region": {
-    "id": "us-east-1a",
-    "country": "us",
-    "label": "Newark, NJ"
-  },
-  "type": [
-    {
-       "ram": 2048,
-       "label": "Linode 2048",
-       "monthly_price": 1000,
-       "transfer": 2000,
-       "class": "standard",
-       "storage": 24576,
-       "id": "g5-standard-1",
-       "backups_price": 250,
-       "mbits_out": 125,
-       "hourly_price": 1,
-       "vcpus": 1
-    }
-  ],
-  "distribution": {
-    "recommended": true,
-    "x64": true,
-    "created": "2015-04-27T16:26:41",
-    "id": "linode/debian8",
-    "label": "Debian 8.1",
-    "vendor": "Debian",
-    "minimum_storage_size": 900
-  },
+  "region": "us-east-1a",
+  "type":  "g5-standard-1",
+  "distribution": "linode/debian8",
   "alerts": {
-    "cpu": {
-       "threshold": 90,
-       "enabled": true
-    },
-    "transfer_out": {
-       "enabled": true,
-       "threshold": 10
-    },
-    "io": {
-       "threshold": 10000,
-       "enabled": true
-    },
-    "transfer_quota": {
-       "threshold": 80,
-       "enabled": true
-    },
-    "transfer_in": {
-       "enabled": true,
-       "threshold": 10
-    }
+    "cpu":  90,
+    "transfer_out": 10,
+    "io": 10000,
+    "transfer_quota": 80,
+    "transfer_in": 10
   },
   "backups": {
-    "snapshot": null,
-    "last_backup": null,
     "enabled": false,
     "schedule": {
        "day": null,
@@ -287,9 +247,9 @@ export default function Introduction(props) {
           following curl command. Also remember to replace <strong>$TOKEN</strong> with your
           authorization token as in the previous API call.
         </p>
-        <Example
+        <Code
           example={`curl -X POST ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id/boot \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />
@@ -298,13 +258,13 @@ export default function Introduction(props) {
           If the status code is 200, it worked. You can now watch for the Linode’s state field
           to change from "booting" to "running":
         </p>
-        <Example
+        <Code
           example={`curl ${API_ROOT}/${API_VERSION}/linode/instances/$linode_id \\
-  -H "Authorization: token $TOKEN"
+  -H "Authorization: Bearer $TOKEN"
 `}
           name="bash"
         />
-        <Example
+        <Code
           example={`{
   "linode": {
       "id": 123456,
@@ -323,7 +283,7 @@ export default function Introduction(props) {
           Run the SSH command from the Linode response object and enter the root password
           you set in the create Linode step:
         </p>
-        <Example example="ssh root@$public_ip" name="bash" />
+        <Code example="ssh root@$public_ip" name="bash" />
         <p>
           Congratulations! You have now successfully launched a Linode through the API.
         </p>

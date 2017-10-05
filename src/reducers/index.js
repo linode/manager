@@ -4,6 +4,7 @@ import { routerReducer } from 'react-router-redux';
 import analytics from './analytics';
 import authentication from './authentication';
 import errors from './errors';
+import events from './events';
 import modal from './modal';
 import notifications from './notifications';
 import preloadIndicator from './preloadIndicator';
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
   routing: routerReducer,
   analytics,
   authentication,
+  events,
   modal,
   notifications,
   select,
