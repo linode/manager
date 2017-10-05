@@ -143,6 +143,10 @@ export class ReducerGenerator {
       });
     }
 
+    (config.properiesMasks || []).forEach(function (property) {
+      delete combinedStateOne[property];
+    });
+
     const newStateMany = {
       ...oldStateMany,
       [config.plural]: {

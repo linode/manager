@@ -7,6 +7,7 @@ export const config = genConfig({
   plural: 'linodes',
   endpoint: id => `/linode/instances/${id}`,
   supports: [ONE, MANY, PUT, DELETE, POST],
+  propertiesMasks: ['specs'],
   properties: {
     type: (linode) => function (_, getState) {
       const types = getState().api.types.types || {};
