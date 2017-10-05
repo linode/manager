@@ -33,10 +33,10 @@ export class IndexPage extends Component {
       { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
     ];
     const tabs = [
-      { name: 'Dashboard', link: `/nodebalancers/${label}/generic/${config.id}` },
+      { name: 'Dashboard', link: `/nodebalancers/${label}/configs/${config.id}` },
       {
         name: 'Settings',
-        link: `/nodebalancers/${label}/generic/${config.id}/settings`,
+        link: `/nodebalancers/${label}/configs/${config.id}/settings`,
       },
     ];
 
@@ -47,7 +47,7 @@ export class IndexPage extends Component {
             <div className="float-sm-left">
               <Breadcrumbs crumbs={crumbs} />
               <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}/generic/${config.id}`}>
+                <Link to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}`}>
                   Port {config.port}
                 </Link>
               </h1>

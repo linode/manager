@@ -1,12 +1,13 @@
 import { resetEventsPoll } from '~/actions/events';
 import { API_ROOT } from '~/constants';
-import rawFetch from '~/fetch';
+import * as rawFetch from '~/fetch';
 import * as session from '~/session';
 
 
 function gatherOptions(token, method, body, headers) {
   const options = {
     method,
+    body,
     mode: 'cors',
     headers: {
       Accept: 'application/json',
@@ -16,6 +17,12 @@ function gatherOptions(token, method, body, headers) {
     },
   };
 
+  const contentType = (options.headers['Content-Type'] || '').toLowerCase();
+  if (contentType === 'application/json') {
+    options.body = JSON.stringify(options.body);
+  }
+
+  // FormData needs to set the Content-Type header itself.
   if (options.body instanceof FormData) {
     delete options.headers['Content-Type'];
   }
@@ -27,23 +34,23 @@ function gatherOptions(token, method, body, headers) {
   return options;
 }
 
-export function partialFetch(method = 'GET', stringifyBody = true) {
+export function partialFetch(method = 'GET') {
   return function (url, body, headers = {}) {
     return async function (dispatch, getState) {
       const state = getState();
       const { token } = state.authentication;
 
-      const encodedBody = stringifyBody ? JSON.stringify(body) : body;
-      const options = gatherOptions(token, method, encodedBody, headers);
-
+      const options = gatherOptions(token, method, body, headers);
       const path = API_ROOT + url;
 
       if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
         dispatch(resetEventsPoll());
       }
 
-      return new Promise((accept, reject) => {
-        rawFetch(path, options).then(async (response) => {
+      return new Promise((accept, _reject) => {
+        const reject = (response) => _reject({ response, request: { path, options }  });
+        
+        rawFetch.rawFetch(path, options).then(async (response) => {
           const { status, headers } = response;
           const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
           if (status >= 400 || inMaintenanceMode) {
@@ -70,12 +77,13 @@ export const fetch = {
 };
 
 function partialFetchFile(method) {
-  const partialFetchPartial = partialFetch(method, false);
-  return (url, attachment, type = 'image/png') =>
-    partialFetchPartial(url, attachment, { 'Content-Type': type });
+  return (url, attachment, type = 'image/png') => {
+    console.log(fetch[method]);
+    return fetch[method](url, attachment, { 'Content-Type': type });
+  }
 }
 
 export const fetchFile = {
-  post: partialFetchFile('POST'),
-  put: partialFetchFile('PUT'),
+  post: partialFetchFile('post'),
+  put: partialFetchFile('put'),
 };

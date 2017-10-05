@@ -25,9 +25,9 @@ export const config = genConfig({
     },
   },
   subresources: {
-    _generic: {
-      plural: 'generic',
-      endpoint: (linode, conf) => `/linode/instances/${linode}/generic/${conf}`,
+    _configs: {
+      plural: 'configs',
+      endpoint: (linode, conf) => `/linode/instances/${linode}/configs/${conf}`,
       supports: [ONE, MANY, PUT, DELETE, POST],
     },
     _disks: {

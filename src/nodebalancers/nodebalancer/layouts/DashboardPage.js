@@ -139,7 +139,7 @@ export class DashboardPage extends Component {
                 title="Configs"
                 nav={
                   <PrimaryButton
-                    to={`/nodebalancers/${nodebalancer.label}/generic/create`}
+                    to={`/nodebalancers/${nodebalancer.label}/configs/create`}
                     buttonClass="btn-default"
                     className="float-sm-right"
                   >Add a Config</PrimaryButton>
@@ -155,7 +155,7 @@ export class DashboardPage extends Component {
                     { textKey: 'port', label: 'Port',
                       cellComponent: LinkCell,
                       hrefFn: function (config) {
-                        return `/nodebalancers/${nodebalancer.label}/generic/${config.id}`;
+                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
                       },
                       tooltipEnabled: true,
                     },

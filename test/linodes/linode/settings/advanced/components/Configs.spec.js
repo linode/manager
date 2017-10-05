@@ -69,7 +69,7 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}/generic/12345`, {
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
       method: 'DELETE',
     });
   });

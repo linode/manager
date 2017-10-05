@@ -41,7 +41,7 @@ export default class Configs extends Component {
 
     const nav = (
       <PrimaryButton
-        to={`/linodes/${linode.label}/settings/advanced/generic/create`}
+        to={`/linodes/${linode.label}/settings/advanced/configs/create`}
         className="float-right"
         buttonClass="btn-default"
       >
@@ -83,7 +83,7 @@ export default class Configs extends Component {
                 {
                   cellComponent: LinkCell,
                   hrefFn: (config) => {
-                    return `/linodes/${linode.label}/settings/advanced/generic/${config.id}`;
+                    return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
                   },
                   label: 'Label',
                   titleKey: 'label',

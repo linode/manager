@@ -49,8 +49,8 @@ export function rebuildLinode(id, config = null) {
       dispatch(actions.one({ status: 'rebuilding' }, id));
       await dispatch(actions.disks.invalidate([id], false));
       await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
-      await dispatch(actions.generic.invalidate([id], false));
-      await dispatch(actions.generic.many(makeNormalResponse(rsp, 'generic'), id));
+      await dispatch(actions.configs.invalidate([id], false));
+      await dispatch(actions.configs.many(makeNormalResponse(rsp, 'configs'), id));
     };
   }
 
@@ -94,7 +94,7 @@ export function linodeStats(linodeId) {
 }
 
 export function cloneLinode(linodeId, regionId, planId, backups, label,
-                            targetId = undefined, generic = [], disks = []) {
+                            targetId = undefined, configs = [], disks = []) {
   return async function (dispatch) {
     const clonedLinode = await dispatch(fetch.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,
@@ -102,7 +102,7 @@ export function cloneLinode(linodeId, regionId, planId, backups, label,
       label: label,
       type: planId,
       disks: disks.length ? disks : undefined,
-      generic: generic.length ? disks : undefined,
+      configs: configs.length ? disks : undefined,
       linode: targetId,
     }));
     dispatch(actions.one(clonedLinode, clonedLinode.id));
