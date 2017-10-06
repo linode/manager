@@ -306,7 +306,7 @@ export default class CreateOrEditConfig extends Component {
                   isCustomRoot: true,
                   rootDevice: defaultRootDevice,
                 })}
-                inputId="custom-root-device"
+                inputName="custom-root-device"
                 inputPlaceholder={defaultRootDevice}
                 inputValue={isCustomRoot ? rootDevice : ''}
                 inputDisabled={isCustomRoot === false}
