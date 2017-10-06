@@ -216,7 +216,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown groups={groups} analytics={{ title: 'Linode actions' }} />
+        <Dropdown groups={groups} duplicateFirst={false} analytics={{ title: 'Linode actions' }} />
         <div className="StatusDropdown-container">
           <div
             style={{ width: progressWidth }}

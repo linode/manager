@@ -26,9 +26,9 @@ describe('components/Dropdown', () => {
 
     expect(dropdown.find('.Dropdown-first').text()).to.equal('Drew');
 
-    expect(dropdown.find('.Dropdown-item').length).to.equal(2);
-    expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Phil');
-    expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Will');
+    expect(dropdown.find('.Dropdown-item').length).to.equal(3);
+    expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Phil');
+    expect(dropdown.find('.Dropdown-item').at(2).text()).to.equal('Will');
   });
 
   it('clickable dropdown', () => {
@@ -52,7 +52,7 @@ describe('components/Dropdown', () => {
     // Click toggle should open body
     dropdown.find('.Dropdown-toggle').simulate('click');
     // Click first menu item should trigger clickBodyItem
-    dropdown.find('.Dropdown-item').first().simulate('mousedown');
+    dropdown.find('.Dropdown-item').at(1).simulate('mousedown');
     // Last menu item goes unclicked
 
     expect(clickFirst.callCount).to.equal(1);

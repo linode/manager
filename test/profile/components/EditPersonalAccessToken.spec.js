@@ -35,7 +35,7 @@ describe('profile/components/EditPersonalAccessToken', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/account/tokens/${testToken.id}`, {
+      ([fn]) => expectRequest(fn, `/profile/tokens/${testToken.id}`, {
         method: 'PUT',
         body: {
           label: 'My awesome token',

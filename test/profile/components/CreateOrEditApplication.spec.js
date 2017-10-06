@@ -42,7 +42,7 @@ describe('profile/components/CreateOrEditApplication', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/clients/', {
+      ([fn]) => expectRequest(fn, '/account/oauth-clients/', {
         method: 'POST',
         body: {
           label: 'My new client',
@@ -55,7 +55,7 @@ describe('profile/components/CreateOrEditApplication', () => {
         await fn(dispatch, () => state);
 
         expect(fetchStub.callCount).to.equal(1);
-        expect(fetchStub.firstCall.args[1]).to.equal('/account/clients/1/thumbnail');
+        expect(fetchStub.firstCall.args[1]).to.equal('/account/oauth-clients/1/thumbnail');
         expectObjectDeepEquals(fetchStub.firstCall.args[2], {
           method: 'PUT',
           body: thumbnail,
@@ -84,5 +84,37 @@ describe('profile/components/CreateOrEditApplication', () => {
 
     // One call to save the data, all other calls are skipped after large file size
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1, [{ id: 1 }]);
+  });
+
+  it('updates an application', async () => {
+    const close = sandbox.spy();
+    const page = shallow(
+      <CreateOrEditApplication
+        dispatch={dispatch}
+        close={close}
+        label="My awesome client"
+        redirect_uri="http://example.com"
+        id="1"
+      />
+    );
+
+    changeInput(page, 'label', 'My new client');
+    changeInput(page, 'redirect', 'http://google.com');
+
+    dispatch.reset();
+    await page.props().onSubmit();
+
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/oauth-clients/1', {
+        method: 'PUT',
+        body: {
+          label: 'My new client',
+          redirect_uri: 'http://google.com',
+        },
+      }),
+    ], 1, [{ id: 1 }]);
+
+    expect(close.callCount).to.equal(1);
   });
 });
