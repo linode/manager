@@ -16,6 +16,7 @@ export default function Textarea(props) {
 Textarea.propTypes = {
   className: PropTypes.string.isRequired,
   id: PropTypes.string,
+  name: PropTypes.string,
 };
 
 Textarea.defaultProps = {
