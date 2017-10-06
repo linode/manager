@@ -227,18 +227,16 @@ export default class CreateOrEditConfig extends Component {
               <Radio
                 name="isMaxRam"
                 checked={isMaxRam}
-                id="isMaxRam-true"
                 onChange={this.onChange}
                 label={`Maximum (${linode.type.memory} MB)`}
               />
             </div>
             <div>
               <RadioInputCombo
-                radioId="isMaxRam-false"
                 radioLabel=""
                 radioChecked={!isMaxRam}
                 radioOnChange={() => this.setState({ isMaxRam: false })}
-                inputId="ramLimit"
+                inputName="ramLimit"
                 inputLabel="MB"
                 inputDisabled={isMaxRam}
                 inputValue={ramLimit}

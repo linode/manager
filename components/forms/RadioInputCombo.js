@@ -7,7 +7,7 @@ export default function RadioInputCombo(props) {
   return (
     <div className="RadioInputCombo">
       <Radio
-        id={props.radioId}
+        name={props.radioName}
         value={props.radioValue}
         checked={props.radioChecked}
         onChange={props.radioOnChange}
@@ -27,7 +27,7 @@ export default function RadioInputCombo(props) {
 }
 
 RadioInputCombo.propTypes = {
-  radioId: PropTypes.string,
+  radioName: PropTypes.string,
   radioOnChange: PropTypes.func.isRequired,
   radioLabel: PropTypes.string.isRequired,
   radioChecked: PropTypes.bool.isRequired,

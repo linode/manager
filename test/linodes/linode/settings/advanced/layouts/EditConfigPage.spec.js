@@ -8,7 +8,9 @@ import sinon from 'sinon';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditConfigPage';
 
-import { expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals,
+} from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 
@@ -53,7 +55,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const label = page.find('#label');
-    label.simulate('change', { target: { name: 'label', value: 'changed label' } });
+    changeInput(page, 'label', 'changed label');
     expect(label.props().value).to.equal('changed label');
   });
 
@@ -66,7 +68,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const notes = page.find('#comments');
-    notes.simulate('change', { target: { name: 'comments', value: 'changed note' } });
+    changeInput(page, 'comments', 'changed note');
     expect(notes.props().value).to.equal('changed note');
   });
 
@@ -79,7 +81,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const kernel = page.find('#kernel');
-    kernel.simulate('change', { target: { name: 'kernel', value: 'linode/latest' } });
+    changeInput(page, 'kernel', 'linode/latest');
     expect(kernel.props().value).to.equal('linode/latest');
   });
 
@@ -93,11 +95,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
 
     const networkHelper = page.find('#enableNetworkHelper');
     const valueWas = networkHelper.props().checked;
-    networkHelper.simulate('change', { target: {
-      name: 'enableNetworkHelper',
-      checked: !valueWas,
-      type: 'checkbox',
-    } });
+    changeInput(page, 'enableNetworkHelper', !valueWas);
     expect(networkHelper.props().checked).to.equal(!valueWas);
   });
 
@@ -111,11 +109,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
 
     const distroHelper = page.find('#enableDistroHelper');
     const valueWas = distroHelper.props().checked;
-    distroHelper.simulate('change', { target: {
-      name: 'enableDistroHelper',
-      checked: !valueWas,
-      type: 'checkbox',
-    } });
+    changeInput(page, 'enableDistroHelper', !valueWas);
     expect(distroHelper.props().checked).to.equal(!valueWas);
   });
 
@@ -129,11 +123,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
 
     const moduleDep = page.find('#enableModulesDepHelper');
     const valueWas = moduleDep.props().checked;
-    moduleDep.simulate('change', { target: {
-      name: 'enableModulesDepHelper',
-      checked: !valueWas,
-      type: 'checkbox',
-    } });
+    changeInput(page, 'enableModulesDepHelper', !valueWas);
     expect(moduleDep.props().checked).to.equal(!valueWas);
   });
 
@@ -147,11 +137,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
 
     const updatedb = page.find('#disableUpdatedb');
     const valueWas = updatedb.props().checked;
-    updatedb.simulate('change', { target: {
-      name: 'disableUpdatedb',
-      checked: !valueWas,
-      type: 'checkbox',
-    } });
+    changeInput(page, 'disableUpdatedb', !valueWas);
     expect(updatedb.props().checked).to.equal(!valueWas);
   });
 
@@ -164,7 +150,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const virtMode = page.find('input[name="virtMode"]').at(0);
-    virtMode.simulate('change', { target: { value: 'fullvirt', name: 'virtMode' } });
+    changeInput(page, 'virtMode', 'fullvirt');
     expect(virtMode.props().checked).to.equal(false);
   });
 
@@ -177,7 +163,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const runLevel = page.find('input[name="runLevel"]').at(0);
-    runLevel.simulate('change', { target: { value: 'single', name: 'runLevel' } });
+    changeInput(page, 'runLevel', 'single');
     expect(runLevel.props().checked).to.equal(false);
   });
 
@@ -190,10 +176,10 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const isMaxRam = page.find('input[name="isMaxRam"]');
-    isMaxRam.simulate('change', { target: { checked: false, name: 'isMaxRam', type: 'checkbox' } });
+    changeInput(page, 'isMaxRam', false);
 
     const ramLimit = page.find('#ramLimit');
-    ramLimit.simulate('change', { target: { value: 1000, name: 'ramLimit' } });
+    changeInput(page, 'ramLimit', 1000);
 
     expect(isMaxRam.props().checked).to.equal(false);
     expect(ramLimit.props().value).to.equal(1000);
@@ -208,8 +194,8 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     );
 
     const initrd = page.find('#initrd');
-    initrd.simulate('change', { target: { value: '25669', name: 'initrd' } });
-    expect(initrd.props().value).to.equal('25669');
+    changeInput(page, 'initrd', 25669);
+    expect(initrd.props().value).to.equal(25669);
   });
 
   it('renders kernel properly', async () => {
@@ -256,10 +242,9 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
       />
     );
     dispatch.reset();
-    const label = page.find('FormGroup');
-    label.find('#label').simulate('change', { target: { name: 'label', value: 'new label' } });
-    const isMaxRam = page.find('#isMaxRam-true');
-    isMaxRam.simulate('change', { target: { name: 'isMaxRam', value: true } });
+
+    changeInput(page, 'label', 'new label');
+    changeInput(page, 'isMaxRam', true);
 
     await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
