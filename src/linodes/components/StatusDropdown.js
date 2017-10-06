@@ -6,7 +6,7 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes as apiLinodes } from '~/api';
+import api from '~/api';
 import { actions } from '~/api/generic/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import Polling from '~/api/polling';
@@ -36,7 +36,7 @@ function fetchLinodes(...ids) {
   return async (dispatch, getState) => {
     const allLinodes = Object.values(getState().api.linodes.linodes);
     const linodes = allLinodes.filter(l => ids.indexOf(l.id.toString()) !== -1);
-    await dispatch(apiLinodes.all([], null, createHeaderFilter({
+    await dispatch(api.linodes.all([], null, createHeaderFilter({
       '+or': linodes.map(({ label }) => ({ label })),
     })));
 
@@ -178,7 +178,7 @@ export default class StatusDropdown extends Component {
     dispatch(showModal('Delete Linode', (
       <DeleteModalBody
         onSubmit={async function () {
-          await dispatch(apiLinodes.delete(linode.id));
+          await dispatch(api.linodes.delete(linode.id));
           await dispatch(push('/'));
         }}
         items={[linode.label]}

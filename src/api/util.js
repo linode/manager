@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import * as api from './';
+import api from './';
 import { fullyLoadedObject } from './external';
 
 

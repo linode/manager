@@ -11,7 +11,7 @@ import { Table } from 'linode-components/tables';
 import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
 
 import toggleSelected from '~/actions/select';
-import { tokens, apps } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -25,7 +25,7 @@ const OBJECT_TYPE = 'tokens';
 
 export class APITokensPage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([tokens, apps].map(c => dispatch(c.all())));
+    await Promise.all([api.tokens, api.apps].map(c => dispatch(c.all())));
   }
 
   constructor(props) {
@@ -39,10 +39,10 @@ export class APITokensPage extends Component {
   revoke = (tokenOrAppId) => {
     const tokenOrApp = this.props.tokens[tokenOrAppId];
     if (this.isApp(tokenOrApp)) {
-      return apps.delete(tokenOrAppId);
+      return api.apps.delete(tokenOrAppId);
     }
 
-    return tokens.delete(tokenOrAppId);
+    return api.tokens.delete(tokenOrAppId);
   }
 
   createDropdownGroups = (token) => {

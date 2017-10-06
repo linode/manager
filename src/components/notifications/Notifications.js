@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import { events } from '~/api';
+import api from '~/api';
 import { eventRead } from '~/api/ad-hoc/events';
 import Polling from '~/api/polling';
 import {
@@ -21,7 +21,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 let filterOptions = { seen: false };
 const fetchAllEvents = () => (dispatch) =>
-  dispatch(events.all([], null, createHeaderFilter(filterOptions)));
+  dispatch(api.events.all([], null, createHeaderFilter(filterOptions)));
 
 const POLLING = Polling({
   apiRequestFn: fetchAllEvents,
@@ -110,7 +110,7 @@ export class Notifications extends Component {
 
   fetchEventsPage(options = null) {
     const { dispatch } = this.props;
-    return dispatch(events.page(0, [], null, true, null, options));
+    return dispatch(api.events.page(0, [], null, true, null, options));
   }
 
   render() {

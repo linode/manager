@@ -20,7 +20,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
@@ -90,7 +90,7 @@ export default class CreateOrEditConfig extends Component {
 
     const idsPath = [linode.id, config.id].filter(Boolean);
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
+      () => api.linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
     ]));
   }

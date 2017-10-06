@@ -15,7 +15,7 @@ import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import * as api from '~/api';
+import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';

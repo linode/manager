@@ -10,7 +10,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -33,7 +33,7 @@ export default class ScheduleForm extends Component {
     const { day, window } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
+      () => api.linodes.put({ backups: { schedule: { day, window } } }, linode.id),
     ]));
   }
 

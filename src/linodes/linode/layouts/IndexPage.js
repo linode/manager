@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { Tabs } from 'linode-components/tabs';
 
 import { setAnalytics, setTitle } from '~/actions';
-import { linodes, types } from '~/api';
+import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { GroupLabel } from '~/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
@@ -19,8 +19,8 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const requests = [
-      types.one([type.id]),
-      linodes.configs.all([id]),
+      api.types.one([type.id]),
+      api.linodes.configs.all([id]),
     ];
 
     await Promise.all(requests.map(dispatch));
