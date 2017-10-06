@@ -11,10 +11,6 @@ schema:
   id:
     type: String
     value: linode/3.5.2-x86_64-linode26
-  description:
-    type: String
-    value: "null"
-    description: Additional, descriptive text about the kernel.
   xen:
     type: Boolean
     value: false
@@ -41,17 +37,11 @@ schema:
     value: x86_64
     description: The architecture of this kernel.
     filterable: true
-  current:
-    type: Boolean
-    value: true
-    filterable: true
-  deprecated:
+  pvops:
     type: Boolean
     value: false
+    description: If this kernel is suitable for paravirtualized operations.
     filterable: true
-  latest:
-    type: Boolean
-    value: true
 enums:
   architecture:
       x86_64: a 64 bit distribution

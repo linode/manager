@@ -114,7 +114,7 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </div>
-            {linode.hypervisor === 'kvm' ? null : (
+            {linode.hypervisor === 'kvm-' ? null : (
               <div className="row">
                 <div className="col-sm-4 row-label">Hypervisor</div>
                 <div className="col-sm-8" id="hypervisor">

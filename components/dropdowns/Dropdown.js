@@ -52,7 +52,12 @@ export default class Dropdown extends Component {
     const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
 
-    const dropdownMenu = groups.map((group, i) => (
+    let allGroups = this.props.groups;
+    if (!this.props.duplicateFirst) {
+      allGroups = groups;
+    }
+
+    const dropdownMenu = allGroups.map((group, i) => (
       <div className="Dropdown-group" key={group.name || i}>
         {!group.name ? null : (
           <div className="Dropdown-groupLabel">{group.name}</div>
@@ -123,6 +128,7 @@ Dropdown.propTypes = {
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,
   dropdownIcon: PropTypes.string,
+  duplicateFirst: PropTypes.bool,
   onOpen: PropTypes.func,
   onClose: PropTypes.func,
   analytics: PropTypes.shape({
@@ -133,4 +139,5 @@ Dropdown.propTypes = {
 Dropdown.defaultProps = {
   dropdownIcon: 'fa-caret-down',
   analytics: {},
+  duplicateFirst: true,
 };

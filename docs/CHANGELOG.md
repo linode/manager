@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.2] 2017-10-04
+### Added
+- Changelog for 2017-10-04
+### Changed
+- Endpoint docs for pricing, disks, config, volume, oauthclient
+### Added
+- documentation for account/credit-card
+- documentation for account/payments
+- documentation for linode/volumes/:id/clone
+- documentation for profile/apps
+
+
 ## [0.13.1] 2017-09-28
 ### Fixed
 - Request parameters should render required/optional labels

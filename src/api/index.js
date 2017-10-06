@@ -9,11 +9,13 @@ import * as domainsModule from './configs/domains';
 import * as nodebalancersModule from './configs/nodebalancers';
 import * as profileModule from './configs/profile';
 import * as accountModule from './configs/account';
+import * as invoicesModule from './configs/invoices';
 import * as eventsModule from './configs/events';
 import * as tokensModule from './configs/tokens';
 import * as clientsModule from './configs/clients';
 import * as usersModule from './configs/users';
 import * as ticketsModule from './configs/tickets';
+import * as appsModule from './configs/apps';
 
 import apiActionReducerGenerator from './apiActionReducerGenerator';
 
@@ -37,3 +39,5 @@ export const clients = apiActionReducerGenerator(clientsModule.config, clientsMo
 export const users = apiActionReducerGenerator(usersModule.config, usersModule.actions);
 export const tickets = apiActionReducerGenerator(ticketsModule.config, ticketsModule.actions);
 export const account = apiActionReducerGenerator(accountModule.config, accountModule.actions);
+export const invoices = apiActionReducerGenerator(invoicesModule.config, invoicesModule.actions);
+export const apps = apiActionReducerGenerator(appsModule.config, appsModule.actions);

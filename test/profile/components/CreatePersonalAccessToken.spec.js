@@ -35,7 +35,7 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     // One call to save the data, one call to show secret.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/tokens/', {
+      ([fn]) => expectRequest(fn, '/profile/tokens/', {
         method: 'POST',
         body: {
           label: 'My sweet new token',
@@ -70,7 +70,7 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     // One call to save the data, one call to show secret.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/tokens/', {
+      ([fn]) => expectRequest(fn, '/profile/tokens/', {
         method: 'POST',
         body: {
           label: 'My sweet new token',
