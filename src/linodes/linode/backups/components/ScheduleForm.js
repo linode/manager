@@ -8,6 +8,7 @@ import {
   Select,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -23,6 +24,8 @@ export default class ScheduleForm extends Component {
       window: props.window,
       day: props.day,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -33,8 +36,6 @@ export default class ScheduleForm extends Component {
       () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { errors, loading, window, day } = this.state;

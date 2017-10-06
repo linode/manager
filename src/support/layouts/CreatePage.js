@@ -14,6 +14,7 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { domains, linodes, nodebalancers, volumes, tickets } from '~/api';
@@ -37,6 +38,8 @@ export class CreatePage extends Component {
       errors: {},
       loading: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
@@ -64,8 +67,6 @@ export class CreatePage extends Component {
       ({ id }) => push(`/support/${id}`),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderOptionsGroup(label, field, group) {
     return {

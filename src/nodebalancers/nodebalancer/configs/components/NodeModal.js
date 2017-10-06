@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { ModalFormGroup, Input, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
@@ -46,9 +47,9 @@ export default class NodeModal extends Component {
       mode: props.node.mode,
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, nodebalancerId, configId } = this.props;

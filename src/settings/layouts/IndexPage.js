@@ -10,6 +10,7 @@ import {
   FormSummary,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { setSource, setTitle } from '~/actions';
 import { account } from '~/api';
@@ -30,6 +31,8 @@ export class IndexPage extends Component {
       networkHelper: !!props.account.network_helper,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
@@ -46,9 +49,6 @@ export class IndexPage extends Component {
       [() => account.put({ network_helper })],
     ]));
   }
-
-  onChange = ({ target: { name, value, type, checked } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value === 'true' })
 
   render() {
     const { networkHelper, loading, errors } = this.state;

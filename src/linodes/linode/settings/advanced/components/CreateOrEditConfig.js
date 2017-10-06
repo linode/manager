@@ -18,6 +18,7 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -33,6 +34,7 @@ export default class CreateOrEditConfig extends Component {
     this.state = { errors: {}, loading: false };
 
     this.componentWillReceiveProps = this.componentWillMount;
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {
@@ -92,9 +94,6 @@ export default class CreateOrEditConfig extends Component {
       () => push(`/linodes/${linode.label}/settings/advanced`),
     ]));
   }
-
-  onChange = ({ target: { name, value, type, checked } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   kernelOptions() {
     const { kernels } = this.props;
