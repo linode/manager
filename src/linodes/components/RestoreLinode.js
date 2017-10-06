@@ -40,7 +40,7 @@ export default class RestoreLinode extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch,  } = this.props;
+    const { dispatch, linodes: allLinodes } = this.props;
     const { linode, label, backup, plan, backups } = this.state;
 
     const data = {
@@ -48,7 +48,7 @@ export default class RestoreLinode extends Component {
       backup_id: backup,
       backups_enabled: backups,
       type: plan,
-      region: linode.region,
+      region: allLinodes[linode].region,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [

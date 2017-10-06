@@ -12,6 +12,7 @@ import {
 } from '@/common';
 import { api } from '@/data';
 import { testType } from '@/data/types';
+import { testLinode } from '@/data/linodes';
 
 
 const { linodes: { linodes }, types: { types } } = api;
@@ -59,6 +60,7 @@ describe('linodes/components/RestoreLinode', function () {
     changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'plan', testType.id);
     changeInput(modal, 'backups', true);
+    changeInput(modal, 'linode', testLinode.id);
 
     dispatch.reset();
 
@@ -72,6 +74,7 @@ describe('linodes/components/RestoreLinode', function () {
           label: 'Restored from backup',
           type: testType.id,
           backups_enabled: true,
+          region: testLinode.region,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
