@@ -12,7 +12,7 @@ import select from './select';
 import session from './session';
 import source from './source';
 import title from './title';
-import api from '../api';
+import api from '../api/reducer';
 
 const appReducer = combineReducers({
   routing: routerReducer,
@@ -25,7 +25,7 @@ const appReducer = combineReducers({
   session,
   source,
   title,
-  api: api.reducer,
+  api,
   errors,
   preloadIndicator,
 });
