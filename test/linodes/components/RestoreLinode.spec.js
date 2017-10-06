@@ -33,6 +33,7 @@ describe('linodes/components/RestoreLinode', function () {
     changeInput(modal, 'backup', 1234);
     changeInput(modal, 'label', 'Restored from backup');
     changeInput(modal, 'plan', testType.id);
+    changeInput(modal, 'linode', testLinode.id);
 
     dispatch.reset();
 
@@ -46,6 +47,7 @@ describe('linodes/components/RestoreLinode', function () {
           label: 'Restored from backup',
           type: testType.id,
           backups_enabled: false,
+          region: testLinode.region,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
