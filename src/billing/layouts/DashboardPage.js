@@ -69,7 +69,7 @@ export class DashboardPage extends Component {
                     } },
                     {
                       cellComponent: LinkCell,
-                      hrefFn: (invoice) => `/invoices/${invoice.id}`, textKey: 'label',
+                      hrefFn: (invoice) => `billing/invoice/${invoice.id}`, textKey: 'label',
                     },
                     {
                       dataKey: 'total',
