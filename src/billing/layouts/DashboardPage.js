@@ -19,7 +19,7 @@ export class DashboardPage extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    await dispatch(setSource(__filename));
+    dispatch(setSource(__filename));
   }
 
   render() {
