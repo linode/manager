@@ -51,6 +51,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'size', 20);
     changeInput(modal, 'linode', 12345);
+    changeInput(modal, 'config', 1234);
 
     dispatch.reset();
     await modal.find('Form').props().onSubmit();
@@ -63,6 +64,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
           region: REGION_MAP.Asia[0],
           size: 20,
           linode_id: 12345,
+          config_id: 1234,
         },
       }),
     ], 2, [{ id: '12345' }]);

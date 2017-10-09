@@ -16,6 +16,10 @@ export function attachVolume(volumeId, linodeId, configId = null) {
       config_id: configId,
     };
 
+    if (!data.config_id) {
+      delete data.config_id;
+    }
+
     await dispatch(thunkFetch.post(`/linode/volumes/${volumeId}/attach`, data));
     dispatch(actions.one({ linode_id: linodeId }, volumeId));
   };
