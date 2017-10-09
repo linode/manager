@@ -10,6 +10,7 @@ import { volumes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
+import { AVAILABLE_VOLUME_REGIONS } from '~/constants';
 import LinodeSelect from '~/linodes/components/LinodeSelect';
 
 
@@ -104,6 +105,7 @@ export default class AddEditVolume extends Component {
           {!showLinodeAndRegion ? null : (
             <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
               <RegionSelect
+                filter={AVAILABLE_VOLUME_REGIONS}
                 value={region}
                 name="region"
                 id="region"
