@@ -17,7 +17,7 @@ export class DashboardPage extends Component {
     await dispatch(invoices.all());
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
   }
