@@ -3,7 +3,7 @@ import {
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
-  singular: 'invoices',
+  plural: 'invoices',
   endpoint: id => `/account/invoices/${id}`,
   supports: [ONE, MANY],
 });
