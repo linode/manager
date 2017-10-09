@@ -27,7 +27,7 @@ export default class UpgradeToKVM extends Component {
   render() {
     const { dispatch, linode } = this.props;
     const { errors } = this.state;
-    const migrateEst = Math.round(linode.specs.disk / (4000 / 60) / 60);
+    const migrateEst = Math.round(linode.type.disk / (4000 / 60) / 60);
 
     return (
       <ConfirmModalBody
@@ -35,7 +35,6 @@ export default class UpgradeToKVM extends Component {
           () => kvmifyLinode(linode.id),
           hideModal,
         ]))}
-        buttonText="Confirm"
         onCancel={() => dispatch(hideModal())}
         analytics={{ title: UpgradeToKVM.title }}
         errors={errors}
@@ -48,7 +47,7 @@ export default class UpgradeToKVM extends Component {
           </p>
           <p>
             {/* eslint-disable max-len */}
-            To migrate {(linode.specs.disk / 1024)} GiB of disks will take about {migrateEst} minutes to complete.
+            To migrate {(linode.type.disk / 1024)} GiB of disks will take about {migrateEst} minutes to complete.
             {/* eslint-enable max-len */}
           </p>
         </div>
