@@ -300,6 +300,11 @@ const EventTypeMap = {
     pastTenseAction: 'resized',
     redirectUrl: getVolumeRedirectUrl,
   },
+  volume_clone: {
+    presentTenseAction: 'Cloning',
+    pastTenseAction: 'cloned',
+    redirectUrl: getVolumesRedirectUrl,
+  },
 
   credit_card_updated: {
     pastTensePrefix: 'Credit card updated by',
@@ -309,11 +314,6 @@ const EventTypeMap = {
     pastTensePrefix: 'Payment submitted by',
     redirectUrl: getAccountRedirectUrl,
   },
-  volume_clone: {
-    presentTenseAction: 'Cloning',
-    pastTenseAction: 'cloned',
-    redirectUrl: getVolumesRedirectUrl,
-  }
 };
 
 export default EventTypeMap;
