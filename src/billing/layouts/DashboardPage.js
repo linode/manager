@@ -2,9 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { TimeDisplay } from '~/components';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input } from 'linode-components/forms';
+import { Table } from 'linode-components/tables';
+import { LinkCell } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -25,9 +28,11 @@ export class DashboardPage extends Component {
   }
 
   render() {
-    const { account } = this.props;
+    const { account, invoices } = this.props;
 
     console.log(this.props);
+    const recentInv = Object.values(invoices).slice(Object.keys(invoices).length - 4);
+    console.log(recentInv);
     const address = [
       account.company,
       `${account.first_name} ${account.last_name}`,
@@ -77,7 +82,25 @@ export class DashboardPage extends Component {
             <h3 className="sub-header">Recent Billing Activity</h3>
             <FormGroup className="row">
               <div className="col-sm-12">
-                Test
+                <Table
+                  columns={[
+                    { dataKey: 'date', formatFn: (date) => {
+                      return (<TimeDisplay time={date} />);
+                    } },
+                    {
+                      cellComponent: LinkCell,
+                      hrefFn: (invoice) => `/invoices/${invoice.id}`, textKey: 'label',
+                    },
+                    { dataKey: 'total',
+                      className: 'ActionsCell',
+                      formatFn: (total) => {
+                      return `$${total.toFixed(2)}`;
+                    } },
+                  ]}
+                  noDataMessage="No invoices found."
+                  data={recentInv}
+                  disableHeader
+                />
               </div>
             </FormGroup>
             <h3 className="sub-header">Account Balance</h3>
@@ -105,7 +128,7 @@ DashboardPage.propTypes = {
 function select(state) {
   return {
     account: state.api.account,
-    invoices: state.api.invoices,
+    invoices: state.api.invoices.invoices,
   };
 }
 
