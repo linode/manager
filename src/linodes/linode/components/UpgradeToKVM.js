@@ -42,8 +42,8 @@ export default class UpgradeToKVM extends Component {
       >
         <div>
           <p>
-            <strong>{linode.label}</strong> will be shut down, migrated to a KVM box, and then booted
-            back up. Specific changes from Xen to KVM are detailed in
+            <strong>{linode.label}</strong> will be shut down, migrated to a KVM box, and then
+            booted back up. Specific changes from Xen to KVM are detailed in
             our <ExternalLink to="https://www.linode.com/docs/platform/kvm">KVM Reference guide</ExternalLink>.
           </p>
           <p>
