@@ -12,10 +12,8 @@ import { account, invoices } from '~/api';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }) {
-    if (!Object.keys(getState().api.account).length) {
-      await dispatch(account.one());
-    }
+  static async preload({ dispatch }) {
+    await dispatch(account.one());
     await dispatch(invoices.all());
   }
 
@@ -36,7 +34,6 @@ export class DashboardPage extends Component {
       account.city && account.state ?
         `${account.city}, ${account.state} ${account.zip ? account.zip : ''}`
         : null,
-      account.company,
     ].map((t, i) => (t ? <li key={i}>{t}</li> : null));
 
     return (
@@ -58,20 +55,8 @@ export class DashboardPage extends Component {
               <div className="col-sm-2 row-label">
                 Email
               </div>
-              <div className="col-sm-10">
+              <div className="col-sm-10" id="email">
                 {account.email}
-              </div>
-            </FormGroup>
-            <h3 className="sub-header">Credit Card</h3>
-            <FormGroup className="row">
-              <div className="col-sm-2 row-label">
-                Credit Card
-              </div>
-              <div className="col-sm-10">
-                <ul className="list-unstyled" id="creditCard">
-                  <li>xxxxxxxxxxxxxxxx Exp: mm/yy</li>
-                  <li><strong>Expired!</strong> - update credit card</li>
-                </ul>
               </div>
             </FormGroup>
             <h3 className="sub-header">Recent Billing Activity</h3>
@@ -105,7 +90,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-2 row-label">
                 Account Balance
               </div>
-              <div className="col-sm-10">
+              <div className="col-sm-10" id="balance">
                 <strong>${(account.balance)}</strong>
               </div>
             </FormGroup>
