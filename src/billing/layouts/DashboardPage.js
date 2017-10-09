@@ -1,16 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { TimeDisplay } from '~/components';
-import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input } from 'linode-components/forms';
+import { FormGroup } from 'linode-components/forms';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
-import { getObjectByLabelLazily } from '~/api/util';
 import { account, invoices } from '~/api';
 
 
@@ -30,9 +27,7 @@ export class DashboardPage extends Component {
   render() {
     const { account, invoices } = this.props;
 
-    console.log(this.props);
     const recentInv = Object.values(invoices).slice(Object.keys(invoices).length - 4);
-    console.log(recentInv);
     const address = [
       account.company,
       `${account.first_name} ${account.last_name}`,
@@ -91,11 +86,13 @@ export class DashboardPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: (invoice) => `/invoices/${invoice.id}`, textKey: 'label',
                     },
-                    { dataKey: 'total',
+                    {
+                      dataKey: 'total',
                       className: 'ActionsCell',
                       formatFn: (total) => {
-                      return `$${total.toFixed(2)}`;
-                    } },
+                        return `$${total.toFixed(2)}`;
+                      },
+                    },
                   ]}
                   noDataMessage="No invoices found."
                   data={recentInv}

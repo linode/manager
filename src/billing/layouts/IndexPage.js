@@ -1,25 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Link } from 'react-router';
 
 import { Tabs } from 'linode-components/tabs';
 
 import { setAnalytics, setTitle } from '~/actions';
-import { getObjectByLabelLazily } from '~/api/util';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-  }
-
-  constructor(props) {
-    super(props);
-
-  }
-
-  async componentDidMount() {
-    const { dispatch, linode } = this.props;
+  componentDidMount() {
+    const { dispatch } = this.props;
     dispatch(setTitle('Billing'));
     dispatch(setAnalytics('billing'));
   }
@@ -57,8 +47,4 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-function select(state, props) {
-  return { };
-}
-
-export default connect(select)(IndexPage);
+export default connect()(IndexPage);
