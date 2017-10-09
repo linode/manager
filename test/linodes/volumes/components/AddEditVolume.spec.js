@@ -1,13 +1,15 @@
+import React from 'react';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
+import { expect } from 'chai';
 
 import { REGION_MAP } from '~/constants';
 import { AddEditVolume } from '~/linodes/volumes/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
+import { testLinode1238 } from '@/data/linodes';
 import { testVolume } from '@/data/volumes';
-
 
 const { linodes: { linodes } } = api;
 
@@ -23,6 +25,8 @@ describe('linodes/volumes/components/AddEditVolume', function () {
   it('creates a volume', async function () {
     AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
+
+    expect(modal.find('config').length).to.equal(0);
 
     changeInput(modal, 'label', 'my-volume');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
@@ -47,11 +51,12 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
 
+    expect(modal.find('config').length).to.equal(0);
+
     changeInput(modal, 'label', 'my-volume');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'size', 20);
     changeInput(modal, 'linode', 12345);
-    changeInput(modal, 'config', 1234);
 
     dispatch.reset();
     await modal.find('Form').props().onSubmit();
@@ -64,7 +69,36 @@ describe('linodes/volumes/components/AddEditVolume', function () {
           region: REGION_MAP.Asia[0],
           size: 20,
           linode_id: 12345,
-          config_id: 1234,
+        },
+      }),
+    ], 2, [{ id: '12345' }]);
+  });
+
+  it('creates a volume and attaches it to selected config', async function () {
+    AddEditVolume.trigger(dispatch, linodes, undefined, testLinode1238);
+    const modal = mount(dispatch.firstCall.args[0].body);
+    const configId = Object.keys(testLinode1238._configs.configs)[0];
+
+    expect(modal.find('config').length).to.equal(1);
+
+    changeInput(modal, 'label', 'my-volume');
+    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'size', 20);
+    changeInput(modal, 'linode', testLinode1238.id);
+    changeInput(modal, 'config', configId);
+
+    dispatch.reset();
+    await modal.find('Form').props().onSubmit();
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+        method: 'POST',
+        body: {
+          label: 'my-volume',
+          region: REGION_MAP.Asia[0],
+          size: 20,
+          linode_id: testLinode1238.id,
+          config_id: configId,
         },
       }),
     ], 2, [{ id: '12345' }]);
@@ -74,10 +108,11 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     AddEditVolume.trigger(dispatch, linodes, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
+    expect(modal.find('config').length).to.equal(0);
+
     changeInput(modal, 'label', 'my-new-volume-label');
 
     dispatch.reset();
-
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

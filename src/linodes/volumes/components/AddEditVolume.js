@@ -34,7 +34,7 @@ export default class AddEditVolume extends Component {
     const { volume = {}, linode } = props;
 
     this.state = {
-      linode,
+      linode: linode ? linode.id : null,
       config: null,
       errors: {},
       label: volume.label || '',
@@ -135,6 +135,7 @@ export default class AddEditVolume extends Component {
     const linodeConfigs = [
       ...allConfigs[linode] || configs || {},
     ];
+    const showLinodeConfigs = (existingVolume && (linodeConfigs.length > 1));
 
     if (config === undefined && linodeConfigs[0]) {
       config = linodeConfigs[0].value;
@@ -207,7 +208,7 @@ export default class AddEditVolume extends Component {
               </ModalFormGroup>
             </div>
           )}
-          {linodeConfigs.length === 1 ? null :
+          {!showLinodeConfigs ? null :
             <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
               <Select
                 options={linodeConfigs}
