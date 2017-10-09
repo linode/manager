@@ -82,10 +82,12 @@ export default class VolumesList extends Component {
 
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      { elements: [{ name: 'Edit', action: () =>
-        AddEditVolume.trigger(dispatch, linodes, record) }] },
-      { elements: [{ name: 'Resize', action: () => ResizeVolume.trigger(dispatch, record) }] },
-      { elements: [record.linode_id === null ?
+      { elements: [
+        { name: 'Edit', action: () =>
+          AddEditVolume.trigger(dispatch, linodes, record) },
+        { name: 'Resize',
+          action: () => ResizeVolume.trigger(dispatch, record) },
+        record.linode_id === null ?
         { name: 'Attach', action: () =>
           AttachVolume.trigger(dispatch, linodes, record) } :
         { name: 'Detach', action: () => this.detachVolumes(record) },

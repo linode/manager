@@ -10,7 +10,6 @@ import { hideModal, showModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { RegionSelect } from '~/components';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import BackupSelect from './BackupSelect';
@@ -41,10 +40,16 @@ export default class RestoreLinode extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch } = this.props;
-    const { label, backup, region, plan, backups } = this.state;
+    const { dispatch, linodes: allLinodes } = this.props;
+    const { linode, label, backup, plan, backups } = this.state;
 
-    const data = { label, region, backup_id: backup, backups_enabled: backups, type: plan };
+    const data = {
+      label,
+      backup_id: backup,
+      backups_enabled: backups,
+      type: plan,
+      region: allLinodes[linode].region,
+    };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
@@ -71,7 +76,7 @@ export default class RestoreLinode extends Component {
   render() {
     const { close, linodes, plans } = this.props;
     const {
-      errors, label, linode, region, plan, backup, backups, allBackups, fetchingBackups,
+      errors, label, linode, plan, backup, backups, allBackups, fetchingBackups,
     } = this.state;
 
     const linodesWithBackups = _.pickBy(linodes, (l) => l.backups.enabled);
@@ -117,14 +122,6 @@ export default class RestoreLinode extends Component {
               value={label}
               name="label"
               id="label"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
-            <RegionSelect
-              value={region}
-              name="region"
-              id="region"
               onChange={this.onChange}
             />
           </ModalFormGroup>

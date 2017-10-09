@@ -41,9 +41,12 @@ form {
     }
 }
 
+input.form-control {
+    height: $form-field-height;
+}
+
 input.form-control,
 .Select {
-    height: $form-field-height;
     width: 225px;
     max-width: 100%;
 }

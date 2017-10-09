@@ -1,8 +1,12 @@
 .Select {
     display: inline-block;
 
-    &-control, &-value, &-input {
+    &-mult-value-wrapper {
         height: $form-field-height;
+
+        &-control, &-value, &-input {
+            height: $form-field-height;
+        }
     }
 
     &-label {
