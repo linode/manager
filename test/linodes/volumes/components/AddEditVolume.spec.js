@@ -1,4 +1,3 @@
-import React from 'react';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -75,16 +74,18 @@ describe('linodes/volumes/components/AddEditVolume', function () {
   });
 
   it('creates a volume and attaches it to selected config', async function () {
-    AddEditVolume.trigger(dispatch, linodes, undefined, testLinode1238);
+    AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
     const configId = Object.keys(testLinode1238._configs.configs)[0];
-
-    expect(modal.find('config').length).to.equal(1);
 
     changeInput(modal, 'label', 'my-volume');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
     changeInput(modal, 'size', 20);
     changeInput(modal, 'linode', testLinode1238.id);
+    modal.instance().setState({
+      allConfigs: { [testLinode1238.id]: Object.values(testLinode1238._configs.configs).map(
+        c => ({ value: c.id, label: c.label })) },
+    });
     changeInput(modal, 'config', configId);
 
     dispatch.reset();
