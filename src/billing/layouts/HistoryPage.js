@@ -13,11 +13,6 @@ import { setSource } from '~/actions/source';
 
 
 export class HistoryPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(account.one());
-    await dispatch(invoices.all());
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
