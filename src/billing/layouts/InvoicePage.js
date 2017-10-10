@@ -16,7 +16,6 @@ import { setSource } from '~/actions/source';
 
 export class InvoicePage extends Component {
   static async preload({ dispatch, getState }, { invoiceId }) {
-    await dispatch(invoices.one([invoiceId]));
     await dispatch(invoices.items.one([invoiceId]));
   }
 
@@ -41,6 +40,9 @@ export class InvoicePage extends Component {
                   label: 'From',
                   headerClassName: 'DateColumn',
                   formatFn: (from) => {
+                    if(!from) {
+                      return;
+                    }
                     const time = moment.utc(from, moment.iso_8601).tz(timezone);
                     return time.format('MMM D YYYY h:mm A z');
                   },
@@ -50,6 +52,9 @@ export class InvoicePage extends Component {
                   label: 'To',
                   headerClassName: 'DateColumn',
                   formatFn: (to) => {
+                    if(!to) {
+                      return;
+                    }
                     const time = moment.utc(to, moment.iso_8601).tz(timezone);
                     return time.format('MMM D YYYY h:mm A z');
                   },
@@ -66,6 +71,9 @@ export class InvoicePage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (unitPrice) => {
+                    if(!unitPrice) {
+                      return;
+                    }
                     return `$${parseFloat(unitPrice).toFixed(4)}`;
                   },
                 },
