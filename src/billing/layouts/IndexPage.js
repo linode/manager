@@ -17,6 +17,7 @@ export class IndexPage extends Component {
   render() {
     const tabs = [
       { name: 'Dashboard', link: '' },
+      { name: 'History', link: 'history' },
     ].map(t => ({ ...t, link: `/billing/${t.link}` }));
 
     return (

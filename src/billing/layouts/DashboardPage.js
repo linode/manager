@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import moment from 'moment-timezone';
 
-import { TimeDisplay } from '~/components';
+import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup } from 'linode-components/forms';
 import { Table } from 'linode-components/tables';
@@ -24,6 +26,7 @@ export class DashboardPage extends Component {
 
   render() {
     const { account, invoices } = this.props;
+    const timezone = getStorage('profile/timezone') || 'UTC';
 
     const recentInv = Object.values(invoices).slice(Object.keys(invoices).length - 4);
     const address = [
@@ -65,11 +68,12 @@ export class DashboardPage extends Component {
                 <Table
                   columns={[
                     { dataKey: 'date', formatFn: (date) => {
-                      return (<TimeDisplay time={date} />);
+                      const time = moment.utc(date, moment.iso_8601).tz(timezone);
+                      return time.format('MMM D YYYY h:mm A z');
                     } },
                     {
                       cellComponent: LinkCell,
-                      hrefFn: (invoice) => `billing/invoice/${invoice.id}`, textKey: 'label',
+                      hrefFn: (invoice) => `/billing/invoice/${invoice.id}`, textKey: 'label',
                     },
                     {
                       dataKey: 'total',
@@ -80,9 +84,14 @@ export class DashboardPage extends Component {
                     },
                   ]}
                   noDataMessage="No invoices found."
-                  data={recentInv}
+                  data={recentInv.reverse()}
                   disableHeader
                 />
+              </div>
+            </FormGroup>
+            <FormGroup className="row">
+              <div className="col-sm-12 text-right">
+                <Link to={`/billing/history`}>Billing History</Link>
               </div>
             </FormGroup>
             <h3 className="sub-header">Account Balance</h3>
