@@ -5,9 +5,14 @@ import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
 import { setAnalytics, setTitle } from '~/actions';
+import { account, invoices } from '~/api';
 
 
 export class IndexPage extends Component {
+  static async preload({ dispatch }) {
+    await Promise.all([account.one(), invoices.all()].map(r => dispatch(r)));
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setTitle('Billing'));
