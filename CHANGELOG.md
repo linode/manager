@@ -4,8 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.15.0] 2017-10-10
+### Added
+- Added volume_clone, credit_card_updated, payment_submitted event support #2622
+- KVMify #2562, #2611
+- Noscript #2565
+- Logout if in maintenance mode #2627
+### Changed
+- Use full backup names in dialogs #2564
+- Restore from Backup should not offer Region #2586
+- Buttons that are dropdowns include the default action in the dropdown #2585
+- Configs should be offered when creating from volume #2544
+- Restrict Volumes to availability regions #2623
+- Hide volume Linodes and Configs when appropriate #2630
+- (Docs) updated to 0.13.3
+### Fixed
+- Allow Notifications to poll with no previous Events #2618
+- Fix multi select (stackscript distros ui) #2614
+
 ## [0.14.2] 2017-10-04
-### Changes
+### Changed
 - Changes to work with the latest API changes
 - (Docs) Updated to 0.13.2
 

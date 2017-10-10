@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
@@ -7,13 +7,30 @@ import { Select } from 'linode-components/forms';
 import { REGION_MAP, UNAVAILABLE_ZONES } from '~/constants';
 
 
-const options = _.map(REGION_MAP, (zones, region) => ({
-  label: region,
-  options: _.sortBy(zones.filter(z => UNAVAILABLE_ZONES.indexOf(z) === -1)
-                         .map(zone => ({ value: zone, label: zone })), 'label'),
-}));
+function makeOptions(additionalFilter) {
+  function filterZones(zones) {
+    let filteredZones = zones.filter(z => UNAVAILABLE_ZONES.indexOf(z) === -1);
+    if (additionalFilter) {
+      filteredZones = filteredZones.filter(z => additionalFilter.indexOf(z) >= 0);
+    }
+
+    return filteredZones;
+  }
+
+  return _.map(REGION_MAP, (zones, region) => ({
+    label: region,
+    options: _.sortBy(filterZones(zones).map(zone => ({ value: zone, label: zone })), 'label'),
+  }));
+}
+
+const defaultOptions = makeOptions();
 
 export default function RegionSelect(props) {
+  let options = defaultOptions;
+  if (props.filter) {
+    options = makeOptions(props.filter);
+  }
+
   return (
     <div>
       <Select
@@ -29,4 +46,5 @@ export default function RegionSelect(props) {
 
 RegionSelect.propTypes = {
   ...Select.propTypes,
+  filter: PropTypes.array,
 };
