@@ -11,6 +11,7 @@ import {
   PasswordInput,
 } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { resetPassword } from '~/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
@@ -28,6 +29,7 @@ export default class ResetRootPassword extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount() {
@@ -48,8 +50,6 @@ export default class ResetRootPassword extends Component {
       () => this.setState({ password: '' }),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmitConfirm = () => {
     const { dispatch } = this.props;

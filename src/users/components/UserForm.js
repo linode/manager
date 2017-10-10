@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import {
   Form, FormGroup, FormGroupError, PasswordInput, Input, Checkboxes, Radio, SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { users } from '~/api';
 import { setTitle } from '~/actions/title';
@@ -24,10 +25,9 @@ export default class UserForm extends Component {
       loading: false,
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value, type } }) =>
-    this.setState({ [name]: type === 'radio' ? value === 'true' : value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, user: { username: oldUsername } } = this.props;

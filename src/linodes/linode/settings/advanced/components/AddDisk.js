@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -34,6 +35,8 @@ export default class AddDisk extends Component {
       password: '',
       filesystem: 'ext4',
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -52,8 +55,6 @@ export default class AddDisk extends Component {
       hideModal,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { dispatch, free, distributions: { distributions } } = this.props;

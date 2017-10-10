@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
@@ -29,6 +30,8 @@ export default class EditARecord extends Component {
       type: type || 'A',
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -49,7 +52,6 @@ export default class EditARecord extends Component {
     ]));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
   onIPChange = ({ target: { value } }) => {
     const type = value.indexOf(':') !== -1 ? 'AAAA' : 'A';
     this.setState({ type: value ? type : this.state.type, ip: value });

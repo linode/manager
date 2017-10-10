@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -57,9 +58,9 @@ export default class CreatePersonalAccessToken extends Component {
       expiry: null,
       loading: false,
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch } = this.props;

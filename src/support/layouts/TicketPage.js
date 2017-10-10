@@ -12,6 +12,7 @@ import {
   Textarea,
   Input,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { tickets } from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
@@ -43,6 +44,8 @@ export class TicketPage extends Component {
     super();
 
     this.state = { reply: '', attachments: [], errors: {}, loading: false };
+
+    this.onChange = onChange.bind(this);
   }
 
   async componentDidMount() {
@@ -51,8 +54,6 @@ export class TicketPage extends Component {
     dispatch(setTitle(this.props.ticket.summary));
     dispatch(setAnalytics(['tickets', 'ticket']));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
     const { attachments, reply: description } = this.state;

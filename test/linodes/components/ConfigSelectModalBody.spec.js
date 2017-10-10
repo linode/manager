@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { powerOnLinode, rebootLinode } from '~/api/linodes';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 
-import { expectDispatchOrStoreErrors } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors } from '@/common';
 import { api } from '@/data';
 
 
@@ -70,8 +70,7 @@ describe('linodes/components/ConfigSelectModalBody', () => {
       />
     );
 
-    const configElement = modal.find('Radio').at(1);
-    configElement.simulate('change', { target: { value: 321321 } });
+    changeInput(modal, 'config', 321321);
 
     dispatch.reset();
     modal.find('FormModalBody').props().onSubmit();

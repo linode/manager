@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { ModalFormGroup, Input } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -31,6 +32,8 @@ export default class EditDisk extends Component {
       label: props.disk.label,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -48,8 +51,6 @@ export default class EditDisk extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { disk, free, dispatch } = this.props;

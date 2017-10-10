@@ -2,6 +2,7 @@ import QRious from 'qrious';
 import React, { Component, PropTypes } from 'react';
 
 import { ModalFormGroup, Input } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -29,6 +30,8 @@ export class TwoFactorModal extends Component {
       tfaCode: '',
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -40,8 +43,6 @@ export class TwoFactorModal extends Component {
       ({ scratch }) => this.twoFactorScratchModal(scratch),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   twoFactorScratchModal(scratch) {
     const title = 'Two-Factor Authentication Enabled';

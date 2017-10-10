@@ -12,6 +12,7 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { nodebalancers } from '~/api';
 import { updateConfigSSL } from '~/api/nodebalancers';
@@ -42,6 +43,8 @@ export default class ConfigForm extends Component {
       sslCert: props.config.ssl_cert,
       sslKey: props.config.ssl_key,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -90,9 +93,6 @@ export default class ConfigForm extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
-
-  onChange = ({ target: { checked, value, name, type } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
     const { submitText, submitDisabledText, config } = this.props;

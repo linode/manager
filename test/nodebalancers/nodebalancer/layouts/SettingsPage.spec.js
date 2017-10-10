@@ -4,7 +4,9 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import { SettingsPage } from '~/nodebalancers/nodebalancer/layouts/SettingsPage';
 
@@ -62,8 +64,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    page.find('#label').simulate('change',
-      { target: { value: 'newlabel' } });
+    changeInput(page, 'label', 'newlabel');
 
     dispatch.reset();
 
