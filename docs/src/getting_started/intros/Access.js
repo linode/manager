@@ -14,7 +14,7 @@ export default function Authentication() {
       <section>
         <p>
           To use some API endpoints, authentication is required. We use the basic OAuth workflow
-          where you can create &nbsp;<em>applications</em> that integrate with Linode by
+          where you can create <em>applications</em> that integrate with Linode by
           registering those applications with us. You then use OAuth to authenticate on behalf
           of the user to request access to resources from their account.
         </p>
@@ -23,10 +23,10 @@ export default function Authentication() {
         <h2>The Access Code</h2>
         <p>
           In the OAuth workflow it is a two step process to authenticate a user before you can
-          start making API calls. You will first need to request an <strong>access code</strong>
-          that can then be exchanged for an &nbsp;<strong>authorization token</strong>.
-          To aid as many application developers as possible with their design we provide two
-          methods for requesting an access code.
+          start making API calls. You will first need to request
+          an <strong>access code</strong> that can then be exchanged for
+          an <strong>authorization token</strong>. To aid as many application developers
+          as possible with their design we provide two methods for requesting an access code.
         </p>
       </section>
       <section>
@@ -44,8 +44,8 @@ export default function Authentication() {
         <p>
           The user logs in to Linode and is presented the scope levels your application is
           requesting. Once the user accepts your request for access, we redirect them back to
-          you with an <em>access code</em>. You may then exchange the access code for an
-          <em>authorization token</em>.
+          you with an <em>access code</em>. You may then exchange
+          the access code for an <em>authorization token</em>.
         </p>
         <p>
           There are additional parameters that you can supply in the query string of the
@@ -54,8 +54,8 @@ export default function Authentication() {
           with your OAuth client application will be used.
         </p>
         <p>
-          When the user is redirected, two parameters will be added to the query string:
-          <code>code</code> and <code>state</code>.
+          When the user is redirected, two parameters will be added to the query
+          string: <code>code</code> and <code>state</code>.
           The last parameter will match the state you gave us at the start of the flow.
           This allows you to ensure that the OAuth flow was initiated by your application,
           rather than by someone manually navigating to {LOGIN_ROOT} with
@@ -163,8 +163,8 @@ export default function Authentication() {
           That is, you are only allowed to see their username and email address. If you
           want more access, you need to add <em>OAuth scopes</em> to the query string.
           An OAuth scope defines the level of access your OAuth token will receive.
-          You can request a comma-delimited list of scopes by adding <code>scope=a,b,c</code>
-          to the query string of the <code>{LOGIN_ROOT}</code> URL.
+          You can request a comma-delimited list of scopes by adding <code>scope=a,b,c</code> to
+          the query string of the <code>{LOGIN_ROOT}</code> URL.
         </p>
         <p>
           A scope takes the form of <code>resource:access</code>, where the
@@ -182,10 +182,10 @@ export default function Authentication() {
         </ul>
         <p>
           In addition to the level of access you request,
-          you will be granted each access level below it. For example, requesting <em>modify</em>
-          access will also grant you <em>view</em> access, and requesting <em>delete</em> access
-          will grant you <em>full</em> access to that resource (<code>resource:*</code> has
-          the same effect).
+          you will be granted each access level below it. For example,
+          requesting <em>modify</em> access will also grant you <em>view</em> access,
+          and requesting <em>delete</em> access will grant you <em>full</em> access
+          to that resource (<code>resource:*</code> has the same effect).
         </p>
         <p>
           Each API endpoint documented on these pages includes the OAuth scope necessary
