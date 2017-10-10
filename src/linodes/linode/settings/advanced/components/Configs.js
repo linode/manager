@@ -60,7 +60,7 @@ export default class Configs extends Component {
                 data={sorted}
                 dispatch={dispatch}
                 massEditGroups={[{ elements: [
-                    { name: 'Delete', action: this.deleteConfigs },
+                  { name: 'Delete', action: this.deleteConfigs },
                 ] }]}
                 selectedMap={selectedMap}
                 objectType={Configs.OBJECT_TYPE}
@@ -92,7 +92,7 @@ export default class Configs extends Component {
                 {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
-                  onClick: (config) => { this.deleteConfigs(linode, [config]); },
+                  onClick: (config) => { this.deleteConfigs(config); },
                   text: 'Delete',
                 },
               ]}
