@@ -114,7 +114,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
-                https://$api_root/$version/networkint/ipv6/2600:3c01::2:5001
+                https://$api_root/$version/networking/ipv6/2600:3c01::2:5001
           python: |
             my_ipv6 = linode.IPv6Address(client, '2600:3c01::2:5001')
       PUT:
