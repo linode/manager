@@ -7,8 +7,8 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes } from '~/api';
-import { linodeBackups } from '~/api/linodes';
+import api from '~/api';
+import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import BackupsCheckbox from './BackupsCheckbox';
@@ -52,7 +52,7 @@ export default class RestoreLinode extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
+      () => api.linodes.post(data),
       ({ label }) => push(`/linodes/${label}`),
     ]));
   }

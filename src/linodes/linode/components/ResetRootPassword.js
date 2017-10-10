@@ -13,7 +13,7 @@ import {
 import { FormModalBody } from 'linode-components/modals';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { resetPassword } from '~/api/linodes';
+import { resetPassword } from '~/api/ad-hoc/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
 

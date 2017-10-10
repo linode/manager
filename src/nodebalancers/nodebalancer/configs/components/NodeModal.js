@@ -5,7 +5,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { nodebalancers } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -63,7 +63,7 @@ export default class NodeModal extends Component {
     const ids = [nodebalancerId, configId, state.id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
+      () => api.nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
       hideModal,
     ]));
   }

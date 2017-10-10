@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
+import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { RescueMode, ResetRootPassword } from '../components';
@@ -13,8 +13,8 @@ export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await Promise.all([
-      linodes.disks,
-      linodes.volumes,
+      api.linodes.disks,
+      api.linodes.volumes,
     ].map(o => dispatch(o.all([id]))));
   }
 

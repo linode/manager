@@ -12,7 +12,7 @@ import { Table } from 'linode-components/tables';
 import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
-import { linodes } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
@@ -44,7 +44,7 @@ export default class Disks extends Component {
   deleteDisks = confirmThenDelete(
     this.props.dispatch,
     'disk',
-    (id) => linodes.disks.delete(this.props.linode.id, id),
+    (id) => api.linodes.disks.delete(this.props.linode.id, id),
     Disks.OBJECT_TYPE).bind(this)
 
   renderStatusMessage() {

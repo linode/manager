@@ -11,7 +11,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setStorage } from '~/storage';
 
@@ -36,7 +36,7 @@ export default class ChangeTimezone extends Component {
     const { timezone } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({ timezone }),
+      () => api.profile.put({ timezone }),
       () => setStorage('profile/timezone', timezone),
     ]));
   }

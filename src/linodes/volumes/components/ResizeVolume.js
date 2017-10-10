@@ -5,7 +5,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { resizeVolume } from '~/api/volumes';
+import { resizeVolume } from '~/api/ad-hoc/volumes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

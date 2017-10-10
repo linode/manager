@@ -12,7 +12,7 @@ import { TableCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
-import { addIP, deleteIP, setRDNS } from '~/api/networking';
+import { addIP, deleteIP, setRDNS } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import { MoreInfo, EditRDNS, AddIP } from '../components';

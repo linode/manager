@@ -11,7 +11,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { setPassword } from '~/api/profile';
+import { setPassword } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectExpiration from './SelectExpiration';

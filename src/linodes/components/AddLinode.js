@@ -6,7 +6,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 
@@ -56,7 +56,7 @@ export default class AddLinode extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
+      () => api.linodes.post(data),
       ({ label }) => push(`/linodes/${label}`),
     ]));
   }

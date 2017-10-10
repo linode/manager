@@ -6,7 +6,7 @@ import { FormModalBody } from 'linode-components/modals';
 import * as utilities from 'linode-components/forms/utilities';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { stackscripts } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DEFAULT_DISTRIBUTION } from '~/constants';
 
@@ -39,7 +39,7 @@ export default class AddStackScript extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => stackscripts.post(data),
+      () => api.stackscripts.post(data),
       ({ id }) => push(`/stackscripts/${id}`),
     ]));
   }

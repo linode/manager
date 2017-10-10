@@ -6,10 +6,10 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { users } from '~/api';
+import api from '~/api';
 import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { actions } from '~/api/configs/users';
+import { actions } from '~/api/generic/users';
 import { FormSummary } from 'linode-components/forms';
 
 
@@ -49,7 +49,7 @@ export default class UserForm extends Component {
     // when you save an existing user, but it isn't currently causing any
     // problems
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users[creating ? 'post' : 'put'](data, ...idsPath),
+      () => api.users[creating ? 'post' : 'put'](data, ...idsPath),
       (user) => creating ? null : actions.one(user),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(oldUsername),

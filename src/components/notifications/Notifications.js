@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import { events } from '~/api';
-import { eventRead } from '~/api/events';
+import api from '~/api';
+import { eventRead } from '~/api/ad-hoc/events';
 import Polling from '~/api/polling';
 import {
   createHeaderFilter,
@@ -21,7 +21,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 let filterOptions = { seen: false };
 const fetchAllEvents = () => (dispatch) =>
-  dispatch(events.all([], null, createHeaderFilter(filterOptions)));
+  dispatch(api.events.all([], null, createHeaderFilter(filterOptions)));
 
 const POLLING = Polling({
   apiRequestFn: fetchAllEvents,
@@ -53,7 +53,7 @@ export class Notifications extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.fetchEventsPage(lessThanNowFilter('created'));
+      this.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
     }
 
     // initialize polling for unseen events
@@ -108,9 +108,9 @@ export class Notifications extends Component {
     this.setState({ loading: false });
   }
 
-  fetchEventsPage(options = null) {
+  fetchEventsPage(headers = null) {
     const { dispatch } = this.props;
-    return dispatch(events.page(0, [], null, true, null, options));
+    return dispatch(api.events.page(0, [], null, true, null, headers));
   }
 
   render() {

@@ -12,7 +12,7 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import { selectLinode } from '../../utilities';
@@ -43,8 +43,8 @@ export class AlertsPage extends Component {
   onSubmit = () => {
     const { dispatch, linode } = this.props;
 
-    return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.linodes.put({ alerts: this.state.alerts }, linode.id),
     ]));
   }
 

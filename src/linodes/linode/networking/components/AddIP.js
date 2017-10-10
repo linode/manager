@@ -5,7 +5,7 @@ import { Input, ModalFormGroup } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { addIP } from '~/api/networking';
+import { addIP } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MONTHLY_IP_COST } from '~/constants';
 

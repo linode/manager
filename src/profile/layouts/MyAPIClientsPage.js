@@ -14,8 +14,8 @@ import { EmitEvent } from 'linode-components/utils';
 
 import { hideModal, showModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import { clients as api } from '~/api';
-import { resetSecret } from '~/api/clients';
+import api from '~/api';
+import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
 import { API_ROOT } from '~/constants';
 import { DefaultClientThumb } from '~/assets';
@@ -29,7 +29,7 @@ const OBJECT_TYPE = 'clients';
 
 export class MyAPIClientsPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.clients.all());
   }
 
   constructor(props) {
@@ -48,7 +48,7 @@ export class MyAPIClientsPage extends Component {
   deleteClients = confirmThenDelete(
     this.props.dispatch,
     'client',
-    api.delete,
+    api.clients.delete,
     OBJECT_TYPE).bind(this)
 
   resetAction = (client) => {
