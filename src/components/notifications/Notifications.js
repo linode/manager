@@ -53,7 +53,7 @@ export class Notifications extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.fetchEventsPage(lessThanNowFilter('created'));
+      this.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
     }
 
     // initialize polling for unseen events
@@ -108,9 +108,9 @@ export class Notifications extends Component {
     this.setState({ loading: false });
   }
 
-  fetchEventsPage(options = null) {
+  fetchEventsPage(headers = null) {
     const { dispatch } = this.props;
-    return dispatch(api.events.page(0, [], null, true, null, options));
+    return dispatch(api.events.page(0, [], null, true, null, headers));
   }
 
   render() {
