@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import * as fetch from '~/fetch';
+import { fetch } from '~/api/fetch';
 
 import { state } from '@/data';
 
@@ -83,17 +83,21 @@ export function expectObjectDeepEquals(initialA, initialB, initialPath) {
  * @param {Object} response - The data that is returned by the fetch call
  * occured to dispatch
  */
-export async function expectRequest(fn, path, expectedRequestData, response = {},
+export async function expectRequest(fn, path, expectedRequestData = {}, response = {},
                                     fetchStub = null) {
   const sandbox = sinon.sandbox.create();
   let checkedRequestData = false;
+
+  const { method = 'get' } = expectedRequestData;
+  // eslint-disable-next-line no-param-reassign
+  delete expectedRequestData.method;
 
   try {
     expect(fn).to.be.a('function');
 
     if (!fetchStub) {
       // eslint-disable-next-line no-param-reassign
-      fetchStub = sandbox.stub(fetch, 'fetch').returns({
+      fetchStub = sandbox.stub(fetch, method.toLowerCase()).returns({
         json: () => response,
       });
     }
@@ -116,16 +120,13 @@ export async function expectRequest(fn, path, expectedRequestData, response = {}
 
     if (!checkedRequestData) {
       expect(fetchStub.callCount).to.equal(1);
-      expect(fetchStub.firstCall.args[1]).to.equal(path);
+      expect(fetchStub.firstCall.args[0]).to.equal(path);
 
-      const requestData = fetchStub.firstCall.args[2];
+      const requestData = fetchStub.firstCall.args[1];
 
-      if (expectedRequestData) {
-        Object.keys(expectedRequestData).map(key => {
-          const value = requestData[key];
-          const nativeValue = key === 'body' ? JSON.parse(value) : value;
-          expectObjectDeepEquals(nativeValue, expectedRequestData[key], key);
-        });
+      const body = expectedRequestData.body;
+      if (body) {
+        Object.keys(body).map(key => expectObjectDeepEquals(requestData[key], body[key], key));
       }
 
       checkedRequestData = true;

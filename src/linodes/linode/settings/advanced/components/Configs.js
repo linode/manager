@@ -11,7 +11,7 @@ import { Table } from 'linode-components/tables';
 import { ButtonCell, CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
-import { linodes } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
@@ -28,7 +28,7 @@ export default class Configs extends Component {
   deleteConfigs = confirmThenDelete(
     this.props.dispatch,
     'config',
-    (id) => linodes.configs.delete(this.props.linode.id, id),
+    (id) => api.linodes.configs.delete(this.props.linode.id, id),
     Configs.OBJECT_TYPE).bind(this)
 
   render() {
@@ -60,7 +60,7 @@ export default class Configs extends Component {
                 data={sorted}
                 dispatch={dispatch}
                 massEditGroups={[{ elements: [
-                    { name: 'Delete', action: this.deleteConfigs },
+                  { name: 'Delete', action: this.deleteConfigs },
                 ] }]}
                 selectedMap={selectedMap}
                 objectType={Configs.OBJECT_TYPE}
@@ -92,7 +92,7 @@ export default class Configs extends Component {
                 {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
-                  onClick: (config) => { this.deleteConfigs(linode, [config]); },
+                  onClick: (config) => { this.deleteConfigs(config); },
                   text: 'Delete',
                 },
               ]}

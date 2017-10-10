@@ -6,8 +6,8 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { volumes, linodes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
+import api from '~/api';
+import { actions as linodeActions } from '~/api/generic/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 import { AVAILABLE_VOLUME_REGIONS } from '~/constants';
@@ -68,7 +68,7 @@ export default class AddEditVolume extends Component {
 
 
     const actions = [
-      () => volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
+      () => api.volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
       close,
     ];
 
@@ -104,7 +104,7 @@ export default class AddEditVolume extends Component {
     }
 
     if (!allConfigs[linodeId]) {
-      const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
+      const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
       const linodeConfigs = Object.values(configs.data).map(function (config) {
         return {
           label: config.label,

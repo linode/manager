@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
-import { toggleTFA } from '~/api/profile';
+import { toggleTFA } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import { TwoFactorModal } from './TwoFactorModal';

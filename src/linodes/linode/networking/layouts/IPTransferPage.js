@@ -12,8 +12,8 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
-import { ipv4s, assignIPs } from '~/api/networking';
+import api from '~/api';
+import { ipv4s, assignIPs } from '~/api/ad-hoc/networking';
 import {
   createHeaderFilter,
   dispatchOrStoreErrors,
@@ -30,7 +30,7 @@ export class IPTransferPage extends Component {
 
     await Promise.all([
       ipv4s(region),
-      linodes.all([], undefined, createHeaderFilter({ region })),
+      api.linodes.all([], undefined, createHeaderFilter({ region })),
     ].map(dispatch));
   }
 

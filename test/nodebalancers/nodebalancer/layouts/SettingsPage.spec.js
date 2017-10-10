@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import {
   changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
 } from '@/common';
-import { genericNodeBalancer } from '@/data/nodebalancers';
+import { configsNodeBalancer } from '@/data/nodebalancers';
 import { SettingsPage } from '~/nodebalancers/nodebalancer/layouts/SettingsPage';
 
 
@@ -24,20 +24,20 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     const page = mount(
       <SettingsPage
         dispatch={dispatch}
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
       />
     );
 
     expect(page.find({ id: 'client_conn_throttle' }).props().value)
-      .to.equal(genericNodeBalancer.client_conn_throttle);
-    expect(page.find({ id: 'label' }).props().value).to.equal(genericNodeBalancer.label);
+      .to.equal(configsNodeBalancer.client_conn_throttle);
+    expect(page.find({ id: 'label' }).props().value).to.equal(configsNodeBalancer.label);
   });
 
   it('makes request to save changes', async () => {
     const page = mount(
       <SettingsPage
         dispatch={dispatch}
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
       />
     );
 
@@ -46,11 +46,11 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
-      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/${configsNodeBalancer.id}`, {
         method: 'PUT',
         body: {
-          client_conn_throttle: genericNodeBalancer.client_conn_throttle,
-          label: genericNodeBalancer.label,
+          client_conn_throttle: configsNodeBalancer.client_conn_throttle,
+          label: configsNodeBalancer.label,
         },
       }),
     ]);
@@ -60,7 +60,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     const page = mount(
       <SettingsPage
         dispatch={dispatch}
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
       />
     );
 

@@ -11,7 +11,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { users } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectUser } from './IndexPage';
@@ -23,7 +23,7 @@ export class PermissionsPage extends Component {
     const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
 
     if (user.restricted) {
-      await dispatch(users.permissions.one([username]));
+      await dispatch(api.users.permissions.one([username]));
     }
   }
 
@@ -43,7 +43,7 @@ export class PermissionsPage extends Component {
     const data = { global, customer, linode, nodebalancer, domain };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users.permissions.put(data, username),
+      () => api.users.permissions.put(data, username),
     ]));
   }
 

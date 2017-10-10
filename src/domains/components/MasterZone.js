@@ -9,7 +9,7 @@ import { Table } from 'linode-components/tables';
 import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { domains } from '~/api';
+import api from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
 import { GroupLabel } from '~/components';
 import { NAME_SERVERS } from '~/constants';
@@ -95,7 +95,7 @@ export class MasterZone extends Component {
     dispatch(showModal(`Delete ${type}`,
       <DeleteModalBody
         onSubmit={async () => {
-          await dispatch(domains.records.delete(domain.id, id));
+          await dispatch(api.domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
         items={[name]}

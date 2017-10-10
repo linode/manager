@@ -11,7 +11,7 @@ import {
 } from 'linode-components/forms';
 import * as utilities from 'linode-components/forms/utilities';
 
-import { stackscripts } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 
@@ -53,7 +53,7 @@ export default class Settings extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => stackscripts.put(data, id),
+      () => api.stackscripts.put(data, id),
     ]));
   }
 

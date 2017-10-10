@@ -10,8 +10,8 @@ import { onChange } from 'linode-components/forms/utilities';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
-import { distributions } from '~/api';
-import { rebuildLinode } from '~/api/linodes';
+import api from '~/api';
+import { rebuildLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 
@@ -21,7 +21,7 @@ import { selectLinode } from '../utilities';
 export class RebuildPage extends Component {
   static async preload({ dispatch, getState }) {
     if (!getState().api.distributions.ids.length) {
-      await dispatch(distributions.all());
+      await dispatch(api.distributions.all());
     }
   }
 

@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { getIPs } from '~/api/networking';
+import { getIPs } from '~/api/ad-hoc/networking';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../utilities';

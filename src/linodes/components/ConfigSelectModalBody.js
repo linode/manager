@@ -4,7 +4,7 @@ import { ModalFormGroup, Radio } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal } from '~/actions/modal';
-import { rebootLinode } from '~/api/linodes';
+import { rebootLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

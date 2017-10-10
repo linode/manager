@@ -13,7 +13,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -46,7 +46,7 @@ export class LishPage extends Component {
     const { authorization, keys } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({
+      () => api.profile.put({
         lish_auth_method: authorization,
         // Strip all whitespace from keys for sanity.
         authorized_keys: keys.split('\n').filter(key => key.replace(/\s/g, '').length),

@@ -8,7 +8,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -26,7 +26,7 @@ export class NotificationsPage extends Component {
     const { dispatch, enabled } = this.props;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({ email_notifications: !enabled }),
+      () => api.profile.put({ email_notifications: !enabled }),
     ]));
   }
 

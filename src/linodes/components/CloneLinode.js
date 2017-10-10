@@ -6,7 +6,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { cloneLinode } from '~/api/linodes';
+import { cloneLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import LinodeSelect from './LinodeSelect';

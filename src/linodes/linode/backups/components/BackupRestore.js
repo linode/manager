@@ -14,7 +14,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { restoreBackup } from '~/api/backups';
+import { restoreBackup } from '~/api/ad-hoc/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { LinodeSelect } from '~/linodes/components';
 

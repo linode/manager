@@ -4,10 +4,10 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
-import { genericNodeBalancer } from '@/data/nodebalancers';
+import { configsNodeBalancer } from '@/data/nodebalancers';
 import NodeModal from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
-const node = genericNodeBalancer._configs.configs['1']._nodes.nodes[1];
+const node = configsNodeBalancer._configs.configs['1']._nodes.nodes[1];
 
 describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   const sandbox = sinon.sandbox.create();

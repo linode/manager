@@ -12,10 +12,9 @@ import { Table } from 'linode-components/tables';
 import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
-import { volumes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
-import { detachVolume } from '~/api/volumes';
-
+import api from '~/api';
+import { actions as linodeActions } from '~/api/generic/linodes';
+import { detachVolume } from '~/api/ad-hoc/volumes';
 import { transform } from '~/api/util';
 import { RegionCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -65,7 +64,7 @@ export default class VolumesList extends Component {
   deleteVolumes = confirmThenDelete(
     this.props.dispatch,
     'volume',
-    this.removeFromLinodeAndCall(volumes.delete),
+    this.removeFromLinodeAndCall(api.volumes.delete),
     this.props.objectType).bind(this)
 
   detachVolumes = confirmThenDelete(

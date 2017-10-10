@@ -5,7 +5,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 
@@ -51,7 +51,7 @@ export default class AddDisk extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.disks.post(data, linode.id),
+      () => api.linodes.disks.post(data, linode.id),
       hideModal,
     ]));
   }

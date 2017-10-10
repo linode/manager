@@ -6,7 +6,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { tokens } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 
@@ -76,7 +76,7 @@ export default class CreatePersonalAccessToken extends Component {
     }, []).join(',') || ''; // '' allows no scopes. undefined copies current scopes.
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
+      () => api.tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
       ({ token }) => renderSecret('personal access token', 'created', token, this.props.close),
     ]));
   }
