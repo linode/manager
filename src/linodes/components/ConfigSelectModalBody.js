@@ -55,6 +55,7 @@ export default class ConfigSelectModalBody extends Component {
               <Radio
                 checked={config.id.toString() === configId}
                 value={config.id}
+                name="config"
                 onChange={e => this.setState({ configId: e.target.value })}
                 label={config.label}
               />

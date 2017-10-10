@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { replace } from 'react-router-redux';
 
 import { Input, ModalFormGroup, Select, Textarea } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
@@ -56,6 +57,8 @@ export default class EditSOARecord extends Component {
       axfrIps: axfrIps.join(';'),
       masterIps: masterIps.join(';'),
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -94,8 +97,6 @@ export default class EditSOARecord extends Component {
       () => close(domain)(),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close, domains: { type } } = this.props;

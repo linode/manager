@@ -11,6 +11,7 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -20,12 +21,13 @@ export class LishPage extends Component {
   constructor() {
     super();
 
-    this.componentWillReceiveProps = this.componentWillMount;
-
     this.state = {
       loading: false,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
+    this.componentWillReceiveProps = this.componentWillMount;
   }
 
   componentWillMount(props) {
@@ -51,8 +53,6 @@ export class LishPage extends Component {
       }),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { errors, loading, authorization, keys } = this.state;

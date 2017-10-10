@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import NodeModal from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
@@ -72,12 +72,9 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       />
     );
 
-    page.find('input').find('#label')
-      .simulate('change', { target: { name: 'label', value: 'myLabel' } });
-    page.find('input').find('#address')
-      .simulate('change', { target: { name: 'address', value: '192.168.4.6:88' } });
-    page.find('input').find('#weight')
-      .simulate('change', { target: { name: 'weight', value: '50' } });
+    changeInput(page, 'label', 'myLabel');
+    changeInput(page, 'address', '192.168.4.6:88');
+    changeInput(page, 'weight', '50');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

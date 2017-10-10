@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -28,6 +29,8 @@ export default class EditRDNS extends Component {
       errors: {},
       hostname: props.ip.rdns || '',
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -39,8 +42,6 @@ export default class EditRDNS extends Component {
       close,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close, ip: { address } } = this.props;

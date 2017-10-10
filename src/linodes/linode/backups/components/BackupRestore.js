@@ -10,6 +10,7 @@ import {
   FormSummary,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -28,6 +29,8 @@ export default class BackupRestore extends Component {
       target: props.linode.id,
       overwrite: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -59,9 +62,6 @@ export default class BackupRestore extends Component {
       </ConfirmModalBody>
     )));
   }
-
-  onChange = ({ target: { name, value, checked } }) =>
-    this.setState({ [name]: name === 'overwrite' ? checked : value })
 
   render() {
     const { backup, linode, linodes } = this.props;
