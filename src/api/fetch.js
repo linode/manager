@@ -47,9 +47,7 @@ function partialFetch(method = 'GET') {
         dispatch(resetEventsPoll());
       }
 
-      return new Promise((accept, _reject) => {
-        const reject = (response) => _reject({ response, request: { path, options } });
-
+      return new Promise((accept, reject) => {
         rawFetch(path, options).then(async (response) => {
           const { status, headers } = response;
           const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
