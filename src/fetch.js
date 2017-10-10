@@ -54,9 +54,10 @@ export function fetch(token, _path, _options) {
 
   return new Promise((accept, reject) => {
     fetchRef(path, options).then((response) => {
-      const { status } = response;
-      if (status >= 400) {
-        if (status === 401) {
+      const { status, headers } = response;
+      const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
+      if (status >= 400 || inMaintenanceMode) {
+        if (status === 401 || inMaintenanceMode) {
           // Unfortunate that we are keeping this store, but the alternative is
           // to hook every fetch call up to redux directly.
           store.dispatch(session.expireAndReAuth);
