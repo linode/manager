@@ -31,10 +31,11 @@ export default class AddEditVolume extends Component {
 
   constructor(props) {
     super(props);
-    const { volume = {}, linode } = props;
+    const { volume = {}, linode, linodes } = props;
 
     this.state = {
-      linode: linode ? linode.id : null,
+      linode,
+      filteredLinodes: linodes,
       config: null,
       errors: {},
       label: volume.label || '',
@@ -79,6 +80,19 @@ export default class AddEditVolume extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
+  onRegionChange = async (e) => {
+    let linodes = { ...this.props.linodes };
+    this.onChange(e);
+
+    linodes = Object.keys(linodes)
+      .filter(id => linodes[id].region === this.state.region)
+      .reduce((obj, key) => {
+        return { ...obj, key: linodes[key] };
+      }, {});
+
+    this.setState({ filteredLinodes: linodes });
+  }
+
   onLinodeChange = async (e) => {
     const { allConfigs } = this.state;
     const linodeId = e.target.value;
@@ -106,8 +120,17 @@ export default class AddEditVolume extends Component {
   }
 
   render() {
-    const { close, title, volume, linode: original, linodes } = this.props;
-    const { errors, region, label, size, linode, allConfigs, config } = this.state;
+    const { close, title, volume, linode: original } = this.props;
+    const {
+      errors,
+      region,
+      label,
+      size,
+      linode,
+      filteredLinodes: linodes,
+      allConfigs,
+      config,
+    } = this.state;
 
     const configs = allConfigs[linode] || [];
 
@@ -149,7 +172,7 @@ export default class AddEditVolume extends Component {
                 value={region}
                 name="region"
                 id="region"
-                onChange={this.onChange}
+                onChange={this.onRegionChange}
               />
             </ModalFormGroup>
           )}

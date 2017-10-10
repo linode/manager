@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-import { REGION_MAP } from '~/constants';
+import { AVAILABLE_VOLUME_REGIONS } from '~/constants';
 import { AddEditVolume } from '~/linodes/volumes/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
@@ -28,7 +28,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     expect(modal.find('config').length).to.equal(0);
 
     changeInput(modal, 'label', 'my-volume');
-    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'region', AVAILABLE_VOLUME_REGIONS[0]);
     changeInput(modal, 'size', 20);
 
     dispatch.reset();
@@ -39,7 +39,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
         method: 'POST',
         body: {
           label: 'my-volume',
-          region: REGION_MAP.Asia[0],
+          region: AVAILABLE_VOLUME_REGIONS[0],
           size: 20,
         },
       }),
@@ -53,7 +53,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     expect(modal.find('config').length).to.equal(0);
 
     changeInput(modal, 'label', 'my-volume');
-    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'region', AVAILABLE_VOLUME_REGIONS[0]);
     changeInput(modal, 'size', 20);
     changeInput(modal, 'linode', 12345);
 
@@ -65,7 +65,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
         method: 'POST',
         body: {
           label: 'my-volume',
-          region: REGION_MAP.Asia[0],
+          region: AVAILABLE_VOLUME_REGIONS[0],
           size: 20,
           linode_id: 12345,
         },
@@ -79,7 +79,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     const configId = Object.keys(testLinode1238._configs.configs)[0];
 
     changeInput(modal, 'label', 'my-volume');
-    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'region', AVAILABLE_VOLUME_REGIONS[0]);
     changeInput(modal, 'size', 20);
     changeInput(modal, 'linode', testLinode1238.id);
     modal.instance().setState({
@@ -96,7 +96,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
         method: 'POST',
         body: {
           label: 'my-volume',
-          region: REGION_MAP.Asia[0],
+          region: AVAILABLE_VOLUME_REGIONS[0],
           size: 20,
           linode_id: testLinode1238.id,
           config_id: configId,
