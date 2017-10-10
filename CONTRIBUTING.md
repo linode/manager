@@ -94,7 +94,7 @@ When creating a new feature:
 1. `git checkout develop`
 2. `git checkout -b my-feature-name`
 3. stage and commit changes to your feature branch
-4. `yarn run lint` # to lint your code
+4. `yarn lint` # to lint your code
 5. `yarn test` # to test your code, see 
 6. `git push -u your-remote my-feature-name` # push to your remote and --set-upstream-to
 7. `git checkout develop` and `git pull origin develop` # make sure you're up to date
@@ -139,7 +139,7 @@ Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/
 **Tip**: set up your local git repository to lint before every commit.
 ```sh
 echo '#!/usr/bin/env bash' > .git/hooks/pre-commit
-echo 'yarn run lint' >> .git/hooks/pre-commit
+echo 'yarn lint' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
@@ -151,11 +151,11 @@ To run tests:
 
 To automatically re-run tests when you make changes:
 
-    yarn run test:watch
+    yarn test:watch
     
 To automatically re-run tests on a single test file:
 
-    yarn run test:watch --single_file=**/name.spec.js
+    yarn test:watch --single_file=**/name.spec.js
 
 Our tests live in test/**.spec.js. They're based on
 [Mocha](https://mochajs.org/) and do assertions with
