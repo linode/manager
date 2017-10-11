@@ -1,10 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 
@@ -34,6 +36,8 @@ export default class AddDisk extends Component {
       password: '',
       filesystem: 'ext4',
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -48,12 +52,10 @@ export default class AddDisk extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.disks.post(data, linode.id),
+      () => api.linodes.disks.post(data, linode.id),
       hideModal,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { dispatch, free, distributions: { distributions } } = this.props;

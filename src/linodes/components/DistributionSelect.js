@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
@@ -48,7 +49,7 @@ export default function DistributionSelect(props) {
       />
       <div>
         <small className="text-muted">
-          <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
+          <ExternalLink to="https://www.linode.com/distributions">Learn more</ExternalLink>
         </small>
       </div>
     </div>

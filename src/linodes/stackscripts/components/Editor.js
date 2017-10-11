@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { CodeEditor } from 'linode-components/editors';
 import {
@@ -10,7 +11,7 @@ import {
 } from 'linode-components/forms';
 import * as utilities from 'linode-components/forms/utilities';
 
-import { stackscripts } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -40,7 +41,7 @@ export default class Editor extends Component {
     const data = { script, rev_note: revision };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => stackscripts.put(data, id),
+      () => api.stackscripts.put(data, id),
       () => this.setState({ revision: '' }),
     ]));
   }

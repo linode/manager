@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Link } from 'react-router';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
@@ -19,7 +20,7 @@ export default function Introduction(props) {
       </div>
       <header>
         <h1>Getting started with Linode Python</h1>
-        <h5>by William Smith; last updated May 22nd, 2017</h5>
+        <h5>by William Smith; last updated October 22nd, 2017</h5>
       </header>
       <section>
         <p>
@@ -87,20 +88,20 @@ Tokyo, JP`}
           noclipboard
         />
         <p>
-          For a Service, we know that we want "Linode 2048". Since we know the service
-          type’s label, we don’t need to list all services, we can just use the label:
+          For a Type, we know that we want "Linode 2048". Since we know the
+          type’s label, we don’t need to list all types, we can just use the label:
         </p>
         <Code
-          example=">>> serv = linode.Service(client, 'g5-standard-1')
->>> serv.label
+          example=">>> type = linode.Type(client, 'g5-standard-1')
+>>> type.label
 'Linode 2048'"
           name="bash"
           noclipboard
         />
         <p>
-          Here we are creating the service object by label - the label is used where IDs are
+          Here we are creating the type object by label - the label is used where IDs are
           used for other objects. While creating objects this way can be useful, we can
-          also use the label in place of the service object in all places it would be used.
+          also use the label in place of the type object in all places it would be used.
         </p>
       </section>
       <section>
@@ -110,7 +111,7 @@ Tokyo, JP`}
           LinodeClient:
         </p>
         <Code
-          example=">>> l = client.linode.create_instance(serv, region)"
+          example=">>> l = client.linode.create_instance(type, region)"
           name="bash"
           noclipboard
         />
@@ -177,7 +178,7 @@ True`}
         </p>
         <Code
           // eslint-disable-next-line max-len
-          example='>>> l, pw = client.linode.create_instance(serv, region, distribution="linode/debian8")'
+          example='>>> l, pw = client.linode.create_instance(type, region, distribution="linode/debian8")'
           name="bash"
           noclipboard
         />

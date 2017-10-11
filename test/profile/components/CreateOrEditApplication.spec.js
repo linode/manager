@@ -3,17 +3,14 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { CreateOrEditApplication } from '~/profile/components';
 
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '@/common';
-import { state } from '@/data';
 
 
 describe('profile/components/CreateOrEditApplication', () => {
@@ -49,19 +46,11 @@ describe('profile/components/CreateOrEditApplication', () => {
           redirect_uri: 'http://example.com',
         },
       }),
-      async ([fn]) => {
-        const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-        dispatch.reset();
-        await fn(dispatch, () => state);
-
-        expect(fetchStub.callCount).to.equal(1);
-        expect(fetchStub.firstCall.args[1]).to.equal('/account/oauth-clients/1/thumbnail');
-        expectObjectDeepEquals(fetchStub.firstCall.args[2], {
-          method: 'PUT',
-          body: thumbnail,
-          headers: { 'Content-Type': 'image/png' },
-        });
-      },
+      async ([fn]) => expectRequest(fn, '/account/oauth-clients/1/thumbnail', {
+        method: 'PUT',
+        body: thumbnail,
+        headers: { 'Content-Type': 'image/png' },
+      }),
     ], 3, [{ id: 1, secret: '' }]);
     // One call to save the data, one call to save the thumbnail, one call to show the secret.
   });

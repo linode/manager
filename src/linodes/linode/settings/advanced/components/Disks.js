@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
@@ -12,7 +13,7 @@ import { Table } from 'linode-components/tables';
 import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
-import { linodes } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
@@ -29,9 +30,11 @@ export default class Disks extends Component {
     this.state = { filter: '' };
   }
 
-  poweredOff() {
-    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
-  }
+  deleteDisks = confirmThenDelete(
+    this.props.dispatch,
+    'disk',
+    (id) => api.linodes.disks.delete(this.props.linode.id, id),
+    Disks.OBJECT_TYPE).bind(this)
 
   freeSpace() {
     const { linode } = this.props;
@@ -41,24 +44,8 @@ export default class Disks extends Component {
     return total - used;
   }
 
-  deleteDisks = confirmThenDelete(
-    this.props.dispatch,
-    'disk',
-    (id) => linodes.disks.delete(this.props.linode.id, id),
-    Disks.OBJECT_TYPE).bind(this)
-
-  renderStatusMessage() {
-    if (!this.poweredOff()) {
-      return (
-        <div>
-          <div className="alert alert-info">
-            Your Linode must be powered off to manage your disks.
-          </div>
-        </div>
-      );
-    }
-
-    return null;
+  poweredOff() {
+    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
   }
 
   renderDiskActions = ({ column, record }) => {
@@ -79,6 +66,20 @@ export default class Disks extends Component {
         />
       </TableCell>
     );
+  }
+
+  renderStatusMessage() {
+    if (!this.poweredOff()) {
+      return (
+        <div>
+          <div className="alert alert-info">
+            Your Linode must be powered off to manage your disks.
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   }
 
   render() {

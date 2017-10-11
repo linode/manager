@@ -41,8 +41,8 @@ export default function Pagination() {
           and an individual object at <code>/$type/$subtype/$id</code>.
         </p>
         <p>
-          Some objects contain lists of other objects, which you can get at
-          <code>/$type/$subtype/$id/$subtype</code>.
+          Some objects contain lists of other objects, which you can get
+          at <code>/$type/$subtype/$id/$subtype</code>.
           You can get an individual sub-object
           at <code>/$type/$subtype/$id/$subtype/$id</code>.
         </p>

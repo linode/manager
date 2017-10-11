@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
@@ -7,10 +8,9 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes } from '~/api';
-import { linodeBackups } from '~/api/linodes';
+import api from '~/api';
+import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { RegionSelect } from '~/components';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import BackupSelect from './BackupSelect';
@@ -40,18 +40,6 @@ export default class RestoreLinode extends Component {
     this.onChange = onChange.bind(this);
   }
 
-  onSubmit = () => {
-    const { dispatch } = this.props;
-    const { label, backup, region, plan, backups } = this.state;
-
-    const data = { label, region, backup_id: backup, backups_enabled: backups, type: plan };
-
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
-      ({ label }) => push(`/linodes/${label}`),
-    ]));
-  }
-
   onLinodeChange = (e) => {
     this.onChange(e);
     this.setState({ fetchingBackups: true }, async () => {
@@ -68,10 +56,28 @@ export default class RestoreLinode extends Component {
     });
   }
 
+  onSubmit = () => {
+    const { dispatch, linodes: allLinodes } = this.props;
+    const { linode, label, backup, plan, backups } = this.state;
+
+    const data = {
+      label,
+      backup_id: backup,
+      backups_enabled: backups,
+      type: plan,
+      region: allLinodes[linode].region,
+    };
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.linodes.post(data),
+      ({ label }) => push(`/linodes/${label}`),
+    ]));
+  }
+
   render() {
     const { close, linodes, plans } = this.props;
     const {
-      errors, label, linode, region, plan, backup, backups, allBackups, fetchingBackups,
+      errors, label, linode, plan, backup, backups, allBackups, fetchingBackups,
     } = this.state;
 
     const linodesWithBackups = _.pickBy(linodes, (l) => l.backups.enabled);
@@ -117,14 +123,6 @@ export default class RestoreLinode extends Component {
               value={label}
               name="label"
               id="label"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
-            <RegionSelect
-              value={region}
-              name="region"
-              id="region"
               onChange={this.onChange}
             />
           </ModalFormGroup>

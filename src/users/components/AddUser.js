@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Checkboxes, Input, ModalFormGroup, PasswordInput, Radio } from 'linode-components/forms';
@@ -6,7 +7,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { users } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -40,7 +41,7 @@ export default class AddUser extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users.post(data),
+      () => api.users.post(data),
       () => push(`/users/${data.username}`),
     ]));
   }

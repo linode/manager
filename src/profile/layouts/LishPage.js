@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -11,8 +12,9 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -20,12 +22,13 @@ export class LishPage extends Component {
   constructor() {
     super();
 
-    this.componentWillReceiveProps = this.componentWillMount;
-
     this.state = {
       loading: false,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
+    this.componentWillReceiveProps = this.componentWillMount;
   }
 
   componentWillMount(props) {
@@ -44,15 +47,13 @@ export class LishPage extends Component {
     const { authorization, keys } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({
+      () => api.profile.put({
         lish_auth_method: authorization,
         // Strip all whitespace from keys for sanity.
         authorized_keys: keys.split('\n').filter(key => key.replace(/\s/g, '').length),
       }),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { errors, loading, authorization, keys } = this.state;

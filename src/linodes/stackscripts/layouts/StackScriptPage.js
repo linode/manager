@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -7,17 +8,17 @@ import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { distributions, stackscripts } from '~/api';
+import api from '~/api';
 
 import { Editor, Settings } from '../components';
 
 
 export class StackScriptPage extends Component {
   static async preload({ dispatch, getState }, { stackscriptId }) {
-    const requests = [stackscripts.one([stackscriptId])];
+    const requests = [api.stackscripts.one([stackscriptId])];
 
     if (!getState().api.distributions.ids.length) {
-      requests.push(distributions.all());
+      requests.push(api.distributions.all());
     }
 
     return Promise.all(requests.map(dispatch));

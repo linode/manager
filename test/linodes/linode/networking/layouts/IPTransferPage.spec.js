@@ -6,7 +6,7 @@ import sinon from 'sinon';
 
 import { IPTransferPage } from '~/linodes/linode/networking/layouts/IPTransferPage';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { state } from '@/data';
 
@@ -53,7 +53,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     });
 
     const sectionB = page.find('#sectionB');
-    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
+    const linodeB = linodes[page.find('[name="selectedOtherLinode"]').props().value];
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(Object.values(linodeB._ips).filter(
       ({ type, version }) => type === 'public' && version === 'ipv4').length);
@@ -74,12 +74,11 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     );
 
     const sectionB = page.find('#sectionB');
-    const select = page.find('Select');
-    const linodeB = linodes[page.find('input[name="selectedOtherLinode"]').props().value];
+    const linodeB = linodes[page.find('[name="selectedOtherLinode"]').props().value];
     const notLinodeB = Object.values(linodesInRegion).filter(
       ({ id }) => id !== linodeB.id)[0];
 
-    select.simulate('change', { record: { name: 'selectedOtherLinode', value: notLinodeB.id } });
+    changeInput(page, 'selectedOtherLinode', notLinodeB.id);
 
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(Object.values(notLinodeB._ips).filter(
