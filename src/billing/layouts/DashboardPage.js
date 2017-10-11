@@ -85,7 +85,7 @@ export class DashboardPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="col-sm-12 text-right">
-                <Link to={`/billing/history`}>Billing History</Link>
+                <Link to="/billing/history">Billing History</Link>
               </div>
             </FormGroup>
             <h3 className="sub-header">Account Balance</h3>

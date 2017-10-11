@@ -31,7 +31,7 @@ describe('billing/layouts/HistoryPage', () => {
     const rowCount = Object.keys(invoices.invoices).length;
     expect(page.find('.TableRow').length).to.equal(rowCount);
   });
-  
+
   it('renders account balance', () => {
     const page = mount(
       <HistoryPage

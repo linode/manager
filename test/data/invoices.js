@@ -17,28 +17,28 @@ export const apiTestInvoice = {
     data: [
       testItem,
       {
-      ...testItem,
-      label: 'Linode 1024 - ln (1234)',
+        ...testItem,
+        label: 'Linode 1024 - ln (1234)',
       },
       {
-      ...testItem,
-      label: 'Storage Volume - sv (123)',
+        ...testItem,
+        label: 'Storage Volume - sv (123)',
       },
       {
-      ...testItem,
-      label: 'Backup Service - Linode 1024 - ln (1234)',
+        ...testItem,
+        label: 'Backup Service - Linode 1024 - ln (1234)',
       },
       {
-      ...testItem,
-      label: 'Nodebalancer - nb (432)',
+        ...testItem,
+        label: 'Nodebalancer - nb (432)',
       },
       {
-      ...testItem,
-      label: 'Linode 1024 - ln (1235)',
+        ...testItem,
+        label: 'Linode 1024 - ln (1235)',
       },
       {
-      ...testItem,
-      label: 'Linode 1024 - ln (1236)',
+        ...testItem,
+        label: 'Linode 1024 - ln (1236)',
       },
     ],
   },

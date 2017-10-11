@@ -5,9 +5,7 @@ import moment from 'moment-timezone';
 import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
-import { ListBody } from 'linode-components/lists/bodies';
-import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
-import { account, invoices } from '~/api';
+import { LinkCell } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
 
@@ -50,7 +48,7 @@ export class HistoryPage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-              <strong>Current Balance: ${account.balance}</strong>
+                <strong>Current Balance: ${account.balance}</strong>
               </div>
             </div>
           </Card>

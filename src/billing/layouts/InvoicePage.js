@@ -5,10 +5,6 @@ import moment from 'moment-timezone';
 import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
-import { objectFromMapByLabel } from '~/api/util';
 import { invoices } from '~/api';
 
 import { setSource } from '~/actions/source';
@@ -40,7 +36,7 @@ export class InvoicePage extends Component {
                   label: 'From',
                   headerClassName: 'DateColumn',
                   formatFn: (from) => {
-                    if(!from) {
+                    if (!from) {
                       return;
                     }
                     const time = moment.utc(from, moment.iso_8601).tz(timezone);
@@ -52,7 +48,7 @@ export class InvoicePage extends Component {
                   label: 'To',
                   headerClassName: 'DateColumn',
                   formatFn: (to) => {
-                    if(!to) {
+                    if (!to) {
                       return;
                     }
                     const time = moment.utc(to, moment.iso_8601).tz(timezone);
@@ -71,7 +67,7 @@ export class InvoicePage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (unitPrice) => {
-                    if(!unitPrice) {
+                    if (!unitPrice) {
                       return;
                     }
                     return `$${parseFloat(unitPrice).toFixed(4)}`;
@@ -92,7 +88,7 @@ export class InvoicePage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-              <strong>Invoice Total: ${invoice.total.toFixed(2)}</strong>
+                <strong>Invoice Total: ${invoice.total.toFixed(2)}</strong>
               </div>
             </div>
           </Card>
@@ -105,6 +101,7 @@ export class InvoicePage extends Component {
 InvoicePage.propTypes = {
   dispatch: PropTypes.func,
   invoice: PropTypes.object.isRequired,
+  items: PropTypes.object.isRequired,
 };
 
 function select(state, ownProps) {

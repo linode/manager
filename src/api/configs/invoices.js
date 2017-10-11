@@ -11,8 +11,8 @@ export const config = genConfig({
       singular: 'items',
       endpoint: id => `/account/invoices/${id}/items`,
       supports: [ONE],
-      },
     },
+  },
 });
 
 export const actions = genActions(config);
