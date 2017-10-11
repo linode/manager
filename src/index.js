@@ -21,6 +21,7 @@ import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
 import OAuthCallbackPage from '~/layouts/OAuth';
+import Longview from '~/longview';
 import Linodes from '~/linodes';
 import StackScripts from '~/linodes/stackscripts';
 import Weblish from '~/linodes/linode/layouts/Weblish';
@@ -149,6 +150,7 @@ const init = () => {
               {Images}
               {Settings}
               {Support}
+              {Longview}
               <Route path="*" component={NotFound} />
             </Route>
           </Router>
