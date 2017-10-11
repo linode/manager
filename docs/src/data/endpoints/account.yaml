@@ -39,7 +39,8 @@ endpoints:
                   "network_helper": true,
                   "phone": "555-555-1212",
                   "state": "PA",
-                  "zip": 19102
+                  "zip": 19102,
+                  "longview_subscription": "longview-10"
                   }
                 }' \
                 https://$api_root/$version/account/settings
@@ -435,6 +436,25 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/oauth-clients/$client_id
+  /account/notifications:
+    group: Notifications
+    authenticated: true
+    description: >
+      View the collection of Notifications on your account.
+    methods:
+      GET:
+        response: notification
+        description: >
+          Returns a collection of important, often time-sensitive items related
+          to your account, such as "you have an outstanding balance" or "one of
+          your linodes has a scheduled migration."  These are infrequent, but
+          important when they do arise.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/notifications
+          python: |
+            # coming soon
   /account/events:
     group: Events
     authenticated: true

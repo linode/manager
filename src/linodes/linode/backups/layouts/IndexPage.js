@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
@@ -8,8 +9,8 @@ import { Tabs } from 'linode-components/tabs';
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { enableBackup } from '~/api/backups';
-import { linodeBackups } from '~/api/linodes';
+import { enableBackup } from '~/api/ad-hoc/backups';
+import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../utilities';

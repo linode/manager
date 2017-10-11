@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from 'linode-components/cards';
@@ -11,7 +12,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { users } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectUser } from './IndexPage';
@@ -23,7 +24,7 @@ export class PermissionsPage extends Component {
     const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
 
     if (user.restricted) {
-      await dispatch(users.permissions.one([username]));
+      await dispatch(api.users.permissions.one([username]));
     }
   }
 
@@ -35,16 +36,6 @@ export class PermissionsPage extends Component {
       loading: false,
       errors: {},
     };
-  }
-
-  onSubmit = () => {
-    const { dispatch, user: { username } } = this.props;
-    const { global, customer, linode, nodebalancer, domain } = this.state;
-    const data = { global, customer, linode, nodebalancer, domain };
-
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users.permissions.put(data, username),
-    ]));
   }
 
   onCellChange = (record, checked, keys) => {
@@ -62,6 +53,16 @@ export class PermissionsPage extends Component {
     this.setState({
       [parentKey]: parentState,
     });
+  }
+
+  onSubmit = () => {
+    const { dispatch, user: { username } } = this.props;
+    const { global, customer, linode, nodebalancer, domain } = this.state;
+    const data = { global, customer, linode, nodebalancer, domain };
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.users.permissions.put(data, username),
+    ]));
   }
 
   updateGlobal = (name) => {

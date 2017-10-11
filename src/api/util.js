@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-import * as api from './';
-import { fullyLoadedObject } from './apiActionReducerGenerator';
+import api from './';
+import { fullyLoadedObject } from './external';
 
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
@@ -103,9 +103,7 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
     }
 
     const response = await dispatch(api[pluralName].all([], undefined, {
-      headers: {
-        'X-Filter': { [labelName]: label },
-      },
+      'X-Filter': { [labelName]: label },
     }));
 
     if (!response.results) {
@@ -150,9 +148,7 @@ export function lessThanNowFilter(key) {
 
 export function createHeaderFilter(filter) {
   return {
-    headers: {
-      'X-Filter': filter,
-    },
+    'X-Filter': filter,
   };
 }
 

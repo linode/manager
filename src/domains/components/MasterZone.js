@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -9,7 +10,7 @@ import { Table } from 'linode-components/tables';
 import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { domains } from '~/api';
+import api from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
 import { GroupLabel } from '~/components';
 import { NAME_SERVERS } from '~/constants';
@@ -25,6 +26,33 @@ import EditCNAMERecord from './EditCNAMERecord';
 
 
 export class MasterZone extends Component {
+  formatARecords() {
+    const { domain } = this.props;
+
+    const { A, AAAA } = domain._groupedRecords;
+    return (A || []).concat(AAAA || []).filter(a => a !== undefined);
+  }
+
+  formatCNAMERecords() {
+    const { domain } = this.props;
+
+    const { CNAME } = domain._groupedRecords;
+    return (CNAME || []).map(record => ({
+      ...record,
+      name: record.name || domain.domain,
+    }));
+  }
+
+  formatMXRecords() {
+    const { domain } = this.props;
+
+    const { MX } = domain._groupedRecords;
+    return (MX || []).map(record => ({
+      ...record,
+      name: record.name || domain.domain,
+    }));
+  }
+
   formatNSRecords() {
     const { domain } = this.props;
     const nsRecords = NAME_SERVERS.map(ns => ({
@@ -46,23 +74,6 @@ export class MasterZone extends Component {
     return nsRecords;
   }
 
-  formatMXRecords() {
-    const { domain } = this.props;
-
-    const { MX } = domain._groupedRecords;
-    return (MX || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
-  }
-
-  formatARecords() {
-    const { domain } = this.props;
-
-    const { A, AAAA } = domain._groupedRecords;
-    return (A || []).concat(AAAA || []).filter(a => a !== undefined);
-  }
-
   formatSRVRecords() {
     const { domain } = this.props;
 
@@ -79,23 +90,13 @@ export class MasterZone extends Component {
     return TXT || [];
   }
 
-  formatCNAMERecords() {
-    const { domain } = this.props;
-
-    const { CNAME } = domain._groupedRecords;
-    return (CNAME || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
-  }
-
   renderDeleteRecord(type, id, name) {
     const { dispatch, domain } = this.props;
 
     dispatch(showModal(`Delete ${type}`,
       <DeleteModalBody
         onSubmit={async () => {
-          await dispatch(domains.records.delete(domain.id, id));
+          await dispatch(api.domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
         items={[name]}
@@ -103,6 +104,22 @@ export class MasterZone extends Component {
         onCancel={() => dispatch(hideModal())}
       />
     ));
+  }
+
+  renderEditARecord(title, id) {
+    return this.renderEditRecord(title, EditARecord, { id });
+  }
+
+  renderEditCNAMERecord(title, id) {
+    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  }
+
+  renderEditMXRecord(title, id) {
+    return this.renderEditRecord(title, EditMXRecord, { id });
+  }
+
+  renderEditNSRecord(title, id) {
+    return this.renderEditRecord(title, EditNSRecord, { id });
   }
 
   renderEditRecord(title, component, props = {}) {
@@ -123,28 +140,12 @@ export class MasterZone extends Component {
     return this.renderEditRecord(title, EditSOARecord);
   }
 
-  renderEditMXRecord(title, id) {
-    return this.renderEditRecord(title, EditMXRecord, { id });
-  }
-
-  renderEditNSRecord(title, id) {
-    return this.renderEditRecord(title, EditNSRecord, { id });
-  }
-
-  renderEditARecord(title, id) {
-    return this.renderEditRecord(title, EditARecord, { id });
-  }
-
-  renderEditTXTRecord(title, id) {
-    return this.renderEditRecord(title, EditTXTRecord, { id });
-  }
-
   renderEditSRVRecord(title, id) {
     return this.renderEditRecord(title, EditSRVRecord, { id });
   }
 
-  renderEditCNAMERecord(title, id) {
-    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  renderEditTXTRecord(title, id) {
+    return this.renderEditRecord(title, EditTXTRecord, { id });
   }
 
   render() {

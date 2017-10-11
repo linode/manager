@@ -5,7 +5,9 @@ import sinon from 'sinon';
 
 import { AddMaster } from '~/domains/components';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 
 
 describe('domains/components/AddMaster', () => {
@@ -21,11 +23,8 @@ describe('domains/components/AddMaster', () => {
     AddMaster.trigger(dispatch);
     const component = mount(dispatch.firstCall.args[0].body, '');
 
-    const change = (name, value) =>
-      component.find('Input').find({ name }).simulate('change', { target: { name, value } });
-
-    change('email', 'test@gmail.com');
-    change('domain', 'test.com');
+    changeInput(component, 'email', 'test@gmail.com');
+    changeInput(component, 'domain', 'test.com');
 
     dispatch.reset();
     await component.find('Form').props().onSubmit();

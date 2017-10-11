@@ -1,8 +1,8 @@
 .Select {
     display: inline-block;
 
-    &-mult-value-wrapper {
-        height: $form-field-height;
+    &-mult-value-wrapper, &--native {
+        height: $form-field-height !important;
 
         &-control, &-value, &-input {
             height: $form-field-height;

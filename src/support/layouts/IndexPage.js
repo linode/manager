@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -10,7 +11,7 @@ import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { tickets } from '~/api';
+import api from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
@@ -54,7 +55,7 @@ export function renderTicketCreationInfo(ticket) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(tickets.all());
+    await dispatch(api.tickets.all());
   }
 
   async componentDidMount() {
@@ -62,19 +63,6 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     dispatch(setTitle('Support'));
     dispatch(setAnalytics(['tickets']));
-  }
-
-  renderUpdatedByCell({ record: ticket }) {
-    return (
-      <TableCell column={{}} record={ticket}>
-        {!ticket.updated_by ? <span>No updates</span> : (
-          <span>
-            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
-            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
-          </span>
-        )}
-      </TableCell>
-    );
   }
 
   renderTickets(tickets) {
@@ -141,6 +129,19 @@ export class IndexPage extends Component {
           })}
         </ListBody>
       </List>
+    );
+  }
+
+  renderUpdatedByCell({ record: ticket }) {
+    return (
+      <TableCell column={{}} record={ticket}>
+        {!ticket.updated_by ? <span>No updates</span> : (
+          <span>
+            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
+            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
+          </span>
+        )}
+      </TableCell>
     );
   }
 

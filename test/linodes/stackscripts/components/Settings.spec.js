@@ -5,11 +5,7 @@ import sinon from 'sinon';
 import Settings from '~/linodes/stackscripts/components/Settings';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common.js';
-import { api } from '@/data';
 import { testStackScript } from '@/data/stackscripts';
-
-
-const { distributions } = api;
 
 describe('linodes/stackscripts/components/Settings', () => {
   const sandbox = sinon.sandbox.create();
@@ -25,7 +21,7 @@ describe('linodes/stackscripts/components/Settings', () => {
       <Settings
         dispatch={dispatch}
         stackscript={testStackScript}
-        distributions={distributions.distributions}
+        distributions={{}}
       />
     );
 

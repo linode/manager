@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { Card, CardImageHeader } from 'linode-components/cards';
 import TimeDisplay from '~/components/TimeDisplay';
