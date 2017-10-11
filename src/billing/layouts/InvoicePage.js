@@ -111,7 +111,6 @@ function select(state, ownProps) {
   const params = ownProps.params;
   const invoiceId = params.invoiceId;
   const invoice = state.api.invoices.invoices[invoiceId];
-  console.log(state);
   const items = invoice._items.data;
   return {
     invoice,
