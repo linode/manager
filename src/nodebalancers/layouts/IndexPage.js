@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -21,8 +22,8 @@ import { MassEditControl } from 'linode-components/lists/controls';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
-import { nodebalancers as api } from '~/api';
-import { transferPool } from '~/api/account';
+import api from '~/api';
+import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
@@ -34,7 +35,7 @@ const OBJECT_TYPE = 'nodebalancers';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.nodebalancers.all());
     await dispatch(transferPool());
   }
 
@@ -54,7 +55,7 @@ export class IndexPage extends Component {
   deleteNodeBalancers = confirmThenDelete(
     this.props.dispatch,
     'NodeBalancer',
-    api.delete,
+    api.nodebalancers.delete,
     OBJECT_TYPE).bind(this)
 
   render() {

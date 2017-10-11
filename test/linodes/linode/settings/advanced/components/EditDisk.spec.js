@@ -3,14 +3,14 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
+import { hideModal } from '~/actions/modal';
 import EditDisk from '~/linodes/linode/settings/advanced/components/EditDisk';
 
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode1236 } from '@/data/linodes';
-import { hideModal } from '~/actions/modal';
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
-describe('linodes/linode/settings/components/EditDisk', () => {
+describe('linodes/linode/settings/advanced/components/EditDisk', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -44,8 +44,8 @@ describe('linodes/linode/settings/components/EditDisk', () => {
         free={0}
       />);
 
-    modal.find('#label').simulate('change', { target: { name: 'label', value: 'The label' } });
-    modal.find('#size').props().onChange({ target: { name: 'size', value: 1000 } });
+    changeInput(modal, 'label', 'The label');
+    changeInput(modal, 'size', 1000);
 
     await modal.find('Form').props().onSubmit({ preventDefault() {} });
 

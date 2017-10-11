@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import {
@@ -12,9 +13,10 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { nodebalancers } from '~/api';
-import { updateConfigSSL } from '~/api/nodebalancers';
+import api from '~/api';
+import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';
 import { dispatchOrStoreErrors } from '~/api/util';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
@@ -42,6 +44,8 @@ export default class ConfigForm extends Component {
       sslCert: props.config.ssl_cert,
       sslKey: props.config.ssl_key,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -82,7 +86,7 @@ export default class ConfigForm extends Component {
         (config.protocol !== 'https' || (sslCert || sslKey))) {
       calls.push(() => updateConfigSSL(sslData, ...idsPath));
     }
-    calls.push(() => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
+    calls.push(() => api.nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
 
     if (!config.id) {
       calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
@@ -90,9 +94,6 @@ export default class ConfigForm extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
-
-  onChange = ({ target: { checked, value, name, type } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
     const { submitText, submitDisabledText, config } = this.props;

@@ -19,7 +19,7 @@ describe('linodes/volumes/components/AttachVolume', function () {
     dispatch = sandbox.spy();
   });
 
-  it('resizes a volume', async function () {
+  it('attaches a volume', async function () {
     AttachVolume.trigger(dispatch, linodes, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -33,7 +33,7 @@ describe('linodes/volumes/components/AttachVolume', function () {
         method: 'POST',
         body: {
           linode_id: '1234',
-          config_id: null,
+          config_id: 12345,
         },
       }),
     ], 1);

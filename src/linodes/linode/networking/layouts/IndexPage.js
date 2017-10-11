@@ -1,11 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { getIPs } from '~/api/networking';
+import { getIPs } from '~/api/ad-hoc/networking';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../utilities';

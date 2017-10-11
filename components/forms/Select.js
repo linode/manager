@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import VendorSelect from 'react-select-plus';
 
 import { EmitEvent, SELECT_CHANGE } from '../utils';
@@ -64,6 +65,30 @@ export default class Select extends Component {
 
   render() {
     const [value] = this.realValue();
+
+    if (!this.props.multi) {
+      const options = this.props.options.map(function ({ value, label, options }) {
+        if (options) {
+          return (
+            <optgroup label={label}>
+              {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
+            </optgroup>
+          );
+        }
+
+        return <option value={value}>{label}</option>;
+      });
+
+      return (
+        <select
+          id={this.props.id || this.props.name}
+          name={this.props.name}
+          onChange={this.props.onChange}
+          value={value}
+          className="Select Select--native form-control"
+        >{options}</select>
+      );
+    }
 
     return (
       <span className={this.props.className}>

@@ -62,6 +62,10 @@ export function getVolumeRedirectUrl() {
   return getVolumesRedirectUrl();
 }
 
+export function getAccountRedirectUrl() {
+  return '/account';
+}
+
 const EventTypeMap = {
   linode_boot: {
     presentTenseAction: 'Booting',
@@ -295,6 +299,20 @@ const EventTypeMap = {
     presentTenseAction: 'Resizing',
     pastTenseAction: 'resized',
     redirectUrl: getVolumeRedirectUrl,
+  },
+  volume_clone: {
+    presentTenseAction: 'Cloning',
+    pastTenseAction: 'cloned',
+    redirectUrl: getVolumesRedirectUrl,
+  },
+
+  credit_card_updated: {
+    pastTensePrefix: 'Credit card updated by',
+    redirectUrl: getAccountRedirectUrl,
+  },
+  payment_submitted: {
+    pastTensePrefix: 'Payment submitted by',
+    redirectUrl: getAccountRedirectUrl,
   },
 };
 
