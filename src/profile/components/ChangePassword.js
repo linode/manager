@@ -9,8 +9,9 @@ import {
   PasswordInput,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { setPassword } from '~/api/profile';
+import { setPassword } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectExpiration from './SelectExpiration';
@@ -26,6 +27,8 @@ export default class ChangePassword extends Component {
       errors: {},
       loading: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -37,8 +40,6 @@ export default class ChangePassword extends Component {
       () => this.setState({ password: '', expires: '' }),
     ]));
   }
-
-  onChange = ({ target: { value, name } }) => this.setState({ [name]: value })
 
   render() {
     const { password, expires, errors, loading } = this.state;

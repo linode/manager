@@ -16,7 +16,7 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
-import { setShared } from '~/api/networking';
+import { setShared } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { IPRdnsCell } from '~/components/tables/cells';
 

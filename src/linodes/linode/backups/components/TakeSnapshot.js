@@ -6,7 +6,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { takeBackup } from '~/api/backups';
+import { takeBackup } from '~/api/ad-hoc/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

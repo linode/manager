@@ -14,9 +14,10 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { domains, linodes, nodebalancers, volumes, tickets } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import TicketHelper from '../components/TicketHelper';
@@ -24,7 +25,9 @@ import TicketHelper from '../components/TicketHelper';
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([linodes, domains, nodebalancers, volumes].map(o => dispatch(o.all())));
+    await Promise.all([
+      api.linodes, api.domains, api.nodebalancers, api.volumes,
+    ].map(o => dispatch(o.all())));
   }
 
   constructor(props) {
@@ -37,6 +40,8 @@ export class CreatePage extends Component {
       errors: {},
       loading: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
@@ -60,12 +65,10 @@ export class CreatePage extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tickets.post(data),
+      () => api.tickets.post(data),
       ({ id }) => push(`/support/${id}`),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderOptionsGroup(label, field, group) {
     return {

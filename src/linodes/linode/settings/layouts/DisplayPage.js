@@ -12,7 +12,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource, setTitle } from '~/actions';
 
@@ -37,7 +37,7 @@ export class DisplayPage extends Component {
     const { group, label } = this.state;
 
     const requests = [
-      () => linodes.put({ group, label }, id),
+      () => api.linodes.put({ group, label }, id),
       () => setTitle(label),
     ];
 

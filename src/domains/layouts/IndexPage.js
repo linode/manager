@@ -17,7 +17,7 @@ import {
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
-import { domains } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
@@ -29,7 +29,7 @@ const OBJECT_TYPE = 'domains';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(domains.all());
+    await dispatch(api.domains.all());
   }
 
   constructor(props) {
@@ -48,7 +48,7 @@ export class IndexPage extends Component {
   deleteDomains = confirmThenDelete(
     this.props.dispatch,
     'domain',
-    domains.delete,
+    api.domains.delete,
     OBJECT_TYPE,
     'domain').bind(this)
 

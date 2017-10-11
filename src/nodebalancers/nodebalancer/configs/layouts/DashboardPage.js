@@ -11,7 +11,7 @@ import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 import { DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { nodebalancers } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
 
@@ -21,8 +21,8 @@ import NodeModal from '../components/NodeModal';
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-    await dispatch(nodebalancers.configs.one([id, configId]));
-    await dispatch(nodebalancers.configs.nodes.all([id, configId]));
+    await dispatch(api.nodebalancers.configs.one([id, configId]));
+    await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));
   }
 
   deleteNBConfigNode(nodebalancer, config, node) {
@@ -35,7 +35,7 @@ export class DashboardPage extends Component {
           const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
-            () => nodebalancers.configs.nodes.delete(...ids),
+            () => api.nodebalancers.configs.nodes.delete(...ids),
             hideModal,
           ]));
         }}

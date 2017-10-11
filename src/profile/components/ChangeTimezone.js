@@ -9,8 +9,9 @@ import {
   Select,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setStorage } from '~/storage';
 
@@ -26,6 +27,8 @@ export default class ChangeTimezone extends Component {
       errors: {},
       timezone: props.timezone,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -33,12 +36,10 @@ export default class ChangeTimezone extends Component {
     const { timezone } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({ timezone }),
+      () => api.profile.put({ timezone }),
       () => setStorage('profile/timezone', timezone),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { loading, errors, timezone } = this.state;

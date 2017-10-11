@@ -10,16 +10,17 @@ import {
   FormSummary,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { setSource, setTitle } from '~/actions';
-import { account } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.account).length) {
-      await dispatch(account.one());
+      await dispatch(api.account.one());
     }
   }
 
@@ -30,6 +31,8 @@ export class IndexPage extends Component {
       networkHelper: !!props.account.network_helper,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
@@ -42,13 +45,10 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => account.put({ network_helper })],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.account.put({ network_helper }),
     ]));
   }
-
-  onChange = ({ target: { name, value, type, checked } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value === 'true' })
 
   render() {
     const { networkHelper, loading, errors } = this.state;

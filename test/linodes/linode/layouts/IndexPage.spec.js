@@ -32,14 +32,14 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const fn1 = _dispatch.secondCall.args[0];
     let fn2 = _dispatch.thirdCall.args[0];
     _dispatch.reset();
-    await expectRequest(fn1, '/linode/types/g5-standard-1', { method: 'GET' });
+    await expectRequest(fn1, '/linode/types/g5-standard-1');
 
     _dispatch.reset();
     _dispatch.returns({ pages: 1, configs: [], results: 0 });
     await fn2(_dispatch, () => state);
 
     fn2 = _dispatch.firstCall.args[0];
-    await expectRequest(fn2, '/linode/instances/1241/configs/?page=1', { method: 'GET' }, {
+    await expectRequest(fn2, '/linode/instances/1241/configs/?page=1', undefined, {
       configs: [],
     });
   });

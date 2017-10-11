@@ -18,8 +18,9 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
@@ -33,6 +34,7 @@ export default class CreateOrEditConfig extends Component {
     this.state = { errors: {}, loading: false };
 
     this.componentWillReceiveProps = this.componentWillMount;
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {
@@ -88,13 +90,10 @@ export default class CreateOrEditConfig extends Component {
 
     const idsPath = [linode.id, config.id].filter(Boolean);
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
+      () => api.linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
     ]));
   }
-
-  onChange = ({ target: { name, value, type, checked } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   kernelOptions() {
     const { kernels } = this.props;
@@ -228,18 +227,16 @@ export default class CreateOrEditConfig extends Component {
               <Radio
                 name="isMaxRam"
                 checked={isMaxRam}
-                id="isMaxRam-true"
                 onChange={this.onChange}
                 label={`Maximum (${linode.type.memory} MB)`}
               />
             </div>
             <div>
               <RadioInputCombo
-                radioId="isMaxRam-false"
                 radioLabel=""
                 radioChecked={!isMaxRam}
                 radioOnChange={() => this.setState({ isMaxRam: false })}
-                inputId="ramLimit"
+                inputName="ramLimit"
                 inputLabel="MB"
                 inputDisabled={isMaxRam}
                 inputValue={ramLimit}
@@ -309,7 +306,7 @@ export default class CreateOrEditConfig extends Component {
                   isCustomRoot: true,
                   rootDevice: defaultRootDevice,
                 })}
-                inputId="custom-root-device"
+                inputName="custom-root-device"
                 inputPlaceholder={defaultRootDevice}
                 inputValue={isCustomRoot ? rootDevice : ''}
                 inputDisabled={isCustomRoot === false}

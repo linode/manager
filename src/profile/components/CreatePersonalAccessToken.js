@@ -2,10 +2,11 @@ import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { tokens } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 
@@ -57,9 +58,9 @@ export default class CreatePersonalAccessToken extends Component {
       expiry: null,
       loading: false,
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch } = this.props;
@@ -75,7 +76,7 @@ export default class CreatePersonalAccessToken extends Component {
     }, []).join(',') || ''; // '' allows no scopes. undefined copies current scopes.
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
+      () => api.tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
       ({ token }) => renderSecret('personal access token', 'created', token, this.props.close),
     ]));
   }

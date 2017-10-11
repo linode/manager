@@ -9,8 +9,9 @@ import {
   SubmitButton,
   Input,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -23,6 +24,8 @@ export default class ChangeEmail extends Component {
       errors: {},
       email: props.email,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -30,11 +33,9 @@ export default class ChangeEmail extends Component {
     const { email } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({ email }),
+      () => api.profile.put({ email }),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { loading, errors, email } = this.state;

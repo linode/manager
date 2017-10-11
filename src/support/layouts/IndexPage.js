@@ -10,7 +10,7 @@ import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { tickets } from '~/api';
+import api from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
@@ -54,7 +54,7 @@ export function renderTicketCreationInfo(ticket) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(tickets.all());
+    await dispatch(api.tickets.all());
   }
 
   async componentDidMount() {

@@ -6,7 +6,9 @@ import sinon from 'sinon';
 
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -26,10 +28,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       />
     );
 
-    const change = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    change('group', 'foobar');
+    changeInput(page, 'group', 'foobar');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -52,11 +51,8 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       />
     );
 
-    const change = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    change('group', 'foobar');
-    change('label', 'my-new-label');
+    changeInput(page, 'group', 'foobar');
+    changeInput(page, 'label', 'my-new-label');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

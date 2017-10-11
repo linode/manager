@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { clients } from '~/api';
-import { updateClientThumbnail } from '~/api/clients';
+import api from '~/api';
+import { updateClientThumbnail } from '~/api/ad-hoc/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
@@ -35,9 +36,9 @@ export default class CreateOrEditApplication extends Component {
       thumbnail: props.thumbnail || '',
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
@@ -47,7 +48,7 @@ export default class CreateOrEditApplication extends Component {
     const idsPath = [id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => clients[id ? 'put' : 'post'](data, ...idsPath),
+      () => api.clients[id ? 'put' : 'post'](data, ...idsPath),
       ({ id }) => {
         if (thumbnail) {
           if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {

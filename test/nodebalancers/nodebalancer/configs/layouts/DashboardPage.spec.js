@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { genericNodeBalancer } from '@/data/nodebalancers';
+import { configsNodeBalancer } from '@/data/nodebalancers';
 import { DashboardPage } from '~/nodebalancers/nodebalancer/configs/layouts/DashboardPage';
 
 describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
@@ -18,13 +18,13 @@ describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
   it('displays the config view summary', async () => {
     const page = await mount(
       <DashboardPage
-        config={genericNodeBalancer._configs.configs[1]}
-        nodebalancer={genericNodeBalancer}
+        config={configsNodeBalancer._configs.configs[1]}
+        nodebalancer={configsNodeBalancer}
       />
     );
     const port = page.find('#port').at(0).text();
-    const portFromApi = genericNodeBalancer._configs.configs[1].port;
-    const nodesFromApi = genericNodeBalancer._configs.configs[1]._nodes.nodes;
+    const portFromApi = configsNodeBalancer._configs.configs[1].port;
+    const nodesFromApi = configsNodeBalancer._configs.configs[1]._nodes.nodes;
     expect(parseInt(port)).to.equal(portFromApi);
     const nodeRows = page.find('.TableRow');
     const nodeValues = nodeRows.at(0).find('td');

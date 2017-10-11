@@ -12,10 +12,11 @@ import {
   Textarea,
   Input,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { tickets } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
-import { addTicketAttachment } from '~/api/tickets';
+import { addTicketAttachment } from '~/api/ad-hoc/tickets';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
@@ -36,13 +37,15 @@ AttachmentTooBigError.prototype = new Error();
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-    await dispatch(tickets.replies.all([ticketId]));
+    await dispatch(api.tickets.replies.all([ticketId]));
   }
 
   constructor() {
     super();
 
     this.state = { reply: '', attachments: [], errors: {}, loading: false };
+
+    this.onChange = onChange.bind(this);
   }
 
   async componentDidMount() {
@@ -51,8 +54,6 @@ export class TicketPage extends Component {
     dispatch(setTitle(this.props.ticket.summary));
     dispatch(setAnalytics(['tickets', 'ticket']));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
     const { attachments, reply: description } = this.state;
@@ -64,7 +65,7 @@ export class TicketPage extends Component {
     ];
 
     if (description) {
-      requests.unshift(() => tickets.replies.post({ description }, [ticket.id]));
+      requests.unshift(() => api.tickets.replies.post({ description }, [ticket.id]));
     }
 
     for (let i = 0; i < attachments.length; i++) {

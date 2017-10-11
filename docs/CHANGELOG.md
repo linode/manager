@@ -6,12 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.3] 2017-10-10
+### Changed
+- obtaining token docs #2555
+### Fixed
+- Fix spacing near changelog alert #2613
+- README links should be relative #2557
+- ipv6 networking typos #2556
+
 ## [0.13.2] 2017-10-04
-### Added
-- Changelog for 2017-10-04
 ### Changed
 - Endpoint docs for pricing, disks, config, volume, oauthclient
 ### Added
+- Changelog for 2017-10-04
 - documentation for account/credit-card
 - documentation for account/payments
 - documentation for linode/volumes/:id/clone
