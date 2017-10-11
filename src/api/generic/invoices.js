@@ -9,8 +9,9 @@ export const config = genConfig({
   subresources: {
     _items: {
       plural: 'items',
+      primaryKey: 'label',
       endpoint: id => `/account/invoices/${id}/items`,
-      supports: [ONE],
+      supports: [MANY],
     },
   },
 });
