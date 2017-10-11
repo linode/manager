@@ -1,8 +1,47 @@
+export const testItem = {
+  amount: 7.2,
+  from: '2017-09-01T04:00:00',
+  to: '2017-10-01T03:59:59',
+  label: 'Linode Managed - ln (1234)',
+  quantity: 720,
+  type: 'hourly',
+  unit_price: 0.01,
+};
+
 export const apiTestInvoice = {
   date: '2016-12-12T15:07:47',
   label: 'Invoice #1234',
   id: 1234,
   total: 10,
+  _items: {
+    data: [
+      testItem,
+      {
+      ...testItem,
+      label: 'Linode 1024 - ln (1234)',
+      },
+      {
+      ...testItem,
+      label: 'Storage Volume - sv (123)',
+      },
+      {
+      ...testItem,
+      label: 'Backup Service - Linode 1024 - ln (1234)',
+      },
+      {
+      ...testItem,
+      label: 'Nodebalancer - nb (432)',
+      },
+      {
+      ...testItem,
+      label: 'Linode 1024 - ln (1235)',
+      },
+      {
+      ...testItem,
+      label: 'Linode 1024 - ln (1236)',
+      },
+    ],
+  },
 };
 
 export const testInvoice = {
