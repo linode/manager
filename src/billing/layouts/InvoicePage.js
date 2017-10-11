@@ -5,14 +5,14 @@ import moment from 'moment-timezone';
 import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
-import { invoices } from '~/api';
+import api from '~/api';
 
 import { setSource } from '~/actions/source';
 
 
 export class InvoicePage extends Component {
   static async preload({ dispatch, getState }, { invoiceId }) {
-    await dispatch(invoices.items.one([invoiceId]));
+    await dispatch(api.invoices.items.one([invoiceId]));
   }
 
   componentDidMount() {
