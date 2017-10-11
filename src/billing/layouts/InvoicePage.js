@@ -12,7 +12,7 @@ import { setSource } from '~/actions/source';
 
 export class InvoicePage extends Component {
   static async preload({ dispatch, getState }, { invoiceId }) {
-    await dispatch(api.invoices.items.one([invoiceId]));
+    await dispatch(api.invoices.items.all([invoiceId]));
   }
 
   componentDidMount() {
@@ -84,7 +84,7 @@ export class InvoicePage extends Component {
                 },
               ]}
               noDataMessage="No items found."
-              data={items}
+              data={Object.values(items)}
             />
             <div className="row">
               <div className="col-sm-12 text-right">
@@ -101,16 +101,15 @@ export class InvoicePage extends Component {
 InvoicePage.propTypes = {
   dispatch: PropTypes.func,
   invoice: PropTypes.object.isRequired,
-  items: PropTypes.object.isRequired,
+  items: PropTypes.object,
 };
 
 function select(state, ownProps) {
   const params = ownProps.params;
   const invoiceId = params.invoiceId;
-  console.log('invId', invoiceId);
   const invoice = state.api.invoices.invoices[invoiceId];
-  console.log('inv', invoice);
-  const items = invoice._items.data;
+  const items = invoice._items.items;
+
   return {
     invoice,
     items,
