@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ExternalLink } from 'linode-components/buttons';
@@ -8,7 +9,7 @@ import { ModalShell } from 'linode-components/modals';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
-import { profile } from '~/api';
+import api from '~/api';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
@@ -23,7 +24,7 @@ export class Layout extends Component {
   // if they were just called.
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.profile).length) {
-      await dispatch(profile.one());
+      await dispatch(api.profile.one());
       // Needed for time display component that is not attached to Redux.
       const { timezone } = getState().api.profile;
       setStorage('profile/timezone', timezone);

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -18,7 +19,7 @@ import {
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { stackscripts } from '~/api';
+import api from '~/api';
 import { createHeaderFilter, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
@@ -29,7 +30,7 @@ const OBJECT_TYPE = 'stackscripts';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(stackscripts.all([], null, createHeaderFilter({ mine: true })));
+    await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
   }
 
   constructor(props) {
@@ -56,7 +57,7 @@ export class IndexPage extends Component {
         onSubmit={async () => {
           const ids = scriptsArr.map(function (script) { return script.id; });
 
-          await Promise.all(ids.map(id => dispatch(stackscripts.delete(id))));
+          await Promise.all(ids.map(id => dispatch(api.stackscripts.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}

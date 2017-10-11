@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { volumes, linodes } from '~/api';
+import api from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 
 import { AddEditVolume, VolumesList } from '../components';
@@ -16,7 +17,7 @@ const OBJECT_TYPE = 'volumes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await Promise.all([
-      linodes, volumes,
+      api.linodes, api.volumes,
     ].map(o => dispatch(o.all())));
   }
 

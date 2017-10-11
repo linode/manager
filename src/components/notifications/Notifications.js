@@ -1,8 +1,9 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { events } from '~/api';
-import { eventRead } from '~/api/events';
+import api from '~/api';
+import { eventRead } from '~/api/ad-hoc/events';
 import Polling from '~/api/polling';
 import {
   createHeaderFilter,
@@ -21,7 +22,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 let filterOptions = { seen: false };
 const fetchAllEvents = () => (dispatch) =>
-  dispatch(events.all([], null, createHeaderFilter(filterOptions)));
+  dispatch(api.events.all([], null, createHeaderFilter(filterOptions)));
 
 const POLLING = Polling({
   apiRequestFn: fetchAllEvents,
@@ -34,8 +35,6 @@ export class Notifications extends Component {
   constructor(props) {
     super(props);
 
-    this.onClickItem = this.onClickItem.bind(this);
-    this.onClickShowMore = this.onClickShowMore.bind(this);
     this.state = { loadingMore: false };
   }
 
@@ -53,7 +52,7 @@ export class Notifications extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.fetchEventsPage(lessThanNowFilter('created'));
+      this.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
     }
 
     // initialize polling for unseen events
@@ -68,11 +67,13 @@ export class Notifications extends Component {
     // total results is relative to the last filtered request
     // TODO: review api structure to account for totalResults seen all time vs in last request
     if (events.totalResults > 0 || actionExpectingEvent) {
-      const latest = events.events[events.ids[0]];
-      filterOptions = {
-        ...filterOptions,
-        ...greaterThanDatetimeFilter('created', latest.created),
-      };
+      if (events.ids[0]) {
+        const latest = events.events[events.ids[0]];
+        filterOptions = {
+          ...filterOptions,
+          ...greaterThanDatetimeFilter('created', latest.created),
+        };
+      }
       POLLING.reset();
     }
 
@@ -85,15 +86,15 @@ export class Notifications extends Component {
     POLLING.stop(POLLING_ID);
   }
 
-  async onClickItem(event) {
+  onClickItem = async event => {
     const { dispatch } = this.props;
 
     if (!event.read) {
       await dispatch(eventRead(event.id));
     }
-  }
+  };
 
-  onClickShowMore(e) {
+  onClickShowMore = e => {
     e.stopPropagation(); // don't let the toggle close the list
     const { events } = this.props;
 
@@ -104,11 +105,11 @@ export class Notifications extends Component {
       ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
     }));
     this.setState({ loading: false });
-  }
+  };
 
-  fetchEventsPage(options = null) {
+  fetchEventsPage(headers = null) {
     const { dispatch } = this.props;
-    return dispatch(events.page(0, [], null, true, null, options));
+    return dispatch(api.events.page(0, [], null, true, null, headers));
   }
 
   render() {

@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Code } from 'linode-components/formats';
 
@@ -7,14 +8,12 @@ export default class SpecExample extends Component {
   constructor() {
     super();
 
-    this.onClick = this.onClick.bind(this);
-
     this.state = { collapsed: true };
   }
 
-  onClick() {
+  onClick = () => {
     this.setState({ collapsed: !this.state.collapsed });
-  }
+  };
 
   render() {
     const { example, type } = this.props;

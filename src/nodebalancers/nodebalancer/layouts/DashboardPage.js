@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -11,9 +12,9 @@ import { DeleteModalBody } from 'linode-components/modals';
 
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
-import { nodebalancers } from '~/api';
-import { transferPool } from '~/api/account';
-import { nodebalancerStats } from '~/api/nodebalancers';
+import api from '~/api';
+import { transferPool } from '~/api/ad-hoc/account';
+import { nodebalancerStats } from '~/api/ad-hoc/nodebalancers';
 import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
 import { TransferPool } from '~/components';
 import {
@@ -55,7 +56,7 @@ export class DashboardPage extends Component {
           const ids = [nodebalancer.id, config.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
-            () => nodebalancers.configs.delete(...ids),
+            () => api.nodebalancers.configs.delete(...ids),
             hideModal,
           ]));
         }}

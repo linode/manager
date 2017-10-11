@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.14.2",
+  "version": "0.15.3",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -21,12 +21,6 @@
   },
   "keywords": [],
   "author": "Linode",
-  "contributors": [
-    {
-      "name": "Phil Eaton",
-      "email": "peaton@linode.com"
-    }
-  ],
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"

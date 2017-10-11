@@ -1,10 +1,12 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ModalFormGroup, Input, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { nodebalancers } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -46,9 +48,9 @@ export default class NodeModal extends Component {
       mode: props.node.mode,
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, nodebalancerId, configId } = this.props;
@@ -62,7 +64,7 @@ export default class NodeModal extends Component {
     const ids = [nodebalancerId, configId, state.id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
+      () => api.nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
       hideModal,
     ]));
   }

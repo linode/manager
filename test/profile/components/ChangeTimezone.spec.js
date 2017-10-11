@@ -5,8 +5,8 @@ import sinon from 'sinon';
 
 import { ChangeTimezone } from '~/profile/components';
 
+import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '@/common';
 import { profile } from '@/data/profile';
-import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 
 
 describe('profile/components/ChangeTimezone', () => {
@@ -25,7 +25,7 @@ describe('profile/components/ChangeTimezone', () => {
       />
     );
 
-    page.find('Select').props().onChange({ target: { value: 'GMT', name: 'timezone' } });
+    changeInput(page, 'timezone', 'GMT');
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);

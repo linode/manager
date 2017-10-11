@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -16,7 +17,7 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
-import { setShared } from '~/api/networking';
+import { setShared } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { IPRdnsCell } from '~/components/tables/cells';
 
@@ -67,6 +68,14 @@ export class IPSharingPage extends Component {
     dispatch(setSource(__filename));
   }
 
+  onChange = (record, checked) => {
+    this.setState(_.merge({}, this.state, {
+      checked: {
+        [record.ip.address]: checked,
+      },
+    }));
+  }
+
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { checked } = this.state;
@@ -78,14 +87,6 @@ export class IPSharingPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setShared(linode.id, sharedIPs),
     ]));
-  }
-
-  onChange = (record, checked) => {
-    this.setState(_.merge({}, this.state, {
-      checked: {
-        [record.ip.address]: checked,
-      },
-    }));
   }
 
   validIPs() {
