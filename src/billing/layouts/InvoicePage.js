@@ -107,7 +107,9 @@ InvoicePage.propTypes = {
 function select(state, ownProps) {
   const params = ownProps.params;
   const invoiceId = params.invoiceId;
+  console.log('invId', invoiceId);
   const invoice = state.api.invoices.invoices[invoiceId];
+  console.log('inv', invoice);
   const items = invoice._items.data;
   return {
     invoice,
