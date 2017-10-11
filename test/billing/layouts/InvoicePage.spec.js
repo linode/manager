@@ -10,6 +10,8 @@ import { api } from '@/data';
 const { invoices } = api;
 
 describe('billing/layouts/InvoicePage', () => {
+  const invoice = invoices.invoices[1234];
+  const items = invoice._items.data;
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -22,11 +24,23 @@ describe('billing/layouts/InvoicePage', () => {
     const page = mount(
       <InvoicePage
         dispatch={dispatch}
-        invoices={invoices.invoices}
-        params={{ invoiceId: 1234 }}
+        invoice={invoice}
+        items={items}
       />
     );
 
-    expect(page.find('.TableRow').length).to.equal(2);
+    expect(page.find('.TableRow').length).to.equal(items.length);
+  });
+
+  it('renders invoice total', () => {
+    const page = mount(
+      <InvoicePage
+        dispatch={dispatch}
+        invoice={invoice}
+        items={items}
+      />
+    );
+
+    expect(page.find('strong').text()).to.equal(`Invoice Total: $${(invoice.total).toFixed(2)}`);
   });
 });
