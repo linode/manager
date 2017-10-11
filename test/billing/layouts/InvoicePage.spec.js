@@ -2,7 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import moment from 'moment-timezone';
 
 import { InvoicePage } from '~/billing/layouts/InvoicePage';
 import { api } from '@/data';
