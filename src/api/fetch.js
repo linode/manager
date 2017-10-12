@@ -4,7 +4,7 @@ import { rawFetch } from '~/fetch';
 import * as session from '~/session';
 
 
-function gatherOptions(token, method, body, headers) {
+export function gatherOptions(token, method, body, headers) {
   const options = {
     method,
     body,

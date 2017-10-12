@@ -50,7 +50,6 @@ export class IndexPage extends Component {
     await dispatch(actions.many(lvclients));
   }
 
-
   constructor(props) {
     super(props);
 
