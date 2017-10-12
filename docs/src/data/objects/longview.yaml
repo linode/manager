@@ -19,17 +19,29 @@ schema:
     value: 'D09E9730-CF01-E0AB-7763FBAFD4000000'
     description: The api key required to install the Longview Agent on a Linode.
   apps:
-    editable: false
     type: Object
-    description: A collection of applications the Longview client is configured to monitor. Currently reports on nginx, apache, and mysql
+    description: >
+      A collection of applications the Longview client is configured to monitor. Currently reports on nginx, apache, and mysql
+    nginx:
+      type: Boolean
+      value: true
+      description: Whether or not nginx is monitored by the Longview client.
+    apache:
+      type: Boolean
+      value: false
+      description: Whether or not apache is monitored by the Longview client.
+    mysql:
+      type: Boolean
+      value: true
+      description: Whether or not mysql is monitored by the Longview client.
   created:
     editable: false
-    type: Date
+    type: String
     value: '2017-10-01T14:00:00'
     description: The date the Longview client was created.
   updated:
     editable: false
-    type: Date
+    type: String
     value: '2017-10-01T14:02:33'
     description: The date the Longview client was updated.
 
