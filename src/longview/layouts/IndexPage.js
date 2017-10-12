@@ -107,11 +107,9 @@ export class IndexPage extends Component {
               { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
               {
                 cellComponent: LinkCell,
-                hrefFn: (lvclient) => { return `/longview/clients/${lvclient.label}`; },
+                hrefFn: (lvclient) => { return `/longview/${lvclient.label}`; },
                 tooltipEnabled: true,
               },
-              { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
-              { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',
