@@ -1,0 +1,35 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Longview
+description: >
+  Longview endpoints provide a means of managing Longview client objects on your account.
+endpoints:
+  /longview/clients:
+    authenticated: true
+    description: >
+      Manage the collection of Longview client objects your account may access.
+    methods:
+      GET:
+        response: longview
+        paginationKey: longview
+        oauth: longviewclients:view
+        description: >
+          Returns a list of Longview clients.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/longview/clients
+  /longview/clients/$id:
+    type: resource
+    authenticated: true
+    description: >
+      Manage a particular Longview client your account may access.
+    methods:
+      GET:
+        response: longview
+        oauth: longviewclients:view
+        description: >
+          Returns information about this Longview client.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/longview/clients/$longviewclient_id
