@@ -435,6 +435,25 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/account/oauth-clients/$client_id
+  /account/notifications:
+    group: Notifications
+    authenticated: true
+    description: >
+      View the collection of Notifications on your account.
+    methods:
+      GET:
+        response: notification
+        description: >
+          Returns a collection of important, often time-sensitive items related
+          to your account, such as "you have an outstanding balance" or "one of
+          your linodes has a scheduled migration."  These are infrequent, but
+          important when they do arise.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/account/notifications
+          python: |
+            # coming soon
   /account/events:
     group: Events
     authenticated: true
