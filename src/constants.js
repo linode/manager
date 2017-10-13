@@ -2,6 +2,7 @@
 export const API_ROOT = ENV_API_ROOT || 'https://api.linode.com/v4';
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.linode.com';
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
+export const LONGVIEW_ROOT = ENV_LONGVIEW_ROOT || 'https://longview.linode.com/fetch';
 export const GA_ID = ENV_GA_ID;
 export const SENTRY_URL = ENV_SENTRY_URL;
 export const ENVIRONMENT = process.env.NODE_ENV || 'development';

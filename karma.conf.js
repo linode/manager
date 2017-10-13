@@ -70,6 +70,7 @@ module.exports = function(config) {
           ENV_GA_ID: null,
           ENV_SENTRY_URL: null,
           ENV_VERSION: null,
+          ENV_LONGVIEW_ROOT: null,
         }),
         new CircularDependencyPlugin({
           failOnError: true,
