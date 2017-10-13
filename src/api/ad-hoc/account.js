@@ -14,6 +14,6 @@ export function makePayment(amount) {
   }));
 }
 
-export function updateCard (body) {
+export function updateCard(body) {
   return (dispatch) => dispatch(fetch.post('/account/credit-card', body));
 }

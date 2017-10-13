@@ -2,9 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, FormSummary, Select, Input, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  Select,
+  Input,
+  SubmitButton,
+} from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
-import api from '~/api';
 
 import { updateCard } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -16,9 +23,9 @@ export class CreditCardPage extends Component {
     super(props);
 
     this.state = {
-      //month: 1,
-      //year: new Date().getFullYear(),
-			card: '',
+      month: 1,
+      year: new Date().getFullYear(),
+      card: '',
       errors: {},
       loading: false,
     };
@@ -31,30 +38,30 @@ export class CreditCardPage extends Component {
     dispatch(setSource(__filename));
   }
 
-	onSubmit = () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
-		const { month, year, card } = this.state;
-		const data = {
-			card_number: card,
-			expiry_month: month,
-			expiry_year: year,
-		};
+    const { month, year, card } = this.state;
+    const data = {
+      card_number: card,
+      expiry_month: month,
+      expiry_year: year,
+    };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => updateCard(data),
     ]));
-	}
+  }
 
-	optionBuilder = (start, count) => {
-		return Array.from({length: count}, (v, i) => {
-			return {value: start + i, label: start + i};
-		});
-	}
+  optionBuilder = (start, count) => {
+    return Array.from({ length: count }, (v, i) => {
+      return { value: start + i, label: start + i };
+    });
+  }
 
   render() {
-		const { month, year, card, errors, loading } = this.state;
-		const months = this.optionBuilder(1, 12);
-		const years = this.optionBuilder(new Date().getFullYear(), 26);
+    const { month, year, card, errors, loading } = this.state;
+    const months = this.optionBuilder(1, 12);
+    const years = this.optionBuilder(new Date().getFullYear(), 26);
 
     return (
       <div>
@@ -68,10 +75,10 @@ export class CreditCardPage extends Component {
                 <label className="col-sm-3 col-form-label">Credit Card</label>
                 <div className="col-sm-9">
                   <Input
-										name="card"
-										id="card"
-										value={card}
-                		onChange={this.onChange}
+                    name="card"
+                    id="card"
+                    value={card}
+                    onChange={this.onChange}
                   />
                   <FormGroupError errors={errors} name="card_number" />
                 </div>
@@ -79,22 +86,22 @@ export class CreditCardPage extends Component {
               <FormGroup errors={errors} name={['expiry_month', 'expiry_year']} className="row">
                 <label className="col-sm-3 col-form-label">Expires</label>
                 <div className="col-sm-1">
-									<Select
-										id="expiry_month"
-										name="month"
-										value={month}
-										onChange={this.onChange}
-										options={months}
-									/>
+                  <Select
+                    id="expiry_month"
+                    name="month"
+                    value={month}
+                    onChange={this.onChange}
+                    options={months}
+                  />
                 </div>
                 <div className="col-sm-2">
-									<Select
-										id="expiry_year"
-										name="year"
-										value={year}
-										onChange={this.onChange}
-										options={years}
-									/>
+                  <Select
+                    id="expiry_year"
+                    name="year"
+                    value={year}
+                    onChange={this.onChange}
+                    options={years}
+                  />
                 </div>
                 <FormGroupError
                   errors={errors}
@@ -117,5 +124,9 @@ export class CreditCardPage extends Component {
     );
   }
 }
+
+CreditCardPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(CreditCardPage);
