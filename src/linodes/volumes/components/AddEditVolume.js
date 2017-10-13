@@ -40,7 +40,7 @@ export default class AddEditVolume extends Component {
       config: null,
       errors: {},
       label: volume.label || '',
-      size: volume.size || 10,
+      size: volume.size || 20,
       allConfigs: {},
       configs: false,
     };
