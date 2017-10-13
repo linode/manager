@@ -54,7 +54,7 @@ export default class AddEditVolume extends Component {
     const data = id ? { label } : {
       label,
       region,
-      size,
+      size: +size,
       linode_id: linode === LinodeSelect.EMPTY ? undefined : +linode,
       config_id: config,
     };
