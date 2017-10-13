@@ -106,7 +106,7 @@ export default class AttachVolume extends Component {
         analytics={{ title: this.title, action: 'attach' }}
         errors={errors}
       >
-        <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
+        <ModalFormGroup label="Linode" id="linode" apiKey="linode_id" errors={errors}>
           <LinodeSelect
             linodes={filteredLinodes}
             value={linode}
