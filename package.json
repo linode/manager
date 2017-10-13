@@ -21,12 +21,6 @@
   },
   "keywords": [],
   "author": "Linode",
-  "contributors": [
-    {
-      "name": "Phil Eaton",
-      "email": "peaton@linode.com"
-    }
-  ],
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
