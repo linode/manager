@@ -225,11 +225,8 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     const { options } = kernel.props();
 
     expect(options.length).to.equal(2); // Two groups
-    expect(options[0].label).to.equal('Current');
-    expect(options[1].label).to.equal('Deprecated');
-    expect(options[0].options.length).to.equal(2);
-    expect(options[0].options[0].label).to.equal('4.0.1-x86-linode55');
-    expect(options[0].options[1].label).to.equal('4.0.1-x86_64-linode55');
+    expect(options[0].label).to.equal('4.0.1-x86-linode55');
+    expect(options[1].label).to.equal('4.0.1-x86_64-linode55');
   });
 
   it('renders boot device properly', () => {
