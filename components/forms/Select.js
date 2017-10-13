@@ -72,7 +72,7 @@ export default class Select extends Component {
             <optgroup label={label}>
               {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
             </optgroup>
-          )
+          );
         }
 
         return <option value={value}>{label}</option>;
@@ -86,7 +86,7 @@ export default class Select extends Component {
           value={value}
           className="Select Select--native form-control"
         >{options}</select>
-      )
+      );
     }
 
     return (
