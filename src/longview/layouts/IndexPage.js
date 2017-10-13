@@ -38,8 +38,16 @@ export class IndexPage extends Component {
     const lvclients = {
       lvclients: [
         {
-          id: 'FAKE', // *DONT COMMIT ME*
-          label: 'longview83735',
+          id: 1000,
+          api_key: 'FAKE', // *DONT COMMIT ME*
+          label: 'longview123',
+          apps: {
+            mysql: false,
+            nginx: false,
+            apache: false,
+          },
+          updated: null,
+          created: '2017-10-12 10:12:17',
         },
       ],
       pages: 1,
