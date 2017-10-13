@@ -16,7 +16,7 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setTitle('Billing'));
-    dispatch(setAnalytics('billing'));
+    dispatch(setAnalytics(['billing']));
   }
 
   render() {

@@ -3,10 +3,12 @@ import React from 'react';
 
 export default function FormGroupError(props) {
   const { errors, name, crumbs, inline, className } = props;
-  const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
   const baseClassName = `${className} FormGroupError`;
-  const fullClassName = inline ? baseClassName
-                          : `${baseClassName} FormGroupError--block`;
+  const fullClassName = inline ? baseClassName : `${baseClassName} FormGroupError--block`;
+  const names = Array.isArray(name) ? name : [name];
+  const fieldErrors = _.flatten(names.map(function (name) {
+    return errors[name + (crumbs ? `.${crumbs}` : '')] || [];
+  }));
   if (fieldErrors && fieldErrors.length) {
     return (
       <ul className={fullClassName}>
@@ -20,7 +22,7 @@ export default function FormGroupError(props) {
 
 FormGroupError.propTypes = {
   errors: PropTypes.any.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
   className: PropTypes.string,
   crumbs: PropTypes.string,
   inline: PropTypes.bool,
