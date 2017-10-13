@@ -7,3 +7,13 @@ export function transferPool() {
     dispatch(actions.one({ _transferpool }, 0));
   };
 }
+
+export function makePayment(amount) {
+  return (dispatch) => dispatch(fetch.post('/account/payments', {
+    usd: parseFloat(amount.toFixed(2)),
+  }));
+}
+
+export function updateCard (body) {
+  return (dispatch) => dispatch(fetch.post('/account/credit-card', body));
+}
