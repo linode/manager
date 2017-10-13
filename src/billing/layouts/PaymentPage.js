@@ -2,9 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, FormSummary, Input, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  Input,
+  SubmitButton,
+} from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
-import api from '~/api';
 
 import { makePayment } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -28,17 +34,17 @@ export class PaymentPage extends Component {
     dispatch(setSource(__filename));
   }
 
-	onSubmit = () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { usd } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => makePayment(parseFloat(usd)),
     ]));
-	}
+  }
 
   render() {
-		const { errors, loading, usd } = this.state;
+    const { errors, loading, usd } = this.state;
 
     return (
       <div>
@@ -52,12 +58,13 @@ export class PaymentPage extends Component {
                 <label className="col-sm-3 col-form-label">Amount to Charge</label>
                 <div className="col-sm-9">
                   <Input
-										name="usd"
-										id="usd"
-										value={usd}
-                		onChange={this.onChange}
-                  /> <small className="text-muted">(USD)</small>
-              		<FormGroupError errors={errors} name="usd" />
+                    name="usd"
+                    id="usd"
+                    value={usd}
+                    onChange={this.onChange}
+                  />
+                  <small className="text-muted">(USD)</small>
+                  <FormGroupError errors={errors} name="usd" />
                 </div>
               </FormGroup>
               <FormGroup className="row">
@@ -75,5 +82,9 @@ export class PaymentPage extends Component {
     );
   }
 }
+
+PaymentPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(PaymentPage);
