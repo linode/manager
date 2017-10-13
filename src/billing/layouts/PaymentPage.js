@@ -33,7 +33,7 @@ export class PaymentPage extends Component {
     const { usd } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => makePayment(usd),
+      () => makePayment(parseFloat(usd)),
     ]));
 	}
 
@@ -48,7 +48,7 @@ export class PaymentPage extends Component {
               onSubmit={this.onSubmit}
               analytics={{ title: 'Make Payment' }}
             >
-              <FormGroup className="row">
+              <FormGroup errors={errors} className="row" name="usd">
                 <label className="col-sm-3 col-form-label">Amount to Charge</label>
                 <div className="col-sm-9">
                   <Input
@@ -56,7 +56,7 @@ export class PaymentPage extends Component {
 										id="usd"
 										value={usd}
                 		onChange={this.onChange}
-                  /> (USD)
+                  /> <small className="text-muted">(USD)</small>
               		<FormGroupError errors={errors} name="usd" />
                 </div>
               </FormGroup>

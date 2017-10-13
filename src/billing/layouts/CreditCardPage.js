@@ -16,7 +16,8 @@ export class CreditCardPage extends Component {
     super(props);
 
     this.state = {
-      month: 1,
+      //month: 1,
+      //year: new Date().getFullYear(),
 			card: '',
       errors: {},
       loading: false,
@@ -72,31 +73,34 @@ export class CreditCardPage extends Component {
 										value={card}
                 		onChange={this.onChange}
                   />
+                  <FormGroupError errors={errors} name="card_number" />
                 </div>
-                <FormGroupError errors={errors} name="card_number" />
               </FormGroup>
-              <FormGroup errors={errors} className="row">
+              <FormGroup errors={errors} name={['expiry_month', 'expiry_year']} className="row">
                 <label className="col-sm-3 col-form-label">Expires</label>
                 <div className="col-sm-1">
 									<Select
-										id="month"
-										name="expiry_month"
+										id="expiry_month"
+										name="month"
 										value={month}
 										onChange={this.onChange}
 										options={months}
 									/>
-                  <FormGroupError errors={errors} name="expiry_month" inline={false} />
                 </div>
-                <div className="col-sm-1">
+                <div className="col-sm-2">
 									<Select
-										id="year"
-										name="expiry_year"
+										id="expiry_year"
+										name="year"
 										value={year}
 										onChange={this.onChange}
 										options={years}
 									/>
-                  <FormGroupError errors={errors} name="expiry_year" inline={false} />
                 </div>
+                <FormGroupError
+                  errors={errors}
+                  name={['expiry_month', 'expiry_year']}
+                  inline={false}
+                />
               </FormGroup>
               <FormGroup className="row">
                 <div className="col-sm-9 offset-sm-3">
