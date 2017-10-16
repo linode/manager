@@ -43,3 +43,7 @@ schema:
   balance:
     value: 0.00
     type: float
+  longview_subscription:
+    value: null
+    type: string
+    description: The Longview Pro tier you are currently subscribed to.

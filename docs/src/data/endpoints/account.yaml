@@ -39,7 +39,8 @@ endpoints:
                   "network_helper": true,
                   "phone": "555-555-1212",
                   "state": "PA",
-                  "zip": 19102
+                  "zip": 19102,
+                  "longview_subscription": "longview-10"
                   }
                 }' \
                 https://$api_root/$version/account/settings
