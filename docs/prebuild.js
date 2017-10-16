@@ -317,6 +317,12 @@ const endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/domains`,
     groups: {},
   },
+  longview: {
+    name: 'Longview',
+    path: '/longview',
+    routePath: `${ROUTE_BASE_PATH}/longview`,
+    groups: {},
+  },
   nodebalancers: {
     name: 'NodeBalancers',
     path: '/nodebalancers',
