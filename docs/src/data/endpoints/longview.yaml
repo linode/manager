@@ -33,3 +33,13 @@ endpoints:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/longview/clients/$longviewclient_id
+      DELETE:
+        oauth: longviewclients:delete
+        dangerous: true
+        description: >
+          Deletes this Longview client. This action cannot be undone
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/longview/clients/$longviewclient_id
