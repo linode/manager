@@ -9,8 +9,8 @@ endpoints:
       Manage the collection of Longview client objects your account may access.
     methods:
       GET:
-        response: longview
-        paginationKey: longview
+        response: longviewclient
+        paginationKey: longviewclients
         oauth: longviewclients:view
         description: >
           Returns a list of Longview clients.
@@ -25,7 +25,7 @@ endpoints:
       Manage a particular Longview client your account may access.
     methods:
       GET:
-        response: longview
+        response: longviewclient
         oauth: longviewclients:view
         description: >
           Returns information about this Longview client.
