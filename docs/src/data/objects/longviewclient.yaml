@@ -1,6 +1,5 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: Longview
-prefix: lngv
+name: LongviewClient
 description: >
   Longview objects describe a single Longview client on your account.
 schema:
