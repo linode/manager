@@ -8,12 +8,7 @@
     height: $nav-height;
     background: $main-header-color;
     font-size: 0;
-
-    a:hover,
-    a:focus,
-    a:active {
-        text-decoration: none;
-    }
+    color: $main-header-color-text;
 
     &-link, &-brand {
         @extend .font-normal;
@@ -33,15 +28,16 @@
     }
     
     &-link {
-        color: $main-header-color-text;
         line-height: $nav-height;
         padding: 0 15px;
+        color: inherit;
 
         &--selected,
         &:hover,
         &:focus,
         &:active {
             color: $main-header-color-text-highlight;
+            text-decoration: none;
         }
 
         &--selected {
