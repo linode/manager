@@ -359,6 +359,12 @@ const endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/profile`,
     groups: {},
   },
+  images: {
+    name: 'Images',
+    path: '/images',
+    routePath: `${ROUTE_BASE_PATH}/images`,
+    groups: {},
+  },
 };
 
 allEndpoints.forEach(function (endpointContainer) {
