@@ -49,7 +49,8 @@ endpoints:
           distribution:
             optional: true
             description: >
-              The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.
+              The Distribution to deploy this Linode with.  May not be included
+              if 'backup_id' or 'image' is sent.
             type: string
           root_pass:
             optional: unless source == "distro"
@@ -79,12 +80,19 @@ endpoints:
             optional: true
             description: >
               The Backup to restore to the newly created
-              Linode.  May not be included if 'distribution' is sent.
+              Linode. May not be included if 'distribution' or 'image' is sent.
+            type: Integer
+          image:
+            optional: true
+            description: >
+              The gold-master image to use for the newly created Linode. May
+               not be included if 'distribution' or 'backup_id' is sent.
             type: Integer
           backups_enabled:
             optional: true
             description: >
-              Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
+              Subscribes this Linode with the Backup service. (Additional
+              charges apply.) Defaults to "false".
             type: Boolean
         examples:
           curl: |
@@ -334,6 +342,34 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
           python: |
             disk.reset_root_password('hunter2')
+  /linode/instances/$id/disks/$id/imagize:
+    group: Disks
+    type: Strange
+    authenticated: true
+    description: Creates a gold-master image for future deployments.
+    methods:
+      POST:
+        oauth: linodes:modify
+        response: image
+        params:
+          label:
+            optional: true
+            description: >
+              Sets the name of the image shown in the base image list, defaults
+              to the source disk label.
+            type: String
+          description:
+            optional: true
+            description: An optional description of the created image
+            type: String
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "label": "My gold master image"
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/imagize
   /linode/instances/$id/configs:
     group: Configs
     authenticated: true
@@ -362,13 +398,13 @@ endpoints:
             description: >
               A kernel ID to boot this Linode with.
               Defaults to "linode/latest-64bit".
-            type: string
+            type: String
             value: linode/latest-64bit
           label:
             description: >
               The user-friendly label to name this config.
             limit: 1-48 characters
-            type: string
+            type: String
             value: My config
           devices:
             description: >
@@ -941,8 +977,9 @@ endpoints:
     type: Action
     authenticated: true
     description: >
-      Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.
-      Returns information about this Linode.
+      Deletes all Disks and Configs on this Linode, then deploys a new
+      Distribution or Image to this Linode with the given attributes. Returns
+      information about this Linode.
     methods:
       POST:
         oauth: linodes:modify
@@ -952,6 +989,12 @@ endpoints:
             description: >
                 An Distribution to deploy to this Linode.
             type: Distribution
+          image:
+            optional: true
+            description: >
+              The gold-master image to use for this Linode. May
+               not be included if 'distribution' is sent.
+            type: Integer
           root_pass:
             description: >
                 The root password for the new deployment.
