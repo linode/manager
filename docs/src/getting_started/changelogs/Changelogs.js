@@ -15,6 +15,102 @@ export default function Authentication() {
         </p>
       </section>
       <section>
+        <h2>2017-10-23</h2>
+        <hr /><br />
+        <b>Breaking Changes:</b><br />
+        <ul>
+          <li>Changed POST /account/payments
+            <ul>
+              <li>Now accepts "usd" as a string representing a dollar amount, including cents</li>
+              <li>Valid values include "0.10", "10.00", "100.20", and "$1.00"</li>
+              <li>Invalid values include 10, 10.01, "10", "10.001", and "10.0"</li>
+            </ul>
+          </li>
+        </ul>
+        <b>Changes:</b><br />
+        <ul>
+          <li>Added GET /account/notifications
+            <ul>
+              <li>Read-only collection of Notification objects</li>
+              <li>Returns important information about your account that may require action</li>
+            </ul>
+          </li>
+          <li>Added GET /images
+            <ul>
+              <li>Lists images on your account</li>
+            </ul>
+          </li>
+          <li>Added GET /images/:id
+            <ul>
+              <li>View a single image on your account</li>
+            </ul>
+          </li>
+          <li>Added PUT /images/:id
+            <ul>
+              <li>Update an image on your account</li>
+            </ul>
+          </li>
+          <li>Added DELETE /images/:id
+            <ul>
+              <li>Deleted an image you own</li>
+            </ul>
+          </li>
+          <li>Added POST /linode/instances/:id/disks/:id/imagize
+            <ul>
+              <li>Created a new image from a disk you own</li>
+            </ul>
+          </li>
+          <li>Added GET /longview/clients
+            <ul>
+              <li>Returns a list of Longview clients on your account</li>
+            </ul>
+          </li>
+          <li>Added GET /longview/clients/:id
+            <ul>
+              <li>Returns information on a single Longview client</li>
+            </ul>
+          </li>
+          <li>Added DELETE /longview/clients/:id
+            <ul>
+              <li>Removes a longview client from your account</li>
+            </ul>
+          </li>
+          <li>Added GET /longview/subscriptions
+            <ul>
+              <li>Returns all available longview subscription tiers</li>
+            </ul>
+          </li>
+          <li>Added GET /longview/subscriptions/:id
+            <ul>
+              <li>Returns information one longview subscription tier</li>
+            </ul>
+          </li>
+          <li>Changed GET /account/settings
+            <ul>
+              <li>Added "longview_subscription" - the tier at which you are subscribed
+              to longview</li>
+            </ul>
+          </li>
+          <li>Changed PUT /account/settings
+            <ul>
+              <li>Sending in "null" or a longview subscription id changes your longview
+              subscription tier.</li>
+            </ul>
+          </li>
+          <li>Added events for enabling/disabling TFA</li>
+          <li>Added Longview and Image grants to GET /users/:id/grants and GET /profile/grants
+            <ul>
+              <li>Response now includes "longview" attribute whose value is an array of
+              grants your user has that relate to longview clients</li>
+              <li>Response now includes an "images" attribute whose value is an array of
+              grants your user has that relate to images</li>
+              <li>Only applies to restricted users</li>
+            </ul>
+          </li>
+          <li>Event objects may now have Longview clients or Images as their entities</li>
+        </ul>
+      </section>
+      <section>
         <h2>2017-10-04</h2>
         <hr /><br />
         <b>Breaking Changes:</b><br />
