@@ -18,6 +18,25 @@ endpoints:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/longview/clients
+      POST:
+        money: true
+        oauth: longviewclient:create
+        description: >
+          Creates a new Longview client.
+        params:
+          label:
+            optional: true
+            description: The label to assign this Longview client.
+            type: String
+            limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                  "label": "newlabel",
+                }' \
+                https://$api_root/$version/longview/clients
   /longview/clients/$id:
     type: resource
     authenticated: true
@@ -32,6 +51,18 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/longview/clients/$longviewclient_id
+      PUT:
+        oauth: longviewclient:modify
+        description: >
+          Modifies this Longview client.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X PUT -d '{
+                    "label": "awesome_new_label",
+                }' \
                 https://$api_root/$version/longview/clients/$longviewclient_id
       DELETE:
         oauth: longviewclients:delete
