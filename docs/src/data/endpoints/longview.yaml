@@ -4,6 +4,7 @@ description: >
   Longview endpoints provide a means of managing Longview client objects on your account.
 endpoints:
   /longview/clients:
+    group: Clients
     authenticated: true
     description: >
       Manage the collection of Longview client objects your account may access.
@@ -37,7 +38,10 @@ endpoints:
                   "label": "newlabel",
                 }' \
                 https://$api_root/$version/longview/clients
+          python: |
+            # coming soon
   /longview/clients/$id:
+    group: Clients
     type: resource
     authenticated: true
     description: >
@@ -64,6 +68,8 @@ endpoints:
                     "label": "awesome_new_label",
                 }' \
                 https://$api_root/$version/longview/clients/$longviewclient_id
+          python: |
+            # coming soon
       DELETE:
         oauth: longviewclients:delete
         dangerous: true
@@ -74,3 +80,39 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 -X DELETE \
                 https://$api_root/$version/longview/clients/$longviewclient_id
+          python: |
+            # coming soon
+  /longview/subscriptions:
+    group: Subscription
+    type: collection
+    authenticated: false
+    description: >
+      View available longview subscriptions.
+    methods:
+      GET:
+        response: LongviewSubscription
+        description: >
+          View a list of available Longview subscription levels.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                 https://$api_root/$version/longview/subscriptions
+          python: |
+            # coming soon
+  /longview/subscriptions/:id:
+    group: Subscription
+    type: resource
+    authenticated: false
+    description: >
+      View information on a single Longview subscription level.
+    methods:
+      GET:
+        response: LongviewSubscription
+        description: >
+          View information on a single Longview subscription level.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                 https://$api_root/$version/longview/subscriptions/longview-10
+          python: |
+            # coming soon
