@@ -97,6 +97,18 @@ export default function Authentication() {
               subscription tier.</li>
             </ul>
           </li>
+          <li>Change POST /linode/instances
+            <ul>
+              <li>Now accepts image - the ID of an image to deploy the linode with</li>
+              <li>Only one source attribute may be provided</li>
+            </ul>
+          </li>
+          <li>Changed POST /linode/instances/:id/rebuild
+            <ul>
+              <li>Now accepts image - the ID of an image to rebuild the linode with</li>
+              <li>Only one source attribute may be provided</li>
+            </ul>
+          </li>
           <li>Added events for enabling/disabling TFA</li>
           <li>Added Longview and Image grants to GET /users/:id/grants and GET /profile/grants
             <ul>
