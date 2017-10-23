@@ -23,7 +23,7 @@ describe('domains/components/AddSlave', () => {
     AddSlave.trigger(dispatch);
     const component = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(component, 'ips', '1;2;3;4');
+    changeInput(component, 'ips', '1;2;3;4', { nameOnly: true });
     changeInput(component, 'domain', 'test.com');
 
     dispatch.reset();

@@ -14,6 +14,7 @@ export default function RadioInputCombo(props) {
         label={props.radioLabel}
       />
       <Input
+        id={props.inputId}
         name={props.inputName}
         value={props.inputValue}
         onChange={props.inputOnChange}
@@ -33,6 +34,7 @@ RadioInputCombo.propTypes = {
   radioChecked: PropTypes.bool.isRequired,
   radioValue: PropTypes.object,
   inputOnChange: PropTypes.func.isRequired,
+  inputId: PropTypes.string,
   inputName: PropTypes.string,
   inputValue: PropTypes.any.isRequired,
   inputDisabled: PropTypes.bool,
