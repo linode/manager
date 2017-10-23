@@ -333,6 +333,12 @@ const endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/domains`,
     groups: {},
   },
+  longview: {
+    name: 'Longview',
+    path: '/longview',
+    routePath: `${ROUTE_BASE_PATH}/longview`,
+    groups: {},
+  },
   nodebalancers: {
     name: 'NodeBalancers',
     path: '/nodebalancers',
@@ -367,6 +373,12 @@ const endpointMap = {
     name: 'Profile',
     path: '/profile',
     routePath: `${ROUTE_BASE_PATH}/profile`,
+    groups: {},
+  },
+  images: {
+    name: 'Images',
+    path: '/images',
+    routePath: `${ROUTE_BASE_PATH}/images`,
     groups: {},
   },
 };
