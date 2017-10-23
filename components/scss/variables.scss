@@ -71,11 +71,16 @@ $grid-max-width: 1140px;
 
 // Basically just sets each max width to 100%
 $container-max-widths: (
-  sm: 100%,
-  md: 100%,
-  lg: 100%,
   xl: $grid-max-width
 );
+
+@each $breakpoint, $container-max-width in $container-max-widths {
+  @if $breakpoint != 'xl' {
+    $container-max-widths: (
+      $breakpoint: 100%
+    );
+  }
+}
 
 /* END bootstrap overrides */
 
