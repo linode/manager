@@ -28,17 +28,8 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
       />
     );
 
-    const selectDay = page.find('input[name="day"]');
-    expect(selectDay.props().value).to.equal('Saturday');
-
-    const selectWindow = page.find('input[name="window"]');
-    expect(selectWindow.props().value).to.equal('W0');
-
-    const settingsForm = page.find('Form');
-    expect(settingsForm.length).to.equal(1);
-
     dispatch.reset();
-    await settingsForm.props().onSubmit();
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

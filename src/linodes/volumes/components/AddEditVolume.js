@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
@@ -35,11 +36,11 @@ export default class AddEditVolume extends Component {
 
     this.state = {
       linode,
-      filteredLinodes: linodes,
+      linodes,
       config: null,
       errors: {},
       label: volume.label || '',
-      size: volume.size || 10,
+      size: volume.size || 20,
       allConfigs: {},
       configs: false,
     };
@@ -53,8 +54,8 @@ export default class AddEditVolume extends Component {
     const data = id ? { label } : {
       label,
       region,
-      size,
-      linode_id: linode === LinodeSelect.EMPTY ? undefined : linode,
+      size: +size,
+      linode_id: linode === LinodeSelect.EMPTY ? undefined : +linode,
       config_id: config,
     };
 
@@ -78,19 +79,6 @@ export default class AddEditVolume extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
-  }
-
-  onRegionChange = async (e) => {
-    let linodes = { ...this.props.linodes };
-    this.onChange(e);
-
-    linodes = Object.keys(linodes)
-      .filter(id => linodes[id].region === this.state.region)
-      .reduce((obj, key) => {
-        return { ...obj, key: linodes[key] };
-      }, {});
-
-    this.setState({ filteredLinodes: linodes });
   }
 
   onLinodeChange = async (e) => {
@@ -127,7 +115,7 @@ export default class AddEditVolume extends Component {
       label,
       size,
       linode,
-      filteredLinodes: linodes,
+      linodes,
       allConfigs,
       config,
     } = this.state;
@@ -138,6 +126,8 @@ export default class AddEditVolume extends Component {
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
     const showLinodeConfigs = !existingVolume && (configs.length > 1);
+
+    const filteredLinodes = _.pickBy(linodes, linode => linode.region === region);
 
     return (
       <FormModalBody
@@ -172,7 +162,7 @@ export default class AddEditVolume extends Component {
                 value={region}
                 name="region"
                 id="region"
-                onChange={this.onRegionChange}
+                onChange={this.onChange}
               />
             </ModalFormGroup>
           )}
@@ -195,7 +185,7 @@ export default class AddEditVolume extends Component {
               <h3>Attach To</h3>
               <ModalFormGroup label="Linode" id="linode" apiKey="linode_id" errors={errors}>
                 <LinodeSelect
-                  linodes={linodes}
+                  linodes={filteredLinodes}
                   value={linode}
                   name="linode"
                   id="linode"

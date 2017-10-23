@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.15.3] 2017-10-13
+### Fixed
+- Send custom integers correctly on volume create
+
+## [0.15.2] 2017-10-13
+### Fixed
+- Rendering of selects
+- Filtering Linodes by region correctly when attaching
+
 ## [0.15.1] 2017-10-13
 ### Added
 - Fremont as available Volume region

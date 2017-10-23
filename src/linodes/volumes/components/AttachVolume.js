@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { ModalFormGroup, Select } from 'linode-components/forms';
@@ -72,7 +73,7 @@ export default class AttachVolume extends Component {
   }
 
   render() {
-    const { close, linodes } = this.props;
+    const { close, linodes, volume } = this.props;
     const { errors, linode, allConfigs, fetchingConfigs } = this.state;
     let { config } = this.state;
 
@@ -94,6 +95,8 @@ export default class AttachVolume extends Component {
       this.setState({ config });
     }
 
+    const filteredLinodes = _.pickBy(linodes, linode => linode.region === volume.region);
+
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
@@ -103,15 +106,15 @@ export default class AttachVolume extends Component {
         analytics={{ title: this.title, action: 'attach' }}
         errors={errors}
       >
-        <ModalFormGroup label="Linode" id="linode" apiKey="linode" errors={errors}>
+        <ModalFormGroup label="Linode" id="linode" apiKey="linode_id" errors={errors}>
           <LinodeSelect
-            linodes={linodes}
+            linodes={filteredLinodes}
             value={linode}
             name="linode"
             onChange={this.onLinodeChange}
           />
         </ModalFormGroup>
-        {linodeConfigs.length === 1 ? null :
+        {linodeConfigs.length <= 1 ? null :
           <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
             <Select
               options={linodeConfigs}

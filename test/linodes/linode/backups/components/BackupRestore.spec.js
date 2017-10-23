@@ -31,9 +31,6 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
       />
     );
 
-    const overwriteVal = page.find('input[name="overwrite"]').props().value;
-    const restoreToVal = page.find('input[name="target"]').props().value;
-
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });
 
@@ -47,8 +44,8 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
       ([fn]) => expectRequest(fn, `/linode/instances/1234/backups/${backup.id}/restore`, {
         method: 'POST',
         body: {
-          linode_id: +restoreToVal,
-          overwrite: overwriteVal,
+          linode_id: testLinode.id,
+          overwrite: false,
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/test-linode')),
