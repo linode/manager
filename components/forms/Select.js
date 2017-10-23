@@ -65,6 +65,30 @@ export default class Select extends Component {
   render() {
     const [value] = this.realValue();
 
+    if (!this.props.multi) {
+      const options = this.props.options.map(function ({ value, label, options }) {
+        if (options) {
+          return (
+            <optgroup label={label}>
+              {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
+            </optgroup>
+          );
+        }
+
+        return <option value={value}>{label}</option>;
+      });
+
+      return (
+        <select
+          id={this.props.id || this.props.name}
+          name={this.props.name}
+          onChange={this.props.onChange}
+          value={value}
+          className="Select Select--native form-control"
+        >{options}</select>
+      );
+    }
+
     return (
       <span className={this.props.className}>
         {/* This allows us to use this in tests like a normal input. */}

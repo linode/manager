@@ -98,21 +98,10 @@ export default class CreateOrEditConfig extends Component {
   kernelOptions() {
     const { kernels } = this.props;
 
-    const ungroupedKernelOptions = _.sortBy(_.map(kernels.kernels, kernel => ({
+    return _.sortBy(_.map(kernels.kernels, kernel => ({
       ...kernel,
       value: kernel.id,
     })), 'version').reverse();
-
-    return [
-      {
-        label: 'Current',
-        options: _.filter(ungroupedKernelOptions, 'current'),
-      },
-      {
-        label: 'Deprecated',
-        options: _.filter(ungroupedKernelOptions, 'deprecated'),
-      },
-    ];
   }
   render() {
     const { linode, config } = this.props;
@@ -122,7 +111,6 @@ export default class CreateOrEditConfig extends Component {
       enableModulesDepHelper, disableUpdatedb,
     } = this.state;
     const defaultRootDevice = `/dev/${AVAILABLE_DISK_SLOTS[linode.hypervisor][0]}`;
-
 
     return (
       <Form
