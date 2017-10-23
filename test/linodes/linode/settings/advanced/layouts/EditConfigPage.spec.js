@@ -178,8 +178,8 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     const isMaxRam = page.find('input[name="isMaxRam"]');
     changeInput(page, 'isMaxRam', false);
 
-    const ramLimit = page.find('#ramLimit');
-    changeInput(page, 'ramLimit', 1000);
+    const ramLimit = page.find('input[name="ramLimit"]');
+    changeInput(page, 'ramLimit', 1000, { nameOnly: true });
 
     expect(isMaxRam.props().checked).to.equal(false);
     expect(ramLimit.props().value).to.equal(1000);
