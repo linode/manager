@@ -74,7 +74,6 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     );
 
     const sectionB = page.find('#sectionB');
-    const select = page.find('Select');
     const linodeB = linodes[page.find('[name="selectedOtherLinode"]').props().value];
     const notLinodeB = Object.values(linodesInRegion).filter(
       ({ id }) => id !== linodeB.id)[0];
