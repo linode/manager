@@ -57,7 +57,7 @@ export default function Authentication() {
           </li>
           <li>Added POST /linode/instances/:id/disks/:id/imagize
             <ul>
-              <li>Created a new image from a disk you own</li>
+              <li>Creates a new image from a disk you own</li>
             </ul>
           </li>
           <li>Added GET /longview/clients
@@ -65,9 +65,19 @@ export default function Authentication() {
               <li>Returns a list of Longview clients on your account</li>
             </ul>
           </li>
+          <li>Added POST /longview/clients
+            <ul>
+              <li>Creates a new Longview client on your account</li>
+            </ul>
+          </li>
           <li>Added GET /longview/clients/:id
             <ul>
               <li>Returns information on a single Longview client</li>
+            </ul>
+          </li>
+          <li>Added PUT /longview/clients/:id
+            <ul>
+              <li>Update a single Longview client</li>
             </ul>
           </li>
           <li>Added DELETE /longview/clients/:id
@@ -93,7 +103,7 @@ export default function Authentication() {
           </li>
           <li>Changed PUT /account/settings
             <ul>
-              <li>Sending in "null" or a longview subscription id changes your longview
+              <li>Sending in "null" or an id to "longview_subscription" changes your longview
               subscription tier.</li>
             </ul>
           </li>

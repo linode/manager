@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.14.0] 2017-10-23
+### Changed
+- /account/payments "amount" is now a string
+### Added
+- /user/:id/grants GET includes "longview" and "images"
+- /profile/grants GET includes "longview" and "images"
+- /images GET
+- /images/:id GET, PUT, and DELETE
+- /linode/instances/:id/disks/:id/imagize POST
+- /linode/instances POST now accepts "image"
+- /linode/instances/:id/rebuild POST now accepts "image"
+- /account/notifications GET
+- /account/settings GET and PUT now includes "longview\_subscription"
+- /longview/subscriptions GET
+- /longview/subscriptions/:id GET
+- /longview/clients GET and POST
+- /longview/clients/:id GET, PUT, and DELETE
+
 ## [0.13.3] 2017-10-10
 ### Changed
 - obtaining token docs #2555
