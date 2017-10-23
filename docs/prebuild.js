@@ -551,11 +551,11 @@ function convertPythonYaml() {
       routePath: '/v4/libraries/python/kernel',
       formattedPythonObject: [],
     },
-    Service: {
-      name: 'Service',
-      path: '/service',
+    Type: {
+      name: 'Type',
+      path: '/type',
       langauge: 'python',
-      routePath: '/v4/libraries/python/service',
+      routePath: '/v4/libraries/python/type',
       formattedPythonObject: [],
     },
     StackScript: {
