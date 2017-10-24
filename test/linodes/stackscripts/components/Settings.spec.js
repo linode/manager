@@ -25,7 +25,7 @@ describe('linodes/stackscripts/components/Settings', () => {
       <Settings
         dispatch={dispatch}
         stackscript={testStackScript}
-        distributions={distributions.distributions}
+        distributions={{}}
       />
     );
 

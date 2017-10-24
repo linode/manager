@@ -48,7 +48,7 @@ export default function DistributionSelect(props) {
       />
       <div>
         <small className="text-muted">
-          <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
+          <ExternalLink to="https://www.linode.com/distributions">Learn more</ExternalLink>
         </small>
       </div>
     </div>
