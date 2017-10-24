@@ -38,7 +38,7 @@ export default class Settings extends Component {
       label,
       description,
       isPublic: isPublic || false,
-      distributions: distributions.map(d => d.id),
+      distributions: distributions,
     });
   }
 
@@ -54,6 +54,7 @@ export default class Settings extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.stackscripts.put(data, id),
+      () => this.setState({ distributions: data.distributions }),
     ]));
   }
 
