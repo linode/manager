@@ -57,8 +57,10 @@ export class PermissionsPage extends Component {
 
   onSubmit = () => {
     const { dispatch, user: { username } } = this.props;
-    const { global, customer, linode, nodebalancer, domain } = this.state;
-    const data = { global, customer, linode, nodebalancer, domain };
+    const { global, customer, linode, nodebalancer, domain,
+      stackscript, longview, image, volume } = this.state;
+    const data = { global, customer, linode, nodebalancer,
+      domain, stackscript, longview, image, volume };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.users.permissions.put(data, username),
@@ -75,7 +77,8 @@ export class PermissionsPage extends Component {
   }
 
   render() {
-    const { global, customer, linode, domain, nodebalancer, loading, errors } = this.state;
+    const { global, customer, linode, domain, nodebalancer, longview,
+      stackscript, image, volume, loading, errors } = this.state;
 
     const analytics = { title: 'User permissions' };
 
@@ -85,6 +88,56 @@ export class PermissionsPage extends Component {
           <div className="Permissions-section">
             <h3>Global Permissions</h3>
             <Checkboxes>
+              <Checkbox
+                id="permission-global-linodes"
+                checked={global.add_linodes}
+                onChange={() => this.updateGlobal('add_linodes')}
+                label="Can add Linodes to this Account ($)"
+              />
+              <Checkbox
+                id="permission-global-nodebalancers"
+                checked={global.add_nodebalancers}
+                onChange={() => this.updateGlobal('add_nodebalancers')}
+                label="Can add NodeBalancers to this Account ($)"
+              />
+              <Checkbox
+                id="permission-global-longview"
+                checked={global.add_longview}
+                onChange={() => this.updateGlobal('add_longview')}
+                label="Can add Longview clients to this Account"
+              />
+              <Checkbox
+                id="permission-global-longview-subscription"
+                checked={global.longview_subscription}
+                onChange={() => this.updateGlobal('longview_subscription')}
+                label="Can modify this account's Longview subscription ($)"
+              />
+              <Checkbox
+                id="permission-global-domains"
+                checked={global.add_domains}
+                onChange={() => this.updateGlobal('add_domains')}
+                label="Can add Domains to this Account"
+              />
+              <Checkbox
+                id="permission-global-stackscripts"
+                checked={global.add_stackscripts}
+                onChange={() => this.updateGlobal('add_stackscripts')}
+                label="Can create StackScripts under this account"
+              />
+              <Checkbox
+                id="permission-global-images"
+                checked={global.add_images}
+                onChange={() => this.updateGlobal('add_images')}
+                label="Can create frozen Images under this account"
+              />
+              {/* TODO: This is not currently returned by the API, but is expected.
+              <Checkbox
+                id="permission-global-volumes"
+                checked={global.add_images}
+                onChange={() => this.updateGlobal('add_volumes')}
+                label="Can add block storage volumes to this account"
+              />
+              */}
               <Checkbox
                 id="permission-customer-access"
                 checked={customer.access}
@@ -108,24 +161,6 @@ export class PermissionsPage extends Component {
                   },
                 })}
                 label="Can cancel the entire account"
-              />
-              <Checkbox
-                id="permission-global-linodes"
-                checked={global.add_linodes}
-                onChange={() => this.updateGlobal('add_linodes')}
-                label="Can add Linodes to this Account ($)"
-              />
-              <Checkbox
-                id="permission-global-nodebalancers"
-                checked={global.add_nodebalancers}
-                onChange={() => this.updateGlobal('add_nodebalancers')}
-                label="Can add NodeBalancers to this Account ($)"
-              />
-              <Checkbox
-                id="permission-global-domains"
-                checked={global.add_domains}
-                onChange={() => this.updateGlobal('add_domains')}
-                label="Can add Domains"
               />
             </Checkboxes>
           </div>
@@ -154,10 +189,58 @@ export class PermissionsPage extends Component {
             ]}
           />
           <PermissionsTable
+            title="Longview"
+            parentKey="longview"
+            onCellChange={this.onCellChange}
+            objects={longview}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+              null,
+            ]}
+          />
+          <PermissionsTable
             title="Domains"
             parentKey="domain"
             onCellChange={this.onCellChange}
             objects={domain}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+              null,
+            ]}
+          />
+          <PermissionsTable
+            title="StackScripts"
+            parentKey="stackscripts"
+            onCellChange={this.onCellChange}
+            objects={stackscript}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'use', label: 'Use' },
+              { dataKey: 'edit', label: 'Edit' },
+              { dataKey: 'delete', label: 'Delete' },
+            ]}
+          />
+          <PermissionsTable
+            title="Images"
+            parentKey="image"
+            onCellChange={this.onCellChange}
+            objects={image}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+              null,
+            ]}
+          />
+          <PermissionsTable
+            title="Volume"
+            parentKey="volume"
+            onCellChange={this.onCellChange}
+            objects={volume}
             columns={[
               { dataKey: 'all', label: 'All' },
               { dataKey: 'access', label: 'Access' },
