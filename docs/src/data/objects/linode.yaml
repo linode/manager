@@ -94,7 +94,7 @@ schema:
   ipv6:
     editable: false
     type: String
-    description: This Linode's IPv6 slaac address.
+    description: This Linode's IPv6 SLAAC address.
     seeAlso: ["/reference/endpoints/linode/instances/$id/ips", "/reference/endpoints/networking/ipv6"]
     value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
   label:
