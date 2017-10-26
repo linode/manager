@@ -26,4 +26,24 @@ schema:
   region:
     type: String
     value: us-east-1a
-    description: The region this Nodebalancer is in
+    description: The region this Nodebalancer is in.
+  ipv4:
+    editable: false
+    type: String
+    value: "123.45.67.89"
+    description: This NodeBalancer's IPv4 address.
+  ipv6:
+    editable: false
+      type: String
+    value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
+    description: This NodeBalancer's IPv6 slaac address.
+  created:
+    editable: false
+    type: Datetime
+    value: "2017-09-29T11:21:01"
+    description: When this NodeBalancer was initially created.
+  updated:
+    editable: false
+    type: Datetime
+    value: "2017-09-30T11:21:01"
+    description: When this NodeBalancer was last updated.
