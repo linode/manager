@@ -6,9 +6,11 @@ description: >
 schema:
   id:
     type: String
+    description: The ID of this distribution.
     value: linode/Arch2014.10
   updated:
-    type: String
+    type: Datetime
+    description: When this distribution was updated.
     value: 2016-12-24T18:00:09
   label:
     type: String
