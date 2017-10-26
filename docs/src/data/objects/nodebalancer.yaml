@@ -36,7 +36,7 @@ schema:
     editable: false
     type: String
     value: "2a01:7e00::f03c:91ff:fe96:46f5/64"
-    description: This NodeBalancer's IPv6 slaac address.
+    description: This NodeBalancer's IPv6 SLAAC address.
   created:
     editable: false
     type: Datetime
