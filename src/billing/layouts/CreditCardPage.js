@@ -77,6 +77,10 @@ export class CreditCardPage extends Component {
                   <Input
                     name="card"
                     id="card"
+                    type="number"
+                    min="0.01"
+                    max="2500"
+                    step="0.01"
                     value={card}
                     onChange={this.onChange}
                   />

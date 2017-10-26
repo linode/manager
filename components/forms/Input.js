@@ -24,6 +24,9 @@ Input.propTypes = {
   multiple: PropTypes.bool,
   id: PropTypes.string,
   name: PropTypes.string,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  step: PropTypes.number,
 };
 
 Input.defaultProps = {
