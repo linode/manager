@@ -10,6 +10,7 @@ description: >
 schema:
   id:
     type: String
+    description: The ID of thie kernel.
     value: linode/3.5.2-x86_64-linode26
   xen:
     type: Boolean
