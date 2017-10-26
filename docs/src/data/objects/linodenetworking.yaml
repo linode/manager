@@ -25,7 +25,7 @@ schema:
       type: String
       value: 2a01:7e00::f03c:91ff:fe96
       description: >
-        This Linode's slaac range.
+        This Linode's SLACC range.
     link_local:
       type: String
       value: f300::f03c:91ff:fe96:46da
