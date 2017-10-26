@@ -60,17 +60,10 @@ schema:
     value: "null"
     description: An initrd disk attached to this Linode config.
   kernel:
+    description: Kernel label for this Linode.
     editable: true
-    type: Kernel
-    id:
-      type: String
-      value: linode/latest_64
-    label:
-      type: String
-      value: Latest 64 bit (4.1.0-x86_64-linode59)
-    current:
-      type: Boolean
-      value: true
+    type: String
+    value: "linode/4.1.0-x86_64-linode59"
   label:
     editable: true
     type: String
