@@ -10,7 +10,7 @@ export function transferPool() {
 
 export function makePayment(amount) {
   return (dispatch) => dispatch(fetch.post('/account/payments', {
-    usd: parseFloat(amount.toFixed(2)),
+    usd: `${amount.toFixed(2)}`,
   }));
 }
 
