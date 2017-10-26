@@ -43,8 +43,8 @@ export class CreditCardPage extends Component {
     const { month, year, card } = this.state;
     const data = {
       card_number: card,
-      expiry_month: month,
-      expiry_year: year,
+      expiry_month: parseInt(month, 10),
+      expiry_year: parseInt(year, 10),
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
