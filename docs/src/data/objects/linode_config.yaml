@@ -8,6 +8,7 @@ description: >
 schema:
   id:
     type: Integer
+    description: This Linode config's ID.
     value: 804
   comments:
     editable: true
