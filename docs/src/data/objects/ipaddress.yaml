@@ -22,7 +22,7 @@ schema:
     type: Enum
     subtype: IPAddressType
     value: public
-    description: The type of IP Address, either public or private
+    description: The type of IP Address, either public or private.
   rdns:
     editable: true
     type: String
@@ -30,12 +30,13 @@ schema:
     description: Reverse DNS address for this IP Address. Null to reset.
   linode_id:
     type: Integer
+    description: The Linode this IP is associated with.
     value: 42
   region:
     type: String
     value: us-east-1a
-    description: The region this IP is in
+    description: The region this IP is in.
 enums:
   IPAddressType:
-    public: Public IP Address
-    private: Internal IP Addresses (192.168 range)
+    public: Public IP Address.
+    private: Internal IP Addresses (192.168 range).
