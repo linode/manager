@@ -7,12 +7,7 @@ schema:
     editable: false
     type: Integer
     value: 804
-    description: An integer
-  label:
-    editable: true
-    type: String
-    value: balancerconfig123
-    description: Unique label for your NodeBalancer config
+    description: The ID of this NodeBalancer config.
   port:
     editable: true
     type: Integer
