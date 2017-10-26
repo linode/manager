@@ -67,16 +67,16 @@ schema:
     type: Boolean
     value: true
     description: Enable passive checks based on observing communication with back-end nodes.
-  ssl_cert:
+  ssl_commonname:
     editable: true
     type: String
     value: 
-    description: SSL certificate served by the NodeBalancer when the protocol is "https".
-  ssl_key:
+    description: Common Name of the configured SSL certificate, if present.
+  ssl_fingerprint:
     editable: true
     type: String
     value: 
-    description: Unpassphrased private key for the SSL certificate when the protocol is "https".
+    description: SSL Certificate fingerprint, if present.
   cipher_suite:
     editable: true
     type: Enum
