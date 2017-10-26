@@ -17,6 +17,7 @@ schema:
     limit: 1-255 characters
   created:
     type: Datetime
+    description: When this config was created.
     value: 2015-09-29T11:21:38
   devices:
     type: devices
@@ -95,6 +96,7 @@ schema:
     description: Sets the run level for Linode boot.
   updated:
     type: Datetime
+    description: When this config was updated.
     value: 2015-09-29T11:21:38
   virt_mode:
     editable: true
