@@ -306,7 +306,7 @@ endpoints:
         response: nodebalancer_config_node
         oauth: nodebalancers:view
         description: >
-          Returns information about this node..
+          Returns information about this node.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
