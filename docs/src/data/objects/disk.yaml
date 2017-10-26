@@ -6,6 +6,7 @@ description: >
 schema:
   id:
     type: Integer
+    description: The ID of this disk.
     value: 123456
   label:
     #_editable: true
@@ -35,9 +36,11 @@ schema:
     description: The filesystem on the disk.
   created:
     type: Datetime
+    description: When this disk was created.
     value: "2015-09-29T11:21:01"
   updated:
     type: Datetime
+    description: When this disk was updated.
     value: "2015-09-29T11:21:01"
 enums:
   Status:
@@ -46,7 +49,7 @@ enums:
     deleting: This disk is being deleted.
   Filesystem:
     raw: No filesystem, just a raw binary stream.
-    swap: Linux swap area
+    swap: Linux swap area.
     ext3: The ext3 journaling filesystem for Linux.
     ext4: The ext4 journaling filesystem for Linux.
-    initrd: initrd (uncompressed initrd, ext2, max 32 MB)
+    initrd: initrd (uncompressed initrd, ext2, max 32 MB).
