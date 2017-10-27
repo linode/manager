@@ -5,20 +5,13 @@ import { TableCell, CheckboxCell } from 'linode-components/tables/cells';
 
 
 export default class TableRow extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.onCheckboxChange = this.onCheckboxChange.bind(this);
-  }
-
-  onCheckboxChange(record, checked) {
+  onCheckboxChange = (record, checked) => {
     const { onToggleSelect } = this.props;
 
     if (onToggleSelect) {
       onToggleSelect(record, checked);
     }
-  }
+  };
 
   render() {
     const { className, columns, onClick, record, selectedMap } = this.props;

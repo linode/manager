@@ -35,8 +35,6 @@ export class Notifications extends Component {
   constructor(props) {
     super(props);
 
-    this.onClickItem = this.onClickItem.bind(this);
-    this.onClickShowMore = this.onClickShowMore.bind(this);
     this.state = { loadingMore: false };
   }
 
@@ -88,15 +86,15 @@ export class Notifications extends Component {
     POLLING.stop(POLLING_ID);
   }
 
-  async onClickItem(event) {
+  onClickItem = async event => {
     const { dispatch } = this.props;
 
     if (!event.read) {
       await dispatch(eventRead(event.id));
     }
-  }
+  };
 
-  onClickShowMore(e) {
+  onClickShowMore = e => {
     e.stopPropagation(); // don't let the toggle close the list
     const { events } = this.props;
 
@@ -107,7 +105,7 @@ export class Notifications extends Component {
       ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
     }));
     this.setState({ loading: false });
-  }
+  };
 
   fetchEventsPage(headers = null) {
     const { dispatch } = this.props;

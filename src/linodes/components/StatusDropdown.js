@@ -64,8 +64,6 @@ const POLLING = Polling({
 export default class StatusDropdown extends Component {
   constructor() {
     super();
-    this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
 
     this.state = {
       open: false,
@@ -123,13 +121,13 @@ export default class StatusDropdown extends Component {
     setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
   }
 
-  open() {
+  open = () => {
     this.setState({ open: !this.state.open });
-  }
+  };
 
-  close() {
+  close = () => {
     this.setState({ open: false });
-  }
+  };
 
   confirmAction = (name, onConfirm) => {
     const { linode, dispatch } = this.props;
