@@ -360,7 +360,7 @@ endpoints:
       Manage the collection of OAuth client applications your account may access.
     methods:
       GET:
-        response: client
+        response: oauthclient
         paginationKey: clients
         oauth: clients:view
         description: >
