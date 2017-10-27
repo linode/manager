@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { PropTypes } from 'prop-types';
+import 'prop-types';
 
 import { Tooltip } from '../../tooltips';
 import TableCell from './TableCell';

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';

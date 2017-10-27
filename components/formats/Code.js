@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Highlight from 'react-highlight';
 import ClipboardButton from 'react-clipboard.js';
 

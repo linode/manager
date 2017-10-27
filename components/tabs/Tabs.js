@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import 'prop-types';
 
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from 'react-router';

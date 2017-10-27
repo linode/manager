@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';

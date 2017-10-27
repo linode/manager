@@ -1,4 +1,4 @@
-import { PropTypes } from 'prop-types';
+import 'prop-types';
 import React, { Component } from 'react';
 
 // Avoid a circular import by importing ../buttons by itself.
