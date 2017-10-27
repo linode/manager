@@ -32,7 +32,7 @@ schema:
     code:
       type: String
       value: rcg3340777c21fa49a5beb971ca1aec44bc584333
-      description: an alphanumeric code unique to each user for use in creating referral URLs.
+      description: An alphanumeric code unique to each user for use in creating referral URLs.
     url:
       type: String
       value: https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333
@@ -40,19 +40,19 @@ schema:
     total:
       type: Integer
       value: 10
-      description: otal number of referrals attributed to user.
+      description: Total number of referrals attributed to user.
     completed:
       type: Integer
       value: 8
-      description: otal number of referrals attributed to user that have converted to full accounts.
+      description: Total number of referrals attributed to user that have converted to full accounts.
     pending:
       type: Integer
       value: 2
-      description: otal number of referrals attributed to user that have not yet converted to full accounts.
+      description: Total number of referrals attributed to user that have not yet converted to full accounts.
     credit:
       type: Integer
       value: 160
-      description: dollar amount of credit based on completed referrals.
+      description: Dollar amount of credit based on completed referrals.
   ip_whitelist_enabled:
     type: Boolean
     value: true
@@ -77,6 +77,10 @@ schema:
     value: true
     description: Toggles whether two factor authentication (TFA) is enabled or disabled.
     editable: true
+  restricted:
+    type: String
+    description: Whether or not this user is restricted.
+    value: False
 enums:
   LishSetting:
     password_keys: Allow both password and key authentication
