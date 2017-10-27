@@ -1,49 +1,62 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Account
 prefix: account/settings
-description:
+description: >
+    A representation of account settings.
 schema:
   address_1:
+    type: String
+    description: First line of this account's address.
     value: 123 Main St.
-    type: string
   address_2:
+    type: String
+    description: Second line of this account's address.
     value: Suite 101
-    type: string
   city:
+    type: String
+    description: City portion of this account's address.
     value: Philadelphia
-    type: string
   company:
+    type: String
+    description: This account's company name.
     value: My Company LLC
-    type: string
   country:
+    type: String
+    description: Country portion of this account's address.
     value: US
-    type: string
   email:
+    type: String
+    description: Email address associated with the account.
     value: jsmith@mycompany.com
-    type: string
   first_name:
+    type: String
+    description: This account holder's first name.
     value: John
-    type: string
   last_name:
+    type: String
+    description: This account holder's last name.
     value: Smith
-    type: string
   network_helper:
-    value: true
-    type: boolean
+    type: Boolean
     description: Enables network helper by default across all users.
+    value: true
   phone:
+    type: String
+    description: Phone number associated with the account.
     value: 555-555-1212
-    type: string
   state:
+    type: String
+    description: State portion of this account's address.
     value: PA
-    type: string
   zip:
+    type: String
+    description: Zip Code portion of this account's address.
     value: 19102
-    type: string
   balance:
+    type: Float
+    description: This account's balance (in US Dollars).
     value: 0.00
-    type: float
   longview_subscription:
-    value: null
-    type: string
+    type: String
     description: The Longview Pro tier you are currently subscribed to.
+    value: null
