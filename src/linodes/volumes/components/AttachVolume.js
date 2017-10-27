@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ModalFormGroup, Select } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
@@ -87,7 +88,7 @@ export default class AttachVolume extends Component {
     ) : null;
 
     const linodeConfigs = [
-      ...allConfigs[linode] || configs || {},
+      ...(allConfigs[linode] || configs || {}),
     ];
 
     if (config === undefined && linodeConfigs[0]) {

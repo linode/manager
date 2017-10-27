@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import 'prop-types';
 
 import { Dropdown } from 'linode-components/dropdowns';
 

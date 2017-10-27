@@ -1,5 +1,6 @@
 import moment from 'moment-timezone';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {

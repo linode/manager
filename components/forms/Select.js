@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import VendorSelect from 'react-select-plus';
 
 import { EmitEvent, SELECT_CHANGE } from '../utils';
