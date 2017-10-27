@@ -1,5 +1,5 @@
 import React from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 
 import TableHeaderRow from './TableHeaderRow';
 import TableRow from './TableRow';

@@ -1,5 +1,5 @@
 import React from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Input } from 'linode-components/forms';
 import TableCell from './TableCell';
