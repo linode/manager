@@ -6,7 +6,7 @@ schema:
     type: String
     value: 0123456789abcdef0123
     description: This application's OAuth client ID
-  name:
+  label:
     type: String
     value: Example OAuth app
     description: Human-friendly client name.
@@ -32,6 +32,10 @@ schema:
     type: Boolean
     value: false
     description: If this client is public.  Public clients use the implicit OAuth flow.
+  thumbnail_url:
+    type: String
+    value: https://oauthreturn.example.org/thumbnail.png
+    description: The URL to this OAuth Client's thumbnail if it exists, otherwise null.
 enums:
   Status:
     active: The client application is active and accepting OAuth logins.
