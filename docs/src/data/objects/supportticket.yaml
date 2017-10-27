@@ -24,44 +24,55 @@ schema:
     filterable: true
   opened:
     type: Datetime
+    description: The time at which this ticket was opened.
     value: "2017-02-23T11:21:01"
     filterable: true
   closed:
     type: Datetime
+    description: The time at which this ticket was closed.
     value: "2017-02-25T03:20:00"
     filterable: true
   updated:
     type: Datetime
+    description: The time at which this ticket was last updated.
     value: "2017-02-23T11:21:01"
     filterable: true
+  opened_by:
+    type: String
+    value: some_user
+    description: The user who opened this ticket.
   updated_by:
     type: String
     value: some_other_user
     description: The user who last updated this ticket.
   entity:
-    description: The entity this ticket was opened regarding
-    type: Object
+    description: The entity this ticket was opened regarding.
     id:
       type: Integer
       value: 9302
-      description: >
-        The entity's ID that this event is for.  This is meaningless without a type.
+      description: The entity's ID that this event is for.  This is meaningless without a type.
     label:
       type: String
       value: linode123
-      description: >
-        The current label of this object.  This will reflect changes in label.
+      description: The current label of this object.  This will reflect changes in label.
     type:
       type: String
       value: linode
-      description: >
-        The type of entity this is related to.
+      description: The type of entity this is related to.
     url:
       type: String
       value: /v4/linode/instances/123
-      description: >
-        The URL where you can access the object this event is for.  If a relative URL, it is
-        relative to the domain you retrieved the event from.
+      description: The URL where you can access the object this event is for.
+        If a relative URL, it is relative to the domain you retrieved the event from.
+  attachments:
+    type: String
+    isArray: True
+    description: A list of files attached to this ticket.
+    value: ["screenshot.jpg", "stacktrace.txt"]
+  gravatar_id:
+    type: String
+    description: The gravatar id of the last user to update this ticket.
+    value: "c3933905f8e430d6a5872b9cf635cf35"
 enums:
   Status:
     new: The support ticket has just been opened.
