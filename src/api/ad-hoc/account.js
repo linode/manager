@@ -8,9 +8,17 @@ export function transferPool() {
   };
 }
 
-export function makePayment(amount) {
+/**
+ * A deviated /payment POST caller because the parameters
+ * differ from the generic /payments GET response fields.
+ * The API expects strings for these numeric values.
+ * @param {number} amount
+ * @param {number} cvv
+ */
+export function makePayment(amount, cvv) {
   return (dispatch) => dispatch(fetch.post('/account/payments', {
     usd: `${amount.toFixed(2)}`,
+    cvv: cvv ? `${parseInt(cvv)}` : undefined,
   }));
 }
 

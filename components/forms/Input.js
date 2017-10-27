@@ -27,6 +27,8 @@ Input.propTypes = {
   min: PropTypes.number,
   max: PropTypes.number,
   step: PropTypes.number,
+  pattern: PropTypes.string,
+  maxlength: PropTypes.number,
 };
 
 Input.defaultProps = {
