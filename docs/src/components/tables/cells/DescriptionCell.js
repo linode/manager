@@ -1,5 +1,5 @@
 import React from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { API_VERSION } from '~/constants';
 

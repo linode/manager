@@ -1,5 +1,5 @@
 import React from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 
 
 export default function ListHeader(props) {

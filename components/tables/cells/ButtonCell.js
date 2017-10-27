@@ -1,5 +1,5 @@
 import React from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Button } from 'linode-components/buttons';
 import TableCell from './TableCell';

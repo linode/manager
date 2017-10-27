@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import 'prop-types';
+import PropTypes from 'prop-types';
 
 import { TableCell, CheckboxCell } from 'linode-components/tables/cells';
 
