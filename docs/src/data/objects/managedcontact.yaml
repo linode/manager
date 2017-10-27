@@ -1,0 +1,31 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: ManagedContact
+prefix: managed/contacts
+description: >
+  A list of people we can contact if we require further information regarding your Managed service.
+schema:
+  name:
+    value: John Q. Public
+    type: String
+    description: >
+      The name of the contact person.
+  email:
+    value: jsmith@mycompany.com
+    type: String
+    description: >
+      The email address of the contact person.
+  phone1:
+    value: 215-555-3000
+    type: String
+    description: >
+      If we need further information regarding a service, we may call this contact if a phone number is provided.
+  phone2:
+    value: 215-555-3001
+    type: String
+    description: >
+      The secondary phone number of the contact person.
+  group:
+    value: Support
+    type: String
+    description: >
+      Contacts can be associated with a monitored service by the group they belong to.
