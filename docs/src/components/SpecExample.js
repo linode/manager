@@ -8,14 +8,12 @@ export default class SpecExample extends Component {
   constructor() {
     super();
 
-    this.onClick = this.onClick.bind(this);
-
     this.state = { collapsed: true };
   }
 
-  onClick() {
+  onClick = () => {
     this.setState({ collapsed: !this.state.collapsed });
-  }
+  };
 
   render() {
     const { example, type } = this.props;

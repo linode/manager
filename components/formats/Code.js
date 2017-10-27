@@ -13,12 +13,10 @@ export default class Code extends Component {
   constructor() {
     super();
 
-    this.onClickCopy = this.onClickCopy.bind(this);
-
     this.state = { clipboardIcon: DEFAULT_CLIPBOARD_ICON };
   }
 
-  onClickCopy() {
+  onClickCopy = () => {
     if (this.state.clipboardIcon === DEFAULT_CLIPBOARD_ICON) {
       this.setState({ clipboardIcon: 'fa-check' }, () => {
         setTimeout(() => {
@@ -26,7 +24,7 @@ export default class Code extends Component {
         }, 2500);
       });
     }
-  }
+  };
 
   render() {
     const { example, language, noclipboard } = this.props;

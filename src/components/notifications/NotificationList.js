@@ -5,11 +5,8 @@ import NotificationListItem from './NotificationListItem';
 
 
 export default class NotificationList extends Component {
-
   constructor(props) {
     super(props);
-
-    this.onClickShowMore = this.onClickShowMore.bind(this);
 
     this.state = { totalResults: props.events.totalResults || 0 };
   }
@@ -18,10 +15,10 @@ export default class NotificationList extends Component {
     this.updateTotalResults(nextProps.events);
   }
 
-  onClickShowMore(e) {
+  onClickShowMore = e => {
     e.preventDefault();
     this.props.onClickShowMore(e);
-  }
+  };
 
   updateTotalResults(events) {
     if (events.totalResults > this.state.totalResults) {
