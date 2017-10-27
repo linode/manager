@@ -4,6 +4,7 @@ import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import api from '~/api';
 
@@ -26,6 +27,13 @@ export class InvoicePage extends Component {
 
     return (
       <div>
+        <Breadcrumbs
+          crumbs={[
+            { label: 'History', to: '/billing/history' },
+            { label: `Invoice #${invoice.id}` },
+          ]}
+        />
+
         <section>
           <Card header={<CardHeader title={`Invoice #${invoice.id}`} />}>
             <Table

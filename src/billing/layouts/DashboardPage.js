@@ -1,14 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import moment from 'moment-timezone';
 
-import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup } from 'linode-components/forms';
-import { Table } from 'linode-components/tables';
-import { LinkCell } from 'linode-components/tables/cells';
-
+import { BillingHistoryList } from '../components/BillingHistoryList';
 import { setSource } from '~/actions/source';
 
 
@@ -19,10 +15,8 @@ export class DashboardPage extends Component {
   }
 
   render() {
-    const { account, invoices } = this.props;
-    const timezone = getStorage('profile/timezone') || 'UTC';
+    const { account } = this.props;
 
-    const recentInv = Object.values(invoices).slice(Object.keys(invoices).length - 4);
     const address = [
       account.company,
       `${account.first_name} ${account.last_name}`,
@@ -32,6 +26,17 @@ export class DashboardPage extends Component {
         `${account.city}, ${account.state} ${account.zip ? account.zip : ''}`
         : null,
     ].map((t, i) => (t ? <li key={i}>{t}</li> : null));
+
+    let balanceHint = 'Your account is current.';
+    if (account.balance > 0) {
+      balanceHint = (
+        <a href="/billing/payment">
+          Please pay now to avoid any service interruptions.
+        </a>
+      );
+    } else if (account.balance < 0) {
+      balanceHint = 'This will be applied towards future invoices.';
+    }
 
     return (
       <div>
@@ -59,28 +64,7 @@ export class DashboardPage extends Component {
             <h3 className="sub-header">Recent Billing Activity</h3>
             <FormGroup className="row">
               <div className="col-sm-12">
-                <Table
-                  columns={[
-                    { dataKey: 'date', formatFn: (date) => {
-                      const time = moment.utc(date, moment.iso_8601).tz(timezone);
-                      return time.format('MMM D YYYY h:mm A z');
-                    } },
-                    {
-                      cellComponent: LinkCell,
-                      hrefFn: (invoice) => `/billing/invoice/${invoice.id}`, textKey: 'label',
-                    },
-                    {
-                      dataKey: 'total',
-                      className: 'ActionsCell',
-                      formatFn: (total) => {
-                        return `$${total.toFixed(2)}`;
-                      },
-                    },
-                  ]}
-                  noDataMessage="No invoices found."
-                  data={recentInv.reverse()}
-                  disableHeader
-                />
+                <BillingHistoryList {...this.props} days={30} />
               </div>
             </FormGroup>
             <FormGroup className="row">
@@ -93,8 +77,12 @@ export class DashboardPage extends Component {
               <div className="col-sm-2 row-label">
                 Account Balance
               </div>
-              <div className="col-sm-10" id="balance">
-                <strong>${(account.balance)}</strong>
+              <div className="col-sm-4" id="balance">
+                <strong>${Math.abs(account.balance).toFixed(2)}</strong>
+                {account.balance < 0 ? ' (credit)' : null}
+              </div>
+              <div className="col-sm-6 text-muted">
+                {balanceHint}
               </div>
             </FormGroup>
           </Card>
@@ -114,6 +102,7 @@ function select(state) {
   return {
     account: state.api.account,
     invoices: state.api.invoices.invoices,
+    payments: state.api.payments.payments,
   };
 }
 

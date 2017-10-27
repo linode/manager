@@ -10,7 +10,11 @@ import api from '~/api';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([api.account.one(), api.invoices.all()].map(r => dispatch(r)));
+    await Promise.all([
+      api.account.one(),
+      api.invoices.all(),
+      api.payments.all(),
+    ].map(r => dispatch(r)));
   }
 
   componentDidMount() {

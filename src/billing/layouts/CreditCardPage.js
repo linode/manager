@@ -77,11 +77,10 @@ export class CreditCardPage extends Component {
                   <Input
                     name="card"
                     id="card"
-                    type="number"
-                    min="0.01"
-                    max="2500"
-                    step="0.01"
+                    type="text"
                     value={card}
+                    maxLength={19}
+                    pattern="[0-9]{13,19}"
                     onChange={this.onChange}
                   />
                   <FormGroupError errors={errors} name="card_number" />
