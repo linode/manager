@@ -3,14 +3,14 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { HistoryPage } from '~/billing/layouts/HistoryPage';
+import { BillingHistoryList } from '~/billing/components/BillingHistoryList';
 import { api } from '@/data';
 import { account } from '@/data/account';
 
 
 const { invoices } = api;
 
-describe('billing/layouts/HistoryPage', () => {
+describe('billing/components/BillingHistoryList', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -19,15 +19,16 @@ describe('billing/layouts/HistoryPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders account balance', () => {
+  it('renders a list of invoices', () => {
     const page = mount(
-      <HistoryPage
+      <BillingHistoryList
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}
       />
     );
 
-    expect(page.find('strong').text()).to.equal('Current Balance: $10.00');
+    const rowCount = Object.keys(invoices.invoices).length;
+    expect(page.find('.TableRow').length).to.equal(rowCount);
   });
 });

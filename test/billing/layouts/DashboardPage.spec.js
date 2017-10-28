@@ -19,19 +19,6 @@ describe('billing/layouts/DashboardPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of recent invoices', () => {
-    const page = mount(
-      <DashboardPage
-        dispatch={dispatch}
-        account={account}
-        invoices={invoices.invoices}
-      />
-    );
-
-    expect(page.find('.TableRow').length).to.equal(4);
-  });
-
-
   it('renders account info', () => {
     const page = mount(
       <DashboardPage
@@ -51,6 +38,6 @@ describe('billing/layouts/DashboardPage', () => {
     expect(address.find('li').at(4).text()).to.equal(loc);
 
     expect(page.find('#email').text()).to.equal(account.email);
-    expect(page.find('#balance').text()).to.equal(`$${account.balance}`);
+    expect(page.find('#balance').text()).to.equal('$10.00');
   });
 });
