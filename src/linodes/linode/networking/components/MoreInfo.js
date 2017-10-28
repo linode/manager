@@ -26,6 +26,19 @@ export default class MoreInfo extends Component {
     )));
   }
 
+  renderDNSResolvers(resolvers) {
+    return (
+      <ModalFormGroup label="DNS Resolvers">
+        <Textarea
+          className="form-control"
+          disabled
+          rows={resolvers.length}
+          value={resolvers.join('\n')}
+        />
+      </ModalFormGroup>
+    );
+  }
+
   renderGateway() {
     const { ip } = this.props;
 
@@ -36,19 +49,6 @@ export default class MoreInfo extends Component {
     return (
       <ModalFormGroup label="Gateway">
         <Input disabled value={ip.gateway} />
-      </ModalFormGroup>
-    );
-  }
-
-  renderDNSResolvers(resolvers) {
-    return (
-      <ModalFormGroup label="DNS Resolvers">
-        <Textarea
-          className="form-control"
-          disabled
-          rows={resolvers.length}
-          value={resolvers.join('\n')}
-        />
       </ModalFormGroup>
     );
   }

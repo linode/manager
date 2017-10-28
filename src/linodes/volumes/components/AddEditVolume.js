@@ -49,6 +49,32 @@ export default class AddEditVolume extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onLinodeChange = async (e) => {
+    const { allConfigs } = this.state;
+    const linodeId = e.target.value;
+
+    this.onChange(e);
+
+    if (linodeId === LinodeSelect.EMPTY) {
+      return;
+    }
+
+    if (!allConfigs[linodeId]) {
+      const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
+      const linodeConfigs = Object.values(configs.data).map(function (config) {
+        return {
+          label: config.label,
+          value: config.id,
+        };
+      });
+
+      this.setState({
+        config: undefined,
+        allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
+      });
+    }
+  }
+
   onSubmit = () => {
     const { dispatch, close, volume: { id } = {} } = this.props;
     const { label, region, size, linode, config } = this.state;
@@ -80,32 +106,6 @@ export default class AddEditVolume extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
-  }
-
-  onLinodeChange = async (e) => {
-    const { allConfigs } = this.state;
-    const linodeId = e.target.value;
-
-    this.onChange(e);
-
-    if (linodeId === LinodeSelect.EMPTY) {
-      return;
-    }
-
-    if (!allConfigs[linodeId]) {
-      const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
-      const linodeConfigs = Object.values(configs.data).map(function (config) {
-        return {
-          label: config.label,
-          value: config.id,
-        };
-      });
-
-      this.setState({
-        config: undefined,
-        allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
-      });
-    }
   }
 
   render() {

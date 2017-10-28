@@ -28,7 +28,6 @@ export default class MassEditControl extends Component {
     dispatch(toggleSelected(objectType, selected));
   }
 
-  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
   allSelected = () => this.props.data.every((record) =>
     this.props.selectedMap[record[this.props.selectedKey]])
 
@@ -40,6 +39,8 @@ export default class MassEditControl extends Component {
       fn(filteredData);
     };
   }
+
+  noneSelected = () => (Object.keys(this.props.selectedMap).length === 0)
 
   render() {
     const { massEditGroups } = this.props;

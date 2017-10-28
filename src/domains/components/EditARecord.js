@@ -35,6 +35,11 @@ export default class EditARecord extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onIPChange = ({ target: { value } }) => {
+    const type = value.indexOf(':') !== -1 ? 'AAAA' : 'A';
+    this.setState({ type: value ? type : this.state.type, ip: value });
+  }
+
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { ttl, hostname, ip, type } = this.state;
@@ -51,11 +56,6 @@ export default class EditARecord extends Component {
       () => api.domains.records[id ? 'put' : 'post'](data, ...ids),
       close,
     ]));
-  }
-
-  onIPChange = ({ target: { value } }) => {
-    const type = value.indexOf(':') !== -1 ? 'AAAA' : 'A';
-    this.setState({ type: value ? type : this.state.type, ip: value });
   }
 
   render() {
