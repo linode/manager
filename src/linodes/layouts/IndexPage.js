@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -52,6 +53,12 @@ export class IndexPage extends Component {
     ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
+  deleteLinodes = confirmThenDelete(
+    this.props.dispatch,
+    'Linode',
+    api.linodes.delete,
+    OBJECT_TYPE).bind(this)
+
   genericAction(actionToDispatch, linodes, confirmType) {
     const { dispatch } = this.props;
 
@@ -88,15 +95,10 @@ export class IndexPage extends Component {
     )));
   }
 
-  powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
   powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
-  reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
-  deleteLinodes = confirmThenDelete(
-    this.props.dispatch,
-    'Linode',
-    api.linodes.delete,
-    OBJECT_TYPE).bind(this)
+  powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
+  reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
   renderLinodes(linodes) {
     const { dispatch, selectedMap } = this.props;

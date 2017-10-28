@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -43,27 +44,6 @@ export class DashboardPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
-  }
-
-  renderGraphs() {
-    const { timezone, linode: { _stats: stats } } = this.props;
-
-    let body = <p>No graphs are available.</p>;
-    if (stats) {
-      const allGraphData = [
-        makeCPUGraphMetadata(stats.cpu),
-        makeIOGraphMetadata(stats.io),
-        makeNetv4GraphMetadata(stats.netv4),
-        makeNetv6GraphMetadata(stats.netv6),
-      ];
-      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
-    }
-
-    return (
-      <Card header={<CardHeader title="Graphs" />} className="graphs">
-        {body}
-      </Card>
-    );
   }
 
   renderDetails() {
@@ -187,6 +167,27 @@ export class DashboardPage extends Component {
           </Card>
         </section>
       </div>
+    );
+  }
+
+  renderGraphs() {
+    const { timezone, linode: { _stats: stats } } = this.props;
+
+    let body = <p>No graphs are available.</p>;
+    if (stats) {
+      const allGraphData = [
+        makeCPUGraphMetadata(stats.cpu),
+        makeIOGraphMetadata(stats.io),
+        makeNetv4GraphMetadata(stats.netv4),
+        makeNetv6GraphMetadata(stats.netv6),
+      ];
+      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
+    }
+
+    return (
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        {body}
+      </Card>
     );
   }
 

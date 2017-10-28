@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Highlight from 'react-highlight';
 import ClipboardButton from 'react-clipboard.js';
 
@@ -12,12 +13,10 @@ export default class Code extends Component {
   constructor() {
     super();
 
-    this.onClickCopy = this.onClickCopy.bind(this);
-
     this.state = { clipboardIcon: DEFAULT_CLIPBOARD_ICON };
   }
 
-  onClickCopy() {
+  onClickCopy = () => {
     if (this.state.clipboardIcon === DEFAULT_CLIPBOARD_ICON) {
       this.setState({ clipboardIcon: 'fa-check' }, () => {
         setTimeout(() => {
@@ -25,7 +24,7 @@ export default class Code extends Component {
         }, 2500);
       });
     }
-  }
+  };
 
   render() {
     const { example, language, noclipboard } = this.props;

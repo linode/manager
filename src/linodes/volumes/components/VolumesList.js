@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { LinkButton } from 'linode-components/buttons';
 import { Dropdown } from 'linode-components/dropdowns';
@@ -32,6 +33,21 @@ export default class VolumesList extends Component {
     this.state = { filter: '' };
   }
 
+  deleteVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(api.volumes.delete),
+    this.props.objectType).bind(this)
+
+  detachVolumes = confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(detachVolume),
+    this.props.objectType,
+    undefined,
+    'detach',
+    'detaching').bind(this)
+
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {
       let volumeOnLinode = getState().api.volumes.volumes[id];
@@ -61,20 +77,32 @@ export default class VolumesList extends Component {
     };
   }
 
-  deleteVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    this.removeFromLinodeAndCall(api.volumes.delete),
-    this.props.objectType).bind(this)
+  renderAttached = ({ column, record }) => {
+    const { linodes } = this.props;
+    const { linode_id: linodeId } = record;
 
-  detachVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    this.removeFromLinodeAndCall(detachVolume),
-    this.props.objectType,
-    undefined,
-    'detach',
-    'detaching').bind(this)
+    let contents = <span>Unattached</span>;
+    let to = linodeId;
+
+    if (to) {
+      const linode = linodes[linodeId];
+      if (linode && linode.label) {
+        to = (
+          <LinkButton to={`/linodes/${linode.label}/settings/advanced`}>
+            {linode.label}
+          </LinkButton>
+        );
+      }
+
+      contents = <div>Attached to {to}</div>;
+    }
+
+    return (
+      <TableCell column={column} record={record}>
+        {contents}
+      </TableCell>
+    );
+  }
 
   renderVolumeActions = ({ column, record }) => {
     const { dispatch, linodes } = this.props;
@@ -100,33 +128,6 @@ export default class VolumesList extends Component {
           groups={groups}
           analytics={{ title: 'Volume actions' }}
         />
-      </TableCell>
-    );
-  }
-
-  renderAttached = ({ column, record }) => {
-    const { linodes } = this.props;
-    const { linode_id: linodeId } = record;
-
-    let contents = <span>Unattached</span>;
-    let to = linodeId;
-
-    if (to) {
-      const linode = linodes[linodeId];
-      if (linode && linode.label) {
-        to = (
-          <LinkButton to={`/linodes/${linode.label}/settings/advanced`}>
-            {linode.label}
-          </LinkButton>
-        );
-      }
-
-      contents = <div>Attached to {to}</div>;
-    }
-
-    return (
-      <TableCell column={column} record={record}>
-        {contents}
       </TableCell>
     );
   }

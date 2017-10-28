@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { Header as HeaderWrapper } from 'linode-components/navigation';
@@ -11,18 +12,6 @@ import { getEmailHash } from '~/cache';
 
 
 export default class Header extends Component {
-  toggleNotifications = () => {
-    const { dispatch, notifications } = this.props;
-
-    if (notifications.open) {
-      dispatch(hideNotifications());
-    } else {
-      this.markEventsSeen();
-      dispatch(hideSession());
-      dispatch(showNotifications());
-    }
-  }
-
   async markEventsSeen() {
     const { dispatch, events } = this.props;
     const unseenIds = events.ids.filter(function (id) {
@@ -32,6 +21,18 @@ export default class Header extends Component {
     // mark up to and including the most recent event seen
     if (unseenIds.length) {
       await dispatch(eventSeen(unseenIds[0]));
+    }
+  }
+
+  toggleNotifications = () => {
+    const { dispatch, notifications } = this.props;
+
+    if (notifications.open) {
+      dispatch(hideNotifications());
+    } else {
+      this.markEventsSeen();
+      dispatch(hideSession());
+      dispatch(showNotifications());
     }
   }
 
