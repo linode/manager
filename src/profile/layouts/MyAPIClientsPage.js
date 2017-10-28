@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -38,11 +39,19 @@ export class MyAPIClientsPage extends Component {
     this.state = { filter: '' };
   }
 
-  thumbnailSrc(client) {
-    if (client.thumbnail_url) {
-      return API_ROOT.concat(client.thumbnail_url);
-    }
-    return DefaultClientThumb;
+  clientLabel(client) {
+    return client.client ? client.client.label : client.label;
+  }
+
+  createDropdownGroups = (client) => {
+    const { dispatch } = this.props;
+    const groups = [
+      { elements: [{ name: 'Edit', action: () =>
+        CreateOrEditApplication.trigger(dispatch, client) }] },
+      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
+    ];
+    return groups;
   }
 
   deleteClients = confirmThenDelete(
@@ -74,19 +83,11 @@ export class MyAPIClientsPage extends Component {
     ));
   }
 
-  createDropdownGroups = (client) => {
-    const { dispatch } = this.props;
-    const groups = [
-      { elements: [{ name: 'Edit', action: () =>
-        CreateOrEditApplication.trigger(dispatch, client) }] },
-      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
-    ];
-    return groups;
-  }
-
-  clientLabel(client) {
-    return client.client ? client.client.label : client.label;
+  thumbnailSrc(client) {
+    if (client.thumbnail_url) {
+      return API_ROOT.concat(client.thumbnail_url);
+    }
+    return DefaultClientThumb;
   }
 
   renderClients = () => {

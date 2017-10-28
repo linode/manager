@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -83,6 +84,15 @@ export class TicketPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
+  renderTicketClosed() {
+    return (
+      <Card id="ticket-closed">
+        This ticket has been closed. If you are still experiencing an issue,
+        please <Link to="/support/create">open a new ticket</Link>.
+      </Card>
+    );
+  }
+
   renderTicketResponseForm() {
     const { errors, loading, reply } = this.state;
 
@@ -123,15 +133,6 @@ export class TicketPage extends Component {
             </div>
           </div>
         </Form>
-      </Card>
-    );
-  }
-
-  renderTicketClosed() {
-    return (
-      <Card id="ticket-closed">
-        This ticket has been closed. If you are still experiencing an issue,
-        please <Link to="/support/create">open a new ticket</Link>.
       </Card>
     );
   }

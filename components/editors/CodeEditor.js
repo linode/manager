@@ -1,7 +1,8 @@
 import 'brace';
 import 'brace/mode/javascript';
 import 'brace/theme/tomorrow';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import AceEditor from 'react-ace';
 
 

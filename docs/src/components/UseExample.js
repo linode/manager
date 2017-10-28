@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { Tabs } from 'linode-components/tabs';
 import { Code } from 'linode-components/formats';
