@@ -15,6 +15,16 @@ export default class Dropdown extends Component {
     };
   }
 
+  close = () => {
+    if (typeof this.props.onClose === 'function') {
+      this.props.onClose();
+    }
+
+    this.emitEvent(DROPDOWN_CLOSE, 'close');
+
+    this.setState({ open: false });
+  }
+
   emitEvent(type, action, item) {
     if (this.props.analytics && this.props.analytics.title) {
       EmitEvent(type, 'dropdown', action, this.props.analytics.title, item);
@@ -29,16 +39,6 @@ export default class Dropdown extends Component {
     this.emitEvent(DROPDOWN_OPEN, 'open');
 
     this.setState({ open: !this.state.open });
-  }
-
-  close = () => {
-    if (typeof this.props.onClose === 'function') {
-      this.props.onClose();
-    }
-
-    this.emitEvent(DROPDOWN_CLOSE, 'close');
-
-    this.setState({ open: false });
   }
 
   wrapClick(f, item) {

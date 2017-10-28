@@ -22,6 +22,32 @@ export class SummaryPage extends Component {
     };
   }
 
+  renderBlock = ({ title, backup }) => {
+    const { linode } = this.props;
+
+    if (!backup) {
+      return title === 'Snapshot' ? this.renderEmptySnapshot() :
+        this.renderEmpty(title);
+    }
+
+    return (
+      <div className="Backup col-sm-3" key={title}>
+        <Link to={`/linodes/${linode.label}/backups/${backup.id}`}>
+          <div className="Backup-block Backup-block--clickable">
+            <div className="Backup-title">{title}</div>
+            <div className="Backup-body">
+              <div className="Backup-description">
+                {!backup.finished ? 'Snapshot in progress' : (
+                  <TimeDisplay time={backup.finished} />
+                )}
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
   renderEmpty(title) {
     return (
       <div className="Backup Backup--disabled col-sm-3">
@@ -59,32 +85,6 @@ export class SummaryPage extends Component {
           </div>
         </div>
       </Form>
-    );
-  }
-
-  renderBlock = ({ title, backup }) => {
-    const { linode } = this.props;
-
-    if (!backup) {
-      return title === 'Snapshot' ? this.renderEmptySnapshot() :
-        this.renderEmpty(title);
-    }
-
-    return (
-      <div className="Backup col-sm-3" key={title}>
-        <Link to={`/linodes/${linode.label}/backups/${backup.id}`}>
-          <div className="Backup-block Backup-block--clickable">
-            <div className="Backup-title">{title}</div>
-            <div className="Backup-body">
-              <div className="Backup-description">
-                {!backup.finished ? 'Snapshot in progress' : (
-                  <TimeDisplay time={backup.finished} />
-                )}
-              </div>
-            </div>
-          </div>
-        </Link>
-      </div>
     );
   }
 

@@ -38,16 +38,6 @@ export class PermissionsPage extends Component {
     };
   }
 
-  onSubmit = () => {
-    const { dispatch, user: { username } } = this.props;
-    const { global, customer, linode, nodebalancer, domain } = this.state;
-    const data = { global, customer, linode, nodebalancer, domain };
-
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => api.users.permissions.put(data, username),
-    ]));
-  }
-
   onCellChange = (record, checked, keys) => {
     const { parentKey, dataKey } = keys;
     const parentState = this.state[parentKey].map(function (child) {
@@ -63,6 +53,16 @@ export class PermissionsPage extends Component {
     this.setState({
       [parentKey]: parentState,
     });
+  }
+
+  onSubmit = () => {
+    const { dispatch, user: { username } } = this.props;
+    const { global, customer, linode, nodebalancer, domain } = this.state;
+    const data = { global, customer, linode, nodebalancer, domain };
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.users.permissions.put(data, username),
+    ]));
   }
 
   updateGlobal = (name) => {

@@ -26,14 +26,6 @@ export class SummaryPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  resetRDNS = (ip) => {
-    const { dispatch } = this.props;
-
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => setRDNS(ip, null),
-    ], [], ip.address));
-  }
-
   deleteIP = (ip) => {
     const { dispatch } = this.props;
 
@@ -49,6 +41,45 @@ export class SummaryPage extends Component {
       />
     )));
   };
+
+  resetRDNS = (ip) => {
+    const { dispatch } = this.props;
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setRDNS(ip, null),
+    ], [], ip.address));
+  }
+
+  renderAddButton() {
+    const { dispatch, linode } = this.props;
+
+    const addIPModal = () => AddIP.trigger(dispatch, linode);
+
+    const privateIPv4s = Object.values(linode._ips).filter(
+      ip => ip.version === 'ipv4' && ip.type === 'private');
+    if (privateIPv4s.length) {
+      return (
+        <PrimaryButton
+          className="float-sm-right"
+          buttonClass="btn-default"
+          onClick={addIPModal}
+        >
+          Add an IP Address
+        </PrimaryButton>
+      );
+    }
+
+    return (
+      <PrimaryButton
+        className="float-sm-right"
+        buttonClass="btn-default"
+        onClick={() => dispatch(addIP(linode.id, 'private'))}
+        options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
+      >
+        Enable Private IPv4
+      </PrimaryButton>
+    );
+  }
 
   renderIPNav = ({ column, record }) => {
     const { dispatch, linode } = this.props;
@@ -126,37 +157,6 @@ export class SummaryPage extends Component {
           noDataMessage={`You have no ${type} addresses.`}
         />
       </ListGroup>
-    );
-  }
-
-  renderAddButton() {
-    const { dispatch, linode } = this.props;
-
-    const addIPModal = () => AddIP.trigger(dispatch, linode);
-
-    const privateIPv4s = Object.values(linode._ips).filter(
-      ip => ip.version === 'ipv4' && ip.type === 'private');
-    if (privateIPv4s.length) {
-      return (
-        <PrimaryButton
-          className="float-sm-right"
-          buttonClass="btn-default"
-          onClick={addIPModal}
-        >
-          Add an IP Address
-        </PrimaryButton>
-      );
-    }
-
-    return (
-      <PrimaryButton
-        className="float-sm-right"
-        buttonClass="btn-default"
-        onClick={() => dispatch(addIP(linode.id, 'private'))}
-        options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
-      >
-        Enable Private IPv4
-      </PrimaryButton>
     );
   }
 

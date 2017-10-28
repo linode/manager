@@ -109,22 +109,6 @@ export default class StatusDropdown extends Component {
     }
   }
 
-  startLinodePolling() {
-    const { linode, dispatch } = this.props;
-
-    POLLING.reset();
-    dispatch(POLLING.start(linode.id));
-    dispatch(setProgress(linode, 1));
-
-    // The point of this is to give time for bar to animate from beginning.
-    // Important for this to happen last otherwise we end up in an infinite loop.
-    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
-  }
-
-  open = () => {
-    this.setState({ open: !this.state.open });
-  };
-
   close = () => {
     this.setState({ open: false });
   };
@@ -147,6 +131,31 @@ export default class StatusDropdown extends Component {
     )));
   }
 
+  deleteLinode = () => {
+    const { linode, dispatch } = this.props;
+
+    dispatch(showModal('Delete Linode', (
+      <DeleteModalBody
+        onSubmit={async function () {
+          await dispatch(api.linodes.delete(linode.id));
+          await dispatch(push('/'));
+        }}
+        items={[linode.label]}
+        typeOfItem="Linode"
+        onCancel={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
+  open = () => {
+    this.setState({ open: !this.state.open });
+  };
+
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
+  powerOnLinode = () => this.selectConfig(powerOnLinode)
+
+  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
+
   selectConfig = (callback) => {
     const { linode, dispatch } = this.props;
     const configCount = Object.keys(linode._configs.configs).length;
@@ -168,23 +177,16 @@ export default class StatusDropdown extends Component {
     )));
   }
 
-  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
-  powerOnLinode = () => this.selectConfig(powerOnLinode)
-  deleteLinode = () => {
+  startLinodePolling() {
     const { linode, dispatch } = this.props;
 
-    dispatch(showModal('Delete Linode', (
-      <DeleteModalBody
-        onSubmit={async function () {
-          await dispatch(api.linodes.delete(linode.id));
-          await dispatch(push('/'));
-        }}
-        items={[linode.label]}
-        typeOfItem="Linode"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
+    POLLING.reset();
+    dispatch(POLLING.start(linode.id));
+    dispatch(setProgress(linode, 1));
+
+    // The point of this is to give time for bar to animate from beginning.
+    // Important for this to happen last otherwise we end up in an infinite loop.
+    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
   }
 
   render() {

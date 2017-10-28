@@ -46,27 +46,6 @@ export class DashboardPage extends Component {
     await dispatch(setSource(__filename));
   }
 
-  renderGraphs() {
-    const { timezone, linode: { _stats: stats } } = this.props;
-
-    let body = <p>No graphs are available.</p>;
-    if (stats) {
-      const allGraphData = [
-        makeCPUGraphMetadata(stats.cpu),
-        makeIOGraphMetadata(stats.io),
-        makeNetv4GraphMetadata(stats.netv4),
-        makeNetv6GraphMetadata(stats.netv6),
-      ];
-      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
-    }
-
-    return (
-      <Card header={<CardHeader title="Graphs" />} className="graphs">
-        {body}
-      </Card>
-    );
-  }
-
   renderDetails() {
     const { username, linode, dispatch } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
@@ -188,6 +167,27 @@ export class DashboardPage extends Component {
           </Card>
         </section>
       </div>
+    );
+  }
+
+  renderGraphs() {
+    const { timezone, linode: { _stats: stats } } = this.props;
+
+    let body = <p>No graphs are available.</p>;
+    if (stats) {
+      const allGraphData = [
+        makeCPUGraphMetadata(stats.cpu),
+        makeIOGraphMetadata(stats.io),
+        makeNetv4GraphMetadata(stats.netv4),
+        makeNetv6GraphMetadata(stats.netv6),
+      ];
+      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
+    }
+
+    return (
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        {body}
+      </Card>
     );
   }
 

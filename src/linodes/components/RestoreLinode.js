@@ -40,6 +40,22 @@ export default class RestoreLinode extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onLinodeChange = (e) => {
+    this.onChange(e);
+    this.setState({ fetchingBackups: true }, async () => {
+      const linodeId = e.target.value;
+      const { allBackups } = this.state;
+
+      if (!allBackups[linodeId]) {
+        const backups = await this.props.dispatch(linodeBackups(linodeId));
+        this.setState({
+          fetchingBackups: false,
+          allBackups: { ...allBackups, [linodeId]: backups },
+        });
+      }
+    });
+  }
+
   onSubmit = () => {
     const { dispatch, linodes: allLinodes } = this.props;
     const { linode, label, backup, plan, backups } = this.state;
@@ -56,22 +72,6 @@ export default class RestoreLinode extends Component {
       () => api.linodes.post(data),
       ({ label }) => push(`/linodes/${label}`),
     ]));
-  }
-
-  onLinodeChange = (e) => {
-    this.onChange(e);
-    this.setState({ fetchingBackups: true }, async () => {
-      const linodeId = e.target.value;
-      const { allBackups } = this.state;
-
-      if (!allBackups[linodeId]) {
-        const backups = await this.props.dispatch(linodeBackups(linodeId));
-        this.setState({
-          fetchingBackups: false,
-          allBackups: { ...allBackups, [linodeId]: backups },
-        });
-      }
-    });
   }
 
   render() {

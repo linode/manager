@@ -30,9 +30,11 @@ export default class Disks extends Component {
     this.state = { filter: '' };
   }
 
-  poweredOff() {
-    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
-  }
+  deleteDisks = confirmThenDelete(
+    this.props.dispatch,
+    'disk',
+    (id) => api.linodes.disks.delete(this.props.linode.id, id),
+    Disks.OBJECT_TYPE).bind(this)
 
   freeSpace() {
     const { linode } = this.props;
@@ -42,24 +44,8 @@ export default class Disks extends Component {
     return total - used;
   }
 
-  deleteDisks = confirmThenDelete(
-    this.props.dispatch,
-    'disk',
-    (id) => api.linodes.disks.delete(this.props.linode.id, id),
-    Disks.OBJECT_TYPE).bind(this)
-
-  renderStatusMessage() {
-    if (!this.poweredOff()) {
-      return (
-        <div>
-          <div className="alert alert-info">
-            Your Linode must be powered off to manage your disks.
-          </div>
-        </div>
-      );
-    }
-
-    return null;
+  poweredOff() {
+    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
   }
 
   renderDiskActions = ({ column, record }) => {
@@ -80,6 +66,20 @@ export default class Disks extends Component {
         />
       </TableCell>
     );
+  }
+
+  renderStatusMessage() {
+    if (!this.poweredOff()) {
+      return (
+        <div>
+          <div className="alert alert-info">
+            Your Linode must be powered off to manage your disks.
+          </div>
+        </div>
+      );
+    }
+
+    return null;
   }
 
   render() {

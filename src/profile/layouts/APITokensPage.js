@@ -35,17 +35,6 @@ export class APITokensPage extends Component {
     this.state = { filter: '' };
   }
 
-  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
-
-  revoke = (tokenOrAppId) => {
-    const tokenOrApp = this.props.tokens[tokenOrAppId];
-    if (this.isApp(tokenOrApp)) {
-      return api.apps.delete(tokenOrAppId);
-    }
-
-    return api.tokens.delete(tokenOrAppId);
-  }
-
   createDropdownGroups = (token) => {
     const { dispatch } = this.props;
 
@@ -63,6 +52,17 @@ export class APITokensPage extends Component {
     }
 
     return groups;
+  }
+
+  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
+
+  revoke = (tokenOrAppId) => {
+    const tokenOrApp = this.props.tokens[tokenOrAppId];
+    if (this.isApp(tokenOrApp)) {
+      return api.apps.delete(tokenOrAppId);
+    }
+
+    return api.tokens.delete(tokenOrAppId);
   }
 
   revokeTokens = confirmThenDelete(

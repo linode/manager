@@ -65,19 +65,6 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['tickets']));
   }
 
-  renderUpdatedByCell({ record: ticket }) {
-    return (
-      <TableCell column={{}} record={ticket}>
-        {!ticket.updated_by ? <span>No updates</span> : (
-          <span>
-            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
-            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
-          </span>
-        )}
-      </TableCell>
-    );
-  }
-
   renderTickets(tickets) {
     const statusFormat = {
       new: 'Open',
@@ -142,6 +129,19 @@ export class IndexPage extends Component {
           })}
         </ListBody>
       </List>
+    );
+  }
+
+  renderUpdatedByCell({ record: ticket }) {
+    return (
+      <TableCell column={{}} record={ticket}>
+        {!ticket.updated_by ? <span>No updates</span> : (
+          <span>
+            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
+            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
+          </span>
+        )}
+      </TableCell>
     );
   }
 

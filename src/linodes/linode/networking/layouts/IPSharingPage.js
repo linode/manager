@@ -68,6 +68,14 @@ export class IPSharingPage extends Component {
     dispatch(setSource(__filename));
   }
 
+  onChange = (record, checked) => {
+    this.setState(_.merge({}, this.state, {
+      checked: {
+        [record.ip.address]: checked,
+      },
+    }));
+  }
+
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { checked } = this.state;
@@ -79,14 +87,6 @@ export class IPSharingPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setShared(linode.id, sharedIPs),
     ]));
-  }
-
-  onChange = (record, checked) => {
-    this.setState(_.merge({}, this.state, {
-      checked: {
-        [record.ip.address]: checked,
-      },
-    }));
   }
 
   validIPs() {
