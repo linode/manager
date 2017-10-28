@@ -118,7 +118,7 @@ export function generateDefaultStateOne(config, one) {
 export class ReducerGenerator {
   static one(config, oldStateMany, action) {
     if (config.singular) {
-      return action.resource;
+      return { ...oldStateMany, ...action.resource };
     }
 
     const nonNanActionIds = (action.ids || []).filter(i => !_.isNaN(i));

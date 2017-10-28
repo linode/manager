@@ -17,6 +17,7 @@ import { apps } from './apps';
 import { users } from './users';
 import { tickets } from './tickets';
 import { volumes } from './volumes';
+import { invoices } from './invoices';
 
 function calculateTotalResults(data) {
   return Object.keys(data).length;
@@ -70,6 +71,7 @@ export const api = fakeAPI([
   [users, 'user', 'users'],
   [tickets, 'ticket', 'tickets'],
   [volumes, 'volume', 'volumes'],
+  [invoices, 'invoices', 'invoices'],
 ]);
 
 export const state = deepFreeze({
