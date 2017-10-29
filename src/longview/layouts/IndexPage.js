@@ -32,30 +32,10 @@ import { AddLVClient } from '../components/AddLVClient';
 const OBJECT_TYPE = 'longview';
 
 export class IndexPage extends Component {
-  // async'ing because we don't want to forget when we add another await
   static async preload({ dispatch }) {
-    // const lvclients = api.lvclients.all();
-    const lvclients = {
-      lvclients: [
-        {
-          id: 1000,
-          api_key: 'FAKE', // *DONT COMMIT ME*
-          label: 'longview123',
-          apps: {
-            mysql: false,
-            nginx: false,
-            apache: false,
-          },
-          updated: null,
-          created: '2017-10-12 10:12:17',
-        },
-      ],
-      pages: 1,
-      page: 1,
-      results: 1,
-    };
-
-    await dispatch(actions.many(lvclients));
+    await Promise.all([
+      api.lvclients.all(),
+    ].map(r => dispatch(r)));
   }
 
   constructor(props) {
