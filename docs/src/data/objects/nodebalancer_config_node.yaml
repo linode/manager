@@ -7,12 +7,12 @@ schema:
     editable: false
     type: Integer
     value: 804
-    description: An integer
+    description: The ID of this NodeBalancer config node.
   label:
     editable: true
     type: String
     value: node001
-    description: Unique label for your NodeBalancer config
+    description: Unique label for your NodeBalancer config.
   address:
     editable: true
     type: String
