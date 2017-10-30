@@ -11,7 +11,7 @@ schema:
   id:
     type: String
     description: The ID of thie kernel.
-    value: linode/3.5.2-x86_64-linode26
+    value: linode/latest-64bit
   xen:
     type: Boolean
     value: false
@@ -24,7 +24,7 @@ schema:
     filterable: true
   label:
     type: String
-    value: 3.5.2-x86_64-linode26
+    value: Latest 64 bit (4.9.50-x86_64-linode86)
     description: The friendly name of this kernel.
     filterable: true
   version:
