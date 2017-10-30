@@ -63,7 +63,7 @@ schema:
     description: Kernel label for this Linode.
     editable: true
     type: String
-    value: "linode/4.1.0-x86_64-linode59"
+    value: "linode/latest-64bit"
   label:
     editable: true
     type: String
