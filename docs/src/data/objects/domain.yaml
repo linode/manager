@@ -6,6 +6,7 @@ description: >
 schema:
   id:
     type: Integer
+    description: This domain's ID.
     value: 357
   domain:
     editable: true
