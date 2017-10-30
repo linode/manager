@@ -48,7 +48,7 @@ schema:
         hourly:
           type: Float
           value: 0.004
-          description: Cost (in cents) per hour.
+          description: Cost (in US dollars) per hour.
           filterable: true
         monthly:
           type: Integer
