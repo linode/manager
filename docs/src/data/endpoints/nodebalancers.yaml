@@ -306,7 +306,8 @@ endpoints:
         response: nodebalancer_config_node
         oauth: nodebalancers:view
         description: >
-          Returns information about this node.
+          Returns information about this node. A node is a single server backend for this
+          nodebalancer, accessed as the given address.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
