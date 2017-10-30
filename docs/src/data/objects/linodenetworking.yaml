@@ -22,8 +22,7 @@ schema:
       type: ipv6-address
       isArray: true
     slaac:
-      type: String
-      value: 2a01:7e00::f03c:91ff:fe96
+      type: ipv6-address
       description: >
         This Linode's SLACC range.
     link_local:
@@ -33,4 +32,5 @@ schema:
         This Linode's link-local range.
     global:
       type: ipv6pool
+      isArray: true
       description: Global IPv6 Pools that route to this Linode.
