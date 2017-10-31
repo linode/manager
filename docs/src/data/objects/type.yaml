@@ -7,6 +7,7 @@ description: >
 schema:
   id:
     type: String
+    description: ID of this type.
     value: linode2048.5
     description: The service plan type.
   disk:
@@ -47,7 +48,7 @@ schema:
         hourly:
           type: Float
           value: 0.004
-          description: Cost (in cents) per hour.
+          description: Cost (in US dollars) per hour.
           filterable: true
         monthly:
           type: Integer
