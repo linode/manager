@@ -52,7 +52,7 @@ schema:
     credit:
       type: Integer
       value: 160
-      description: Dollar amount of credit based on completed referrals.
+      description: US Dollar amount of credit based on completed referrals.
   ip_whitelist_enabled:
     type: Boolean
     value: true
@@ -78,8 +78,10 @@ schema:
     description: Toggles whether two factor authentication (TFA) is enabled or disabled.
     editable: true
   restricted:
-    type: String
-    description: Whether or not this user is restricted.
+    type: Boolean
+    description: Whether or not this user is restricted. Restricted users are granted access to specific
+     resources with grants.
+    seeAlso: ["/reference/endpoints/account/users/$username/grants"]
     value: False
 enums:
   LishSetting:
