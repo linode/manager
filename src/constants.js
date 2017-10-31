@@ -496,3 +496,140 @@ export const Countries = {
   ZM: 'Zambia',
   ZW: 'Zimbabwe',
 };
+
+export const HIGHCHARTS_THEME = {
+  chart: {
+    plotBorderWidth: 1,
+    plotBorderColor: '#D3D3D3',
+    plotBackgroundColor: '#fff',
+    backgroundColor: 'rgba(0,0,0,0)',
+    zoomType: 'x',
+    animation: false,
+    marginLeft: 16,
+    marginRight: 0,
+    marginBottom: 50,
+    marginTop: 25,
+    spacingTop: 0,
+    spacingLeft: 0,
+    spacingRight: 0,
+    spacingBottom: 0,
+    style: {
+      fontFamily: 'Helvetica,Arial,sans-serif',
+    },
+    resetZoomButton: {
+      theme: {
+        fill: '#fff',
+        stroke: '#D3D3D3',
+        r: 0,
+        style: {
+          fontSize: 12,
+        },
+        states: {
+          hover: {
+            fill: '#f5f5f5',
+            stroke: '#D3D3D3',
+          },
+        },
+      },
+    },
+    /**
+    events: {
+      selection: function(event) {
+        event.preventDefault();
+        try {
+          longview.changeToTime((event.xAxis[0].min / 1000), parseInt(event.xAxis[0].max / 1000))
+          Page.ResetZoomButton.show();
+        } catch(e) { }
+      }
+    }
+    */
+  },
+  title: {
+    text: null,
+    style: {
+      'font-family': '"Helvetica Neue", Helvetica, sans-serif',
+      'font-size': '17px',
+      'font-weight': '300',
+      'color': '#000',
+    },
+  },
+  credits: {
+    enabled: false,
+  },
+  xAxis: {
+    type: 'datetime',
+    labels: {
+      enabled: true,
+    },
+    tickColor: '#D3D3D3',
+    startOnTick: false,
+    endOnTick: false,
+    lineWidth: 0,
+  },
+  yAxis: {
+    title: {
+      text: null,
+    },
+    labels: {
+      enabled: true,
+      rotation: 270,
+      align: 'right',
+    },
+    maxPadding: 0.25,
+    startOnTick: false,
+    endOnTick: true,
+    showFirstLabel: false,
+    showLastLabel: true,
+    gridLineWidth: 1,
+    gridLineColor: '#D3D3D3',
+  },
+  tooltip: {
+    useHTML: true,
+    enabled: true,
+    crosshairs: [true, false],
+    shared: true,
+  },
+  loading: {
+    labelStyle: {
+      color: '#000',
+      'font-family': '"Helvetica Neue", Helvetica, sans-serif',
+      'font-weight': 500,
+    },
+  },
+  plotOptions: {
+    series: {
+      animation: true,
+      stacking: 'normal',
+      shadow: false,
+      fillOpacity: 0.75,
+      marker: {
+        enabled: false,
+        states: {
+          hover: {
+            enabled: true,
+          },
+        },
+      },
+    },
+    area: {
+      lineWidth: 1,
+      states: {
+        hover: {
+          lineWidth: 1.0,
+        },
+      },
+    },
+    line: {
+      stacking: null,
+      lineWidth: 2,
+      states: {
+        hover: {
+          lineWidth: 2,
+        },
+      },
+    },
+  },
+  global: {
+    useUTC: true,
+  },
+};

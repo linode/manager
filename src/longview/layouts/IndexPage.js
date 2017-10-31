@@ -27,7 +27,7 @@ import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
-import { AddLVClient } from '../components/AddLVClient';
+import AddLVClient from '../components/AddLVClient';
 
 const OBJECT_TYPE = 'longview';
 

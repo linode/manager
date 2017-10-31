@@ -1,44 +1,65 @@
-import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
-
-import { getTopProcesses } from '~/api/longview/stats';
-import { getObjectByLabelLazily } from '~/api/util';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fullyLoadedObject } from '~/api/external';
+import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
-const OBJECT_TYPE = 'lvclients';
+import { Tabs } from 'linode-components/tabs';
+
+import { setAnalytics, setTitle } from '~/actions';
+import api from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
+import { selectLVClient } from '../utilities';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }, { lvLabel }) {
-    const { api_key } = await dispatch(getObjectByLabelLazily('lvclients', lvLabel));
-    await dispatch(getTopProcesses(api_key));
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = { filter: '' };
+  async componentDidMount() {
+    const { dispatch, lvclient } = this.props;
+    dispatch(setTitle(lvclient.label));
+    dispatch(setAnalytics(['lvclients', 'lvclient']));
   }
 
   render() {
+    const { lvclient } = this.props;
+
+    if (!lvclient) { return null; }
+
+    const tabs = [
+      { name: 'Dashboard', link: '' },
+      { name: 'Settings', link: '/settings' },
+    ].map(t => ({ ...t, link: `/longview/${encodeURIComponent(lvclient.label)}${t.link}` }));
+
     return (
-      <div>Longview details</div>
+      <div>
+        <header className="main-header">
+          <div className="container">
+            <div className="float-sm-left">
+              <Link to="/longview">Longview Clients</Link>
+              <h1 title={lvclient.id}>
+                <Link to={`/longview/${lvclient.label}`} />
+              </h1>
+            </div>
+          </div>
+        </header>
+        <div className="main-header-fix"></div>
+        <Tabs
+          tabs={tabs}
+          onClick={(e, tabIndex) => {
+            e.stopPropagation();
+            this.props.dispatch(push(tabs[tabIndex].link));
+          }}
+          pathname={location.pathname}
+        >
+          {this.props.children}
+        </Tabs>
+      </div>
     );
   }
 }
 
 IndexPage.propTypes = {
-  dispatch: PropTypes.func,
+  dispatch: PropTypes.func.isRequired,
+  lvclient: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-
-function select(state) {
-  const lvclients = _.pickBy(state.api.lvclients.lvclients, fullyLoadedObject);
-
-  return {
-    lvclients,
-    selectedMap: state.select.selected[OBJECT_TYPE] || {},
-  };
-}
-
-export default connect(select)(IndexPage);
+export default connect(selectLVClient)(IndexPage);

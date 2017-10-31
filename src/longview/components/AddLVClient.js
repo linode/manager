@@ -42,7 +42,7 @@ export default class AddLVClient extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.lvclients.post(data),
-      ({ label }) => push(`/longview/clients/${label}`),
+      ({ label }) => push(`/longview/${label}`),
     ]));
   }
 
