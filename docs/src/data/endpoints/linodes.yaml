@@ -31,11 +31,11 @@ endpoints:
             description: >
               A region ID to provision
               this Linode in.
-            type: string
+            type: String
             value: us-east-1a
           type:
             description: A Linode type ID to use for this Linode.
-            type: string
+            type: String
             value: g5-standard-1
           label:
             optional: true
@@ -52,7 +52,7 @@ endpoints:
             description: >
               The Distribution to deploy this Linode with.  May not be included
               if 'backup_id' or 'image' is sent.
-            type: string
+            type: String
           root_pass:
             optional: unless source == "distro"
             description: >
@@ -686,18 +686,17 @@ endpoints:
         dangerous: false
         params:
           region:
-            optional: true
             description: >
               A region ID to provision
               this Linode in. Required when cloning to a new Linode.
-            type: string
+            type: String
             value: us-east-1a
           type:
-            optional: true
             description: >
               A Linode type ID to use for this
               Linode. Required when cloning to a new Linode.
-            type: string
+            type: String
+            value: g5-standard-1
           linode_id:
             optional: true
             description: >
@@ -722,13 +721,13 @@ endpoints:
             optional: true
             description: >
               A list of disk ID's to include in the clone process. All disks attached to configs will be cloned from the source Linode if not provided.
-            type: string
+            type: String
             isArray: true
           configs:
             optional: true
             description: >
               A list of config ID's to include in the clone process. All configs will be cloned from the source Linode if not provided.
-            type: string
+            type: String
             isArray: true
         examples:
           curl: |
@@ -774,7 +773,7 @@ endpoints:
           type:
             description: >
               A Linode type to use for this Linode.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -918,7 +917,7 @@ endpoints:
           type:
             description: >
                 An IP Address Type for this IP Address. Public IP's incur a monthly cost.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -935,7 +934,7 @@ endpoints:
             Sets IP Sharing for this Linode.
         params:
           ips:
-            type: string
+            type: String
             description: >
               A list of IP Addresses this Linode will share.
         examples:
