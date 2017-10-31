@@ -25,5 +25,5 @@ schema:
     value: True
   gravatar_id:
     type: String
-    description: The gravatar id of the last user to update this ticket.
-    value: "c3933905f8e430d6a5872b9cf635cf35"
+    description: The gravatar id of the user who posted this reply.
+    value: "aad889008f120255f1ac47fde3f5338b"
