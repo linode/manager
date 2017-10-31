@@ -7,3 +7,4 @@ xunit.xml
 coverage
 .sass-cache/
 restart-manager.sh
+secrets.*.js
