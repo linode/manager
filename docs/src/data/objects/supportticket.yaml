@@ -49,7 +49,7 @@ schema:
     description: The entity this ticket was opened regarding.
     id:
       type: Integer
-      value: 9302
+      value: 123
       description: The entity's ID that this event is for.  This is meaningless without a type.
     label:
       type: String
@@ -71,8 +71,8 @@ schema:
     value: ["screenshot.jpg", "stacktrace.txt"]
   gravatar_id:
     type: String
-    description: The gravatar id of the last user to update this ticket.
-    value: "c3933905f8e430d6a5872b9cf635cf35"
+    description: The gravatar id of the user who opened this ticket.
+    value: "aad889008f120255f1ac47fde3f5338b"
 enums:
   Status:
     new: The support ticket has just been opened.
