@@ -319,7 +319,7 @@ endpoints:
     group: Users
     type: resource
     description: >
-      Manage grants for restricted users.  It is an error to call this endpoint for unrestrcited users.  Only unrestricted
+      Manage grants for restricted users.  It is an error to call this endpoint for unrestricted users.  Only unrestricted
       users may access this endpoint.
     methods:
       GET:
