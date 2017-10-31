@@ -4,16 +4,16 @@ description: >
     A Payment
 schema:
   date:
-    type: String
+    type: Datetime
     value: "2015-09-29T11:21:01"
     filterable: true
     description: The date the payment was processed.
   id:
-    type: integer
+    type: Integer
     value: 123
     description: The payment's ID.
   amount:
-    type: integer
+    type: Integer
     value: 120
     filterable: true
     description: The amount (in US Dollars) of the payment.
