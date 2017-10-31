@@ -36,6 +36,7 @@ endpoints:
           type:
             description: A Linode type ID to use for this Linode.
             type: string
+            value: g5-standard-1
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
