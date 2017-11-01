@@ -27,6 +27,7 @@ export class IndexPage extends Component {
   render() {
     const tabs = [
       { name: 'Dashboard', link: '' },
+      { name: 'Contact Info', link: 'contact' },
       { name: 'Update Credit Card', link: 'creditcard' },
       { name: 'Make A Payment', link: 'payment' },
       { name: 'History', link: 'history' },
