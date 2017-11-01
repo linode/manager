@@ -240,7 +240,7 @@ endpoints:
             description: >
               The tag attribute for a CAA record. One of issue, issuewild,
               iodef. Ignored on other record types.
-            type: String
+            type: Enum
           ttl:
             optional: true
             description: >
