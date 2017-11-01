@@ -19,3 +19,11 @@ schema:
     type: String
     value: some_other_user
     description: The user who submitted this reply.
+  from_linode:
+    type: Boolean
+    description: Whether or not this reply is from a linode employee.
+    value: True
+  gravatar_id:
+    type: String
+    description: The gravatar id of the user who posted this reply.
+    value: "aad889008f120255f1ac47fde3f5338b"
