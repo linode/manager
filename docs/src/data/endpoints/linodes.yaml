@@ -310,7 +310,7 @@ endpoints:
     group: Disks
     type: Strange
     authenticated: true
-    description: Resizes the disk.
+    description: Resizes the disk. The linode this disk is attached to must be shut down for this to take effect.
     methods:
       POST:
         oauth: linodes:modify
@@ -318,6 +318,7 @@ endpoints:
         params:
           size:
             description: The desired size of the disk in MB.
+            value: 1024
             type: Integer
         examples:
           curl: |
@@ -342,6 +343,7 @@ endpoints:
             description: >
               New root password for the OS installed on this disk.
             type: String
+            value: hunter2
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -368,10 +370,12 @@ endpoints:
               Sets the name of the image shown in the base image list, defaults
               to the source disk label.
             type: String
+            value: My gold master image
           description:
             optional: true
             description: An optional description of the created image
             type: String
+            value: This is the image description, its more descriptive than a label.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -917,8 +921,9 @@ endpoints:
         params:
           type:
             description: >
-                An IP Address Type for this IP Address. Public IP's incur a monthly cost.
+                An IP Address Type for this IP Address: either public or private. Public IP's incur a monthly cost.
             type: String
+            value: private
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -1071,6 +1076,7 @@ endpoints:
               Label of StackScript.
             limit: 3-128 characters
             type: String
+            value: Initial Label
           description:
             optional: true
             description: >
@@ -1096,6 +1102,7 @@ endpoints:
             description: >
               The shell script to run on boot.
             type: String
+            value: "#!/bin/bash"
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -1275,6 +1282,7 @@ endpoints:
             description: >
               A unique label to identify your new volume with.
             type: String
+            value: a_fancy_new_volume
           region:
             description: >
               Which region the new volume should be created in.
@@ -1351,6 +1359,7 @@ endpoints:
             description: >
               A unique label to identify your new volume with.
             type: String
+            value: a_fancy_new_volume
           region:
             description: >
               Which region the new volume should be created in.
