@@ -418,7 +418,8 @@ endpoints:
             value: My config
           devices:
             description: >
-              Disks attached to this Linode config.
+              Disks attached to this Linode config. Devices may have either a volume or a disk configured,
+              but not both. Multiple devices cannot be attached to a given disk or volume.
             type: devices
           comments:
             optional: true
