@@ -375,7 +375,7 @@ endpoints:
             optional: true
             description: An optional description of the created image
             type: String
-            value: This is the image description, its more descriptive than a label.
+            value: This is the image description, it's more descriptive than a label.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -921,7 +921,7 @@ endpoints:
         params:
           type:
             description: >
-                An IP Address Type for this IP Address: either public or private. Public IP's incur a monthly cost.
+                An IP Address Type for this IP Address, either "public" or "private". Public IP's incur a monthly cost.
             type: String
             value: private
         examples:
