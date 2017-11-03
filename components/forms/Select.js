@@ -67,16 +67,16 @@ export default class Select extends Component {
     const [value] = this.realValue();
 
     if (!this.props.multi) {
-      const options = this.props.options.map(function ({ value, label, options }) {
+      const options = this.props.options.map(function ({ value, label, options }, index) {
         if (options) {
           return (
             <optgroup label={label}>
-              {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
+              {options.map(({ value, label }, index) => (<option key={index} value={value}>{label}</option>))}
             </optgroup>
           );
         }
 
-        return <option value={value}>{label}</option>;
+        return <option key={index} value={value}>{label}</option>;
       });
 
       return (
