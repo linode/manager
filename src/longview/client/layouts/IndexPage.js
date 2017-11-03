@@ -58,7 +58,7 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  lvclient: PropTypes.object.isRequired,
+  lvclient: PropTypes.object,
   children: PropTypes.node.isRequired,
 };
 

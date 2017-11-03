@@ -62,6 +62,21 @@ function get(id, params = {}) {
  * 
  **/
 
+export function getValues(id, keys = [], start = null, end = null) {
+  const params = {
+    api_action: 'getValues',
+    keys: keys,
+  };
+
+  if (start && end) {
+    params.start = start;
+    params.end = end;
+  }
+
+  return get(id, params);
+}
+
+
 export function getLatest(id, keys = [], start = null, end = null) {
   const params = {
     api_action: 'getLatest',

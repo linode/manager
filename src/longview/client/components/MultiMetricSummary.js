@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { AbstractChart } from 'react-highcharts-wrapper';
 
 const config = {
@@ -24,3 +24,9 @@ const config = {
 export default function MultiMetricSummary(props, state) {
   return (<AbstractChart config={config} />);
 }
+
+MultiMetricSummary.propTypes = {
+  summary: PropTypes.object,
+  lvclient: PropTypes.object,
+  dispatch: PropTypes.func,
+};

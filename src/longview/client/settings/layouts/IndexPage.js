@@ -11,6 +11,7 @@ import { selectLVClient } from '../../utilities';
 
 export function IndexPage(props) {
   const { lvclient } = props;
+  if (!lvclient) { return null; }
 
   const tabs = [
     { name: 'Display', link: '/' },
