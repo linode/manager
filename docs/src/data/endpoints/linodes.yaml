@@ -310,7 +310,7 @@ endpoints:
     group: Disks
     type: Strange
     authenticated: true
-    description: Resizes the disk. The linode this disk is attached to must be shut down for this to take effect.
+    description: Resizes the disk. The Linode this disk is attached to must be shut down for this to take effect.
     methods:
       POST:
         oauth: linodes:modify
@@ -422,8 +422,8 @@ endpoints:
             value: My config
           devices:
             description: >
-              Disks attached to this Linode config. Devices may have either a volume or a disk configured,
-              but not both. Multiple devices cannot be attached to a given disk or volume.
+              Devices that would be attached to a Linode when booted using this config.
+              Devices can be either Disks or Volumes, but only one type per slot (a - h).
             type: devices
           comments:
             optional: true
@@ -921,7 +921,9 @@ endpoints:
         params:
           type:
             description: >
-                An IP Address Type for this IP Address, either "public" or "private". Public IP's incur a monthly cost.
+                The type of IP Address this is, can be one of "public" or "private".
+                Public IP Addresses, over and above the one included with each Linode,
+                incur an additional monthly charge.
             type: String
             value: private
         examples:
