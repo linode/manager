@@ -91,7 +91,9 @@ describe('support/layouts/TicketPage', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/attachments`),
+      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/attachments`, {
+        method: 'POST',
+      }),
     ]);
   });
 

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -18,7 +19,7 @@ import {
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import toggleSelected from '~/actions/select';
-import { users as api } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
 import CreateHelper from '~/components/CreateHelper';
@@ -37,7 +38,7 @@ function getGravatarURL(user) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.users.all());
   }
 
   constructor(props) {
@@ -56,7 +57,7 @@ export class IndexPage extends Component {
   deleteUsers = confirmThenDelete(
     this.props.dispatch,
     'user',
-    api.delete,
+    api.users.delete,
     OBJECT_TYPE,
     'username',
     'delete',

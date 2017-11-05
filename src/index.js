@@ -12,7 +12,7 @@ import { ModalShell } from 'linode-components/modals';
 
 import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
-import { actions, thunks, reducer } from '~/api/configs/linodes';
+import { actions, thunks, reducer } from '~/api/generic/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';

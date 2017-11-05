@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -11,7 +12,7 @@ import { Table } from 'linode-components/tables';
 import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
 
 import toggleSelected from '~/actions/select';
-import { tokens, apps } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
@@ -25,24 +26,13 @@ const OBJECT_TYPE = 'tokens';
 
 export class APITokensPage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([tokens, apps].map(c => dispatch(c.all())));
+    await Promise.all([api.tokens, api.apps].map(c => dispatch(c.all())));
   }
 
   constructor(props) {
     super(props);
 
     this.state = { filter: '' };
-  }
-
-  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
-
-  revoke = (tokenOrAppId) => {
-    const tokenOrApp = this.props.tokens[tokenOrAppId];
-    if (this.isApp(tokenOrApp)) {
-      return apps.delete(tokenOrAppId);
-    }
-
-    return tokens.delete(tokenOrAppId);
   }
 
   createDropdownGroups = (token) => {
@@ -62,6 +52,17 @@ export class APITokensPage extends Component {
     }
 
     return groups;
+  }
+
+  isApp = (tokenOrApp) => tokenOrApp.thumbnail_url !== undefined
+
+  revoke = (tokenOrAppId) => {
+    const tokenOrApp = this.props.tokens[tokenOrAppId];
+    if (this.isApp(tokenOrApp)) {
+      return api.apps.delete(tokenOrAppId);
+    }
+
+    return api.tokens.delete(tokenOrAppId);
   }
 
   revokeTokens = confirmThenDelete(

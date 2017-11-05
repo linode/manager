@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
@@ -9,7 +10,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { rescueLinode } from '~/api/linodes';
+import { rescueLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import DeviceSelect from './DeviceSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';

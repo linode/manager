@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
@@ -7,7 +8,7 @@ import { Tabs } from 'linode-components/tabs';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
 import { setAnalytics, setTitle } from '~/actions';
-import { nodebalancers } from '~/api';
+import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { GroupLabel } from '~/components';
 
@@ -15,7 +16,7 @@ import { GroupLabel } from '~/components';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-    await dispatch(nodebalancers.configs.all([id]));
+    await dispatch(api.nodebalancers.configs.all([id]));
   }
 
   async componentDidMount() {

@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ModalFormGroup, Radio } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal } from '~/actions/modal';
-import { rebootLinode } from '~/api/linodes';
+import { rebootLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -55,6 +56,7 @@ export default class ConfigSelectModalBody extends Component {
               <Radio
                 checked={config.id.toString() === configId}
                 value={config.id}
+                name="config"
                 onChange={e => this.setState({ configId: e.target.value })}
                 label={config.label}
               />

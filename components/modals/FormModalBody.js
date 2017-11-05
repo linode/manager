@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { CancelButton } from '../buttons';
 import { Form, FormSummary, SubmitButton } from '../forms';

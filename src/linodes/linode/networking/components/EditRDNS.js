@@ -1,10 +1,12 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { setRDNS } from '~/api/networking';
+import { setRDNS } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -28,6 +30,8 @@ export default class EditRDNS extends Component {
       errors: {},
       hostname: props.ip.rdns || '',
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -39,8 +43,6 @@ export default class EditRDNS extends Component {
       close,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close, ip: { address } } = this.props;
