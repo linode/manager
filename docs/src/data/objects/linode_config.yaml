@@ -8,6 +8,7 @@ description: >
 schema:
   id:
     type: Integer
+    description: This Linode config's ID.
     value: 804
   comments:
     editable: true
@@ -17,6 +18,7 @@ schema:
     limit: 1-255 characters
   created:
     type: Datetime
+    description: When this config was created.
     value: 2015-09-29T11:21:38
   devices:
     type: devices
@@ -58,17 +60,10 @@ schema:
     value: "null"
     description: An initrd disk attached to this Linode config.
   kernel:
+    description: Kernel label for this Linode.
     editable: true
-    type: Kernel
-    id:
-      type: String
-      value: linode/latest_64
-    label:
-      type: String
-      value: Latest 64 bit (4.1.0-x86_64-linode59)
-    current:
-      type: Boolean
-      value: true
+    type: String
+    value: "linode/latest-64bit"
   label:
     editable: true
     type: String
@@ -95,6 +90,7 @@ schema:
     description: Sets the run level for Linode boot.
   updated:
     type: Datetime
+    description: When this config was updated.
     value: 2015-09-29T11:21:38
   virt_mode:
     editable: true

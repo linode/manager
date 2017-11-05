@@ -579,7 +579,7 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "config": 5567
+                    "config_id": 5567
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/boot
           python: |
@@ -621,8 +621,7 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "config": 5567
-
+                    "config_id": 5567
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/reboot
           python: |
