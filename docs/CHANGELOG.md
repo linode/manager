@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.14.1] 2017-11-05
+### Fixed
+- Numerous missing types and descriptions were added
+- Oauthclient type was incorrectly called Client
+- Nodebalancer Config did not document certificate parameteres correctly
+- Nodebalancer and SupportTicket had undocumented response properties
+
 ## [0.14.0] 2017-10-23
 ### Changed
 - /account/payments "amount" is now a string
