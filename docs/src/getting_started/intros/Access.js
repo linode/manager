@@ -91,9 +91,9 @@ export default function Authentication() {
             },
             {
               parameter: 'response_type',
-              description: 'Required. Either \'code\' for an [OAUTH Authorization Code Grant](' +
-              'https://tools.ietf.org/html/rfc6749#section-4.1) or \'token\' for an [OAuth ' +
-              'Implcit Grant token](https://tools.ietf.org/html/rfc6749#section-4.2).',
+              description: 'Required. Either \'code\' for an OAUTH Authorization Code Grant (' +
+              'https://tools.ietf.org/html/rfc6749#section-4.1) or \'token\' for an OAuth ' +
+              'Implcit Grant token (https://tools.ietf.org/html/rfc6749#section-4.2).',
             },
             {
               parameter: 'state',

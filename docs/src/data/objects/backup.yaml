@@ -6,6 +6,7 @@ description: >
 schema:
   id:
     type: Integer
+    description: This backup's ID.
     value: 123456
   label:
     type: String
@@ -29,13 +30,15 @@ schema:
     filterable: false
     description: This backup region.
   created:
-    type: string
+    type: Datetime
     value: "2015-09-29T11:21:01"
+    description: When this backup was created.
   updated:
-    type: string
+    type: Datetime
     value: "2015-09-29T11:21:01"
+    description: When this backup was updated.
   finished:
-    type: string
+    type: Datetime
     value: "2015-09-29T11:21:01"
     description: An ISO 8601 datetime of when the backup completed.
   configs:
