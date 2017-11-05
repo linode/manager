@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.15.4] 2017-11-05
+### Added
+- Added Billing components and pages
+### Changed
+- Handle deprecations in preparation for React 16.0
+- (Docs) updated to 0.14.1
+
 ## [0.15.3] 2017-10-13
 ### Fixed
 - Send custom integers correctly on volume create
