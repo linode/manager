@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 
 export default function Textarea(props) {
@@ -6,6 +7,7 @@ export default function Textarea(props) {
     <span className="Textarea">
       <textarea
         {...props}
+        id={props.id || props.name}
         className={`form-control ${props.className}`}
       />
     </span>
@@ -14,6 +16,8 @@ export default function Textarea(props) {
 
 Textarea.propTypes = {
   className: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  name: PropTypes.string,
 };
 
 Textarea.defaultProps = {

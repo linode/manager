@@ -1,9 +1,11 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
-import { domains } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
@@ -39,6 +41,8 @@ export default class EditSRVRecord extends Component {
       // eslint-disable-next-line
       port: port,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -57,12 +61,10 @@ export default class EditSRVRecord extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      () => api.domains.records[id ? 'put' : 'post'](data, ...ids),
       close,
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
     const { close, title, id } = this.props;

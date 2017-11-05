@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, SubmitButton } from 'linode-components/forms';

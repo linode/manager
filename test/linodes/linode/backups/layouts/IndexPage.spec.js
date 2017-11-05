@@ -56,7 +56,9 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/instances/1235/backups/enable'),
+      ([fn]) => expectRequest(fn, '/linode/instances/1235/backups/enable', {
+        method: 'POST',
+      }),
     ]);
   });
 });

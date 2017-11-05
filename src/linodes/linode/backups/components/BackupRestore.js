@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -10,10 +11,11 @@ import {
   FormSummary,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { restoreBackup } from '~/api/backups';
+import { restoreBackup } from '~/api/ad-hoc/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { LinodeSelect } from '~/linodes/components';
 
@@ -28,6 +30,8 @@ export default class BackupRestore extends Component {
       target: props.linode.id,
       overwrite: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -59,9 +63,6 @@ export default class BackupRestore extends Component {
       </ConfirmModalBody>
     )));
   }
-
-  onChange = ({ target: { name, value, checked } }) =>
-    this.setState({ [name]: name === 'overwrite' ? checked : value })
 
   render() {
     const { backup, linode, linodes } = this.props;

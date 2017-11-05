@@ -12,7 +12,7 @@ import {
   expectRequest,
   expectObjectDeepEquals,
 } from '@/common';
-import { genericNodeBalancer } from '@/data/nodebalancers';
+import { configsNodeBalancer } from '@/data/nodebalancers';
 
 
 describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
@@ -27,7 +27,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
   it('commits changes to the API', async () => {
     const page = await mount(
       <AddConfigPage
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
         dispatch={dispatch}
       />
     );
@@ -46,7 +46,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/${configsNodeBalancer.id}/configs/`, {
         method: 'POST',
         body: {
           check_timeout: 30,
@@ -63,14 +63,14 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}/configs/5`)),
+        pushResult, push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
     ], 2, [{ id: 5 }]);
   });
 
   it('commits changes to the API with HTTPS', async () => {
     const page = await mount(
       <AddConfigPage
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
         dispatch={dispatch}
       />
     );
@@ -91,7 +91,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/${configsNodeBalancer.id}/configs/`, {
         method: 'POST',
         body: {
           check_timeout: 30,
@@ -110,7 +110,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}/configs/5`)),
+        pushResult, push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
     ], 2, [{ id: 5 }]);
   });
 });

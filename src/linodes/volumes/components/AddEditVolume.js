@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { Input, ModalFormGroup, Select } from 'linode-components/forms';
@@ -7,8 +8,8 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { volumes, linodes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
+import api from '~/api';
+import { actions as linodeActions } from '~/api/generic/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 import { AVAILABLE_VOLUME_REGIONS } from '~/constants';
@@ -48,6 +49,32 @@ export default class AddEditVolume extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onLinodeChange = async (e) => {
+    const { allConfigs } = this.state;
+    const linodeId = e.target.value;
+
+    this.onChange(e);
+
+    if (linodeId === LinodeSelect.EMPTY) {
+      return;
+    }
+
+    if (!allConfigs[linodeId]) {
+      const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
+      const linodeConfigs = Object.values(configs.data).map(function (config) {
+        return {
+          label: config.label,
+          value: config.id,
+        };
+      });
+
+      this.setState({
+        config: undefined,
+        allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
+      });
+    }
+  }
+
   onSubmit = () => {
     const { dispatch, close, volume: { id } = {} } = this.props;
     const { label, region, size, linode, config } = this.state;
@@ -69,7 +96,7 @@ export default class AddEditVolume extends Component {
 
 
     const actions = [
-      () => volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
+      () => api.volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
       close,
     ];
 
@@ -79,32 +106,6 @@ export default class AddEditVolume extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
-  }
-
-  onLinodeChange = async (e) => {
-    const { allConfigs } = this.state;
-    const linodeId = e.target.value;
-
-    this.onChange(e);
-
-    if (linodeId === LinodeSelect.EMPTY) {
-      return;
-    }
-
-    if (!allConfigs[linodeId]) {
-      const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
-      const linodeConfigs = Object.values(configs.data).map(function (config) {
-        return {
-          label: config.label,
-          value: config.id,
-        };
-      });
-
-      this.setState({
-        config: undefined,
-        allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
-      });
-    }
   }
 
   render() {

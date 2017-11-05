@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
-import { domains } from '~/api';
+import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import MasterZone from '../components/MasterZone';
@@ -13,7 +14,7 @@ import SlaveZone from '../components/SlaveZone';
 export class ZonePage extends Component {
   static async preload({ dispatch, getState }, { domainLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
-    await dispatch(domains.records.all([id]));
+    await dispatch(api.domains.records.all([id]));
   }
 
   async componentDidMount() {
