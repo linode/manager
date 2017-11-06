@@ -310,7 +310,7 @@ endpoints:
     group: Disks
     type: Strange
     authenticated: true
-    description: Resizes the disk. The Linode this disk is attached to must be shut down for this to take effect.
+    description: Resizes the disk. The Linode this disk is attached to must be shut down for resizing to take effect.
     methods:
       POST:
         oauth: linodes:modify
@@ -922,8 +922,7 @@ endpoints:
           type:
             description: >
                 The type of IP Address this is, can be one of "public" or "private".
-                Public IP Addresses, over and above the one included with each Linode,
-                incur an additional monthly charge.
+                Public IP Addresses, over and above the one included with each Linode, incur an additional monthly charge.
             type: String
             value: private
         examples:
