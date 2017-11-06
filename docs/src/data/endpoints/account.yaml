@@ -231,16 +231,20 @@ endpoints:
           username:
             type: String
             description: The username for the new user.
+            value: example_user
           email:
             type: String
             description: The user's email.
+            value: person@place.com
           password:
             type: String
             description: The user's password.
+            value: hunter2
           restricted:
-            optinoal: true
+            optional: true
             type: Boolean
             description: If false, this user has access to the entire account.  Defaults to true.
+            value: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -374,20 +378,23 @@ endpoints:
         description: >
           Registers a new OAuth client application.
         params:
-          name:
+          label:
             description: A name for the new client application.
             type: string
             limit: "1-128 characters"
+            value: Example OAuth app
           redirect_uri:
             description: A URL to redirect to after the OAuth flow has completed.
             type: string
             limit: "1-512 characters"
+            value: https://oauthreturn.example.org/
           public:
             optional: true
             description: >
               If true, this client uses the implicit OAuth flow and does not
               use a client secret.
             type: Boolean
+            value: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -491,6 +498,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
+    description: Updates specific event to designate that it has been seen.
     methods:
       POST:
         description: >
@@ -504,6 +512,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
+    description: Updates specific event to designate that it has been read.
     methods:
       POST:
         description: >
@@ -571,9 +580,18 @@ endpoints:
             curl https://$api_root/$version/account/payments
       POST:
         oauth: account:modify
-        response: payment
         description: >
           Make a payment.
+        params:
+          usd:
+            type: Integer
+            description: The amount (in US Dollars) of the payment.
+            value: 120
+          cvv:
+            type: Integer
+            optional: true
+            description: CVV (Card Verification Value) of the credit card to be used for the payment.
+            value: 123
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

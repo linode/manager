@@ -266,14 +266,18 @@ endpoints:
               type: String
               description: >
                   The address, either v4 or v6, to allow logins from.
+              value: 123.45.67.89
             netmask:
               type: String
               description: >
                   If adding a v4 address, the netmask in the form of "255.255.255.0".
                   If adding a v6 address, the prefix length ('/64') as an integer.
+              value: 255.255.255.0
             note:
+              optional: true
               type: String
               description: A note to add alongside this entry.
+              value: A note describing this entry.
           examples:
             curl: |
               curl -H "Authorization: Bearer $TOKEN" \
