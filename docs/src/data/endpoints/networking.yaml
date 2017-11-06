@@ -155,9 +155,11 @@ endpoints:
               address:
                 type: string
                 value: 210.111.22.94
+                description: IPv4 address to assign to a Linode.
               linode_id:
                 type: integer
                 value: 123405
+                description: Linode ID.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
