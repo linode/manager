@@ -584,9 +584,9 @@ endpoints:
           Make a payment.
         params:
           usd:
-            type: Integer
+            type: String
             description: The amount (in US Dollars) of the payment.
-            value: 120
+            value: 120.00
           cvv:
             type: Integer
             optional: true
@@ -597,7 +597,7 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "usd": 100,
+                    "usd": 120.00,
                 }' \
                 https://$api_root/$version/account/payments
   /account/payments/:id:
