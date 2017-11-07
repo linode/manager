@@ -125,13 +125,11 @@ endpoints:
         description: >
           Creates a NodeBalancer config.
         params:
-          label:
-            description: Unique label for your NodeBalancer config.
-            type: String
           port:
             description: Port to bind to on the public interfaces.
             limit: 1-65534
             type: Integer
+            optional: true
           protocol:
             description: The protocol used for the config.
             type: String
