@@ -4,7 +4,6 @@ prefix: device
 schema:
   disk_id:
     type: Integer
-    value: 123456
     description: Null if a volume is assigned to this slot.
   volume_id:
     type: Integer
