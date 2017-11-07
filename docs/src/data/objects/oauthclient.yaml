@@ -19,7 +19,7 @@ schema:
     description: The app's client secret, used in the OAuth flow. Visible only on app creation.
   redirect_uri:
     type: String
-    value: https://oauthreturn.example.org/
+    value: https://example.org/oauth_callback
     description: The URL to redirect to after the OAuth flow.
     limit: 1-512 characters
     editable: true
