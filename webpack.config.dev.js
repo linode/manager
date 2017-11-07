@@ -46,7 +46,6 @@ module.exports = {
       {
         test: /\.jsx?/,
         use: ['babel-loader'],
-        exclude: /(node_modules|bower_components)/,
         include: [
           path.join(__dirname, 'src'),
           path.resolve(__dirname, './node_modules/linode-components'),

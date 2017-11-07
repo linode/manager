@@ -14,6 +14,8 @@ import { selectLVClient } from '../utilities';
 export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, lvclient } = this.props;
+    // @todo fix this  - label not ready yet
+    
     dispatch(setTitle(lvclient.label));
     dispatch(setAnalytics(['lvclients', 'lvclient']));
   }

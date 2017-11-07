@@ -12,14 +12,9 @@ function fetch(body, headers) {
       rawFetch(path, options).then(async (response) => {
         const { status } = response;
         const json = await response.json();
-        console.log('json is', json);
         if (status >= 400) {
           reject(response);
-        } else if (json && json.length && json[0].NOTIFICATIONS && json[0].NOTIFICATIONS.length) {
-          console.log(json.NOTIFICATIONS);
-          reject(response);
         } else {
-          console.log('accepted', json);
           accept(json);
         }
       }, reject);
@@ -30,12 +25,49 @@ function fetch(body, headers) {
 function get(id, params = {}) {
   return async (dispatch) => {
     const body = new URLSearchParams();
-    body.set('api_key', id);
+    // body.set('api_key', id);
     Object.keys(params).forEach(k => body.set(k, params[k]));
     const stats = await dispatch(fetch(body));
-    dispatch(actions.one({ _stats: stats }, id));
+    console.log(`longview ${id} stats incoming`, stats);
+    stats.forEach(stat => {
+      if (stat.NOTIFICATIONS.length) {
+        // structured as: {CODE, SEVERITY, TEXT}
+        console.warn('notifications', stat.NOTIFICATIONS);
+      }
+      // @todo further filter by date range
+
+      console.log('actions.one', { [`_${stat.ACTION}`]: stat.DATA });
+      dispatch(actions.one({ [`_${stat.ACTION}`]: stat.DATA }, id));
+    });
   };
 }
+
+const lvStatsFetch = (action) => (id, apiKey, keys = [], start = null, end = null) => {
+  const params = {
+    api_key: apiKey,
+    api_action: action,
+    keys: JSON.stringify(keys),
+  };
+
+  // start implies seconds relative to now
+  // unless end is also provided
+  if (end && start) {
+    params.start = start;
+    params.end = end;
+  } else if (start) {
+    const now = parseInt(Date.now() / 1000);
+    params.end = now;
+    params.start = now - start * 100;
+  }
+
+  return get(id, params);
+};
+
+export const getValues = lvStatsFetch('getValues');
+export const getTopProcesses = lvStatsFetch('getTopProcesses');
+export const getLatest = lvStatsFetch('getLatest');
+
+// TODO: stub out more actions, refactor based on what is common
 
 /*
  * getValues
@@ -50,59 +82,15 @@ function get(id, params = {}) {
  * lastUpdated
  * batch
  *  - api
- *	return 'DERIVE' if $dsName =~ m/^Processes\..*\.(cpu|ioreadkbytes|iowritekbytes)$/o;
- *	return 'DERIVE' if $dsName =~ m/^Disk\..*\.(reads|writes|read_bytes|write_bytes)$/o;
- *	return 'DERIVE' if $dsName =~ m/^CPU\..*\.(wait|system|user)$/o;
- *	return 'STATS'  if $dsName =~ m/^Network\.Linode\.v[46]\.(?:rx|tx|ip6_rx|ip6_tx)(?:_private)?_bytes/o;
- *	return 'DERIVE' if $dsName =~ m/^Network\.Interface\..*\.(tx_bytes|rx_bytes)$/o;
- *	return 'DERIVE' if $dsName =~ m/^Applications\.Apache\.Total/o;
- *	return 'DERIVE' if $dsName =~ m/^Applications\.Nginx\.(?:accepted_cons|handled_cons|requests)/o;
- *	return 'DERIVE' if $dsName =~ m/^Applications\.MySQL\.(?:Com|Slow_queries|Bytes|Connections|Max_used|Aborted|Qcache_hits|Qcache_inserts)/o;
- *	return "GAUGE"; # Default
+ * Processes.*.(cpu|ioreadkbytes|iowritekbytes)
+ * Disk.*.(reads|writes|read_bytes|write_bytes)
+ * CPU.*.(wait|system|user)
+ * Network.Linode.v[46].(rx|tx|ip6_rx|ip6_tx)(_private)_bytes
+ * Network.Interface.*.(tx_bytes|rx_bytes)
+ * Applications.Apache.Total
+ * Applications.Nginx.(accepted_cons|handled_cons|requests)
+ * Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|Qcache_hits|Qcache_inserts)
+ * Applications.{application}.status
+ * Applications.{application}.status_message
  * 
  **/
-
-export function getValues(id, keys = [], start = null, end = null) {
-  const params = {
-    api_action: 'getValues',
-    keys: keys,
-  };
-
-  if (start && end) {
-    params.start = start;
-    params.end = end;
-  }
-
-  return get(id, params);
-}
-
-
-export function getLatest(id, keys = [], start = null, end = null) {
-  const params = {
-    api_action: 'getLatest',
-    keys: keys,
-  };
-
-  if (start && end) {
-    params.start = start;
-    params.end = end;
-  }
-
-  return get(id, params);
-}
-
-export function getTopProcesses(id, keys = [], start = null, end = null) {
-  const params = {
-    api_action: 'getTopProcesses',
-    keys: keys,
-  };
-
-  if (start && end) {
-    params.start = start;
-    params.end = end;
-  }
-
-  return get(id, params);
-}
-
-// TODO: stub out more actions, refactor based on what is common
