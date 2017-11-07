@@ -277,7 +277,7 @@ endpoints:
               optional: true
               type: String
               description: A note to add alongside this entry.
-              value: A note describing this entry.
+              value: home
           examples:
             curl: |
               curl -H "Authorization: Bearer $TOKEN" \

@@ -159,7 +159,7 @@ endpoints:
               linode_id:
                 type: integer
                 value: 123405
-                description: Linode ID.
+                description: The ID of the Linode to assign this address to.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
