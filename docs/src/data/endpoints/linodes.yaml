@@ -922,7 +922,9 @@ endpoints:
           type:
             description: >
                 The type of IP Address this is, can be one of "public" or "private".
-                Public IP Addresses, over and above the one included with each Linode, incur an additional monthly charge.
+                Public IP Addresses, over and above the one included with each Linode,
+                incur an additional monthly charge. If you need an additional Public IP Address
+                you must request one - please open a ticket.
             type: String
             value: private
         examples:
