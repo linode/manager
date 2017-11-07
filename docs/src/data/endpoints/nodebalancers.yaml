@@ -125,7 +125,6 @@ endpoints:
         description: >
           Creates a NodeBalancer config.
         params:
-          label:
           port:
             description: Port to bind to on the public interfaces.
             limit: 1-65534

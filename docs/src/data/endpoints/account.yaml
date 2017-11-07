@@ -498,7 +498,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
-    description: Updates specific event to designate that it has been seen.
+    description: Updates marks all Events up to and including this Event as seen.
     methods:
       POST:
         description: >
@@ -512,7 +512,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
-    description: Updates specific event to designate that it has been read.
+    description: Updates specific Event to designate that it has been read.
     methods:
       POST:
         description: >
@@ -588,10 +588,10 @@ endpoints:
             description: The amount (in US Dollars) of the payment.
             value: "120.00"
           cvv:
-            type: Integer
+            type: String
             optional: true
             description: CVV (Card Verification Value) of the credit card to be used for the payment.
-            value: 123
+            value: "0123"
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
