@@ -97,11 +97,11 @@ endpoints:
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example app",
-                    "redirect_uri": "https://oauthreturn.example.org/",
+                    "redirect_uri": "https://example.org/oauth_callback/",
                 }' \
                 https://$api_root/$version/account/oauth-clients
           python: |
-            new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
+            new_client = client.account.create_oauth_client('Example app', 'https://example.org/oauth_callback/')
   /account/oauth-clients/$id:
     group: OAuth Clients
     type: resource
@@ -387,7 +387,7 @@ endpoints:
             description: A URL to redirect to after the OAuth flow has completed.
             type: string
             limit: "1-512 characters"
-            value: https://oauthreturn.example.org/
+            value: https://example.org/oauth_callback/
           public:
             optional: true
             description: >
@@ -401,7 +401,7 @@ endpoints:
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "name": "Example app",
-                    "redirect_uri": "https://oauthreturn.example.org/",
+                    "redirect_uri": "https://example.org/oauth_callback/",
                 }' \
                 https://$api_root/$version/account/oauth-clients
   /account/oauth-clients/$id:
