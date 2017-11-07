@@ -41,6 +41,7 @@ endpoints:
             description: >
               Start of Authority (SOA) contact email.
             type: String
+            optional: true
           description:
             optional: true
             description: >
@@ -115,6 +116,8 @@ endpoints:
             import linode
             TODO
   /domains/$id:
+    description: >
+      Manage a particular Domain your account may access.
     authenticated: true
     methods:
       GET:
@@ -257,6 +260,8 @@ endpoints:
             TODO
   /domains/$id/records/$id:
     authenticated: true
+    description: >
+      Manage a particular Domain Record your account may access.
     methods:
       GET:
         response: domainrecord

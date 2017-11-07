@@ -30,10 +30,12 @@ endpoints:
             description: >
               A short summary or title for the support ticket.
             type: String
+            value: A question about a Linode
           description:
             description: >
               The complete details of the support request.
             type: String
+            value: More details about the question
           domain_id:
             description: >
               The Domain this ticket is regarding, if relevant.
@@ -44,6 +46,7 @@ endpoints:
               The Linode this ticket is regarding, if relevant.
             type: Integer
             optional: true
+            value: 123
           longviewclient_id:
             description: >
               The LongviewClient this ticket is regarding, if relevant.
@@ -52,6 +55,11 @@ endpoints:
           nodebalancer_id:
             description: >
               The NodeBalancer this ticket is regarding, if relevant.
+            type: Integer
+            optional: true
+          volume_id:
+            description: >
+              The Block Storage Volume this ticket is regarding, if relevant.
             type: Integer
             optional: true
         examples:
