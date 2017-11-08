@@ -1,0 +1,122 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: ManagedHistory
+prefix: managed/history
+description: >
+  Managed History objects describe support ticket issues that have occurred while subscribed to your Managed service.
+schema:
+  created:
+    type: Datetime
+    value: 2017-10-31T11:12:21
+  entity:
+    description: >
+      Displays information related to the type of issue being monitored by your Service.
+    id:
+      type: Integer
+      value: 1234567
+    type:
+      type: String
+      value: ticket
+      description: >
+        The type of service issue being reported.
+    label:
+      type: String
+      value: Could not connect to URL
+      description: >
+        A summary of the issue being reported.
+    url:
+      type: String
+      value: /support/tickets/1234567
+      description: >
+        The endpoint URI related to the Support Ticket that was created.
+  service:
+    description: >
+      Displays information related to the Service being monitored.
+    id:
+      type: Integer
+      value: 111
+    updated:
+      type: Datetime
+      value: 2017-10-31T22:34:50
+    status:
+      type: Enum
+      subtype: ManagedServiceStatus
+      value: "active"
+      description: >
+        Describes the status of your Service.
+    label:
+      type: String
+      value: myLabel
+      description: >
+        Describes the Service you want monitored.
+    type:
+      type: Enum
+      subtype: ManagedServiceType
+      value: "url"
+      description: >
+        Describes the type of monitoring you want.
+    body:
+      type: String
+      value: String to match.
+      description: >
+        Response must contain this string or an alert will be triggered.
+    method:
+      type: Enum
+      subtype: ManagedServiceMethod
+      value: "get"
+      description: >
+        The method by which the URL is accessed.
+    #TODO credentials:
+    created:
+      type: Datetime
+      value: 2017-10-31T19:20:33
+    consultation_group:
+      type: String
+      value: Support Manager
+      description: >
+        If we need help along the way, we'll contact someone from this group.
+    path:
+      type: String
+      value: /
+      description: >
+        Defaults to "/" for url.
+    url:
+      type: String
+      value: https://mydomain.domain.com/
+      description: >
+        The URL to request.
+    timeout:
+      type: Integer
+      value: 10
+      description: >
+        Response must be received before this timeout or an alert will be triggered.
+    port:
+      type: Integer
+      value: 80
+      description: >
+        Defaults to 80 if HTTP/TCP, 443 if HTTPS
+    protocol:
+      type: Enum
+      subtype: ManagedServiceProtocol
+      value: "https"
+      description: >
+        Defaults to HTTP in URL mode, TCP in TCP mode.
+    domain:
+      type: String
+      value: mydomain.domain.com
+      description: >
+        The domain name of the URL to request.
+enums:
+  ManagedServiceStatus:
+    new: A newly-created Service.
+    active: An active Service to monitor.
+    disabled: A disabled Service to monitor.
+  ManagedServiceType:
+    url: Monitor a specific URL.
+    tcp: Monitor a port via TCP.
+  ManagedServiceMethod:
+    get: Monitor a specific URL/port via GET.
+    post: Monitor a specific URL/port via POST.
+  ManagedServiceProtocol:
+    http: HTTP
+    https: HTTPS
+    tcp: TCP
