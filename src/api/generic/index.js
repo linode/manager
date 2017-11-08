@@ -2,7 +2,7 @@
 const generics = [
   'distributions', 'regions', 'types', 'linodes', 'volumes', 'stackscripts', 'kernels', 'domains',
   'nodebalancers', 'profile', 'account', 'events', 'tokens', 'clients', 'users', 'tickets', 'apps',
-  'invoices', 'payments',
+  'invoices', 'payments', 'images',
 ];
 
 // eslint-disable-next-line global-require

@@ -19,6 +19,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
+import { AddImage } from '~/linodes/images/components';
 
 
 export default class Disks extends Component {
@@ -55,6 +56,8 @@ export default class Disks extends Component {
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
         EditDisk.trigger(dispatch, linode, record, free) }] },
+      { elements: [{ name: 'Imagize', action: () =>
+        AddImage.trigger(dispatch, undefined, linode, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
     ];
 
