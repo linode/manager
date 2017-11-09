@@ -17,6 +17,7 @@ import { apps } from './apps';
 import { users } from './users';
 import { tickets } from './tickets';
 import { volumes } from './volumes';
+import { images } from './images';
 import { invoices } from './invoices';
 
 function calculateTotalResults(data) {
@@ -71,6 +72,7 @@ export const api = fakeAPI([
   [users, 'user', 'users'],
   [tickets, 'ticket', 'tickets'],
   [volumes, 'volume', 'volumes'],
+  [images, 'image', 'images'],
   [invoices, 'invoices', 'invoices'],
 ]);
 

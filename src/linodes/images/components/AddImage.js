@@ -22,6 +22,7 @@ export default class AddImage extends Component {
         linodes={linodes}
         linode={linode}
         disk={disk}
+        title={AddImage.title}
       />
     )));
   }
@@ -69,6 +70,7 @@ export default class AddImage extends Component {
         };
       });
 
+    console.log('sdfasd---asdfadsf', linodeDisks);
       this.setState({
         allDisks: { ...allDisks, [linodeId]: linodeDisks },
         loading: false,
@@ -78,6 +80,7 @@ export default class AddImage extends Component {
 
   onSubmit = () => {
     const { description, label, linode, disk } = this.state;
+    console.log('asdfas--1', disk);
     const { dispatch } = this.props;
 
     const requests = [hideModal];
@@ -101,6 +104,7 @@ export default class AddImage extends Component {
     const { dispatch } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
     const disks = allDisks[linode] || [];
+    console.log(disks, disk);
     const diskObj = linodes ? this.getDiskObject(disks, disk) : disk;
 
     return (
@@ -124,7 +128,7 @@ export default class AddImage extends Component {
             </ModalFormGroup>
           : null}
           {linodes ?
-            <ModalFormGroup label="Disk" id="disk">
+            <ModalFormGroup label="Disk" id="disk" apiKey="disk">
               {disks.length ?
                 <Select
                   options={disks}
@@ -141,7 +145,7 @@ export default class AddImage extends Component {
               }
             </ModalFormGroup>
           : null}
-          {disk ?
+          {disk && diskObj ?
             <ModalFormGroup label="Type" id="type">
               <Input
                 value={diskObj.filesystem}
@@ -149,7 +153,7 @@ export default class AddImage extends Component {
               />
             </ModalFormGroup>
           : null}
-          {disk ?
+          {disk && diskObj ?
             <ModalFormGroup errors={errors} label="Size" id="size">
               <Input
                 value={`${diskObj.size} MB`}
