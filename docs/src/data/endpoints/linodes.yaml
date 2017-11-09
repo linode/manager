@@ -193,10 +193,16 @@ endpoints:
             description: >
               Optional distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
-              is created.</li></ul>
+              is created.</li></ul> You may not provide distribution if image is provided.
             type: Distribution
+          image:
+            optional: true
+            description: >
+              Optional image id to deploy the disk from. You may not provide image
+              if distribution is provided.
+            seeAlso: ["/reference/endpoints/images"]
           root_pass:
-            optional: unless distribution is specified
+            optional: unless distribution or image is specified
             description: >
               Root password to deploy distribution with.
               <ul><li>root_pass is required if a distribution is provided.</li></ul>
