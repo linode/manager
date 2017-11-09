@@ -505,7 +505,7 @@ export const HIGHCHARTS_THEME = {
     backgroundColor: 'rgba(0,0,0,0)',
     zoomType: 'x',
     animation: false,
-    marginLeft: 16,
+    marginLeft: 24,
     marginRight: 0,
     marginBottom: 50,
     marginTop: 25,
@@ -547,10 +547,10 @@ export const HIGHCHARTS_THEME = {
   title: {
     text: null,
     style: {
-      'font-family': '"Helvetica Neue", Helvetica, sans-serif',
-      'font-size': '17px',
-      'font-weight': '300',
-      'color': '#000',
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSize: '17px',
+      fontWeight: '300',
+      color: '#000',
     },
   },
   credits: {
@@ -592,8 +592,8 @@ export const HIGHCHARTS_THEME = {
   loading: {
     labelStyle: {
       color: '#000',
-      'font-family': '"Helvetica Neue", Helvetica, sans-serif',
-      'font-weight': 500,
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontWeight: 500,
     },
   },
   plotOptions: {
@@ -602,6 +602,8 @@ export const HIGHCHARTS_THEME = {
       stacking: 'normal',
       shadow: false,
       fillOpacity: 0.75,
+      stickyTracking: true, // MJ Added (testing)
+      linkedTo: ':previous', // MJ Added (testing)
       marker: {
         enabled: false,
         states: {
