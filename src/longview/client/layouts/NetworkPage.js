@@ -14,9 +14,10 @@ export class NetworkPage extends Component {
   }
 
   render() {
+    const classLink = `/longview/network/${this.props.lvclient.label}`;
     return (
       <article className="container">
-        <ComingSoon feature="Longview Networking" classicLink={`/longview/network/${this.props.lvclient.label}`} />
+        <ComingSoon feature="Longview Networking" classicLink={classLink} />
       </article>
     );
   }
