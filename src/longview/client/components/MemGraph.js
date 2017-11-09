@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { AbstractChart } from 'react-highcharts-wrapper';
+
+// @todo copied from the old manager.. clean it
+const bytesFormatter = num => {
+  const n = parseFloat(num);
+
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const scale = units.findIndex((v, i) => n < 1024 ** (i + 1));
+  return `${(n / 1024 ** scale).toFixed(parseInt(scale / 3))} ${units[scale]}`;
+};
 
 const config = {
   /* HighchartsConfig */
@@ -16,51 +25,54 @@ const config = {
   xAxis: {
     type: 'datetime',
   },
+  yAxis: {
+    labels: {
+      // format: '{value} GB',
+      formatter: bytesFormatter,
+    },
+  },
   legend: true,
   tickPositioner: 'standard',
-  series: [
-    {
-      key: 'wait',
-      name: 'Wait',
-      color: '#91C7ED',
-    },
-    {
-      key: 'user',
-      name: 'User',
-      color: '#51A6F5',
-    },
-    {
-      key: 'system',
-      name: 'System',
-      color: '#0276FD',
-    },
-    {
-      name: 'CPU',
-      colorByPoint: true,
-      data: [],
-    }],
+  series: [{
+    key: 'real.used',
+    name: 'Used',
+    color: '#ECC8EC',
+  }, {
+    key: 'real.cache',
+    name: 'Cache',
+    color: '#CD96CD',
+  }, {
+    key: 'real.buffers',
+    name: 'Buffers',
+    color: '#8E388E',
+  }, {
+    key: 'swap.used',
+    name: 'Swap',
+    color: '#EE2C2C',
+  }],
 };
 
-export default function CPUGraph(props, state) {
-  let loadedConfig = { ...config };
+export default class MemGraph extends PureComponent {
+  render() {
+    const props = this.props;
+    let loadedConfig = { ...config };
 
-  const values = props.lvclient._getValues || {};
-  const CPU = values.CPU;
-  const scaleTime = (result, [key, value]) => ([
-    ...result,
-    { ...value, x: value.x * 1000 },
-  ]);
+    const Mem = props.mem_usage;
+    const scaleTime = (result, [key, value]) => ([
+      ...result,
+      { ...value, x: value.x * 1000 },
+    ]);
 
-  if (CPU) {
-    loadedConfig.series[0].data = Object.entries(CPU.cpu0.wait).reduce(scaleTime, {});
-    loadedConfig.series[1].data = Object.entries(CPU.cpu0.user).reduce(scaleTime, {});
-    loadedConfig.series[2].data = Object.entries(CPU.cpu0.system).reduce(scaleTime, {});
+    if (Mem) {
+      loadedConfig.series[0].data = Object.entries(Mem.real.used).reduce(scaleTime, {});
+      loadedConfig.series[1].data = Object.entries(Mem.real.cache).reduce(scaleTime, {});
+      loadedConfig.series[2].data = Object.entries(Mem.real.buffers).reduce(scaleTime, {});
+      loadedConfig.series[3].data = Object.entries(Mem.swap.used).reduce(scaleTime, {});
+    }
+    return (<AbstractChart config={loadedConfig} />);
   }
-  return (<AbstractChart config={loadedConfig} />);
 }
 
-CPUGraph.propTypes = {
-  summary: PropTypes.object,
-  lvclient: PropTypes.object,
-  dispatch: PropTypes.func,
+MemGraph.propTypes = {
+  mem_usage: PropTypes.object,
 };

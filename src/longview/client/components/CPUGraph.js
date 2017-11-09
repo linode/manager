@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { AbstractChart } from 'react-highcharts-wrapper';
 
@@ -15,6 +15,11 @@ const config = {
   },
   xAxis: {
     type: 'datetime',
+  },
+  yAxis: {
+    labels: {
+      format: '{value}%',
+    },
   },
   legend: true,
   tickPositioner: 'standard',
@@ -41,26 +46,26 @@ const config = {
     }],
 };
 
-export default function CPUGraph(props, state) {
-  let loadedConfig = { ...config };
+export default class CPUGraph extends PureComponent {
+  render() {
+    const props = this.props;
+    let loadedConfig = { ...config };
 
-  const values = props.lvclient._getValues || {};
-  const CPU = values.CPU;
-  const scaleTime = (result, [key, value]) => ([
-    ...result,
-    { ...value, x: value.x * 1000 },
-  ]);
+    const CPU = props.cpu_usage;
+    const scaleTime = (result, [key, value]) => ([
+      ...result,
+      { ...value, x: value.x * 1000 },
+    ]);
 
-  if (CPU) {
-    loadedConfig.series[0].data = Object.entries(CPU.cpu0.wait).reduce(scaleTime, {});
-    loadedConfig.series[1].data = Object.entries(CPU.cpu0.user).reduce(scaleTime, {});
-    loadedConfig.series[2].data = Object.entries(CPU.cpu0.system).reduce(scaleTime, {});
+    if (CPU) {
+      loadedConfig.series[0].data = Object.entries(CPU.cpu0.wait).reduce(scaleTime, {});
+      loadedConfig.series[1].data = Object.entries(CPU.cpu0.user).reduce(scaleTime, {});
+      loadedConfig.series[2].data = Object.entries(CPU.cpu0.system).reduce(scaleTime, {});
+    }
+    return (<AbstractChart config={loadedConfig} />);
   }
-  return (<AbstractChart config={loadedConfig} />);
 }
 
 CPUGraph.propTypes = {
-  summary: PropTypes.object,
-  lvclient: PropTypes.object,
-  dispatch: PropTypes.func,
+  cpu_usage: PropTypes.object,
 };

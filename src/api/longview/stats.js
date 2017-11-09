@@ -22,7 +22,7 @@ function fetch(body, headers) {
   };
 }
 
-function get(id, params = {}) {
+function get(id, params = {}, storeKeyFn) {
   return async (dispatch) => {
     const body = new URLSearchParams();
     // body.set('api_key', id);
@@ -35,12 +35,15 @@ function get(id, params = {}) {
         console.warn('notifications', stat.NOTIFICATIONS);
       }
       // @todo further filter by date range
-
-      console.log('actions.one', { [`_${stat.ACTION}`]: stat.DATA });
-      dispatch(actions.one({ [`_${stat.ACTION}`]: stat.DATA }, id));
+      const storeKey = storeKeyFn(stat.ACTION);
+      console.log('actions.one', id, { [storeKey]: stat.DATA });
+      dispatch(actions.one({ [storeKey]: stat.DATA }, id));
     });
   };
 }
+
+export const getStoreKeyFn = (action, start, end) =>
+  (subAction) => `_${subAction || action}@${start}${end ? `:${end}` : ''}`;
 
 const lvStatsFetch = (action) => (id, apiKey, keys = [], start = null, end = null) => {
   const params = {
@@ -60,7 +63,10 @@ const lvStatsFetch = (action) => (id, apiKey, keys = [], start = null, end = nul
     params.start = now - start * 100;
   }
 
-  return get(id, params);
+  // Index LV cached requests with their relative time
+  const storeKeyFn = getStoreKeyFn(action, start, end);
+
+  return get(id, params, storeKeyFn);
 };
 
 export const getValues = lvStatsFetch('getValues');

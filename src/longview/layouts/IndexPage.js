@@ -61,11 +61,9 @@ export class IndexPage extends Component {
   renderLVClients() {
     const { dispatch, lvclients, selectedMap } = this.props;
     const { filter } = this.state;
-    console.log('i am here with lvclients:', lvclients, 'filtering by', filter);
     const { sorted } = transform(lvclients, {
       filterBy: filter,
     });
-    console.log('i am there');
     
     return (
       <List>

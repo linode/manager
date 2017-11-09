@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { AbstractChart } from 'react-highcharts-wrapper';
 
@@ -21,41 +21,39 @@ const config = {
   series: [],
 };
 
+export default class NetGraph extends PureComponent {
+  render() {
+    let loadedConfig = { ...config };
 
-export default function NetGraph(props, state) {
-  let loadedConfig = { ...config };
+    const Net = this.props.network || {};
+    const scaleTime = (result, [key, value]) => ([
+      ...result,
+      { ...value, x: value.x * 1000 },
+    ]);
 
-  const values = props.lvclient._getValues || {};
-  const Net = values.Network;
-  const scaleTime = (result, [key, value]) => ([
-    ...result,
-    { ...value, x: value.x * 1000 },
-  ]);
-
-  if (Net) {
-    console.log('Net is ', Net);
-    const iface = Net.Interface;
-    Object.entries(iface).forEach(([key, value]) => {
-      const inbound = {
-        key: `${key}.rx_bytes`,
-        name: 'Inbound',
-        color: '#32CC4D',
-        data: Object.entries(value.rx_bytes).reduce(scaleTime, {}),
-      };
-      const outbound = {
-        key: `${key}.tx_bytes`,
-        name: 'Outbound',
-        color: '#32AE4D',
-        data: Object.entries(value.tx_bytes).reduce(scaleTime, {}),
-      };
-      loadedConfig.series.push(inbound, outbound);
-    });
+    if (Net) {
+      console.log('Net is ', Net);
+      const iface = Net.Interface;
+      Object.entries(iface).forEach(([key, value]) => {
+        const inbound = {
+          key: `${key}.rx_bytes`,
+          name: 'Inbound',
+          color: '#32CC4D',
+          data: Object.entries(value.rx_bytes).reduce(scaleTime, {}),
+        };
+        const outbound = {
+          key: `${key}.tx_bytes`,
+          name: 'Outbound',
+          color: '#32AE4D',
+          data: Object.entries(value.tx_bytes).reduce(scaleTime, {}),
+        };
+        loadedConfig.series.push(inbound, outbound);
+      });
+    }
+    return (<AbstractChart config={loadedConfig} />);
   }
-  return (<AbstractChart config={loadedConfig} />);
 }
 
 NetGraph.propTypes = {
-  summary: PropTypes.object,
-  lvclient: PropTypes.object,
-  dispatch: PropTypes.func,
+  network: PropTypes.object,
 };

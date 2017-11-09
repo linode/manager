@@ -29,9 +29,8 @@ function sumProcessAcrossUsers(process) {
 }
 
 export default function TopProcesses(props, state) {
-  const topProcesses = props.lvclient._getTopProcesses || {};
-  const processes = topProcesses.Processes;
-
+  const processes = props.processes;
+  
   if (! processes) {
     return null;
   }
@@ -83,7 +82,5 @@ export default function TopProcesses(props, state) {
 }
 
 TopProcesses.propTypes = {
-  processes: PropTypes.object,
-  lvclient: PropTypes.object,
-  dispatch: PropTypes.func,
+  processes: PropTypes.array,
 };

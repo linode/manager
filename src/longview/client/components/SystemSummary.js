@@ -2,10 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export default function SystemSummary(props, state) {
-  const values = props.lvclient._getValues || {};
-  const sysinfo = values.SysInfo;
-  const packages = values.Packages;
-  const uptime = values.Uptime;
+  const { sysinfo, packages, uptime } = props;
 
   const days = parseInt(uptime / 86400);
   const hours = parseInt(uptime % 86400 / 3600);
@@ -26,6 +23,6 @@ export default function SystemSummary(props, state) {
 
 SystemSummary.propTypes = {
   sysinfo: PropTypes.object,
-  lvclient: PropTypes.object,
-  dispatch: PropTypes.func,
+  packages: PropTypes.array,
+  uptime: PropTypes.number,
 };
