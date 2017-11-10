@@ -1,6 +1,5 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
-import { expect } from 'chai';
 
 import { AddImage } from '~/linodes/images/components';
 

@@ -1,11 +1,9 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
-import { expect } from 'chai';
 
 import { EditImage } from '~/linodes/images/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
-import { api } from '@/data';
 import { testImage } from '@/data/images';
 
 describe('linodes/images/components/EditImage', function () {
