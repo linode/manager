@@ -70,7 +70,6 @@ export default class AddImage extends Component {
         };
       });
 
-    console.log('sdfasd---asdfadsf', linodeDisks);
       this.setState({
         allDisks: { ...allDisks, [linodeId]: linodeDisks },
         loading: false,
@@ -80,7 +79,6 @@ export default class AddImage extends Component {
 
   onSubmit = () => {
     const { description, label, linode, disk } = this.state;
-    console.log('asdfas--1', disk);
     const { dispatch } = this.props;
 
     const requests = [hideModal];
@@ -104,7 +102,6 @@ export default class AddImage extends Component {
     const { dispatch } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
     const disks = allDisks[linode] || [];
-    console.log(disks, disk);
     const diskObj = linodes ? this.getDiskObject(disks, disk) : disk;
 
     return (
