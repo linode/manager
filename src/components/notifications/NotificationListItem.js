@@ -28,7 +28,24 @@ export default function NotificationListItem(props) {
     className += ` ${baseCls}--read`;
   }
 
-  if (timeRemaining !== null && timeRemaining > 0) {
+  if (eventOptions == null) {
+    message = (
+        <div>
+          <div>
+            {`${event.action} `}
+            {entity}
+          </div>
+          <div>
+            <small>
+              <span className="text-muted">
+                <TimeDisplay time={event.created} /> by&nbsp;
+                <strong>{event.username}</strong>
+              </span>
+            </small>
+          </div>
+        </div>
+    );
+  } else if (timeRemaining !== null && timeRemaining > 0) {
     message = (
       <div>
         <div>
@@ -88,9 +105,12 @@ export default function NotificationListItem(props) {
     }
   }
 
+  const eventLink = eventOptions != null ? eventOptions.redirectUrl(event.entity)
+      : '#';
+
   return (
     <Link
-      to={eventOptions.redirectUrl(event.entity)}
+      to={eventLink}
       className={className}
       onClick={() => props.onClick(event)}
     >
