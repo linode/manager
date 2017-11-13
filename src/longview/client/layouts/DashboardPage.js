@@ -1,14 +1,10 @@
-import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import { Select } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
-import { getObjectByLabelLazily } from '~/api/util';
 import { connect } from 'react-redux';
-import { fullyLoadedObject } from '~/api/external';
-import MultiMetricSummary from '../components/MultiMetricSummary';
 import TopProcesses from '../components/TopProcesses';
 import SystemSummary from '../components/SystemSummary';
 import NetGraph from '../components/NetGraph';
@@ -114,7 +110,7 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   lvclient: PropTypes.object.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   timeselect: PropTypes.string.isRequired,
 };
 

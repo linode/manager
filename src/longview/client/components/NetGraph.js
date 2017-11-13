@@ -25,14 +25,13 @@ export default class NetGraph extends PureComponent {
   render() {
     let loadedConfig = { ...config };
 
-    const Net = this.props.network || {};
+    const Net = this.props.network;
     const scaleTime = (result, [key, value]) => ([
       ...result,
       { ...value, x: value.x * 1000 },
     ]);
 
     if (Net) {
-      console.log('Net is ', Net);
       const iface = Net.Interface;
       Object.entries(iface).forEach(([key, value]) => {
         const inbound = {

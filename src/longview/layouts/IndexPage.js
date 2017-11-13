@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 import { fullyLoadedObject } from '~/api/util';
-import { actions } from '~/api/generic/lvclients';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
@@ -16,10 +17,6 @@ import {
   CheckboxCell,
   LinkCell,
 } from 'linode-components/tables/cells';
-import {
-  RegionCell,
-  IPAddressCell,
-} from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
