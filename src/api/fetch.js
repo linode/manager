@@ -31,7 +31,6 @@ export function gatherOptions(token, method, body, headers) {
   }
 
 
-
   if (options.headers['X-Filter']) {
     options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);
   }

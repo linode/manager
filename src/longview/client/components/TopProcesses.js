@@ -30,7 +30,7 @@ function sumProcessAcrossUsers(process) {
 
 export default function TopProcesses(props, state) {
   const processes = props.processes;
-  
+
   if (! processes) {
     return null;
   }

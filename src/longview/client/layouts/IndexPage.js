@@ -83,7 +83,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch, lvclient } = this.props;
     // @todo fix this  - label not ready yet
-    
+
     dispatch(setTitle(lvclient.label));
     dispatch(setAnalytics(['lvclients', 'lvclient']));
   }
@@ -108,7 +108,7 @@ export class IndexPage extends Component {
       { name: 'System', link: '/system' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/longview/${encodeURIComponent(lvclient.label)}${t.link}` }));
-    
+
     const allMyChildren = React.Children.map(
       this.props.children,
       (child) => React.cloneElement(child, {

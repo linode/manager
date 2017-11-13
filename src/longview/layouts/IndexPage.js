@@ -61,7 +61,7 @@ export class IndexPage extends Component {
     const { sorted } = transform(lvclients, {
       filterBy: filter,
     });
-    
+
     return (
       <List>
         <ListHeader className="Menu">

@@ -98,5 +98,5 @@ export const getLatest = lvStatsFetch('getLatest');
  * Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|Qcache_hits|Qcache_inserts)
  * Applications.{application}.status
  * Applications.{application}.status_message
- * 
+ *
  **/
