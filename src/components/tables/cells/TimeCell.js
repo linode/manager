@@ -12,7 +12,7 @@ export default function TimeCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-      {time ? <TimeDisplay time={time} capitalize /> : 'Unknown'}
+      {time ? <TimeDisplay time={time} capitalize /> : 'Never'}
     </TableCell>
   );
 }

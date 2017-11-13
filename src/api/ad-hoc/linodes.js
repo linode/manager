@@ -75,6 +75,13 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   };
 }
 
+export function imagizeLinodeDisk(linodeId, diskId, data) {
+  return async (dispatch) => {
+    await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/imagize`, data));
+    // TODO: fetch until complete
+  };
+}
+
 export function resizeLinode(linodeId, type) {
   return (dispatch) => dispatch(fetch.post(`/linode/instances/${linodeId}/resize`, { type }));
 }
