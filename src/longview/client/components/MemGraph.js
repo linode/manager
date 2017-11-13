@@ -58,7 +58,7 @@ export default class MemGraph extends PureComponent {
     let loadedConfig = { ...config };
 
     const Mem = props.mem_usage;
-    const scaleTime = (result, [key, value]) => ([
+    const scaleTime = (result, [, value]) => ([
       ...result,
       { ...value, x: value.x * 1000 },
     ]);

@@ -19,14 +19,6 @@ const OBJECT_TYPE = 'lvclients';
 
 
 export class DashboardPage extends Component {
-
-  componentWillMount() {
-    console.log('dash to mount');
-    // const [start, end] = this.state.timeselect.split(':');
-    // const { api_key } = this.props.lvclient;
-    // console.log(`api key is ${api_key}`);
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));

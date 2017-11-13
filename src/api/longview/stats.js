@@ -4,7 +4,7 @@ import { gatherOptions } from '~/api/fetch';
 import { actions } from '~/api/generic/lvclients';
 
 
-function fetch(body, headers) {
+function fetch(body /* , headers */) {
   return async () => {
     const options = gatherOptions(null, 'POST', body);
     const path = LONGVIEW_ROOT;
@@ -28,15 +28,12 @@ function get(id, params = {}, storeKeyFn) {
     // body.set('api_key', id);
     Object.keys(params).forEach(k => body.set(k, params[k]));
     const stats = await dispatch(fetch(body));
-    console.log(`longview ${id} stats incoming`, stats);
     stats.forEach(stat => {
       if (stat.NOTIFICATIONS.length) {
         // structured as: {CODE, SEVERITY, TEXT}
-        console.warn('notifications', stat.NOTIFICATIONS);
       }
       // @todo further filter by date range
       const storeKey = storeKeyFn(stat.ACTION);
-      console.log('actions.one', id, { [storeKey]: stat.DATA });
       dispatch(actions.one({ [storeKey]: stat.DATA }, id));
     });
   };
@@ -76,27 +73,22 @@ export const getLatest = lvStatsFetch('getLatest');
 // TODO: stub out more actions, refactor based on what is common
 
 /*
- * getValues
- * getLatestValue
- *  - keys: [
- *    `Applications.{application}.status`,
- *    `Applications.{application}.status_message`,
- *    "SysInfo.os.dist",
- *    "SysInfo.client",
- *  ]
  * getTopProcesses
  * lastUpdated
  * batch
  *  - api
- * Processes.*.(cpu|ioreadkbytes|iowritekbytes)
- * Disk.*.(reads|writes|read_bytes|write_bytes)
- * CPU.*.(wait|system|user)
- * Network.Linode.v[46].(rx|tx|ip6_rx|ip6_tx)(_private)_bytes
- * Network.Interface.*.(tx_bytes|rx_bytes)
- * Applications.Apache.Total
- * Applications.Nginx.(accepted_cons|handled_cons|requests)
- * Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|Qcache_hits|Qcache_inserts)
- * Applications.{application}.status
- * Applications.{application}.status_message
- *
+ * getValues and getLatestValue
+ *  - keys:
+ *    - SysInfo.(os.distSysInfo|client)
+ *    - Processes.*.(cpu|ioreadkbytes|iowritekbytes)
+ *    - Disk.*.(reads|writes|read_bytes|write_bytes)
+ *    - CPU.*.(wait|system|user)
+ *    - Network.Linode.v[46].(rx|tx|ip6_rx|ip6_tx)(_private)_bytes
+ *    - Network.Interface.*.(tx_bytes|rx_bytes)
+ *    - Applications.{application}.status
+ *    - Applications.{application}.status_message
+ *    - Applications.Apache.Total
+ *    - Applications.Nginx.(accepted_cons|handled_cons|requests)
+ *    - Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|
+ *    -                     Qcache_hits|Qcache_inserts)
  **/

@@ -13,7 +13,7 @@ function fixProcessUsername(process) {
 function sumProcessAcrossUsers(process) {
   return _.reduce(
     process,
-    (result, value, key) => ({
+    (result, value /* , key */) => ({
       count: result.count + value.count,
       mem: result.mem + value.mem,
       cpu: result.cpu + value.cpu,
@@ -28,7 +28,7 @@ function sumProcessAcrossUsers(process) {
   );
 }
 
-export default function TopProcesses(props, state) {
+export default function TopProcesses(props /* , state */) {
   const processes = props.processes;
 
   if (! processes) {

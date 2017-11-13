@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { AbstractChart } from 'react-highcharts-wrapper';
 
+/**
+ * This file is intended to be the LV Client lists all
+ * purpose widget that renders cpu/mem/disk via a toggle
+ */
+
 const config = {
   /* HighchartsConfig */
   chart: {
@@ -21,7 +26,7 @@ const config = {
   }],
 };
 
-export default function MultiMetricSummary(props, state) {
+export default function MultiMetricSummary(/* props, state */) {
   return (<AbstractChart config={config} />);
 }
 

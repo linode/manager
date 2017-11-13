@@ -50,30 +50,29 @@ const config = {
 export default class DiskGraph extends PureComponent {
   render() {
     const props = this.props;
-    let loadedConfig = { ...config };
+    let loadedConf = { ...config };
 
     const Disk = props.disks;
-    const scaleTime = (result, [key, value]) => ([
+    const scaleTime = (result, [, value]) => ([
       ...result,
       { ...value, x: value.x * 1000 },
     ]);
 
     if (Disk) {
-      console.log('DISK IS', Disk);
-      console.log('this is new');
-      Object.entries(Disk).forEach(([key, disk]) => {
-        let [readsIndex, writesIndex] = [0, 1];
+      Object.entries(Disk).forEach(([, disk]) => {
+        // These keys match the series position above
+        let [readsKey, writesKey] = [0, 1];
 
-        console.log(disk);
         if (disk.isswap) {
-          readsIndex = writesIndex = 2;
+          readsKey = writesKey = 2;
         }
-        loadedConfig.series[readsIndex].data = loadedConfig.series[readsIndex].data.concat(Object.entries(disk.reads).reduce(scaleTime, {}));
-        loadedConfig.series[writesIndex].data = loadedConfig.series[writesIndex].data.concat(Object.entries(disk.writes).reduce(scaleTime, {}));
+        const readsScaled = Object.entries(disk.reads).reduce(scaleTime, {});
+        const writesScaled = Object.entries(disk.writes).reduce(scaleTime, {});
+        loadedConf.series[readsKey].data = loadedConf.series[readsKey].data.concat(readsScaled);
+        loadedConf.series[writesKey].data = loadedConf.series[writesKey].data.concat(writesScaled);
       });
-      console.log('DISK CHART LOADEDCONFIG', loadedConfig);
     }
-    return (<AbstractChart config={loadedConfig} />);
+    return (<AbstractChart config={loadedConf} />);
   }
 }
 

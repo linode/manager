@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function SystemSummary(props, state) {
+export default function SystemSummary(props /* , state */) {
   const { sysinfo, packages, uptime } = props;
 
   const days = parseInt(uptime / 86400);

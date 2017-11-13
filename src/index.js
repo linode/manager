@@ -75,7 +75,6 @@ window.handleError = function (e) {
   try {
     // eslint-disable-next-line no-console
     console.error(e);
-    console.trace(e);
 
     store.dispatch(setError(e));
 

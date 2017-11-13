@@ -52,7 +52,7 @@ export default class CPUGraph extends PureComponent {
     let loadedConfig = { ...config };
 
     const CPU = props.cpu_usage;
-    const scaleTime = (result, [key, value]) => ([
+    const scaleTime = (result, [, value]) => ([
       ...result,
       { ...value, x: value.x * 1000 },
     ]);

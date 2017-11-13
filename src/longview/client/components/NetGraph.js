@@ -26,7 +26,7 @@ export default class NetGraph extends PureComponent {
     let loadedConfig = { ...config };
 
     const Net = this.props.network;
-    const scaleTime = (result, [key, value]) => ([
+    const scaleTime = (result, [, value]) => ([
       ...result,
       { ...value, x: value.x * 1000 },
     ]);

@@ -9,7 +9,6 @@ import { Tabs } from 'linode-components/tabs';
 import { GroupLabel } from '~/components';
 
 import { setAnalytics, setTitle } from '~/actions';
-import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { getTopProcesses, getValues } from '~/api/longview/stats';
 import { selectLVClient } from '../utilities';
@@ -30,7 +29,7 @@ const timeOptions = [
 // @todo replace false with a check for lv subscription
 const notSubscribed = (option) => (false) || ['1800', '43200'].indexOf(option.value) < 0;
 // @todo replace false with comparisson of option.value and lv client create date
-const predatesInstall = (option) => false;
+const predatesInstall = (/* option */) => false;
 const timeOptionsMap = (option) => ({ ...option,
   disabled: notSubscribed(option) || predatesInstall(option),
 });
@@ -42,7 +41,10 @@ export class IndexPage extends Component {
     const loadOpts = ['Load'];
     const diskOpts = ['Disk.*.reads', 'Disk.*.writes', 'Disk.*.isswap'];
     const cpuOpts = ['CPU.*.wait', 'CPU.*.user', 'CPU.*.system'];
-    const memOpts = ['Memory.real.used', 'Memory.real.cache', 'Memory.real.buffers', 'Memory.swap.used', 'Memory.real.free'];
+    const memOpts = [
+      'Memory.real.used', 'Memory.real.cache', 'Memory.real.buffers',
+      'Memory.swap.used', 'Memory.real.free',
+    ];
     const netOpts = [
       'Network.Interface.*.rx_bytes', 'Network.Interface.*.tx_bytes',
       'Network.Linode.*.tx_bytes', 'Network.Linode.*.rx_bytes',
