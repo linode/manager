@@ -348,7 +348,13 @@ endpoints:
                 -X PUT -d '{
                     "global": {
                         "add_linodes": true
-                    }
+                    },
+                    "linodes": {[
+                        {
+                            "id": 123,
+                            "permissions": "read_only"
+                        }
+                    ]}
                 }' \
                 https://$api_root/$version/account/users/testguy/grants
           python: |
