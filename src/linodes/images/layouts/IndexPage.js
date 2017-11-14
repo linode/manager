@@ -183,7 +183,7 @@ export class IndexPage extends Component {
             this.renderImages(images.images) :
             <CreateHelper
               label="Images"
-              onClick={() => AddImage.trigger(dispatch, { linodes })}
+              onClick={() => AddImage.trigger(dispatch, linodes)}
               linkText="Add an Image"
             />
           }
