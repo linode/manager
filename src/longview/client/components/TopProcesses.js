@@ -82,5 +82,5 @@ export default function TopProcesses(props /* , state */) {
 }
 
 TopProcesses.propTypes = {
-  processes: PropTypes.array,
+  processes: PropTypes.object,
 };

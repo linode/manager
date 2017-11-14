@@ -13,12 +13,33 @@ const config = {
   tooltip: {
     valueDecimals: 2,
   },
+  yAxis: {
+    allowDecimals: false,
+    min: 0,
+  },
   xAxis: {
     type: 'datetime',
   },
   legend: true,
   tickPositioner: 'standard',
-  series: [],
+  plotOptions: {
+    column: {
+      stacking: 'normal',
+      grouping: true,
+    },
+  },
+  series: [
+    {
+      id: 'Inbound',
+      name: 'Inbound',
+      color: '#32CC4D',
+    },
+    {
+      id: 'Outbound',
+      name: 'Outbound',
+      color: '#32AE4D',
+    },
+  ],
 };
 
 export default class NetGraph extends PureComponent {
@@ -36,14 +57,18 @@ export default class NetGraph extends PureComponent {
       Object.entries(iface).forEach(([key, value]) => {
         const inbound = {
           key: `${key}.rx_bytes`,
-          name: 'Inbound',
-          color: '#32CC4D',
+          name: `Inbound (${key})`,
+          linkedTo: 'Inbound',
+          stack: 'Inbound',
+          visible: true,
           data: Object.entries(value.rx_bytes).reduce(scaleTime, {}),
         };
         const outbound = {
           key: `${key}.tx_bytes`,
-          name: 'Outbound',
-          color: '#32AE4D',
+          name: `Outbound (${key})`,
+          linkedTo: 'Outbound',
+          stack: 'Outbound',
+          visible: true,
           data: Object.entries(value.tx_bytes).reduce(scaleTime, {}),
         };
         loadedConfig.series.push(inbound, outbound);
