@@ -19,10 +19,17 @@ export default class LinodeFromImage extends Component {
   static title = 'Create from Image'
 
   static async trigger(dispatch, plans, images) {
+    const imageOptions = Object.values(images.images).map(function (image) {
+      return {
+        label: image.label,
+        value: image.id,
+      };
+    });
+
     return dispatch(showModal(LinodeFromImage.title, (
       <LinodeFromImage
         dispatch={dispatch}
-        images={images.images}
+        images={imageOptions}
         close={() => dispatch(hideModal())}
         plans={plans}
       />
@@ -45,7 +52,7 @@ export default class LinodeFromImage extends Component {
       backups_enabled: backups,
       type: plan,
       region,
-      image,
+      image: parseInt(image),
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
