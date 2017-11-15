@@ -47,6 +47,11 @@ export default function Authentication() {
         <b>Changes:</b>
         <ul>
           <li>Added support for CAA Domain records</li>
+          <li>Changed POST /linode/instances/:id/disks
+            <ul>
+              <li>Now accepts "image" - an image ID to deploy from</li>
+            </ul>
+          </li>
         </ul>
       </section>
       <section>
