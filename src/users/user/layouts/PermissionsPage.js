@@ -130,14 +130,12 @@ export class PermissionsPage extends Component {
                 onChange={() => this.updateGlobal('add_images')}
                 label="Can create frozen Images under this account"
               />
-              {/* TODO: This is not currently returned by the API, but is expected.
               <Checkbox
                 id="permission-global-volumes"
-                checked={global.add_images}
+                checked={global.add_volumes}
                 onChange={() => this.updateGlobal('add_volumes')}
                 label="Can add block storage volumes to this account"
               />
-              */}
               <Checkbox
                 id="permission-customer-access"
                 checked={customer.access}
