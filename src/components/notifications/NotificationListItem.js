@@ -30,20 +30,20 @@ export default function NotificationListItem(props) {
 
   if (eventOptions == null) {
     message = (
+      <div>
         <div>
-          <div>
-            {`${event.action} `}
-            {entity}
-          </div>
-          <div>
-            <small>
-              <span className="text-muted">
-                <TimeDisplay time={event.created} /> by&nbsp;
-                <strong>{event.username}</strong>
-              </span>
-            </small>
-          </div>
+          {`${event.action} `}
+          {entity}
         </div>
+        <div>
+          <small>
+            <span className="text-muted">
+              <TimeDisplay time={event.created} /> by&nbsp;
+              <strong>{event.username}</strong>
+            </span>
+          </small>
+        </div>
+      </div>
     );
   } else if (timeRemaining !== null && timeRemaining > 0) {
     message = (

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { Input, ModalFormGroup, Select, PasswordInput } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -39,19 +39,20 @@ export default class LinodeFromImage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, backups: false };
+    this.state = { errors: {}, backups: false, password: '' };
 
     this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, image, plan, backups, region } = this.state;
+    const { label, image, plan, backups, region, password } = this.state;
     const data = {
       label,
       backups_enabled: backups,
       type: plan,
       region,
+      root_pass: password,
       image: parseInt(image),
     };
 
@@ -64,7 +65,7 @@ export default class LinodeFromImage extends Component {
   render() {
     const { close, plans, images } = this.props;
     const {
-      errors, label, plan, backups, image, region,
+      errors, label, plan, backups, image, region, password,
     } = this.state;
 
     return (
@@ -76,53 +77,66 @@ export default class LinodeFromImage extends Component {
         analytics={{ title: LinodeFromImage.title, action: 'add' }}
         errors={errors}
       >
-        <div>
-          <ModalFormGroup label="Image" id="image" apiKey="image" errors={errors}>
-            <Select
-              options={images}
-              value={image}
-              name="image"
-              id="image"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
-            <Input
-              placeholder="my-linode"
-              value={label}
-              name="label"
-              id="label"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
-            <RegionSelect
-              value={region}
-              name="region"
-              id="region"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Plan" id="plan" apiKey="type" errors={errors}>
-            <PlanSelect
-              plans={plans}
-              value={plan}
-              name="plan"
-              id="plan"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
-            <BackupsCheckbox
-              plans={plans}
-              plan={plan}
-              checked={backups}
-              name="backups"
-              id="backups"
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
-        </div>
+        {images.length ?
+          <div>
+            <ModalFormGroup label="Image" id="image" apiKey="image" errors={errors}>
+              <Select
+                options={images}
+                value={image}
+                name="image"
+                id="image"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+            <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
+              <Input
+                placeholder="my-linode"
+                value={label}
+                name="label"
+                id="label"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+            <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
+              <RegionSelect
+                value={region}
+                name="region"
+                id="region"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+            <ModalFormGroup label="Plan" id="plan" apiKey="type" errors={errors}>
+              <PlanSelect
+                plans={plans}
+                value={plan}
+                name="plan"
+                id="plan"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+            <ModalFormGroup label="Password" id="password" apiKey="root_pass" errors={errors}>
+              <PasswordInput
+                value={password}
+                name="password"
+                id="password"
+                onChange={this.onChange}
+              />
+            </ModalFormGroup>
+            <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
+              <BackupsCheckbox
+                plans={plans}
+                plan={plan}
+                checked={backups}
+                name="backups"
+                id="backups"
+                onChange={this.onChange}
+                disabled={false}
+              />
+            </ModalFormGroup>
+          </div>
+        :
+          <div>No Images Found</div>
+        }
       </FormModalBody>
     );
   }
