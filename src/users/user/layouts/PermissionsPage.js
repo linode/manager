@@ -9,6 +9,7 @@ import {
   Form,
   FormGroup,
   FormSummary,
+  Radio,
   SubmitButton,
 } from 'linode-components/forms';
 
@@ -57,9 +58,9 @@ export class PermissionsPage extends Component {
 
   onSubmit = () => {
     const { dispatch, user: { username } } = this.props;
-    const { global, customer, linode, nodebalancer, domain,
+    const { global, linode, nodebalancer, domain,
       stackscript, longview, image, volume } = this.state;
-    const data = { global, customer, linode, nodebalancer,
+    const data = { global, linode, nodebalancer,
       domain, stackscript, longview, image, volume };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -77,7 +78,7 @@ export class PermissionsPage extends Component {
   }
 
   render() {
-    const { global, customer, linode, domain, nodebalancer, longview,
+    const { global, linode, domain, nodebalancer, longview,
       stackscript, image, volume, loading, errors } = this.state;
 
     const analytics = { title: 'User permissions' };
@@ -137,30 +138,62 @@ export class PermissionsPage extends Component {
                 label="Can add block storage volumes to this account"
               />
               <Checkbox
-                id="permission-customer-access"
-                checked={customer.access}
-                onChange={() => this.setState({
-                  customer: {
-                    ...this.state.customer,
-                    access: !customer.access,
-                  },
-                })}
-                label="Can view invoices, make payments, update contact and
-                  billing info, and will receive copies of all invoices and
-                  payment emails"
-              />
-              <Checkbox
                 id="permission-customer-cancel"
-                checked={customer.cancel}
+                checked={global.cancel_account}
                 onChange={() => this.setState({
-                  customer: {
-                    ...this.state.customer,
-                    cancel: !customer.cancel,
+                  global: {
+                    ...this.state.global,
+                    cancel_account: !global.cancel_account,
                   },
                 })}
                 label="Can cancel the entire account"
               />
             </Checkboxes>
+            
+            <h3>Customer Access</h3>
+            <Radio
+              id="permission-customer-access-none"
+              name="customer-access"
+              checked={global.account_access === null}
+              onChange={() => this.setState({
+                global: {
+                  ...this.state.global,
+                  account_access: null,
+                },
+              })}
+              label="None"
+            />
+            <Radio
+              id="permission-customer-access-read-only"
+              name="customer-access"
+              checked={global.account_access === 'read_only'}
+              onChange={() => this.setState({
+                global: {
+                  ...this.state.global,
+                  account_access: 'read_only',
+                },
+              })}
+              label="Read-Only (Can view invoices, view billing info, and
+                will receive copies of all invoices and payment emails)"
+            />
+            <Radio
+              id="permission-customer-access-readwrite"
+              name="customer-access"
+              checked={global.account_access === 'read_write'}
+              onChange={() => this.setState({
+                global: {
+                  ...this.state.global,
+                  account_access: 'read_write',
+                },
+              })}
+              title="Can view invoices, make payments, update contact and
+              billing info, and will receive copies of all invoices and
+              payment emails"
+              label="Read-Write (Can make payments, update contact and
+                billing info, and will receive copies of all invoices and
+                payment emails)"
+            />
+
           </div>
           <PermissionsTable
             title="Linode"
