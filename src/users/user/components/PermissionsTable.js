@@ -16,17 +16,14 @@ export default function PermissionsTable(props) {
     tooltipEnabled: true,
   };
 
-  const maybeCheckboxCell = (col) => !col ? {} : {
-    cellComponent: col ? CheckboxCell : null,
-    onChange: onCellChange,
-    dataKey: col.dataKey,
-    label: col.label,
-  };
 
   const allColumns = [headerColumn, ...columns.map(col => ({
     parentKey,
     headerClassName: 'PermissionsCheckboxColumn',
-    ...maybeCheckboxCell(col),
+    cellComponent: RadioCell,
+    onChange: onCellChange,
+    dataKey: col.dataKey,
+    label: col.label,
   }))];
 
   return (
