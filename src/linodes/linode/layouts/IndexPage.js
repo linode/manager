@@ -36,9 +36,13 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setAnalytics(['linodes', 'linode']));
+  }
+
+  componentWillMount() {
     const { dispatch, linode } = this.props;
     dispatch(setTitle(linode.label));
-    dispatch(setAnalytics(['linodes', 'linode']));
   }
 
   render() {

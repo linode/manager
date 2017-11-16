@@ -10,6 +10,7 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { onChange } from 'linode-components/forms/utilities';
 
 import { hideModal, showModal } from '~/actions/modal';
+import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { rebuildLinode } from '~/api/ad-hoc/linodes';
@@ -44,6 +45,11 @@ export class RebuildPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Rebuild - ${linode.label}`));
   }
 
   onSubmit = () => {

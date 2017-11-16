@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -22,6 +23,11 @@ export class RescuePage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Rescue - ${linode.label}`));
   }
 
   render() {
