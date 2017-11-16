@@ -7,6 +7,7 @@ import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input } from 'linode-components/forms';
 
+import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
 import { linodeStats } from '~/api/ad-hoc/linodes';
@@ -44,6 +45,11 @@ export class DashboardPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Dashboard - ${linode.label}`));
   }
 
   renderDetails() {

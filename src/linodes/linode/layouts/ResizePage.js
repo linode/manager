@@ -13,6 +13,7 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
+import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
@@ -45,6 +46,11 @@ export class ResizePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Resize - ${linode.label}`));
   }
 
   onSubmit = () => {

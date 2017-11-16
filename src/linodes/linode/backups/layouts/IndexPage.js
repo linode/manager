@@ -8,6 +8,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Tabs } from 'linode-components/tabs';
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
+import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import { enableBackup } from '~/api/ad-hoc/backups';
 import { linodeBackups } from '~/api/ad-hoc/linodes';
@@ -33,6 +34,11 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Backups - ${linode.label}`));
   }
 
   onSubmit = () => {

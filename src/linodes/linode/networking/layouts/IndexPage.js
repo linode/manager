@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
+import { setTitle } from '~/actions';
 import { Tabs } from 'linode-components/tabs';
 
 import { getIPs } from '~/api/ad-hoc/networking';
@@ -16,6 +17,11 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await dispatch(getIPs(id));
+  }
+
+  componentWillMount() {
+    const { dispatch, linode } = this.props;
+    dispatch(setTitle(`Networking - ${linode.label}`));
   }
 
   render() {
