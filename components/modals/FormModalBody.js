@@ -26,7 +26,7 @@ export default class FormModalBody extends Component {
   render() {
     const {
       className, buttonText, buttonDisabledText, noCancel, children, errors: propsErrors,
-      noSubmitEvent,
+      noSubmit, noSubmitEvent,
     } = this.props;
     const { loading, errors: stateErrors = {} } = this.state;
 
@@ -48,10 +48,10 @@ export default class FormModalBody extends Component {
         {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
           {noCancel ? null : <CancelButton disabled={loading} onClick={this.onCancel} />}
-          <SubmitButton
+          {noSubmit ? null : <SubmitButton
             disabled={loading}
             disabledChildren={buttonDisabledText}
-          >{buttonText}</SubmitButton>
+          >{buttonText}</SubmitButton>}
           <FormSummary errors={errors} />
         </div>
       </Form>
@@ -65,6 +65,7 @@ FormModalBody.propTypes = {
   buttonText: PropTypes.string,
   buttonDisabledText: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
+  noSubmit: PropTypes.bool,
   noSubmitEvent: PropTypes.bool,
   onCancel: PropTypes.func,
   noCancel: PropTypes.bool.isRequired,
@@ -76,6 +77,7 @@ FormModalBody.propTypes = {
 FormModalBody.defaultProps = {
   noCancel: false,
   noCancelEvent: false,
+  noSubmit: false,
   errors: {},
   buttonText: 'Save',
   buttonDisabledText: 'Saving',
