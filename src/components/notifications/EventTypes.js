@@ -167,8 +167,8 @@ const EventTypeMap = {
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_imagize: {
-    presentTenseAction: 'Scheduled',
-    pastTenseAction: 'scheduled for imagize',
+    presentTenseAction: 'Creating an image from ',
+    pastTenseAction: 'scheduled for image creation',
     pastTensePrefix: 'Disk on',
     redirectUrl: getImagesRedirectUrl,
   },
