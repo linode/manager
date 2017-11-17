@@ -56,10 +56,15 @@ export default class Disks extends Component {
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
         EditDisk.trigger(dispatch, linode, record, free) }] },
-      { elements: [{ name: 'Imagize', action: () =>
-        AddImage.trigger(dispatch, undefined, linode, record) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
     ];
+
+    if (record.filesystem !== 'swap') {
+      groups.splice(1, 0, { elements: [{
+        name: 'Create an Image',
+        action: () => AddImage.trigger(dispatch, undefined, linode, record),
+      }] });
+    }
 
     return (
       <TableCell column={column} record={record} className="ActionsCell">
