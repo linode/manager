@@ -1,25 +1,30 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { setTitle } from '~/actions';
 import { ChangeTimezone, ChangeEmail } from '../components';
 
 
-export function DisplayPage(props) {
-  return (
-    <div>
-      <section>
-        <ChangeTimezone
-          dispatch={props.dispatch}
-          timezone={props.profile.timezone}
+export class DisplayPage extends Component {
+  render() {
+    const { dispatch, profile } = this.props;
+
+    return (
+      <div>
+        <section>
+          <ChangeTimezone
+            dispatch={dispatch}
+            timezone={profile.timezone}
+          />
+        </section>
+        <ChangeEmail
+          dispatch={dispatch}
+          email={profile.email}
         />
-      </section>
-      <ChangeEmail
-        dispatch={props.dispatch}
-        email={props.profile.email}
-      />
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 DisplayPage.propTypes = {
