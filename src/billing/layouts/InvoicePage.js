@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
-import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
-import api from '~/api';
 
 import { setSource } from '~/actions/source';
+import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
+import { getStorage } from '~/storage';
 
 
 export class InvoicePage extends Component {
@@ -28,6 +29,7 @@ export class InvoicePage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Invoice - #${invoice.id}`} />
         <Breadcrumbs
           crumbs={[
             { label: 'History', to: '/billing/history' },

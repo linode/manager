@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import MasterZone from '../components/MasterZone';
 import SlaveZone from '../components/SlaveZone';
@@ -20,7 +21,6 @@ export class ZonePage extends Component {
   async componentDidMount() {
     const { dispatch, domain } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle(domain.domain));
     dispatch(setAnalytics(['domains', 'domain']));
   }
 
@@ -41,10 +41,11 @@ export class ZonePage extends Component {
     }
 
     return (
-      <MasterZone
-        dispatch={dispatch}
-        domain={domain}
-      />
+      <ChainedDocumentTitle title={domain.domain}>
+        <MasterZone
+          dispatch={dispatch}
+          domain={domain} />
+      </ChainedDocumentTitle>
     );
   }
 }

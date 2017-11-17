@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 
 import { AddEditVolume, VolumesList } from '../components';
@@ -25,7 +26,6 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['volumes']));
-    dispatch(setTitle('Volumes'));
   }
 
   render() {
@@ -36,6 +36,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Volumes" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Volumes</h1>

@@ -16,6 +16,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { makePayment } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class MakeAPaymentPage extends Component {
@@ -49,6 +50,7 @@ export class MakeAPaymentPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Make a Payment" />
         <section>
           <Card header={<CardHeader title="Make a Payment" />}>
             <Form

@@ -13,11 +13,11 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { setTitle } from '~/actions';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 
@@ -48,11 +48,6 @@ export class ResizePage extends Component {
     dispatch(setSource(__filename));
   }
 
-  componentWillMount() {
-    const { dispatch, linode } = this.props;
-    dispatch(setTitle(`Resize - ${linode.label}`));
-  }
-
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
@@ -63,11 +58,12 @@ export class ResizePage extends Component {
   }
 
   render() {
-    const { types, linode: { type: { id: currentType } } } = this.props;
+    const { types, linode: { label, type: { id: currentType } } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Resize" />}>
+        <ChainedDocumentTitle title="Resize" />
         <Form
           onSubmit={this.onSubmit}
           analytics={{ title: 'Resize Linode' }}

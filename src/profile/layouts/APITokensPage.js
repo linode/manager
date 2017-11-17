@@ -14,6 +14,7 @@ import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
 
@@ -156,6 +157,7 @@ export class APITokensPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="API Tokens" />
         <header className="NavigationHeader clearfix">
           <PrimaryButton
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}

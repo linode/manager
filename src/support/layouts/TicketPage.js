@@ -18,7 +18,8 @@ import { onChange } from 'linode-components/forms/utilities';
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/ad-hoc/tickets';
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
+import { ChainedDocumentTitle } from '~/components';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './IndexPage';
@@ -52,7 +53,6 @@ export class TicketPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle(this.props.ticket.summary));
     dispatch(setAnalytics(['tickets', 'ticket']));
   }
 
@@ -145,6 +145,7 @@ export class TicketPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={ticket.summary} />
         <header className="main-header main-header--border">
           <div className="container clearfix">
             <div className="float-sm-left">

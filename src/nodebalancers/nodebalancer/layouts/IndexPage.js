@@ -7,10 +7,10 @@ import { Tabs } from 'linode-components/tabs';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
 
-import { setAnalytics, setTitle } from '~/actions';
+import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { GroupLabel } from '~/components';
+import { ChainedDocumentTitle, GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -21,7 +21,6 @@ export class IndexPage extends Component {
 
   async componentDidMount() {
     const { dispatch, nodebalancer } = this.props;
-    dispatch(setTitle(nodebalancer.label));
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer']));
   }
 
@@ -37,6 +36,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={nodebalancer.label} />
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">

@@ -17,9 +17,10 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import TicketHelper from '../components/TicketHelper';
 
@@ -48,7 +49,6 @@ export class CreatePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Open a Ticket'));
     dispatch(setAnalytics(['tickets', 'create']));
   }
 
@@ -94,6 +94,7 @@ export class CreatePage extends Component {
 
     return (
       <div className="container create-page">
+        <ChainedDocumentTitle title="Open a Ticket" />
         <header className="text-sm-left">
           <Link to="/support">Support</Link>
           <h1>Open a ticket</h1>
