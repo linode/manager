@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup, Select, PasswordInput } from 'linode-components/forms';
+import { Link } from 'react-router';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
@@ -19,12 +20,9 @@ export default class LinodeFromImage extends Component {
   static title = 'Create from Image'
 
   static async trigger(dispatch, plans, images) {
-    const imageOptions = Object.values(images.images).map(function (image) {
-      return {
-        label: image.label,
-        value: image.id,
-      };
-    });
+    const imageOptions = Object.values(images.images).map(
+      image => ({ label: image.label, value: image.id })
+    );
 
     return dispatch(showModal(LinodeFromImage.title, (
       <LinodeFromImage
@@ -72,6 +70,7 @@ export default class LinodeFromImage extends Component {
       <FormModalBody
         onSubmit={this.onSubmit}
         onCancel={close}
+        noSubmit={!images.length}
         buttonText="Create"
         buttonDisabledText="Creating"
         analytics={{ title: LinodeFromImage.title, action: 'add' }}
@@ -135,7 +134,7 @@ export default class LinodeFromImage extends Component {
             </ModalFormGroup>
           </div>
         :
-          <div>No Images Found</div>
+          <div>You have no Images! Click on <Link to="/images">Images</Link> to create some.</div>
         }
       </FormModalBody>
     );

@@ -61,14 +61,15 @@ export default class AddImage extends Component {
 
     if (!allDisks[linodeId]) {
       const disks = await this.props.dispatch(api.linodes.disks.all([linodeId]));
-      const linodeDisks = Object.values(disks.data).map(function (disk) {
-        return {
-          label: disk.label,
-          value: disk.id,
-          size: disk.size,
-          filesystem: disk.filesystem,
-        };
-      });
+      const linodeDisks = Object.values(disks.data)
+        .map(
+          disk => ({
+            label: disk.label,
+            value: disk.id,
+            size: disk.size,
+            filesystem: disk.filesystem,
+          })
+        );
 
       this.setState({
         allDisks: { ...allDisks, [linodeId]: linodeDisks },
