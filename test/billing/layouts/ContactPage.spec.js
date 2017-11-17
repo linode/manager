@@ -57,5 +57,7 @@ describe('billing/layouts/ContactPage', () => {
         },
       }),
     ]);
+
+    page.unmount();
   });
 });
