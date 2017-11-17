@@ -13,6 +13,7 @@ import { enableBackup } from '~/api/ad-hoc/backups';
 import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
+import DisplayCurrency from '~/components/DisplayCurrency';
 
 import { selectLinode } from '../../utilities';
 
@@ -50,6 +51,7 @@ export class IndexPage extends Component {
 
     if (!linode.backups.enabled) {
       const { loading, errors } = this.state;
+      const backupPrice = linode.type.addons.backups.price.monthly;
 
       return (
         <Card header={<CardHeader title="Enable backups" />}>
@@ -58,8 +60,7 @@ export class IndexPage extends Component {
             analytics={{ title: 'Enable Backups' }}
           >
             <p>
-              Backups not enabled. Enable backups for
-              ${(linode.type.addons.backups.price.monthly).toFixed(2)}/mo.
+              Backups not enabled. Enable backups for {<DisplayCurrency value={backupPrice} />}/mo.
             </p>
             <SubmitButton
               className="btn-primary"
