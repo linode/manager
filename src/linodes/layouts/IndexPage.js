@@ -13,13 +13,14 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
@@ -47,7 +48,6 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Linodes'));
     dispatch(setAnalytics(['linodes']));
 
     ['distributions', 'types'].map(f => dispatch(api[f].all()));
@@ -204,6 +204,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Linodes" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Linodes</h1>

@@ -5,8 +5,9 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { setAnalytics, setTitle } from '~/actions';
+import { setAnalytics } from '~/actions';
 import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -20,7 +21,6 @@ export class IndexPage extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(setTitle('Billing'));
     dispatch(setAnalytics(['billing']));
   }
 

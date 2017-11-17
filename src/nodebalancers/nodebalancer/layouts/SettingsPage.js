@@ -13,7 +13,7 @@ import {
   Input,
 } from 'linode-components/forms';
 
-import { setSource, setTitle } from '~/actions';
+import { setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
@@ -42,7 +42,6 @@ export class SettingsPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
       () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
-      () => setTitle(label),
     ]));
   }
 

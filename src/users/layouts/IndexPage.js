@@ -17,11 +17,12 @@ import {
   ThumbnailCell,
 } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
 import { confirmThenDelete } from '~/utilities';
@@ -50,7 +51,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Users'));
     dispatch(setAnalytics(['users']));
   }
 
@@ -75,6 +75,7 @@ export class IndexPage extends Component {
 
     return (
       <List>
+        <ChainedDocumentTitle title="Users" />
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl

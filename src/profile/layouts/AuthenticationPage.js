@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setTitle } from "~/actions";
+import { ChainedDocumentTitle } from '~/components';
+
 import { ChangePassword, TwoFactor } from '../components';
 
 
 export class AuthenticationPage extends Component {
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch(setTitle("Password & Authentication - My Profile"));
   }
 
   render() {
@@ -17,6 +17,7 @@ export class AuthenticationPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Password & Authentication" />
         <section>
           <ChangePassword dispatch={dispatch} />
         </section>

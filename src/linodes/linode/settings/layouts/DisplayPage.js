@@ -15,7 +15,7 @@ import {
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { setSource, setTitle } from '~/actions';
+import { setSource } from '~/actions';
 
 import { selectLinode } from '../../utilities';
 
@@ -39,7 +39,6 @@ export class DisplayPage extends Component {
 
     const requests = [
       () => api.linodes.put({ group, label }, id),
-      () => setTitle(label),
     ];
 
     if (oldLabel !== label) {

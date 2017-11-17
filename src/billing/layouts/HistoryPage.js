@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 
-import { BillingHistoryList } from '../components/BillingHistoryList';
-
 import { setSource } from '~/actions/source';
+import { ChainedDocumentTitle } from '~/components';
+
+import { BillingHistoryList } from '../components/BillingHistoryList';
 
 
 export class HistoryPage extends Component {
@@ -20,6 +21,7 @@ export class HistoryPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title='History' />
         <section>
           <Card header={<CardHeader title="Billing History" />}>
             <BillingHistoryList {...this.props} />

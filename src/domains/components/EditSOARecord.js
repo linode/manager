@@ -7,7 +7,6 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { setTitle } from '~/actions/title';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -94,7 +93,6 @@ export default class EditSOARecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.domains.put(data, this.props.domains.id),
-      () => setTitle(data.domain),
       () => close(domain)(),
     ]));
   }

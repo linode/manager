@@ -5,8 +5,11 @@ import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup } from 'linode-components/forms';
-import { BillingHistoryList } from '../components/BillingHistoryList';
+
 import { setSource } from '~/actions/source';
+import { ChainedDocumentTitle } from '~/components';
+
+import { BillingHistoryList } from '../components/BillingHistoryList';
 
 
 export class DashboardPage extends Component {
@@ -41,6 +44,7 @@ export class DashboardPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Billing" />
         <section>
           <Card header={<CardHeader title="Account Information" />}>
             <h3 className="sub-header">Contact</h3>
