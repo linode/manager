@@ -1,23 +1,33 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { setTitle } from "~/actions";
 import { ChangePassword, TwoFactor } from '../components';
 
 
-export function AuthenticationPage(props) {
-  return (
-    <div>
-      <section>
-        <ChangePassword dispatch={props.dispatch} />
-      </section>
-      <TwoFactor
-        dispatch={props.dispatch}
-        tfaEnabled={props.profile.two_factor_auth}
-        username={props.profile.username}
-      />
-    </div>
-  );
+export class AuthenticationPage extends Component {
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(setTitle("Password & Authentication - My Profile"));
+  }
+
+  render() {
+    const { dispatch, profile } = this.props;
+
+    return (
+      <div>
+        <section>
+          <ChangePassword dispatch={dispatch} />
+        </section>
+        <TwoFactor
+          dispatch={dispatch}
+          tfaEnabled={profile.two_factor_auth}
+          username={profile.username}
+        />
+      </div>
+    );
+  }
 }
 
 AuthenticationPage.propTypes = {

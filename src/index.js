@@ -14,6 +14,7 @@ import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/generic/linodes';
 import Billing from '~/billing';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import DevTools from '~/components/DevTools';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
 import { init as initAnalytics } from './analytics';
@@ -114,46 +115,48 @@ const init = () => {
   try {
     render(
       <Provider store={store}>
-        <div>
-          <Router
-            history={history}
-            onUpdate={onPageChange}
-            dispatch={store.dispatch}
-            render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
-          >
-            <Route
-              path="/logout"
-              component={Logout}
-            />
-            <Route path="oauth">
-              <Route path="callback" component={OAuthCallbackPage} />
-            </Route>
-            <Route
-              path="/linodes/:linodeLabel/weblish"
-              component={Weblish}
-            />
-            <Route
-              onChange={() => store.dispatch(hideModal())}
-              path="/"
-              component={Layout}
+        <ChainedDocumentTitle title="Linode Manager">
+          <div>
+            <Router
+              history={history}
+              onUpdate={onPageChange}
+              dispatch={store.dispatch}
+              render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
             >
-              <IndexRedirect to="/linodes" />
-              {Linodes}
-              {StackScripts}
-              {NodeBalancers}
-              {Domains}
-              {Profile}
-              {Users}
-              {Billing}
-              {Volumes}
-              {Images}
-              {Settings}
-              {Support}
-              <Route path="*" component={NotFound} />
-            </Route>
-          </Router>
-          <DevTools />
-        </div>
+              <Route
+                path="/logout"
+                component={Logout}
+              />
+              <Route path="oauth">
+                <Route path="callback" component={OAuthCallbackPage} />
+              </Route>
+              <Route
+                path="/linodes/:linodeLabel/weblish"
+                component={Weblish}
+              />
+              <Route
+                onChange={() => store.dispatch(hideModal())}
+                path="/"
+                component={Layout}
+              >
+                <IndexRedirect to="/linodes" />
+                {Linodes}
+                {StackScripts}
+                {NodeBalancers}
+                {Domains}
+                {Profile}
+                {Users}
+                {Billing}
+                {Volumes}
+                {Images}
+                {Settings}
+                {Support}
+                <Route path="*" component={NotFound} />
+              </Route>
+            </Router>
+            <DevTools />
+          </div>
+        </ChainedDocumentTitle>
       </Provider>,
       document.getElementById('root')
     );
