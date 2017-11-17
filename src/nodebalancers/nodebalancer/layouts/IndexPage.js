@@ -20,7 +20,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, nodebalancer } = this.props;
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer']));
   }
 

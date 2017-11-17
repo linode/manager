@@ -19,7 +19,7 @@ export class ZonePage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, domain } = this.props;
+    const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['domains', 'domain']));
   }
@@ -44,7 +44,8 @@ export class ZonePage extends Component {
       <ChainedDocumentTitle title={domain.domain}>
         <MasterZone
           dispatch={dispatch}
-          domain={domain} />
+          domain={domain}
+        />
       </ChainedDocumentTitle>
     );
   }

@@ -20,7 +20,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, nodebalancer } = this.props;
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
   }
 
@@ -43,7 +43,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
-        <ChainedDocumentTitle title={'Port ' + config.port + ' - ' + nodebalancer.label} />
+        <ChainedDocumentTitle title={`Port ${config.port} - ${nodebalancer.label}`} />
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">

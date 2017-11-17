@@ -21,7 +21,7 @@ export class HistoryPage extends Component {
 
     return (
       <div>
-        <ChainedDocumentTitle title='History' />
+        <ChainedDocumentTitle title="History" />
         <section>
           <Card header={<CardHeader title="Billing History" />}>
             <BillingHistoryList {...this.props} />

@@ -25,7 +25,7 @@ export class StackScriptPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, stackscript } = this.props;
+    const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
