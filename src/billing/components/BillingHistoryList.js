@@ -7,6 +7,7 @@ import moment from 'moment-timezone';
 import { getStorage } from '~/storage';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
+import DisplayCurrency from '~/components/DisplayCurrency';
 
 export const BillingHistoryList = props => {
   const {
@@ -55,9 +56,7 @@ export const BillingHistoryList = props => {
         {
           dataKey: 'total',
           className: 'ActionsCell',
-          formatFn: (total) => {
-            return total < 0 ? `($${(-total).toFixed(2)})` : `$${total.toFixed(2)}`;
-          },
+          formatFn: (total) => <DisplayCurrency value={total} />,
         },
       ]}
       noDataMessage="No history found."
