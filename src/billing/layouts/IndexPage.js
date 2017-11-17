@@ -35,6 +35,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Billing" />
         <header className="main-header">
           <div className="container">
             <h1 className="float-sm-left">Billing</h1>

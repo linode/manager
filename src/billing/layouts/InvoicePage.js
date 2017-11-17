@@ -29,7 +29,7 @@ export class InvoicePage extends Component {
 
     return (
       <div>
-        <ChainedDocumentTitle title={`Invoice - #${invoice.id}`} />
+        <ChainedDocumentTitle title={`Invoice #${invoice.id}`} />
         <Breadcrumbs
           crumbs={[
             { label: 'History', to: '/billing/history' },
