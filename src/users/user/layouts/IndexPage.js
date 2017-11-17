@@ -17,7 +17,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, user } = this.props;
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['users', 'user']));
   }
 

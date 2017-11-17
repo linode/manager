@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { ChainedDocumentTitle } from '~/components';
@@ -7,28 +7,20 @@ import { ChainedDocumentTitle } from '~/components';
 import { ChangePassword, TwoFactor } from '../components';
 
 
-export class AuthenticationPage extends Component {
-  componentWillMount() {
-    const { dispatch } = this.props;
-  }
-
-  render() {
-    const { dispatch, profile } = this.props;
-
-    return (
-      <div>
-        <ChainedDocumentTitle title="Password & Authentication" />
-        <section>
-          <ChangePassword dispatch={dispatch} />
-        </section>
-        <TwoFactor
-          dispatch={dispatch}
-          tfaEnabled={profile.two_factor_auth}
-          username={profile.username}
-        />
-      </div>
-    );
-  }
+export function AuthenticationPage(props) {
+  return (
+    <div>
+      <ChainedDocumentTitle title="Password & Authentication" />
+      <section>
+        <ChangePassword dispatch={props.dispatch} />
+      </section>
+      <TwoFactor
+        dispatch={props.dispatch}
+        tfaEnabled={props.profile.two_factor_auth}
+        username={props.profile.username}
+      />
+    </div>
+  );
 }
 
 AuthenticationPage.propTypes = {

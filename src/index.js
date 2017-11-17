@@ -115,48 +115,47 @@ const init = () => {
   try {
     render(
       <Provider store={store}>
-        <ChainedDocumentTitle title="Linode Manager">
-          <div>
-            <Router
-              history={history}
-              onUpdate={onPageChange}
-              dispatch={store.dispatch}
-              render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
+        <div>
+          <ChainedDocumentTitle title="Linode Manager" />
+          <Router
+            history={history}
+            onUpdate={onPageChange}
+            dispatch={store.dispatch}
+            render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
+          >
+            <Route
+              path="/logout"
+              component={Logout}
+            />
+            <Route path="oauth">
+              <Route path="callback" component={OAuthCallbackPage} />
+            </Route>
+            <Route
+              path="/linodes/:linodeLabel/weblish"
+              component={Weblish}
+            />
+            <Route
+              onChange={() => store.dispatch(hideModal())}
+              path="/"
+              component={Layout}
             >
-              <Route
-                path="/logout"
-                component={Logout}
-              />
-              <Route path="oauth">
-                <Route path="callback" component={OAuthCallbackPage} />
-              </Route>
-              <Route
-                path="/linodes/:linodeLabel/weblish"
-                component={Weblish}
-              />
-              <Route
-                onChange={() => store.dispatch(hideModal())}
-                path="/"
-                component={Layout}
-              >
-                <IndexRedirect to="/linodes" />
-                {Linodes}
-                {StackScripts}
-                {NodeBalancers}
-                {Domains}
-                {Profile}
-                {Users}
-                {Billing}
-                {Volumes}
-                {Images}
-                {Settings}
-                {Support}
-                <Route path="*" component={NotFound} />
-              </Route>
-            </Router>
-            <DevTools />
-          </div>
-        </ChainedDocumentTitle>
+              <IndexRedirect to="/linodes" />
+              {Linodes}
+              {StackScripts}
+              {NodeBalancers}
+              {Domains}
+              {Profile}
+              {Users}
+              {Billing}
+              {Volumes}
+              {Images}
+              {Settings}
+              {Support}
+              <Route path="*" component={NotFound} />
+            </Route>
+          </Router>
+          <DevTools />
+        </div>
       </Provider>,
       document.getElementById('root')
     );
