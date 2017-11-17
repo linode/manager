@@ -29,5 +29,7 @@ describe('billing/layouts/HistoryPage', () => {
     );
 
     expect(page.find('strong').text()).to.equal('Current Balance: $10.00');
+
+    page.unmount();
   });
 });
