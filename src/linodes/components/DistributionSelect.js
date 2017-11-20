@@ -16,14 +16,14 @@ export default function DistributionSelect(props) {
     value: d.id,
     vendorLower: d.vendor.toLowerCase(),
   }));
- 
-  const withImages = _.map(Object.values(props.images), i => ({
+
+  const withImages = props.images ? _.map(Object.values(props.images), i => ({
     ...i,
     value: i.id,
     vendor: 'Images',
     vendorLower: 'images',
-  }));
-  
+  })) : [];
+
   const vendorsUnsorted = _.map(
     _.groupBy(withVendorLowerCased.concat(withImages), 'vendorLower'),
     (v) => ({
