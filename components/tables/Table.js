@@ -62,12 +62,6 @@ Table.propTypes = {
     onChange: PropTypes.func,
     className: PropTypes.string,
     dataKey: PropTypes.string,
-    name: PropTypes.string,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      null,
-    ]),
-    label: PropTypes.string,
     formatFn: PropTypes.func,
   })),
   data: PropTypes.array.isRequired,
