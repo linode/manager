@@ -44,7 +44,6 @@ export default class AddDisk extends Component {
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { label, size, distribution, password, filesystem } = this.state;
-    console.log(distribution);
     const data = {
       label,
       filesystem,

@@ -27,7 +27,7 @@ export class IndexPage extends Component {
         api.images.all(),
         api.distributions.all(),
       ];
-    
+
       Promise.all(subRequests.map(r => dispatch(r)));
     }
 
