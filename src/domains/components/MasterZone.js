@@ -551,6 +551,8 @@ export class MasterZone extends Component {
                 columns={[
                   { dataKey: 'tag', label: 'Tag', headerClassName: 'TagColumn' },
                   { dataKey: 'target', label: 'Value', headerClassName: 'ValueColumn' },
+                  { dataKey: 'name', label: 'Domain', headerClassName: 'NameColumn' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
                   {
                     cellComponent: NameserversCell,
                     onEditClick: ({ id }) =>

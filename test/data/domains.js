@@ -97,6 +97,8 @@ export const testDomain = {
         type: 'CAA',
         tag: 'issue',
         target: 'certsign.ro',
+        name: 'www.mywebsite.com',
+        ttl_sec: 0,
       },
     },
   },

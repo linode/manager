@@ -32,6 +32,12 @@ describe('domains/components/EditCAARecord', () => {
 
     const target = page.find('#target');
     expect(target.props().value).to.equal(currentRecord.target);
+
+    const name = page.find('#name');
+    expect(name.props().value).to.equal(currentRecord.name);
+
+    const ttl = page.find('#ttl');
+    expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
   it('submits data onsubmit and closes modal for CAA record', async () => {
@@ -50,6 +56,8 @@ describe('domains/components/EditCAARecord', () => {
 
     changeInput(page, 'tag', 'issue');
     changeInput(page, 'target', 'certsign.ro');
+    changeInput(page, 'name', 'www.mysite.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -61,6 +69,8 @@ describe('domains/components/EditCAARecord', () => {
           tag: 'issue',
           target: 'certsign.ro',
           type: 'CAA',
+          name: 'www.mysite.com',
+          ttl_sec: 3600,
         },
       }),
     ]);
@@ -80,6 +90,8 @@ describe('domains/components/EditCAARecord', () => {
 
     changeInput(page, 'tag', 'iodef');
     changeInput(page, 'target', 'shenanigans.co');
+    changeInput(page, 'name', 'www.mysite.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -90,6 +102,8 @@ describe('domains/components/EditCAARecord', () => {
         body: {
           tag: 'iodef',
           target: 'shenanigans.co',
+          name: 'www.mysite.com',
+          ttl_sec: 3600,
         },
       }),
     ]);
