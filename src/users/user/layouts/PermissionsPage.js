@@ -76,7 +76,8 @@ export class PermissionsPage extends Component {
   }
 
   updateGrant = (parentKey, object, index) => (e) => {
-    console.log(e.target.value); // "on"
+    //    console.log(e.tae); // "on"
+    const targetVal = e.target.value;
     this.setState((prevState, props) => {
       console.log('prevState ', prevState);
       console.log('props', props);
@@ -87,8 +88,9 @@ export class PermissionsPage extends Component {
       };
       stateChange[parentKey][index] = {
         ...prevState[parentKey][index],
-        permissions: e.target.value === 'none' ? null : e.target.value,
+        permissions: targetVal === 'none' ? null : targetVal,
       };
+      console.log('stateChange ', stateChange);
       return stateChange;
     });
   }
@@ -270,7 +272,7 @@ export class PermissionsPage extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {section.objects.map(object => (
+                    {section.objects.map((object, idx) => (
                       <tr className="TableRow  ">
                         <td className="TableCell LabelCell">
                           <div className="TableCell-content">
@@ -278,7 +280,7 @@ export class PermissionsPage extends Component {
                           </div>
                         </td>
                         {section.dataColumns(object.id).map(
-                          column => {
+                          (column) => {
                             console.log('column is ', column);
                             return(
                           <td className="TableCell  ">
@@ -288,9 +290,9 @@ export class PermissionsPage extends Component {
                                   className="Radio-input"
                                   type="radio"
                                   name={`grants-${section.parentKey}-${object.id}`}
-                                  onChange={this.updateGrant(section.parentKey, object)}
+                                  onChange={this.updateGrant(section.parentKey, object, idx)}
                                   value={column.value}
-                                  checked={column.value === object.permissions}
+                                  checked={object.permissions === (column.value === 'none' ? null : column.value)}
                                   title={object.label}
                                 />
                               </label>
