@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
-import { CheckboxCell, LabelCell } from 'linode-components/tables/cells';
+import { RadioCell, LabelCell } from 'linode-components/tables/cells';
 
 
 export default function PermissionsTable(props) {
@@ -23,7 +23,9 @@ export default function PermissionsTable(props) {
     cellComponent: RadioCell,
     onChange: onCellChange,
     dataKey: col.dataKey,
+    name: col.name,
     label: col.label,
+    value: col.value,
   }))];
 
   return (
