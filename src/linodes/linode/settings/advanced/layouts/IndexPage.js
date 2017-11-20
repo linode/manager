@@ -23,7 +23,12 @@ export class IndexPage extends Component {
     // Fetch distributions without waiting
     if (!getState().api.distributions.ids.length) {
       // Only needed from the add disk modal which isn't shown immediately.
-      dispatch(api.distributions.all());
+      const subRequests = [
+        api.images.all(),
+        api.distributions.all(),
+      ];
+    
+      Promise.all(subRequests.map(r => dispatch(r)));
     }
 
     const { totalPages } = getState().api.kernels;

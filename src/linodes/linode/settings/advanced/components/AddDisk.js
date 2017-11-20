@@ -14,11 +14,12 @@ import { DistributionSelect } from '~/linodes/components';
 export default class AddDisk extends Component {
   static title = 'Add a Disk'
 
-  static trigger(dispatch, linode, distributions, free) {
+  static trigger(dispatch, linode, distributions, images, free) {
     return dispatch(showModal(AddDisk.title, (
       <AddDisk
         dispatch={dispatch}
         distributions={distributions}
+        images={images}
         linode={linode}
         free={free}
       />
@@ -43,11 +44,13 @@ export default class AddDisk extends Component {
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { label, size, distribution, password, filesystem } = this.state;
+    console.log(distribution);
     const data = {
       label,
       filesystem,
       size: parseInt(size),
-      distribution: distribution || null,
+      distribution: !/^\d+$/.test(distribution) ? distribution : null,
+      image: /^\d+$/.test(distribution) ? parseInt(distribution) : null,
       root_pass: password || null,
     };
 
@@ -58,7 +61,7 @@ export default class AddDisk extends Component {
   }
 
   render() {
-    const { dispatch, free, distributions: { distributions } } = this.props;
+    const { dispatch, free, distributions: { distributions }, images } = this.props;
     const { label, size, distribution, filesystem, password, errors } = this.state;
 
     let minimumStorageSize = 8;
@@ -103,6 +106,7 @@ export default class AddDisk extends Component {
               name="distribution"
               value={distribution}
               distributions={distributions}
+              images={images}
               onChange={this.onChange}
               allowNone
             />
@@ -147,6 +151,7 @@ export default class AddDisk extends Component {
 
 AddDisk.propTypes = {
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   linode: PropTypes.object.isRequired,
   free: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
