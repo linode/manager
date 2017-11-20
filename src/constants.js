@@ -251,10 +251,10 @@ export const DISTRIBUTION_DISPLAY_ORDER = [
   'centos',
   'fedora',
   'arch',
+  'coreos',
   'opensuse',
   'gentoo',
   'slackware',
-  'containerlinux',
 ];
 
 export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';
