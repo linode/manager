@@ -37,23 +37,6 @@ export class PermissionsPage extends Component {
     };
   }
 
-  onCellChange = (record, checked, keys) => {
-    const { parentKey, dataKey } = keys;
-    const parentState = this.state[parentKey].map(function (child) {
-      if (child === record) {
-        return {
-          ...child,
-          [dataKey]: checked,
-        };
-      }
-      return child;
-    });
-
-    this.setState({
-      [parentKey]: parentState,
-    });
-  }
-
   onSubmit = () => {
     const { dispatch, user: { username } } = this.props;
     const { global, linode, nodebalancer, domain,
@@ -76,11 +59,8 @@ export class PermissionsPage extends Component {
   }
 
   updateGrant = (parentKey, object, index) => (e) => {
-    //    console.log(e.tae); // "on"
     const targetVal = e.target.value;
-    this.setState((prevState, props) => {
-      console.log('prevState ', prevState);
-      console.log('props', props);
+    this.setState((prevState) => {
       const stateChange = {
         [parentKey]: [
           ...prevState[parentKey],
@@ -90,7 +70,6 @@ export class PermissionsPage extends Component {
         ...prevState[parentKey][index],
         permissions: targetVal === 'none' ? null : targetVal,
       };
-      console.log('stateChange ', stateChange);
       return stateChange;
     });
   }
@@ -175,7 +154,7 @@ export class PermissionsPage extends Component {
                 label="Can cancel the entire account"
               />
             </Checkboxes>
-            
+
             <h3>Customer Access</h3>
             <Radio
               id="permission-customer-access-none"
@@ -281,24 +260,26 @@ export class PermissionsPage extends Component {
                         </td>
                         {section.dataColumns(object.id).map(
                           (column) => {
-                            console.log('column is ', column);
-                            return(
-                          <td className="TableCell  ">
-                            <div className="TableCell-content Radio">
-                              <label>
-                                <input
-                                  className="Radio-input"
-                                  type="radio"
-                                  name={`grants-${section.parentKey}-${object.id}`}
-                                  onChange={this.updateGrant(section.parentKey, object, idx)}
-                                  value={column.value}
-                                  checked={object.permissions === (column.value === 'none' ? null : column.value)}
-                                  title={object.label}
-                                />
-                              </label>
-                            </div>
-                          </td>
-                        ); } )}
+                            return (
+                              <td className="TableCell  ">
+                                <div className="TableCell-content Radio">
+                                  <label>
+                                    <input
+                                      className="Radio-input"
+                                      type="radio"
+                                      name={`grants-${section.parentKey}-${object.id}`}
+                                      id={
+                                        `grants-${section.parentKey}-${object.id}-${column.value}`}
+                                      onChange={this.updateGrant(section.parentKey, object, idx)}
+                                      value={column.value}
+                                      checked={object.permissions ===
+                                        (column.value === 'none' ? null : column.value)}
+                                      title={object.label}
+                                    />
+                                  </label>
+                                </div>
+                              </td>
+                        ); })}
                       </tr>
                     ))}
                   </tbody>
