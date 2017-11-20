@@ -17,8 +17,6 @@ import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectUser } from './IndexPage';
-import { PermissionsTable } from '../components';
-
 
 export class PermissionsPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
@@ -77,11 +75,37 @@ export class PermissionsPage extends Component {
     });
   }
 
+  updateGrant = (parentKey, object, index) => (e) => {
+    console.log(e.target.value); // "on"
+    this.setState((prevState, props) => {
+      console.log('prevState ', prevState);
+      console.log('props', props);
+      const stateChange = {
+        [parentKey]: [
+          ...prevState[parentKey],
+        ],
+      };
+      stateChange[parentKey][index] = {
+        ...prevState[parentKey][index],
+        permissions: e.target.value === 'none' ? null : e.target.value,
+      };
+      return stateChange;
+    });
+  }
+
   render() {
     const { global, linode, domain, nodebalancer, longview,
       stackscript, image, volume, loading, errors } = this.state;
 
     const analytics = { title: 'User permissions' };
+
+    const thingPermissions = (name) => ([
+      { name, dataKey: 'permissions', label: 'None', value: 'none' },
+      { name, dataKey: 'permissions', label: 'Read-Only', value: 'read_only' },
+      { name, dataKey: 'permissions', label: 'Read-Write', value: 'read_write' },
+    ]);
+
+    const headerColumns = thingPermissions(''); // The same for all Grant sections
 
     return (
       <Form onSubmit={this.onSubmit} analytics={analytics}>
@@ -195,90 +219,92 @@ export class PermissionsPage extends Component {
             />
 
           </div>
-          <PermissionsTable
-            title="Linode"
-            parentKey="linode"
-            onCellChange={this.onCellChange}
-            objects={linode}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              { dataKey: 'resize', label: 'Resize ($)' },
-            ]}
-          />
-          <PermissionsTable
-            title="NodeBalancer"
-            parentKey="nodebalancer"
-            onCellChange={this.onCellChange}
-            objects={nodebalancer}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              null,
-            ]}
-          />
-          <PermissionsTable
-            title="Longview"
-            parentKey="longview"
-            onCellChange={this.onCellChange}
-            objects={longview}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              null,
-            ]}
-          />
-          <PermissionsTable
-            title="Domains"
-            parentKey="domain"
-            onCellChange={this.onCellChange}
-            objects={domain}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              null,
-            ]}
-          />
-          <PermissionsTable
-            title="StackScripts"
-            parentKey="stackscripts"
-            onCellChange={this.onCellChange}
-            objects={stackscript}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'use', label: 'Use' },
-              { dataKey: 'edit', label: 'Edit' },
-              { dataKey: 'delete', label: 'Delete' },
-            ]}
-          />
-          <PermissionsTable
-            title="Images"
-            parentKey="image"
-            onCellChange={this.onCellChange}
-            objects={image}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              null,
-            ]}
-          />
-          <PermissionsTable
-            title="Volume"
-            parentKey="volume"
-            onCellChange={this.onCellChange}
-            objects={volume}
-            columns={[
-              { dataKey: 'all', label: 'All' },
-              { dataKey: 'access', label: 'Access' },
-              { dataKey: 'delete', label: 'Delete' },
-              null,
-            ]}
-          />
+          {[{
+            parentKey: 'linode',
+            title: 'Linode',
+            objects: linode,
+            dataColumns: (id) => thingPermissions(`linode-grants-${id}`),
+          }, {
+            parentKey: 'domain',
+            title: 'Domain',
+            objects: domain,
+            dataColumns: (id) => thingPermissions(`domain-grants-${id}`),
+          }, {
+            parentKey: 'nodebalancer',
+            title: 'NodeBalancer',
+            objects: nodebalancer,
+            dataColumns: (id) => thingPermissions(`nodebalancer-grants-${id}`),
+          }, {
+            parentKey: 'longview',
+            title: 'Longview Client',
+            objects: longview,
+            dataColumns: (id) => thingPermissions(`longview-grants-${id}`),
+          }, {
+            parentKey: 'stackscript',
+            title: 'Stackscript',
+            objects: stackscript,
+            dataColumns: (id) => thingPermissions(`stackscript-grants-${id}`),
+          }, {
+            parentKey: 'image',
+            title: 'Image',
+            objects: image,
+            dataColumns: (id) => thingPermissions(`image-grants-${id}`),
+          }, {
+            parentKey: 'volume',
+            title: 'Volume',
+            objects: volume,
+            dataColumns: (id) => thingPermissions(`volume-grants-${id}`),
+          },
+          ].map(section => (
+            <div className="form-group Permissions-section">
+              <h3>{section.title}</h3>
+              {!section.objects.length ?
+                <div className="text-muted">No {section.title}s found.</div> :
+                <table className="Table  Table--secondary">
+                  <thead>
+                    <tr>
+                      <th className="LabelColumn">{section.title}</th>
+                      {headerColumns.map(column => (
+                        <th className="PermissionsCheckboxColumn">{column.label}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {section.objects.map(object => (
+                      <tr className="TableRow  ">
+                        <td className="TableCell LabelCell">
+                          <div className="TableCell-content">
+                            <span>{object.label}</span>
+                          </div>
+                        </td>
+                        {section.dataColumns(object.id).map(
+                          column => {
+                            console.log('column is ', column);
+                            return(
+                          <td className="TableCell  ">
+                            <div className="TableCell-content Radio">
+                              <label>
+                                <input
+                                  className="Radio-input"
+                                  type="radio"
+                                  name={`grants-${section.parentKey}-${object.id}`}
+                                  onChange={this.updateGrant(section.parentKey, object)}
+                                  value={column.value}
+                                  checked={column.value === object.permissions}
+                                  title={object.label}
+                                />
+                              </label>
+                            </div>
+                          </td>
+                        ); } )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              }
+            </div>
+          ))}
+
           <FormGroup>
             <SubmitButton disabled={loading}>Save</SubmitButton>
             <FormSummary errors={errors} success="Permissions saved." />

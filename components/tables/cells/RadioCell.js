@@ -12,7 +12,7 @@ export default function RadioCell(props) {
     onChange,
     record,
     name,
-    value
+    value,
   } = props;
 
   return (
@@ -23,7 +23,7 @@ export default function RadioCell(props) {
         onChange={(e) => {
           onChange(record, e.target.checked, column);
         }}
-        name={name}
+        name={`${name}-${record.id}`}
         value={value}
       />
     </TableCell>
@@ -38,8 +38,8 @@ RadioCell.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
-    null,
-  ]),
+    PropTypes.oneOf([null]),
+  ]).isRequired,
 };
 
 RadioCell.defaultProps = {
