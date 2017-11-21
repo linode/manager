@@ -7,6 +7,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import DisplayCurrency from '~/components/DisplayCurrency';
 
 import { BillingHistoryList } from '../components/BillingHistoryList';
 
@@ -81,7 +82,7 @@ export class DashboardPage extends Component {
                 Account Balance
               </div>
               <div className="col-sm-4" id="balance">
-                <strong>${Math.abs(account.balance).toFixed(2)}</strong>
+                <strong>{<DisplayCurrency value={account.balance} />}</strong>
                 {account.balance < 0 ? ' (credit)' : null}
               </div>
               <div className="col-sm-6 text-muted">
