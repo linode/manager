@@ -8,7 +8,7 @@ import { hideModal, showModal } from '~/actions/modal';
 import { actions } from '../generic/linodes';
 import { fetch } from '../fetch';
 
-function linodeAction(id, action, body, handleRsp, handleFailure) {
+function linodeAction(id, action, body, handleRsp) {
   return async (dispatch) => {
     try {
       const rsp = await dispatch(fetch.post(`/linode/instances/${id}/${action}`, body));
@@ -17,13 +17,14 @@ function linodeAction(id, action, body, handleRsp, handleFailure) {
       }
     } catch (ex) {
       if (ex.status === 400) {
-        await dispatch(showModal("Linode busy", (
+        await dispatch(showModal('Linode busy', (
           <FormModalBody
             buttonText="OK"
             onSubmit={() => dispatch(hideModal())}
             noCancel
           >
-            {_.capitalize(action)} failed because the Linode is busy. Please try again in a few moments. 
+          {_.capitalize(action)} failed because the Linode is busy. 
+          Please try again in a few moments.
           </FormModalBody>
         )));
       }

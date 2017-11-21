@@ -162,14 +162,14 @@ export default class StatusDropdown extends Component {
     const { linode, dispatch } = this.props;
     const configCount = Object.keys(linode._configs.configs).length;
     if (configCount <= 1) {
-      dispatch(callback(linode.id));
-      dispatch(hideModal());
+      dispatch_(callback(linode.id));
+      dispatch_(hideModal());
       return;
     }
 
     const title = 'Select Configuration Profile';
 
-    dispatch(showModal(title, (
+    dispatch_(showModal(title, (
       <ConfigSelectModalBody
         linode={linode}
         title={title}
