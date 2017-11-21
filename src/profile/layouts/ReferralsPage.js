@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 
+import { ChainedDocumentTitle } from '~/components';
+
 export function ReferralsPage(props) {
   const { code, url, total, completed, pending, credit } = props.referrals;
   const ref = `You have ${total} total referrals: ${completed} completed
@@ -12,9 +14,10 @@ export function ReferralsPage(props) {
 
   return (
     <Card header={header}>
+      <ChainedDocumentTitle title="Referrals" />
       <p>
         Referrals reward you when you refer people to Linode. If someone
-        signs up using your referral code, you'll receive a credit of
+        signs up using your referral code, you&apos;ll receive a credit of
         $20.00, so long as the person you referred remains an active
         customer for 90 days.
       </p>

@@ -5,8 +5,10 @@ import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup } from 'linode-components/forms';
-import { BillingHistoryList } from '../components/BillingHistoryList';
+
 import { setSource } from '~/actions/source';
+
+import { BillingHistoryList } from '../components/BillingHistoryList';
 
 
 export class DashboardPage extends Component {

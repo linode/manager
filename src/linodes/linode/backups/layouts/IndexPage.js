@@ -12,6 +12,7 @@ import { setSource } from '~/actions/source';
 import { enableBackup } from '~/api/ad-hoc/backups';
 import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import { selectLinode } from '../../utilities';
 
@@ -86,6 +87,7 @@ export class IndexPage extends Component {
         }}
         pathname={location.pathname}
       >
+        <ChainedDocumentTitle title="Backups" />
         {this.props.children}
       </Tabs>
     );

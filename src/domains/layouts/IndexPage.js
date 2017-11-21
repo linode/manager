@@ -16,10 +16,11 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
 
@@ -42,7 +43,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Domains'));
     dispatch(setAnalytics(['domains']));
   }
 
@@ -72,6 +72,7 @@ export class IndexPage extends Component {
 
     return (
       <List>
+        <ChainedDocumentTitle title="Domains" />
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl

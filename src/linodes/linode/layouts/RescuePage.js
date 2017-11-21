@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import { RescueMode, ResetRootPassword } from '../components';
 import { selectLinode } from '../utilities';
@@ -29,6 +30,7 @@ export class RescuePage extends Component {
 
     return (
       <div className="row">
+        <ChainedDocumentTitle title="Rescue" />
         <section className="col-lg-6 col-md-12 col-sm-12">
           <RescueMode dispatch={dispatch} linode={linode} />
         </section>
