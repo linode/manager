@@ -189,28 +189,49 @@ export default class StatusDropdown extends Component {
     setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
   }
 
+  linodeToGroups = linode => {
+    const status = linode.status;
+    // we always show the current status
+    const finalGroups = [{ elements: [
+      { name: LinodeStatesReadable[status] || _.capitalize(status) },
+    ] }];
+    const transitionStates = [
+      'shutting_down',
+      'booting',
+      'provisioning',
+      'rebooting',
+      'rebuilding',
+      'restoring',
+      'migrating',
+    ];
+    // don't allow power actions in a transition state
+    if (!(_.find(transitionStates, el => el === status))) {
+      if (status !== 'offline') {
+        finalGroups.push({ elements: [
+            { name: 'Reboot', action: this.rebootLinode },
+            { name: 'Power Off', action: this.powerOffLinode },
+        ] });
+      } else {
+        finalGroups.push({ elements: [
+            { name: 'Power On', action: this.powerOnLinode },
+        ] });
+      }
+    }
+    // we always allow Lish
+    finalGroups.push({ elements: [
+        { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
+    ] });
+    // we always allow deletion
+    finalGroups.push({ elements: [
+        { name: 'Delete', action: this.deleteLinode },
+    ] });
+    return finalGroups;
+  }
+
   render() {
     const { linode } = this.props;
 
-    const status = LinodeStatesReadable[linode.status] || _.capitalize(linode.status);
-    const groups = [
-      { elements: [{ name: status }] },
-      {
-        elements: [
-          { name: 'Reboot', action: this.rebootLinode },
-          { name: 'Power Off', action: this.powerOffLinode },
-        ],
-      },
-      { elements: [{
-        name: 'Launch Console',
-        action: () => launchWeblishConsole(linode),
-      }] },
-      { elements: [{ name: 'Delete', action: this.deleteLinode }] },
-    ];
-
-    if (linode.status === 'offline') {
-      groups[1].elements = [{ name: 'Power On', action: this.powerOnLinode }];
-    }
+    const groups = this.linodeToGroups(linode);
 
     // The calc(x + 1px) is needed because we have left: -1px on this element.
     const progressWidth = `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})`;
