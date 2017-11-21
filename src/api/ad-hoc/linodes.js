@@ -1,13 +1,32 @@
+import _ from 'lodash';
+import React from 'react';
+
+import { FormModalBody } from 'linode-components/modals';
+
+import { hideModal, showModal } from '~/actions/modal';
+
 import { actions } from '../generic/linodes';
 import { fetch } from '../fetch';
 
-
-function linodeAction(id, action, body, handleRsp) {
+function linodeAction(id, action, body, handleRsp, handleFailure) {
   return async (dispatch) => {
-    const rsp = await dispatch(fetch.post(`/linode/instances/${id}/${action}`, body));
-
-    if (handleRsp) {
-      dispatch(handleRsp(rsp));
+    try {
+      const rsp = await dispatch(fetch.post(`/linode/instances/${id}/${action}`, body));
+      if (handleRsp) {
+        dispatch(handleRsp(rsp));
+      }
+    } catch (ex) {
+      if (ex.status === 400) {
+        await dispatch(showModal("Linode busy", (
+          <FormModalBody
+            buttonText="OK"
+            onSubmit={() => dispatch(hideModal())}
+            noCancel
+          >
+            {_.capitalize(action)} failed because the Linode is busy. Please try again in a few moments. 
+          </FormModalBody>
+        )));
+      }
     }
   };
 }

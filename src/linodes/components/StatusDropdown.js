@@ -156,7 +156,9 @@ export default class StatusDropdown extends Component {
 
   rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
 
-  selectConfig = (callback) => {
+  /* selectConfig needs to return a thunk because the callback is dispatched as
+   * an action */
+  selectConfig = (callback) => (dispatch_) => {
     const { linode, dispatch } = this.props;
     const configCount = Object.keys(linode._configs.configs).length;
     if (configCount <= 1) {
