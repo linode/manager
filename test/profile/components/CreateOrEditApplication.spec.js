@@ -32,6 +32,7 @@ describe('profile/components/CreateOrEditApplication', () => {
 
     changeInput(page, 'label', 'My new client');
     changeInput(page, 'redirect', 'http://example.com');
+    changeInput(page, 'public_', true);
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB - 0.5) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 
@@ -44,6 +45,7 @@ describe('profile/components/CreateOrEditApplication', () => {
         body: {
           label: 'My new client',
           redirect_uri: 'http://example.com',
+          public: true,
         },
       }),
       async ([fn]) => expectRequest(fn, '/account/oauth-clients/1/thumbnail', {
@@ -51,7 +53,7 @@ describe('profile/components/CreateOrEditApplication', () => {
         body: thumbnail,
         headers: { 'Content-Type': 'image/png' },
       }),
-    ], 3, [{ id: 1, secret: '' }]);
+    ], 3, [{ id: 1, secret: '', public: true }]);
     // One call to save the data, one call to save the thumbnail, one call to show the secret.
   });
 
@@ -65,6 +67,7 @@ describe('profile/components/CreateOrEditApplication', () => {
 
     changeInput(page, 'label', 'My new client');
     changeInput(page, 'redirect', 'http://example.com');
+    changeInput(page, 'public_', true);
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB + 1) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 
@@ -89,6 +92,7 @@ describe('profile/components/CreateOrEditApplication', () => {
 
     changeInput(page, 'label', 'My new client');
     changeInput(page, 'redirect', 'http://google.com');
+    changeInput(page, 'public_', false);
 
     dispatch.reset();
     await page.props().onSubmit();
@@ -100,10 +104,27 @@ describe('profile/components/CreateOrEditApplication', () => {
         body: {
           label: 'My new client',
           redirect_uri: 'http://google.com',
+          public: false,
         },
       }),
     ], 1, [{ id: 1 }]);
 
     expect(close.callCount).to.equal(1);
+  });
+
+  it('has the public field disabled upon edit', async () => {
+    const page = shallow(
+      <CreateOrEditApplication
+        dispatch={dispatch}
+        close={close}
+        label="My awesome client"
+        redirect_uri="http://example.com"
+        id="1"
+        public
+        forEdit
+      />
+    );
+
+    expect(page.find('#public_').at(0).props().disabled).to.equal(true);
   });
 });
