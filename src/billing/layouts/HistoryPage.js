@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 
+import { BillingHistoryList } from '../components/BillingHistoryList';
+import DisplayCurrency from '~/components/DisplayCurrency';
 import { setSource } from '~/actions/source';
 import { ChainedDocumentTitle } from '~/components';
-
-import { BillingHistoryList } from '../components/BillingHistoryList';
 
 
 export class HistoryPage extends Component {
@@ -28,8 +28,8 @@ export class HistoryPage extends Component {
 
             <div className="row">
               <div className="col-sm-12 text-right">
-                <strong>Current Balance: ${Math.abs(account.balance).toFixed(2)}
-                {account.balance < 0 ? ' (credit)' : null}</strong>
+                <strong>Current Balance: <DisplayCurrency value={account.balance} />
+                  {account.balance < 0 ? ' (credit)' : null}</strong>
               </div>
             </div>
           </Card>
