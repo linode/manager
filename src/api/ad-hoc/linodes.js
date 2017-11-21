@@ -23,7 +23,7 @@ function linodeAction(id, action, body, handleRsp) {
             onSubmit={() => dispatch(hideModal())}
             noCancel
           >
-          {_.capitalize(action)} failed because the Linode is busy. 
+          {_.capitalize(action)} failed because the Linode is busy.
           Please try again in a few moments.
           </FormModalBody>
         )));
