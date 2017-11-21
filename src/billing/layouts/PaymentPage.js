@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
+import { ChainedDocumentTitle } from '~/components';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
@@ -23,6 +24,7 @@ export class PaymentPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Payment #${payment.id}`} />
         <Breadcrumbs
           crumbs={[
             { label: 'History', to: '/billing/history' },
