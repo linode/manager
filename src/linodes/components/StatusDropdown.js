@@ -173,7 +173,7 @@ export default class StatusDropdown extends Component {
       <ConfigSelectModalBody
         linode={linode}
         title={title}
-        dispatch={dispatch}
+        dispatch={dispatch_}
         action={callback}
       />
     )));
