@@ -95,15 +95,17 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-first').text().trim()).to.equal('Offline');
   });
 
-  it('renders modal on reboot if multiple configs', () => {
+  it('renders modal on reboot if multiple configs', async () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes['1233']} dispatch={dispatch} />
     );
 
     dropdown.find('.Dropdown-toggle').simulate('click');
-    dropdown.find('.Dropdown-item').first().simulate('mousedown');
-    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
+    await dropdown.find('.Dropdown-item').first().simulate('click');
+    // click the confirm button on the first modal
+    const firstButton = document.querySelector('.Modal-footer');
+    console.log(firstButton);
   });
 
   it('renders modal on power on if multiple configs', () => {
@@ -114,6 +116,7 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.Dropdown-toggle').simulate('click');
     dropdown.find('.Dropdown-item').first().simulate('mousedown');
-    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
+    const configModal = dropdown.find('#configs').at(0);
+    expect(configModal.props().apiKey).to.equal("config_id");
   });
 });
