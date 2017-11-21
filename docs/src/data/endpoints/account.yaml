@@ -97,11 +97,11 @@ endpoints:
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "label": "Example app",
-                    "redirect_uri": "https://oauthreturn.example.org/",
+                    "redirect_uri": "https://example.org/oauth_callback/",
                 }' \
                 https://$api_root/$version/account/oauth-clients
           python: |
-            new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
+            new_client = client.account.create_oauth_client('Example app', 'https://example.org/oauth_callback/')
   /account/oauth-clients/$id:
     group: OAuth Clients
     type: resource
@@ -231,16 +231,20 @@ endpoints:
           username:
             type: String
             description: The username for the new user.
+            value: example_user
           email:
             type: String
             description: The user's email.
+            value: person@place.com
           password:
             type: String
             description: The user's password.
+            value: hunter2
           restricted:
-            optinoal: true
+            optional: true
             type: Boolean
             description: If false, this user has access to the entire account.  Defaults to true.
+            value: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -344,7 +348,13 @@ endpoints:
                 -X PUT -d '{
                     "global": {
                         "add_linodes": true
-                    }
+                    },
+                    "linodes": {[
+                        {
+                            "id": 123,
+                            "permissions": "read_only"
+                        }
+                    ]}
                 }' \
                 https://$api_root/$version/account/users/testguy/grants
           python: |
@@ -374,27 +384,30 @@ endpoints:
         description: >
           Registers a new OAuth client application.
         params:
-          name:
+          label:
             description: A name for the new client application.
             type: string
             limit: "1-128 characters"
+            value: Example OAuth app
           redirect_uri:
             description: A URL to redirect to after the OAuth flow has completed.
             type: string
             limit: "1-512 characters"
+            value: https://example.org/oauth_callback/
           public:
             optional: true
             description: >
               If true, this client uses the implicit OAuth flow and does not
               use a client secret.
             type: Boolean
+            value: true
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
                     "name": "Example app",
-                    "redirect_uri": "https://oauthreturn.example.org/",
+                    "redirect_uri": "https://example.org/oauth_callback/",
                 }' \
                 https://$api_root/$version/account/oauth-clients
   /account/oauth-clients/$id:
@@ -491,6 +504,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
+    description: Updates marks all Events up to and including this Event as seen.
     methods:
       POST:
         description: >
@@ -504,6 +518,7 @@ endpoints:
     group: Events
     type: resource
     authenticated: true
+    description: Updates specific Event to designate that it has been read.
     methods:
       POST:
         description: >
@@ -571,15 +586,24 @@ endpoints:
             curl https://$api_root/$version/account/payments
       POST:
         oauth: account:modify
-        response: payment
         description: >
           Make a payment.
+        params:
+          usd:
+            type: String
+            description: The amount (in US Dollars) of the payment.
+            value: "120.00"
+          cvv:
+            type: String
+            optional: true
+            description: CVV (Card Verification Value) of the credit card to be used for the payment.
+            value: "0123"
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: Bearer $TOKEN" \
                 -X POST -d '{
-                    "usd": 100,
+                    "usd": "120.00",
                 }' \
                 https://$api_root/$version/account/payments
   /account/payments/:id:

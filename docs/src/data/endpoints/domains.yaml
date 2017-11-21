@@ -41,6 +41,7 @@ endpoints:
             description: >
               Start of Authority (SOA) contact email.
             type: String
+            optional: true
           description:
             optional: true
             description: >
@@ -115,6 +116,8 @@ endpoints:
             import linode
             TODO
   /domains/$id:
+    description: >
+      Manage a particular Domain your account may access.
     authenticated: true
     methods:
       GET:
@@ -205,8 +208,8 @@ endpoints:
             optional: true
             description: >
               When Type=MX the hostname. When Type=CNAME the target of the
-              alias. When Type=TXT the value of the record. When Type=A or
-              AAAA the token of '[remote_addr]' will be substituted with the
+              alias. When Type=TXT or CAA the value of the record. When Type=A
+              or AAAA the token of '[remote_addr]' will be substituted with the
               IP address of the request.
             type: String
           priority:
@@ -235,6 +238,12 @@ endpoints:
             description: >
               The protocol to append to an SRV record.
             type: String
+          tag:
+            optional: true
+            description: >
+              The tag attribute for a CAA record. One of issue, issuewild,
+              iodef. Ignored on other record types.
+            type: Enum
           ttl:
             optional: true
             description: >
@@ -257,6 +266,8 @@ endpoints:
             TODO
   /domains/$id/records/$id:
     authenticated: true
+    description: >
+      Manage a particular Domain Record your account may access.
     methods:
       GET:
         response: domainrecord

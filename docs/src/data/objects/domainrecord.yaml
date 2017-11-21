@@ -12,7 +12,7 @@ schema:
     type: String
     value: A
     description: >
-      Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).
+      Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV or CAA).
   name:
     type: String
     value: sub.example.com
@@ -31,7 +31,7 @@ schema:
     filterable: true
     description: >
       When type=MX the hostname. When type=CNAME the target of the alias.
-      When type=TXT the value of the record.
+      When type=TXT or CAA the value of the record.
       When type=A or AAAA the token of '[remote_addr]' will be substituted
       with the IP address of the request.
   priority:
@@ -70,6 +70,14 @@ schema:
     optional: true
     description: >
       The protocol to append to an SRV record. Must conform to RFC2782 standards.
+  tag:
+    type: String
+    value: issue
+    editable: true
+    optional: true
+    description: >
+      The tag attribute for a CAA record. One of issue, issuewild, iodef.
+      Ignored on other record types.
   ttl_sec:
     type: Integer
     value: 86400
@@ -88,3 +96,4 @@ enums:
     CNAME: Canonical Name Record
     TXT: Text Record
     SRV: Service Record
+    CAA: Certification Authority Authorization Record
