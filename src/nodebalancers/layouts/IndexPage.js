@@ -20,11 +20,12 @@ import {
 } from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
@@ -48,7 +49,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('NodeBalancers'));
     dispatch(setAnalytics(['nodebalancers']));
   }
 
@@ -123,6 +123,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="NodeBalancers" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">NodeBalancers</h1>
