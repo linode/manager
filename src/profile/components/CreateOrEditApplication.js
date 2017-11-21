@@ -35,7 +35,6 @@ export default class CreateOrEditApplication extends Component {
       label: props.label || '',
       redirect: props.redirect_uri || '',
       thumbnail: props.thumbnail || '',
-      public_: props.public || false,
       errors: {},
     };
 
@@ -44,9 +43,9 @@ export default class CreateOrEditApplication extends Component {
 
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
-    const { label, redirect, thumbnail, public_ } = this.state;
+    const { label, redirect, thumbnail } = this.state;
 
-    const data = { label, redirect_uri: redirect, public: public_ };
+    const data = { label, redirect_uri: redirect };
     const idsPath = [id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -72,8 +71,8 @@ export default class CreateOrEditApplication extends Component {
   }
 
   render() {
-    const { close, title, id, forEdit } = this.props;
-    const { errors, label, redirect, public_ } = this.state;
+    const { close, title, id } = this.props;
+    const { errors, label, redirect } = this.state;
 
     return (
       <FormModalBody
@@ -109,16 +108,6 @@ export default class CreateOrEditApplication extends Component {
               onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
             />
           </ModalFormGroup>
-          <ModalFormGroup id="public" label="Public" apiKey="public" errors={errors}>
-            <Input
-              name="public_"
-              id="public_"
-              type="checkbox"
-              checked={public_}
-              disabled={forEdit}
-              onChange={this.onChange}
-            />
-          </ModalFormGroup>
         </div>
       </FormModalBody>
     );
@@ -133,6 +122,4 @@ CreateOrEditApplication.propTypes = {
   id: PropTypes.string,
   redirect_uri: PropTypes.string,
   thumbnail: PropTypes.string,
-  public: PropTypes.boolean,
-  forEdit: PropTypes.boolean,
 };
