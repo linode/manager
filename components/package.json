@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^15.1.0"
+    "react": "~0.14 || ^15.0.0 || ^16.0.0",
+    "react-dom": "~0.14 || ^15.0.0 || ^16.0.0"
   },
   "dependencies": {
     "react-clipboard.js": "^1.1.2",
-    "react-dom": "^15.1.0",
     "react-highlight": "^0.10.0",
     "react-router": "^2.4.1",
     "react-router-dom": "^4.1.1",

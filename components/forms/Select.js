@@ -67,16 +67,16 @@ export default class Select extends Component {
     const [value] = this.realValue();
 
     if (!this.props.multi) {
-      const options = this.props.options.map(function ({ value, label, options }) {
+      const options = this.props.options.map(function ({ value, label, disabled, options }, index) {
         if (options) {
           return (
             <optgroup label={label}>
-              {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
+              {options.map(({ value, label, disabled }, index) => (<option key={index} value={value} disabled={disabled}>{label}</option>))}
             </optgroup>
           );
         }
 
-        return <option value={value}>{label}</option>;
+        return <option key={index} value={value} disabled={disabled}>{label}</option>;
       });
 
       return (
@@ -85,7 +85,7 @@ export default class Select extends Component {
           name={this.props.name}
           onChange={this.props.onChange}
           value={value}
-          className="Select Select--native form-control"
+          className={`Select Select--native form-control ${this.props.className}`}
         >{options}</select>
       );
     }

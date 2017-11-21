@@ -173,7 +173,7 @@ export function transform(objects, options = {}) {
   const {
     filterBy = '',
     filterOn = 'label',
-    sortBy = o => o[filterOn].toLowerCase(),
+    sortBy = o => o[filterOn] ? o[filterOn].toLowerCase() : '',
     groupOn = 'group',
     smartFilter = true,
   } = options;
@@ -187,8 +187,12 @@ export function transform(objects, options = {}) {
     }
   }
 
-  const filtered = filterBy.length ? _.pickBy(objects, o =>
-    filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
+  const filterFn = (filterBy) => _.pickBy(
+    objects,
+    o => filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1
+  );
+
+  const filtered = filterBy.length ? filterFn(filterBy) : objects;
   const sorted = _.sortBy(Object.values(filtered), sortBy);
 
   const groupOnFn = _.isFunction(groupOn) ? groupOn : o => o[groupOn];

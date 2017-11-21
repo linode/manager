@@ -57,9 +57,11 @@ export class Layout extends Component {
         className="Layout"
         onClick={(e) => {
           const { notifications, session } = this.props;
+          // Simulated/Proxied events may not be complete (Highcharts)
+          const className = `${e.target.className}`;
           // Gross
-          const isListItem = e.target.className.includes('NotificationList-listItem');
-          const isSessionMenu = e.target.className.includes('SessionMenu');
+          const isListItem = className.includes('NotificationList-listItem');
+          const isSessionMenu = className.includes('SessionMenu');
           if (notifications.open && !isListItem) {
             dispatch(hideNotifications());
           } else if (session.open && !isSessionMenu) {

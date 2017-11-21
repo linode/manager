@@ -124,6 +124,7 @@ export default class Header extends Component {
         />
         <this.renderLink to="/nodebalancers" label="NodeBalancers" />
         <this.renderLink to="/domains" label="Domains" />
+        <this.renderLink to="/longview" label="Longview" />
         <this.renderLink to="/support" label="Support" />
         {!username ? null : (
           <div

@@ -2,6 +2,7 @@
 export const API_ROOT = ENV_API_ROOT || 'https://api.linode.com/v4';
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.linode.com';
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
+export const LONGVIEW_ROOT = ENV_LONGVIEW_ROOT || 'https://longview.linode.com/fetch';
 export const GA_ID = ENV_GA_ID;
 export const SENTRY_URL = ENV_SENTRY_URL;
 export const ENVIRONMENT = process.env.NODE_ENV || 'development';
@@ -502,4 +503,143 @@ export const Countries = {
   YU: 'Yugoslavia',
   ZM: 'Zambia',
   ZW: 'Zimbabwe',
+};
+
+export const HIGHCHARTS_THEME = {
+  chart: {
+    plotBorderWidth: 1,
+    plotBorderColor: '#D3D3D3',
+    plotBackgroundColor: '#fff',
+    backgroundColor: 'rgba(0,0,0,0)',
+    zoomType: 'x',
+    animation: false,
+    marginLeft: 24,
+    marginRight: 0,
+    marginBottom: 50,
+    marginTop: 25,
+    spacingTop: 0,
+    spacingLeft: 0,
+    spacingRight: 0,
+    spacingBottom: 0,
+    style: {
+      fontFamily: 'Helvetica,Arial,sans-serif',
+    },
+    resetZoomButton: {
+      theme: {
+        fill: '#fff',
+        stroke: '#D3D3D3',
+        r: 0,
+        style: {
+          fontSize: 12,
+        },
+        states: {
+          hover: {
+            fill: '#f5f5f5',
+            stroke: '#D3D3D3',
+          },
+        },
+      },
+    },
+    /**
+    events: {
+      selection: function(event) {
+        event.preventDefault();
+        try {
+          longview.changeToTime((event.xAxis[0].min / 1000), parseInt(event.xAxis[0].max / 1000))
+          Page.ResetZoomButton.show();
+        } catch(e) { }
+      }
+    }
+    */
+  },
+  title: {
+    text: null,
+    style: {
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSize: '17px',
+      fontWeight: '300',
+      color: '#000',
+    },
+  },
+  credits: {
+    enabled: false,
+  },
+  xAxis: {
+    type: 'datetime',
+    labels: {
+      enabled: true,
+    },
+    tickColor: '#D3D3D3',
+    startOnTick: false,
+    endOnTick: false,
+    lineWidth: 0,
+  },
+  yAxis: {
+    title: {
+      text: null,
+    },
+    labels: {
+      enabled: true,
+      rotation: 270,
+      align: 'right',
+    },
+    maxPadding: 0.25,
+    startOnTick: false,
+    endOnTick: true,
+    showFirstLabel: false,
+    showLastLabel: true,
+    gridLineWidth: 1,
+    gridLineColor: '#D3D3D3',
+  },
+  tooltip: {
+    useHTML: true,
+    enabled: true,
+    crosshairs: [true, false],
+    shared: true,
+  },
+  loading: {
+    labelStyle: {
+      color: '#000',
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontWeight: 500,
+    },
+  },
+  plotOptions: {
+    series: {
+      animation: true,
+      stacking: 'normal',
+      shadow: false,
+      fillOpacity: 0.75,
+      stickyTracking: true, // MJ Added (testing)
+      linkedTo: ':previous', // MJ Added (testing)
+      marker: {
+        enabled: false,
+        states: {
+          hover: {
+            enabled: true,
+          },
+        },
+      },
+    },
+    area: {
+      lineWidth: 1,
+      states: {
+        hover: {
+          lineWidth: 1.0,
+        },
+      },
+    },
+    line: {
+      stacking: null,
+      lineWidth: 2,
+      states: {
+        hover: {
+          lineWidth: 2,
+        },
+      },
+    },
+  },
+  global: {
+    useUTC: true,
+  },
 };

@@ -4,28 +4,32 @@ import { rawFetch } from '~/fetch';
 import * as session from '~/session';
 
 
-function gatherOptions(token, method, body, headers) {
+export function gatherOptions(token, method, body, headers) {
   const options = {
     method,
     body,
     mode: 'cors',
     headers: {
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       ...headers,
     },
   };
+
+  if (token) {
+    options.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // FormData needs to set the Content-Type header itself.
+  if (options.body instanceof FormData || options.body instanceof URLSearchParams) {
+    delete options.headers['Content-Type'];
+  }
 
   const contentType = (options.headers['Content-Type'] || '').toLowerCase();
   if (contentType === 'application/json') {
     options.body = JSON.stringify(options.body);
   }
 
-  // FormData needs to set the Content-Type header itself.
-  if (options.body instanceof FormData) {
-    delete options.headers['Content-Type'];
-  }
 
   if (options.headers['X-Filter']) {
     options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);
