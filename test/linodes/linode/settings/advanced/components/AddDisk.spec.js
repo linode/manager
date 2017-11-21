@@ -70,7 +70,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     expect(dispatch.calledWith(hideModal())).to.equal(true);
   });
 
-  it('should POST /linode/instances/:id/disks/ when form is submitted (create from and only list distro)', async () => {
+  it('should POST /linode/instances/:id/disks/ create disk from and only list distro', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
       <AddDisk
@@ -106,8 +106,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
       }),
     ]);
   });
-  
-  it('should POST /linode/instances/:id/disks/ when form is submitted (create from image and list all)', async () => {
+
+  it('should POST /linode/instances/:id/disks/ create disk from image and list all', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
       <AddDisk
@@ -115,10 +115,9 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         linode={testLinode1236}
         free={4096}
         distributions={api.distributions}
-        images={{images: api.images}}
+        images={{ mages: api.images }}
       />);
 
-    const distro = Object.keys(api.distributions.distributions)[0];
     changeInput(modal, 'distribution', 38);
     changeInput(modal, 'label', 'Test disk');
     changeInput(modal, 'size', '1234');
