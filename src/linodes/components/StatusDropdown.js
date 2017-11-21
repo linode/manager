@@ -212,7 +212,7 @@ export default class StatusDropdown extends Component {
             { name: 'Power Off', action: this.powerOffLinode },
         ] });
       } else {
-        finalGroups.push = ({ elements: [
+        finalGroups.push({ elements: [
             { name: 'Power On', action: this.powerOnLinode },
         ] });
       }

@@ -495,6 +495,11 @@ export const testLinode1247 = {
   },
 };
 
+export const testLinode1248 = {
+  ...createTestLinode(1248),
+  status: 'provisioning',
+};
+
 export const linodes = [
   testLinode,
   testLinode1233,
@@ -510,4 +515,5 @@ export const linodes = [
   testLinode1245,
   testLinode1246,
   testLinode1247,
+  testLinode1248,
 ].reduce((object, linode) => ({ ...object, [linode.id]: linode }), {});
