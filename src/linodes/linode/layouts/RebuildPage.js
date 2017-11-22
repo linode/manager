@@ -24,6 +24,9 @@ export class RebuildPage extends Component {
     if (!getState().api.distributions.ids.length) {
       await dispatch(api.distributions.all());
     }
+    if (!getState().api.images.ids.length) {
+      await dispatch(api.images.all());
+    }
   }
 
   constructor(props) {
@@ -47,13 +50,20 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id, label }, distributions } = this.props;
+    const { dispatch, linode: { id, label }, distributions, images } = this.props;
     const { password, distribution } = this.state;
-    const distroLabel = distributions[distribution].label;
+    const isDistro = !/^\d+$/.test(distribution);
+    const distroLabel = isDistro ? distributions[distribution].label : images[distribution].label;
+
+    const data = {
+      distribution: isDistro ? distribution : null,
+      image: !isDistro ? parseInt(distribution) : null,
+      root_pass: password,
+    };
 
     const callback = async () => {
       await dispatch(dispatchOrStoreErrors.call(this, [
-        () => rebuildLinode(id, { distribution, root_pass: password }),
+        () => rebuildLinode(id, data),
         () => this.setState({ password: '', distribution }),
       ], ['distribution']));
 
@@ -75,7 +85,7 @@ export class RebuildPage extends Component {
   }
 
   render() {
-    const { distributions, linode } = this.props;
+    const { distributions, images, linode } = this.props;
     const { distribution, errors, loading } = this.state;
 
     const currentDistribution = linode.distribution ? linode.distribution.id : null;
@@ -103,6 +113,7 @@ export class RebuildPage extends Component {
             <div className="col-sm-9">
               <DistributionSelect
                 distributions={distributions}
+                images={images}
                 value={distribution}
                 name="distribution"
                 id="distribution"
@@ -142,13 +153,15 @@ export class RebuildPage extends Component {
 RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   linode: PropTypes.object.isRequired,
 };
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
   const { distributions } = state.api.distributions;
-  return { linode, distributions };
+  const { images } = state.api.images;
+  return { linode, distributions, images };
 }
 
 export default connect(select)(RebuildPage);
