@@ -11,14 +11,16 @@ import { account } from '@/data/account';
 
 describe('billing/layouts/ContactPage', () => {
   const sandbox = sinon.sandbox.create();
+  let page = undefined;
 
   afterEach(() => {
     sandbox.restore();
+    page.unmount();
   });
 
   it('updates contact info', async () => {
     const dispatch = sandbox.stub();
-    const page = mount(
+    page = mount(
       <ContactPage
         dispatch={dispatch}
         account={account}

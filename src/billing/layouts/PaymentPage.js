@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
+import { ChainedDocumentTitle } from '~/components';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
-
+import DisplayCurrency from '~/components/DisplayCurrency';
 import { setSource } from '~/actions/source';
 
 
@@ -23,6 +24,7 @@ export class PaymentPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Payment #${payment.id}`} />
         <Breadcrumbs
           crumbs={[
             { label: 'History', to: '/billing/history' },
@@ -59,7 +61,7 @@ export class PaymentPage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (usd) => {
-                    return `$${usd.toFixed(2)}`;
+                    return <DisplayCurrency value={usd} />;
                   },
                 },
               ]}
@@ -68,7 +70,7 @@ export class PaymentPage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-                <strong>Payment Total: ${payment.usd.toFixed(2)}</strong>
+                <strong>Payment Total: {<DisplayCurrency value={payment.usd} />}</strong>
               </div>
             </div>
           </Card>

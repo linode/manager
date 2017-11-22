@@ -16,6 +16,7 @@ import { onChange } from 'linode-components/forms/utilities';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class LishPage extends Component {
@@ -68,6 +69,7 @@ export class LishPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Lish" />
         <Card header={<CardHeader title="Change Lish settings" />}>
           <Form
             onSubmit={this.onSubmit}

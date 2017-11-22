@@ -12,15 +12,17 @@ const { invoices } = api;
 
 describe('billing/layouts/HistoryPage', () => {
   const sandbox = sinon.sandbox.create();
+  let page = undefined;
 
   afterEach(() => {
     sandbox.restore();
+    page.unmount();
   });
 
   const dispatch = sandbox.spy();
 
   it('renders account balance', () => {
-    const page = mount(
+    page = mount(
       <HistoryPage
         dispatch={dispatch}
         account={account}

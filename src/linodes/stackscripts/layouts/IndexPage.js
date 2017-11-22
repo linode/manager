@@ -16,11 +16,12 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { createHeaderFilter, transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 
 import AddStackScript from '../components/AddStackScript';
@@ -43,7 +44,6 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['stackscripts']));
-    dispatch(setTitle('StackScripts'));
   }
 
   deleteScripts = (scriptsToDelete) => {
@@ -155,6 +155,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="StackScripts" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">StackScripts</h1>

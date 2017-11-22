@@ -14,6 +14,7 @@ import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/generic/linodes';
 import Billing from '~/billing';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import DevTools from '~/components/DevTools';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
 import { init as initAnalytics } from './analytics';
@@ -115,6 +116,7 @@ const init = () => {
     render(
       <Provider store={store}>
         <div>
+          <ChainedDocumentTitle title="Linode Manager" />
           <Router
             history={history}
             onUpdate={onPageChange}

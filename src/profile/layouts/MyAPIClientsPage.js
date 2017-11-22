@@ -18,6 +18,7 @@ import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { API_ROOT } from '~/constants';
 import { DefaultClientThumb } from '~/assets';
 import { confirmThenDelete } from '~/utilities';
@@ -45,11 +46,12 @@ export class MyAPIClientsPage extends Component {
 
   createDropdownGroups = (client) => {
     const { dispatch } = this.props;
+    const editClient = { ...client, forEdit: true };
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
-        CreateOrEditApplication.trigger(dispatch, client) }] },
-      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
+        CreateOrEditApplication.trigger(dispatch, editClient) }] },
+      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(editClient) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteClients(editClient) }] },
     ];
     return groups;
   }
@@ -78,7 +80,7 @@ export class MyAPIClientsPage extends Component {
             'client secret', 'reset', secret, () => dispatch(hideModal())));
         }}
       >
-        Are you sure you want to reset <strong>{client.label}</strong>'s secret?
+        Are you sure you want to reset <strong>{client.label}</strong>&apos;s secret?
       </ConfirmModalBody>
     ));
   }
@@ -159,6 +161,7 @@ export class MyAPIClientsPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="My API Clients" />
         <header className="NavigationHeader clearfix">
           <PrimaryButton
             onClick={() => CreateOrEditApplication.trigger(dispatch)}

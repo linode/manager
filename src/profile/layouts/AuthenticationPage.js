@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { ChainedDocumentTitle } from '~/components';
+
 import { ChangePassword, TwoFactor } from '../components';
 
 
 export function AuthenticationPage(props) {
   return (
     <div>
+      <ChainedDocumentTitle title="Password & Authentication" />
       <section>
         <ChangePassword dispatch={props.dispatch} />
       </section>

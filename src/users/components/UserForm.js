@@ -8,7 +8,6 @@ import {
 import { onChange } from 'linode-components/forms/utilities';
 
 import api from '~/api';
-import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/generic/users';
 import { FormSummary } from 'linode-components/forms';
@@ -54,7 +53,6 @@ export default class UserForm extends Component {
       (user) => creating ? null : actions.one(user),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(oldUsername),
-      () => creating ? null : setTitle(data.username),
     ]));
   }
 

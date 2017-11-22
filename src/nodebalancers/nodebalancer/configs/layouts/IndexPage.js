@@ -6,9 +6,10 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { setAnalytics, setTitle } from '~/actions';
+import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
 
@@ -19,8 +20,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, nodebalancer } = this.props;
-    dispatch(setTitle(nodebalancer.label));
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
   }
 
@@ -43,6 +43,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Port ${config.port} - ${nodebalancer.label}`} />
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">

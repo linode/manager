@@ -16,7 +16,9 @@ import { onChange } from 'linode-components/forms/utilities';
 import { makePayment } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
+import { ChainedDocumentTitle } from '~/components';
 
+import DisplayCurrency from '~/components/DisplayCurrency';
 
 export class MakeAPaymentPage extends Component {
   constructor(props) {
@@ -46,15 +48,24 @@ export class MakeAPaymentPage extends Component {
 
   render() {
     const { errors, loading, usd, cvv } = this.state;
+    const { balance } = this.props;
 
     return (
       <div>
+        <ChainedDocumentTitle title="Make a Payment" />
         <section>
           <Card header={<CardHeader title="Make a Payment" />}>
             <Form
               onSubmit={this.onSubmit}
               analytics={{ title: 'Make Payment' }}
             >
+              <FormGroup errors={errors} className="row" name="balance">
+                <label className="col-sm-3 col-form-label">Balance</label>
+                <div className="col-sm-5 col-form-text">
+                  <DisplayCurrency value={balance} />
+                  <FormGroupError errors={errors} name="balance" />
+                </div>
+              </FormGroup>
               <FormGroup errors={errors} className="row" name="usd">
                 <label className="col-sm-3 col-form-label">Amount to Charge</label>
                 <div className="col-sm-5">
@@ -66,7 +77,7 @@ export class MakeAPaymentPage extends Component {
                     onChange={this.onChange}
                     pattern="[0-9]{0,7}(.[0-9]{0,2})?"
                     maxLength={7}
-                    // max="2500"
+                  // max="2500"
                   />
                   <small className="text-muted col-sm-1">(USD)</small>
                   <FormGroupError errors={errors} name="usd" />
@@ -83,8 +94,8 @@ export class MakeAPaymentPage extends Component {
                     onChange={this.onChange}
                     maxLength={4}
                     pattern="[0-9]{3,4}"
-                    // min="0000"
-                    // max="9999"
+                  // min="0000"
+                  // max="9999"
                   />
                   <small className="text-muted col-sm-1">(Optional)</small>
                 </div>
@@ -108,6 +119,11 @@ export class MakeAPaymentPage extends Component {
 
 MakeAPaymentPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  balance: PropTypes.number,
 };
 
-export default connect()(MakeAPaymentPage);
+const mapStateToProps = (state) => ({
+  balance: state.api.account.balance,
+});
+
+export default connect(mapStateToProps)(MakeAPaymentPage);

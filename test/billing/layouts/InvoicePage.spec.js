@@ -30,6 +30,8 @@ describe('billing/layouts/InvoicePage', () => {
     );
 
     expect(page.find('.TableRow').length).to.equal(items.length);
+
+    page.unmount();
   });
 
   it('renders invoice total', () => {
@@ -41,6 +43,9 @@ describe('billing/layouts/InvoicePage', () => {
       />
     );
 
-    expect(page.find('strong').text()).to.equal(`Invoice Total: $${(invoice.total).toFixed(2)}`);
+    const expected = page.find('strong').text();
+    const result = 'Invoice Total: $10.00';
+    expect(expected).to.equal(result);
+    page.unmount();
   });
 });

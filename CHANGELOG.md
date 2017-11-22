@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.15.5] 2017-11-20
+### Added
+- Contact info can be edited (#2684)
+- Images can be listed, created, and deployed as Linodes
+- CoreOS is included in Distribution lists
+### Changed
+- (Docs) updated to 0.15.0
+- All User Grants are now represented
+- User Grants have been remapped to None,ReadOnly,ReadWrite
+### Fixed
+- Handle unknown event types to prevent error splash (#2624, #2621)
+
 ## [0.15.4] 2017-11-05
 ### Added
 - Added Billing components and pages

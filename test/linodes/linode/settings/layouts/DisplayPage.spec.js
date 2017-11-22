@@ -39,7 +39,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
         method: 'PUT',
         body: { group: 'foobar', label: testLinode.label },
       }),
-    ], 2);
+    ], 1);
   });
 
   it('redirects if the label changed', async () => {
@@ -65,6 +65,6 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       }),
       () => {},
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
-    ], 3);
+    ], 2);
   });
 });

@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.15.0] 2017-11-20
+### Changed
+- Grants have been reworked
+### Added
+- API Changelog for 2017-11-20
+- CAA domain record properties are documented
+- Payment properties are documented
+### Fixed
+- Many more example values are provided
+- Many typos in property defintions have been corrected
+
 ## [0.14.1] 2017-11-05
 ### Fixed
 - Numerous missing types and descriptions were added

@@ -15,6 +15,46 @@ export default function Authentication() {
         </p>
       </section>
       <section>
+        <h2>2017-11-20</h2>
+        <hr /><br />
+        <b>Breaking Changes:</b><br />
+        <ul>
+          <li>Reworked UserGrant system
+            <ul>
+              <li>Three Grant levels are now enforced: No grants, read_only, and read_write</li>
+              <li>read_only allows access to GET endpoints</li>
+              <li>read_write is equivalent to legacy "all" grant</li>
+              <li>Legacy "all" or "access" grants are treated as read_write</li>
+            </ul>
+          </li>
+          <li>Changed GET /account/users/:username/grants
+            <ul>
+              <li>Grants response objects now always include "id", "label" and "permissions"</li>
+              <li>"permissions" can be null or an enum of either "read_only" or "read_write"</li>
+            </ul>
+          </li>
+          <li>Changed PUT /account/users/:username/grants
+            <ul>
+              <li>Grants now accepted in the new format detailed above</li>
+            </ul>
+          </li>
+          <li>Changed GET /profile/grants
+            <ul>
+              <li>Grants returned in new format detailed above</li>
+            </ul>
+          </li>
+        </ul>
+        <b>Changes:</b>
+        <ul>
+          <li>Added support for CAA Domain records</li>
+          <li>Changed POST /linode/instances/:id/disks
+            <ul>
+              <li>Now accepts "image" - an image ID to deploy from</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+      <section>
         <h2>2017-10-23</h2>
         <hr /><br />
         <b>Breaking Changes:</b><br />
