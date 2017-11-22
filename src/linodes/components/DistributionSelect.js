@@ -69,4 +69,5 @@ DistributionSelect.propTypes = {
   distributions: PropTypes.object.isRequired,
   images: PropTypes.object,
   allowNone: PropTypes.bool,
+  options: PropTypes.array,
 };
