@@ -1,7 +1,7 @@
 .VerticalNav {
     height: 100%;
     padding: 25px;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     &-section {
         &:not(:last-of-type) {

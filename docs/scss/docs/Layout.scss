@@ -1,4 +1,5 @@
 $sidebar-width: 250px;
+$header-height: 60px;
 
 .Layout {
     height: 100%;
@@ -9,18 +10,22 @@ $sidebar-width: 250px;
 
     &-navigationContainer {
         position: fixed;
+        top: $header-height;
+        bottom: 0;
         background-color: $light-gray;
         border: $border;
         width: $sidebar-width;
+        overflow-y: scroll;
     }
 
     &-content {
+        margin-top: 60px;
+        margin-left: calc(#{$sidebar-width} - 1px);
         background-color: $white;
-        margin-left: $sidebar-width - 1px;
         // Subtract the bootstrap margin too.
         width: calc(100% - #{$sidebar-width} - 30px);
         border: $border;
-        margin-bottom: 30px;
+        overflow-y: scroll;
     }
 
     @media screen and (max-width: #{$sidebar-breakpoint}) {
@@ -32,10 +37,11 @@ $sidebar-width: 250px;
 
         &-navigationContainer {
             display: none; 
-            overflow-y: visible;
             border: $border;
-            position: absolute;
-            top: 0;
+            position: fixed;
+            top: $header-height;
+            bottom: 0;
+            overflow-y: scroll;
             border-top: 0;
             border-right: 0;
 
