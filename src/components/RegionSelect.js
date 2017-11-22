@@ -46,6 +46,6 @@ export default function RegionSelect(props) {
 }
 
 RegionSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   filter: PropTypes.array,
 };
