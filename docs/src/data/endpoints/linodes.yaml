@@ -31,11 +31,12 @@ endpoints:
             description: >
               A region ID to provision
               this Linode in.
-            type: string
+            type: String
             value: us-east-1a
           type:
             description: A Linode type ID to use for this Linode.
-            type: string
+            type: String
+            value: g5-standard-1
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
@@ -51,7 +52,7 @@ endpoints:
             description: >
               The Distribution to deploy this Linode with.  May not be included
               if 'backup_id' or 'image' is sent.
-            type: string
+            type: String
           root_pass:
             optional: unless source == "distro"
             description: >
@@ -193,10 +194,16 @@ endpoints:
             description: >
               Optional distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
-              is created.</li></ul>
+              is created.</li></ul> You may not provide distribution if image is provided.
             type: Distribution
+          image:
+            optional: true
+            description: >
+              Optional image id to deploy the disk from. You may not provide image
+              if distribution is provided.
+            seeAlso: ["/reference/endpoints/images"]
           root_pass:
-            optional: unless distribution is specified
+            optional: unless distribution or image is specified
             description: >
               Root password to deploy distribution with.
               <ul><li>root_pass is required if a distribution is provided.</li></ul>
@@ -309,7 +316,7 @@ endpoints:
     group: Disks
     type: Strange
     authenticated: true
-    description: Resizes the disk.
+    description: Resizes the disk. The Linode this disk is attached to must be shut down for resizing to take effect.
     methods:
       POST:
         oauth: linodes:modify
@@ -317,6 +324,7 @@ endpoints:
         params:
           size:
             description: The desired size of the disk in MB.
+            value: 1024
             type: Integer
         examples:
           curl: |
@@ -341,6 +349,7 @@ endpoints:
             description: >
               New root password for the OS installed on this disk.
             type: String
+            value: hunter2
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -367,10 +376,12 @@ endpoints:
               Sets the name of the image shown in the base image list, defaults
               to the source disk label.
             type: String
+            value: My gold master image
           description:
             optional: true
             description: An optional description of the created image
             type: String
+            value: This is the image description, it's more descriptive than a label.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -417,7 +428,8 @@ endpoints:
             value: My config
           devices:
             description: >
-              Disks attached to this Linode config.
+              Devices that would be attached to a Linode when booted using this config.
+              Devices can be either Disks or Volumes, but only one type per slot (a - h).
             type: devices
           comments:
             optional: true
@@ -684,18 +696,17 @@ endpoints:
         dangerous: false
         params:
           region:
-            optional: true
             description: >
               A region ID to provision
               this Linode in. Required when cloning to a new Linode.
-            type: string
+            type: String
             value: us-east-1a
           type:
-            optional: true
             description: >
               A Linode type ID to use for this
               Linode. Required when cloning to a new Linode.
-            type: string
+            type: String
+            value: g5-standard-1
           linode_id:
             optional: true
             description: >
@@ -720,13 +731,13 @@ endpoints:
             optional: true
             description: >
               A list of disk ID's to include in the clone process. All disks attached to configs will be cloned from the source Linode if not provided.
-            type: string
+            type: String
             isArray: true
           configs:
             optional: true
             description: >
               A list of config ID's to include in the clone process. All configs will be cloned from the source Linode if not provided.
-            type: string
+            type: String
             isArray: true
         examples:
           curl: |
@@ -772,7 +783,7 @@ endpoints:
           type:
             description: >
               A Linode type to use for this Linode.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -915,8 +926,12 @@ endpoints:
         params:
           type:
             description: >
-                An IP Address Type for this IP Address. Public IP's incur a monthly cost.
-            type: string
+                The type of IP Address this is, can be one of "public" or "private".
+                Public IP Addresses, over and above the one included with each Linode,
+                incur an additional monthly charge. If you need an additional Public IP Address
+                you must request one - please open a ticket.
+            type: String
+            value: private
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -933,7 +948,7 @@ endpoints:
             Sets IP Sharing for this Linode.
         params:
           ips:
-            type: string
+            type: String
             description: >
               A list of IP Addresses this Linode will share.
         examples:
@@ -1069,6 +1084,7 @@ endpoints:
               Label of StackScript.
             limit: 3-128 characters
             type: String
+            value: Initial Label
           description:
             optional: true
             description: >
@@ -1094,6 +1110,7 @@ endpoints:
             description: >
               The shell script to run on boot.
             type: String
+            value: "#!/bin/bash"
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -1273,6 +1290,7 @@ endpoints:
             description: >
               A unique label to identify your new volume with.
             type: String
+            value: a_fancy_new_volume
           region:
             description: >
               Which region the new volume should be created in.
@@ -1349,6 +1367,7 @@ endpoints:
             description: >
               A unique label to identify your new volume with.
             type: String
+            value: a_fancy_new_volume
           region:
             description: >
               Which region the new volume should be created in.

@@ -9,7 +9,6 @@ import {
   FormGroupError,
   FormSummary,
   Select,
-  Input,
   SubmitButton,
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
@@ -17,6 +16,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { updateCard } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class CreditCardPage extends Component {
@@ -66,6 +66,7 @@ export class CreditCardPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Update Credit Card" />
         <section>
           <Card header={<CardHeader title="Update Credit Card" />}>
             <Form
@@ -74,17 +75,20 @@ export class CreditCardPage extends Component {
             >
               <FormGroup className="row" errors={errors} name="card_number">
                 <label className="col-sm-3 col-form-label">Credit Card</label>
-                <div className="col-sm-9">
-                  <Input
-                    name="card"
-                    id="card"
-                    type="text"
-                    value={card}
-                    maxLength={19}
-                    pattern="[0-9]{13,19}"
-                    onChange={this.onChange}
-                  />
-                  <FormGroupError errors={errors} name="card_number" />
+                <div className="col-sm-3">
+                  <div className="input-group">
+                    <input
+                      name="card"
+                      id="card"
+                      type="text"
+                      value={card}
+                      maxLength={19}
+                      pattern="[0-9]{13,19}"
+                      onChange={this.onChange}
+                      className="form-control"
+                    />
+                    <FormGroupError errors={errors} name="card_number" />
+                  </div>
                 </div>
               </FormGroup>
               <FormGroup errors={errors} name={['expiry_month', 'expiry_year']} className="row">

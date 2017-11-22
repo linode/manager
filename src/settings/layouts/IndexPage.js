@@ -13,9 +13,10 @@ import {
 } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 
-import { setSource, setTitle } from '~/actions';
+import { setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class IndexPage extends Component {
@@ -39,7 +40,6 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Account Settings'));
   }
 
   onSubmit = () => {
@@ -56,6 +56,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Account Settings" />
         <header className="main-header main-header--border">
           <div className="container">
             <h1>Account Settings</h1>

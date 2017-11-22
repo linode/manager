@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
+import { ChainedDocumentTitle } from '~/components';
 import { Tabs } from 'linode-components/tabs';
 
 import { getIPs } from '~/api/ad-hoc/networking';
@@ -38,6 +39,7 @@ export class IndexPage extends Component {
         }}
         pathname={location.pathname}
       >
+        <ChainedDocumentTitle title="Networking" />
         {this.props.children}
       </Tabs>
     );

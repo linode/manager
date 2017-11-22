@@ -3,13 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
-import { getStorage } from '~/storage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
+import DisplayCurrency from '~/components/DisplayCurrency';
 import api from '~/api';
-
 import { setSource } from '~/actions/source';
+
+import { ChainedDocumentTitle } from '~/components';
+import { getStorage } from '~/storage';
 
 
 export class InvoicePage extends Component {
@@ -28,6 +30,7 @@ export class InvoicePage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Invoice #${invoice.id}`} />
         <Breadcrumbs
           crumbs={[
             { label: 'History', to: '/billing/history' },
@@ -88,7 +91,7 @@ export class InvoicePage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (amount) => {
-                    return `$${amount.toFixed(2)}`;
+                    return <DisplayCurrency value={amount} />;
                   },
                 },
               ]}
@@ -97,7 +100,7 @@ export class InvoicePage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-                <strong>Invoice Total: ${invoice.total.toFixed(2)}</strong>
+                <strong>Invoice Total: <DisplayCurrency value={invoice.total} /></strong>
               </div>
             </div>
           </Card>

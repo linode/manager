@@ -10,8 +10,9 @@ import { TableCell, LinkCell } from 'linode-components/tables/cells';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
@@ -61,7 +62,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Support'));
     dispatch(setAnalytics(['tickets']));
   }
 
@@ -150,6 +150,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Support" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Support</h1>

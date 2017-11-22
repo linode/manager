@@ -17,6 +17,7 @@ import { setSource } from '~/actions/source';
 import api from '~/api';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 
@@ -57,11 +58,12 @@ export class ResizePage extends Component {
   }
 
   render() {
-    const { types, linode: { type: { id: currentType } } } = this.props;
+    const { types, linode: { label, type: { id: currentType } } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Resize" />}>
+        <ChainedDocumentTitle title="Resize" />
         <Form
           onSubmit={this.onSubmit}
           analytics={{ title: 'Resize Linode' }}

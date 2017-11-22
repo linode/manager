@@ -11,6 +11,7 @@ import {
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class NotificationsPage extends Component {
@@ -40,6 +41,7 @@ export class NotificationsPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Notifications" />
         <Card header={<CardHeader title="Change email settings" />}>
           <Form
             onSubmit={this.onSubmit}

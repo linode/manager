@@ -11,7 +11,7 @@ import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
 import { linodeStats } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-import { TransferPool } from '~/components';
+import { ChainedDocumentTitle, TransferPool } from '~/components';
 import {
   GraphGroup,
   makeCPUGraphMetadata,
@@ -54,6 +54,7 @@ export class DashboardPage extends Component {
 
     return (
       <div className="row">
+        <ChainedDocumentTitle title="Dashboard" />
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Summary" />} className="full-height">
             <div className="row">

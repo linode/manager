@@ -10,7 +10,7 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
 import { ListBody } from 'linode-components/lists/bodies';
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { DeleteModalBody } from 'linode-components/modals';
 import {
@@ -18,12 +18,13 @@ import {
   CheckboxCell,
   TableCell,
 } from 'linode-components/tables/cells';
-import { TimeCell } from '~/components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
+import { TimeCell } from '~/components/tables/cells';
 
 import { AddImage, EditImage } from '../components';
 
@@ -46,7 +47,6 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['images']));
-    dispatch(setTitle('Images'));
   }
 
   deleteImages = (imagesToDelete) => {
@@ -167,6 +167,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Images" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Images</h1>

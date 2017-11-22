@@ -7,8 +7,8 @@ import { ExternalLink } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 
 import { Editor, Settings } from '../components';
 
@@ -25,9 +25,8 @@ export class StackScriptPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, stackscript } = this.props;
+    const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle(stackscript.label));
   }
 
   render() {
@@ -35,6 +34,7 @@ export class StackScriptPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={stackscript.label} />
         <header className="main-header main-header--border">
           <div className="container">
             <Link to="/stackscripts">StackScripts</Link>
