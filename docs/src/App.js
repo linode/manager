@@ -128,7 +128,8 @@ browserHistory.listen(function (location) {
       const element = document.getElementById(id);
       if (element) {
         element.classList.add('highlight');
-        document.body.scrollTop = element.getBoundingClientRect().top + window.pageYOffset;
+        document.documentElement.scrollTop =
+          element.getBoundingClientRect().top + window.pageYOffset;
       }
     }, 0);
     return;
