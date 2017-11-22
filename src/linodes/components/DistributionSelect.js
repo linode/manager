@@ -65,7 +65,7 @@ export default function DistributionSelect(props) {
 }
 
 DistributionSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   distributions: PropTypes.object.isRequired,
   images: PropTypes.object,
   allowNone: PropTypes.bool,

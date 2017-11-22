@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -53,7 +54,7 @@ export default function BackupSelect(props) {
 }
 
 BackupSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   backups: PropTypes.object,
 };
 
