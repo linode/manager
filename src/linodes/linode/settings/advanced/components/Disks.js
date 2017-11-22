@@ -91,7 +91,7 @@ export default class Disks extends Component {
   }
 
   render() {
-    const { dispatch, linode, distributions, selectedMap } = this.props;
+    const { dispatch, linode, distributions, images, selectedMap } = this.props;
     const { filter } = this.state;
     const disks = Object.values(linode._disks.disks);
     const free = this.freeSpace();
@@ -104,7 +104,7 @@ export default class Disks extends Component {
       <PrimaryButton
         className="float-right"
         buttonClass="btn-default"
-        onClick={() => AddDisk.trigger(dispatch, linode, distributions, free)}
+        onClick={() => AddDisk.trigger(dispatch, linode, distributions, images, free)}
       >
         Add a Disk
       </PrimaryButton>
@@ -169,5 +169,6 @@ Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
 };

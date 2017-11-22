@@ -17,8 +17,16 @@ export default function DistributionSelect(props) {
     vendorLower: d.vendor.toLowerCase(),
   }));
 
+  const withImages = props.images !== undefined ?
+    _.map(Object.values(props.images), i => ({
+      ...i,
+      value: i.id,
+      vendor: 'Images',
+      vendorLower: 'images',
+    })) : [];
+
   const vendorsUnsorted = _.map(
-    _.groupBy(withVendorLowerCased, 'vendorLower'),
+    _.groupBy(withVendorLowerCased.concat(withImages), 'vendorLower'),
     (v) => ({
       label: v[0].vendor,
       options: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
@@ -59,5 +67,7 @@ export default function DistributionSelect(props) {
 DistributionSelect.propTypes = {
   ...Select.propTypes,
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   allowNone: PropTypes.bool,
+  options: PropTypes.array,
 };
