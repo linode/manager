@@ -86,7 +86,7 @@ export default class AddLinode extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup
-            label="Distribution"
+            label="Image"
             id="distribution"
             apiKey="distribution"
             errors={errors}
