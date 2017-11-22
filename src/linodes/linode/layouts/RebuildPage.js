@@ -102,7 +102,7 @@ export class RebuildPage extends Component {
           analytics={{ title: 'Rebuild Linode' }}
         >
           <FormGroup className="row">
-            <label className="col-sm-3 col-form-label">Current Distribution</label>
+            <label className="col-sm-3 col-form-label">Current Image</label>
             <div className="col-sm-9">
               <Input
                 disabled
@@ -111,7 +111,7 @@ export class RebuildPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} name="distribution" className="row">
-            <label className="col-sm-3 col-form-label">New Distribution</label>
+            <label className="col-sm-3 col-form-label">New Image</label>
             <div className="col-sm-9">
               <DistributionSelect
                 distributions={distributions}
