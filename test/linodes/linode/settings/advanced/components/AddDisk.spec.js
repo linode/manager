@@ -115,7 +115,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         linode={testLinode1236}
         free={4096}
         distributions={api.distributions}
-        images={{ mages: api.images }}
+        images={{ images: api.images }}
       />);
 
     changeInput(modal, 'distribution', 38);
