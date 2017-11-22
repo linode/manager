@@ -167,6 +167,25 @@ endpoints:
           python: |
             import linode
             TODO
+  /domains/$id/clone:
+    authenticated: true
+    description: >
+      Clones the provided Domain into a new Domain. You must provide a new
+      domain name (url) for the cloned domain as Domains must be unique.
+    methods:
+      POST:
+        response: domain
+        oauth: domains:modify
+        params:
+          domain:
+            description: >
+              The Domain name for the new Domain.
+            type: String
+            value: www.mynewdomain.com
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/domains/$domain_id/records
   /domains/$id/records:
     authenticated: true
     description: >
