@@ -171,7 +171,7 @@ endpoints:
     authenticated: true
     description: >
       Clones the provided Domain into a new Domain. You must provide a new
-      domain name (url) for the cloned domain as Domains must be unique.
+      domain for the cloned domain as Domains must be unique.
     methods:
       POST:
         response: domain
@@ -181,7 +181,7 @@ endpoints:
             description: >
               The Domain name for the new Domain.
             type: String
-            value: www.mynewdomain.com
+            value: mynewdomain.com
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
