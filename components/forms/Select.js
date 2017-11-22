@@ -70,13 +70,14 @@ export default class Select extends Component {
       const options = this.props.options.map(function ({ value, label, options }) {
         if (options) {
           return (
-            <optgroup label={label}>
-              {options.map(({ value, label }) => (<option value={value}>{label}</option>))}
+            <optgroup key={label} label={label}>
+              {options.map(({ value, label }) =>
+                (<option key={`${label}-${value}`} value={value}>{label}</option>))}
             </optgroup>
           );
         }
 
-        return <option value={value}>{label}</option>;
+        return <option key={`${label}-${value}`} value={value}>{label}</option>;
       });
 
       return (
