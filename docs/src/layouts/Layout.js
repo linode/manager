@@ -36,7 +36,7 @@ export default class Layout extends Component {
 
     return (
       <div className="Docs Layout">
-        <Header>
+        <Header className="Header-fixed">
           <div className="MainHeader-brand">
             <Link to="/">
               <span className="MainHeader-logo">
@@ -49,7 +49,7 @@ export default class Layout extends Component {
               </span>
             </Link>
           </div>
-          <span className="MainHeader-title">Developers</span>
+          <span className="MainHeader-title">Linode API v4</span>
           <button
             className="ToggleNav navbar-toggler navbar-toggler-right collapsed"
             type="button"
