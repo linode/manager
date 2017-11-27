@@ -53,3 +53,11 @@ schema:
     type: String
     value: "2017-10-19T11:21:01"
     description: The last time this image was used.
+enums:
+  Status:
+    creating: creating
+    available: available
+    deleted: deleted
+  Type:
+    0: Image was created manually
+    1: Image was created automatically from a deleted Linode
