@@ -92,6 +92,14 @@ export const testDomain = {
         weight: 5,
         target: 'ns1.service.com',
       },
+      7: {
+        id: 7,
+        type: 'CAA',
+        tag: 'issue',
+        target: 'certsign.ro',
+        name: 'www.mywebsite.com',
+        ttl_sec: 0,
+      },
     },
   },
 };
