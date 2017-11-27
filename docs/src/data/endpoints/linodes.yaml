@@ -454,12 +454,14 @@ endpoints:
           run_level:
             optional: true
             description: >
-              Sets the run level for Linode boot. Defaults to "default".
+              Sets the run level for Linode boot. One of "default",
+              "single" (for single user mode), or "binbash".
             type: Enum
           virt_mode:
             optional: true
             description: >
-              Controls the virtualization mode. Defaults to "paravirt".
+              Controls the virtualization mode. One of "paravirt" (default)
+              or "fullvirt".
             type: Enum
           helpers:
             type: Object

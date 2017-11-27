@@ -130,38 +130,88 @@ endpoints:
             limit: 1-65534
             type: Integer
             optional: true
+            value: 80
           protocol:
             description: The protocol used for the config.
             type: String
+            optional: true
+            value: https
           algorithm:
             description: Balancing algorithm.
             type: Enum
+            optional: true
+            roundrobin:
+              type: String
+              description: Round robin
+            leastconn:
+              type: String
+              description: Assigns connections to the backend with the least connections.
+            source:
+              type: String
+              description: Uses the client's IPv4 address.
+            value: roundrobin
           stickiness:
             description: Session persistence. Route subsequent requests from a client to the same backend.
             type: Enum
+            none:
+              type: String
+              description: no stickiness
+            table:
+              type: String
+              description: Keep track of clients with a table
+            http_cookie:
+              type: String
+              description: Use an HTTP Cookie to keep track of clients
+            value: none
           check:
             description: Perform active health checks on the backend nodes.
             type: Enum
+            optional: true
+            none:
+              type: String
+              description: None
+            connection:
+              type: String
+              description: Requires a successful TCP handshake.
+            http:
+              type: String
+              description: Requires a 2xx or 3xx response from the backend node.
+            http_body:
+              type: String
+              description: Uses a regex to match against an expected result body.
+            value: http_body
           check_interval:
             description: Seconds between health check probes.
             type: Integer
+            optional: true
+            value: 5
           check_timeout:
             description: Seconds to wait before considering the probe a failure.
             limit: 1-30. Must be less than check_interval # leave the final period off!
             type: Integer
+            optional: true
+            value: 3
           check_attempts:
             description: Number of failed probes before taking a node out of rotation.
             limit: 1-30
             type: Integer
+            optional: true
+            value: 10
           check_path:
             description: When check is "http", the path to request.
             type: String
+            optional: true
+            value: "/path/to/check"
           check_body:
             description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
             type: String
+            optional: true
+            value: we got some stuff back
           check_passive:
             description: Enable passive checks based on observing communication with back-end nodes.
             type: Boolean
+            optional: true
+            value: true
           # ssl_cert:
           #  description: SSL certificate served by the NodeBalancer when the protocol is "https".
           # ssl_key:
@@ -169,6 +219,13 @@ endpoints:
           cipher_suite:
             description: SSL cipher suite to enforce.
             type: Enum
+            recommended:
+              type: String
+              description: Recommended
+            legacy:
+              type: String
+              description: Legacy
+            value: legacy
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -280,7 +337,7 @@ endpoints:
             description: Load balancing weight, 1-255. Higher means more connections.
             type: Integer
           mode:
-            description: The connections mode for this node. One of 'accept', 'reject', or 'drain'.
+            description: The connections mode for this node. One of "accept", "reject", or "drain".
             type: Enum
         examples:
           curl: |

@@ -60,7 +60,7 @@ schema:
   check_body:
     editable: true
     type: String
-    value: 
+    value:  "we got some stuff back"
     description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
   check_passive:
     editable: true
