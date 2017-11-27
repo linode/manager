@@ -2,7 +2,11 @@
   "presets": ["stage-0", "react", "es2015"],
   "compact": true,
   "plugins": [
-    "transform-runtime",
+    ["transform-runtime",
+    {
+      "helpers": false,
+      "polyfill": false
+    }],
     "transform-class-properties",
     ["babel-root-import", [{
       "rootPathSuffix": "src"

@@ -113,7 +113,7 @@ export class InvoicePage extends Component {
 InvoicePage.propTypes = {
   dispatch: PropTypes.func,
   invoice: PropTypes.object.isRequired,
-  items: PropTypes.object,
+  items: PropTypes.array,
 };
 
 function select(state, ownProps) {
