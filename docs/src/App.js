@@ -125,11 +125,12 @@ browserHistory.listen(function (location) {
     // the element is rendered on the page before trying to getElementById.
     setTimeout(() => {
       const id = hash.replace('#', '');
+      const headerHeight = 60;
       const element = document.getElementById(id);
       if (element) {
         element.classList.add('highlight');
-        document.documentElement.scrollTop =
-          element.getBoundingClientRect().top + window.pageYOffset;
+        document.scrollingElement.scrollTop =
+          element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
       }
     }, 0);
     return;
