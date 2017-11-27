@@ -1186,7 +1186,11 @@ bootstrap@4.0.0-alpha.6:
     jquery ">=1.9.1"
     tether "^1.4.0"
 
-brace-expansion@^1.1.7:
+bowser@^0.7.2:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/bowser/-/bowser-0.7.3.tgz#4fc0cb4e0e2bdd9b394df0d2038c32c2cc2712c8"
+
+brace-expansion@^1.0.0, brace-expansion@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
   dependencies:
@@ -4611,6 +4615,17 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
+novnc-node@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/novnc-node/-/novnc-node-0.5.3.tgz#69f20a4a2ff0c54ca2f942ff59553f523eb61fa7"
+  dependencies:
+    bowser "^0.7.2"
+    debug "^2.2.0"
+
+"novnc@git://github.com/novnc/novnc.git#v0.6.2":
+  version "0.6.2"
+  resolved "git://github.com/novnc/novnc.git#e8986fa0692705fa890aed02e08b6844e535eb06"
+
 "npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
@@ -4671,7 +4686,7 @@ object.entries@^1.0.4:
     function-bind "^1.1.0"
     has "^1.0.1"
 
-object.omit@^2.0.0:
+object.omit@^2.0.0, object.omit@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/object.omit/-/object.omit-2.0.1.tgz#1a9c744829f39dbb858c76ca3579ae2a54ebd1fa"
   dependencies:
@@ -5596,6 +5611,14 @@ react-transform-hmr@^1.0.3:
   dependencies:
     global "^4.3.0"
     react-proxy "^1.1.7"
+
+react-vnc-display@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-vnc-display/-/react-vnc-display-1.1.0.tgz#1081c1bcd072fbd3b6bc055b1ef4d59db316a5b9"
+  dependencies:
+    novnc-node "^0.5.3"
+    object.omit "^2.0.1"
+    prop-types "^15.5.10"
 
 react@^15.5.4, react@^15.6:
   version "15.6.2"

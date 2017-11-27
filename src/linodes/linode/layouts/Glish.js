@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VncDisplay } from 'react-vnc-display';
 
 import { ZONES } from '~/constants';
-import { lishToken } from '~/api/linodes';
+import { lishToken } from '~/api/generic/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { addJSScript } from './Weblish';
@@ -13,10 +14,9 @@ import { addJSScript } from './Weblish';
 export class Glish extends Component {
   constructor(props) {
     super(props);
-    this.state = {state:'warn', message:'Connecting'};
+    this.state = { state: 'warn', message: 'Connecting' };
     this.session = '';
     this.host = '';
-
   }
 
   componentDidMount() {
@@ -36,20 +36,20 @@ export class Glish extends Component {
     this.host = `${ZONES[region.id]}.webconsole.linode.com`;
 
     this.rfb = new RFB({
-      'target': this.refs.canvas,
-      'encrypt': true,
-      'repeaterID': '',
-      'true_color': true,
-      'local_cursor': true,
-      'shared': true,
-      'view_only': false,
-      'onUpdateState': this.onUpdateState,
+      target: this.refs.canvas,
+      encrypt: true,
+      repeaterID: '',
+      true_color: true,
+      local_cursor: true,
+      shared: true,
+      view_only: false,
+      onUpdateState: this.onUpdateState,
     });
 
-    this.monitor_url = `wss://${this.host}:8080/` + this.session + "/monitor";
+    this.monitor_url = `wss://${this.host}:8080/${this.session}/monitor`;
     this.monitor = new WebSocket(this.monitor_url);
 
-    this.monitor.addEventListener("message", (e) => {
+    this.monitor.addEventListener('message', (e) => {
       const data = JSON.parse(e.data);
       console.log('message received', data);
       if (data.poweredStatus === 'Running') {
@@ -61,23 +61,17 @@ export class Glish extends Component {
     this.connect();
   }
 
-  renew = () => {
-    if (this.monitor.readyState === 1) {
-      this.monitor.send(JSON.stringify({ action: "renew" }));
-    }
-  }
-
   onUpdateState = (rfb, newState, oldState, message) => {
     // const valid = ["normal", "loaded"];
-    const valid = ["failed", "fatal", "normal", "disconnected", "loaded"];
-    // "connect", 
+    const valid = ['failed', 'fatal', 'normal', 'disconnected', 'loaded'];
+    // "connect",
     if (valid.indexOf(newState) !== -1) {
       this.setState({ state: newState });
     } else {
       this.setState({ state: 'warn' });
     }
 
-    if (newState === "disconnected") {
+    if (newState === 'disconnected') {
       this.setState({ message: 'Disconnected' });
     } else if (message) {
       this.setState({ message });
@@ -90,6 +84,12 @@ export class Glish extends Component {
      * }*/
   }
 
+  renew = () => {
+    if (this.monitor.readyState === 1) {
+      this.monitor.send(JSON.stringify({ action: 'renew' }));
+    }
+  }
+
   connect = () => {
     this.rfb.connect(this.host, 8080, '', this.session);
   }
@@ -98,16 +98,17 @@ export class Glish extends Component {
     console.log('Render', this.state.state, this.state.message);
     return (
       <div>
-      <GlishStatus
-        {...this.state.state}
-        {...this.state.message}
-        {...this.host}
-        {...this.session}
-        reload={this.connect.bind(this)} />
-<VncDisplay url="wss://some-remote-display:5991/path" />
-	<canvas ref="canvas" style={{ width: '1024px', height: '655px' }}>
-        Canvas not supported.
-      </canvas>
+        <GlishStatus
+          {...this.state.state}
+          {...this.state.message}
+          {...this.host}
+          {...this.session}
+          reload={this.connect.bind(this)}
+        />
+        <VncDisplay url="wss://some-remote-display:5991/path" />
+          <canvas ref="canvas" style={{ width: '1024px', height: '655px' }}>
+            Canvas not supported.
+          </canvas>
       </div>
     );
   }
@@ -121,14 +122,14 @@ Glish.propTypes = {
   }).isRequired,
 };
 
-export class GlishStatus extends Component {
-  render() {
-      return <div id="glish-warning" style={{ color: 'black', background: 'red' }}>
-        State is {this.props.state}; Message is {this.props.message}<br/>
-        Host is {this.props.host}; Session is {this.props.session}<br/>
-        <button onClick={this.props.reload}>Reconnect &#x27f3;</button>
-     </div>
-  }
+export function GlishStatus(props) {
+  return (
+    <div id="glish-warning" style={{ color: 'black', background: 'red' }}>
+      State is {props.state}; Message is {props.message}<br/>
+      Host is {props.host}; Session is {props.session}<br/>
+      <button onClick={this.props.reload}>Reconnect &#x27f3;</button>
+    </div>
+  );
 }
 
 GlishStatus.propTypes = {
