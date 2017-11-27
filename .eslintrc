@@ -1,11 +1,12 @@
 {
   "extends": "airbnb",
-  "plugins": [
+    "plugins": [
     "babel"
   ],
   "env": {
     "browser": true,
-    "mocha": true
+    "mocha": true,
+    "jest": true
   },
   "parser": "babel-eslint",
   "rules": {
