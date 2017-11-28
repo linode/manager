@@ -23,8 +23,10 @@ export default function ParamFieldCell(props) {
   let deprecatedWarning;
   if (record.deprecated) {
     deprecatedWarning = (
-      <div className="FieldCell-label">
-        {record.deprecated}
+      <div className="FieldCell-label-deprecated">
+        <small>
+          {record.deprecated}
+        </small>
       </div>
     );
   }
@@ -35,7 +37,9 @@ export default function ParamFieldCell(props) {
         {record.name}
       </div>
       {subLabel}
-      {deprecatedWarning}
+      <div>
+        {deprecatedWarning}
+      </div>
     </td>
   );
 }
