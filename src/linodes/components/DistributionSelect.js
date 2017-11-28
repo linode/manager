@@ -38,7 +38,7 @@ export default function DistributionSelect(props) {
   const options = [];
 
   if (props.allowNone) {
-    options.push({ label: 'No distribution', value: 'none' });
+    options.push({ label: 'No image', value: 'none' });
   }
 
   for (const vendorName of DISTRIBUTION_DISPLAY_ORDER) {
