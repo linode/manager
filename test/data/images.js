@@ -20,4 +20,4 @@ export const testImage = {
 
 export const images = [
   testImage,
-];
+].reduce((object, image) => ({ ...object, [image.id]: image }), {});

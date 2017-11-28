@@ -96,7 +96,7 @@ export default class AddDisk extends Component {
           </ModalFormGroup>
           <ModalFormGroup
             id="distribution"
-            label="Distribution"
+            label="Image"
             apiKey="distribution"
             errors={errors}
           >
