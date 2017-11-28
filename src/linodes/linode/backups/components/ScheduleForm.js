@@ -134,7 +134,7 @@ export class ScheduleForm extends Component {
             />
             <small className="form-text text-muted">
               Weekly Backups will be attempted between {start.format('dddd HH:mm z')}
-               and {finish.format('dddd HH:mm z')}.
+              &nbsp;and {finish.format('dddd HH:mm z')}.
             </small>
             <FormGroupError errors={errors} name="day" />
           </div>
