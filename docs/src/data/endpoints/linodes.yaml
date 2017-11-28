@@ -1010,8 +1010,9 @@ endpoints:
         params:
           distribution:
             description: >
-                An Distribution to deploy to this Linode.
-            type: Distribution
+                An ID of a Distribution to deploy to this Linode.
+            type: String
+            deprecated: Some deprecated stuff
           image:
             optional: true
             description: >
