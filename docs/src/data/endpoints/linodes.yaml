@@ -50,7 +50,7 @@ endpoints:
           distribution:
             optional: true
             description: >
-              The Distribution to deploy this Linode with.  May not be included
+              The ID of a Distribution to deploy this Linode with.  May not be included
               if 'backup_id' or 'image' is sent.
             type: String
           root_pass:
@@ -192,10 +192,10 @@ endpoints:
           distribution:
             optional: true
             description: >
-              Optional distribution to deploy with this disk.
+              Optional ID of a distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
               is created.</li></ul> You may not provide distribution if image is provided.
-            type: Distribution
+            type: String
           image:
             optional: true
             description: >
@@ -1010,8 +1010,8 @@ endpoints:
         params:
           distribution:
             description: >
-                An Distribution to deploy to this Linode.
-            type: Distribution
+                An ID of a Distribution to deploy to this Linode.
+            type: String
           image:
             optional: true
             description: >

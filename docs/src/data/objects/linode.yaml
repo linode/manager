@@ -74,7 +74,7 @@ schema:
     value: us-east-1a
   distribution:
     description: The distribution that this Linode booted to last.
-    type: Distribution
+    type: String
     seeAlso: "/reference/endpoints/linode/distributions"
     filterable: true
   group:
