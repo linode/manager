@@ -20,7 +20,7 @@ export default class UserForm extends Component {
     this.state = {
       username: props.user.username,
       email: props.user.email,
-      restricted: props.user.restricted,
+      restricted: props.user.restricted ? 'yes' : 'no',
       password: '',
       loading: false,
       errors: {},
@@ -34,7 +34,7 @@ export default class UserForm extends Component {
     const data = {
       username: this.state.username,
       email: this.state.email,
-      restricted: this.state.restricted,
+      restricted: this.state.restricted === 'yes',
       password: this.state.password,
     };
 
@@ -112,16 +112,16 @@ export default class UserForm extends Component {
               <Radio
                 id="restricted"
                 name="restricted"
-                value
-                checked={restricted}
+                value="yes"
+                checked={restricted === 'yes'}
                 onChange={this.onChange}
                 label="Yes - this user can only do what I specify"
               />
               <Radio
                 id="unrestricted"
                 name="restricted"
-                value={false}
-                checked={!restricted}
+                value="no"
+                checked={restricted === 'no'}
                 onChange={this.onChange}
                 label="No - this user has no access restrictions"
               />
