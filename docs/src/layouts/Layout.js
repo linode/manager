@@ -103,8 +103,10 @@ export default class Layout extends Component {
               />
             </VerticalNav>
           </div>
-          <div className="Layout-content">
-            {this.props.children}
+          <div className="Layout-contentBox">
+            <div className="Layout-content">
+              {this.props.children}
+            </div>
           </div>
         </div>
       </div>
