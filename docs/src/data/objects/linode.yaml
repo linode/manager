@@ -77,7 +77,7 @@ schema:
     type: Distribution
     seeAlso: "/reference/endpoints/linode/distributions"
     filterable: true
-    deprecated: This parameter will be deprecated once APIv4 out of beta. See changelog for more information.
+    deprecated: This parameter will be deprecated once APIv4 is out of beta. See the changelog for more information.
   group:
     editable: true
     type: String
