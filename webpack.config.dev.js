@@ -68,6 +68,13 @@ module.exports = {
         ],
       },
       {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
         test: /\.svg$/,
         use: ['file-loader'],
         include: path.join(__dirname, 'node_modules')
