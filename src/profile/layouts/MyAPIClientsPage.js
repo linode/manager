@@ -46,11 +46,12 @@ export class MyAPIClientsPage extends Component {
 
   createDropdownGroups = (client) => {
     const { dispatch } = this.props;
+    const editClient = { ...client, forEdit: true };
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
-        CreateOrEditApplication.trigger(dispatch, client) }] },
-      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
+        CreateOrEditApplication.trigger(dispatch, editClient) }] },
+      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(editClient) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteClients(editClient) }] },
     ];
     return groups;
   }
