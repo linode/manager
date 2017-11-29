@@ -5,7 +5,9 @@ $header-height: 60px;
     height: 100%;
 
     &-container {
+        height: 100%;
         margin: 0 auto;
+        position: relative;
     }
 
     &-navigationContainer {
@@ -18,14 +20,21 @@ $header-height: 60px;
         overflow-y: scroll;
     }
 
-    &-content {
+    &-contentBox {
+        position: absolute;
+        top: 0;
+        bottom: 0;
         margin-top: 60px;
         margin-left: calc(#{$sidebar-width} - 1px);
-        background-color: $white;
+        height: calc(100% - 60px);
         // Subtract the bootstrap margin too.
         width: calc(100% - #{$sidebar-width} - 30px);
+        background-color: $white;
         border: $border;
-        overflow-y: scroll;
+    }
+
+    &-content {
+        background-color: $white;
     }
 
     @media screen and (max-width: #{$sidebar-breakpoint}) {
