@@ -12,8 +12,8 @@ schema:
     type: Integer
     value: 123
     description: The payment's ID.
-  amount:
-    type: Integer
-    value: 120
+  usd:
+    type: String
+    value: "12.00"
     filterable: true
     description: The amount (in US Dollars) of the payment.
