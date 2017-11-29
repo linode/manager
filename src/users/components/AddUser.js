@@ -26,7 +26,13 @@ export default class AddUser extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { errors: {}, username: '', email: '', password: '' };
+    this.state = {
+      errors: {},
+      username: '',
+      email: '',
+      password: '',
+      restricted: 'yes',
+    };
 
     this.onChange = onChange.bind(this);
   }
@@ -36,7 +42,7 @@ export default class AddUser extends Component {
     const data = {
       username: this.state.username,
       email: this.state.email,
-      restricted: this.state.restricted,
+      restricted: this.state.restricted === 'yes',
       password: this.state.password,
     };
 
@@ -89,16 +95,16 @@ export default class AddUser extends Component {
               <Radio
                 id="restricted"
                 name="restricted"
-                value
-                checked={restricted}
+                value="yes"
+                checked={restricted === 'yes'}
                 onChange={this.onChange}
                 label="Yes - this user can only do what I specify"
               />
               <Radio
                 id="unrestricted"
                 name="restricted"
-                value={false}
-                checked={!restricted}
+                value="no"
+                checked={restricted === 'no'}
                 onChange={this.onChange}
                 label="No - this user has no access restrictions"
               />

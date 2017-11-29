@@ -30,7 +30,7 @@ export class IndexPage extends Component {
     super(props);
 
     this.state = {
-      networkHelper: !!props.account.network_helper,
+      networkHelper: props.account.network_helper ? 'ON' : 'OFF',
       errors: {},
     };
 
@@ -44,10 +44,10 @@ export class IndexPage extends Component {
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { networkHelper: network_helper } = this.state;
+    const { networkHelper } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => api.account.put({ network_helper }),
+      () => api.account.put({ network_helper: networkHelper === 'ON' }),
     ]));
   }
 
@@ -74,15 +74,15 @@ export class IndexPage extends Component {
                   <Checkboxes>
                     <Radio
                       name="networkHelper"
-                      checked={!networkHelper}
-                      value="false"
+                      checked={networkHelper === 'OFF'}
+                      value="OFF"
                       label="OFF - This is the legacy / old account behavior"
                       onChange={this.onChange}
                     />
                     <Radio
                       name="networkHelper"
-                      checked={networkHelper}
-                      value="true"
+                      checked={networkHelper === 'ON'}
+                      value="ON"
                       onChange={this.onChange}
                       label="ON  - This is new account behavior. You probably want this."
                     />
