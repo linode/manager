@@ -5,13 +5,14 @@ $header-height: 60px;
     height: 100%;
 
     &-container {
+        min-height: 100%;
         margin: 0 auto;
     }
 
     &-navigationContainer {
         position: fixed;
         top: $header-height;
-        bottom: 0;
+        max-height: calc(100% - #{$header-height});
         background-color: $light-gray;
         border: $border;
         width: $sidebar-width;
@@ -19,7 +20,7 @@ $header-height: 60px;
     }
 
     &-content {
-        margin-top: 60px;
+        margin-top: $header-height;
         margin-left: calc(#{$sidebar-width} - 1px);
         background-color: $white;
         // Subtract the bootstrap margin too.
