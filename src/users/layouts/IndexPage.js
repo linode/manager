@@ -38,8 +38,13 @@ function getGravatarURL(user) {
 }
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.users.all());
+  static async preload(r) {
+    const dispatch = r.dispatch;
+    const onReject = reason => {
+      return reason.status === 403 ? [] : Promise.reject(reason);
+    };
+
+    await dispatch(api.users.all()).catch(onReject);
   }
 
   constructor(props) {
