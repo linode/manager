@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.16.0] 2017-11-29
+### Changed
+- Update docs page titles (#2753)
+- Document payment "usd" as String
+### Added
+- Documented all enum fields (#2464)
+- Document Distribution ID
+### Fixed
+- Scroll content when clicking on a subnav item (#2733)
+- Allow nav to scroll with a short window (#2734)
+
 ## [0.15.0] 2017-11-20
 ### Changed
 - Grants have been reworked

@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.16.0] 2017-11-29
+### Added
+- List CoreOS in Linode create (#2576)
+- Support for CAA records (#2626)
+- Public option for OAuth clients (#2655)
+- Create disks from images (#2680)
+- Rebuild Linodes from images (#2681)
+- Use more specific page titles (#2701)
+- Display current balance on payment page (#2704)
+### Changed
+- Disable Linode power actions during transition states (#2319)
+- Render backup schedule time slots in the user's local timezone (#2563)
+- User permissions page matches the new options (#2656)
+- Exclude "swap" from the disk list for imagizing (#2710)
+- Make "Create Image" behave the same from all entrypoints (#2717)
+### Fixed
+- Negative numbers in invoices should appear with parenthesis (#2705)
+- Credit card dropdowns should line up with their container (#2706)
+- Don't crash if we try to create a Linode from image with no images (#2717)
+
 ## [0.15.5] 2017-11-20
 ### Added
 - Contact info can be edited (#2684)
