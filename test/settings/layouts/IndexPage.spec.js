@@ -26,8 +26,8 @@ describe('settings/layouts/IndexPage', () => {
       />
     );
 
-    const helper = page.find('input[name="networkHelper"]').at(0);
-    changeInput(helper, 'networkHelper', true);
+    const helper = page.find('input[name="networkHelper"]').at(1);
+    changeInput(helper, 'networkHelper', 'ON');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
