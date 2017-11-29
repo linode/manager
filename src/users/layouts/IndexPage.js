@@ -39,7 +39,10 @@ function getGravatarURL(user) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.users.all());
+    // Restricted users will get a 403 on /v4/profile/users
+    const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
+
+    await dispatch(api.users.all()).catch(onReject);
   }
 
   constructor(props) {
