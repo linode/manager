@@ -53,7 +53,8 @@ endpoints:
               The Distribution to deploy this Linode with.  May not be included
               if 'backup_id' or 'image' is sent.
             type: String
-            deprecated: This parameter will be deprecated once APIv4 is out of beta. See the changelog for more information.
+            deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
+              See the changelog for more information.
           root_pass:
             optional: unless source == "distro"
             description: >
@@ -197,7 +198,8 @@ endpoints:
               <ul><li>If no distribution is provided, a blank disk
               is created.</li></ul> You may not provide distribution if image is provided.
             type: String
-            deprecated: This parameter will be deprecated once APIv4 is out of beta. See the changelog for more information.
+            deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
+              See the changelog for more information.
           image:
             optional: true
             description: >
@@ -1015,7 +1017,8 @@ endpoints:
             description: >
                 An ID of a Distribution to deploy to this Linode.
             type: String
-            deprecated: This parameter will be deprecated once APIv4 is out of beta. See the changelog for more information.
+            deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
+              See the changelog for more information.
           image:
             optional: true
             description: >
