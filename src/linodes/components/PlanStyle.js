@@ -3,17 +3,23 @@ import React from 'react';
 import DisplayCurrency from '~/components/DisplayCurrency';
 
 
-export function planStyle(plan, withPrice = false) {
+export function planName(plan) {
   if (!plan) {
     return 'Unknown';
   }
+  return `Linode ${parseInt(plan.memory) / 1024}G`;
+}
 
-  const output = `Linode ${parseInt(plan.memory) / 1024}G`;
-  return withPrice ? `${output} (${<DisplayCurrency value={plan.price.monthly} />}/mo)` : output;
+export function priceInfo(price) {
+  return <span>(<DisplayCurrency value={price} />)/mo</span>;
+}
+
+export function planStyle(plan, withPrice = false) {
+  return <span>{planName(plan)} {withPrice && priceInfo(plan.price.monthly)}</span>;  
 }
 
 export function planStats(plan) {
-  const readable = planStyle(plan);
+  const readable = planName(plan);
   if (!readable) {
     return null;
   }
