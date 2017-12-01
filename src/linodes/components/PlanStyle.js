@@ -1,25 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import DisplayCurrency from '~/components/DisplayCurrency';
+import { formatCurrency } from '~/components/Currency';
 
 
-export function planName(plan) {
+export function planStyle(plan, withPrice = false) {
   if (!plan) {
     return 'Unknown';
   }
-  return `Linode ${parseInt(plan.memory) / 1024}G`;
-}
-
-export function priceInfo(price) {
-  return <span>(<DisplayCurrency value={price} />)/mo</span>;
-}
-
-export function planStyle(plan, withPrice = false) {
-  return <span>{planName(plan)} {withPrice && priceInfo(plan.price.monthly)}</span>;  
+  const output = `Linode ${parseInt(plan.memory) / 1024}G`;
+  return withPrice ?
+    `${output} (${formatCurrency(plan.price.monthly)})/mo`
+    : output;
 }
 
 export function planStats(plan) {
-  const readable = planName(plan);
+  const readable = planStyle(plan);
   if (!readable) {
     return null;
   }
