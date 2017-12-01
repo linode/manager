@@ -65,6 +65,12 @@ $header-height: 60px;
             }
         }
 
+        &-contentBox {
+            margin-left: 0;
+            width: 100%;
+            border: 0;
+        }
+
         &-content {
             margin-left: 0;
             width: 100%;
