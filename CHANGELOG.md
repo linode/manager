@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.16.1] 2017-12-01
+### Fixed
+- Pricing information showed `[Object Object]` in some places since 0.16.0 (#2808)
+
 ## [0.16.0] 2017-11-29
 ### Added
 - List CoreOS in Linode create (#2576)
