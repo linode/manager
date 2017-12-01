@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.16.1] 2017-12-01
+### Fixed
+- Docs rendering in mobile used roughly half-width since 0.16.0 (#2796)
+
 ## [0.16.0] 2017-11-29
 ### Changed
 - Update docs page titles (#2753)
