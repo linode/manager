@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { formatCurrency } from '~/components/Currency';
+import DisplayCurrency from '~/components/DisplayCurrency';
 
 
 export function planStyle(plan, withPrice = false) {
   if (!plan) {
     return 'Unknown';
   }
+
   const output = `Linode ${parseInt(plan.memory) / 1024}G`;
-  return withPrice ?
-    `${output} (${formatCurrency(plan.price.monthly)})/mo`
-    : output;
+  return withPrice ? `${output} (${<DisplayCurrency value={plan.price.monthly} />}/mo)` : output;
 }
 
 export function planStats(plan) {
