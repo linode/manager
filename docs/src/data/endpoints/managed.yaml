@@ -24,7 +24,7 @@ endpoints:
           name:
             description: The contact's full name.
             type: String
-            limit: "1-64 characters"
+            limit: 1-64 characters
           email:
             description: The email address for the contact.
             type: String
@@ -49,7 +49,6 @@ endpoints:
                     "group": "Support",
                 }' \
                 https://$api_root/$version/managed/contacts
-
   /managed/contacts/$id:
     group: Contacts
     type: resource
@@ -80,17 +79,99 @@ endpoints:
                     "group": "Developers"
                 }' \
                 https://$api_root/$version/account/oauth-clients/$client_id
-  /managed/history:
-    group: History
+  #/managed/history:
+  # group: History
+  #  type: resource
+  #  description: >
+  #    A list of the issues created from monitoring your Services.
+  #  methods:
+  #    GET:
+  #      response: ManagedHistory
+  #      description: >
+  #        Returns your managed service issue history list.
+  #      examples:
+  #        curl: |
+  #          curl -H "Authorization: Bearer $TOKEN" \
+  #              https://$api_root/$version/managed/history
+  /managed/services:
+    group: Services
     type: resource
     description: >
-      A list of the issues created from monitoring your Services.
+      A list of the service monitors your account may access.
     methods:
       GET:
-        response: ManagedHistory
+        response: ManagedService
         description: >
-          Returns your managed service issue history list.
+          Returns your managed services list.
         examples:
           curl: |
-            curl https://$api_root/$version/managed/history
-
+            curl https://$api_root/$version/managed/services
+      POST:
+        description: >
+          Registers a new service to monitor.
+        params:
+          label:
+            description: A unique label for the service.
+            type: String
+            limit: 3-64 characters
+          service_type:
+            description: Which service type being used.
+            type: String
+            value: url
+          address:
+            description: The URL to request. If service_type is TCP, must include port number. For example, tcp://monitor.example.org:23
+            type: String
+            value: https://monitor.example.org
+          timeout:
+            description: Response must be received before this timeout or an alert will be triggered.
+            value: 30
+            limit: 1-255
+          body:
+            description: Response must contain this string or an alert will be triggered.
+            type: String
+            value: Success!
+            limit: 0-100 chracters
+          consultation_group:
+            description: If we need help along the way, we'll contact someone from this group.
+            value: Support
+            limit: 0-50 characters
+          region:
+            description: Required if address is a private IP, otherwise not used.
+            type: String
+            value: us-east-1a
+          notes:
+            description: We'll refer to these instructions when responding to a service-related issue.
+            type: String
+            value: If the Linode needs to be rebooted, please contact us first.
+            limit: 0-1000 characters
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "label": "NewMonitor",
+                    "service_type": "url",
+                    "address": "https://monitor.example.org",
+                    "timeout": 30,
+                    "consultation_group": "Support",
+                    "region": "us-east-1a",
+                    "body": "Success!",
+                    "notes": "Please contact us if the Linode must be rebooted",
+                    "credentials": 12345,23456,34567
+                }' \
+                https://$api_root/$version/managed/contacts
+  /managed/services/$id:
+    group: Services
+    type: resource
+    authenticated: true
+    description: >
+      Manage a particular Managed service your account may access.
+    methods:
+      GET:
+        response: ManagedService
+        description: >
+          Returns information about this service.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/managed/services/$service_id
