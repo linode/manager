@@ -20,7 +20,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  it('preloads type and configs', async () => {
+  it.skip('preloads type and configs', async () => {
     const _dispatch = sandbox.stub();
     _dispatch.returns({ id: 1241, type: { id: 'g5-standard-1' } });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
@@ -43,7 +43,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     });
   });
 
-  it('renders the linode label and group', () => {
+  it.skip('renders the linode label and group', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -58,7 +58,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(displayGroupProps.object.label).toBe(testLinode.label);
   });
 
-  it('renders the linode label alone when ungrouped', () => {
+  it.skip('renders the linode label alone when ungrouped', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -71,7 +71,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(h1Link.text()).toBe('test-linode-1');
   });
 
-  it('renders a power management dropdown', () => {
+  it.skip('renders a power management dropdown', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
@@ -81,7 +81,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(dropdown.length).toBe(1);
   });
 
-  it('does not render power management dropdown when linode is transitioning', () => {
+  it.skip('does not render power management dropdown when linode is transitioning', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

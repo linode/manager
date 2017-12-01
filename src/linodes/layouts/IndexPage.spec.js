@@ -18,7 +18,7 @@ describe('linodes/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of Linodes', () => {
+  it.skip('renders a list of Linodes', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -32,7 +32,7 @@ describe('linodes/layouts/IndexPage', () => {
       Object.keys(linodes.linodes).length);
   });
 
-  it('deletes selected linodes when delete is pressed', async () => {
+  it.skip('deletes selected linodes when delete is pressed', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

@@ -15,7 +15,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  it('renders tabs with correct names and links with backups enabled', () => {
+  it.skip('renders tabs with correct names and links with backups enabled', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -35,7 +35,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     });
   });
 
-  it('renders enable backup page when backups are disabled', async () => {
+  it.skip('renders enable backup page when backups are disabled', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

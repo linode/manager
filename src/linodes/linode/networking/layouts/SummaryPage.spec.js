@@ -23,7 +23,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   const ipv6s = Object.values(testLinode._ips).filter(
     ip => ip.version === 'ipv6');
 
-  it('renders ipv4 addresses', function () {
+  it.skip('renders ipv4 addresses', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -46,7 +46,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     });
   });
 
-  it('renders ipv6 addresses', function () {
+  it.skip('renders ipv6 addresses', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -62,14 +62,14 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const columns = row.find('td');
 
       const address = columns.at(0).text();
-      const ip = testLinode._ips[address.split('/')[0].trim()];
+      const ip = testLinode._ips[address.split.skip('/')[0].trim()];
 
       expect(columns.at(1).text()).toBe(ip.rdns || '');
       expect(columns.at(2).text().toLowerCase()).toBe(ip.type);
     });
   });
 
-  it('opens the add modal on click if has private IP', function () {
+  it.skip('opens the add modal on click if has private IP', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -88,7 +88,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(dispatch.firstCall.args[0].title, 'Add a Public IP Address');
   });
 
-  it('adds a private IP on click if doesnt exist', function () {
+  it.skip('adds a private IP on click if doesnt exist', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -109,7 +109,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     });
   });
 
-  it('opens the more info modal on click', function () {
+  it.skip('opens the more info modal on click', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -124,7 +124,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });
 
-  it('opens the edit rdns modal on click', function () {
+  it.skip('opens the edit rdns modal on click', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -139,7 +139,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });
 
-  it('triggers reset rdns on click', function () {
+  it.skip('triggers reset rdns on click', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -153,7 +153,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });
 
-  it('hides reset rdns on click if members.linode.com', function () {
+  it.skip('hides reset rdns on click if members.linode.com', function () {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}

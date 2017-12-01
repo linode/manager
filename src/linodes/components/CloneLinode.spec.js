@@ -28,7 +28,7 @@ describe('linodes/components/CloneLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it('clones a linode', async function () {
+  it.skip('clones a linode', async function () {
     CloneLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 

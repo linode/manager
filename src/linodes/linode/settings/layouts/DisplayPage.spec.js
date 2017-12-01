@@ -18,7 +18,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     sandbox.restore();
   });
 
-  it('makes request to save changes', async () => {
+  it.skip('makes request to save changes', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage
@@ -41,7 +41,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     ], 1);
   });
 
-  it('redirects if the label changed', async () => {
+  it.skip('redirects if the label changed', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage

@@ -15,7 +15,7 @@ describe('linodes/images/components/EditImage', function () {
     dispatch = sandbox.spy();
   });
 
-  it('update an image', async function () {
+  it.skip('update an image', async function () {
     EditImage.trigger(dispatch, testImage);
     const modal = await mount(dispatch.firstCall.args[0].body);
 

@@ -19,7 +19,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
     sandbox.restore();
   });
 
-  it('resize the linode', async () => {
+  it.skip('resize the linode', async () => {
     const page = mount(
       <ResizePage
         dispatch={dispatch}

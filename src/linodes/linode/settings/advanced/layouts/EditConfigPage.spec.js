@@ -32,7 +32,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     account: { network_helper: true },
   });
 
-  it('uses network helper default on create', () => {
+  it.skip('uses network helper default on create', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -45,7 +45,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(page.find('#enableNetworkHelper').props().checked).toBe(true);
   });
 
-  it('change label', () => {
+  it.skip('change label', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -58,7 +58,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(label.props().value).toBe('changed label');
   });
 
-  it('change note', () => {
+  it.skip('change note', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -71,7 +71,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(notes.props().value).toBe('changed note');
   });
 
-  it('change kernel', () => {
+  it.skip('change kernel', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -84,7 +84,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(kernel.props().value).toBe('linode/latest');
   });
 
-  it('change network helper', () => {
+  it.skip('change network helper', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -98,7 +98,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(networkHelper.props().checked).toBe(!valueWas);
   });
 
-  it('change distro helper', () => {
+  it.skip('change distro helper', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -112,7 +112,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(distroHelper.props().checked).toBe(!valueWas);
   });
 
-  it('change modules.dep helper', () => {
+  it.skip('change modules.dep helper', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -126,7 +126,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(moduleDep.props().checked).toBe(!valueWas);
   });
 
-  it('change updatedb helper', () => {
+  it.skip('change updatedb helper', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -140,7 +140,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(updatedb.props().checked).toBe(!valueWas);
   });
 
-  it('change virt mode', () => {
+  it.skip('change virt mode', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -153,7 +153,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(virtMode.props().checked).toBe(false);
   });
 
-  it('change run level', () => {
+  it.skip('change run level', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -166,7 +166,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(runLevel.props().checked).toBe(false);
   });
 
-  it('change memory limit', () => {
+  it.skip('change memory limit', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -184,7 +184,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(ramLimit.props().value).toBe(1000);
   });
 
-  it('change initrd', async() => {
+  it.skip('change initrd', async() => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -197,7 +197,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(initrd.props().value).toBe(25669);
   });
 
-  it('renders kernel properly', async () => {
+  it.skip('renders kernel properly', async () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -214,7 +214,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(options[1].label).toBe('4.0.1-x86_64-linode55');
   });
 
-  it('renders boot device properly', () => {
+  it.skip('renders boot device properly', () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -230,7 +230,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     slots.forEach((slot, i) => expect(options[i].value).toBe(`/dev/${slot}`));
   });
 
-  it('commits changes to the API', async () => {
+  it.skip('commits changes to the API', async () => {
     const page = mount(
       <EditConfigPage
         {...props}

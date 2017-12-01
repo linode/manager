@@ -27,7 +27,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of stackscripts', () => {
+  it.skip('renders a list of stackscripts', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -50,7 +50,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
       .toBe('42 active / 150 total deploys');
   });
 
-  it('shows the delete modal when delete is pressed', () => {
+  it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -67,7 +67,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
-  it('deletes selected stackscripts when delete is pressed', async () => {
+  it.skip('deletes selected stackscripts when delete is pressed', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -87,7 +87,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
     await expectRequest(fn, '/linode/stackscripts/38', { method: 'DELETE' });
   });
 
-  it('creates a stackscript', async () => {
+  it.skip('creates a stackscript', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

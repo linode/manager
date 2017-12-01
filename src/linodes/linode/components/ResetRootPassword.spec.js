@@ -16,7 +16,7 @@ describe('linodes/linode/components/ResetRootPassword', () => {
     sandbox.restore();
   });
 
-  it('resets root password', async () => {
+  it.skip('resets root password', async () => {
     const dispatch = sandbox.spy();
     const page = shallow(
       <ResetRootPassword
@@ -36,7 +36,7 @@ describe('linodes/linode/components/ResetRootPassword', () => {
     ], 1);
   });
 
-  it('shows a modal for confirmation', async () => {
+  it.skip('shows a modal for confirmation', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <ResetRootPassword

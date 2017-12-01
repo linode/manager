@@ -20,7 +20,7 @@ describe('linodes/linode/components/RescueMode', () => {
     sandbox.restore();
   });
 
-  it('shows disks in rescue mode', async () => {
+  it.skip('shows disks in rescue mode', async () => {
     const page = mount(
       <RescueMode
         dispatch={dispatch}
@@ -32,7 +32,7 @@ describe('linodes/linode/components/RescueMode', () => {
     ]);
   });
 
-  it('dispatches reboot to rescue mode', async () => {
+  it.skip('dispatches reboot to rescue mode', async () => {
     const page = mount(
       <RescueMode
         dispatch={dispatch}
@@ -62,7 +62,7 @@ describe('linodes/linode/components/RescueMode', () => {
     ], 1);
   });
 
-  it('rescue disks are auto-populated in filesystem order', async () => {
+  it.skip('rescue disks are auto-populated in filesystem order', async () => {
     const page = mount(
       <RescueMode
         dispatch={dispatch}

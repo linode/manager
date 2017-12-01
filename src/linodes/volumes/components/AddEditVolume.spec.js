@@ -20,7 +20,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates a volume', async function () {
+  it.skip('creates a volume', async function () {
     AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -45,7 +45,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     ], 1);
   });
 
-  it('creates a volume and attaches it', async function () {
+  it.skip('creates a volume and attaches it', async function () {
     AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -72,7 +72,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     ], 2, [{ id: '12345' }]);
   });
 
-  it('creates a volume and attaches it to selected config', async function () {
+  it.skip('creates a volume and attaches it to selected config', async function () {
     AddEditVolume.trigger(dispatch, linodes);
     const modal = mount(dispatch.firstCall.args[0].body);
     const configId = Object.keys(testLinode1238._configs.configs)[0];
@@ -104,7 +104,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     ], 2, [{ id: '12345' }]);
   });
 
-  it('updates an existing volume', async function () {
+  it.skip('updates an existing volume', async function () {
     AddEditVolume.trigger(dispatch, linodes, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 

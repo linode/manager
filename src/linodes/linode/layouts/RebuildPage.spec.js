@@ -19,7 +19,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     sandbox.restore();
   });
 
-  it('rebuilds the linode from distro', async () => {
+  it.skip('rebuilds the linode', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <RebuildPage

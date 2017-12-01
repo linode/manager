@@ -35,7 +35,7 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
     sandbox.restore();
   });
 
-  it('renders ips', () => {
+  it.skip('renders ips', () => {
     const page = mount(
       <IPSharingPage
         dispatch={dispatch}
@@ -48,7 +48,7 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
     expect(rows.length).toBe(Object.keys(allIps).length);
   });
 
-  it('saves shared ips', async () => {
+  it.skip('saves shared ips', async () => {
     const page = mount(
       <IPSharingPage
         dispatch={dispatch}

@@ -31,22 +31,31 @@ export default class VolumesList extends Component {
     super(props);
 
     this.state = { filter: '' };
+
+    this.deleteVolumes = this.deleteVolumes.bind(this);
+    this.detachVolumes = this.detachVolumes.bind(this);
+    this.renderAttached = this.renderAttached.bind(this);
+    this.renderVolumeActions = this.renderVolumeActions.bind(this);
   }
 
-  deleteVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    this.removeFromLinodeAndCall(api.volumes.delete),
-    this.props.objectType).bind(this)
+  detachVolumes() {
+    return confirmThenDelete(
+      this.props.dispatch,
+      'volume',
+      this.removeFromLinodeAndCall(detachVolume),
+      this.props.objectType,
+      undefined,
+      'detach',
+      'detaching');
+  }
 
-  detachVolumes = confirmThenDelete(
-    this.props.dispatch,
-    'volume',
-    this.removeFromLinodeAndCall(detachVolume),
-    this.props.objectType,
-    undefined,
-    'detach',
-    'detaching').bind(this)
+  deleteVolumes() {
+    return confirmThenDelete(
+      this.props.dispatch,
+      'volume',
+      this.removeFromLinodeAndCall(api.volumes.delete),
+      this.props.objectType);
+  }
 
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {
@@ -109,16 +118,24 @@ export default class VolumesList extends Component {
 
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      { elements: [
-        { name: 'Edit', action: () =>
-          AddEditVolume.trigger(dispatch, linodes, record) },
-        { name: 'Resize',
-          action: () => ResizeVolume.trigger(dispatch, record) },
-        record.linode_id === null ?
-        { name: 'Attach', action: () =>
-          AttachVolume.trigger(dispatch, linodes, record) } :
-        { name: 'Detach', action: () => this.detachVolumes(record) },
-      ] },
+      {
+        elements: [
+          {
+            name: 'Edit', action: () =>
+              AddEditVolume.trigger(dispatch, linodes, record)
+          },
+          {
+            name: 'Resize',
+            action: () => ResizeVolume.trigger(dispatch, record)
+          },
+          record.linode_id === null ?
+            {
+              name: 'Attach', action: () =>
+                AttachVolume.trigger(dispatch, linodes, record)
+            } :
+            { name: 'Detach', action: () => this.detachVolumes(record) },
+        ]
+      },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
 
@@ -147,9 +164,11 @@ export default class VolumesList extends Component {
             <MassEditControl
               data={sorted}
               dispatch={dispatch}
-              massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteVolumes },
-              ] }]}
+              massEditGroups={[{
+                elements: [
+                  { name: 'Delete', action: this.deleteVolumes },
+                ]
+              }]}
               selectedMap={selectedMap}
               objectType={objectType}
               toggleSelected={toggleSelected}
@@ -180,7 +199,8 @@ export default class VolumesList extends Component {
                 dataFn: (volume) => {
                   const { size } = volume;
                   return `${size} GiB`;
-                } },
+                }
+              },
               {
                 cellComponent: RegionCell,
                 headerClassName: 'RegionColumn',
@@ -215,7 +235,7 @@ VolumesList.propTypes = {
   dispatch: PropTypes.func.isRequired,
   objectType: PropTypes.string.isRequired,
   selectedMap: PropTypes.object.isRequired,
-  volumes: PropTypes.object.isRequired,
+  volumes: PropTypes.array.isRequired,
   className: PropTypes.string,
   linodes: PropTypes.object,
 };

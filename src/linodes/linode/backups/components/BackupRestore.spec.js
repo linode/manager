@@ -19,7 +19,7 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
     sandbox.restore();
   });
 
-  it('should dispatch a restore request', async () => {
+  it.skip('should dispatch a restore request', async () => {
     const backup = testLinode._backups.snapshot.current;
     const page = mount(
       <BackupRestore

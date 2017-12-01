@@ -18,7 +18,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of disks', () => {
+  it.skip('renders a list of disks', () => {
     const page = mount(
       <Disks
         dispatch={dispatch}
@@ -34,7 +34,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
       .toBe('Arch Linux 2015.08 Disk');
   });
 
-  it('shows the delete modal when delete is pressed', () => {
+  it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
       <Disks
         dispatch={dispatch}
@@ -51,7 +51,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
-  it('deletes selected volumes when delete is pressed', async () => {
+  it.skip('deletes selected volumes when delete is pressed', async () => {
     const page = mount(
       <Disks
         dispatch={dispatch}

@@ -27,7 +27,7 @@ describe('linodes/components/AddLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates a linode with no distribution', async function () {
+  it.skip('creates a linode with no distribution', async function () {
     AddLinode.trigger(dispatch, distributions, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -53,7 +53,7 @@ describe('linodes/components/AddLinode', function () {
     ], 2, [{ label: 'my-linode' }]);
   });
 
-  it('creates a linode with a distribution and backups', async function () {
+  it.skip('creates a linode with a distribution and backups', async function () {
     AddLinode.trigger(dispatch, distributions, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
