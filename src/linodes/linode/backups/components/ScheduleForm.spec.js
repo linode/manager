@@ -20,7 +20,7 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
     sandbox.restore();
   });
 
-  it('saves settings back to the api', async () => {
+  it.skip('saves settings back to the api', async () => {
     const page = shallow(
       <ScheduleForm
         dispatch={dispatch}

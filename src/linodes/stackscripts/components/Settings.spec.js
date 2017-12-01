@@ -16,7 +16,7 @@ describe('linodes/stackscripts/components/Settings', () => {
 
   const dispatch = sandbox.spy();
 
-  it('saves stackscript settings', async () => {
+  it.skip('saves stackscript settings', async () => {
     const component = mount(
       <Settings
         dispatch={dispatch}

@@ -18,7 +18,7 @@ describe('linodes/images/components/AddImage', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates an image', async function () {
+  it.skip('creates an image', async function () {
     AddImage.trigger(dispatch, linodes);
     const modal = await mount(dispatch.firstCall.args[0].body);
     const diskId = Object.keys(testLinode1238._disks.disks)[0].id;
@@ -46,7 +46,7 @@ describe('linodes/images/components/AddImage', function () {
     ], 2);
   });
 
-  it('creates an image in settings', async function () {
+  it.skip('creates an image in settings', async function () {
     const disk = Object.keys(testLinode1238._disks.disks)[0];
     AddImage.trigger(dispatch, undefined, 1238, disk);
     const modal = await mount(dispatch.firstCall.args[0].body);

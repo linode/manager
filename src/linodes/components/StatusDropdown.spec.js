@@ -19,7 +19,7 @@ describe('linodes/components/StatusDropdown', () => {
     sandbox.restore();
   });
 
-  it('renders correct options for offline Linodes', () => {
+  it.skip('renders correct options for offline Linodes', () => {
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
     );
@@ -34,7 +34,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-item').at(2).text()).toBe('Delete');
   });
 
-  it('renders correct options for online Linodes', () => {
+  it.skip('renders correct options for online Linodes', () => {
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
@@ -50,7 +50,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-item').at(3).text()).toBe('Delete');
   });
 
-  it('renders correct options for provisioning Linodes', () => {
+  it.skip('renders correct options for provisioning Linodes', () => {
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1248]} dispatch={() => {}} />
     );
@@ -64,7 +64,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-item').at(1).text()).toBe('Delete');
   });
 
-  it('dispatches on item click', async () => {
+  it.skip('dispatches on item click', async () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={dispatch} />
@@ -78,7 +78,7 @@ describe('linodes/components/StatusDropdown', () => {
     await expectRequest(reboot, '/linode/instances/1235/reboot', { method: 'POST' });
   });
 
-  it('is in a rebooting state, progressbar should show up', async () => {
+  it.skip('is in a rebooting state, progressbar should show up', async () => {
     const dispatch = sandbox.spy();
     const progress = mount(
       <StatusDropdown linode={linodes.linodes[1237]} dispatch={dispatch} />
@@ -86,7 +86,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(progress.find('.StatusDropdown-progress').length).toBe(1);
   });
 
-  it('shows unrecognized status as offline', async () => {
+  it.skip('shows unrecognized status as offline', async () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1243]} dispatch={dispatch} />
@@ -94,7 +94,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-first').text().trim()).toBe('Offline');
   });
 
-  it('renders modal on reboot if multiple configs', () => {
+  it.skip('renders modal on reboot if multiple configs', () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes['1233']} dispatch={dispatch} />
@@ -105,7 +105,7 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dispatch.firstCall.args[0].type).toBe(SHOW_MODAL);
   });
 
-  it('renders modal on power on if multiple configs', () => {
+  it.skip('renders modal on power on if multiple configs', () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes['1238']} dispatch={dispatch} />

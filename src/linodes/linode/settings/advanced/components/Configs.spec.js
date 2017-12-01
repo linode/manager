@@ -18,7 +18,7 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of configs', () => {
+  it.skip('renders a list of configs', () => {
     const page = mount(
       <Configs
         dispatch={dispatch}
@@ -34,7 +34,7 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
       .toBe('Test config');
   });
 
-  it('shows the delete modal when delete is pressed', () => {
+  it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
       <Configs
         dispatch={dispatch}
@@ -51,7 +51,7 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
-  it('deletes selected volumes when delete is pressed', async () => {
+  it.skip('deletes selected volumes when delete is pressed', async () => {
     const page = mount(
       <Configs
         dispatch={dispatch}

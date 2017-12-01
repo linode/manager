@@ -19,7 +19,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     sandbox.restore();
   });
 
-  it('renders backup blocks with no backups present', () => {
+  it.skip('renders backup blocks with no backups present', () => {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -44,7 +44,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       'No snapshots taken');
   });
 
-  it('renders backup blocks with all backups present', () => {
+  it.skip('renders backup blocks with all backups present', () => {
     const { daily, weekly, snapshot } = testLinode1235._backups;
     const page = mount(
       <SummaryPage
@@ -72,7 +72,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     testBlock(blocks.at(3), 'Snapshot', snapshot.current.finished, '54782236');
   });
 
-  it('takes a snapshot', async () => {
+  it.skip('takes a snapshot', async () => {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}
@@ -97,7 +97,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     ], 2, [{ id: '1' }]);
   });
 
-  it('does not show take snapshot button for an auto backup', () => {
+  it.skip('does not show take snapshot button for an auto backup', () => {
     const page = mount(
       <SummaryPage
         dispatch={dispatch}

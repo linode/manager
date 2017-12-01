@@ -17,7 +17,7 @@ describe('linodes/linode/backups/components/CancelForm', () => {
     sandbox.restore();
   });
 
-  it('shows cancel backups modal when button is pressed', async () => {
+  it.skip('shows cancel backups modal when button is pressed', async () => {
     const page = mount(
       <CancelForm
         dispatch={dispatch}

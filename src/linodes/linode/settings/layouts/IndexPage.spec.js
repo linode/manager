@@ -14,7 +14,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  it('renders tabs with correct names and links', () => {
+  it.skip('renders tabs with correct names and links', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

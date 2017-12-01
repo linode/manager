@@ -17,7 +17,7 @@ describe('linodes/stackscripts/components/Editor', () => {
 
   const dispatch = sandbox.spy();
 
-  it('saves stackscript editor', async () => {
+  it.skip('saves stackscript editor', async () => {
     const component = mount(
       <Editor
         dispatch={dispatch}

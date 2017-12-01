@@ -16,7 +16,7 @@ describe('linodes/volumes/components/ResizeVolume', function () {
     dispatch = sandbox.spy();
   });
 
-  it('resizes a volume', async function () {
+  it.skip('resizes a volume', async function () {
     ResizeVolume.trigger(dispatch, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 

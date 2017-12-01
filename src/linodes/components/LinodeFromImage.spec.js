@@ -28,7 +28,7 @@ describe('linodes/components/LinodeFromImage', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates a linode from an image with backups', async function () {
+  it.skip('creates a linode from an image with backups', async function () {
     LinodeFromImage.trigger(dispatch, types, images);
     const modal = mount(dispatch.firstCall.args[0].body);
 

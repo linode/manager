@@ -15,7 +15,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     sandbox.restore();
   });
 
-  it('renders all alerts', () => {
+  it.skip('renders all alerts', () => {
     const page = mount(
       <AlertsPage
         linode={testLinode}
@@ -36,7 +36,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     });
   });
 
-  it('maps form fields and dispatches a putLinode event', async () => {
+  it.skip('maps form fields and dispatches a putLinode event', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <AlertsPage

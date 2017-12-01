@@ -18,7 +18,7 @@ describe('linodes/linode/settings/advanced/components/EditDisk', () => {
 
   const testDisk = testLinode1236._disks.disks[12345];
 
-  it('should dismiss the modal when Cancel is clicked', () => {
+  it.skip('should dismiss the modal when Cancel is clicked', () => {
     const dispatch = sandbox.spy();
     const modal = mount(
       <EditDisk
@@ -33,7 +33,7 @@ describe('linodes/linode/settings/advanced/components/EditDisk', () => {
     expect(dispatch.calledWith(hideModal())).toBe(true);
   });
 
-  it('should commit changes to the API', async () => {
+  it.skip('should commit changes to the API', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
       <EditDisk

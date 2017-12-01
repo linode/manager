@@ -22,7 +22,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     sandbox.restore();
   });
 
-  it('should dispatch a snapshot request', async () => {
+  it.skip('should dispatch a snapshot request', async () => {
     TakeSnapshot.trigger(dispatch, testLinode);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -44,7 +44,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
     ], 2, [{ id: 1 }]);
   });
 
-  it('should not include label if label is not set', async () => {
+  it.skip('should not include label if label is not set', async () => {
     TakeSnapshot.trigger(dispatch, testLinode);
     const modal = mount(dispatch.firstCall.args[0].body);
 

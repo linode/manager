@@ -26,7 +26,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     username: 'tdude',
   };
 
-  it('renders public ipv4 and ipv6', () => {
+  it.skip('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
@@ -36,10 +36,10 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
     const ipSection = page.find('#ips');
     expect(ipSection.find('li').at(0).text()).toBe(ipv4[0]);
-    expect(ipSection.find('li').at(1).text()).toBe(ipv6.split('/')[0]);
+    expect(ipSection.find('li').at(1).text()).toBe(ipv6.split.skip('/')[0]);
   });
 
-  it('renders backups not enabled', () => {
+  it.skip('renders backups not enabled', () => {
     const page = mount(
       <DashboardPage
         {...{ ...props, linode: { ...testLinode, backups: { enabled: false } } }}
@@ -49,7 +49,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#backup-status').text()).toBe('Enable Backups');
   });
 
-  it('renders backups enabled', () => {
+  it.skip('renders backups enabled', () => {
     const page = mount(
       <DashboardPage
         {...props}
@@ -59,7 +59,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#backup-status').text()).toBe('View Backups');
   });
 
-  it('renders region', () => {
+  it.skip('renders region', () => {
     const page = mount(
       <DashboardPage
         {...props}
@@ -69,7 +69,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#region').text()).toBe(testLinode.region);
   });
 
-  it('renders distribution', () => {
+  it.skip('renders distribution', () => {
     const page = mount(
       <DashboardPage
         {...props}
@@ -79,7 +79,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#distro').text()).toBe(`${testLinode.distribution.label}Rebuild`);
   });
 
-  it('renders unknown distribution', () => {
+  it.skip('renders unknown distribution', () => {
     const page = mount(
       <DashboardPage
         {...{ ...props, linode: testLinode1246 }}
@@ -89,7 +89,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#distro').text()).toBe('UnknownRebuild');
   });
 
-  it('renders ssh input elements', () => {
+  it.skip('renders ssh input elements', () => {
     const page = shallow(
       <DashboardPage
         linode={testLinode}
@@ -99,7 +99,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('.input-group').at(0).find('Button').length).toBe(1);
   });
 
-  it('renders ssh path', () => {
+  it.skip('renders ssh path', () => {
     const ipv4 = testLinode.ipv4;
     const sshPath = `ssh root@${ipv4[0]}`;
     const page = shallow(
@@ -111,7 +111,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#ssh-input').props().value).toBe(sshPath);
   });
 
-  it('renders lish input elements', () => {
+  it.skip('renders lish input elements', () => {
     const page = shallow(
       <DashboardPage
         {...props}
@@ -125,7 +125,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       .at(1).length).toBe(1);
   });
 
-  it('renders lish path', () => {
+  it.skip('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
         ZONES[testLinode.region]
       }.linode.com`;

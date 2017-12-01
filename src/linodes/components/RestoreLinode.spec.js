@@ -26,7 +26,7 @@ describe('linodes/components/RestoreLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it('creates a new linode from a backup', async function () {
+  it.skip('creates a new linode from a backup', async function () {
     RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
@@ -54,7 +54,7 @@ describe('linodes/components/RestoreLinode', function () {
     ], 2, [{ label: 'my-linode' }]);
   });
 
-  it('creates a new linode from a backup with backups enabled', async function () {
+  it.skip('creates a new linode from a backup with backups enabled', async function () {
     RestoreLinode.trigger(dispatch, linodes, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 

@@ -19,7 +19,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
   const ip = Object.values(testLinode._ips).filter(
     ip => ip.type === 'public' && ip.version === 'ipv4')[0];
 
-  it('renders fields correctly', () => {
+  it.skip('renders fields correctly', () => {
     const page = mount(
       <EditRDNS
         dispatch={dispatch}
@@ -35,7 +35,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
     expect(hostname.props().value).toBe(ip.rdns);
   });
 
-  it('submits data onsubmit and closes modal', async () => {
+  it.skip('submits data onsubmit and closes modal', async () => {
     const page = mount(
       <EditRDNS
         dispatch={dispatch}

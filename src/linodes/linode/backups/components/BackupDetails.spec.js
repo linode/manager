@@ -17,7 +17,7 @@ describe('linodes/linode/backups/components/BackupDetails', () => {
     sandbox.restore();
   });
 
-  it('renders fields', () => {
+  it.skip('renders fields', () => {
     const backup = testLinode._backups.daily;
     const page = mount(
       <BackupDetails
@@ -57,7 +57,7 @@ describe('linodes/linode/backups/components/BackupDetails', () => {
     expect(space.text()).toBe('2330MB');
   });
 
-  it('renders label if label exists', () => {
+  it.skip('renders label if label exists', () => {
     const page = shallow(
       <BackupDetails
         dispatch={dispatch}

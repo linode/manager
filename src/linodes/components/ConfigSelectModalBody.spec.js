@@ -18,7 +18,7 @@ describe('linodes/components/ConfigSelectModalBody', () => {
     sandbox.restore();
   });
 
-  it('renders power on button text', () => {
+  it.skip('renders power on button text', () => {
     const modal = shallow(
       <ConfigSelectModalBody
         linode={linodes.linodes['1238']}
@@ -29,7 +29,7 @@ describe('linodes/components/ConfigSelectModalBody', () => {
     expect(modal.props().buttonText).toBe('Power On');
   });
 
-  it('renders reboot button text', () => {
+  it.skip('renders reboot button text', () => {
     const modal = shallow(
       <ConfigSelectModalBody
         linode={linodes.linodes['1238']}
@@ -40,7 +40,7 @@ describe('linodes/components/ConfigSelectModalBody', () => {
     expect(modal.props().buttonText).toBe('Reboot');
   });
 
-  it('renders config list', () => {
+  it.skip('renders config list', () => {
     const linode = linodes.linodes['1238'];
     const modal = shallow(<ConfigSelectModalBody linode={linode} />);
 
@@ -55,7 +55,7 @@ describe('linodes/components/ConfigSelectModalBody', () => {
     }
   });
 
-  it('dispatches action when button is pressed', () => {
+  it.skip('dispatches action when button is pressed', () => {
     const dispatch = sandbox.spy();
     const action = sandbox.stub().returns(42);
 
