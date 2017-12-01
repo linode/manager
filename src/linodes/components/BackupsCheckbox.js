@@ -3,14 +3,14 @@ import React from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Checkbox } from 'linode-components/forms';
-import DisplayCurrency from '~/components/DisplayCurrency';
+import { formatCurrency } from '~/components/Currency';
 
 
 export default function BackupsCheckbox(props) {
   let label = 'Enable';
   if (props.plan) {
     const backupsPrice = props.plans[props.plan].addons.backups.price.monthly;
-    label = `Enable (${<DisplayCurrency value={backupsPrice} />}/mo)`;
+    label = `Enable (${formatCurrency(backupsPrice)}/mo)`;
   }
 
   return (

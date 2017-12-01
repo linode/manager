@@ -18,7 +18,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { ChainedDocumentTitle } from '~/components';
 
-import DisplayCurrency from '~/components/DisplayCurrency';
+import Currency from '~/components/Currency';
 
 export class MakeAPaymentPage extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ export class MakeAPaymentPage extends Component {
               <FormGroup errors={errors} className="row" name="balance">
                 <label className="col-sm-3 col-form-label">Balance</label>
                 <div className="col-sm-5 col-form-text">
-                  <DisplayCurrency value={balance} />
+                  <Currency value={balance} />
                   <FormGroupError errors={errors} name="balance" />
                 </div>
               </FormGroup>
