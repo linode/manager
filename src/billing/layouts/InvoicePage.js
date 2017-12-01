@@ -6,7 +6,7 @@ import moment from 'moment-timezone';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
-import DisplayCurrency from '~/components/DisplayCurrency';
+import Currency from '~/components/Currency';
 import api from '~/api';
 import { setSource } from '~/actions/source';
 
@@ -91,7 +91,7 @@ export class InvoicePage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (amount) => {
-                    return <DisplayCurrency value={amount} />;
+                    return <Currency value={amount} />;
                   },
                 },
               ]}
@@ -100,7 +100,7 @@ export class InvoicePage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-                <strong>Invoice Total: <DisplayCurrency value={invoice.total} /></strong>
+                <strong>Invoice Total: <Currency value={invoice.total} /></strong>
               </div>
             </div>
           </Card>

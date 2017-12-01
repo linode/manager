@@ -3,16 +3,16 @@ import React from 'react';
 
 const normalizeNumber = (v) => Math.abs(v).toFixed(2);
 
-const convertToCurrency = (v) => (v < 0)
+export const formatCurrency = (v) => (v < 0)
   ? `($${normalizeNumber(v)})`
   : `$${normalizeNumber(v)}`;
 
-export default function DisplayCurrency(props) {
+export default function Currency(props) {
   const { value } = props;
 
-  return (<span className="display-currency">{convertToCurrency(value)}</span>);
+  return (<span className="currency">{formatCurrency(value)}</span>);
 }
 
-DisplayCurrency.propTypes = {
+Currency.propTypes = {
   value: PropTypes.number.isRequired,
 };

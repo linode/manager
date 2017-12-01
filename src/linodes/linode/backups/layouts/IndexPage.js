@@ -13,7 +13,7 @@ import { enableBackup } from '~/api/ad-hoc/backups';
 import { linodeBackups } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
-import DisplayCurrency from '~/components/DisplayCurrency';
+import Currency from '~/components/Currency';
 
 import { selectLinode } from '../../utilities';
 
@@ -60,7 +60,7 @@ export class IndexPage extends Component {
             analytics={{ title: 'Enable Backups' }}
           >
             <p>
-              Backups not enabled. Enable backups for {<DisplayCurrency value={backupPrice} />}/mo.
+              Backups not enabled. Enable backups for {<Currency value={backupPrice} />}/mo.
             </p>
             <SubmitButton
               className="btn-primary"
