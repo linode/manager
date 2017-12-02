@@ -56,8 +56,8 @@ describe('nodebalancers/layouts/IndexPage', () => {
     dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.callCount).toBe(1);
-    expect(dispatch.firstCall.args[0])
-      .to.have.property('type').which.equals(SHOW_MODAL);
+    expect(dispatch.firstCall.args[0]).toHaveProperty('type');
+    expect(dispatch.firstCall.args[0].type).toBe(SHOW_MODAL);
   });
 
   it('deletes selected nodebalancers when delete is pressed', async () => {

@@ -6,7 +6,7 @@ import { REGION_MAP } from '~/constants';
 import { AddNodeBalancer } from '~/nodebalancers/components';
 
 import {
-  changeInput,
+  createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectObjectDeepEquals,
   expectRequest,
@@ -15,19 +15,20 @@ import {
 
 describe('linodes/components/AddNodeBalancer', function () {
   const sandbox = sinon.sandbox.create();
-  let dispatch = sandbox.spy();
+  const dispatch = sandbox.spy();
 
   afterEach(() => {
     sandbox.restore();
-    dispatch = sandbox.spy();
   });
 
   it('adds a nodebalancer', async function () {
     AddNodeBalancer.trigger(dispatch);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'label', 'node-1');
-    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    modal.find('input[name="label"]')
+      .simulate('change', createSimulatedEvent('label', 'node-1'));
+    modal.find('Select[name="region"]')
+      .simulate('change', createSimulatedEvent('region', REGION_MAP.Asia[0]));
 
     dispatch.reset();
 

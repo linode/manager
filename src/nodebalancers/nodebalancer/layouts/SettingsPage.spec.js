@@ -4,7 +4,11 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+  changeInput,
+  createSimulatedEvent,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import { SettingsPage } from '~/nodebalancers/nodebalancer/layouts/SettingsPage';
@@ -27,9 +31,9 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    expect(page.find({ id: 'client_conn_throttle' }).props().value)
+    expect(page.find('input#client_conn_throttle').props().value)
       .toBe(configsNodeBalancer.client_conn_throttle);
-    expect(page.find({ id: 'label' }).props().value).toBe(configsNodeBalancer.label);
+    expect(page.find('input#label').props().value).toBe(configsNodeBalancer.label);
   });
 
   it('makes request to save changes', async () => {
@@ -63,7 +67,8 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    changeInput(page, 'label', 'newlabel');
+    page.find('input[name="label"]')
+      .simulate('change', createSimulatedEvent('label', 'newlabel'));
 
     dispatch.reset();
 

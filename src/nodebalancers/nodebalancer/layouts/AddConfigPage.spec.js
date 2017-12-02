@@ -7,6 +7,7 @@ import { AddConfigPage } from '~/nodebalancers/nodebalancer/layouts/AddConfigPag
 
 import {
   changeInput,
+  createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectRequest,
   expectObjectDeepEquals,
@@ -31,15 +32,24 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
       />
     );
 
-    changeInput(page, 'port', 82);
-    changeInput(page, 'protocol', 'http');
-    changeInput(page, 'algorithm', 'roundrobin');
-    changeInput(page, 'stickiness', 'none');
-    changeInput(page, 'check', 'none');
-    changeInput(page, 'checkPassive', true);
-    changeInput(page, 'checkInterval', 0);
-    changeInput(page, 'checkTimeout', 30);
-    changeInput(page, 'checkAttempts', 3);
+    page.find('input[name="port"]')
+      .simulate('change', createSimulatedEvent('port', 82));
+    page.find('select[name="protocol"]')
+      .simulate('change', createSimulatedEvent('protocol', 'http'));
+    page.find('select[name="algorithm"]')
+      .simulate('change', createSimulatedEvent('algorithm', 'roundrobin'));
+    page.find('select[name="stickiness"]')
+      .simulate('change', createSimulatedEvent('stickiness','none'));
+    page.find('select[name="check"]')
+      .simulate('change', createSimulatedEvent('check', 'none'));
+    page.find('input[name="checkPassive"]')
+      .simulate('change', createSimulatedEvent('checkPassive', true));
+    page.find('input[name="checkInterval"]')
+      .simulate('change', createSimulatedEvent('checkInterval', 0));
+    page.find('input[name="checkTimeout"]')
+      .simulate('change', createSimulatedEvent('checkTimeout', 30));
+    page.find('input[name="checkAttempts"]')
+      .simulate('change', createSimulatedEvent('checkAttempts', 3));
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -74,17 +84,28 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
       />
     );
 
-    changeInput(page, 'port', 82);
-    changeInput(page, 'protocol', 'https');
-    changeInput(page, 'algorithm', 'roundrobin');
-    changeInput(page, 'stickiness', 'none');
-    changeInput(page, 'check', 'none');
-    changeInput(page, 'checkPassive', true);
-    changeInput(page, 'checkInterval', 0);
-    changeInput(page, 'checkTimeout', 30);
-    changeInput(page, 'checkAttempts', 3);
-    changeInput(page, 'sslCert', 'Some ssl cert');
-    changeInput(page, 'sslKey', 'Some ssl key');
+    page.find('input[name="port"]')
+      .simulate('change', createSimulatedEvent('port', 82));
+    page.find('select[name="protocol"]')
+      .simulate('change', createSimulatedEvent('protocol', 'https'));
+    page.find('select[name="algorithm"]')
+      .simulate('change', createSimulatedEvent('algorithm', 'roundrobin'));
+    page.find('select[name="stickiness"]')
+      .simulate('change', createSimulatedEvent('stickiness', 'none'));
+    page.find('select[name="check"]')
+      .simulate('change', createSimulatedEvent('check', 'none'));
+    page.find('input[name="checkPassive"]')
+      .simulate('change', createSimulatedEvent('checkPassive', true));
+    page.find('input[name="checkInterval"]')
+      .simulate('change', createSimulatedEvent('checkInterval', 0));
+    page.find('input[name="checkTimeout"]')
+      .simulate('change', createSimulatedEvent('checkTimeout', 30));
+    page.find('input[name="checkAttempts"]')
+      .simulate('change', createSimulatedEvent('checkAttempts', 3));
+    page.find('textarea[name="sslCert"]')
+      .simulate('change', createSimulatedEvent('sslCert', 'Some ssl cert'));
+    page.find('textarea[name="sslKey"]')
+      .simulate('change', createSimulatedEvent('sslKey', 'Some ssl key'));
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
