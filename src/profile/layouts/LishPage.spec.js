@@ -4,7 +4,12 @@ import sinon from 'sinon';
 
 import { LishPage } from '~/profile/layouts/LishPage';
 
-import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectRequest,
+  expectDispatchOrStoreErrors
+} from '~/test.helpers';
 import { profile } from '~/data/profile';
 
 
@@ -25,8 +30,10 @@ describe('profile/layouts/LishPage', () => {
       />
     );
 
-    changeInput(page, 'authorization', 'disabled');
-    changeInput(page, 'keys', 'foobar\nbarfoo\n \n');
+    page.find('select[name="authorization"]')
+      .simulate('change', createSimulatedEvent('authorization', 'disabled'));
+    page.find('textarea[name="keys"]')
+      .simulate('change', createSimulatedEvent('keys', 'foobar\nbarfoo\n \n'));
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);

@@ -4,7 +4,12 @@ import sinon from 'sinon';
 
 import { ChangeEmail } from '~/profile/components';
 
-import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectRequest,
+  expectDispatchOrStoreErrors,
+} from '~/test.helpers';
 import { profile } from '~/data/profile';
 
 
@@ -24,7 +29,8 @@ describe('profile/components/ChangeEmail', () => {
       />
     );
 
-    changeInput(page, 'email', 'new@gmail.com');
+    page.find('input[name="email"]')
+      .simulate('change', createSimulatedEvent('email', 'new@gmail.com'));
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);

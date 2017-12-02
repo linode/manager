@@ -4,7 +4,12 @@ import sinon from 'sinon';
 
 import { ChangePassword } from '~/profile/components';
 
-import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectRequest,
+  expectDispatchOrStoreErrors
+} from '~/test.helpers';
 
 
 describe('profile/components/ChangePassword', () => {
@@ -23,8 +28,10 @@ describe('profile/components/ChangePassword', () => {
       />
     );
 
-    changeInput(page, 'password', 'thePassword');
-    changeInput(page, 'expires', 0);
+    page.find('input[name="password"]')
+      .simulate('change', createSimulatedEvent('password', 'thePassword'));
+    page.find('select[name="expires"]')
+      .simulate('change', createSimulatedEvent('expires', 0));
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);

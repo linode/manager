@@ -4,7 +4,12 @@ import sinon from 'sinon';
 
 import { ChangeTimezone } from '~/profile/components';
 
-import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectRequest,
+  expectDispatchOrStoreErrors
+} from '~/test.helpers';
 import { profile } from '~/data/profile';
 
 
@@ -24,7 +29,8 @@ describe('profile/components/ChangeTimezone', () => {
       />
     );
 
-    changeInput(page, 'timezone', 'GMT');
+    page.find('select[name="timezone"]')
+      .simulate('change', createSimulatedEvent('timezone', 'GMT'));
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);

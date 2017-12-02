@@ -11,8 +11,8 @@
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
     "start": "yarn run copy-assets && node devServer.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch"
   },
   "repository": {
     "type": "git",
@@ -124,13 +124,13 @@
       "/node_modules/(?!(linode-components-*.*?\\.js$))"
     ],
     "globals": {
-      "ENV_API_ROOT": true,
-      "ENV_LOGIN_ROOT": true,
-      "ENV_APP_ROOT": true,
-      "ENV_GA_ID": true,
-      "ENV_SENTRY_URL": true,
-      "ENV_DEVTOOLS_DISABLED": true,
-      "ENV_VERSION": true
+      "ENV_API_ROOT": null,
+      "ENV_LOGIN_ROOT": null,
+      "ENV_APP_ROOT": null,
+      "ENV_GA_ID": null,
+      "ENV_SENTRY_URL": null,
+      "ENV_DEVTOOLS_DISABLED": null,
+      "ENV_VERSION": null
     }
   }
 }
