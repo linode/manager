@@ -2,7 +2,12 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectDispatchOrStoreErrors,
+  expectRequest
+} from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import NodeModal from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
@@ -28,10 +33,12 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       />
     );
 
-    expect(page.find('#label').props().value).toBe('greatest_node_ever');
-    expect(page.find('#address').props().value).toBe('192.168.4.5:80');
-    expect(page.find('#weight').props().value).toBe(40);
-    expect(page.find('#mode').props().value).toBe('accept');
+    console.log(page.debug());
+
+    expect(page.find('input#label').props().value).toBe('greatest_node_ever');
+    expect(page.find('input#address').props().value).toBe('192.168.4.5:80');
+    expect(page.find('input#weight').props().value).toBe(40);
+    expect(page.find('select#mode').props().value).toBe('accept');
   });
 
   it('updates node', async () => {
@@ -71,9 +78,12 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       />
     );
 
-    changeInput(page, 'label', 'myLabel');
-    changeInput(page, 'address', '192.168.4.6:88');
-    changeInput(page, 'weight', '50');
+    page.find('input#label')
+      .simulate('change', createSimulatedEvent('label', 'myLabel'));
+    page.find('input#address')
+      .simulate('change', createSimulatedEvent('address', '192.168.4.6:88'));
+    page.find('input#weight')
+      .simulate('change', createSimulatedEvent('weight', '50'));
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
