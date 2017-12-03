@@ -21,6 +21,7 @@ $tab-active-border: #bbb;
 
         &.ReactTabs__Tab--selected {
             border-color: $tab-active-border;
+            font-weight: bold;
         }
 
         &:hover,

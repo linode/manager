@@ -18,6 +18,11 @@
             background: transparent;
             border: none;
             border-bottom: 3px solid $blue;
+            font-weight: normal;
+        }
+
+        &:not(:last-of-type) {
+            margin-right: 3px;
         }
     }
 
