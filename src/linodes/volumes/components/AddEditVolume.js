@@ -72,7 +72,7 @@ export default class AddEditVolume extends Component {
       const linodeConfigs = Object.values(configs.data).map(function (config) {
         return {
           label: config.label,
-          value: config.id,
+          value: parseInt(config.id),
         };
       });
 

@@ -13,7 +13,7 @@ export function attachVolume(volumeId, linodeId, configId = null) {
   return async function(dispatch) {
     const data = {
       linode_id: linodeId,
-      config_id: configId,
+      config_id: (configId === null ? configId : parseInt(configId)),
     };
 
     if (!data.config_id) {
