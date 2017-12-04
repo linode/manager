@@ -14,7 +14,7 @@ describe('session', () => {
 
   it('allows the request when logged out and hitting /oauth/callback', () => {
     const redirectStub = sandbox.stub(session, 'redirect');
-    sandbox.stub(store, 'getState', () =>
+    sandbox.stub(store, 'getState').callsFake(() =>
       ({ authentication: { token: null } }));
 
     session.checkLogin({ location: { pathname: '/oauth/callback' } });
@@ -24,8 +24,7 @@ describe('session', () => {
 
   it('allows the request when the oauth token is not null', () => {
     const redirectStub = sandbox.stub(session, 'redirect');
-    sandbox.stub(store, 'getState', () =>
-      ({ authentication: { token: 'not null' } }));
+    sandbox.stub(store, 'getState').callsFake(() => ({ authentication: { token: 'not null' } }));
 
     session.checkLogin({ location: { pathname: '/' } });
 
@@ -34,8 +33,7 @@ describe('session', () => {
 
   it('redirects to login when the oauth token is null', () => {
     const redirectStub = sandbox.stub(session, 'redirect');
-    sandbox.stub(store, 'getState', () =>
-      ({ authentication: { token: null } }));
+    sandbox.stub(store, 'getState').callsFake(() => ({ authentication: { token: null } }));
 
     session.checkLogin({ location: { pathname: '/linodes', query: { foo: 'bar' } } });
 
@@ -63,8 +61,11 @@ describe('session', () => {
       expect(setStorage.args[i][1]).toBe('');
     });
   });
-
-  it('expires and checksLogin on expireAndReAuth', () => {
+  /**
+   * @todo skipped
+   * Not providing value.
+   */
+  it.skip('expires and checksLogin on expireAndReAuth', () => {
     const redirectStub = sandbox.stub(session, 'redirect');
     const dispatch = sandbox.stub();
 
