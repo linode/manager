@@ -33,8 +33,6 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       />
     );
 
-    console.log(page.debug());
-
     expect(page.find('input#label').props().value).toBe('greatest_node_ever');
     expect(page.find('input#address').props().value).toBe('192.168.4.5:80');
     expect(page.find('input#weight').props().value).toBe(40);
