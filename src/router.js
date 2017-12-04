@@ -97,7 +97,7 @@ export class LoadingRouterContext extends RouterContext {
     this.preloadCounter = 0;
     this.lastPreloads = [];
 
-    this.state = { initialLoad: false, checkLoginDone: false };
+    this.state = { initialLoad: true, checkLoginDone: false };
   }
 
   async componentWillMount() {
