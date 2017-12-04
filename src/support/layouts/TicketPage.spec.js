@@ -7,6 +7,7 @@ import { TicketPage } from '~/support/layouts/TicketPage';
 
 import { expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
 import { testTicket, closedTicket } from '~/data/tickets';
+import { createSimulatedEvent } from '../../test.helpers';
 
 
 describe('support/layouts/TicketPage', () => {
@@ -56,8 +57,11 @@ describe('support/layouts/TicketPage', () => {
     );
 
     const reply = 'This is my awesome response.';
-    page.find('#reply[name="reply"]').simulate(
-      'change', { target: { name: 'reply', value: reply } });
+    const replyWrapper = page.find('textarea#reply[name="reply"]');
+    replyWrapper.simulate(
+      'change',
+      createSimulatedEvent('reply', reply)
+    );
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { CreatePage } from '~/support/layouts/CreatePage';
 
 import {
-  changeInput,
+  createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectObjectDeepEquals,
   expectRequest,
@@ -33,10 +33,23 @@ describe('support/layouts/CreatePage', () => {
         dispatch={dispatch}
       />
     );
+    const summaryWrapper = page.find('input#summary');
+    summaryWrapper.simulate(
+      'change',
+      createSimulatedEvent('summary', 'My new ticket!')
+    );
 
-    changeInput(page, 'summary', 'My new ticket!');
-    changeInput(page, 'regarding', `linode_id:${testLinode.id}`);
-    changeInput(page, 'description', 'This is my new description!');
+    const regardingWrapper = page.find('select#regarding');
+    regardingWrapper.simulate(
+      'change',
+      createSimulatedEvent('regarding', `linode_id:${testLinode.id}`)
+    );
+
+    const descriptionWrapper = page.find('textarea#description');
+    descriptionWrapper.simulate(
+      'change',
+      createSimulatedEvent('description', 'This is my new description!')
+    );
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
