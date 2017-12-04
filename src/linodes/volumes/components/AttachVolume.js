@@ -50,7 +50,7 @@ export default class AttachVolume extends Component {
         const linodeConfigs = Object.values(configs.configs).map(function (config) {
           return {
             label: config.label,
-            value: config.id,
+            value: parseInt(config.id),
           };
         });
 
@@ -82,7 +82,7 @@ export default class AttachVolume extends Component {
       Object.values(linodes[linode]._configs.configs).map(function (config) {
         return {
           label: config.label,
-          value: config.id,
+          value: parseInt(config.id),
         };
       }
     ) : null;
