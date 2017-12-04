@@ -53,7 +53,7 @@ describe('layouts/Layout', () => {
     const component = shallow(makeLayout());
     const sourceLink = component.find('footer').find('ExternalLink');
     expect(sourceLink.props().children).toBe('Page Source');
-    expect(sourceLink.props().to).toBe('https://github.com/linode/manager/blob/vtrue/foobar.html');
+    expect(sourceLink.props().to).toBe('https://github.com/linode/manager/blob/master/foobar.html');
   });
 
   const errorsPopulated = {
