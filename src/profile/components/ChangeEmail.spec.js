@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import { ChangeEmail } from '~/profile/components';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectRequest,
   expectDispatchOrStoreErrors,

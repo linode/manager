@@ -14,7 +14,7 @@ import { ChainedDocumentTitle, GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel }) {
+  static async preload({ dispatch }, { nbLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
     await dispatch(api.nodebalancers.configs.all([id]));
   }

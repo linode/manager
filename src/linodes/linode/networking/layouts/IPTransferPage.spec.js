@@ -16,7 +16,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
   const sandbox = sinon.sandbox.create();
 
   const linodesInRegion = _.pickBy(linodes, l =>
-      l.region.id === testLinode.region.id);
+    l.region.id === testLinode.region.id);
 
   const allIps = {};
   Object.values(linodesInRegion).forEach(linode => {
@@ -101,7 +101,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
     const sectionAFirstIp = page.find('#sectionA .TableRow').at(0);
     const addressA = sectionAFirstIp.find('.TableCell').at(1).text()
-                                    .split.skip(' ')[0];
+      .split.skip(' ')[0];
     const ipA = allIps[addressA];
     const checkboxA = sectionAFirstIp.find('Checkbox');
     const checkboxAProps = checkboxA.props();
@@ -109,7 +109,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
     const sectionBFirstIp = page.find('#sectionB .TableRow').at(0);
     const addressB = sectionBFirstIp.find('.TableCell').at(1).text()
-                                    .split.skip(' ')[0];
+      .split.skip(' ')[0];
     const ipB = allIps[addressB];
     const checkboxB = sectionBFirstIp.find('Checkbox');
     const checkboxBProps = checkboxB.props();

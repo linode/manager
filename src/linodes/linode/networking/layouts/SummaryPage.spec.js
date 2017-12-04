@@ -119,7 +119,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
     dispatch.reset();
     page.find('#more-info').at(0).props()
-        .onClick();
+      .onClick();
     expect(dispatch.callCount).toBe(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });
@@ -134,7 +134,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
     dispatch.reset();
     page.find('#edit-rdns').at(0).props()
-        .onMouseDown();
+      .onMouseDown();
     expect(dispatch.callCount).toBe(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });
@@ -148,7 +148,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     );
     dispatch.reset();
     page.find('#reset-rdns').at(0).props()
-        .onMouseDown();
+      .onMouseDown();
     expect(dispatch.callCount).toBe(1);
     expect(dispatch.firstCall.args[0].type, SHOW_MODAL);
   });

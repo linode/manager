@@ -3,10 +3,9 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectRequest
+  expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import NodeModal from '~/nodebalancers/nodebalancer/configs/components/NodeModal';

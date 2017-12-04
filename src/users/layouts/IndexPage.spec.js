@@ -63,7 +63,7 @@ describe('users/layouts/IndexPage', () => {
     dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.callCount).toBe(1);
-    expect(dispatch.firstCall.args[0]).toHaveProperty('type')
+    expect(dispatch.firstCall.args[0]).toHaveProperty('type');
     expect(dispatch.firstCall.args[0].type).toBe(SHOW_MODAL);
   });
 

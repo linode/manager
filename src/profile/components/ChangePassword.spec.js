@@ -5,10 +5,9 @@ import sinon from 'sinon';
 import { ChangePassword } from '~/profile/components';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectRequest,
-  expectDispatchOrStoreErrors
+  expectDispatchOrStoreErrors,
 } from '~/test.helpers';
 
 

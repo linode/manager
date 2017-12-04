@@ -12,7 +12,7 @@ import { ChainedDocumentTitle } from '~/components';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { username }) {
+  static async preload({ dispatch }, { username }) {
     await dispatch(getObjectByLabelLazily('users', username, 'username'));
   }
 

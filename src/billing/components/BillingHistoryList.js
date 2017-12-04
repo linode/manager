@@ -11,8 +11,8 @@ import Currency from '~/components/Currency';
 
 export const BillingHistoryList = props => {
   const {
-      invoices,
-      payments,
+    invoices,
+    payments,
   } = props;
 
   const dateSort = (a, b) => new Date(a.date) - new Date(b.date);

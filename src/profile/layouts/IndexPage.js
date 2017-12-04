@@ -9,7 +9,6 @@ import { setAnalytics, setSource } from '~/actions';
 import { ChainedDocumentTitle } from '~/components';
 
 export class IndexPage extends Component {
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));

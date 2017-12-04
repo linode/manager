@@ -17,7 +17,8 @@ describe('components/Error', () => {
 
     expect(error.find('h1').text()).toBe('404');
     expect(error.find('h2').text()).toBe('Whoops!');
-    expect(error.find('.Error-body').text()).toBe('The page you\'re trying to reach does not exist.');
+    expect(error.find('.Error-body').text())
+      .toBe('The page you\'re trying to reach does not exist.');
   });
 
   it('renders a 400 component', () => {

@@ -1,7 +1,8 @@
+language: node_js
+node_js:
+  - "8.4.0"
+before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
 install:
-    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    - sudo apt-get update && sudo apt-get install yarn
     - yarn
     - (cd docs && yarn)
     - (cd components && yarn)
@@ -17,6 +18,6 @@ script:
         yarn run lint
         (cd docs && yarn run lint && yarn run prebuild)
         (cd components && yarn run lint)
-        yarn test
+        yarn test -- --coverage --maxWorkers=4
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi

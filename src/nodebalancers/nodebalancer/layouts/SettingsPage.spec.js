@@ -4,7 +4,6 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectObjectDeepEquals,

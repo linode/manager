@@ -83,7 +83,7 @@ export function expectObjectDeepEquals(initialA, initialB, initialPath) {
  * occured to dispatch
  */
 export async function expectRequest(fn, path, expectedRequestData = {}, response = {},
-                                    fetchStub = null) {
+  fetchStub = null) {
   const sandbox = sinon.sandbox.create();
   let checkedRequestData = false;
 
@@ -146,9 +146,9 @@ export async function expectRequest(fn, path, expectedRequestData = {}, response
 }
 
 export async function expectDispatchOrStoreErrors(fn,
-                                                  expectArgs = [],
-                                                  expectN = undefined,
-                                                  dispatchResults = []) {
+  expectArgs = [],
+  expectN = undefined,
+  dispatchResults = []) {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 

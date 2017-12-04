@@ -34,7 +34,7 @@ describe('components/Tabs', async () => {
 
     const tabComponents = page.find('Tabs').find('Tab');
     expect(tabComponents.length).toBe(tabs.length);
-    tabs.forEach(({ name, link }, i) => {
+    tabs.forEach(({ name }, i) => {
       expect(tabComponents.at(i).children().text()).toBe(name);
     });
   });

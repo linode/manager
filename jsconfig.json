@@ -3,5 +3,10 @@
         "include": [
             "jest"
         ]
-    }
+    },
+    "exclude": [
+        "coverage",
+        "node_modules",
+        "exclude"
+    ]
 }

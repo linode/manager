@@ -98,8 +98,8 @@ export class SummaryPage extends Component {
     const daily = backups.daily;
     const snapshot = backups.snapshot &&
                      (backups.snapshot.in_progress ?
-                      backups.snapshot.in_progress :
-                      backups.snapshot.current) ||
+                       backups.snapshot.in_progress :
+                       backups.snapshot.current) ||
                      undefined;
     const weekly = backups.weekly && backups.weekly.length ? backups.weekly[0] : undefined;
     const biweekly = backups.weekly && backups.weekly.length === 2 ? backups.weekly[1] : undefined;

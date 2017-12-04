@@ -133,7 +133,7 @@ export default class LinodeFromImage extends Component {
               />
             </ModalFormGroup>
           </div>
-        :
+          :
           <div>You have no Images! Click on <Link to="/images">Images</Link> to create some.</div>
         }
       </FormModalBody>

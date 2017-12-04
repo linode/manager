@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { IndexPage } from '~/domains/layouts/IndexPage';

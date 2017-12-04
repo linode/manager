@@ -19,7 +19,7 @@ import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { selectUser } from './IndexPage';
 
 export class PermissionsPage extends Component {
-  static async preload({ dispatch, getState }, { username }) {
+  static async preload({ dispatch }, { username }) {
     const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
 
     if (user.restricted) {
@@ -178,8 +178,7 @@ export class PermissionsPage extends Component {
                   account_access: 'read_only',
                 },
               })}
-              label="Read-Only (Can view invoices, view billing info, and
-                will receive copies of all invoices and payment emails)"
+              label="Read-Only (Can view invoices, view billing info, and will receive copies of all invoices and payment emails)" // eslint-disable-line max-len
             />
             <Radio
               id="permission-customer-access-readwrite"
@@ -279,7 +278,8 @@ export class PermissionsPage extends Component {
                                   </label>
                                 </div>
                               </td>
-                        ); })}
+                            );
+                          })}
                       </tr>
                     ))}
                   </tbody>

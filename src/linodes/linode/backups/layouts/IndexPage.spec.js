@@ -30,7 +30,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
 
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).toBe(tabList.length);
-    tabList.forEach(({ name, link }, i) => {
+    tabList.forEach(({ name }, i) => {
       expect(tabs.at(i).children().text()).toBe(name);
     });
   });
