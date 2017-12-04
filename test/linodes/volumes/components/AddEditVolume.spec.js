@@ -35,7 +35,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+      ([fn]) => expectRequest(fn, '/volumes/', {
         method: 'POST',
         body: {
           label: 'my-volume',
@@ -61,7 +61,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+      ([fn]) => expectRequest(fn, '/volumes/', {
         method: 'POST',
         body: {
           label: 'my-volume',
@@ -92,7 +92,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/volumes/', {
+      ([fn]) => expectRequest(fn, '/volumes/', {
         method: 'POST',
         body: {
           label: 'my-volume',
@@ -117,7 +117,7 @@ describe('linodes/volumes/components/AddEditVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/volumes/${testVolume.id}`, {
+      ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}`, {
         method: 'PUT',
         body: { label: 'my-new-volume-label' },
       }),

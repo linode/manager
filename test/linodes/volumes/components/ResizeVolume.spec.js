@@ -26,7 +26,7 @@ describe('linodes/volumes/components/ResizeVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/volumes/${testVolume.id}/resize`, {
+      ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}/resize`, {
         method: 'POST',
         body: { size: 20 },
       }),
