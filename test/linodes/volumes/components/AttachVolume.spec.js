@@ -29,7 +29,7 @@ describe('linodes/volumes/components/AttachVolume', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/volumes/${testVolume.id}/attach`, {
+      ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}/attach`, {
         method: 'POST',
         body: {
           linode_id: '1234',
