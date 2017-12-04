@@ -3,8 +3,11 @@ import sinon from 'sinon';
 
 import { AddUser } from '~/users/components';
 
-import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
-
+import {
+  createSimulatedEvent,
+  expectDispatchOrStoreErrors,
+  expectRequest,
+} from '~/test.helpers';
 
 describe('users/components/AddUser', () => {
   const sandbox = sinon.sandbox.create();
@@ -21,10 +24,14 @@ describe('users/components/AddUser', () => {
 
     dispatch.reset();
 
-    changeInput(modal, 'username', 'theUser');
-    changeInput(modal, 'email', 'user@example.com');
-    changeInput(modal, 'password', 'password');
-    changeInput(modal, 'restricted', 'yes');
+    modal.find('input[name="username"]')
+      .simulate('change', createSimulatedEvent('username', 'theUser'));
+    modal.find('input[name="email"]')
+      .simulate('change', createSimulatedEvent('email', 'user@example.com'));
+    modal.find('input[name="password"]')
+      .simulate('change', createSimulatedEvent('password', 'password'));
+    modal.find('input#restricted')
+      .simulate('change', createSimulatedEvent('restricted', true));
 
     await modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];

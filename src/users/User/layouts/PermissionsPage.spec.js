@@ -26,11 +26,11 @@ describe('users/user/layouts/PermissionsPage', () => {
     );
 
     // global
-    const globalAddVolumes = page.find('#permission-global-volumes');
+    const globalAddVolumes = page.find('input#permission-global-volumes');
     expect(globalAddVolumes.props().checked).toBe(true);
 
     // customer
-    const customerReadOnly = page.find('#permission-customer-access-read-only');
+    const customerReadOnly = page.find('input#permission-customer-access-read-only');
     expect(customerReadOnly.props().checked).toBe(true);
   });
 
