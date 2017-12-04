@@ -5,10 +5,9 @@ import sinon from 'sinon';
 import { LishPage } from '~/profile/layouts/LishPage';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectRequest,
-  expectDispatchOrStoreErrors
+  expectDispatchOrStoreErrors,
 } from '~/test.helpers';
 import { profile } from '~/data/profile';
 

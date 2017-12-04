@@ -125,7 +125,7 @@ export default class AddImage extends Component {
                 onChange={this.onLinodeChange}
               />
             </ModalFormGroup>
-          : null}
+            : null}
           {linodes ?
             <ModalFormGroup label="Disk" id="disk" apiKey="disk">
               {disks.length ?
@@ -136,14 +136,14 @@ export default class AddImage extends Component {
                   id="disk"
                   onChange={this.onChange}
                 />
-              :
+                :
                 <Input
                   value={loading ? '' : 'None'}
                   disabled
                 />
               }
             </ModalFormGroup>
-          : null}
+            : null}
           {disk && diskObj ?
             <ModalFormGroup label="Type" id="type">
               <Input
@@ -151,7 +151,7 @@ export default class AddImage extends Component {
                 disabled
               />
             </ModalFormGroup>
-          : null}
+            : null}
           {disk && diskObj ?
             <ModalFormGroup errors={errors} label="Size" id="size">
               <Input
@@ -162,7 +162,7 @@ export default class AddImage extends Component {
                 Disk usage may not exceed 2048 MB for this Image.
               </small>
             </ModalFormGroup>
-          : null}
+            : null}
           <ModalFormGroup errors={errors} id="label" label="Label" apiKey="label">
             <Input
               id="label"

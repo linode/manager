@@ -15,7 +15,7 @@ import { getStorage } from '~/storage';
 
 
 export class InvoicePage extends Component {
-  static async preload({ dispatch, getState }, { invoiceId }) {
+  static async preload({ dispatch }, { invoiceId }) {
     await dispatch(api.invoices.items.all([invoiceId]));
   }
 

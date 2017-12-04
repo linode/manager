@@ -70,7 +70,7 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   return async (dispatch) => {
     dispatch(actions.disks.one({ id: diskId, size }, linodeId, diskId));
     await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
-                              { size }));
+      { size }));
     // TODO: fetch until complete
   };
 }
@@ -102,7 +102,7 @@ export function linodeStats(linodeId) {
 }
 
 export function cloneLinode(linodeId, regionId, planId, backups, label,
-                            targetId = undefined, configs = [], disks = []) {
+  targetId = undefined, configs = [], disks = []) {
   return async function (dispatch) {
     const clonedLinode = await dispatch(fetch.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,

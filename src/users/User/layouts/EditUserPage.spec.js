@@ -5,10 +5,9 @@ import sinon from 'sinon';
 import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectRequest
+  expectRequest,
 } from '~/test.helpers';
 import { testUser } from '~/data/users';
 

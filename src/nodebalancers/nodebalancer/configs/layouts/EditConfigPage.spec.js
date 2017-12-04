@@ -3,11 +3,10 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectRequest,
- } from '~/test.helpers';
+} from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import { EditConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/EditConfigPage';
 
@@ -38,7 +37,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     page.find('select[name="algorithm"]')
       .simulate('change', createSimulatedEvent('algorithm', 'roundrobin'));
     page.find('select[name="stickiness"]')
-      .simulate('change', createSimulatedEvent('stickiness','none'));
+      .simulate('change', createSimulatedEvent('stickiness', 'none'));
     page.find('select[name="check"]')
       .simulate('change', createSimulatedEvent('check', 'http_body'));
     page.find('input[name="checkPath"]')
@@ -95,7 +94,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     page.find('select[name="algorithm"]')
       .simulate('change', createSimulatedEvent('algorithm', 'roundrobin'));
     page.find('select[name="stickiness"]')
-      .simulate('change', createSimulatedEvent('stickiness','none'));
+      .simulate('change', createSimulatedEvent('stickiness', 'none'));
     page.find('select[name="check"]')
       .simulate('change', createSimulatedEvent('check', 'none'));
     page.find('input[name="checkPassive"]')

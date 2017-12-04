@@ -6,7 +6,6 @@ import { push } from 'react-router-redux';
 import { AddConfigPage } from '~/nodebalancers/nodebalancer/layouts/AddConfigPage';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectRequest,
@@ -39,7 +38,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
     page.find('select[name="algorithm"]')
       .simulate('change', createSimulatedEvent('algorithm', 'roundrobin'));
     page.find('select[name="stickiness"]')
-      .simulate('change', createSimulatedEvent('stickiness','none'));
+      .simulate('change', createSimulatedEvent('stickiness', 'none'));
     page.find('select[name="check"]')
       .simulate('change', createSimulatedEvent('check', 'none'));
     page.find('input[name="checkPassive"]')

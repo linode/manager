@@ -40,10 +40,10 @@ export function checkLogin(next) {
       && next.location.pathname !== '/logout'
       && state.authentication.token === null) {
     const query = Object.keys(next.location.query || {})
-            .reduce((a, k) => [
-              ...a,
-              `${k}=${encodeURIComponent(next.location.query[k])}`,
-            ], []).join('%26');
+      .reduce((a, k) => [
+        ...a,
+        `${k}=${encodeURIComponent(next.location.query[k])}`,
+      ], []).join('%26');
 
     // During testing we'll need to be able to replace this.
     const { redirect } = module.exports;

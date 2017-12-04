@@ -50,7 +50,7 @@ export function ipv4s(region) {
 }
 
 export function assignIPs(region, assignments) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     const { linodes } = getState().api.linodes;
     const data = { region, assignments: [] };
 
@@ -103,7 +103,7 @@ export function setRDNS(ip, rdns) {
     const { linode_id: linodeId, address } = ip;
     const rawAddress = address.split('/')[0].trim();
     await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
-                                  { rdns }));
+      { rdns }));
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
 

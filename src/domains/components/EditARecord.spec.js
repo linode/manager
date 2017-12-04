@@ -123,7 +123,10 @@ describe('domains/components/EditARecord', () => {
     });
 
     hostnameInput.simulate('change', createSimulatedEvent('hostname', 'tee'));
-    ipInput.simulate('change', createSimulatedEvent('ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334'));
+    ipInput.simulate(
+      'change',
+      createSimulatedEvent('ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334')
+    );
     ttlInput.simulate('change', createSimulatedEvent('ttl', 1));
     // changeInput(page, 'hostname', 'tee');
     // changeInput(page, 'ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334');

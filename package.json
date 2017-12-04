@@ -29,9 +29,7 @@
     "babel-cli": "^6.10.1",
     "babel-core": "^6.3.15",
     "babel-eslint": "^8.0.2",
-    "babel-istanbul": "^0.8.0",
     "babel-loader": "^6.2.0",
-    "babel-plugin-istanbul": "^4.1.4",
     "babel-plugin-transform-class-properties": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.4.0",
     "babel-polyfill": "^6.3.14",
@@ -113,12 +111,15 @@
     "zxcvbn": "^4.4.2"
   },
   "jest": {
+    "coverageDirectory": "<rootDir>/coverage",
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js"
     },
-    "rootDir": "src/",
-    "setupTestFrameworkScriptFile": "<rootDir>/testSetup.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/src/testSetup.js",
     "testRegex": "src/.*\\.spec\\.js$",
     "transformIgnorePatterns": [
       "/node_modules/(?!(linode-components-*.*?\\.js$))"

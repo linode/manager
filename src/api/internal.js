@@ -123,10 +123,10 @@ export class ReducerGenerator {
 
     const nonNanActionIds = (action.ids || []).filter(i => !_.isNaN(i));
     const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
-               action.resource[config.primaryKey];
+      action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
-                        generateDefaultStateOne(config, action.resource);
+      generateDefaultStateOne(config, action.resource);
 
     const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
 

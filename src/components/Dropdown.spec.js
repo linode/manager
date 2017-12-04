@@ -20,7 +20,7 @@ describe('components/Dropdown', () => {
             elements: [
               { action: () => { }, name: 'Phil' },
               { action: () => { }, name: 'Will' },
-            ]
+            ],
           },
         ]}
       />
@@ -46,7 +46,7 @@ describe('components/Dropdown', () => {
             elements: [
               { action: clickBodyItem, name: 'Phil' },
               { action: unclicked, name: 'Will' },
-            ]
+            ],
           },
         ]}
       />

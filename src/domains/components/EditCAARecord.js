@@ -10,9 +10,9 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import SelectDNSSeconds from './SelectDNSSeconds';
 
 const tagOptions = [
-    { value: 'issue', label: 'issue' },
-    { value: 'issuewild', label: 'issueWild' },
-    { value: 'iodef', label: 'iodef' },
+  { value: 'issue', label: 'issue' },
+  { value: 'issuewild', label: 'issueWild' },
+  { value: 'iodef', label: 'iodef' },
 ];
 
 export default class EditCAARecord extends Component {

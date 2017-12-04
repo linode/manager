@@ -20,7 +20,7 @@ import NodeModal from '../components/NodeModal';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel, configId }) {
+  static async preload({ dispatch }, { nbLabel, configId }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
     await dispatch(api.nodebalancers.configs.one([id, configId]));
     await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));

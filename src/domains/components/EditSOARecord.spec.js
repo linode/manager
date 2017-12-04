@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditSOARecord from '~/domains/components/EditSOARecord';
 
-import { createSimulatedEvent,expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
+import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 import { Input, Select } from 'linode-components/forms';
 import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';

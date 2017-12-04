@@ -127,8 +127,8 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it.skip('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        ZONES[testLinode.region]
-      }.linode.com`;
+      ZONES[testLinode.region]
+    }.linode.com`;
     const page = shallow(
       <DashboardPage
         {...props}

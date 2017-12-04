@@ -122,19 +122,19 @@ export default class VolumesList extends Component {
         elements: [
           {
             name: 'Edit', action: () =>
-              AddEditVolume.trigger(dispatch, linodes, record)
+              AddEditVolume.trigger(dispatch, linodes, record),
           },
           {
             name: 'Resize',
-            action: () => ResizeVolume.trigger(dispatch, record)
+            action: () => ResizeVolume.trigger(dispatch, record),
           },
           record.linode_id === null ?
             {
               name: 'Attach', action: () =>
-                AttachVolume.trigger(dispatch, linodes, record)
+                AttachVolume.trigger(dispatch, linodes, record),
             } :
             { name: 'Detach', action: () => this.detachVolumes(record) },
-        ]
+        ],
       },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
     ];
@@ -167,7 +167,7 @@ export default class VolumesList extends Component {
               massEditGroups={[{
                 elements: [
                   { name: 'Delete', action: this.deleteVolumes },
-                ]
+                ],
               }]}
               selectedMap={selectedMap}
               objectType={objectType}
@@ -199,7 +199,7 @@ export default class VolumesList extends Component {
                 dataFn: (volume) => {
                   const { size } = volume;
                   return `${size} GiB`;
-                }
+                },
               },
               {
                 cellComponent: RegionCell,

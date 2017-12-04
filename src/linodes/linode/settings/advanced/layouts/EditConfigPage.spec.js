@@ -184,7 +184,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     expect(ramLimit.props().value).toBe(1000);
   });
 
-  it.skip('change initrd', async() => {
+  it.skip('change initrd', async () => {
     const page = mount(
       <EditConfigPage
         {...props}

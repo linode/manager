@@ -110,7 +110,7 @@ function genThunkOne(config, actions) {
  */
 function genThunkPage(config, actions) {
   function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
-                     fetchBeganAt, headers) {
+    fetchBeganAt, headers) {
     return async (dispatch, getState) => {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
@@ -285,10 +285,10 @@ export default function apiActionReducerGenerator(config, actions) {
       const subresource = config.subresources[key];
       if (subresource.plural) {
         thunks[subresource.plural] = apiActionReducerGenerator(subresource,
-                                                               actions[subresource.plural]);
+          actions[subresource.plural]);
       } else if (subresource.singular) {
         thunks[subresource.singular] = apiActionReducerGenerator(subresource,
-                                                                 actions[subresource.singular]);
+          actions[subresource.singular]);
       }
     });
   }

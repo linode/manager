@@ -106,7 +106,7 @@ export default function NotificationListItem(props) {
   }
 
   const eventLink = eventOptions != null ? eventOptions.redirectUrl(event.entity)
-      : '#';
+    : '#';
 
   return (
     <Link

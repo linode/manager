@@ -9,8 +9,8 @@ import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectType,
-                                  labelKey = 'label', deleteAction = 'delete',
-                                  deleteActionPending = 'deleting', idKey = 'id') {
+  labelKey = 'label', deleteAction = 'delete',
+  deleteActionPending = 'deleting', idKey = 'id') {
   return function (_toDelete) {
     const labelFn = _.isFunction(labelKey) ? labelKey : (o) => o[labelKey];
     const toDelete = Array.isArray(_toDelete) ? _toDelete : [_toDelete];

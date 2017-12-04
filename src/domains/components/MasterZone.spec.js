@@ -93,7 +93,7 @@ describe('domains/components/MasterZone', () => {
       fmt(currentZone.ttl_sec),
       fmt(currentZone.refresh_sec),
       fmt(currentZone.retry_sec),
-      fmt(currentZone.expire_sec, 604800)
+      fmt(currentZone.expire_sec, 604800),
     ].forEach(
       (value, i) => expect(soaValues.at(i + 2).text()).toBe(value));
   });

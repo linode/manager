@@ -5,10 +5,9 @@ import sinon from 'sinon';
 import { ChangeTimezone } from '~/profile/components';
 
 import {
-  changeInput,
   createSimulatedEvent,
   expectRequest,
-  expectDispatchOrStoreErrors
+  expectDispatchOrStoreErrors,
 } from '~/test.helpers';
 import { profile } from '~/data/profile';
 
