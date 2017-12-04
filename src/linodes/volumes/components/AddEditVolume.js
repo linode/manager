@@ -49,6 +49,14 @@ export default class AddEditVolume extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onRegionChange = async (e) => {
+    this.onChange(e);
+    this.setState({
+      linode: null,
+      config: null,
+    });
+  }
+
   onLinodeChange = async (e) => {
     const { allConfigs } = this.state;
     const linodeId = e.target.value;
@@ -163,7 +171,7 @@ export default class AddEditVolume extends Component {
                 value={region}
                 name="region"
                 id="region"
-                onChange={this.onChange}
+                onChange={this.onRegionChange}
               />
             </ModalFormGroup>
           )}
