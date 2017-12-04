@@ -4,7 +4,12 @@ import sinon from 'sinon';
 
 import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
-import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
+import {
+  changeInput,
+  createSimulatedEvent,
+  expectDispatchOrStoreErrors,
+  expectRequest
+} from '~/test.helpers';
 import { testUser } from '~/data/users';
 
 
@@ -25,8 +30,10 @@ describe('users/user/layouts/EditUserPage', () => {
       />
     );
 
-    changeInput(page, 'username', 'the-username');
-    changeInput(page, 'email', 'the-email');
+    page.find('input[name="username"]')
+      .simulate('change', createSimulatedEvent('username', 'the-username'));
+    page.find('input[name="email"]')
+      .simulate('change', createSimulatedEvent('email', 'the-email'));
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });

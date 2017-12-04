@@ -63,8 +63,8 @@ describe('users/layouts/IndexPage', () => {
     dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.callCount).toBe(1);
-    expect(dispatch.firstCall.args[0])
-      .toHave.property('type').which.equals(SHOW_MODAL);
+    expect(dispatch.firstCall.args[0]).toHaveProperty('type')
+    expect(dispatch.firstCall.args[0].type).toBe(SHOW_MODAL);
   });
 
   it('deletes selected users when delete is pressed', async () => {
