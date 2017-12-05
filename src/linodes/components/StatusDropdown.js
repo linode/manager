@@ -11,7 +11,7 @@ import api from '~/api';
 import { actions } from '~/api/generic/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import Polling from '~/api/polling';
-import { createHeaderFilter } from '~/api/util';
+import { createHeaderFilter, dispatchOrStoreErrors } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 
 import ConfigSelectModalBody from './ConfigSelectModalBody';
@@ -158,11 +158,14 @@ export default class StatusDropdown extends Component {
 
   selectConfig = (callback) => {
     const { linode, dispatch } = this.props;
-    const configCount = Object.keys(linode._configs.configs).length;
+    const configs = linode._configs.configs;
+    const configCount = Object.keys(configs).length;
+
     if (configCount <= 1) {
-      dispatch(callback(linode.id));
-      dispatch(hideModal());
-      return;
+      return dispatch(dispatchOrStoreErrors.call(this, [
+        () => callback(linode.id, parseInt(Object.keys(configs)[0])),
+        hideModal,
+      ]));
     }
 
     const title = 'Select Configuration Profile';
