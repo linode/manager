@@ -162,10 +162,9 @@ export default class StatusDropdown extends Component {
     const configCount = Object.keys(configs).length;
 
     if (configCount <= 1) {
-      return dispatch(dispatchOrStoreErrors.call(this, [
-        () => callback(linode.id, parseInt(Object.keys(configs)[0])),
-        hideModal,
-      ]));
+      dispatch(callback(linode.id, parseInt(Object.keys(configs)[0]) || null));
+      dispatch(hideModal());
+      return;
     }
 
     const title = 'Select Configuration Profile';
