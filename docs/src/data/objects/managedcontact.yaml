@@ -4,6 +4,10 @@ prefix: managed/contacts
 description: >
   A list of people we can contact if we require further information regarding your Managed service.
 schema:
+  id:
+    type: Integer
+    value: 123
+    description: This contact's ID.
   name:
     value: John Q. Public
     type: String

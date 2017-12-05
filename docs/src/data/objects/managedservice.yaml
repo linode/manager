@@ -4,6 +4,10 @@ prefix: managed/services
 description: >
   Managed Service objects describe monitoring services set up for your Linodes.
 schema:
+  id:
+    type: Integer
+    value: 123
+    description: This service's ID.
   created:
     type: Datetime
     value: 2017-10-31T11:12:21
