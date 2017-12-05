@@ -175,3 +175,104 @@ endpoints:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/managed/services/$service_id
+  /managed/credentials:
+    group: Credentials
+    type: resource
+    description: >
+      Manage your managed service credentials list.
+    methods:
+      GET:
+        response: ManagedCredential
+        description: >
+          Returns your credentials list.
+        examples:
+          curl: |
+            curl https://$api_root/$version/managed/credentials
+      POST:
+        description: >
+          Registers a new credential.
+        params:
+          label:
+            type: String
+            limit: 2-75 characters
+            description: >
+              A unique label describing the credential being added.
+          username:
+            type: String
+            description: >
+              An optional login username.
+          password:
+            type: String
+            description: >
+              A password or passphrase that provides access.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "label": "MyCredential",
+                    "username": "myusername",
+                    "pasword": "mypassword",
+                }' \
+                https://$api_root/$version/managed/credentials
+  /managed/credentials/$id:
+    group: Credentials
+    type: resource
+    authenticated: true
+    description: >
+      Manage a particular Managed service credential your account may access.
+    methods:
+      GET:
+        response: ManagedCredential
+        description: >
+          Returns information about this credential.
+        examples:
+          curl: |
+            curl -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/managed/credential/$credential_id
+      PUT:
+        description: >
+          Edits this credential.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X PUT -d '{
+                    "label": "MyNewCredential",
+                    "username": "myusername2",
+                }' \
+                https://$api_root/$version/managed/credentials/$credential_id
+  /managed/credentials/$id/password:
+    group: Credentials
+    type: resource
+    authenticated: true
+    description: >
+      Change the password for a credential.
+    methods:
+      POST:
+        response: ManagedCredential
+        description: >
+          Changes the password for a credential.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                -X POST -d '{
+                    "pasword": "mypassword",
+                }' \
+                https://$api_root/$version/managed/credentials/$credential_id/password
+  /managed/credentials/$id/revoke:
+    group: Credentials
+    type: resource
+    authenticated: true
+    description: >
+      Revokes a credential.
+    methods:
+      POST:
+        description: >
+          Revokes a credential.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $TOKEN" \
+                https://$api_root/$version/managed/credentials/$credential_id/revoke
