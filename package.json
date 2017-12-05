@@ -71,9 +71,6 @@
     "webpack-hot-middleware": "^2.6.4",
     "xunit-file": "^0.0.9"
   },
-  "peerDependencies": {
-    "react": "^15.1.0"
-  },
   "dependencies": {
     "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
