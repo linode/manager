@@ -382,6 +382,12 @@ const endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/images`,
     groups: {},
   },
+  managed: {
+    name: 'Managed',
+    path: '/managed',
+    routePath: `${ROUTE_BASE_PATH}/managed`,
+    groups: {},
+  },
 };
 
 allEndpoints.forEach(function (endpointContainer) {

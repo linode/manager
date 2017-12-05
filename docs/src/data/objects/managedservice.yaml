@@ -1,0 +1,92 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: ManagedService
+prefix: managed/services
+description: >
+  Managed Service objects describe monitoring services set up for your Linodes.
+schema:
+  created:
+    type: Datetime
+    value: 2017-10-31T11:12:21
+  updated:
+    type: Datetime
+    value: 2017-10-31T11:15:21
+  service_type:
+    type: Enum
+    subtype: ManagedServiceType
+    value: "url"
+    description: >
+        Defaults to HTTP in URL mode, TCP in TCP mode.
+  label:
+    type: String
+    editable: true
+    optional: false
+    value: MonitorLabel
+    description: >
+      Unique label describing the service.
+  timeout:
+    type: Integer
+    editable: true
+    optional: false
+    value: 30
+    description: >
+      Response must be received before this timeout or an alert will be triggered.
+  address:
+    type: String
+    optional: false
+    editable: true
+    value: https://monitor.example.org/
+    description: >
+      The URL to request. If service_type is TCP, must include port number. For
+      example, tcp://monitor.example.org:23
+  body:
+    type: String
+    optional: true
+    value: Success!
+    editable: true
+    description: >
+      Response must contain this string or an alert will be triggered.
+  consultation_group:
+    type: String
+    optional: true
+    editable: true
+    value: Support
+    description: >
+      If we need help along the way, we'll contact someone from this group.
+  notes:
+    type: String
+    optional: true
+    editable: true
+    description: >
+      We'll refer to these instructions when responding to a service-related issue.
+    value: If the Linode needs to be rebooted, please contact us first.
+  region:
+    type: String
+    optional: true
+    editable: true
+    description: >
+      If the address is a private IP, you must use the region (as a slug) for the service being monitored. Otherwise, do not use.
+  # TODO - uncomment in ARB-301
+  #credentials:
+  #  type: String
+  #  isArray: true
+  #  subtype: integer
+  #  filterable: true
+  #  value: 12345,23456,34567
+  #  optional: true
+  #  description: >
+  #    An array of credentials associated with this service.
+enums:
+  ManagedServiceStatus:
+    new: A newly-created Service.
+    active: An active Service to monitor.
+    disabled: A disabled Service to monitor.
+  ManagedServiceType:
+    url: Monitor via HTTP or HTTPS.
+    tcp: Monitor a port via TCP.
+  ManagedServiceMethod:
+    get: Monitor a specific URL/port via GET.
+    post: Monitor a specific URL/port via POST.
+  ManagedServiceProtocol:
+    http: HTTP
+    https: HTTPS
+    tcp: TCP
