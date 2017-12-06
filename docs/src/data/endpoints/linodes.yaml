@@ -1188,13 +1188,13 @@ endpoints:
   /linode/distributions:
     group: Distributions
     description: >
-      View the collection of images. This endpoint is deprecated. Use /images instead.
+      THIS ENDPOINT IS DEPRECATED. USE /images INSTEAD. Returns information about this distribution.
     methods:
       GET:
         response: image
         paginationKey: distributions
         description: >
-          Returns a list of distributions. This endpoint is deprecated. Use /images instead.
+          THIS ENDPOINT IS DEPRECATED. USE /images INSTEAD. Returns information about this distribution.
         seeAlso: ["/reference/endpoints/images"]
         examples:
           curl: |
@@ -1205,12 +1205,12 @@ endpoints:
     group: Distributions
     type: resource
     description: >
-      Returns information about a specific image. This endpoint is deprecated. Use /images instead.
+      THIS ENDPOINT IS DEPRECATED. USE /images INSTEAD. Returns information about this distribution.
     methods:
       GET:
         response: image
         description: >
-          Returns information about this distribution. This endpoint is deprecated. Use /images instead.
+          THIS ENDPOINT IS DEPRECATED. USE /images INSTEAD. Returns information about this distribution.
         seeAlso: ["/reference/endpoints/images"]
         examples:
           curl: |
