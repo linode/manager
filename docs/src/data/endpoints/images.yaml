@@ -39,7 +39,7 @@ endpoints:
       PUT:
         oauth: 'images:modify'
         description: |
-          Modifies a given image
+          Modifies a given image. Only private images belonging to you are modifiable.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -55,7 +55,7 @@ endpoints:
       DELETE:
         oauth: 'images:delete'
         description: |
-          Deletes a given image
+          Deletes a given image.Only private images belonging to you are deletable.
         examples:
           curl: |
             curl -H "Authorization: Bearer $TOKEN" \
