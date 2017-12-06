@@ -1104,10 +1104,12 @@ endpoints:
             description: >
               Description of the StackScript.
             type: String
-          distributions:
+          images:
             description: >
-              A list of distributions compatible with StackScript.
-            type: distribution
+              A list of official images compatible with StackScript.  Official
+              images' creator is "linode".
+            type: String
+            isArray: true
           is_public:
             optional: true
             description: >
