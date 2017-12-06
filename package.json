@@ -58,6 +58,7 @@
     "jsonpath": "^0.2.11",
     "mockdate": "^1.0.4",
     "node-sass": "^3.4.2",
+    "pre-commit": "^1.2.2",
     "qrious": "^2.2.0",
     "react-addons-test-utils": "^15.1.0",
     "redux-devtools": "^3.3.1",
@@ -107,6 +108,7 @@
     "xterm": "^2.0.1",
     "zxcvbn": "^4.4.2"
   },
+  "pre-commit": ["test", "lint"],
   "jest": {
     "coverageDirectory": "<rootDir>/coverage",
     "collectCoverageFrom": [
