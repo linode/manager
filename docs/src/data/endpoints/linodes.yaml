@@ -54,7 +54,7 @@ endpoints:
               if 'backup_id' or 'image' is sent.
             type: String
             deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
-              See the changelog for more information.
+              You can provide the same inputs to "image" instead.  See the changelog for more information.
           root_pass:
             optional: unless source == "distro"
             description: >
@@ -90,8 +90,11 @@ endpoints:
             optional: true
             description: >
               The gold-master image to use for the newly created Linode. May
-               not be included if 'distribution' or 'backup_id' is sent.
-            type: Integer
+               not be included if 'distribution' or 'backup_id' is sent.  Official
+               images start with "linode/", while your own images start with 
+               "private/"
+            type: String
+            value: "linode/debian9"
           backups_enabled:
             optional: true
             description: >
@@ -199,13 +202,15 @@ endpoints:
               is created.</li></ul> You may not provide distribution if image is provided.
             type: String
             deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
-              See the changelog for more information.
+              The same value can be passed to "image" instead.  See the changelog for more information.
           image:
             optional: true
             description: >
               Optional image id to deploy the disk from. You may not provide image
-              if distribution is provided.
+              if distribution is provided.  Official images start with "linode/",
+              while your images start with "private/"
             seeAlso: ["/reference/endpoints/images"]
+            type: String
           root_pass:
             optional: unless distribution or image is specified
             description: >
@@ -1023,8 +1028,10 @@ endpoints:
             optional: true
             description: >
               The gold-master image to use for this Linode. May
-               not be included if 'distribution' is sent.
-            type: Integer
+               not be included if 'distribution' is sent.  Official images start
+               with "linode/", while your own images start with "private/"
+            type: String
+            value: "linode/debian9"
           root_pass:
             description: >
                 The root password for the new deployment.
