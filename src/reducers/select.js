@@ -68,7 +68,7 @@ export default function select(_state = null, action) {
         ...state,
         selected: {
           [objectType]: _.omitBy(state.selected[objectType],
-                                 (_, key) => selectedIds.indexOf(+key) >= 0),
+            (_, key) => selectedIds.indexOf(+key) >= 0),
         },
       };
     }

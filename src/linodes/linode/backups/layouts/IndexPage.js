@@ -19,7 +19,7 @@ import { selectLinode } from '../../utilities';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     if (backups.enabled) {
       await dispatch(linodeBackups(id));

@@ -85,7 +85,7 @@ export default class AttachVolume extends Component {
           value: config.id,
         };
       }
-    ) : null;
+      ) : null;
 
     const linodeConfigs = [
       ...(allConfigs[linode] || configs || {}),

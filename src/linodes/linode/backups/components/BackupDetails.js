@@ -30,7 +30,7 @@ export default function BackupDetails(props) {
     </div>
   );
   const space = disks.length === 0 ? null :
-                backup.disks.map(d => d.size).reduce((a, b) => a + b);
+    backup.disks.map(d => d.size).reduce((a, b) => a + b);
 
   const label = !backup.label ? null : (
     <FormGroup className="row">

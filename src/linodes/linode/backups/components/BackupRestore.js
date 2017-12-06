@@ -76,8 +76,8 @@ export default class BackupRestore extends Component {
       l.id !== linode.id && l.region === linode.region);
 
     const targetLabel = !target || target === linode.id ?
-                        'This Linode' :
-                        linodes.linodes[target].label;
+      'This Linode' :
+      linodes.linodes[target].label;
 
     return (
       <Card header={<CardHeader title="Restore" />}>

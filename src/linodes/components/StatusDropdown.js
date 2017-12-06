@@ -208,22 +208,22 @@ export default class StatusDropdown extends Component {
     if (!(_.find(transitionStates, el => el === status))) {
       if (status !== 'offline') {
         finalGroups.push({ elements: [
-            { name: 'Reboot', action: this.rebootLinode },
-            { name: 'Power Off', action: this.powerOffLinode },
+          { name: 'Reboot', action: this.rebootLinode },
+          { name: 'Power Off', action: this.powerOffLinode },
         ] });
       } else {
         finalGroups.push({ elements: [
-            { name: 'Power On', action: this.powerOnLinode },
+          { name: 'Power On', action: this.powerOnLinode },
         ] });
       }
     }
     // we always allow Lish
     finalGroups.push({ elements: [
-        { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
+      { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
     ] });
     // we always allow deletion
     finalGroups.push({ elements: [
-        { name: 'Delete', action: this.deleteLinode },
+      { name: 'Delete', action: this.deleteLinode },
     ] });
     return finalGroups;
   }

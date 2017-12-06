@@ -1,0 +1,7 @@
+{
+    "path-autocomplete.pathMappings": {
+        "~": "${workspace}/src",
+        "@": "${workspace}/test",
+        "linode-components": "${workspace}/components"
+    }
+}

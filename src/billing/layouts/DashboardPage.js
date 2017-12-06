@@ -68,7 +68,7 @@ export class DashboardPage extends Component {
             <h3 className="sub-header">Recent Billing Activity</h3>
             <FormGroup className="row">
               <div className="col-sm-12">
-                <BillingHistoryList {...this.props} days={30} />
+                <BillingHistoryList payments={[]} {...this.props} days={30} />
               </div>
             </FormGroup>
             <FormGroup className="row">

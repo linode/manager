@@ -14,7 +14,7 @@ import { selectLinode } from '../../utilities';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await dispatch(getIPs(id));
   }
