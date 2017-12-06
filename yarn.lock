@@ -3957,12 +3957,13 @@ lex-parser@0.1.x, lex-parser@~0.1.3:
 "linode-components@file:./components":
   version "0.0.1"
   dependencies:
+    react "^15.6"
     react-clipboard.js "^1.1.2"
-    react-dom "^15.1.0"
+    react-dom "^15.6"
     react-highlight "^0.10.0"
     react-router "^2.4.1"
     react-router-dom "^4.1.1"
-    react-select-plus "^1.0.0-rc.5"
+    react-select-plus "^1.0.0-rc.10.patch1"
     react-tooltip "^3.3.0"
 
 "linode-styleguide@file:./styleguide":
@@ -5422,16 +5423,16 @@ react-dock@^0.2.4:
     lodash.debounce "^3.1.1"
     prop-types "^15.5.8"
 
-react-dom@15.5:
-  version "15.5.4"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.5.4.tgz#ba0c28786fd52ed7e4f2135fe0288d462aef93da"
+react-dom@^15.5.4:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.1.tgz#2cb0ed4191038e53c209eb3a79a23e2a4cf99470"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
-    prop-types "~15.5.7"
+    prop-types "^15.5.10"
 
-react-dom@^15.1.0, react-dom@^15.5.4:
+react-dom@^15.6:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
   dependencies:
@@ -5525,7 +5526,7 @@ react-router@^4.2.0:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-react-select-plus@^1.0.0-rc.5:
+react-select-plus@^1.0.0-rc.10.patch1:
   version "1.0.0-rc.10.patch1"
   resolved "https://registry.yarnpkg.com/react-select-plus/-/react-select-plus-1.0.0-rc.10.patch1.tgz#f23ed6f13fff44e065f586cd9dad6f6e5352a468"
   dependencies:
@@ -5582,6 +5583,16 @@ react@15.5:
     prop-types "^15.5.7"
 
 react@^15.5.4:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
+  dependencies:
+    create-react-class "^15.6.0"
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
+
+react@^15.6:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   dependencies:
