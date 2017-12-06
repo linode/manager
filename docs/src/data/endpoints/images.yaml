@@ -10,6 +10,7 @@ endpoints:
     methods:
       GET:
         response: image
+        paginationKey: images
         oauth: 'images:view'
         description: |
           Returns a list of images.
