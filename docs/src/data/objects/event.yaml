@@ -40,7 +40,6 @@ schema:
       The action that caused this event.
   username:
     type: String
-    type: String
     value: example_user
     description: >
       The username of the user who initiated this event.
