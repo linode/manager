@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
+import { FormGroup } from 'linode-components/forms';
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
@@ -161,15 +162,16 @@ export default class StatusDropdown extends Component {
     const configs = linode._configs.configs;
     const configCount = Object.keys(configs).length;
 
-    if (configCount <= 1) {
-      dispatch(callback(linode.id, parseInt(Object.keys(configs)[0]) || null));
-      dispatch(hideModal());
-      return;
+    if (configCount === 1) {
+      return dispatch(dispatchOrStoreErrors.call(this, [
+        () => callback(linode.id, parseInt(Object.keys(configs)[0]) || null),
+        () => hideModal(),
+      ]));
     }
 
     const title = 'Select Configuration Profile';
 
-    dispatch(showModal(title, (
+    return dispatch(showModal(title, (
       <ConfigSelectModalBody
         linode={linode}
         title={title}
@@ -232,6 +234,7 @@ export default class StatusDropdown extends Component {
 
   render() {
     const { linode } = this.props;
+    const { errors } = this.state;
 
     const groups = this.linodeToGroups(linode);
 
@@ -247,6 +250,7 @@ export default class StatusDropdown extends Component {
             className={`StatusDropdown-progress ${this.state.hiddenClass}`}
           />
         </div>
+        <FormGroup errors={errors} name="config_id" />
       </div>
     );
   }
