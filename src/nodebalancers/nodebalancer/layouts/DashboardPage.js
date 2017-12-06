@@ -30,7 +30,7 @@ import {
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel }) {
+  static async preload({ dispatch }, { nbLabel }) {
     await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
 

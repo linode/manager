@@ -212,7 +212,7 @@ export default class ConfigForm extends Component {
               </div>
             </FormGroup>
           </span>
-        : null}
+          : null}
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
           <label className="col-sm-2 col-form-label">Type</label>

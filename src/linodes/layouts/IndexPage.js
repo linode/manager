@@ -194,7 +194,7 @@ export class IndexPage extends Component {
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
     const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
     const linodeFromImage = async () => LinodeFromImage.trigger(dispatch, types,
-        await dispatch(api.images.all()));
+      await dispatch(api.images.all()));
 
     const addOptions = [
       { name: 'Create from Backup', action: restoreLinode },

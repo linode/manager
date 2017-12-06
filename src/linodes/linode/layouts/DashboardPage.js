@@ -30,7 +30,7 @@ import { UpgradeToKVM } from '../components';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 

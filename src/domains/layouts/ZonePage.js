@@ -13,7 +13,7 @@ import SlaveZone from '../components/SlaveZone';
 
 
 export class ZonePage extends Component {
-  static async preload({ dispatch, getState }, { domainLabel }) {
+  static async preload({ dispatch }, { domainLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
     await dispatch(api.domains.records.all([id]));
   }

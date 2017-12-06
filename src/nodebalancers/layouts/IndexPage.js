@@ -107,7 +107,7 @@ export class IndexPage extends Component {
                 text: 'Delete',
               },
             ]}
-            noDataMessage={"No NodeBalancers found."}
+            noDataMessage={'No NodeBalancers found.'}
             data={sorted}
             selectedMap={selectedMap}
             disableHeader

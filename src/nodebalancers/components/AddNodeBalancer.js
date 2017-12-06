@@ -62,7 +62,7 @@ export default class AddNodeBalancer extends Component {
         errors={errors}
       >
         <div>
-          <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
+          <ModalFormGroup label="Label" id="label-group" apiKey="label" errors={errors}>
             <Input
               placeholder="my-nodebalancer"
               value={label}
@@ -71,7 +71,7 @@ export default class AddNodeBalancer extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
+          <ModalFormGroup label="Region" id="region-group" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}
               name="region"

@@ -32,7 +32,7 @@ export default function PasswordInput(props) {
         <small className="PasswordInput-strength-text">
          This is {str[strength.score]} password.
         </small>
-       )}
+      )}
     </div>
   );
 }

@@ -61,6 +61,10 @@ export class IndexPage extends Component {
     return _.capitalize(s);
   }
 
+  /**
+   * @todo For testing purposes, and due to the complexity,
+   * this should probably be it's own component.
+   */
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
