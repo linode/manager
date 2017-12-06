@@ -199,6 +199,7 @@ endpoints:
               A unique label describing the credential being added.
           username:
             type: String
+            optional: true
             description: >
               An optional login username.
           password:
