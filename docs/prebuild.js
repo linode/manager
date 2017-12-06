@@ -382,6 +382,12 @@ const endpointMap = {
     routePath: `${ROUTE_BASE_PATH}/images`,
     groups: {},
   },
+  volumes: {
+    name: 'Volumes',
+    path: '/volumes',
+    routePath: `${ROUTE_BASE_PATH}/volumes`,
+    groups: {},
+  },
 };
 
 allEndpoints.forEach(function (endpointContainer) {
