@@ -13,12 +13,12 @@ module.exports = {
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client',
-    './src/index'
+    './src/index',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -43,17 +43,7 @@ module.exports = {
         use: ['json-loader'],
       },
       {
-        test: /\.jsx?/,
-        use: ['babel-loader'],
-        include: [
-          path.join(__dirname, 'src'),
-          path.resolve(__dirname, './node_modules/linode-components'),
-          path.resolve(__dirname, './components'),
-          path.resolve(__dirname, './node_modules/linode-styleguide')
-        ]
-      },
-      {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
           'style-loader',
           'css-loader',
@@ -68,11 +58,14 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        test: /\.jsx?/,
+        use: ['babel-loader'],
+        include: [
+          path.join(__dirname, 'src'),
+          path.resolve(__dirname, './node_modules/linode-components'),
+          path.resolve(__dirname, './components'),
+          path.resolve(__dirname, './node_modules/linode-styleguide')
+        ]
       },
       {
         test: /\.svg$/,
