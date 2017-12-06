@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import DisplayCurrency from '~/components/Currency';
+import Currency from '~/components/Currency';
 
-describe('components/DisplayCurrency', () => {
+describe('components/Currency', () => {
   it('renders negative values', () => {
     const component = shallow(
-      <DisplayCurrency value={-999} />
+      <Currency value={-999} />
     );
 
     expect(component.find('.currency').text()).toBe('($999.00)');
@@ -13,7 +13,7 @@ describe('components/DisplayCurrency', () => {
 
   it('renders positive values', () => {
     const component = shallow(
-      <DisplayCurrency value={999} />
+      <Currency value={999} />
     );
 
     expect(component.find('.currency').text()).toBe('$999.00');
@@ -21,7 +21,7 @@ describe('components/DisplayCurrency', () => {
 
   it('renders zero values', () => {
     const component = shallow(
-      <DisplayCurrency value={0} />
+      <Currency value={0} />
     );
 
     expect(component.find('.currency').text()).toBe('$0.00');
