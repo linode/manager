@@ -12,6 +12,7 @@ import { hideSession } from '~/actions/session';
 import api from '~/api';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
+import Banners from '~/components/Banners';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import SessionMenu from '~/components/SessionMenu';
 import { VERSION } from '~/constants';
@@ -25,6 +26,7 @@ export class Layout extends Component {
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.profile).length) {
       await dispatch(api.profile.one());
+      await dispatch(api.notifications.one());
       // Needed for time display component that is not attached to Redux.
       const { timezone } = getState().api.profile;
       setStorage('profile/timezone', timezone);
@@ -43,6 +45,7 @@ export class Layout extends Component {
       email,
       errors,
       notifications,
+      banners,
       session,
       events,
       source,
@@ -89,6 +92,7 @@ export class Layout extends Component {
             events={events}
           />
           <div className="Main">
+            <Banners banners={banners.data} />
             {errors.status ?
               <Error status={errors.status} /> :
               this.props.children}
@@ -119,6 +123,7 @@ Layout.propTypes = {
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
+  banners: PropTypes.object,
   session: PropTypes.object,
   events: PropTypes.object,
 };
@@ -132,6 +137,7 @@ function select(state) {
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
+    banners: state.api.notifications,
     session: state.session,
     events: state.api.events,
   };
