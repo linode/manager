@@ -88,6 +88,9 @@ We are doing our best to follow [a successful git branching model](http://nvie.c
 In addition, updates should be accompanied by a [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md). 
 See [Keepachangelog](http://keepachangelog.com/en/0.3.0/) for formatting details
 
+We use [pre-commit](https://www.npmjs.com/package/pre-commit) to run linting and testing on commit. If either fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behaviour can be skipped using the
+`--no-verify` flag.
+
 In general, the following flows apply.
 
 When creating a new feature:
