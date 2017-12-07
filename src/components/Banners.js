@@ -23,8 +23,39 @@ function importantTicket(banners) {
   }
 }
 
+function abuseTicket(banners) {
+  if (banners.length > 1) {
+    return (
+      <div className="abuseTicket">
+        You have <Link to="/support">abuse tickets</Link> open!
+      </div>
+    );
+  } else if (banners.length === 1) {
+    const ticket = banners[0].entity;
+    return (
+      <div className="abuseTicket">
+        You have an abuse ticket open! <Link
+          to={
+            `/support/${ticket.id}`
+          }
+        >[Ticket #{ticket.id}]</Link> {
+          banners[0].entity.label
+        }
+      </div>
+    );
+  }
+}
+
 function renderBanners(banners) {
-  return importantTicket(filterBanners(banners, 'important_ticket'));
+  const abuseItems = filterBanners(banners, 'abuse_ticket');
+  return (
+    <div className="Banner">
+      {abuseItems.length ?
+        abuseTicket(abuseItems) :
+        importantTicket(filterBanners(banners, 'important_ticket'))
+      }
+    </div>
+  );
 }
 
 export default function Banners(props) {
@@ -33,11 +64,7 @@ export default function Banners(props) {
     return;
   }
 
-  return (
-    <div className="Banner">
-      {renderBanners(banners)}
-    </div>
-  );
+  return renderBanners(banners);
 }
 
 Banners.propTypes = {
