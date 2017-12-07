@@ -26,7 +26,7 @@ export class Layout extends Component {
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.profile).length) {
       await dispatch(api.profile.one());
-      await dispatch(api.notifications.one());
+      await dispatch(api.banners.one());
       // Needed for time display component that is not attached to Redux.
       const { timezone } = getState().api.profile;
       setStorage('profile/timezone', timezone);
@@ -92,7 +92,7 @@ export class Layout extends Component {
             events={events}
           />
           <div className="Main">
-            <Banners banners={banners.data} />
+            <Banners banners={banners} />
             {errors.status ?
               <Error status={errors.status} /> :
               this.props.children}
@@ -123,7 +123,7 @@ Layout.propTypes = {
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
-  banners: PropTypes.object,
+  banners: PropTypes.array,
   session: PropTypes.object,
   events: PropTypes.object,
 };
@@ -137,7 +137,7 @@ function select(state) {
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
-    banners: state.api.notifications,
+    banners: state.api.banners.data,
     session: state.session,
     events: state.api.events,
   };

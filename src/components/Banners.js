@@ -17,7 +17,7 @@ function importantTicket(banners) {
   } else if (banners.length === 1) {
     return (
       <div className="importantTicket">
-        You have <Link to={banners[0].entity.url}>important tickets</Link> open!
+        You have an <Link to={`/support/${banners[0].entity.id}`}>important ticket</Link> open!
       </div>
     );
   }

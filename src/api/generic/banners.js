@@ -3,7 +3,7 @@ import {
 } from '~/api/internal';
 
 export const config = genConfig({
-  singular: 'notification',
+  singular: 'banners',
   endpoint: () => '/account/notifications',
   supports: [ONE],
 });
