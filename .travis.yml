@@ -7,8 +7,6 @@ cache:
   yarn: true
 install:
     - yarn
-    - (cd docs && yarn)
-    - (cd components && yarn)
 script:
     - set -e
     - |
@@ -19,8 +17,6 @@ script:
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
         yarn run lint
-        (cd docs && yarn run lint && yarn run prebuild)
-        (cd components && yarn run lint)
         yarn test -- --coverage --maxWorkers=2
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi
