@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup } from 'linode-components/forms';
+import { Card, CardHeader } from 'linode-components';
+import { FormGroup } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import Currency from '~/components/Currency';

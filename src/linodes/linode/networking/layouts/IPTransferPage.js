@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
   Select,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';

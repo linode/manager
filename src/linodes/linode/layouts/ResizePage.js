@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup,
   FormGroupError,
@@ -10,8 +10,8 @@ import {
   FormSummary,
   SubmitButton,
   Input,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';

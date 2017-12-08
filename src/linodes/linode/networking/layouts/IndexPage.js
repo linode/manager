@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { ChainedDocumentTitle } from '~/components';
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import { getIPs } from '~/api/ad-hoc/networking';
 import { getObjectByLabelLazily } from '~/api/util';

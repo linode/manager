@@ -2,7 +2,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 import { transform } from '~/api/util';
 

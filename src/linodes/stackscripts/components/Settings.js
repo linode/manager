@@ -9,8 +9,8 @@ import {
   FormSummary,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import * as utilities from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';

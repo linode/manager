@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Card } from 'linode-components/cards';
+import { ExternalLink } from 'linode-components';
+import { Card } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { objectFromMapByLabel } from '~/api/util';
