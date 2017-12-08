@@ -8,6 +8,10 @@ import { distros as distroAssets } from '~/assets';
 export default function DistroStyle(props) {
   const { linode } = props;
 
+  if (!linode || !linode.image || !linode.image.vendor) {
+    return <span className="distro-style">Unknown</span>;
+  }
+
   const src = distroAssets[_.lowerCase(linode.image.vendor)];
 
   return (
