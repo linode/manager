@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 import {
   Checkbox,
   Checkboxes,
@@ -11,7 +11,7 @@ import {
   FormSummary,
   Radio,
   SubmitButton,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import { Header as HeaderWrapper } from 'linode-components/navigation';
+import { Header as HeaderWrapper } from 'linode-components';
 
 import { hideNotifications, showNotifications } from '~/actions/notifications';
 import { hideSession, showSession } from '~/actions/session';

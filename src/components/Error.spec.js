@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 
-import { Error } from 'linode-components/errors';
+import { Error } from 'linode-components';
 
 
 describe('components/Error', () => {

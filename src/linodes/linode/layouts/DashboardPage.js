@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input } from 'linode-components/forms';
+import { Button } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { FormGroup, Input } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';

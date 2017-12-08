@@ -4,11 +4,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { TableCell, LinkCell } from 'linode-components/tables/cells';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
+import { PrimaryButton } from 'linode-components';
+import { ListBody, ListGroup } from 'linode-components';
+import { TableCell, LinkCell } from 'linode-components';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';

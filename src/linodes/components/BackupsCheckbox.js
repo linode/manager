@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Checkbox } from 'linode-components/forms';
+import { ExternalLink } from 'linode-components';
+import { Checkbox } from 'linode-components';
 import { formatCurrency } from '~/components/Currency';
 
 

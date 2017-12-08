@@ -2,8 +2,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Select } from 'linode-components/forms';
+import { ExternalLink } from 'linode-components';
+import { Select } from 'linode-components';
 
 import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 

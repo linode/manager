@@ -1,4 +1,4 @@
-import { EVENTS } from 'linode-components/utils';
+import { EVENTS } from 'linode-components';
 
 import { store } from '~/store';
 

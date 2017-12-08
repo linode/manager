@@ -3,7 +3,7 @@ import React from 'react';
 
 import _ from 'lodash';
 import { OAUTH_SUBSCOPES } from '~/constants';
-import { TableCell } from 'linode-components/tables/cells';
+import { TableCell } from 'linode-components';
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {
   const subscopeAllowed = (
