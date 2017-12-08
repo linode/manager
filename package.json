@@ -83,7 +83,6 @@
     "history": "^2.1.2",
     "isomorphic-fetch": "^2.2.0",
     "jest": "^21.2.1",
-    "linode-components": "file:./components",
     "lodash": "^4.16.4",
     "md5": "^2.1.0",
     "moment": "^2.17.1",
