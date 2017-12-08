@@ -255,7 +255,6 @@ export const DISTRIBUTION_DISPLAY_ORDER = [
   'opensuse',
   'gentoo',
   'slackware',
-  'images',
 ];
 
 export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';
