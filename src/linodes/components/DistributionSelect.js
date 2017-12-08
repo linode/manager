@@ -21,7 +21,7 @@ export default function DistributionSelect(props) {
       x.value = i.id;
       x.vendorLower = _.lowerCase(i.vendor);
 
-      vendorsOrdered.includes(x.vendor) || vendorsOrdered.push(x.vendorLower);
+      vendorsOrdered.includes(x.vendorLower) || vendorsOrdered.push(x.vendorLower);
 
       return x;
     }) : [];
