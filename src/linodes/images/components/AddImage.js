@@ -103,8 +103,11 @@ export default class AddImage extends Component {
   render() {
     const { dispatch } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
-    const disks = allDisks[linode] || [];
-    const diskObj = linodes ? this.getDiskObject(disks, disk) : disk;
+    let disks = allDisks[linode] || [];
+    // swap has already been filtered out
+    const isSimpleLinode = disks.length <= 1;
+    // now that we know isSimpleLinode, filter out raw disks
+    disks = disks.filter(disk => disk.filesystem !== 'raw');
 
     return (
       <FormModalBody
@@ -124,9 +127,12 @@ export default class AddImage extends Component {
                 id="linode"
                 onChange={this.onLinodeChange}
               />
+              <small className="text-muted">
+              Note: Disk usage may not exceed 2048 MB.
+              </small>
             </ModalFormGroup>
             : null}
-          {linodes ?
+          {!isSimpleLinode ?
             <ModalFormGroup label="Disk" id="disk" apiKey="disk">
               {disks.length ?
                 <Select
@@ -142,25 +148,6 @@ export default class AddImage extends Component {
                   disabled
                 />
               }
-            </ModalFormGroup>
-            : null}
-          {disk && diskObj ?
-            <ModalFormGroup label="Type" id="type">
-              <Input
-                value={diskObj.filesystem}
-                disabled
-              />
-            </ModalFormGroup>
-            : null}
-          {disk && diskObj ?
-            <ModalFormGroup errors={errors} label="Size" id="size">
-              <Input
-                value={`${diskObj.size} MB`}
-                disabled
-              />
-              <small className="text-muted">
-                Disk usage may not exceed 2048 MB for this Image.
-              </small>
             </ModalFormGroup>
             : null}
           <ModalFormGroup errors={errors} id="label" label="Label" apiKey="label">
