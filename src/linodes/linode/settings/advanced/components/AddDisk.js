@@ -47,7 +47,7 @@ export default class AddDisk extends Component {
       label,
       filesystem,
       size: parseInt(size),
-      image: /^\d+$/.test(image) ? parseInt(image) : null,
+      image,
       root_pass: password || null,
     };
 
@@ -63,7 +63,7 @@ export default class AddDisk extends Component {
 
     let minimumStorageSize = 8;
     if (images[image]) {
-      minimumStorageSize = images[image].disk_minimum;
+      minimumStorageSize = images[image].min_deploy_size;
     }
 
     const filesystemOptions = [
