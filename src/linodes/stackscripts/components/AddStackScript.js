@@ -26,7 +26,7 @@ export default class AddStackScript extends Component {
 
     this.state = { errors: {}, label: '' };
 
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {

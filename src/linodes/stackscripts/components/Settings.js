@@ -27,7 +27,7 @@ export default class Settings extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {
