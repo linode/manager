@@ -105,7 +105,8 @@ export default class AddImage extends Component {
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
     let disks = allDisks[linode] || [];
     // swap has already been filtered out
-    const isSimpleLinode = disks.length <= 1;
+    const hasRawDisks = disks.filter(disk => disk.filesystem === 'raw').length > 0;
+    const isSimpleLinode = !hasRawDisks && disks.length <= 1;
     // now that we know isSimpleLinode, filter out raw disks
     disks = disks.filter(disk => disk.filesystem !== 'raw');
 
@@ -128,7 +129,7 @@ export default class AddImage extends Component {
                 onChange={this.onLinodeChange}
               />
               <small className="text-muted">
-              Note: Disk usage may not exceed 2048 MB.
+                Disk usage may not exceed 2048 MB.
               </small>
             </ModalFormGroup>
             : null}
@@ -147,6 +148,11 @@ export default class AddImage extends Component {
                   value={loading ? '' : 'None'}
                   disabled
                 />
+              }
+              {(disks.length === 0 && hasRawDisks) &&
+                <small className="text-muted">
+                  Cannot create images from raw disks.
+                </small>
               }
             </ModalFormGroup>
             : null}
