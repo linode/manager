@@ -5,7 +5,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 
 
 export default function TransferPool(props) {
-  if (! props.transfer) return <div />;
+  if (! props.transfer) return <span />;
   const { transfer: { used, quota } } = props;
 
   return (
