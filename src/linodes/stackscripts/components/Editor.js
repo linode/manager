@@ -26,7 +26,7 @@ export default class Editor extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {
