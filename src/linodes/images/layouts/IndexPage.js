@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import _ from 'lodash';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
@@ -145,9 +145,11 @@ export class IndexPage extends Component {
                 label: 'Created',
               },
               {
-                cellComponent: TimeCell,
-                timeKey: 'last_used',
-                label: 'Deployed',
+                cellComponent: LabelCell,
+                dataKey: 'status',
+                headerClassName: 'StatusColumn',
+                titleKey: 'status',
+                label: 'Status',
               },
               { cellComponent: this.renderImageActions },
             ]}
@@ -181,7 +183,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(images.images).length ?
-            this.renderImages(images.images) :
+            this.renderImages(_.filter(images.images, i => !i.is_public)) :
             <CreateHelper
               label="Images"
               onClick={() => AddImage.trigger(dispatch, linodes)}

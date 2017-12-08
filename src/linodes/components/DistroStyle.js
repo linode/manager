@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -7,20 +8,16 @@ import { distros as distroAssets } from '~/assets';
 export default function DistroStyle(props) {
   const { linode } = props;
 
-  if (!linode || !linode.distribution || !linode.distribution.vendor) {
-    return (<span>Unknown</span>);
-  }
-
-  const src = distroAssets[linode.distribution.vendor.toLowerCase()];
+  const src = distroAssets[_.lowerCase(linode.image.vendor)];
 
   return (
     <span className="distro-style">
-      <img
+      {src ? <img
         src={src}
-        alt={linode.distribution.vendor}
+        alt={linode.image.vendor}
         width="15" height="15"
-      />
-      <span>{linode.distribution.label}</span>
+      /> : ''}
+      <span>{linode.image.vendor}</span>
     </span>
   );
 }

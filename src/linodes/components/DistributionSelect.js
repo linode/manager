@@ -9,31 +9,33 @@ import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 
 
 export default function DistributionSelect(props) {
-  // The API returns vendors with inconsistent casing, so we normalize that before
-  // we group on vendor.
-  const withVendorLowerCased = _.map(Object.values(props.distributions), d => ({
-    ...d,
-    value: d.id,
-    vendorLower: d.vendor.toLowerCase(),
-  }));
+  const vendorsOrdered = [...DISTRIBUTION_DISPLAY_ORDER];
+  const extendedImages = props.images !== undefined ?
+    _.map(Object.values(props.images), i => {
+      const x = { ...i };
 
-  const withImages = props.images !== undefined ?
-    _.map(Object.values(props.images), i => ({
-      ...i,
-      value: i.id,
-      vendor: 'Images',
-      vendorLower: 'images',
-    })) : [];
+      if (! i.is_public) {
+        x.vendor = 'Images';
+      }
+
+      x.value = i.id;
+      x.vendorLower = _.lowerCase(i.vendor);
+
+      vendorsOrdered.includes(x.vendor) || vendorsOrdered.push(x.vendorLower);
+
+      return x;
+    }) : [];
+  vendorsOrdered.push('images');
 
   const vendorsUnsorted = _.map(
-    _.groupBy(withVendorLowerCased.concat(withImages), 'vendorLower'),
+    _.groupBy(extendedImages, 'vendorLower'),
     (v) => ({
       label: v[0].vendor,
       options: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
     })
   );
 
-  const vendorByName = vendor => vendorsUnsorted.find(v => v.label.toLowerCase() === vendor);
+  const vendorByName = vendor => vendorsUnsorted.find(v => _.lowerCase(v.label) === vendor);
 
   const options = [];
 
@@ -41,7 +43,7 @@ export default function DistributionSelect(props) {
     options.push({ label: 'No image', value: 'none' });
   }
 
-  for (const vendorName of DISTRIBUTION_DISPLAY_ORDER) {
+  for (const vendorName of vendorsOrdered) {
     const byName = vendorByName(vendorName);
 
     if (byName) {
@@ -66,8 +68,7 @@ export default function DistributionSelect(props) {
 
 DistributionSelect.propTypes = {
   ..._.omit(Select.propTypes, 'options'),
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   allowNone: PropTypes.bool,
   options: PropTypes.array,
 };

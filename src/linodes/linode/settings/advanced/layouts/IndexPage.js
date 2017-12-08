@@ -16,20 +16,10 @@ export class IndexPage extends Component {
       api.linodes.disks.all([id]),
       api.linodes.volumes.all([id]),
       api.kernels.page(0),
+      api.images.all(),
     ];
 
     await Promise.all(requests.map(r => dispatch(r)));
-
-    // Fetch distributions without waiting
-    if (!getState().api.distributions.ids.length) {
-      // Only needed from the add disk modal which isn't shown immediately.
-      const subRequests = [
-        api.images.all(),
-        api.distributions.all(),
-      ];
-
-      Promise.all(subRequests.map(r => dispatch(r)));
-    }
 
     const { totalPages } = getState().api.kernels;
 

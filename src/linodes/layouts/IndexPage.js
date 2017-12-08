@@ -36,6 +36,7 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.linodes.all());
+    await dispatch(api.images.all());
     await dispatch(transferPool());
   }
 
@@ -50,7 +51,7 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['linodes']));
 
-    ['distributions', 'types'].map(f => dispatch(api[f].all()));
+    ['images', 'types'].map(f => dispatch(api[f].all()));
   }
 
   deleteLinodes = confirmThenDelete(
@@ -188,9 +189,9 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dispatch, linodes, distributions, types, transfer } = this.props;
+    const { dispatch, linodes, images, types, transfer } = this.props;
 
-    const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
+    const addLinode = () => AddLinode.trigger(dispatch, images, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
     const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
     const linodeFromImage = async () => LinodeFromImage.trigger(dispatch, types,
@@ -237,19 +238,19 @@ IndexPage.propTypes = {
   linodes: PropTypes.object.isRequired,
   transfer: PropTypes.object.isRequired,
   types: PropTypes.object.isRequired,
-  distributions: PropTypes.object.isRequired,
+  images: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
 };
 
 function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
-  const distributions = state.api.distributions.distributions;
+  const images = state.api.images.images;
   const types = state.api.types.types;
   const transfer = state.api.account._transferpool;
 
   return {
     linodes,
-    distributions,
+    images,
     types,
     transfer,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
