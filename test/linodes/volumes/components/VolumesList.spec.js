@@ -83,7 +83,7 @@ describe('linodes/volumes/components/VolumesList', () => {
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
-      ([fn]) => expectRequest(fn, '/linode/volumes/38', { method: 'DELETE' }),
+      ([fn]) => expectRequest(fn, '/volumes/38', { method: 'DELETE' }),
     ]);
   });
 });

@@ -18,10 +18,15 @@ export const config = genConfig({
         ...linode.specs,
       };
     },
-    distribution: (linode) => function (_, getState) {
-      const distributions = getState().api.distributions.distributions || {};
+    image: (linode) => function (_, getState) {
+      const images = getState().api.images.images || {};
 
-      return distributions[linode.distribution];
+      return {
+        vendor: 'Unknown',
+        label: 'Unknown',
+        id: linode.image,
+        ...images[linode.image],
+      };
     },
   },
   subresources: {
