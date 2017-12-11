@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.16.2] 2017-12-11
+### Fixed
+
+### Added
+- Deprecation flags (#2756, #2821)
+- /account/payments/paypal and /account/payments/paypal/execute (#2801)
+- /domain/clone (#2747)
+
+### Changed
+- renames /linode/volumes to /volumes (#2754)
+- /distributions are now in /images (#2822, #2823, #2815)
+- API Changelog updated for 2017-12-11 release
+
 ## [0.16.1] 2017-12-01
 ### Fixed
 - Docs rendering in mobile used roughly half-width since 0.16.0 (#2796)

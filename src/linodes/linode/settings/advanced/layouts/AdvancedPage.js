@@ -32,8 +32,7 @@ export class AdvancedPage extends Component {
 AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
   configsSelectedMap: PropTypes.object.isRequired,
   volumesSelectedMap: PropTypes.object.isRequired,
@@ -42,14 +41,13 @@ AdvancedPage.propTypes = {
 
 function select(state, params) {
   const { linode } = selectLinode(state, params);
-  const { distributions, images: { images }, linodes: { linodes } } = state.api;
+  const { images: { images }, linodes: { linodes } } = state.api;
   const volumesSelectedMap = state.select.selected[Volumes.OBJECT_TYPE] || {};
   const disksSelectedMap = state.select.selected[Disks.OBJECT_TYPE] || {};
   const configsSelectedMap = state.select.selected[Configs.OBJECT_TYPE] || {};
   return {
     linode,
     linodes,
-    distributions,
     images,
     disksSelectedMap,
     volumesSelectedMap,

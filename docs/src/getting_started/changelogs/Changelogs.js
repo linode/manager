@@ -15,6 +15,70 @@ export default function Authentication() {
         </p>
       </section>
       <section>
+        <h2>2017-12-11</h2>
+        <hr /><br />
+        <b>Breaking:</b><br />
+        <ul>
+          <li>Unify Distributions and Images
+            <ul>
+              <li>Removes Distribution.architecture</li>
+              <li>Renames Distribution.updated to last_used (Datetime)</li>
+              <li>Renames Distribution.disk_minimum to min_deploy_size (Integer)</li>
+              <li>Adds Distribution.filesystem (String)</li>
+              <li>Adds Distribution.created (Datetime)</li>
+              <li>Adds Distribution.description (String)</li>
+              <li>Adds Distribution.status (String)</li>
+              <li>Adds Distribution.type (String)</li>
+              <li>Adds Distribution.is_public (Boolean)</li>
+              <li>Adds Distribution.creator (String)</li>
+              <li>Adds Image.deprecated (Boolean)</li>
+            </ul>
+          </li>
+          <li>Renamed "distribution" to "image"
+            <ul>
+              <li>POST /linode/instances takes "image" instead of "distribution"</li>
+              <li>POST /linode/instances/:id/disks takes "image" instead of "distribution"</li>
+              <li>POST /linode/instances/:id/rebuild takes "image" instead of "distribution"</li>
+              <li>Linode object returns "image" instead of "distribution"</li>
+              <li>StackScript object returns "images" instead of "distributions"</li>
+            </ul>
+          </li>
+          <li>Change Image IDs to Slugs
+            <ul>
+              <li>slugs match the format private/:image_id</li>
+            </ul>
+          </li>
+          <li>Moved volumes to top level
+            <ul>
+              <li>Changed all references from /linode/volumes to /volumes</li>
+            </ul>
+          </li>
+        </ul>
+        <b>Features:</b><br />
+        <ul>
+          <li>Added POST account/payments/paypal
+            <ul>
+              <li>Stages a PayPal payment and returns the payment_id</li>
+            </ul>
+          </li>
+          <li>Added POST account/payments/paypal/execute
+            <ul>
+              <li>Execute a PayPal payment that has been authorized in PayPal</li>
+              <li>This is required for Linode to capture funds and credit your account</li>
+            </ul>
+          </li>
+          <li>Added POST /domains/$id/clone
+            <ul>
+              <li>New endpoint can be reached at POST domains/:domain_id/clone</li>
+              <li>Requires a new domain be provided in the post body</li>
+            </ul>
+          </li>
+        </ul>
+        <b>Bugfixes:</b><br />
+        <ul>
+          <li>Ensure POST domain/records accepts and honors ttl_sec</li>
+          <li>Fixed Linode create from a Stackscript using UDFs</li>
+        </ul>
         <h2>2017-11-20</h2>
         <hr /><br />
         <b>Breaking Changes:</b><br />

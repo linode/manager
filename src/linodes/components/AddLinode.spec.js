@@ -13,10 +13,10 @@ import {
 } from '~/test.helpers';
 import { api } from '~/data';
 import { testType } from '~/data/types';
-import { testDistro } from '~/data/distributions';
+import { testLinodeImage } from '~/data/images';
 
 
-const { distributions: { distributions }, types: { types } } = api;
+const { images: { images }, types: { types } } = api;
 
 describe('linodes/components/AddLinode', function () {
   const sandbox = sinon.sandbox.create();
@@ -28,12 +28,12 @@ describe('linodes/components/AddLinode', function () {
   });
 
   it.skip('creates a linode with no distribution', async function () {
-    AddLinode.trigger(dispatch, distributions, types);
+    AddLinode.trigger(dispatch, images, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'No distro linode');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);
-    changeInput(modal, 'distribution', 'none');
+    changeInput(modal, 'image', 'none');
     changeInput(modal, 'plan', testType.id);
 
     dispatch.reset();
@@ -54,13 +54,13 @@ describe('linodes/components/AddLinode', function () {
   });
 
   it.skip('creates a linode with a distribution and backups', async function () {
-    AddLinode.trigger(dispatch, distributions, types);
+    AddLinode.trigger(dispatch, images, types);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'Ubuntu Linode');
     changeInput(modal, 'region', REGION_MAP.Asia[1]);
     changeInput(modal, 'plan', testType.id);
-    changeInput(modal, 'distribution', testDistro.id);
+    changeInput(modal, 'image', testLinodeImage.id);
     changeInput(modal, 'password', 'foobar');
     changeInput(modal, 'backups', true);
 
@@ -75,7 +75,7 @@ describe('linodes/components/AddLinode', function () {
           label: 'Ubuntu Linode',
           region: REGION_MAP.Asia[1],
           type: testType.id,
-          distribution: testDistro.id,
+          image: testLinodeImage.id,
           root_pass: 'foobar',
           backups_enabled: true,
         },
