@@ -18,19 +18,19 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     sandbox.restore();
   });
 
-  it('should drop filesystem and render password if a distro is selected', () => {
+  it('should drop filesystem and render password if a image is selected', () => {
     const modal = mount(
       <AddDisk
         dispatch={() => {}}
         linode={testLinode1236}
         free={4096}
-        distributions={api.distributions}
+        images={api.images}
       />);
 
-    const distro = Object.keys(api.distributions.distributions)[0];
-    changeInput(modal, 'distribution', distro);
+    const image = Object.keys(api.images.images)[0];
+    changeInput(modal, 'image', image);
 
-    expect(modal.find('#distribution').props().value).to.equal(distro);
+    expect(modal.find('#image').props().value).to.equal(image);
     expect(modal.find('#filesystem').length).to.equal(0);
     expect(modal.find('PasswordInput').length).to.equal(1);
   });
@@ -41,17 +41,17 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={() => {}}
         linode={testLinode1236}
         free={4096}
-        distributions={api.distributions}
+        images={api.images}
       />);
     expect(modal.find('[type="number"]').props())
       .to.have.property('min').that.equals(8);
     expect(modal.find('[type="number"]').props())
       .to.have.property('max').that.equals(4096);
-    const distro = Object.values(api.distributions.distributions)[0];
+    const image = Object.values(api.images.images)[0];
 
-    changeInput(modal, 'distribution', distro.id);
+    changeInput(modal, 'image', image.id);
     expect(modal.find('[type="number"]').props())
-      .to.have.property('min').that.equals(distro.disk_minimum);
+      .to.have.property('min').that.equals(image.min_deploy_size);
   });
 
   it('should dismiss the modal when Cancel is clicked', async () => {
@@ -61,7 +61,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}
-        distributions={api.distributions}
+        images={api.images}
       />);
 
     modal.find('CancelButton').simulate('click');
@@ -77,11 +77,11 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}
-        distributions={api.distributions}
+        images={api.images}
       />);
 
-    const distro = Object.keys(api.distributions.distributions)[0];
-    changeInput(modal, 'distribution', distro);
+    const image = Object.keys(api.images.images)[0];
+    changeInput(modal, 'image', image);
     changeInput(modal, 'label', 'Test disk');
     changeInput(modal, 'size', '1234');
     changeInput(modal, 'password', 'hunter2');
@@ -89,8 +89,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     dispatch.reset();
     await modal.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
-    expect(modal.find('#distribution').at(0).find('optgroup').length).to.equal(2);
-    expect(modal.find('#distribution').at(0).find('option').length).to.equal(5);
+    expect(modal.find('#image').at(0).find('optgroup').length).to.equal(1);
+    expect(modal.find('#image').at(0).find('option').length).to.equal(2);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/disks/', {
@@ -99,8 +99,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
           label: 'Test disk',
           filesystem: 'ext4',
           size: 1234,
-          distribution: distro,
-          image: null,
+          image: image,
           root_pass: 'hunter2',
         },
       }),
@@ -114,11 +113,10 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}
-        distributions={api.distributions}
-        images={{ images: api.images }}
+        images={api.images}
       />);
 
-    changeInput(modal, 'distribution', 38);
+    changeInput(modal, 'image', 'private/38');
     changeInput(modal, 'label', 'Test disk');
     changeInput(modal, 'size', '1234');
     changeInput(modal, 'password', 'hunter2');
@@ -126,8 +124,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     dispatch.reset();
     await modal.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
-    expect(modal.find('#distribution').at(0).find('optgroup').length).to.equal(3);
-    expect(modal.find('#distribution').at(0).find('option').length).to.equal(6);
+    expect(modal.find('#image').at(0).find('optgroup').length).to.equal(3);
+    expect(modal.find('#image').at(0).find('option').length).to.equal(6);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/disks/', {
@@ -136,8 +134,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
           label: 'Test disk',
           filesystem: 'ext4',
           size: 1234,
-          distribution: null,
-          image: 38,
+          image: 'private/38',
           root_pass: 'hunter2',
         },
       }),

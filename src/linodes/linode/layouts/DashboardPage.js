@@ -33,7 +33,7 @@ export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-    
+
     try {
       await dispatch(linodeStats(id));
     } catch (e) {

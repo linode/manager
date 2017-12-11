@@ -70,17 +70,17 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#region').text()).to.equal(testLinode.region);
   });
 
-  it('renders distribution', () => {
+  it('renders image', () => {
     const page = mount(
       <DashboardPage
         {...props}
       />
     );
 
-    expect(page.find('#distro').text()).to.equal(`${testLinode.distribution.label}Rebuild`);
+    expect(page.find('#distro').text()).to.equal(`${testLinode.image.label}Rebuild`);
   });
 
-  it('renders unknown distribution', () => {
+  it('renders unknown distro', () => {
     const page = mount(
       <DashboardPage
         {...{ ...props, linode: testLinode1246 }}
