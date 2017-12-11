@@ -18,8 +18,11 @@ script:
         cmphash=$(cat yarn.lock | grep linode-components | grep -o "#[0-9a-f]*" | tr -d "#")
         echo "Using linode-components version $cmphash"
     - |
-      if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
-        yarn run lint
-        yarn test -- --coverage --maxWorkers=2
+      (if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
+        (yarn run lint)
+        ex1=$?
+        (yarn test -- --coverage --maxWorkers=2)
+        ex2=$?
+        exit $(($ex1 | $ex2))
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
-      fi
+      fi)
