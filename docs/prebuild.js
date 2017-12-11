@@ -128,7 +128,7 @@ function formatSchemaField(schemaField, enumMap, filterDepth, iteration = 1) {
   description = convertUlToArray(description);
 
   // eslint-disable-next-line max-len
-  const { name, seeAlso, editable, filterable, optional, type, subtype, isArray, value } = schemaField;
+  const { name, seeAlso, editable, filterable, optional, type, subtype, isArray, value, deprecated } = schemaField;
   let lowerType = type && _.isString(type) ? type.toLowerCase() : 'object';
 
   let nestedSchema = null;
@@ -188,6 +188,7 @@ function formatSchemaField(schemaField, enumMap, filterDepth, iteration = 1) {
     isArray,
     type: lowerType,
     schema: nestedSchema,
+    deprecated,
   };
 }
 
@@ -379,6 +380,12 @@ const endpointMap = {
     name: 'Images',
     path: '/images',
     routePath: `${ROUTE_BASE_PATH}/images`,
+    groups: {},
+  },
+  volumes: {
+    name: 'Volumes',
+    path: '/volumes',
+    routePath: `${ROUTE_BASE_PATH}/volumes`,
     groups: {},
   },
 };
