@@ -30,11 +30,13 @@ schema:
     editable: true
     value: Installs the Linode API bindings
     filterable: true
-  distributions:
-    description: A list of distributions this StackScript is compatible with.
+  images:
+    description: >
+      A list of public, official images this StackScript is compatible with.
+      Official images' creator will be 'linode'.
     type: String
     isArray: true
-    seeAlso: "/reference/endpoints/linode/distributions"
+    seeAlso: "/reference/endpoints/images"
     editable: true
     filterable: true
     value:
