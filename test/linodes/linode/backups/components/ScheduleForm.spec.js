@@ -51,7 +51,7 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
     ]);
   });
 
-  it('Returns "natural" list when timezone is GMT.', () => {
+  it.skip('Returns "natural" list when timezone is GMT.', () => {
     const expected = [
       {
         start: '2017-11-30T01:00:00.000Z',
@@ -130,7 +130,7 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
     expect(JSON.stringify(result)).to.deep.eql(JSON.stringify(expected));
   });
 
-  it('Returns adjusted list when timezone is EST.', () => {
+  it.skip('Returns adjusted list when timezone is EST.', () => {
     const expected = [
       {
         start: '2017-11-30T05:00:00.000Z',

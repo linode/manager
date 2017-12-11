@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { EditImage } from '~/linodes/images/components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
-import { testImage } from '@/data/images';
+import { testPrivateImage } from '@/data/images';
 
 describe('linodes/images/components/EditImage', function () {
   const sandbox = sinon.sandbox.create();
@@ -16,7 +16,7 @@ describe('linodes/images/components/EditImage', function () {
   });
 
   it('update an image', async function () {
-    EditImage.trigger(dispatch, testImage);
+    EditImage.trigger(dispatch, testPrivateImage);
     const modal = await mount(dispatch.firstCall.args[0].body);
 
     changeInput(modal, 'label', 'my-image');
@@ -26,7 +26,7 @@ describe('linodes/images/components/EditImage', function () {
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/images/38', {
+      ([fn]) => expectRequest(fn, '/images/private/38', {
         method: 'PUT',
         body: {
           label: 'my-image',

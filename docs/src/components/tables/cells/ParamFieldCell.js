@@ -20,12 +20,26 @@ export default function ParamFieldCell(props) {
     );
   }
 
+  let deprecatedWarning;
+  if (record.deprecated) {
+    deprecatedWarning = (
+      <div className="FieldCell-label-deprecated">
+        <small>
+          {record.deprecated}
+        </small>
+      </div>
+    );
+  }
+
   return (
     <td className="TableCell FieldCell">
       <div>
         {record.name}
       </div>
       {subLabel}
+      <div>
+        {deprecatedWarning}
+      </div>
     </td>
   );
 }
