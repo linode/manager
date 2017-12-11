@@ -6,7 +6,9 @@ import sinon from 'sinon';
 
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
@@ -26,10 +28,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       />
     );
 
-    const change = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    change('group', 'foobar');
+    changeInput(page, 'group', 'foobar');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -40,7 +39,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
         method: 'PUT',
         body: { group: 'foobar', label: testLinode.label },
       }),
-    ], 2);
+    ], 1);
   });
 
   it('redirects if the label changed', async () => {
@@ -52,11 +51,8 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       />
     );
 
-    const change = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    change('group', 'foobar');
-    change('label', 'my-new-label');
+    changeInput(page, 'group', 'foobar');
+    changeInput(page, 'label', 'my-new-label');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -69,6 +65,6 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       }),
       () => {},
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
-    ], 3);
+    ], 2);
   });
 });

@@ -68,3 +68,11 @@ schema:
     description: The upstream distribution vendor. Consistent between releases of a distro.
       None for private images.
     filterable: true
+enums:
+  Status:
+    creating: creating
+    available: available
+    deleted: deleted
+  Type:
+    0: Image was created manually
+    1: Image was created automatically from a deleted Linode

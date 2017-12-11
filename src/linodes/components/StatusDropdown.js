@@ -1,14 +1,15 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes as apiLinodes } from '~/api';
-import { actions } from '~/api/configs/linodes';
-import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import api from '~/api';
+import { actions } from '~/api/generic/linodes';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import Polling from '~/api/polling';
 import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
@@ -36,7 +37,7 @@ function fetchLinodes(...ids) {
   return async (dispatch, getState) => {
     const allLinodes = Object.values(getState().api.linodes.linodes);
     const linodes = allLinodes.filter(l => ids.indexOf(l.id.toString()) !== -1);
-    await dispatch(apiLinodes.all([], null, createHeaderFilter({
+    await dispatch(api.linodes.all([], null, createHeaderFilter({
       '+or': linodes.map(({ label }) => ({ label })),
     })));
 
@@ -63,8 +64,6 @@ const POLLING = Polling({
 export default class StatusDropdown extends Component {
   constructor() {
     super();
-    this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
 
     this.state = {
       open: false,
@@ -110,25 +109,9 @@ export default class StatusDropdown extends Component {
     }
   }
 
-  startLinodePolling() {
-    const { linode, dispatch } = this.props;
-
-    POLLING.reset();
-    dispatch(POLLING.start(linode.id));
-    dispatch(setProgress(linode, 1));
-
-    // The point of this is to give time for bar to animate from beginning.
-    // Important for this to happen last otherwise we end up in an infinite loop.
-    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
-  }
-
-  open() {
-    this.setState({ open: !this.state.open });
-  }
-
-  close() {
+  close = () => {
     this.setState({ open: false });
-  }
+  };
 
   confirmAction = (name, onConfirm) => {
     const { linode, dispatch } = this.props;
@@ -147,6 +130,31 @@ export default class StatusDropdown extends Component {
       </ConfirmModalBody>
     )));
   }
+
+  deleteLinode = () => {
+    const { linode, dispatch } = this.props;
+
+    dispatch(showModal('Delete Linode', (
+      <DeleteModalBody
+        onSubmit={async function () {
+          await dispatch(api.linodes.delete(linode.id));
+          await dispatch(push('/'));
+        }}
+        items={[linode.label]}
+        typeOfItem="Linode"
+        onCancel={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
+  open = () => {
+    this.setState({ open: !this.state.open });
+  };
+
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
+  powerOnLinode = () => this.selectConfig(powerOnLinode)
+
+  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
 
   selectConfig = (callback) => {
     const { linode, dispatch } = this.props;
@@ -169,47 +177,61 @@ export default class StatusDropdown extends Component {
     )));
   }
 
-  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
-  powerOnLinode = () => this.selectConfig(powerOnLinode)
-  deleteLinode = () => {
+  startLinodePolling() {
     const { linode, dispatch } = this.props;
 
-    dispatch(showModal('Delete Linode', (
-      <DeleteModalBody
-        onSubmit={async function () {
-          await dispatch(apiLinodes.delete(linode.id));
-          await dispatch(push('/'));
-        }}
-        items={[linode.label]}
-        typeOfItem="Linode"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
+    POLLING.reset();
+    dispatch(POLLING.start(linode.id));
+    dispatch(setProgress(linode, 1));
+
+    // The point of this is to give time for bar to animate from beginning.
+    // Important for this to happen last otherwise we end up in an infinite loop.
+    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
+  }
+
+  linodeToGroups = linode => {
+    const status = linode.status;
+    // we always show the current status
+    const finalGroups = [{ elements: [
+      { name: LinodeStatesReadable[status] || _.capitalize(status) },
+    ] }];
+    const transitionStates = [
+      'shutting_down',
+      'booting',
+      'provisioning',
+      'rebooting',
+      'rebuilding',
+      'restoring',
+      'migrating',
+    ];
+    // don't allow power actions in a transition state
+    if (!(_.find(transitionStates, el => el === status))) {
+      if (status !== 'offline') {
+        finalGroups.push({ elements: [
+            { name: 'Reboot', action: this.rebootLinode },
+            { name: 'Power Off', action: this.powerOffLinode },
+        ] });
+      } else {
+        finalGroups.push({ elements: [
+            { name: 'Power On', action: this.powerOnLinode },
+        ] });
+      }
+    }
+    // we always allow Lish
+    finalGroups.push({ elements: [
+        { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
+    ] });
+    // we always allow deletion
+    finalGroups.push({ elements: [
+        { name: 'Delete', action: this.deleteLinode },
+    ] });
+    return finalGroups;
   }
 
   render() {
     const { linode } = this.props;
 
-    const status = LinodeStatesReadable[linode.status] || _.capitalize(linode.status);
-    const groups = [
-      { elements: [{ name: status }] },
-      {
-        elements: [
-          { name: 'Reboot', action: this.rebootLinode },
-          { name: 'Power Off', action: this.powerOffLinode },
-        ],
-      },
-      { elements: [{
-        name: 'Launch Console',
-        action: () => launchWeblishConsole(linode),
-      }] },
-      { elements: [{ name: 'Delete', action: this.deleteLinode }] },
-    ];
-
-    if (linode.status === 'offline') {
-      groups[1].elements = [{ name: 'Power On', action: this.powerOnLinode }];
-    }
+    const groups = this.linodeToGroups(linode);
 
     // The calc(x + 1px) is needed because we have left: -1px on this element.
     const progressWidth = `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})`;

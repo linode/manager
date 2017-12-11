@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { ConfirmModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
-import { kvmifyLinode } from '~/api/linodes';
+import { kvmifyLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 

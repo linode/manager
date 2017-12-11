@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -7,10 +8,10 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { transferPool } from '~/api/account';
-import { linodeStats } from '~/api/linodes';
+import { transferPool } from '~/api/ad-hoc//account';
+import { linodeStats } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-import { TransferPool } from '~/components';
+import { ChainedDocumentTitle, TransferPool } from '~/components';
 import {
   GraphGroup,
   makeCPUGraphMetadata,
@@ -45,27 +46,6 @@ export class DashboardPage extends Component {
     await dispatch(setSource(__filename));
   }
 
-  renderGraphs() {
-    const { timezone, linode: { _stats: stats } } = this.props;
-
-    let body = <p>No graphs are available.</p>;
-    if (stats) {
-      const allGraphData = [
-        makeCPUGraphMetadata(stats.cpu),
-        makeIOGraphMetadata(stats.io),
-        makeNetv4GraphMetadata(stats.netv4),
-        makeNetv6GraphMetadata(stats.netv6),
-      ];
-      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
-    }
-
-    return (
-      <Card header={<CardHeader title="Graphs" />} className="graphs">
-        {body}
-      </Card>
-    );
-  }
-
   renderDetails() {
     const { username, linode, dispatch } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
@@ -74,6 +54,7 @@ export class DashboardPage extends Component {
 
     return (
       <div className="row">
+        <ChainedDocumentTitle title="Dashboard" />
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Summary" />} className="full-height">
             <div className="row">
@@ -187,6 +168,27 @@ export class DashboardPage extends Component {
           </Card>
         </section>
       </div>
+    );
+  }
+
+  renderGraphs() {
+    const { timezone, linode: { _stats: stats } } = this.props;
+
+    let body = <p>No graphs are available.</p>;
+    if (stats) {
+      const allGraphData = [
+        makeCPUGraphMetadata(stats.cpu),
+        makeIOGraphMetadata(stats.io),
+        makeNetv4GraphMetadata(stats.netv4),
+        makeNetv6GraphMetadata(stats.netv6),
+      ];
+      body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
+    }
+
+    return (
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        {body}
+      </Card>
     );
   }
 

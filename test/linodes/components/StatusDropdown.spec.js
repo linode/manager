@@ -51,6 +51,20 @@ describe('linodes/components/StatusDropdown', () => {
     expect(dropdown.find('.Dropdown-item').at(3).text()).to.equal('Delete');
   });
 
+  it('renders correct options for provisioning Linodes', () => {
+    const dropdown = mount(
+      <StatusDropdown linode={linodes.linodes[1248]} dispatch={() => {}} />
+    );
+
+    expect(dropdown.find('.Dropdown-first').text().trim()).to.equal('Provisioning');
+
+    dropdown.find('.Dropdown-toggle').simulate('click');
+
+    expect(dropdown.find('.Dropdown-item').length).to.equal(2);
+    expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Launch Console');
+    expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Delete');
+  });
+
   it('dispatches on item click', async () => {
     const dispatch = sandbox.spy();
     const dropdown = mount(

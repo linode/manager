@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
@@ -12,12 +13,13 @@ import { Table } from 'linode-components/tables';
 import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
 
 import { default as toggleSelected } from '~/actions/select';
-import { linodes } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { confirmThenDelete } from '~/utilities';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
+import { AddImage } from '~/linodes/images/components';
 
 
 export default class Disks extends Component {
@@ -29,9 +31,11 @@ export default class Disks extends Component {
     this.state = { filter: '' };
   }
 
-  poweredOff() {
-    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
-  }
+  deleteDisks = confirmThenDelete(
+    this.props.dispatch,
+    'disk',
+    (id) => api.linodes.disks.delete(this.props.linode.id, id),
+    Disks.OBJECT_TYPE).bind(this)
 
   freeSpace() {
     const { linode } = this.props;
@@ -41,11 +45,36 @@ export default class Disks extends Component {
     return total - used;
   }
 
-  deleteDisks = confirmThenDelete(
-    this.props.dispatch,
-    'disk',
-    (id) => linodes.disks.delete(this.props.linode.id, id),
-    Disks.OBJECT_TYPE).bind(this)
+  poweredOff() {
+    return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
+  }
+
+  renderDiskActions = ({ column, record }) => {
+    const { dispatch, linode } = this.props;
+    const free = this.freeSpace();
+
+    const groups = [
+      { elements: [{ name: 'Edit', action: () =>
+        EditDisk.trigger(dispatch, linode, record, free) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
+    ];
+
+    if (record.filesystem !== 'swap') {
+      groups.splice(1, 0, { elements: [{
+        name: 'Create an Image',
+        action: () => AddImage.trigger(dispatch, undefined, linode, record),
+      }] });
+    }
+
+    return (
+      <TableCell column={column} record={record} className="ActionsCell">
+        <Dropdown
+          groups={groups}
+          analytics={{ title: 'Disk actions' }}
+        />
+      </TableCell>
+    );
+  }
 
   renderStatusMessage() {
     if (!this.poweredOff()) {
@@ -61,28 +90,8 @@ export default class Disks extends Component {
     return null;
   }
 
-  renderDiskActions = ({ column, record }) => {
-    const { dispatch, linode } = this.props;
-    const free = this.freeSpace();
-
-    const groups = [
-      { elements: [{ name: 'Edit', action: () =>
-        EditDisk.trigger(dispatch, linode, record, free) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
-    ];
-
-    return (
-      <TableCell column={column} record={record} className="ActionsCell">
-        <Dropdown
-          groups={groups}
-          analytics={{ title: 'Disk actions' }}
-        />
-      </TableCell>
-    );
-  }
-
   render() {
-    const { dispatch, linode, distributions, selectedMap } = this.props;
+    const { dispatch, linode, distributions, images, selectedMap } = this.props;
     const { filter } = this.state;
     const disks = Object.values(linode._disks.disks);
     const free = this.freeSpace();
@@ -95,7 +104,7 @@ export default class Disks extends Component {
       <PrimaryButton
         className="float-right"
         buttonClass="btn-default"
-        onClick={() => AddDisk.trigger(dispatch, linode, distributions, free)}
+        onClick={() => AddDisk.trigger(dispatch, linode, distributions, images, free)}
       >
         Add a Disk
       </PrimaryButton>
@@ -160,5 +169,6 @@ Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
 };

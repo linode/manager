@@ -1,12 +1,13 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { replace } from 'react-router-redux';
 
 import { Input, ModalFormGroup, Select, Textarea } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { setTitle } from '~/actions/title';
-import { domains } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectDNSSeconds, {
@@ -56,6 +57,8 @@ export default class EditSOARecord extends Component {
       axfrIps: axfrIps.join(';'),
       masterIps: masterIps.join(';'),
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -89,13 +92,10 @@ export default class EditSOARecord extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.put(data, this.props.domains.id),
-      () => setTitle(data.domain),
+      () => api.domains.put(data, this.props.domains.id),
       () => close(domain)(),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close, domains: { type } } = this.props;

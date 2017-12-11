@@ -70,7 +70,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     expect(dispatch.calledWith(hideModal())).to.equal(true);
   });
 
-  it('should POST /linode/instances/:id/disks/ when form is submitted', async () => {
+  it('should POST /linode/instances/:id/disks/ create disk from and only list distro', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
       <AddDisk
@@ -89,6 +89,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     dispatch.reset();
     await modal.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
+    expect(modal.find('#distribution').at(0).find('optgroup').length).to.equal(2);
+    expect(modal.find('#distribution').at(0).find('option').length).to.equal(5);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/disks/', {
@@ -98,6 +100,44 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
           filesystem: 'ext4',
           size: 1234,
           distribution: distro,
+          image: null,
+          root_pass: 'hunter2',
+        },
+      }),
+    ]);
+  });
+
+  it('should POST /linode/instances/:id/disks/ create disk from image and list all', async () => {
+    const dispatch = sandbox.spy();
+    const modal = mount(
+      <AddDisk
+        dispatch={dispatch}
+        linode={testLinode1236}
+        free={4096}
+        distributions={api.distributions}
+        images={{ images: api.images }}
+      />);
+
+    changeInput(modal, 'distribution', 38);
+    changeInput(modal, 'label', 'Test disk');
+    changeInput(modal, 'size', '1234');
+    changeInput(modal, 'password', 'hunter2');
+
+    dispatch.reset();
+    await modal.find('Form').props().onSubmit({ preventDefault() {} });
+    expect(dispatch.callCount).to.equal(1);
+    expect(modal.find('#distribution').at(0).find('optgroup').length).to.equal(3);
+    expect(modal.find('#distribution').at(0).find('option').length).to.equal(6);
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1236/disks/', {
+        method: 'POST',
+        body: {
+          label: 'Test disk',
+          filesystem: 'ext4',
+          size: 1234,
+          distribution: null,
+          image: 38,
           root_pass: 'hunter2',
         },
       }),

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -16,11 +17,12 @@ import {
   ThumbnailCell,
 } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import toggleSelected from '~/actions/select';
-import { users as api } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
 import { confirmThenDelete } from '~/utilities';
@@ -37,7 +39,10 @@ function getGravatarURL(user) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    // Restricted users will get a 403 on /v4/profile/users
+    const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
+
+    await dispatch(api.users.all()).catch(onReject);
   }
 
   constructor(props) {
@@ -49,14 +54,13 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Users'));
     dispatch(setAnalytics(['users']));
   }
 
   deleteUsers = confirmThenDelete(
     this.props.dispatch,
     'user',
-    api.delete,
+    api.users.delete,
     OBJECT_TYPE,
     'username',
     'delete',
@@ -74,6 +78,7 @@ export class IndexPage extends Component {
 
     return (
       <List>
+        <ChainedDocumentTitle title="Users" />
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl

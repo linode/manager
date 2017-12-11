@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-import { generateDefaultStateFull } from '~/api/apiResultActionReducerGenerator.js';
-import { config as linodeConfig } from '~/api/configs/linodes';
+import { generateDefaultStateFull } from '~/api/internal';
+import { config as linodeConfig } from '~/api/generic/linodes';
 import {
   getObjectByLabelLazily,
   Error404,
@@ -12,7 +12,8 @@ import {
 } from '~/api/util';
 import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
-import { expectRequest } from '@/common';
+import { expectObjectDeepEquals, expectRequest } from '@/common';
+
 
 describe('api/util', async () => {
   const sandbox = sinon.sandbox.create();
@@ -62,22 +63,13 @@ describe('api/util', async () => {
   it('provides a header structure utility function', function () {
     const emptyHeader = createHeaderFilter({});
 
-    expect(emptyHeader).to.exist;
-    expect(emptyHeader).to.be.an('object');
-
-    expect(emptyHeader.headers).to.exist;
-    expect(emptyHeader.headers).to.be.an('object');
-
-    expect(emptyHeader.headers['X-Filter']).to.exist;
-    expect(emptyHeader.headers['X-Filter']).to.be.an('object');
+    expectObjectDeepEquals(emptyHeader['X-Filter'], {});
   });
 
   it('provides createHeaderFilter which assigns an object to X-Filter', function () {
     const emptyHeader = createHeaderFilter({ example: true });
 
-    expect(emptyHeader.headers['X-Filter']).to.exist;
-    expect(emptyHeader.headers['X-Filter']).to.be.an('object');
-    expect(emptyHeader.headers['X-Filter'].example).to.equal(true);
+    expect(emptyHeader['X-Filter'].example).to.equal(true);
   });
 
   it('provides a lessThanDatetimeFilter function', function () {

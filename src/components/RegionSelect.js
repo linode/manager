@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
@@ -45,6 +46,6 @@ export default function RegionSelect(props) {
 }
 
 RegionSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   filter: PropTypes.array,
 };

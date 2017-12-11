@@ -1,12 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { setAnalytics, setTitle } from '~/actions';
+import { setAnalytics } from '~/actions';
 import { getObjectByLabelLazily } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -15,8 +17,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, user } = this.props;
-    dispatch(setTitle(user.username));
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['users', 'user']));
   }
 
@@ -34,6 +35,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={username} />
         <header className="main-header">
           <div className="container">
             <div className="float-sm-left">

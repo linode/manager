@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -9,7 +10,7 @@ import { Table } from 'linode-components/tables';
 import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { domains } from '~/api';
+import api from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
 import { GroupLabel } from '~/components';
 import { NAME_SERVERS } from '~/constants';
@@ -21,10 +22,37 @@ import EditMXRecord from './EditMXRecord';
 import EditARecord from './EditARecord';
 import EditTXTRecord from './EditTXTRecord';
 import EditSRVRecord from './EditSRVRecord';
+import EditCAARecord from './EditCAARecord';
 import EditCNAMERecord from './EditCNAMERecord';
 
-
 export class MasterZone extends Component {
+  formatARecords() {
+    const { domain } = this.props;
+
+    const { A, AAAA } = domain._groupedRecords;
+    return (A || []).concat(AAAA || []).filter(a => a !== undefined);
+  }
+
+  formatCNAMERecords() {
+    const { domain } = this.props;
+
+    const { CNAME } = domain._groupedRecords;
+    return (CNAME || []).map(record => ({
+      ...record,
+      name: record.name || domain.domain,
+    }));
+  }
+
+  formatMXRecords() {
+    const { domain } = this.props;
+
+    const { MX } = domain._groupedRecords;
+    return (MX || []).map(record => ({
+      ...record,
+      name: record.name || domain.domain,
+    }));
+  }
+
   formatNSRecords() {
     const { domain } = this.props;
     const nsRecords = NAME_SERVERS.map(ns => ({
@@ -46,28 +74,20 @@ export class MasterZone extends Component {
     return nsRecords;
   }
 
-  formatMXRecords() {
-    const { domain } = this.props;
-
-    const { MX } = domain._groupedRecords;
-    return (MX || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
-  }
-
-  formatARecords() {
-    const { domain } = this.props;
-
-    const { A, AAAA } = domain._groupedRecords;
-    return (A || []).concat(AAAA || []).filter(a => a !== undefined);
-  }
-
   formatSRVRecords() {
     const { domain } = this.props;
 
     const { SRV } = domain._groupedRecords;
     return (SRV || []).map(record => ({
+      ...record, domain: domain.domain,
+    }));
+  }
+
+  formatCAARecords() {
+    const { domain } = this.props;
+
+    const { CAA } = domain._groupedRecords;
+    return (CAA || []).map(record => ({
       ...record, domain: domain.domain,
     }));
   }
@@ -79,23 +99,13 @@ export class MasterZone extends Component {
     return TXT || [];
   }
 
-  formatCNAMERecords() {
-    const { domain } = this.props;
-
-    const { CNAME } = domain._groupedRecords;
-    return (CNAME || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
-  }
-
   renderDeleteRecord(type, id, name) {
     const { dispatch, domain } = this.props;
 
     dispatch(showModal(`Delete ${type}`,
       <DeleteModalBody
         onSubmit={async () => {
-          await dispatch(domains.records.delete(domain.id, id));
+          await dispatch(api.domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
         items={[name]}
@@ -103,6 +113,22 @@ export class MasterZone extends Component {
         onCancel={() => dispatch(hideModal())}
       />
     ));
+  }
+
+  renderEditARecord(title, id) {
+    return this.renderEditRecord(title, EditARecord, { id });
+  }
+
+  renderEditCNAMERecord(title, id) {
+    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  }
+
+  renderEditMXRecord(title, id) {
+    return this.renderEditRecord(title, EditMXRecord, { id });
+  }
+
+  renderEditNSRecord(title, id) {
+    return this.renderEditRecord(title, EditNSRecord, { id });
   }
 
   renderEditRecord(title, component, props = {}) {
@@ -123,28 +149,16 @@ export class MasterZone extends Component {
     return this.renderEditRecord(title, EditSOARecord);
   }
 
-  renderEditMXRecord(title, id) {
-    return this.renderEditRecord(title, EditMXRecord, { id });
-  }
-
-  renderEditNSRecord(title, id) {
-    return this.renderEditRecord(title, EditNSRecord, { id });
-  }
-
-  renderEditARecord(title, id) {
-    return this.renderEditRecord(title, EditARecord, { id });
-  }
-
-  renderEditTXTRecord(title, id) {
-    return this.renderEditRecord(title, EditTXTRecord, { id });
-  }
-
   renderEditSRVRecord(title, id) {
     return this.renderEditRecord(title, EditSRVRecord, { id });
   }
 
-  renderEditCNAMERecord(title, id) {
-    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  renderEditCAARecord(title, id) {
+    return this.renderEditRecord(title, EditCAARecord, { id });
+  }
+
+  renderEditTXTRecord(title, id) {
+    return this.renderEditRecord(title, EditTXTRecord, { id });
   }
 
   render() {
@@ -167,6 +181,7 @@ export class MasterZone extends Component {
     const cnameRecords = formatSeconds(this.formatCNAMERecords());
     const txtRecords = formatSeconds(this.formatTXTRecords());
     const srvRecords = formatSeconds(this.formatSRVRecords());
+    const caaRecords = formatSeconds(this.formatCAARecords());
 
     const soaRecord = {
       ...domain,
@@ -461,57 +476,96 @@ export class MasterZone extends Component {
               />
             </Card>
           </section>
-          <Card
-            id="srv"
-            header={
-              <CardHeader
-                title="SRV Records"
-                nav={
-                  <PrimaryButton
-                    onClick={() => { this.renderEditRecord('Add SRV Record', EditSRVRecord); }}
-                    buttonClass="btn-default"
-                  >
-                    Add SRV Record
-                  </PrimaryButton>
-                }
+          <section>
+            <Card
+              id="srv"
+              header={
+                <CardHeader
+                  title="SRV Records"
+                  nav={
+                    <PrimaryButton
+                      onClick={() => { this.renderEditRecord('Add SRV Record', EditSRVRecord); }}
+                      buttonClass="btn-default"
+                    >
+                      Add SRV Record
+                    </PrimaryButton>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'name', label: 'Service', headerClassName: 'ServiceColumn' },
+                  { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'domain',
+                    label: 'Domain',
+                    titleKey: 'domain',
+                    tooltipEnabled: true,
+                  },
+                  { dataKey: 'weight', label: 'Weight', headerClassName: 'WeightColumn' },
+                  { dataKey: 'port', label: 'Port', headerClassName: 'PortColumn' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Target',
+                    titleKey: 'target',
+                    tooltipEnabled: true,
+                  },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
+                  {
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('SRV Record', id, target),
+                  },
+                ]}
+                data={srvRecords}
+                noDataMessage="You have no SRV records."
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'name', label: 'Service', headerClassName: 'ServiceColumn' },
-                { dataKey: 'priority', label: 'Priority', headerClassName: 'WeightColumn' },
-                {
-                  cellComponent: LabelCell,
-                  headerClassName: 'LabelColumn',
-                  dataKey: 'domain',
-                  label: 'Domain',
-                  titleKey: 'domain',
-                  tooltipEnabled: true,
-                },
-                { dataKey: 'weight', label: 'Weight', headerClassName: 'WeightColumn' },
-                { dataKey: 'port', label: 'Port', headerClassName: 'PortColumn' },
-                {
-                  cellComponent: LabelCell,
-                  headerClassName: 'LabelColumn',
-                  dataKey: 'target',
-                  label: 'Target',
-                  titleKey: 'target',
-                  tooltipEnabled: true,
-                },
-                { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
-                {
-                  cellComponent: NameserversCell,
-                  onEditClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
-                  onDeleteClick: ({ id, target }) =>
-                    this.renderDeleteRecord('SRV Record', id, target),
-                },
-              ]}
-              data={srvRecords}
-              noDataMessage="You have no SRV records."
-            />
-          </Card>
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="caa"
+              header={
+                <CardHeader
+                  title="CAA Records"
+                  nav={
+                    <PrimaryButton
+                      onClick={() => { this.renderEditRecord('Add CAA Record', EditCAARecord); }}
+                      buttonClass="btn-default"
+                    >
+                      Add CAA Record
+                    </PrimaryButton>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'tag', label: 'Tag', headerClassName: 'TagColumn' },
+                  { dataKey: 'target', label: 'Value', headerClassName: 'ValueColumn' },
+                  { dataKey: 'name', label: 'Domain', headerClassName: 'NameColumn' },
+                  { dataKey: 'ttl_sec', label: 'TTL', headerClassName: 'TTLColumn' },
+                  {
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) =>
+                      this.renderEditRecord('Edit CAA Record', EditCAARecord, { id }),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('CAA Record', id, target),
+                  },
+                ]}
+                data={caaRecords}
+                noDataMessage="You have no CAA records."
+              />
+            </Card>
+          </section>
         </div>
       </div>
     );

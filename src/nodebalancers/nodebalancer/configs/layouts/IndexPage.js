@@ -1,25 +1,26 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { setAnalytics, setTitle } from '~/actions';
-import { nodebalancers } from '~/api';
+import { setAnalytics } from '~/actions';
+import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-    await dispatch(nodebalancers.configs.all([id]));
+    await dispatch(api.nodebalancers.configs.all([id]));
   }
 
   async componentDidMount() {
-    const { dispatch, nodebalancer } = this.props;
-    dispatch(setTitle(nodebalancer.label));
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
   }
 
@@ -42,6 +43,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={`Port ${config.port} - ${nodebalancer.label}`} />
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">

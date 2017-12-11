@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -12,20 +13,21 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import * as api from '~/api';
-import { transferPool } from '~/api/account';
-import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import api from '~/api';
+import { transferPool } from '~/api/ad-hoc/account';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
-import { AddLinode, CloneLinode, RestoreLinode } from '../components';
+import { AddLinode, CloneLinode, RestoreLinode, LinodeFromImage } from '../components';
 import { TransferPool } from '../../components';
 
 
@@ -46,11 +48,16 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Linodes'));
     dispatch(setAnalytics(['linodes']));
 
     ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
+
+  deleteLinodes = confirmThenDelete(
+    this.props.dispatch,
+    'Linode',
+    api.linodes.delete,
+    OBJECT_TYPE).bind(this)
 
   genericAction(actionToDispatch, linodes, confirmType) {
     const { dispatch } = this.props;
@@ -88,15 +95,10 @@ export class IndexPage extends Component {
     )));
   }
 
-  powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
   powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
-  reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
-  deleteLinodes = confirmThenDelete(
-    this.props.dispatch,
-    'Linode',
-    api.linodes.delete,
-    OBJECT_TYPE).bind(this)
+  powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
+  reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
   renderLinodes(linodes) {
     const { dispatch, selectedMap } = this.props;
@@ -191,14 +193,18 @@ export class IndexPage extends Component {
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
     const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
+    const linodeFromImage = async () => LinodeFromImage.trigger(dispatch, types,
+        await dispatch(api.images.all()));
 
     const addOptions = [
       { name: 'Create from Backup', action: restoreLinode },
+      { name: 'Create from Image', action: linodeFromImage },
       { name: 'Clone a Linode', action: cloneLinode },
     ];
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Linodes" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Linodes</h1>

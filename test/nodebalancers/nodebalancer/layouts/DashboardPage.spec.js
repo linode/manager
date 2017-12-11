@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { genericNodeBalancer } from '@/data/nodebalancers';
+import { configsNodeBalancer } from '@/data/nodebalancers';
 import { DashboardPage } from '~/nodebalancers/nodebalancer/layouts/DashboardPage';
 
 describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
@@ -19,7 +19,7 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
     const page = mount(
       <DashboardPage
         dispatch={dispatch}
-        nodebalancer={genericNodeBalancer}
+        nodebalancer={configsNodeBalancer}
         transfer={{ used: 1, quota: 5 }}
       />
     );

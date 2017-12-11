@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -6,27 +7,26 @@ import { ExternalLink } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
-import { distributions, stackscripts } from '~/api';
+import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 
 import { Editor, Settings } from '../components';
 
 
 export class StackScriptPage extends Component {
   static async preload({ dispatch, getState }, { stackscriptId }) {
-    const requests = [stackscripts.one([stackscriptId])];
+    const requests = [api.stackscripts.one([stackscriptId])];
 
     if (!getState().api.distributions.ids.length) {
-      requests.push(distributions.all());
+      requests.push(api.distributions.all());
     }
 
     return Promise.all(requests.map(dispatch));
   }
 
   async componentDidMount() {
-    const { dispatch, stackscript } = this.props;
+    const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle(stackscript.label));
   }
 
   render() {
@@ -34,6 +34,7 @@ export class StackScriptPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={stackscript.label} />
         <header className="main-header main-header--border">
           <div className="container">
             <Link to="/stackscripts">StackScripts</Link>

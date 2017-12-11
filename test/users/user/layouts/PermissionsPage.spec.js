@@ -26,16 +26,13 @@ describe('users/user/layouts/PermissionsPage', () => {
       />
     );
 
-    const customerAccess = page.find('#permission-customer-access');
-    expect(customerAccess.props().checked).to.equal(true);
-    const customerCancel = page.find('#permission-customer-cancel');
-    expect(customerCancel.props().checked).to.equal(false);
-    const globalLinodes = page.find('#permission-global-linodes');
-    expect(globalLinodes.props().checked).to.equal(true);
-    const globalNB = page.find('#permission-global-nodebalancers');
-    expect(globalNB.props().checked).to.equal(true);
-    const globalDNS = page.find('#permission-global-domains');
-    expect(globalDNS.props().checked).to.equal(true);
+    // global
+    const globalAddVolumes = page.find('#permission-global-volumes');
+    expect(globalAddVolumes.props().checked).to.equal(true);
+
+    // customer
+    const customerReadOnly = page.find('#permission-customer-access-read-only');
+    expect(customerReadOnly.props().checked).to.equal(true);
   });
 
   it('should commit changes to the API', async () => {
@@ -47,48 +44,77 @@ describe('users/user/layouts/PermissionsPage', () => {
     );
 
     dispatch.reset();
-    page.instance().updateGlobal('add_linodes');
+    page.instance().updateGlobal('add_linodes'); // make a change to a global setting
     await page.instance().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/account/users/${testUser2.username}/grants`, {
         method: 'PUT',
         body: {
-          customer: {
-            access: true,
-            cancel: false,
-          },
           global: {
-            add_linodes: false,
-            add_nodebalancers: true,
+            account_access: 'read_only',
             add_domains: true,
+            add_images: true,
+            add_linodes: false,
+            add_longview: true,
+            add_nodebalancers: true,
+            add_stackscripts: true,
+            add_volumes: true,
+            cancel_account: false,
+            longview_subscription: true,
           },
           linode: [
             {
-              all: true,
-              access: true,
-              delete: true,
-              resize: true,
               label: 'linode1',
-              id: 1234,
+              id: 1111,
+              permissions: 'read_write',
             },
           ],
           nodebalancer: [
             {
-              all: true,
-              access: true,
-              delete: true,
               label: 'nb1',
-              id: 4321,
+              id: 2222,
+              permissions: 'read_only',
             },
           ],
           domain: [
             {
-              all: true,
-              access: true,
-              delete: true,
               label: 'domain1',
-              id: 9876,
+              id: 3333,
+              permissions: 'read_write',
+            },
+          ],
+          stackscript: [
+            {
+              label: 'stackscript1',
+              id: 4444,
+              permissions: null,
+            },
+          ],
+          longview: [
+            {
+              label: 'longview1',
+              id: 5555,
+              permissions: 'read_only',
+            },
+          ],
+          image: [
+            {
+              label: 'image1',
+              id: 6666,
+              permissions: 'read_only',
+            },
+            {
+              label: 'image2',
+              id: 7777,
+              permissions: 'read_write',
+            },
+          ],
+          volume: [
+            {
+              label: 'volume1',
+              id: 8888,
+              permissions: null,
             },
           ],
         },
@@ -104,17 +130,36 @@ describe('users/user/layouts/PermissionsPage', () => {
       />
     );
 
-    const record = page.instance().state.linode[0];
-    const valueWas = page.find('.TableRow').at(0).find('input')
+    let valueNull = page.find('.TableRow').at(0).find('input')
       .at(0)
       .props().checked;
-    const keys = {
-      parentKey: 'linode',
-      dataKey: 'all',
-    };
-    await page.instance().onCellChange(record, !valueWas, keys);
-    const checkbox = page.find('.TableRow').at(0).find('input')
-      .at(0);
-    expect(checkbox.props().checked).to.equal(!valueWas);
+    let valueReadOnly = page.find('.TableRow').at(0).find('input')
+      .at(1)
+      .props().checked;
+    let valueReadWrite = page.find('.TableRow').at(0).find('input')
+      .at(2)
+      .props().checked;
+
+    expect(valueNull).to.equal(false);
+    expect(valueReadOnly).to.equal(false);
+    expect(valueReadWrite).to.equal(true);
+
+    const radioReadOnly = page.find('.TableRow').at(0).find('input')
+      .at(1);
+    radioReadOnly.simulate('change', radioReadOnly);
+
+    valueNull = page.find('.TableRow').at(0).find('input')
+      .at(0)
+      .props().checked;
+    valueReadOnly = page.find('.TableRow').at(0).find('input')
+      .at(1)
+      .props().checked;
+    valueReadWrite = page.find('.TableRow').at(0).find('input')
+      .at(2)
+      .props().checked;
+
+    expect(valueNull).to.equal(false);
+    expect(valueReadOnly).to.equal(true);
+    expect(valueReadWrite).to.equal(false);
   });
 });

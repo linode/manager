@@ -1,11 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ModalFormGroup, Input } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { linodes } from '~/api';
-import { resizeLinodeDisk } from '~/api/linodes';
+import api from '~/api';
+import { resizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -31,6 +33,8 @@ export default class EditDisk extends Component {
       label: props.disk.label,
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   onSubmit = () => {
@@ -43,13 +47,11 @@ export default class EditDisk extends Component {
     }
 
     if (label !== disk.label) {
-      requests.unshift(() => linodes.disks.put({ label }, linode.id, disk.id));
+      requests.unshift(() => api.linodes.disks.put({ label }, linode.id, disk.id));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { disk, free, dispatch } = this.props;

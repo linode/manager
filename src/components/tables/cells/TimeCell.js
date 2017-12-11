@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { TableCell } from 'linode-components/tables/cells';
 
@@ -11,7 +12,7 @@ export default function TimeCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-      {time ? <TimeDisplay time={time} capitalize /> : 'Unknown'}
+      {time ? <TimeDisplay time={time} capitalize /> : 'Never'}
     </TableCell>
   );
 }

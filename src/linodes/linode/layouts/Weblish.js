@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { ZONES } from '~/constants';
 import { getObjectByLabelLazily } from '~/api/util';
-import { lishToken } from '~/api/linodes';
+import { lishToken } from '~/api/ad-hoc/linodes';
 
 export function addCSSLink(url) {
   const head = window.document.querySelector('head');

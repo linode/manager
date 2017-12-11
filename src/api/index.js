@@ -1,41 +1,9 @@
-import * as distributionsModule from './configs/distributions';
-import * as regionsModule from './configs/regions';
-import * as typesModule from './configs/types';
-import * as linodesModule from './configs/linodes';
-import * as volumesModule from './configs/volumes';
-import * as stackscriptsModule from './configs/stackscripts';
-import * as kernelsModule from './configs/kernels';
-import * as domainsModule from './configs/domains';
-import * as nodebalancersModule from './configs/nodebalancers';
-import * as profileModule from './configs/profile';
-import * as accountModule from './configs/account';
-import * as eventsModule from './configs/events';
-import * as tokensModule from './configs/tokens';
-import * as clientsModule from './configs/clients';
-import * as usersModule from './configs/users';
-import * as ticketsModule from './configs/tickets';
-import * as appsModule from './configs/apps';
+import apiActionReducerGenerator from './external';
+import * as generic from './generic';
 
-import apiActionReducerGenerator from './apiActionReducerGenerator';
 
-export const distributions = apiActionReducerGenerator(distributionsModule.config,
-                                                       distributionsModule.actions);
-export const regions = apiActionReducerGenerator(regionsModule.config,
-                                                 regionsModule.actions);
-export const types = apiActionReducerGenerator(typesModule.config, typesModule.actions);
-export const linodes = apiActionReducerGenerator(linodesModule.config, linodesModule.actions);
-export const volumes = apiActionReducerGenerator(volumesModule.config, volumesModule.actions);
-export const stackscripts = apiActionReducerGenerator(stackscriptsModule.config,
-                                                       stackscriptsModule.actions);
-export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsModule.actions);
-export const domains = apiActionReducerGenerator(domainsModule.config, domainsModule.actions);
-export const nodebalancers = apiActionReducerGenerator(nodebalancersModule.config,
-                                                       nodebalancersModule.actions);
-export const profile = apiActionReducerGenerator(profileModule.config, profileModule.actions);
-export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
-export const tokens = apiActionReducerGenerator(tokensModule.config, tokensModule.actions);
-export const clients = apiActionReducerGenerator(clientsModule.config, clientsModule.actions);
-export const users = apiActionReducerGenerator(usersModule.config, usersModule.actions);
-export const tickets = apiActionReducerGenerator(ticketsModule.config, ticketsModule.actions);
-export const account = apiActionReducerGenerator(accountModule.config, accountModule.actions);
-export const apps = apiActionReducerGenerator(appsModule.config, appsModule.actions);
+function actionExporter(module) {
+  return apiActionReducerGenerator(module.config, module.actions);
+}
+
+export default generic.exportWith(actionExporter);

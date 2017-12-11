@@ -1,13 +1,14 @@
 import _ from 'lodash';
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { ModalFormGroup, Select } from 'linode-components/forms';
 import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { attachVolume } from '~/api/volumes';
-import { linodes } from '~/api';
+import api from '~/api';
+import { attachVolume } from '~/api/ad-hoc/volumes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { LinodeSelect } from '~/linodes/components';
 
@@ -45,7 +46,7 @@ export default class AttachVolume extends Component {
       const { allConfigs } = this.state;
 
       if (!allConfigs[linodeId]) {
-        const configs = await this.props.dispatch(linodes.configs.all([linodeId]));
+        const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
         const linodeConfigs = Object.values(configs.configs).map(function (config) {
           return {
             label: config.label,
@@ -87,7 +88,7 @@ export default class AttachVolume extends Component {
     ) : null;
 
     const linodeConfigs = [
-      ...allConfigs[linode] || configs || {},
+      ...(allConfigs[linode] || configs || {}),
     ];
 
     if (config === undefined && linodeConfigs[0]) {

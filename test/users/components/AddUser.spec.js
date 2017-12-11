@@ -24,7 +24,7 @@ describe('users/components/AddUser', () => {
     changeInput(modal, 'username', 'theUser');
     changeInput(modal, 'email', 'user@example.com');
     changeInput(modal, 'password', 'password');
-    changeInput(modal, 'restricted', true);
+    changeInput(modal, 'restricted', 'yes');
 
     await modal.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];

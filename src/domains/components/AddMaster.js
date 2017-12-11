@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
@@ -6,7 +7,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { domains } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -40,7 +41,7 @@ export default class AddMaster extends Component {
     const { domain, email } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.post({ domain, soa_email: email, type: 'master' }),
+      () => api.domains.post({ domain, soa_email: email, type: 'master' }),
       () => push(`/domains/${domain}`),
     ]));
   }

@@ -72,7 +72,7 @@ function createTestNodeBalancer(id) {
   };
 }
 
-export const genericNodeBalancer = createTestNodeBalancer(1);
+export const configsNodeBalancer = createTestNodeBalancer(1);
 
 export const noGroupNodeBalancer = {
   ...createTestNodeBalancer(2),
@@ -80,6 +80,6 @@ export const noGroupNodeBalancer = {
 };
 
 export const nodebalancers = [
-  genericNodeBalancer,
+  configsNodeBalancer,
   noGroupNodeBalancer,
 ].reduce((object, nodebalancer) => ({ ...object, [nodebalancer.id]: nodebalancer }), {});

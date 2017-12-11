@@ -1,11 +1,13 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { clients } from '~/api';
-import { updateClientThumbnail } from '~/api/clients';
+import api from '~/api';
+import { updateClientThumbnail } from '~/api/ad-hoc/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
@@ -33,21 +35,22 @@ export default class CreateOrEditApplication extends Component {
       label: props.label || '',
       redirect: props.redirect_uri || '',
       thumbnail: props.thumbnail || '',
+      public_: props.public || false,
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
-    const { label, redirect, thumbnail } = this.state;
+    const { label, redirect, thumbnail, public_ } = this.state;
 
-    const data = { label, redirect_uri: redirect };
+    const data = { label, redirect_uri: redirect, public: public_ };
     const idsPath = [id].filter(Boolean);
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => clients[id ? 'put' : 'post'](data, ...idsPath),
+      () => api.clients[id ? 'put' : 'post'](data, ...idsPath),
       ({ id }) => {
         if (thumbnail) {
           if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
@@ -69,8 +72,8 @@ export default class CreateOrEditApplication extends Component {
   }
 
   render() {
-    const { close, title, id } = this.props;
-    const { errors, label, redirect } = this.state;
+    const { close, title, id, forEdit } = this.props;
+    const { errors, label, redirect, public_ } = this.state;
 
     return (
       <FormModalBody
@@ -106,6 +109,16 @@ export default class CreateOrEditApplication extends Component {
               onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
             />
           </ModalFormGroup>
+          <ModalFormGroup id="public" label="Public" apiKey="public" errors={errors}>
+            <Input
+              name="public_"
+              id="public_"
+              type="checkbox"
+              checked={public_}
+              disabled={forEdit}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
         </div>
       </FormModalBody>
     );
@@ -120,4 +133,6 @@ CreateOrEditApplication.propTypes = {
   id: PropTypes.string,
   redirect_uri: PropTypes.string,
   thumbnail: PropTypes.string,
+  public: PropTypes.boolean,
+  forEdit: PropTypes.boolean,
 };
