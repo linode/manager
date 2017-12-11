@@ -13,7 +13,7 @@ import {
 } from '@/common';
 import { api } from '@/data';
 import { testType } from '@/data/types';
-import { testImage } from '@/data/images';
+import { testLinodeImage } from '@/data/images';
 
 
 const { types: { types } } = api;
@@ -35,7 +35,7 @@ describe('linodes/components/LinodeFromImage', function () {
     changeInput(modal, 'label', 'Ubuntu Linode');
     changeInput(modal, 'region', REGION_MAP.Asia[1]);
     changeInput(modal, 'plan', testType.id);
-    changeInput(modal, 'image', testImage.id);
+    changeInput(modal, 'image', testLinodeImage.id);
     changeInput(modal, 'backups', true);
 
     dispatch.reset();
@@ -49,7 +49,7 @@ describe('linodes/components/LinodeFromImage', function () {
           label: 'Ubuntu Linode',
           region: REGION_MAP.Asia[1],
           type: testType.id,
-          image: testImage.id,
+          image: testLinodeImage.id,
           backups_enabled: true,
         },
       }),
