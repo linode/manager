@@ -27,7 +27,7 @@ import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
-import { AddLinode, CloneLinode, RestoreLinode, LinodeFromImage } from '../components';
+import { AddLinode, CloneLinode, RestoreLinode } from '../components';
 import { TransferPool } from '../../components';
 
 
@@ -194,12 +194,9 @@ export class IndexPage extends Component {
     const addLinode = () => AddLinode.trigger(dispatch, images, types);
     const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
     const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
-    const linodeFromImage = async () => LinodeFromImage.trigger(dispatch, types,
-        await dispatch(api.images.all()));
 
     const addOptions = [
       { name: 'Create from Backup', action: restoreLinode },
-      { name: 'Create from Image', action: linodeFromImage },
       { name: 'Clone a Linode', action: cloneLinode },
     ];
 
