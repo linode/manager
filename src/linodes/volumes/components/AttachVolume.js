@@ -115,8 +115,8 @@ export default class AttachVolume extends Component {
             onChange={this.onLinodeChange}
           />
         </ModalFormGroup>
-        {linodeConfigs.length <= 1 ? null :
-          <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+        {linodeConfigs.length === 1 ? null :
+          <ModalFormGroup label="Config" id="config" apiKey="config_id" errors={errors}>
             <Select
               options={linodeConfigs}
               value={config}
