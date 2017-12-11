@@ -41,7 +41,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={() => {}}
         linode={testLinode1236}
         free={4096}
-        images={api.images}
+        images={api.images.images}
       />);
     expect(modal.find('[type="number"]').props())
       .to.have.property('min').that.equals(8);
@@ -113,7 +113,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}
-        images={api.images}
+        images={api.images.images}
       />);
 
     changeInput(modal, 'image', 'private/38');
@@ -124,8 +124,9 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     dispatch.reset();
     await modal.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
+
     expect(modal.find('#image').at(0).find('optgroup').length).to.equal(3);
-    expect(modal.find('#image').at(0).find('option').length).to.equal(6);
+    expect(modal.find('#image').at(0).find('option').length).to.equal(7);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/disks/', {

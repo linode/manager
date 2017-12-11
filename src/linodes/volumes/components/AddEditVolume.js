@@ -105,13 +105,9 @@ export default class AddEditVolume extends Component {
 
     const actions = [
       () => api.volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
+      (volume) => volume && data.linode_id && linodeActions.volumes.one(volume, linode, volume.id),
       close,
     ];
-
-    if (!id && linode !== LinodeSelect.EMPTY) {
-      actions.splice(1, 0, (volume) =>
-        linodeActions.volumes.one(volume, linode, volume.id));
-    }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
