@@ -35,7 +35,7 @@ const OBJECT_TYPE = 'linodes';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.linodes.all());
+    await dispatch(api.linodes.all());  
     await dispatch(transferPool());
   }
 
