@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import ScheduleForm from '~/linodes/linode/backups/components/ScheduleForm';
+import { ScheduleForm } from '~/linodes/linode/backups/components/ScheduleForm';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
@@ -17,13 +17,14 @@ describe('linodes/linode/backups/components/ScheduleForm', () => {
     sandbox.restore();
   });
 
-  it.skip('saves settings back to the api', async () => {
+  it('saves settings back to the api', async () => {
     const page = mount(
       <ScheduleForm
         dispatch={dispatch}
         linode={testLinode}
         window="W0"
         day="Saturday"
+        tz="US/Eastern"
       />
     );
 
