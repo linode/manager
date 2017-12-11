@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.16.2] 2017-12-11
+### Fixed
+- Changing Region in Volume attach dialog did not reset Linode Config (#2812)
+- Volume attachment API requests must use integer config\_id (#2813)
+
+### Changed
+- Image and Distro selector combined and fields renamed to match API (#2803)
+- Addresses /volumes API endpoint moving from /linode/volumes (#2803)
+
 ## [0.16.1] 2017-12-01
 ### Fixed
 - Pricing information showed `[Object Object]` in some places since 0.16.0 (#2808)

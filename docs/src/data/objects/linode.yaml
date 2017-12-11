@@ -72,10 +72,12 @@ schema:
     seeAlso: "/reference/endpoints/regions"
     description: This Linode's region.
     value: us-east-1a
-  distribution:
-    description: The distribution that this Linode booted to last.
-    type: String
-    seeAlso: "/reference/endpoints/linode/distributions"
+  image:
+    description: >
+      The image that this Linode booted to last, if known.  Currently this will
+      only display official images.
+    type: Image
+    seeAlso: "/reference/endpoints/images"
     filterable: true
   group:
     editable: true

@@ -35,7 +35,7 @@ export default class AddStackScript extends Component {
 
     const data = {
       label,
-      distributions: [DEFAULT_DISTRIBUTION],
+      images: [DEFAULT_DISTRIBUTION],
       script: '#!/bin/bash\n\n# Your script goes here.',
     };
 
