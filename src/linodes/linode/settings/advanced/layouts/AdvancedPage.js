@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
@@ -32,6 +33,7 @@ AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   linodes: PropTypes.object.isRequired,
   configsSelectedMap: PropTypes.object.isRequired,
   volumesSelectedMap: PropTypes.object.isRequired,
@@ -40,7 +42,7 @@ AdvancedPage.propTypes = {
 
 function select(state, params) {
   const { linode } = selectLinode(state, params);
-  const { distributions, linodes: { linodes } } = state.api;
+  const { distributions, images: { images }, linodes: { linodes } } = state.api;
   const volumesSelectedMap = state.select.selected[Volumes.OBJECT_TYPE] || {};
   const disksSelectedMap = state.select.selected[Disks.OBJECT_TYPE] || {};
   const configsSelectedMap = state.select.selected[Configs.OBJECT_TYPE] || {};
@@ -48,6 +50,7 @@ function select(state, params) {
     linode,
     linodes,
     distributions,
+    images,
     disksSelectedMap,
     volumesSelectedMap,
     configsSelectedMap,

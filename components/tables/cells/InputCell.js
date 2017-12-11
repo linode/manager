@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Input } from 'linode-components/forms';
 import TableCell from './TableCell';
@@ -25,7 +25,7 @@ InputCell.propTypes = {
   placeholder: PropTypes.string,
   record: PropTypes.object.isRequired,
   value: PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.number,
+    PropTypes.string,
+    PropTypes.number,
   ]),
 };

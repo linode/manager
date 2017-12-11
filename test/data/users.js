@@ -11,41 +11,70 @@ export const testUser = {
 };
 
 export const testPermissions = {
-  customer: {
-    access: true,
-    cancel: false,
-  },
   global: {
-    add_linodes: true,
-    add_nodebalancers: true,
+    account_access: 'read_only',
     add_domains: true,
+    add_images: true,
+    add_linodes: true,
+    add_longview: true,
+    add_nodebalancers: true,
+    add_stackscripts: true,
+    add_volumes: true,
+    cancel_account: false,
+    longview_subscription: true,
   },
   linode: [
     {
-      all: true,
-      access: true,
-      delete: true,
-      resize: true,
       label: 'linode1',
-      id: 1234,
+      id: 1111,
+      permissions: 'read_write',
     },
   ],
   nodebalancer: [
     {
-      all: true,
-      access: true,
-      delete: true,
       label: 'nb1',
-      id: 4321,
+      id: 2222,
+      permissions: 'read_only',
     },
   ],
   domain: [
     {
-      all: true,
-      access: true,
-      delete: true,
       label: 'domain1',
-      id: 9876,
+      id: 3333,
+      permissions: 'read_write',
+    },
+  ],
+  stackscript: [
+    {
+      label: 'stackscript1',
+      id: 4444,
+      permissions: null,
+    },
+  ],
+  longview: [
+    {
+      label: 'longview1',
+      id: 5555,
+      permissions: 'read_only',
+    },
+  ],
+  image: [
+    {
+      label: 'image1',
+      id: 6666,
+      permissions: 'read_only',
+    },
+    {
+      label: 'image2',
+      id: 7777,
+      permissions: 'read_write',
+    },
+  ],
+  volume: [
+    {
+      label: 'volume1',
+      id: 8888,
+      permissions: null,
     },
   ],
 };

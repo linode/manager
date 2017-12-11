@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { Select } from 'linode-components/forms';
@@ -16,8 +17,16 @@ export default function DistributionSelect(props) {
     vendorLower: d.vendor.toLowerCase(),
   }));
 
+  const withImages = props.images !== undefined ?
+    _.map(Object.values(props.images), i => ({
+      ...i,
+      value: i.id,
+      vendor: 'Images',
+      vendorLower: 'images',
+    })) : [];
+
   const vendorsUnsorted = _.map(
-    _.groupBy(withVendorLowerCased, 'vendorLower'),
+    _.groupBy(withVendorLowerCased.concat(withImages), 'vendorLower'),
     (v) => ({
       label: v[0].vendor,
       options: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
@@ -29,7 +38,7 @@ export default function DistributionSelect(props) {
   const options = [];
 
   if (props.allowNone) {
-    options.push({ label: 'No distribution', value: 'none' });
+    options.push({ label: 'No image', value: 'none' });
   }
 
   for (const vendorName of DISTRIBUTION_DISPLAY_ORDER) {
@@ -48,7 +57,7 @@ export default function DistributionSelect(props) {
       />
       <div>
         <small className="text-muted">
-          <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
+          <ExternalLink to="https://www.linode.com/distributions">Learn more</ExternalLink>
         </small>
       </div>
     </div>
@@ -56,7 +65,9 @@ export default function DistributionSelect(props) {
 }
 
 DistributionSelect.propTypes = {
-  ...Select.propTypes,
+  ..._.omit(Select.propTypes, 'options'),
   distributions: PropTypes.object.isRequired,
+  images: PropTypes.object,
   allowNone: PropTypes.bool,
+  options: PropTypes.array,
 };

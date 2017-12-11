@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
@@ -14,17 +15,21 @@ import {
   SubmitButton,
   Textarea,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
-import { domains, linodes, nodebalancers, volumes, tickets } from '~/api';
+import { setAnalytics, setSource } from '~/actions';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import TicketHelper from '../components/TicketHelper';
 
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
-    await Promise.all([linodes, domains, nodebalancers, volumes].map(o => dispatch(o.all())));
+    await Promise.all([
+      api.linodes, api.domains, api.nodebalancers, api.volumes,
+    ].map(o => dispatch(o.all())));
   }
 
   constructor(props) {
@@ -37,12 +42,13 @@ export class CreatePage extends Component {
       errors: {},
       loading: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Open a Ticket'));
     dispatch(setAnalytics(['tickets', 'create']));
   }
 
@@ -60,12 +66,10 @@ export class CreatePage extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tickets.post(data),
+      () => api.tickets.post(data),
       ({ id }) => push(`/support/${id}`),
     ]));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderOptionsGroup(label, field, group) {
     return {
@@ -90,6 +94,7 @@ export class CreatePage extends Component {
 
     return (
       <div className="container create-page">
+        <ChainedDocumentTitle title="Open a Ticket" />
         <header className="text-sm-left">
           <Link to="/support">Support</Link>
           <h1>Open a ticket</h1>

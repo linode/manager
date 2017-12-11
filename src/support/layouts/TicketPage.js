@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -12,11 +13,13 @@ import {
   Textarea,
   Input,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { tickets } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
-import { addTicketAttachment } from '~/api/tickets';
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { addTicketAttachment } from '~/api/ad-hoc/tickets';
+import { setAnalytics, setSource } from '~/actions';
+import { ChainedDocumentTitle } from '~/components';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './IndexPage';
@@ -36,23 +39,22 @@ AttachmentTooBigError.prototype = new Error();
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-    await dispatch(tickets.replies.all([ticketId]));
+    await dispatch(api.tickets.replies.all([ticketId]));
   }
 
   constructor() {
     super();
 
     this.state = { reply: '', attachments: [], errors: {}, loading: false };
+
+    this.onChange = onChange.bind(this);
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle(this.props.ticket.summary));
     dispatch(setAnalytics(['tickets', 'ticket']));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
     const { attachments, reply: description } = this.state;
@@ -64,7 +66,7 @@ export class TicketPage extends Component {
     ];
 
     if (description) {
-      requests.unshift(() => tickets.replies.post({ description }, [ticket.id]));
+      requests.unshift(() => api.tickets.replies.post({ description }, [ticket.id]));
     }
 
     for (let i = 0; i < attachments.length; i++) {
@@ -80,6 +82,15 @@ export class TicketPage extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
+  }
+
+  renderTicketClosed() {
+    return (
+      <Card id="ticket-closed">
+        This ticket has been closed. If you are still experiencing an issue,
+        please <Link to="/support/create">open a new ticket</Link>.
+      </Card>
+    );
   }
 
   renderTicketResponseForm() {
@@ -126,15 +137,6 @@ export class TicketPage extends Component {
     );
   }
 
-  renderTicketClosed() {
-    return (
-      <Card id="ticket-closed">
-        This ticket has been closed. If you are still experiencing an issue,
-        please <Link to="/support/create">open a new ticket</Link>.
-      </Card>
-    );
-  }
-
   render() {
     const { ticket, replies } = this.props;
     if (!ticket) {
@@ -143,6 +145,7 @@ export class TicketPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={ticket.summary} />
         <header className="main-header main-header--border">
           <div className="container clearfix">
             <div className="float-sm-left">

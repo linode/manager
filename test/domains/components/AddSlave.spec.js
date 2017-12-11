@@ -5,7 +5,9 @@ import sinon from 'sinon';
 
 import { AddSlave } from '~/domains/components';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 
 
 describe('domains/components/AddSlave', () => {
@@ -21,11 +23,8 @@ describe('domains/components/AddSlave', () => {
     AddSlave.trigger(dispatch);
     const component = mount(dispatch.firstCall.args[0].body);
 
-    const change = (name, value) =>
-      component.find({ name }).simulate('change', { target: { name, value } });
-
-    change('ips', '1;2;3;4');
-    change('domain', 'test.com');
+    changeInput(component, 'ips', '1;2;3;4', { nameOnly: true });
+    changeInput(component, 'domain', 'test.com');
 
     dispatch.reset();
     await component.find('Form').props().onSubmit();

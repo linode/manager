@@ -1,10 +1,12 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Input, ModalFormGroup } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { tokens } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -29,16 +31,16 @@ export default class EditPersonalAccessToken extends Component {
       errors: {},
       label: props.label,
     };
-  }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { label } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => tokens.put({ label }, id),
+      () => api.tokens.put({ label }, id),
       close,
     ]));
   }

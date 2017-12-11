@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -13,9 +14,10 @@ import {
 import { onChange } from 'linode-components/forms/utilities';
 
 import { setSource } from '~/actions/source';
-import { types } from '~/api';
-import { resizeLinode } from '~/api/linodes';
+import api from '~/api';
+import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 
@@ -25,7 +27,7 @@ import { selectLinode } from '../utilities';
 export class ResizePage extends Component {
   static async preload({ dispatch, getState }) {
     if (!getState().api.types.ids.length) {
-      await dispatch(types.all());
+      await dispatch(api.types.all());
     }
   }
 
@@ -50,18 +52,18 @@ export class ResizePage extends Component {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => resizeLinode(linode.id, type)],
-      ['type'],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => resizeLinode(linode.id, type),
     ]));
   }
 
   render() {
-    const { types, linode: { type: { id: currentType } } } = this.props;
+    const { types, linode: { label, type: { id: currentType } } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Resize" />}>
+        <ChainedDocumentTitle title="Resize" />
         <Form
           onSubmit={this.onSubmit}
           analytics={{ title: 'Resize Linode' }}

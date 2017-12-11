@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -14,9 +15,10 @@ import { EmitEvent } from 'linode-components/utils';
 
 import { hideModal, showModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import { clients as api } from '~/api';
-import { resetSecret } from '~/api/clients';
+import api from '~/api';
+import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { API_ROOT } from '~/constants';
 import { DefaultClientThumb } from '~/assets';
 import { confirmThenDelete } from '~/utilities';
@@ -29,7 +31,7 @@ const OBJECT_TYPE = 'clients';
 
 export class MyAPIClientsPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.clients.all());
   }
 
   constructor(props) {
@@ -38,17 +40,26 @@ export class MyAPIClientsPage extends Component {
     this.state = { filter: '' };
   }
 
-  thumbnailSrc(client) {
-    if (client.thumbnail_url) {
-      return API_ROOT.concat(client.thumbnail_url);
-    }
-    return DefaultClientThumb;
+  clientLabel(client) {
+    return client.client ? client.client.label : client.label;
+  }
+
+  createDropdownGroups = (client) => {
+    const { dispatch } = this.props;
+    const editClient = { ...client, forEdit: true };
+    const groups = [
+      { elements: [{ name: 'Edit', action: () =>
+        CreateOrEditApplication.trigger(dispatch, editClient) }] },
+      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(editClient) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteClients(editClient) }] },
+    ];
+    return groups;
   }
 
   deleteClients = confirmThenDelete(
     this.props.dispatch,
     'client',
-    api.delete,
+    api.clients.delete,
     OBJECT_TYPE).bind(this)
 
   resetAction = (client) => {
@@ -69,24 +80,16 @@ export class MyAPIClientsPage extends Component {
             'client secret', 'reset', secret, () => dispatch(hideModal())));
         }}
       >
-        Are you sure you want to reset <strong>{client.label}</strong>'s secret?
+        Are you sure you want to reset <strong>{client.label}</strong>&apos;s secret?
       </ConfirmModalBody>
     ));
   }
 
-  createDropdownGroups = (client) => {
-    const { dispatch } = this.props;
-    const groups = [
-      { elements: [{ name: 'Edit', action: () =>
-        CreateOrEditApplication.trigger(dispatch, client) }] },
-      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteClients(client) }] },
-    ];
-    return groups;
-  }
-
-  clientLabel(client) {
-    return client.client ? client.client.label : client.label;
+  thumbnailSrc(client) {
+    if (client.thumbnail_url) {
+      return API_ROOT.concat(client.thumbnail_url);
+    }
+    return DefaultClientThumb;
   }
 
   renderClients = () => {
@@ -158,6 +161,7 @@ export class MyAPIClientsPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="My API Clients" />
         <header className="NavigationHeader clearfix">
           <PrimaryButton
             onClick={() => CreateOrEditApplication.trigger(dispatch)}

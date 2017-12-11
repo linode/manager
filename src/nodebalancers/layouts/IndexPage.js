@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -19,11 +20,12 @@ import {
 } from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
-import { nodebalancers as api } from '~/api';
-import { transferPool } from '~/api/account';
+import api from '~/api';
+import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
@@ -34,7 +36,7 @@ const OBJECT_TYPE = 'nodebalancers';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.nodebalancers.all());
     await dispatch(transferPool());
   }
 
@@ -47,14 +49,13 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('NodeBalancers'));
     dispatch(setAnalytics(['nodebalancers']));
   }
 
   deleteNodeBalancers = confirmThenDelete(
     this.props.dispatch,
     'NodeBalancer',
-    api.delete,
+    api.nodebalancers.delete,
     OBJECT_TYPE).bind(this)
 
   render() {
@@ -122,6 +123,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="NodeBalancers" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">NodeBalancers</h1>

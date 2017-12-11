@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -10,16 +11,18 @@ import {
   FormSummary,
   SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { setSource, setTitle } from '~/actions';
-import { account } from '~/api';
+import { setSource } from '~/actions';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.account).length) {
-      await dispatch(account.one());
+      await dispatch(api.account.one());
     }
   }
 
@@ -27,34 +30,33 @@ export class IndexPage extends Component {
     super(props);
 
     this.state = {
-      networkHelper: !!props.account.network_helper,
+      networkHelper: props.account.network_helper ? 'ON' : 'OFF',
       errors: {},
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Account Settings'));
   }
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { networkHelper: network_helper } = this.state;
+    const { networkHelper } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => account.put({ network_helper })],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => api.account.put({ network_helper: networkHelper === 'ON' }),
     ]));
   }
-
-  onChange = ({ target: { name, value, type, checked } }) =>
-    this.setState({ [name]: type === 'checkbox' ? checked : value === 'true' })
 
   render() {
     const { networkHelper, loading, errors } = this.state;
 
     return (
       <div>
+        <ChainedDocumentTitle title="Account Settings" />
         <header className="main-header main-header--border">
           <div className="container">
             <h1>Account Settings</h1>
@@ -72,15 +74,15 @@ export class IndexPage extends Component {
                   <Checkboxes>
                     <Radio
                       name="networkHelper"
-                      checked={!networkHelper}
-                      value="false"
+                      checked={networkHelper === 'OFF'}
+                      value="OFF"
                       label="OFF - This is the legacy / old account behavior"
                       onChange={this.onChange}
                     />
                     <Radio
                       name="networkHelper"
-                      checked={networkHelper}
-                      value="true"
+                      checked={networkHelper === 'ON'}
+                      value="ON"
                       onChange={this.onChange}
                       label="ON  - This is new account behavior. You probably want this."
                     />

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -12,9 +13,9 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { setSource, setTitle } from '~/actions';
+import { setSource } from '~/actions';
 
 import { selectLinode } from '../../utilities';
 
@@ -37,8 +38,7 @@ export class DisplayPage extends Component {
     const { group, label } = this.state;
 
     const requests = [
-      () => linodes.put({ group, label }, id),
-      () => setTitle(label),
+      () => api.linodes.put({ group, label }, id),
     ];
 
     if (oldLabel !== label) {

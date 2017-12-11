@@ -62,6 +62,14 @@ export function getVolumeRedirectUrl() {
   return getVolumesRedirectUrl();
 }
 
+export function getImagesRedirectUrl() {
+  return '/images';
+}
+
+export function getImageRedirectUrl() {
+  return getImagesRedirectUrl();
+}
+
 export function getAccountRedirectUrl() {
   return '/account';
 }
@@ -157,6 +165,12 @@ const EventTypeMap = {
     pastTenseAction: 'resized',
     pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeAdvancedRedirectUrl,
+  },
+  disk_imagize: {
+    presentTenseAction: 'Creating an image from ',
+    pastTenseAction: 'scheduled for image creation',
+    pastTensePrefix: 'Disk on',
+    redirectUrl: getImagesRedirectUrl,
   },
 
   linode_snapshot: {
@@ -304,6 +318,17 @@ const EventTypeMap = {
     presentTenseAction: 'Cloning',
     pastTenseAction: 'cloned',
     redirectUrl: getVolumesRedirectUrl,
+  },
+
+  image_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getImageRedirectUrl,
+  },
+  image_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getImagesRedirectUrl,
   },
 
   credit_card_updated: {

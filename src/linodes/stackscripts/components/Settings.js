@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import {
   Checkbox,
@@ -11,7 +12,7 @@ import {
 } from 'linode-components/forms';
 import * as utilities from 'linode-components/forms/utilities';
 
-import { stackscripts } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
 
@@ -38,7 +39,7 @@ export default class Settings extends Component {
       label,
       description,
       isPublic: isPublic || false,
-      distributions: distributions.map(d => d.id),
+      distributions: distributions,
     });
   }
 
@@ -53,7 +54,8 @@ export default class Settings extends Component {
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => stackscripts.put(data, id),
+      () => api.stackscripts.put(data, id),
+      () => this.setState({ distributions: data.distributions }),
     ]));
   }
 

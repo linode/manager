@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
@@ -6,7 +7,7 @@ import { onChange } from 'linode-components/forms/utilities';
 import { FormModalBody } from 'linode-components/modals';
 
 import { hideModal, showModal } from '~/actions/modal';
-import { linodes } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { RegionSelect } from '~/components';
 
@@ -56,7 +57,7 @@ export default class AddLinode extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
+      () => api.linodes.post(data),
       ({ label }) => push(`/linodes/${label}`),
     ]));
   }
@@ -85,7 +86,7 @@ export default class AddLinode extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup
-            label="Distribution"
+            label="Image"
             id="distribution"
             apiKey="distribution"
             errors={errors}

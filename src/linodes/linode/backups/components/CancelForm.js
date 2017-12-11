@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
-import { cancelBackup } from '~/api/backups';
+import { cancelBackup } from '~/api/ad-hoc/backups';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
 

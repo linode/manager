@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
@@ -9,8 +10,9 @@ import { TableCell, LinkCell } from 'linode-components/tables/cells';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
-import { tickets } from '~/api';
+import { setAnalytics, setSource } from '~/actions';
+import api from '~/api';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
@@ -54,27 +56,13 @@ export function renderTicketCreationInfo(ticket) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(tickets.all());
+    await dispatch(api.tickets.all());
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Support'));
     dispatch(setAnalytics(['tickets']));
-  }
-
-  renderUpdatedByCell({ record: ticket }) {
-    return (
-      <TableCell column={{}} record={ticket}>
-        {!ticket.updated_by ? <span>No updates</span> : (
-          <span>
-            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
-            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
-          </span>
-        )}
-      </TableCell>
-    );
   }
 
   renderTickets(tickets) {
@@ -144,11 +132,25 @@ export class IndexPage extends Component {
     );
   }
 
+  renderUpdatedByCell({ record: ticket }) {
+    return (
+      <TableCell column={{}} record={ticket}>
+        {!ticket.updated_by ? <span>No updates</span> : (
+          <span>
+            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
+            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
+          </span>
+        )}
+      </TableCell>
+    );
+  }
+
   render() {
     const { tickets } = this.props;
 
     return (
       <div className="PrimaryPage container">
+        <ChainedDocumentTitle title="Support" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Support</h1>

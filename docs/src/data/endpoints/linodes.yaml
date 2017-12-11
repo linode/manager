@@ -20,7 +20,9 @@ endpoints:
             curl -H "Authorization: Bearer $TOKEN" \
                 https://$api_root/$version/linode/instances
           python: |
-            my_linodes = client.linode.get_instances()
+            my_linodes 
+            
+            = client.linode.get_instances()
       POST:
         money: true
         oauth: linodes:create
@@ -50,7 +52,7 @@ endpoints:
           distribution:
             optional: true
             description: >
-              The Distribution to deploy this Linode with.  May not be included
+              The ID of a Distribution to deploy this Linode with.  May not be included
               if 'backup_id' or 'image' is sent.
             type: String
             deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
@@ -197,12 +199,13 @@ endpoints:
           distribution:
             optional: true
             description: >
-              Optional distribution to deploy with this disk.
+              Optional ID of a distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
               is created.</li></ul> You may not provide distribution if image is provided.
             type: String
             deprecated: This parameter is deprecated and will be removed before the end of the Beta Period.
               The same value can be passed to "image" instead.  See the changelog for more information.
+
           image:
             optional: true
             description: >
@@ -463,12 +466,14 @@ endpoints:
           run_level:
             optional: true
             description: >
-              Sets the run level for Linode boot. Defaults to "default".
+              Sets the run level for Linode boot. One of "default",
+              "single" (for single user mode), or "binbash".
             type: Enum
           virt_mode:
             optional: true
             description: >
-              Controls the virtualization mode. Defaults to "paravirt".
+              Controls the virtualization mode. One of "paravirt" (default)
+              or "fullvirt".
             type: Enum
           helpers:
             type: Object

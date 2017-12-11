@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -12,8 +13,8 @@ import {
   Input,
 } from 'linode-components/forms';
 
-import { setSource, setTitle } from '~/actions';
-import { nodebalancers } from '~/api';
+import { setSource } from '~/actions';
+import api from '~/api';
 import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
 
@@ -39,9 +40,8 @@ export class SettingsPage extends Component {
     const { connThrottle, label } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
+      () => api.nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
       () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
-      () => setTitle(label),
     ]));
   }
 

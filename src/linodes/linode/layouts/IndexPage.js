@@ -1,14 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { setAnalytics, setTitle } from '~/actions';
-import { linodes, types } from '~/api';
+import { setAnalytics } from '~/actions';
+import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { GroupLabel } from '~/components';
+import { ChainedDocumentTitle, GroupLabel } from '~/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 
@@ -19,8 +20,8 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const requests = [
-      types.one([type.id]),
-      linodes.configs.all([id]),
+      api.types.one([type.id]),
+      api.linodes.configs.all([id]),
     ];
 
     await Promise.all(requests.map(dispatch));
@@ -35,8 +36,7 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, linode } = this.props;
-    dispatch(setTitle(linode.label));
+    const { dispatch } = this.props;
     dispatch(setAnalytics(['linodes', 'linode']));
   }
 
@@ -57,6 +57,7 @@ export class IndexPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title={linode.label} />
         <header className="main-header">
           <div className="container">
             <div className="float-sm-left">

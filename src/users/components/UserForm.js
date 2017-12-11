@@ -1,14 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
 import {
   Form, FormGroup, FormGroupError, PasswordInput, Input, Checkboxes, Radio, SubmitButton,
 } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
-import { users } from '~/api';
-import { setTitle } from '~/actions/title';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { actions } from '~/api/configs/users';
+import { actions } from '~/api/generic/users';
 import { FormSummary } from 'linode-components/forms';
 
 
@@ -19,22 +20,21 @@ export default class UserForm extends Component {
     this.state = {
       username: props.user.username,
       email: props.user.email,
-      restricted: props.user.restricted,
+      restricted: props.user.restricted ? 'yes' : 'no',
       password: '',
       loading: false,
       errors: {},
     };
-  }
 
-  onChange = ({ target: { name, value, type } }) =>
-    this.setState({ [name]: type === 'radio' ? value === 'true' : value })
+    this.onChange = onChange.bind(this);
+  }
 
   onSubmit = () => {
     const { dispatch, user: { username: oldUsername } } = this.props;
     const data = {
       username: this.state.username,
       email: this.state.email,
-      restricted: this.state.restricted,
+      restricted: this.state.restricted === 'yes',
       password: this.state.password,
     };
 
@@ -49,11 +49,10 @@ export default class UserForm extends Component {
     // when you save an existing user, but it isn't currently causing any
     // problems
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users[creating ? 'post' : 'put'](data, ...idsPath),
+      () => api.users[creating ? 'post' : 'put'](data, ...idsPath),
       (user) => creating ? null : actions.one(user),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(oldUsername),
-      () => creating ? null : setTitle(data.username),
     ]));
   }
 
@@ -113,16 +112,16 @@ export default class UserForm extends Component {
               <Radio
                 id="restricted"
                 name="restricted"
-                value
-                checked={restricted}
+                value="yes"
+                checked={restricted === 'yes'}
                 onChange={this.onChange}
                 label="Yes - this user can only do what I specify"
               />
               <Radio
                 id="unrestricted"
                 name="restricted"
-                value={false}
-                checked={!restricted}
+                value="no"
+                checked={restricted === 'no'}
                 onChange={this.onChange}
                 label="No - this user has no access restrictions"
               />

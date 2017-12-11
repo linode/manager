@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.15.3",
+  "version": "0.16.1",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -21,12 +21,6 @@
   },
   "keywords": [],
   "author": "Linode",
-  "contributors": [
-    {
-      "name": "Phil Eaton",
-      "email": "peaton@linode.com"
-    }
-  ],
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -120,6 +114,7 @@
     "react-redux": "^4.0.6",
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.5",
+    "react-side-effect": "^1.1.3",
     "react-tabs": "^0.7.0",
     "react-tooltip": "^3.3.0",
     "redux": "^3.0.5",

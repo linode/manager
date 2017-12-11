@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { PrimaryButton } from 'linode-components/buttons';
@@ -15,10 +16,11 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
-import { setAnalytics, setSource, setTitle } from '~/actions';
+import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
-import { domains } from '~/api';
+import api from '~/api';
 import { transform } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
 
@@ -29,7 +31,7 @@ const OBJECT_TYPE = 'domains';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(domains.all());
+    await dispatch(api.domains.all());
   }
 
   constructor(props) {
@@ -41,14 +43,13 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    dispatch(setTitle('Domains'));
     dispatch(setAnalytics(['domains']));
   }
 
   deleteDomains = confirmThenDelete(
     this.props.dispatch,
     'domain',
-    domains.delete,
+    api.domains.delete,
     OBJECT_TYPE,
     'domain').bind(this)
 
@@ -71,6 +72,7 @@ export class IndexPage extends Component {
 
     return (
       <List>
+        <ChainedDocumentTitle title="Domains" />
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl

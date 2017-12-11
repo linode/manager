@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -8,8 +9,9 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { profile } from '~/api';
+import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 
 export class NotificationsPage extends Component {
@@ -26,7 +28,7 @@ export class NotificationsPage extends Component {
     const { dispatch, enabled } = this.props;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => profile.put({ email_notifications: !enabled }),
+      () => api.profile.put({ email_notifications: !enabled }),
     ]));
   }
 
@@ -39,6 +41,7 @@ export class NotificationsPage extends Component {
 
     return (
       <div>
+        <ChainedDocumentTitle title="Notifications" />
         <Card header={<CardHeader title="Change email settings" />}>
           <Form
             onSubmit={this.onSubmit}

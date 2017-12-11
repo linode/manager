@@ -1,9 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
+import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
+import { ChainedDocumentTitle } from '~/components';
 
 import { RescueMode, ResetRootPassword } from '../components';
 import { selectLinode } from '../utilities';
@@ -13,8 +15,8 @@ export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await Promise.all([
-      linodes.disks,
-      linodes.volumes,
+      api.linodes.disks,
+      api.linodes.volumes,
     ].map(o => dispatch(o.all([id]))));
   }
 
@@ -28,6 +30,7 @@ export class RescuePage extends Component {
 
     return (
       <div className="row">
+        <ChainedDocumentTitle title="Rescue" />
         <section className="col-lg-6 col-md-12 col-sm-12">
           <RescueMode dispatch={dispatch} linode={linode} />
         </section>

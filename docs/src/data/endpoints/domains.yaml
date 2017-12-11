@@ -35,7 +35,7 @@ endpoints:
             type: String
           type:
             description: >
-              Domain type as master or slave.
+              Domain type. Can be "master" or "slave".
             type: Enum
           soa_email:
             description: >
@@ -74,7 +74,7 @@ endpoints:
           status:
             optional: true
             description: >
-              The status of the Domain; it can be disabled, active, or edit_mode.
+              The status of the Domain. Can be "disabled", "active", or "edit_mode".
             type: Enum
           master_ips:
             optional: true
@@ -214,7 +214,8 @@ endpoints:
         params:
           type:
             description: >
-              Type of record.
+              Type of record. Can be one of "A", "AAAA", "NS", "MX",
+              "CNAME", "TXT", "SRV", "PTR", or "CAA".
             type: Enum
           name:
             optional: true
@@ -260,8 +261,8 @@ endpoints:
           tag:
             optional: true
             description: >
-              The tag attribute for a CAA record. One of issue, issuewild,
-              iodef. Ignored on other record types.
+              The tag attribute for a CAA record. One of "issue", "issuewild",
+              or "iodef". Ignored on other record types.
             type: Enum
           ttl:
             optional: true
