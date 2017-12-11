@@ -1,0 +1,2242 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`linodes/linode/layouts/ResizePage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <ResizePage
+    dispatch={[Function]}
+    linode={
+      Object {
+        "_backups": Object {
+          "daily": Object {
+            "availability": "daily",
+            "configs": Array [
+              "Ubuntu Disk",
+            ],
+            "created": "2017-01-31T07:28:52",
+            "disks": Array [
+              Object {
+                "filesystem": "ext4",
+                "label": "Ubuntu 15.10 Disk",
+                "size": 2330,
+              },
+              Object {
+                "filesystem": "swap",
+                "label": "512 MB Swap Image",
+                "size": 0,
+              },
+            ],
+            "finished": "2017-01-31T07:30:03",
+            "id": 54782214,
+            "label": null,
+            "region": "us-east-1a",
+            "status": "successful",
+            "type": "auto",
+            "updated": "2017-01-31T12:32:01",
+          },
+          "snapshot": Object {
+            "current": Object {
+              "availability": "unavailable",
+              "configs": Array [
+                "Some config",
+              ],
+              "created": "2017-01-31T21:50:42",
+              "disks": Array [
+                Object {
+                  "filesystem": "ext4",
+                  "label": "Ubuntu 15.10 Disk",
+                  "size": 2330,
+                },
+                Object {
+                  "filesystem": "swap",
+                  "label": "512 MB Swap Image",
+                  "size": 0,
+                },
+              ],
+              "finished": "2017-01-31T21:51:51",
+              "id": 54782236,
+              "label": "the label",
+              "region": "us-east-1a",
+              "status": "successful",
+              "type": "snapshot",
+              "updated": "2017-01-31T21:51:51",
+            },
+            "in_progress": null,
+          },
+          "weekly": Array [],
+        },
+        "_configs": Object {
+          "configs": Object {
+            "12345": Object {
+              "comments": "Test comments",
+              "created": "2015-09-29 11:21:38 +0000",
+              "devices": Object {
+                "sda": Object {
+                  "disk_id": 12345,
+                },
+                "sdb": Object {
+                  "disk_id": 12346,
+                },
+                "sdc": null,
+                "sdd": null,
+                "sde": null,
+                "sdf": null,
+                "sdg": null,
+                "sdh": null,
+              },
+              "helpers": Object {
+                "devtmpfs_automount": false,
+                "distro": true,
+                "modules_dep": true,
+                "network": true,
+                "updatedb_disabled": true,
+              },
+              "id": 12345,
+              "initrd": "",
+              "kernel": "linode/latest_64",
+              "label": "Test config",
+              "memory_limit": 1024,
+              "root_device": "/dev/sda",
+              "run_level": "default",
+              "updated": "2015-09-29 11:21:38 +0000",
+              "virt_mode": "paravirt",
+            },
+          },
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 1,
+        },
+        "_disks": Object {
+          "disks": Object {
+            "12345": Object {
+              "created": "2016-08-09T19:47:11",
+              "filesystem": "ext4",
+              "id": 12345,
+              "label": "Arch Linux 2015.08 Disk",
+              "size": 6144,
+              "updated": "2016-08-09T19:47:11",
+            },
+            "12346": Object {
+              "created": "2016-08-09T19:47:11",
+              "filesystem": "swap",
+              "id": 12346,
+              "label": "Swap Disk",
+              "size": 6144,
+              "updated": "2016-08-09T19:47:11",
+            },
+          },
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 2,
+        },
+        "_ips": Object {
+          "2600:3c03::f03c:91ff:fe0a:1": Object {
+            "address": "2600:3c03::f03c:91ff:fe0a:1",
+            "gateway": "fe80::1",
+            "key": "2600:3c03::f03c:91ff:fe0a:1",
+            "linode_id": 1234,
+            "prefix": "64",
+            "rdns": "li1-1.members.linode.com",
+            "type": "slaac",
+            "version": "ipv6",
+          },
+          "97.107.143.0": Object {
+            "address": "97.107.143.0",
+            "gateway": "97.107.143.0",
+            "key": "97.107.143.0",
+            "linode_id": 1234,
+            "prefix": 24,
+            "rdns": "li1-1.members.linode.com",
+            "type": "public",
+            "version": "ipv4",
+          },
+          "97.107.143.2": Object {
+            "address": "97.107.143.2",
+            "gateway": "97.107.143.0",
+            "key": "97.107.143.2",
+            "linode_id": 1234,
+            "prefix": 17,
+            "rdns": "li1-1.members.linode.com",
+            "type": "private",
+            "version": "ipv4",
+          },
+          "fe80::f03c:91ff:fe0a:181f": Object {
+            "address": "fe80::f03c:91ff:fe0a:181f",
+            "key": "fe80::f03c:91ff:fe0a:181f",
+            "linode_id": 1234,
+            "type": "link-local",
+            "version": "ipv6",
+          },
+        },
+        "_polling": false,
+        "_shared": Array [],
+        "_stats": Object {
+          "cpu": Array [
+            Array [
+              1490378700000,
+              1.67,
+            ],
+          ],
+          "io": Object {
+            "io": Array [
+              Array [
+                1490379000000,
+                0.91,
+              ],
+            ],
+            "swap": Array [
+              Array [
+                1490378100000,
+                0,
+              ],
+            ],
+          },
+          "netv4": Object {
+            "in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+          },
+          "netv6": Object {
+            "in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+          },
+        },
+        "_volumes": Object {
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 1,
+          "volumes": Object {
+            "38": Object {
+              "created": "2017-08-08T13:55:16",
+              "id": 38,
+              "label": "test",
+              "linode_id": null,
+              "region": "us-east-1a",
+              "size": 20,
+              "status": "active",
+              "updated": "2017-08-08T04:00:00",
+            },
+          },
+        },
+        "alerts": Object {
+          "cpu": 90,
+          "io": 5000,
+          "network_in": 5,
+          "network_out": 5,
+          "tranfer_quota": 80,
+        },
+        "backups": Object {
+          "enabled": true,
+          "schedule": Object {
+            "day": "Monday",
+            "window": "W10",
+          },
+        },
+        "created": "2016-07-06T16:47:27",
+        "disk": 20480,
+        "distribution": Object {
+          "id": "linode/ubuntu15.10",
+          "label": "Ubuntu 15.10",
+          "vendor": "Ubuntu",
+        },
+        "group": "Test Group",
+        "hypervisor": "kvm",
+        "id": 1234,
+        "ipv4": Array [
+          "97.107.143.0",
+          "97.107.143.1",
+        ],
+        "ipv6": "2600:3c03::f03c:91ff:fe0a:0",
+        "label": "test-linode",
+        "memory": 2048,
+        "region": "us-east-1a",
+        "status": "running",
+        "type": Object {
+          "_polling": false,
+          "addons": Object {
+            "backups": Object {
+              "price": Object {
+                "monthly": 2.5,
+              },
+            },
+          },
+          "class": "standard",
+          "disk": 24576,
+          "id": "linode2048.5",
+          "label": "Linode 2048",
+          "memory": 2048,
+          "network_out": 125,
+          "price": Object {
+            "hourly": 0.015,
+            "monthly": 10,
+          },
+          "service_type": "linode",
+          "transfer": 2000,
+          "vcpus": 2,
+        },
+        "vcpus": 2,
+      }
+    }
+    types={
+      Object {
+        "ids": Array [
+          "g5-nanode-1",
+          "linode1024.5",
+          "linode2048.5",
+          "g5-highmem-1",
+        ],
+        "pagesFetched": Array [
+          1,
+        ],
+        "plural": "types",
+        "singular": "type",
+        "totalPages": 1,
+        "totalResults": 4,
+        "types": Object {
+          "g5-highmem-1": Object {
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 5,
+                },
+              },
+            },
+            "class": "highmem",
+            "disk": 20480,
+            "id": "g5-highmem-1",
+            "label": "Linode 16384",
+            "memory": 16384,
+            "network_out": 1000,
+            "price": Object {
+              "hourly": 0.09,
+              "monthly": 60,
+            },
+            "transfer": 5000,
+            "vcpus": 1,
+          },
+          "g5-nanode-1": Object {
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2,
+                },
+              },
+            },
+            "class": "nanode",
+            "disk": 20480,
+            "id": "g5-nanode-1",
+            "label": "Linode 1024",
+            "memory": 1024,
+            "network_out": 1000,
+            "price": Object {
+              "hourly": 0.0075,
+              "monthly": 5,
+            },
+            "transfer": 1000,
+            "vcpus": 1,
+          },
+          "linode1024.5": Object {
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode1024.5",
+            "label": "Linode 1024",
+            "memory": 1024,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.0075,
+              "monthly": 5,
+            },
+            "service_type": "linode",
+            "transfer": 1000,
+            "vcpus": 1,
+          },
+          "linode2048.5": Object {
+            "_polling": false,
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2.5,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode2048.5",
+            "label": "Linode 2048",
+            "memory": 2048,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.015,
+              "monthly": 10,
+            },
+            "service_type": "linode",
+            "transfer": 2000,
+            "vcpus": 2,
+          },
+        },
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Resize"
+        />,
+        <Form
+          analytics={
+            Object {
+              "title": "Resize Linode",
+            }
+          }
+          className=""
+          noSubmitEvent={false}
+          onSubmit={[Function]}
+        >
+          <FormGroup
+            className="row"
+          >
+            <label
+              className="col-sm-3 col-form-label"
+            >
+              Current Plan
+            </label>
+            <div
+              className="col-sm-9"
+            >
+              <Input
+                className=""
+                disabled={true}
+                value="Linode 2G"
+              />
+            </div>
+          </FormGroup>
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="type"
+          >
+            <label
+              className="col-sm-3 col-form-label"
+            >
+              New Plan
+            </label>
+            <div
+              className="col-sm-9"
+            >
+              <PlanSelect
+                id="type"
+                name="type"
+                onChange={[Function]}
+                plans={
+                  Object {
+                    "g5-highmem-1": Object {
+                      "addons": Object {
+                        "backups": Object {
+                          "price": Object {
+                            "monthly": 5,
+                          },
+                        },
+                      },
+                      "class": "highmem",
+                      "disk": 20480,
+                      "id": "g5-highmem-1",
+                      "label": "Linode 16384",
+                      "memory": 16384,
+                      "network_out": 1000,
+                      "price": Object {
+                        "hourly": 0.09,
+                        "monthly": 60,
+                      },
+                      "transfer": 5000,
+                      "vcpus": 1,
+                    },
+                    "g5-nanode-1": Object {
+                      "addons": Object {
+                        "backups": Object {
+                          "price": Object {
+                            "monthly": 2,
+                          },
+                        },
+                      },
+                      "class": "nanode",
+                      "disk": 20480,
+                      "id": "g5-nanode-1",
+                      "label": "Linode 1024",
+                      "memory": 1024,
+                      "network_out": 1000,
+                      "price": Object {
+                        "hourly": 0.0075,
+                        "monthly": 5,
+                      },
+                      "transfer": 1000,
+                      "vcpus": 1,
+                    },
+                    "linode1024.5": Object {
+                      "addons": Object {
+                        "backups": Object {
+                          "price": Object {
+                            "monthly": 2,
+                          },
+                        },
+                      },
+                      "class": "standard",
+                      "disk": 24576,
+                      "id": "linode1024.5",
+                      "label": "Linode 1024",
+                      "memory": 1024,
+                      "network_out": 125,
+                      "price": Object {
+                        "hourly": 0.0075,
+                        "monthly": 5,
+                      },
+                      "service_type": "linode",
+                      "transfer": 1000,
+                      "vcpus": 1,
+                    },
+                    "linode2048.5": Object {
+                      "_polling": false,
+                      "addons": Object {
+                        "backups": Object {
+                          "price": Object {
+                            "monthly": 2.5,
+                          },
+                        },
+                      },
+                      "class": "standard",
+                      "disk": 24576,
+                      "id": "linode2048.5",
+                      "label": "Linode 2048",
+                      "memory": 2048,
+                      "network_out": 125,
+                      "price": Object {
+                        "hourly": 0.015,
+                        "monthly": 10,
+                      },
+                      "service_type": "linode",
+                      "transfer": 2000,
+                      "vcpus": 2,
+                    },
+                  }
+                }
+                value="linode2048.5"
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={false}
+                name="type"
+              />
+            </div>
+          </FormGroup>
+          <FormGroup
+            className="row"
+          >
+            <div
+              className="col-sm-9 offset-sm-3"
+            >
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Resizing"
+              >
+                Resize
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Linode is being resized."
+              />
+            </div>
+          </FormGroup>
+        </Form>,
+      ],
+      "className": "",
+      "header": <CardHeader
+        title="Resize"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Resize",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "analytics": Object {
+            "title": "Resize Linode",
+          },
+          "children": Array [
+            <FormGroup
+              className="row"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+              >
+                Current Plan
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <Input
+                  className=""
+                  disabled={true}
+                  value="Linode 2G"
+                />
+              </div>
+            </FormGroup>,
+            <FormGroup
+              className="row"
+              errors={Object {}}
+              name="type"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+              >
+                New Plan
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <PlanSelect
+                  id="type"
+                  name="type"
+                  onChange={[Function]}
+                  plans={
+                    Object {
+                      "g5-highmem-1": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 5,
+                            },
+                          },
+                        },
+                        "class": "highmem",
+                        "disk": 20480,
+                        "id": "g5-highmem-1",
+                        "label": "Linode 16384",
+                        "memory": 16384,
+                        "network_out": 1000,
+                        "price": Object {
+                          "hourly": 0.09,
+                          "monthly": 60,
+                        },
+                        "transfer": 5000,
+                        "vcpus": 1,
+                      },
+                      "g5-nanode-1": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2,
+                            },
+                          },
+                        },
+                        "class": "nanode",
+                        "disk": 20480,
+                        "id": "g5-nanode-1",
+                        "label": "Linode 1024",
+                        "memory": 1024,
+                        "network_out": 1000,
+                        "price": Object {
+                          "hourly": 0.0075,
+                          "monthly": 5,
+                        },
+                        "transfer": 1000,
+                        "vcpus": 1,
+                      },
+                      "linode1024.5": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2,
+                            },
+                          },
+                        },
+                        "class": "standard",
+                        "disk": 24576,
+                        "id": "linode1024.5",
+                        "label": "Linode 1024",
+                        "memory": 1024,
+                        "network_out": 125,
+                        "price": Object {
+                          "hourly": 0.0075,
+                          "monthly": 5,
+                        },
+                        "service_type": "linode",
+                        "transfer": 1000,
+                        "vcpus": 1,
+                      },
+                      "linode2048.5": Object {
+                        "_polling": false,
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2.5,
+                            },
+                          },
+                        },
+                        "class": "standard",
+                        "disk": 24576,
+                        "id": "linode2048.5",
+                        "label": "Linode 2048",
+                        "memory": 2048,
+                        "network_out": 125,
+                        "price": Object {
+                          "hourly": 0.015,
+                          "monthly": 10,
+                        },
+                        "service_type": "linode",
+                        "transfer": 2000,
+                        "vcpus": 2,
+                      },
+                    }
+                  }
+                  value="linode2048.5"
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={false}
+                  name="type"
+                />
+              </div>
+            </FormGroup>,
+            <FormGroup
+              className="row"
+            >
+              <div
+                className="col-sm-9 offset-sm-3"
+              >
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Resizing"
+                >
+                  Resize
+                </SubmitButton>
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="Linode is being resized."
+                />
+              </div>
+            </FormGroup>,
+          ],
+          "className": "",
+          "noSubmitEvent": false,
+          "onSubmit": [Function],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <label
+                  className="col-sm-3 col-form-label"
+                >
+                  Current Plan
+                </label>,
+                <div
+                  className="col-sm-9"
+                >
+                  <Input
+                    className=""
+                    disabled={true}
+                    value="Linode 2G"
+                  />
+                </div>,
+              ],
+              "className": "row",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Current Plan",
+                  "className": "col-sm-3 col-form-label",
+                },
+                "ref": null,
+                "rendered": "Current Plan",
+                "type": "label",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <Input
+                    className=""
+                    disabled={true}
+                    value="Linode 2G"
+                  />,
+                  "className": "col-sm-9",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "disabled": true,
+                    "value": "Linode 2G",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                "type": "div",
+              },
+            ],
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <label
+                  className="col-sm-3 col-form-label"
+                >
+                  New Plan
+                </label>,
+                <div
+                  className="col-sm-9"
+                >
+                  <PlanSelect
+                    id="type"
+                    name="type"
+                    onChange={[Function]}
+                    plans={
+                      Object {
+                        "g5-highmem-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 5,
+                              },
+                            },
+                          },
+                          "class": "highmem",
+                          "disk": 20480,
+                          "id": "g5-highmem-1",
+                          "label": "Linode 16384",
+                          "memory": 16384,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.09,
+                            "monthly": 60,
+                          },
+                          "transfer": 5000,
+                          "vcpus": 1,
+                        },
+                        "g5-nanode-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "nanode",
+                          "disk": 20480,
+                          "id": "g5-nanode-1",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode1024.5": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode1024.5",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "service_type": "linode",
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode2048.5": Object {
+                          "_polling": false,
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2.5,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode2048.5",
+                          "label": "Linode 2048",
+                          "memory": 2048,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.015,
+                            "monthly": 10,
+                          },
+                          "service_type": "linode",
+                          "transfer": 2000,
+                          "vcpus": 2,
+                        },
+                      }
+                    }
+                    value="linode2048.5"
+                  />
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={false}
+                    name="type"
+                  />
+                </div>,
+              ],
+              "className": "row",
+              "errors": Object {},
+              "name": "type",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "New Plan",
+                  "className": "col-sm-3 col-form-label",
+                },
+                "ref": null,
+                "rendered": "New Plan",
+                "type": "label",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <PlanSelect
+                      id="type"
+                      name="type"
+                      onChange={[Function]}
+                      plans={
+                        Object {
+                          "g5-highmem-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 5,
+                                },
+                              },
+                            },
+                            "class": "highmem",
+                            "disk": 20480,
+                            "id": "g5-highmem-1",
+                            "label": "Linode 16384",
+                            "memory": 16384,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.09,
+                              "monthly": 60,
+                            },
+                            "transfer": 5000,
+                            "vcpus": 1,
+                          },
+                          "g5-nanode-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "nanode",
+                            "disk": 20480,
+                            "id": "g5-nanode-1",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode1024.5": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode1024.5",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "service_type": "linode",
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode2048.5": Object {
+                            "_polling": false,
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2.5,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode2048.5",
+                            "label": "Linode 2048",
+                            "memory": 2048,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.015,
+                              "monthly": 10,
+                            },
+                            "service_type": "linode",
+                            "transfer": 2000,
+                            "vcpus": 2,
+                          },
+                        }
+                      }
+                      value="linode2048.5"
+                    />,
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="type"
+                    />,
+                  ],
+                  "className": "col-sm-9",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "id": "type",
+                      "name": "type",
+                      "onChange": [Function],
+                      "plans": Object {
+                        "g5-highmem-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 5,
+                              },
+                            },
+                          },
+                          "class": "highmem",
+                          "disk": 20480,
+                          "id": "g5-highmem-1",
+                          "label": "Linode 16384",
+                          "memory": 16384,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.09,
+                            "monthly": 60,
+                          },
+                          "transfer": 5000,
+                          "vcpus": 1,
+                        },
+                        "g5-nanode-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "nanode",
+                          "disk": 20480,
+                          "id": "g5-nanode-1",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode1024.5": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode1024.5",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "service_type": "linode",
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode2048.5": Object {
+                          "_polling": false,
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2.5,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode2048.5",
+                          "label": "Linode 2048",
+                          "memory": 2048,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.015,
+                            "monthly": 10,
+                          },
+                          "service_type": "linode",
+                          "transfer": 2000,
+                          "vcpus": 2,
+                        },
+                      },
+                      "value": "linode2048.5",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "errors": Object {},
+                      "inline": false,
+                      "name": "type",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                ],
+                "type": "div",
+              },
+            ],
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": <div
+                className="col-sm-9 offset-sm-3"
+              >
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Resizing"
+                >
+                  Resize
+                </SubmitButton>
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="Linode is being resized."
+                />
+              </div>,
+              "className": "row",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Resizing"
+                  >
+                    Resize
+                  </SubmitButton>,
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Linode is being resized."
+                  />,
+                ],
+                "className": "col-sm-9 offset-sm-3",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "Resize",
+                    "className": "btn-default",
+                    "disabled": false,
+                    "disabledChildren": "Resizing",
+                  },
+                  "ref": null,
+                  "rendered": "Resize",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "success": "Linode is being resized.",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+            "type": [Function],
+          },
+        ],
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Resize"
+          />,
+          <Form
+            analytics={
+              Object {
+                "title": "Resize Linode",
+              }
+            }
+            className=""
+            noSubmitEvent={false}
+            onSubmit={[Function]}
+          >
+            <FormGroup
+              className="row"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+              >
+                Current Plan
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <Input
+                  className=""
+                  disabled={true}
+                  value="Linode 2G"
+                />
+              </div>
+            </FormGroup>
+            <FormGroup
+              className="row"
+              errors={Object {}}
+              name="type"
+            >
+              <label
+                className="col-sm-3 col-form-label"
+              >
+                New Plan
+              </label>
+              <div
+                className="col-sm-9"
+              >
+                <PlanSelect
+                  id="type"
+                  name="type"
+                  onChange={[Function]}
+                  plans={
+                    Object {
+                      "g5-highmem-1": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 5,
+                            },
+                          },
+                        },
+                        "class": "highmem",
+                        "disk": 20480,
+                        "id": "g5-highmem-1",
+                        "label": "Linode 16384",
+                        "memory": 16384,
+                        "network_out": 1000,
+                        "price": Object {
+                          "hourly": 0.09,
+                          "monthly": 60,
+                        },
+                        "transfer": 5000,
+                        "vcpus": 1,
+                      },
+                      "g5-nanode-1": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2,
+                            },
+                          },
+                        },
+                        "class": "nanode",
+                        "disk": 20480,
+                        "id": "g5-nanode-1",
+                        "label": "Linode 1024",
+                        "memory": 1024,
+                        "network_out": 1000,
+                        "price": Object {
+                          "hourly": 0.0075,
+                          "monthly": 5,
+                        },
+                        "transfer": 1000,
+                        "vcpus": 1,
+                      },
+                      "linode1024.5": Object {
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2,
+                            },
+                          },
+                        },
+                        "class": "standard",
+                        "disk": 24576,
+                        "id": "linode1024.5",
+                        "label": "Linode 1024",
+                        "memory": 1024,
+                        "network_out": 125,
+                        "price": Object {
+                          "hourly": 0.0075,
+                          "monthly": 5,
+                        },
+                        "service_type": "linode",
+                        "transfer": 1000,
+                        "vcpus": 1,
+                      },
+                      "linode2048.5": Object {
+                        "_polling": false,
+                        "addons": Object {
+                          "backups": Object {
+                            "price": Object {
+                              "monthly": 2.5,
+                            },
+                          },
+                        },
+                        "class": "standard",
+                        "disk": 24576,
+                        "id": "linode2048.5",
+                        "label": "Linode 2048",
+                        "memory": 2048,
+                        "network_out": 125,
+                        "price": Object {
+                          "hourly": 0.015,
+                          "monthly": 10,
+                        },
+                        "service_type": "linode",
+                        "transfer": 2000,
+                        "vcpus": 2,
+                      },
+                    }
+                  }
+                  value="linode2048.5"
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={false}
+                  name="type"
+                />
+              </div>
+            </FormGroup>
+            <FormGroup
+              className="row"
+            >
+              <div
+                className="col-sm-9 offset-sm-3"
+              >
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Resizing"
+                >
+                  Resize
+                </SubmitButton>
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="Linode is being resized."
+                />
+              </div>
+            </FormGroup>
+          </Form>,
+        ],
+        "className": "",
+        "header": <CardHeader
+          title="Resize"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Resize",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "analytics": Object {
+              "title": "Resize Linode",
+            },
+            "children": Array [
+              <FormGroup
+                className="row"
+              >
+                <label
+                  className="col-sm-3 col-form-label"
+                >
+                  Current Plan
+                </label>
+                <div
+                  className="col-sm-9"
+                >
+                  <Input
+                    className=""
+                    disabled={true}
+                    value="Linode 2G"
+                  />
+                </div>
+              </FormGroup>,
+              <FormGroup
+                className="row"
+                errors={Object {}}
+                name="type"
+              >
+                <label
+                  className="col-sm-3 col-form-label"
+                >
+                  New Plan
+                </label>
+                <div
+                  className="col-sm-9"
+                >
+                  <PlanSelect
+                    id="type"
+                    name="type"
+                    onChange={[Function]}
+                    plans={
+                      Object {
+                        "g5-highmem-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 5,
+                              },
+                            },
+                          },
+                          "class": "highmem",
+                          "disk": 20480,
+                          "id": "g5-highmem-1",
+                          "label": "Linode 16384",
+                          "memory": 16384,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.09,
+                            "monthly": 60,
+                          },
+                          "transfer": 5000,
+                          "vcpus": 1,
+                        },
+                        "g5-nanode-1": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "nanode",
+                          "disk": 20480,
+                          "id": "g5-nanode-1",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 1000,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode1024.5": Object {
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode1024.5",
+                          "label": "Linode 1024",
+                          "memory": 1024,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.0075,
+                            "monthly": 5,
+                          },
+                          "service_type": "linode",
+                          "transfer": 1000,
+                          "vcpus": 1,
+                        },
+                        "linode2048.5": Object {
+                          "_polling": false,
+                          "addons": Object {
+                            "backups": Object {
+                              "price": Object {
+                                "monthly": 2.5,
+                              },
+                            },
+                          },
+                          "class": "standard",
+                          "disk": 24576,
+                          "id": "linode2048.5",
+                          "label": "Linode 2048",
+                          "memory": 2048,
+                          "network_out": 125,
+                          "price": Object {
+                            "hourly": 0.015,
+                            "monthly": 10,
+                          },
+                          "service_type": "linode",
+                          "transfer": 2000,
+                          "vcpus": 2,
+                        },
+                      }
+                    }
+                    value="linode2048.5"
+                  />
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={false}
+                    name="type"
+                  />
+                </div>
+              </FormGroup>,
+              <FormGroup
+                className="row"
+              >
+                <div
+                  className="col-sm-9 offset-sm-3"
+                >
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Resizing"
+                  >
+                    Resize
+                  </SubmitButton>
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Linode is being resized."
+                  />
+                </div>
+              </FormGroup>,
+            ],
+            "className": "",
+            "noSubmitEvent": false,
+            "onSubmit": [Function],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  <label
+                    className="col-sm-3 col-form-label"
+                  >
+                    Current Plan
+                  </label>,
+                  <div
+                    className="col-sm-9"
+                  >
+                    <Input
+                      className=""
+                      disabled={true}
+                      value="Linode 2G"
+                    />
+                  </div>,
+                ],
+                "className": "row",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Current Plan",
+                    "className": "col-sm-3 col-form-label",
+                  },
+                  "ref": null,
+                  "rendered": "Current Plan",
+                  "type": "label",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <Input
+                      className=""
+                      disabled={true}
+                      value="Linode 2G"
+                    />,
+                    "className": "col-sm-9",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "disabled": true,
+                      "value": "Linode 2G",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  <label
+                    className="col-sm-3 col-form-label"
+                  >
+                    New Plan
+                  </label>,
+                  <div
+                    className="col-sm-9"
+                  >
+                    <PlanSelect
+                      id="type"
+                      name="type"
+                      onChange={[Function]}
+                      plans={
+                        Object {
+                          "g5-highmem-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 5,
+                                },
+                              },
+                            },
+                            "class": "highmem",
+                            "disk": 20480,
+                            "id": "g5-highmem-1",
+                            "label": "Linode 16384",
+                            "memory": 16384,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.09,
+                              "monthly": 60,
+                            },
+                            "transfer": 5000,
+                            "vcpus": 1,
+                          },
+                          "g5-nanode-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "nanode",
+                            "disk": 20480,
+                            "id": "g5-nanode-1",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode1024.5": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode1024.5",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "service_type": "linode",
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode2048.5": Object {
+                            "_polling": false,
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2.5,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode2048.5",
+                            "label": "Linode 2048",
+                            "memory": 2048,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.015,
+                              "monthly": 10,
+                            },
+                            "service_type": "linode",
+                            "transfer": 2000,
+                            "vcpus": 2,
+                          },
+                        }
+                      }
+                      value="linode2048.5"
+                    />
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="type"
+                    />
+                  </div>,
+                ],
+                "className": "row",
+                "errors": Object {},
+                "name": "type",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "New Plan",
+                    "className": "col-sm-3 col-form-label",
+                  },
+                  "ref": null,
+                  "rendered": "New Plan",
+                  "type": "label",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <PlanSelect
+                        id="type"
+                        name="type"
+                        onChange={[Function]}
+                        plans={
+                          Object {
+                            "g5-highmem-1": Object {
+                              "addons": Object {
+                                "backups": Object {
+                                  "price": Object {
+                                    "monthly": 5,
+                                  },
+                                },
+                              },
+                              "class": "highmem",
+                              "disk": 20480,
+                              "id": "g5-highmem-1",
+                              "label": "Linode 16384",
+                              "memory": 16384,
+                              "network_out": 1000,
+                              "price": Object {
+                                "hourly": 0.09,
+                                "monthly": 60,
+                              },
+                              "transfer": 5000,
+                              "vcpus": 1,
+                            },
+                            "g5-nanode-1": Object {
+                              "addons": Object {
+                                "backups": Object {
+                                  "price": Object {
+                                    "monthly": 2,
+                                  },
+                                },
+                              },
+                              "class": "nanode",
+                              "disk": 20480,
+                              "id": "g5-nanode-1",
+                              "label": "Linode 1024",
+                              "memory": 1024,
+                              "network_out": 1000,
+                              "price": Object {
+                                "hourly": 0.0075,
+                                "monthly": 5,
+                              },
+                              "transfer": 1000,
+                              "vcpus": 1,
+                            },
+                            "linode1024.5": Object {
+                              "addons": Object {
+                                "backups": Object {
+                                  "price": Object {
+                                    "monthly": 2,
+                                  },
+                                },
+                              },
+                              "class": "standard",
+                              "disk": 24576,
+                              "id": "linode1024.5",
+                              "label": "Linode 1024",
+                              "memory": 1024,
+                              "network_out": 125,
+                              "price": Object {
+                                "hourly": 0.0075,
+                                "monthly": 5,
+                              },
+                              "service_type": "linode",
+                              "transfer": 1000,
+                              "vcpus": 1,
+                            },
+                            "linode2048.5": Object {
+                              "_polling": false,
+                              "addons": Object {
+                                "backups": Object {
+                                  "price": Object {
+                                    "monthly": 2.5,
+                                  },
+                                },
+                              },
+                              "class": "standard",
+                              "disk": 24576,
+                              "id": "linode2048.5",
+                              "label": "Linode 2048",
+                              "memory": 2048,
+                              "network_out": 125,
+                              "price": Object {
+                                "hourly": 0.015,
+                                "monthly": 10,
+                              },
+                              "service_type": "linode",
+                              "transfer": 2000,
+                              "vcpus": 2,
+                            },
+                          }
+                        }
+                        value="linode2048.5"
+                      />,
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="type"
+                      />,
+                    ],
+                    "className": "col-sm-9",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "id": "type",
+                        "name": "type",
+                        "onChange": [Function],
+                        "plans": Object {
+                          "g5-highmem-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 5,
+                                },
+                              },
+                            },
+                            "class": "highmem",
+                            "disk": 20480,
+                            "id": "g5-highmem-1",
+                            "label": "Linode 16384",
+                            "memory": 16384,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.09,
+                              "monthly": 60,
+                            },
+                            "transfer": 5000,
+                            "vcpus": 1,
+                          },
+                          "g5-nanode-1": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "nanode",
+                            "disk": 20480,
+                            "id": "g5-nanode-1",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 1000,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode1024.5": Object {
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode1024.5",
+                            "label": "Linode 1024",
+                            "memory": 1024,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.0075,
+                              "monthly": 5,
+                            },
+                            "service_type": "linode",
+                            "transfer": 1000,
+                            "vcpus": 1,
+                          },
+                          "linode2048.5": Object {
+                            "_polling": false,
+                            "addons": Object {
+                              "backups": Object {
+                                "price": Object {
+                                  "monthly": 2.5,
+                                },
+                              },
+                            },
+                            "class": "standard",
+                            "disk": 24576,
+                            "id": "linode2048.5",
+                            "label": "Linode 2048",
+                            "memory": 2048,
+                            "network_out": 125,
+                            "price": Object {
+                              "hourly": 0.015,
+                              "monthly": 10,
+                            },
+                            "service_type": "linode",
+                            "transfer": 2000,
+                            "vcpus": 2,
+                          },
+                        },
+                        "value": "linode2048.5",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "className": "",
+                        "errors": Object {},
+                        "inline": false,
+                        "name": "type",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                  ],
+                  "type": "div",
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": <div
+                  className="col-sm-9 offset-sm-3"
+                >
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Resizing"
+                  >
+                    Resize
+                  </SubmitButton>
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Linode is being resized."
+                  />
+                </div>,
+                "className": "row",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Resizing"
+                    >
+                      Resize
+                    </SubmitButton>,
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Linode is being resized."
+                    />,
+                  ],
+                  "className": "col-sm-9 offset-sm-3",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": "Resize",
+                      "className": "btn-default",
+                      "disabled": false,
+                      "disabledChildren": "Resizing",
+                    },
+                    "ref": null,
+                    "rendered": "Resize",
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "errors": Object {},
+                      "success": "Linode is being resized.",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                ],
+                "type": "div",
+              },
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

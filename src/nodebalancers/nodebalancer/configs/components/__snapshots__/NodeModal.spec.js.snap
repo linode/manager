@@ -1,0 +1,806 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nodebalancers/nodebalancer/configs/components/NodeModal should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <NodeModal
+    configId="1"
+    confirmTest="Edit"
+    dispatch={[Function]}
+    node={
+      Object {
+        "address": "192.168.4.5:80",
+        "config_id": 0,
+        "id": 1,
+        "label": "greatest_node_ever",
+        "mode": "accept",
+        "nodebalancer_id": 23,
+        "status": "online",
+        "weight": 40,
+      }
+    }
+    nodebalancerId="23"
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "analytics": Object {
+        "action": "edit",
+        "title": undefined,
+      },
+      "buttonDisabledText": "Saving",
+      "buttonText": "Save",
+      "children": <div>
+        <ModalFormGroup
+          apiKey="label"
+          errors={Object {}}
+          id="label"
+          label="Label"
+        >
+          <Input
+            className=""
+            id="label"
+            name="label"
+            onChange={[Function]}
+            value="greatest_node_ever"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="address"
+          errors={Object {}}
+          id="address"
+          label="Address"
+        >
+          <Input
+            className=""
+            id="address"
+            name="address"
+            onChange={[Function]}
+            placeholder="192.168.1.10:80"
+            value="192.168.4.5:80"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="weight"
+          description="Define a weight to be used in determining how connections are balanced to this node."
+          errors={Object {}}
+          id="weight"
+          label="Weight"
+        >
+          <Input
+            className=""
+            id="weight"
+            name="weight"
+            onChange={[Function]}
+            type="number"
+            value={40}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="mode"
+          description="Configure how this node handles incoming connections based on it's health."
+          errors={Object {}}
+          id="mode"
+          label="Mode"
+        >
+          <Select
+            analytics={
+              Object {
+                "noTrack": false,
+              }
+            }
+            className=""
+            id="mode"
+            name="mode"
+            onChange={[Function]}
+            options={
+              Array [
+                Object {
+                  "label": "Accept",
+                  "value": "accept",
+                },
+                Object {
+                  "label": "Reject",
+                  "value": "reject",
+                },
+                Object {
+                  "label": "Drain",
+                  "value": "drain",
+                },
+              ]
+            }
+            value="accept"
+          />
+        </ModalFormGroup>
+      </div>,
+      "errors": Object {},
+      "noCancel": false,
+      "noCancelEvent": false,
+      "noSubmit": false,
+      "onCancel": [Function],
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <ModalFormGroup
+            apiKey="label"
+            errors={Object {}}
+            id="label"
+            label="Label"
+          >
+            <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              value="greatest_node_ever"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="address"
+            errors={Object {}}
+            id="address"
+            label="Address"
+          >
+            <Input
+              className=""
+              id="address"
+              name="address"
+              onChange={[Function]}
+              placeholder="192.168.1.10:80"
+              value="192.168.4.5:80"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="weight"
+            description="Define a weight to be used in determining how connections are balanced to this node."
+            errors={Object {}}
+            id="weight"
+            label="Weight"
+          >
+            <Input
+              className=""
+              id="weight"
+              name="weight"
+              onChange={[Function]}
+              type="number"
+              value={40}
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="mode"
+            description="Configure how this node handles incoming connections based on it's health."
+            errors={Object {}}
+            id="mode"
+            label="Mode"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="mode"
+              name="mode"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "Accept",
+                    "value": "accept",
+                  },
+                  Object {
+                    "label": "Reject",
+                    "value": "reject",
+                  },
+                  Object {
+                    "label": "Drain",
+                    "value": "drain",
+                  },
+                ]
+              }
+              value="accept"
+            />
+          </ModalFormGroup>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "label",
+            "children": <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              value="greatest_node_ever"
+            />,
+            "errors": Object {},
+            "id": "label",
+            "label": "Label",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "label",
+              "name": "label",
+              "onChange": [Function],
+              "value": "greatest_node_ever",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "address",
+            "children": <Input
+              className=""
+              id="address"
+              name="address"
+              onChange={[Function]}
+              placeholder="192.168.1.10:80"
+              value="192.168.4.5:80"
+            />,
+            "errors": Object {},
+            "id": "address",
+            "label": "Address",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "address",
+              "name": "address",
+              "onChange": [Function],
+              "placeholder": "192.168.1.10:80",
+              "value": "192.168.4.5:80",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "weight",
+            "children": <Input
+              className=""
+              id="weight"
+              name="weight"
+              onChange={[Function]}
+              type="number"
+              value={40}
+            />,
+            "description": "Define a weight to be used in determining how connections are balanced to this node.",
+            "errors": Object {},
+            "id": "weight",
+            "label": "Weight",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "weight",
+              "name": "weight",
+              "onChange": [Function],
+              "type": "number",
+              "value": 40,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "mode",
+            "children": <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="mode"
+              name="mode"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "Accept",
+                    "value": "accept",
+                  },
+                  Object {
+                    "label": "Reject",
+                    "value": "reject",
+                  },
+                  Object {
+                    "label": "Drain",
+                    "value": "drain",
+                  },
+                ]
+              }
+              value="accept"
+            />,
+            "description": "Configure how this node handles incoming connections based on it's health.",
+            "errors": Object {},
+            "id": "mode",
+            "label": "Mode",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "analytics": Object {
+                "noTrack": false,
+              },
+              "className": "",
+              "id": "mode",
+              "name": "mode",
+              "onChange": [Function],
+              "options": Array [
+                Object {
+                  "label": "Accept",
+                  "value": "accept",
+                },
+                Object {
+                  "label": "Reject",
+                  "value": "reject",
+                },
+                Object {
+                  "label": "Drain",
+                  "value": "drain",
+                },
+              ],
+              "value": "accept",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "analytics": Object {
+          "action": "edit",
+          "title": undefined,
+        },
+        "buttonDisabledText": "Saving",
+        "buttonText": "Save",
+        "children": <div>
+          <ModalFormGroup
+            apiKey="label"
+            errors={Object {}}
+            id="label"
+            label="Label"
+          >
+            <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              value="greatest_node_ever"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="address"
+            errors={Object {}}
+            id="address"
+            label="Address"
+          >
+            <Input
+              className=""
+              id="address"
+              name="address"
+              onChange={[Function]}
+              placeholder="192.168.1.10:80"
+              value="192.168.4.5:80"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="weight"
+            description="Define a weight to be used in determining how connections are balanced to this node."
+            errors={Object {}}
+            id="weight"
+            label="Weight"
+          >
+            <Input
+              className=""
+              id="weight"
+              name="weight"
+              onChange={[Function]}
+              type="number"
+              value={40}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="mode"
+            description="Configure how this node handles incoming connections based on it's health."
+            errors={Object {}}
+            id="mode"
+            label="Mode"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="mode"
+              name="mode"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "Accept",
+                    "value": "accept",
+                  },
+                  Object {
+                    "label": "Reject",
+                    "value": "reject",
+                  },
+                  Object {
+                    "label": "Drain",
+                    "value": "drain",
+                  },
+                ]
+              }
+              value="accept"
+            />
+          </ModalFormGroup>
+        </div>,
+        "errors": Object {},
+        "noCancel": false,
+        "noCancelEvent": false,
+        "noSubmit": false,
+        "onCancel": [Function],
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <ModalFormGroup
+              apiKey="label"
+              errors={Object {}}
+              id="label"
+              label="Label"
+            >
+              <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                value="greatest_node_ever"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="address"
+              errors={Object {}}
+              id="address"
+              label="Address"
+            >
+              <Input
+                className=""
+                id="address"
+                name="address"
+                onChange={[Function]}
+                placeholder="192.168.1.10:80"
+                value="192.168.4.5:80"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="weight"
+              description="Define a weight to be used in determining how connections are balanced to this node."
+              errors={Object {}}
+              id="weight"
+              label="Weight"
+            >
+              <Input
+                className=""
+                id="weight"
+                name="weight"
+                onChange={[Function]}
+                type="number"
+                value={40}
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="mode"
+              description="Configure how this node handles incoming connections based on it's health."
+              errors={Object {}}
+              id="mode"
+              label="Mode"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="mode"
+                name="mode"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "Accept",
+                      "value": "accept",
+                    },
+                    Object {
+                      "label": "Reject",
+                      "value": "reject",
+                    },
+                    Object {
+                      "label": "Drain",
+                      "value": "drain",
+                    },
+                  ]
+                }
+                value="accept"
+              />
+            </ModalFormGroup>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "label",
+              "children": <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                value="greatest_node_ever"
+              />,
+              "errors": Object {},
+              "id": "label",
+              "label": "Label",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "label",
+                "name": "label",
+                "onChange": [Function],
+                "value": "greatest_node_ever",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "address",
+              "children": <Input
+                className=""
+                id="address"
+                name="address"
+                onChange={[Function]}
+                placeholder="192.168.1.10:80"
+                value="192.168.4.5:80"
+              />,
+              "errors": Object {},
+              "id": "address",
+              "label": "Address",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "address",
+                "name": "address",
+                "onChange": [Function],
+                "placeholder": "192.168.1.10:80",
+                "value": "192.168.4.5:80",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "weight",
+              "children": <Input
+                className=""
+                id="weight"
+                name="weight"
+                onChange={[Function]}
+                type="number"
+                value={40}
+              />,
+              "description": "Define a weight to be used in determining how connections are balanced to this node.",
+              "errors": Object {},
+              "id": "weight",
+              "label": "Weight",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "weight",
+                "name": "weight",
+                "onChange": [Function],
+                "type": "number",
+                "value": 40,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "mode",
+              "children": <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="mode"
+                name="mode"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "Accept",
+                      "value": "accept",
+                    },
+                    Object {
+                      "label": "Reject",
+                      "value": "reject",
+                    },
+                    Object {
+                      "label": "Drain",
+                      "value": "drain",
+                    },
+                  ]
+                }
+                value="accept"
+              />,
+              "description": "Configure how this node handles incoming connections based on it's health.",
+              "errors": Object {},
+              "id": "mode",
+              "label": "Mode",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "analytics": Object {
+                  "noTrack": false,
+                },
+                "className": "",
+                "id": "mode",
+                "name": "mode",
+                "onChange": [Function],
+                "options": Array [
+                  Object {
+                    "label": "Accept",
+                    "value": "accept",
+                  },
+                  Object {
+                    "label": "Reject",
+                    "value": "reject",
+                  },
+                  Object {
+                    "label": "Drain",
+                    "value": "drain",
+                  },
+                ],
+                "value": "accept",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+        ],
+        "type": "div",
+      },
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

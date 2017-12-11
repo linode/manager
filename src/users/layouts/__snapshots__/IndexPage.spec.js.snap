@@ -1,0 +1,3304 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`users/layouts/IndexPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <IndexPage
+    dispatch={[Function]}
+    profile={
+      Object {
+        "authorized_keys": Array [
+          "foobar",
+        ],
+        "email": "user@example.com",
+        "email_notifications": true,
+        "ip_whitelist_enabled": false,
+        "lish_auth_method": "password_keys",
+        "referrals": Object {
+          "code": "",
+          "completed": 0,
+          "credit": 0,
+          "pending": 0,
+          "total": 0,
+          "url": null,
+        },
+        "restricted": false,
+        "timezone": "US/Eastern",
+        "two_factor_auth": true,
+        "username": "theuser",
+      }
+    }
+    selectedMap={Object {}}
+    users={
+      Object {
+        "ids": Array [
+          undefined,
+          undefined,
+        ],
+        "pagesFetched": Array [
+          1,
+        ],
+        "plural": "users",
+        "singular": "user",
+        "totalPages": 1,
+        "totalResults": 2,
+        "users": Array [
+          Object {
+            "_polling": false,
+            "email": "example1@domain.com",
+            "password": "crisprcas9",
+            "restricted": false,
+            "username": "testuser1",
+          },
+          Object {
+            "_permissions": Object {
+              "domain": Array [
+                Object {
+                  "id": 3333,
+                  "label": "domain1",
+                  "permissions": "read_write",
+                },
+              ],
+              "global": Object {
+                "account_access": "read_only",
+                "add_domains": true,
+                "add_images": true,
+                "add_linodes": true,
+                "add_longview": true,
+                "add_nodebalancers": true,
+                "add_stackscripts": true,
+                "add_volumes": true,
+                "cancel_account": false,
+                "longview_subscription": true,
+              },
+              "image": Array [
+                Object {
+                  "id": 6666,
+                  "label": "image1",
+                  "permissions": "read_only",
+                },
+                Object {
+                  "id": 7777,
+                  "label": "image2",
+                  "permissions": "read_write",
+                },
+              ],
+              "linode": Array [
+                Object {
+                  "id": 1111,
+                  "label": "linode1",
+                  "permissions": "read_write",
+                },
+              ],
+              "longview": Array [
+                Object {
+                  "id": 5555,
+                  "label": "longview1",
+                  "permissions": "read_only",
+                },
+              ],
+              "nodebalancer": Array [
+                Object {
+                  "id": 2222,
+                  "label": "nb1",
+                  "permissions": "read_only",
+                },
+              ],
+              "stackscript": Array [
+                Object {
+                  "id": 4444,
+                  "label": "stackscript1",
+                  "permissions": null,
+                },
+              ],
+              "volume": Array [
+                Object {
+                  "id": 8888,
+                  "label": "volume1",
+                  "permissions": null,
+                },
+              ],
+            },
+            "_polling": false,
+            "email": "example2@domain.com",
+            "password": "crisprcas9",
+            "restricted": true,
+            "username": "testuser2",
+          },
+        ],
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <header
+          className="PrimaryPage-header"
+        >
+          <div
+            className="PrimaryPage-headerRow clearfix"
+          >
+            <h1
+              className="float-left"
+            >
+              Users
+            </h1>
+            <PrimaryButton
+              buttonClass="btn-primary"
+              className="float-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add a User
+            </PrimaryButton>
+          </div>
+        </header>,
+        <div
+          className="PrimaryPage-body"
+        >
+          <List
+            className=""
+          >
+            <SideEffect(ChainedDocumentTitle)
+              title="Users"
+            />
+            <ListHeader
+              className="Menu"
+            >
+              <div
+                className="Menu-item"
+              >
+                <MassEditControl
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  dispatch={[Function]}
+                  massEditGroups={
+                    Array [
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "action": [Function],
+                            "name": "Delete",
+                          },
+                        ],
+                      },
+                    ]
+                  }
+                  objectType="users"
+                  selectedKey="username"
+                  selectedMap={Object {}}
+                  toggleSelected={[Function]}
+                />
+              </div>
+              <div
+                className="Menu-item"
+              >
+                <Input
+                  className=""
+                  onChange={[Function]}
+                  placeholder="Filter..."
+                  value=""
+                />
+              </div>
+            </ListHeader>
+            <ListBody>
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                      "selectedKey": "username",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ThumbnailColumn",
+                      "srcFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "idKey": "username",
+                      "textKey": "username",
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "dataKey": "email",
+                    },
+                    Object {
+                      "dataFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "_polling": false,
+                      "email": "example1@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": false,
+                      "username": "testuser1",
+                    },
+                    Object {
+                      "_permissions": Object {
+                        "domain": Array [
+                          Object {
+                            "id": 3333,
+                            "label": "domain1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "global": Object {
+                          "account_access": "read_only",
+                          "add_domains": true,
+                          "add_images": true,
+                          "add_linodes": true,
+                          "add_longview": true,
+                          "add_nodebalancers": true,
+                          "add_stackscripts": true,
+                          "add_volumes": true,
+                          "cancel_account": false,
+                          "longview_subscription": true,
+                        },
+                        "image": Array [
+                          Object {
+                            "id": 6666,
+                            "label": "image1",
+                            "permissions": "read_only",
+                          },
+                          Object {
+                            "id": 7777,
+                            "label": "image2",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "linode": Array [
+                          Object {
+                            "id": 1111,
+                            "label": "linode1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "longview": Array [
+                          Object {
+                            "id": 5555,
+                            "label": "longview1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "nodebalancer": Array [
+                          Object {
+                            "id": 2222,
+                            "label": "nb1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "stackscript": Array [
+                          Object {
+                            "id": 4444,
+                            "label": "stackscript1",
+                            "permissions": null,
+                          },
+                        ],
+                        "volume": Array [
+                          Object {
+                            "id": 8888,
+                            "label": "volume1",
+                            "permissions": null,
+                          },
+                        ],
+                      },
+                      "_polling": false,
+                      "email": "example2@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": true,
+                      "username": "testuser2",
+                    },
+                  ]
+                }
+                disableHeader={true}
+                noDataMessage="No users found."
+                onToggleSelect={[Function]}
+                selectedMap={Object {}}
+              />
+            </ListBody>
+          </List>
+        </div>,
+      ],
+      "className": "PrimaryPage container",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="PrimaryPage-headerRow clearfix"
+          >
+            <h1
+              className="float-left"
+            >
+              Users
+            </h1>
+            <PrimaryButton
+              buttonClass="btn-primary"
+              className="float-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add a User
+            </PrimaryButton>
+          </div>,
+          "className": "PrimaryPage-header",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <h1
+                className="float-left"
+              >
+                Users
+              </h1>,
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a User
+              </PrimaryButton>,
+            ],
+            "className": "PrimaryPage-headerRow clearfix",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Users",
+                "className": "float-left",
+              },
+              "ref": null,
+              "rendered": "Users",
+              "type": "h1",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "buttonClass": "btn-primary",
+                "children": "Add a User",
+                "className": "float-right",
+                "onClick": [Function],
+                "options": Array [],
+              },
+              "ref": null,
+              "rendered": "Add a User",
+              "type": [Function],
+            },
+          ],
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <List
+            className=""
+          >
+            <SideEffect(ChainedDocumentTitle)
+              title="Users"
+            />
+            <ListHeader
+              className="Menu"
+            >
+              <div
+                className="Menu-item"
+              >
+                <MassEditControl
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  dispatch={[Function]}
+                  massEditGroups={
+                    Array [
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "action": [Function],
+                            "name": "Delete",
+                          },
+                        ],
+                      },
+                    ]
+                  }
+                  objectType="users"
+                  selectedKey="username"
+                  selectedMap={Object {}}
+                  toggleSelected={[Function]}
+                />
+              </div>
+              <div
+                className="Menu-item"
+              >
+                <Input
+                  className=""
+                  onChange={[Function]}
+                  placeholder="Filter..."
+                  value=""
+                />
+              </div>
+            </ListHeader>
+            <ListBody>
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                      "selectedKey": "username",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ThumbnailColumn",
+                      "srcFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "idKey": "username",
+                      "textKey": "username",
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "dataKey": "email",
+                    },
+                    Object {
+                      "dataFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "_polling": false,
+                      "email": "example1@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": false,
+                      "username": "testuser1",
+                    },
+                    Object {
+                      "_permissions": Object {
+                        "domain": Array [
+                          Object {
+                            "id": 3333,
+                            "label": "domain1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "global": Object {
+                          "account_access": "read_only",
+                          "add_domains": true,
+                          "add_images": true,
+                          "add_linodes": true,
+                          "add_longview": true,
+                          "add_nodebalancers": true,
+                          "add_stackscripts": true,
+                          "add_volumes": true,
+                          "cancel_account": false,
+                          "longview_subscription": true,
+                        },
+                        "image": Array [
+                          Object {
+                            "id": 6666,
+                            "label": "image1",
+                            "permissions": "read_only",
+                          },
+                          Object {
+                            "id": 7777,
+                            "label": "image2",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "linode": Array [
+                          Object {
+                            "id": 1111,
+                            "label": "linode1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "longview": Array [
+                          Object {
+                            "id": 5555,
+                            "label": "longview1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "nodebalancer": Array [
+                          Object {
+                            "id": 2222,
+                            "label": "nb1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "stackscript": Array [
+                          Object {
+                            "id": 4444,
+                            "label": "stackscript1",
+                            "permissions": null,
+                          },
+                        ],
+                        "volume": Array [
+                          Object {
+                            "id": 8888,
+                            "label": "volume1",
+                            "permissions": null,
+                          },
+                        ],
+                      },
+                      "_polling": false,
+                      "email": "example2@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": true,
+                      "username": "testuser2",
+                    },
+                  ]
+                }
+                disableHeader={true}
+                noDataMessage="No users found."
+                onToggleSelect={[Function]}
+                selectedMap={Object {}}
+              />
+            </ListBody>
+          </List>,
+          "className": "PrimaryPage-body",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <SideEffect(ChainedDocumentTitle)
+                title="Users"
+              />,
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="users"
+                    selectedKey="username"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>,
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                        "selectedKey": "username",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ThumbnailColumn",
+                        "srcFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "idKey": "username",
+                        "textKey": "username",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "email",
+                      },
+                      Object {
+                        "dataFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No users found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "title": "Users",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  <div
+                    className="Menu-item"
+                  >
+                    <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_polling": false,
+                            "email": "example1@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": false,
+                            "username": "testuser1",
+                          },
+                          Object {
+                            "_permissions": Object {
+                              "domain": Array [
+                                Object {
+                                  "id": 3333,
+                                  "label": "domain1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "global": Object {
+                                "account_access": "read_only",
+                                "add_domains": true,
+                                "add_images": true,
+                                "add_linodes": true,
+                                "add_longview": true,
+                                "add_nodebalancers": true,
+                                "add_stackscripts": true,
+                                "add_volumes": true,
+                                "cancel_account": false,
+                                "longview_subscription": true,
+                              },
+                              "image": Array [
+                                Object {
+                                  "id": 6666,
+                                  "label": "image1",
+                                  "permissions": "read_only",
+                                },
+                                Object {
+                                  "id": 7777,
+                                  "label": "image2",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "linode": Array [
+                                Object {
+                                  "id": 1111,
+                                  "label": "linode1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "longview": Array [
+                                Object {
+                                  "id": 5555,
+                                  "label": "longview1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "nodebalancer": Array [
+                                Object {
+                                  "id": 2222,
+                                  "label": "nb1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "stackscript": Array [
+                                Object {
+                                  "id": 4444,
+                                  "label": "stackscript1",
+                                  "permissions": null,
+                                },
+                              ],
+                              "volume": Array [
+                                Object {
+                                  "id": 8888,
+                                  "label": "volume1",
+                                  "permissions": null,
+                                },
+                              ],
+                            },
+                            "_polling": false,
+                            "email": "example2@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": true,
+                            "username": "testuser2",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="users"
+                      selectedKey="username"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />
+                  </div>,
+                  <div
+                    className="Menu-item"
+                  >
+                    <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />
+                  </div>,
+                ],
+                "className": "Menu",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_polling": false,
+                            "email": "example1@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": false,
+                            "username": "testuser1",
+                          },
+                          Object {
+                            "_permissions": Object {
+                              "domain": Array [
+                                Object {
+                                  "id": 3333,
+                                  "label": "domain1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "global": Object {
+                                "account_access": "read_only",
+                                "add_domains": true,
+                                "add_images": true,
+                                "add_linodes": true,
+                                "add_longview": true,
+                                "add_nodebalancers": true,
+                                "add_stackscripts": true,
+                                "add_volumes": true,
+                                "cancel_account": false,
+                                "longview_subscription": true,
+                              },
+                              "image": Array [
+                                Object {
+                                  "id": 6666,
+                                  "label": "image1",
+                                  "permissions": "read_only",
+                                },
+                                Object {
+                                  "id": 7777,
+                                  "label": "image2",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "linode": Array [
+                                Object {
+                                  "id": 1111,
+                                  "label": "linode1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "longview": Array [
+                                Object {
+                                  "id": 5555,
+                                  "label": "longview1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "nodebalancer": Array [
+                                Object {
+                                  "id": 2222,
+                                  "label": "nb1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "stackscript": Array [
+                                Object {
+                                  "id": 4444,
+                                  "label": "stackscript1",
+                                  "permissions": null,
+                                },
+                              ],
+                              "volume": Array [
+                                Object {
+                                  "id": 8888,
+                                  "label": "volume1",
+                                  "permissions": null,
+                                },
+                              ],
+                            },
+                            "_polling": false,
+                            "email": "example2@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": true,
+                            "username": "testuser2",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="users"
+                      selectedKey="username"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "class",
+                    "props": Object {
+                      "data": Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ],
+                      "dispatch": [Function],
+                      "massEditGroups": Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ],
+                      "objectType": "users",
+                      "selectedKey": "username",
+                      "selectedMap": Object {},
+                      "toggleSelected": [Function],
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "onChange": [Function],
+                      "placeholder": "Filter...",
+                      "value": "",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                        "selectedKey": "username",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ThumbnailColumn",
+                        "srcFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "idKey": "username",
+                        "textKey": "username",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "email",
+                      },
+                      Object {
+                        "dataFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No users found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "columns": Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                      "selectedKey": "username",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ThumbnailColumn",
+                      "srcFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "idKey": "username",
+                      "textKey": "username",
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "dataKey": "email",
+                    },
+                    Object {
+                      "dataFn": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ],
+                  "data": Array [
+                    Object {
+                      "_polling": false,
+                      "email": "example1@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": false,
+                      "username": "testuser1",
+                    },
+                    Object {
+                      "_permissions": Object {
+                        "domain": Array [
+                          Object {
+                            "id": 3333,
+                            "label": "domain1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "global": Object {
+                          "account_access": "read_only",
+                          "add_domains": true,
+                          "add_images": true,
+                          "add_linodes": true,
+                          "add_longview": true,
+                          "add_nodebalancers": true,
+                          "add_stackscripts": true,
+                          "add_volumes": true,
+                          "cancel_account": false,
+                          "longview_subscription": true,
+                        },
+                        "image": Array [
+                          Object {
+                            "id": 6666,
+                            "label": "image1",
+                            "permissions": "read_only",
+                          },
+                          Object {
+                            "id": 7777,
+                            "label": "image2",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "linode": Array [
+                          Object {
+                            "id": 1111,
+                            "label": "linode1",
+                            "permissions": "read_write",
+                          },
+                        ],
+                        "longview": Array [
+                          Object {
+                            "id": 5555,
+                            "label": "longview1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "nodebalancer": Array [
+                          Object {
+                            "id": 2222,
+                            "label": "nb1",
+                            "permissions": "read_only",
+                          },
+                        ],
+                        "stackscript": Array [
+                          Object {
+                            "id": 4444,
+                            "label": "stackscript1",
+                            "permissions": null,
+                          },
+                        ],
+                        "volume": Array [
+                          Object {
+                            "id": 8888,
+                            "label": "volume1",
+                            "permissions": null,
+                          },
+                        ],
+                      },
+                      "_polling": false,
+                      "email": "example2@domain.com",
+                      "password": "crisprcas9",
+                      "restricted": true,
+                      "username": "testuser2",
+                    },
+                  ],
+                  "disableHeader": true,
+                  "noDataMessage": "No users found.",
+                  "onToggleSelect": [Function],
+                  "selectedMap": Object {},
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <header
+            className="PrimaryPage-header"
+          >
+            <div
+              className="PrimaryPage-headerRow clearfix"
+            >
+              <h1
+                className="float-left"
+              >
+                Users
+              </h1>
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a User
+              </PrimaryButton>
+            </div>
+          </header>,
+          <div
+            className="PrimaryPage-body"
+          >
+            <List
+              className=""
+            >
+              <SideEffect(ChainedDocumentTitle)
+                title="Users"
+              />
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="users"
+                    selectedKey="username"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                        "selectedKey": "username",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ThumbnailColumn",
+                        "srcFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "idKey": "username",
+                        "textKey": "username",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "email",
+                      },
+                      Object {
+                        "dataFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No users found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>
+            </List>
+          </div>,
+        ],
+        "className": "PrimaryPage container",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="PrimaryPage-headerRow clearfix"
+            >
+              <h1
+                className="float-left"
+              >
+                Users
+              </h1>
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a User
+              </PrimaryButton>
+            </div>,
+            "className": "PrimaryPage-header",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <h1
+                  className="float-left"
+                >
+                  Users
+                </h1>,
+                <PrimaryButton
+                  buttonClass="btn-primary"
+                  className="float-right"
+                  onClick={[Function]}
+                  options={Array []}
+                >
+                  Add a User
+                </PrimaryButton>,
+              ],
+              "className": "PrimaryPage-headerRow clearfix",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Users",
+                  "className": "float-left",
+                },
+                "ref": null,
+                "rendered": "Users",
+                "type": "h1",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "buttonClass": "btn-primary",
+                  "children": "Add a User",
+                  "className": "float-right",
+                  "onClick": [Function],
+                  "options": Array [],
+                },
+                "ref": null,
+                "rendered": "Add a User",
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <List
+              className=""
+            >
+              <SideEffect(ChainedDocumentTitle)
+                title="Users"
+              />
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="users"
+                    selectedKey="username"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                        "selectedKey": "username",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ThumbnailColumn",
+                        "srcFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "idKey": "username",
+                        "textKey": "username",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "email",
+                      },
+                      Object {
+                        "dataFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No users found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>
+            </List>,
+            "className": "PrimaryPage-body",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <SideEffect(ChainedDocumentTitle)
+                  title="Users"
+                />,
+                <ListHeader
+                  className="Menu"
+                >
+                  <div
+                    className="Menu-item"
+                  >
+                    <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_polling": false,
+                            "email": "example1@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": false,
+                            "username": "testuser1",
+                          },
+                          Object {
+                            "_permissions": Object {
+                              "domain": Array [
+                                Object {
+                                  "id": 3333,
+                                  "label": "domain1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "global": Object {
+                                "account_access": "read_only",
+                                "add_domains": true,
+                                "add_images": true,
+                                "add_linodes": true,
+                                "add_longview": true,
+                                "add_nodebalancers": true,
+                                "add_stackscripts": true,
+                                "add_volumes": true,
+                                "cancel_account": false,
+                                "longview_subscription": true,
+                              },
+                              "image": Array [
+                                Object {
+                                  "id": 6666,
+                                  "label": "image1",
+                                  "permissions": "read_only",
+                                },
+                                Object {
+                                  "id": 7777,
+                                  "label": "image2",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "linode": Array [
+                                Object {
+                                  "id": 1111,
+                                  "label": "linode1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "longview": Array [
+                                Object {
+                                  "id": 5555,
+                                  "label": "longview1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "nodebalancer": Array [
+                                Object {
+                                  "id": 2222,
+                                  "label": "nb1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "stackscript": Array [
+                                Object {
+                                  "id": 4444,
+                                  "label": "stackscript1",
+                                  "permissions": null,
+                                },
+                              ],
+                              "volume": Array [
+                                Object {
+                                  "id": 8888,
+                                  "label": "volume1",
+                                  "permissions": null,
+                                },
+                              ],
+                            },
+                            "_polling": false,
+                            "email": "example2@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": true,
+                            "username": "testuser2",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="users"
+                      selectedKey="username"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />
+                  </div>
+                  <div
+                    className="Menu-item"
+                  >
+                    <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />
+                  </div>
+                </ListHeader>,
+                <ListBody>
+                  <Table
+                    className=""
+                    columns={
+                      Array [
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "CheckboxColumn",
+                          "selectedKey": "username",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ThumbnailColumn",
+                          "srcFn": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "hrefFn": [Function],
+                          "idKey": "username",
+                          "textKey": "username",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "email",
+                        },
+                        Object {
+                          "dataFn": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ButtonColumn",
+                          "onClick": [Function],
+                          "text": "Delete",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ]
+                    }
+                    disableHeader={true}
+                    noDataMessage="No users found."
+                    onToggleSelect={[Function]}
+                    selectedMap={Object {}}
+                  />
+                </ListBody>,
+              ],
+              "className": "",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "title": "Users",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": Array [
+                    <div
+                      className="Menu-item"
+                    >
+                      <MassEditControl
+                        data={
+                          Array [
+                            Object {
+                              "_polling": false,
+                              "email": "example1@domain.com",
+                              "password": "crisprcas9",
+                              "restricted": false,
+                              "username": "testuser1",
+                            },
+                            Object {
+                              "_permissions": Object {
+                                "domain": Array [
+                                  Object {
+                                    "id": 3333,
+                                    "label": "domain1",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "global": Object {
+                                  "account_access": "read_only",
+                                  "add_domains": true,
+                                  "add_images": true,
+                                  "add_linodes": true,
+                                  "add_longview": true,
+                                  "add_nodebalancers": true,
+                                  "add_stackscripts": true,
+                                  "add_volumes": true,
+                                  "cancel_account": false,
+                                  "longview_subscription": true,
+                                },
+                                "image": Array [
+                                  Object {
+                                    "id": 6666,
+                                    "label": "image1",
+                                    "permissions": "read_only",
+                                  },
+                                  Object {
+                                    "id": 7777,
+                                    "label": "image2",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "linode": Array [
+                                  Object {
+                                    "id": 1111,
+                                    "label": "linode1",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "longview": Array [
+                                  Object {
+                                    "id": 5555,
+                                    "label": "longview1",
+                                    "permissions": "read_only",
+                                  },
+                                ],
+                                "nodebalancer": Array [
+                                  Object {
+                                    "id": 2222,
+                                    "label": "nb1",
+                                    "permissions": "read_only",
+                                  },
+                                ],
+                                "stackscript": Array [
+                                  Object {
+                                    "id": 4444,
+                                    "label": "stackscript1",
+                                    "permissions": null,
+                                  },
+                                ],
+                                "volume": Array [
+                                  Object {
+                                    "id": 8888,
+                                    "label": "volume1",
+                                    "permissions": null,
+                                  },
+                                ],
+                              },
+                              "_polling": false,
+                              "email": "example2@domain.com",
+                              "password": "crisprcas9",
+                              "restricted": true,
+                              "username": "testuser2",
+                            },
+                          ]
+                        }
+                        dispatch={[Function]}
+                        massEditGroups={
+                          Array [
+                            Object {
+                              "elements": Array [
+                                Object {
+                                  "action": [Function],
+                                  "name": "Delete",
+                                },
+                              ],
+                            },
+                          ]
+                        }
+                        objectType="users"
+                        selectedKey="username"
+                        selectedMap={Object {}}
+                        toggleSelected={[Function]}
+                      />
+                    </div>,
+                    <div
+                      className="Menu-item"
+                    >
+                      <Input
+                        className=""
+                        onChange={[Function]}
+                        placeholder="Filter..."
+                        value=""
+                      />
+                    </div>,
+                  ],
+                  "className": "Menu",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <MassEditControl
+                        data={
+                          Array [
+                            Object {
+                              "_polling": false,
+                              "email": "example1@domain.com",
+                              "password": "crisprcas9",
+                              "restricted": false,
+                              "username": "testuser1",
+                            },
+                            Object {
+                              "_permissions": Object {
+                                "domain": Array [
+                                  Object {
+                                    "id": 3333,
+                                    "label": "domain1",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "global": Object {
+                                  "account_access": "read_only",
+                                  "add_domains": true,
+                                  "add_images": true,
+                                  "add_linodes": true,
+                                  "add_longview": true,
+                                  "add_nodebalancers": true,
+                                  "add_stackscripts": true,
+                                  "add_volumes": true,
+                                  "cancel_account": false,
+                                  "longview_subscription": true,
+                                },
+                                "image": Array [
+                                  Object {
+                                    "id": 6666,
+                                    "label": "image1",
+                                    "permissions": "read_only",
+                                  },
+                                  Object {
+                                    "id": 7777,
+                                    "label": "image2",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "linode": Array [
+                                  Object {
+                                    "id": 1111,
+                                    "label": "linode1",
+                                    "permissions": "read_write",
+                                  },
+                                ],
+                                "longview": Array [
+                                  Object {
+                                    "id": 5555,
+                                    "label": "longview1",
+                                    "permissions": "read_only",
+                                  },
+                                ],
+                                "nodebalancer": Array [
+                                  Object {
+                                    "id": 2222,
+                                    "label": "nb1",
+                                    "permissions": "read_only",
+                                  },
+                                ],
+                                "stackscript": Array [
+                                  Object {
+                                    "id": 4444,
+                                    "label": "stackscript1",
+                                    "permissions": null,
+                                  },
+                                ],
+                                "volume": Array [
+                                  Object {
+                                    "id": 8888,
+                                    "label": "volume1",
+                                    "permissions": null,
+                                  },
+                                ],
+                              },
+                              "_polling": false,
+                              "email": "example2@domain.com",
+                              "password": "crisprcas9",
+                              "restricted": true,
+                              "username": "testuser2",
+                            },
+                          ]
+                        }
+                        dispatch={[Function]}
+                        massEditGroups={
+                          Array [
+                            Object {
+                              "elements": Array [
+                                Object {
+                                  "action": [Function],
+                                  "name": "Delete",
+                                },
+                              ],
+                            },
+                          ]
+                        }
+                        objectType="users"
+                        selectedKey="username"
+                        selectedMap={Object {}}
+                        toggleSelected={[Function]}
+                      />,
+                      "className": "Menu-item",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "class",
+                      "props": Object {
+                        "data": Array [
+                          Object {
+                            "_polling": false,
+                            "email": "example1@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": false,
+                            "username": "testuser1",
+                          },
+                          Object {
+                            "_permissions": Object {
+                              "domain": Array [
+                                Object {
+                                  "id": 3333,
+                                  "label": "domain1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "global": Object {
+                                "account_access": "read_only",
+                                "add_domains": true,
+                                "add_images": true,
+                                "add_linodes": true,
+                                "add_longview": true,
+                                "add_nodebalancers": true,
+                                "add_stackscripts": true,
+                                "add_volumes": true,
+                                "cancel_account": false,
+                                "longview_subscription": true,
+                              },
+                              "image": Array [
+                                Object {
+                                  "id": 6666,
+                                  "label": "image1",
+                                  "permissions": "read_only",
+                                },
+                                Object {
+                                  "id": 7777,
+                                  "label": "image2",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "linode": Array [
+                                Object {
+                                  "id": 1111,
+                                  "label": "linode1",
+                                  "permissions": "read_write",
+                                },
+                              ],
+                              "longview": Array [
+                                Object {
+                                  "id": 5555,
+                                  "label": "longview1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "nodebalancer": Array [
+                                Object {
+                                  "id": 2222,
+                                  "label": "nb1",
+                                  "permissions": "read_only",
+                                },
+                              ],
+                              "stackscript": Array [
+                                Object {
+                                  "id": 4444,
+                                  "label": "stackscript1",
+                                  "permissions": null,
+                                },
+                              ],
+                              "volume": Array [
+                                Object {
+                                  "id": 8888,
+                                  "label": "volume1",
+                                  "permissions": null,
+                                },
+                              ],
+                            },
+                            "_polling": false,
+                            "email": "example2@domain.com",
+                            "password": "crisprcas9",
+                            "restricted": true,
+                            "username": "testuser2",
+                          },
+                        ],
+                        "dispatch": [Function],
+                        "massEditGroups": Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ],
+                        "objectType": "users",
+                        "selectedKey": "username",
+                        "selectedMap": Object {},
+                        "toggleSelected": [Function],
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "div",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <Input
+                        className=""
+                        onChange={[Function]}
+                        placeholder="Filter..."
+                        value=""
+                      />,
+                      "className": "Menu-item",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "className": "",
+                        "onChange": [Function],
+                        "placeholder": "Filter...",
+                        "value": "",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "div",
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": <Table
+                    className=""
+                    columns={
+                      Array [
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "CheckboxColumn",
+                          "selectedKey": "username",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ThumbnailColumn",
+                          "srcFn": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "hrefFn": [Function],
+                          "idKey": "username",
+                          "textKey": "username",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "email",
+                        },
+                        Object {
+                          "dataFn": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ButtonColumn",
+                          "onClick": [Function],
+                          "text": "Delete",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "_polling": false,
+                          "email": "example1@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": false,
+                          "username": "testuser1",
+                        },
+                        Object {
+                          "_permissions": Object {
+                            "domain": Array [
+                              Object {
+                                "id": 3333,
+                                "label": "domain1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "global": Object {
+                              "account_access": "read_only",
+                              "add_domains": true,
+                              "add_images": true,
+                              "add_linodes": true,
+                              "add_longview": true,
+                              "add_nodebalancers": true,
+                              "add_stackscripts": true,
+                              "add_volumes": true,
+                              "cancel_account": false,
+                              "longview_subscription": true,
+                            },
+                            "image": Array [
+                              Object {
+                                "id": 6666,
+                                "label": "image1",
+                                "permissions": "read_only",
+                              },
+                              Object {
+                                "id": 7777,
+                                "label": "image2",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "linode": Array [
+                              Object {
+                                "id": 1111,
+                                "label": "linode1",
+                                "permissions": "read_write",
+                              },
+                            ],
+                            "longview": Array [
+                              Object {
+                                "id": 5555,
+                                "label": "longview1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "nodebalancer": Array [
+                              Object {
+                                "id": 2222,
+                                "label": "nb1",
+                                "permissions": "read_only",
+                              },
+                            ],
+                            "stackscript": Array [
+                              Object {
+                                "id": 4444,
+                                "label": "stackscript1",
+                                "permissions": null,
+                              },
+                            ],
+                            "volume": Array [
+                              Object {
+                                "id": 8888,
+                                "label": "volume1",
+                                "permissions": null,
+                              },
+                            ],
+                          },
+                          "_polling": false,
+                          "email": "example2@domain.com",
+                          "password": "crisprcas9",
+                          "restricted": true,
+                          "username": "testuser2",
+                        },
+                      ]
+                    }
+                    disableHeader={true}
+                    noDataMessage="No users found."
+                    onToggleSelect={[Function]}
+                    selectedMap={Object {}}
+                  />,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "columns": Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                        "selectedKey": "username",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ThumbnailColumn",
+                        "srcFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "idKey": "username",
+                        "textKey": "username",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "email",
+                      },
+                      Object {
+                        "dataFn": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ],
+                    "data": Array [
+                      Object {
+                        "_polling": false,
+                        "email": "example1@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": false,
+                        "username": "testuser1",
+                      },
+                      Object {
+                        "_permissions": Object {
+                          "domain": Array [
+                            Object {
+                              "id": 3333,
+                              "label": "domain1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "global": Object {
+                            "account_access": "read_only",
+                            "add_domains": true,
+                            "add_images": true,
+                            "add_linodes": true,
+                            "add_longview": true,
+                            "add_nodebalancers": true,
+                            "add_stackscripts": true,
+                            "add_volumes": true,
+                            "cancel_account": false,
+                            "longview_subscription": true,
+                          },
+                          "image": Array [
+                            Object {
+                              "id": 6666,
+                              "label": "image1",
+                              "permissions": "read_only",
+                            },
+                            Object {
+                              "id": 7777,
+                              "label": "image2",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "linode": Array [
+                            Object {
+                              "id": 1111,
+                              "label": "linode1",
+                              "permissions": "read_write",
+                            },
+                          ],
+                          "longview": Array [
+                            Object {
+                              "id": 5555,
+                              "label": "longview1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "nodebalancer": Array [
+                            Object {
+                              "id": 2222,
+                              "label": "nb1",
+                              "permissions": "read_only",
+                            },
+                          ],
+                          "stackscript": Array [
+                            Object {
+                              "id": 4444,
+                              "label": "stackscript1",
+                              "permissions": null,
+                            },
+                          ],
+                          "volume": Array [
+                            Object {
+                              "id": 8888,
+                              "label": "volume1",
+                              "permissions": null,
+                            },
+                          ],
+                        },
+                        "_polling": false,
+                        "email": "example2@domain.com",
+                        "password": "crisprcas9",
+                        "restricted": true,
+                        "username": "testuser2",
+                      },
+                    ],
+                    "disableHeader": true,
+                    "noDataMessage": "No users found.",
+                    "onToggleSelect": [Function],
+                    "selectedMap": Object {},
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                "type": [Function],
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

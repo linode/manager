@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,6 +17,17 @@ describe('profile/layouts/LishPage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <LishPage
+        dispatch={dispatch}
+        profile={profile}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('changes lish settings', async () => {

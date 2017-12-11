@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -33,6 +33,17 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <IPSharingPage
+        dispatch={dispatch}
+        linodes={linodes}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders ips', () => {

@@ -1,0 +1,1286 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`users/layouts/UserForm should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <UserForm
+    dispatch={[Function]}
+    user={
+      Object {
+        "_polling": false,
+        "email": "example1@domain.com",
+        "password": "crisprcas9",
+        "restricted": false,
+        "username": "testuser1",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "analytics": Object {
+        "action": "edit",
+        "title": "Add/Edit User",
+      },
+      "children": Array [
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="username"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+            htmlFor="username"
+          >
+            Username
+          </label>
+          <div
+            className="col-sm-10 clearfix"
+          >
+            <Input
+              className="float-sm-left"
+              id="username"
+              name="username"
+              onChange={[Function]}
+              value="testuser1"
+            />
+            <FormGroupError
+              className="float-sm-left"
+              errors={Object {}}
+              inline={true}
+              name="username"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="email"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <div
+            className="col-sm-10 clearfix"
+          >
+            <Input
+              className="float-sm-left"
+              id="email"
+              name="email"
+              onChange={[Function]}
+              value="example1@domain.com"
+            />
+            <FormGroupError
+              className="float-sm-left"
+              errors={Object {}}
+              inline={true}
+              name="email"
+            />
+          </div>
+        </FormGroup>,
+        null,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="restricted"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Restricted
+          </label>
+          <div
+            className="col-sm-10 clearfix"
+          >
+            <Checkboxes
+              className="float-sm-left"
+            >
+              <Radio
+                checked={false}
+                className=""
+                id="restricted"
+                label="Yes - this user can only do what I specify"
+                name="restricted"
+                onChange={[Function]}
+                value="yes"
+              />
+              <Radio
+                checked={true}
+                className=""
+                id="unrestricted"
+                label="No - this user has no access restrictions"
+                name="restricted"
+                onChange={[Function]}
+                value="no"
+              />
+            </Checkboxes>
+            <FormGroupError
+              className="float-sm-left"
+              errors={Object {}}
+              inline={true}
+              name="restricted"
+            />
+          </div>
+        </FormGroup>,
+        <div
+          className="row"
+        >
+          <div
+            className="offset-sm-2 col-sm-10"
+          >
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Saving"
+            >
+              Save
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="User settings saved."
+            />
+          </div>
+        </div>,
+      ],
+      "className": "",
+      "noSubmitEvent": false,
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="username"
+            >
+              Username
+            </label>,
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Input
+                className="float-sm-left"
+                id="username"
+                name="username"
+                onChange={[Function]}
+                value="testuser1"
+              />
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="username"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "username",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Username",
+              "className": "col-sm-2 col-form-label",
+              "htmlFor": "username",
+            },
+            "ref": null,
+            "rendered": "Username",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className="float-sm-left"
+                  id="username"
+                  name="username"
+                  onChange={[Function]}
+                  value="testuser1"
+                />,
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="username"
+                />,
+              ],
+              "className": "col-sm-10 clearfix",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "float-sm-left",
+                  "id": "username",
+                  "name": "username",
+                  "onChange": [Function],
+                  "value": "testuser1",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "float-sm-left",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "username",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="email"
+            >
+              Email
+            </label>,
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Input
+                className="float-sm-left"
+                id="email"
+                name="email"
+                onChange={[Function]}
+                value="example1@domain.com"
+              />
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="email"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "email",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Email",
+              "className": "col-sm-2 col-form-label",
+              "htmlFor": "email",
+            },
+            "ref": null,
+            "rendered": "Email",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className="float-sm-left"
+                  id="email"
+                  name="email"
+                  onChange={[Function]}
+                  value="example1@domain.com"
+                />,
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="email"
+                />,
+              ],
+              "className": "col-sm-10 clearfix",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "float-sm-left",
+                  "id": "email",
+                  "name": "email",
+                  "onChange": [Function],
+                  "value": "example1@domain.com",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "float-sm-left",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "email",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      null,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Restricted
+            </label>,
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Checkboxes
+                className="float-sm-left"
+              >
+                <Radio
+                  checked={false}
+                  className=""
+                  id="restricted"
+                  label="Yes - this user can only do what I specify"
+                  name="restricted"
+                  onChange={[Function]}
+                  value="yes"
+                />
+                <Radio
+                  checked={true}
+                  className=""
+                  id="unrestricted"
+                  label="No - this user has no access restrictions"
+                  name="restricted"
+                  onChange={[Function]}
+                  value="no"
+                />
+              </Checkboxes>
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="restricted"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "restricted",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Restricted",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Restricted",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Checkboxes
+                  className="float-sm-left"
+                >
+                  <Radio
+                    checked={false}
+                    className=""
+                    id="restricted"
+                    label="Yes - this user can only do what I specify"
+                    name="restricted"
+                    onChange={[Function]}
+                    value="yes"
+                  />
+                  <Radio
+                    checked={true}
+                    className=""
+                    id="unrestricted"
+                    label="No - this user has no access restrictions"
+                    name="restricted"
+                    onChange={[Function]}
+                    value="no"
+                  />
+                </Checkboxes>,
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="restricted"
+                />,
+              ],
+              "className": "col-sm-10 clearfix",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": Array [
+                    <Radio
+                      checked={false}
+                      className=""
+                      id="restricted"
+                      label="Yes - this user can only do what I specify"
+                      name="restricted"
+                      onChange={[Function]}
+                      value="yes"
+                    />,
+                    <Radio
+                      checked={true}
+                      className=""
+                      id="unrestricted"
+                      label="No - this user has no access restrictions"
+                      name="restricted"
+                      onChange={[Function]}
+                      value="no"
+                    />,
+                  ],
+                  "className": "float-sm-left",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "checked": false,
+                      "className": "",
+                      "id": "restricted",
+                      "label": "Yes - this user can only do what I specify",
+                      "name": "restricted",
+                      "onChange": [Function],
+                      "value": "yes",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "checked": true,
+                      "className": "",
+                      "id": "unrestricted",
+                      "label": "No - this user has no access restrictions",
+                      "name": "restricted",
+                      "onChange": [Function],
+                      "value": "no",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "float-sm-left",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "restricted",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="offset-sm-2 col-sm-10"
+          >
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Saving"
+            >
+              Save
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="User settings saved."
+            />
+          </div>,
+          "className": "row",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Saving"
+              >
+                Save
+              </SubmitButton>,
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="User settings saved."
+              />,
+            ],
+            "className": "offset-sm-2 col-sm-10",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Save",
+                "className": "btn-default",
+                "disabled": false,
+                "disabledChildren": "Saving",
+              },
+              "ref": null,
+              "rendered": "Save",
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "errors": Object {},
+                "success": "User settings saved.",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": "div",
+        },
+        "type": "div",
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "analytics": Object {
+          "action": "edit",
+          "title": "Add/Edit User",
+        },
+        "children": Array [
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="username"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="username"
+            >
+              Username
+            </label>
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Input
+                className="float-sm-left"
+                id="username"
+                name="username"
+                onChange={[Function]}
+                value="testuser1"
+              />
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="username"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="email"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Input
+                className="float-sm-left"
+                id="email"
+                name="email"
+                onChange={[Function]}
+                value="example1@domain.com"
+              />
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="email"
+              />
+            </div>
+          </FormGroup>,
+          null,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="restricted"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Restricted
+            </label>
+            <div
+              className="col-sm-10 clearfix"
+            >
+              <Checkboxes
+                className="float-sm-left"
+              >
+                <Radio
+                  checked={false}
+                  className=""
+                  id="restricted"
+                  label="Yes - this user can only do what I specify"
+                  name="restricted"
+                  onChange={[Function]}
+                  value="yes"
+                />
+                <Radio
+                  checked={true}
+                  className=""
+                  id="unrestricted"
+                  label="No - this user has no access restrictions"
+                  name="restricted"
+                  onChange={[Function]}
+                  value="no"
+                />
+              </Checkboxes>
+              <FormGroupError
+                className="float-sm-left"
+                errors={Object {}}
+                inline={true}
+                name="restricted"
+              />
+            </div>
+          </FormGroup>,
+          <div
+            className="row"
+          >
+            <div
+              className="offset-sm-2 col-sm-10"
+            >
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Saving"
+              >
+                Save
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="User settings saved."
+              />
+            </div>
+          </div>,
+        ],
+        "className": "",
+        "noSubmitEvent": false,
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+                htmlFor="username"
+              >
+                Username
+              </label>,
+              <div
+                className="col-sm-10 clearfix"
+              >
+                <Input
+                  className="float-sm-left"
+                  id="username"
+                  name="username"
+                  onChange={[Function]}
+                  value="testuser1"
+                />
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="username"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "username",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Username",
+                "className": "col-sm-2 col-form-label",
+                "htmlFor": "username",
+              },
+              "ref": null,
+              "rendered": "Username",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className="float-sm-left"
+                    id="username"
+                    name="username"
+                    onChange={[Function]}
+                    value="testuser1"
+                  />,
+                  <FormGroupError
+                    className="float-sm-left"
+                    errors={Object {}}
+                    inline={true}
+                    name="username"
+                  />,
+                ],
+                "className": "col-sm-10 clearfix",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "float-sm-left",
+                    "id": "username",
+                    "name": "username",
+                    "onChange": [Function],
+                    "value": "testuser1",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "float-sm-left",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "username",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+                htmlFor="email"
+              >
+                Email
+              </label>,
+              <div
+                className="col-sm-10 clearfix"
+              >
+                <Input
+                  className="float-sm-left"
+                  id="email"
+                  name="email"
+                  onChange={[Function]}
+                  value="example1@domain.com"
+                />
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="email"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "email",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Email",
+                "className": "col-sm-2 col-form-label",
+                "htmlFor": "email",
+              },
+              "ref": null,
+              "rendered": "Email",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className="float-sm-left"
+                    id="email"
+                    name="email"
+                    onChange={[Function]}
+                    value="example1@domain.com"
+                  />,
+                  <FormGroupError
+                    className="float-sm-left"
+                    errors={Object {}}
+                    inline={true}
+                    name="email"
+                  />,
+                ],
+                "className": "col-sm-10 clearfix",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "float-sm-left",
+                    "id": "email",
+                    "name": "email",
+                    "onChange": [Function],
+                    "value": "example1@domain.com",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "float-sm-left",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "email",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Restricted
+              </label>,
+              <div
+                className="col-sm-10 clearfix"
+              >
+                <Checkboxes
+                  className="float-sm-left"
+                >
+                  <Radio
+                    checked={false}
+                    className=""
+                    id="restricted"
+                    label="Yes - this user can only do what I specify"
+                    name="restricted"
+                    onChange={[Function]}
+                    value="yes"
+                  />
+                  <Radio
+                    checked={true}
+                    className=""
+                    id="unrestricted"
+                    label="No - this user has no access restrictions"
+                    name="restricted"
+                    onChange={[Function]}
+                    value="no"
+                  />
+                </Checkboxes>
+                <FormGroupError
+                  className="float-sm-left"
+                  errors={Object {}}
+                  inline={true}
+                  name="restricted"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "restricted",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Restricted",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Restricted",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Checkboxes
+                    className="float-sm-left"
+                  >
+                    <Radio
+                      checked={false}
+                      className=""
+                      id="restricted"
+                      label="Yes - this user can only do what I specify"
+                      name="restricted"
+                      onChange={[Function]}
+                      value="yes"
+                    />
+                    <Radio
+                      checked={true}
+                      className=""
+                      id="unrestricted"
+                      label="No - this user has no access restrictions"
+                      name="restricted"
+                      onChange={[Function]}
+                      value="no"
+                    />
+                  </Checkboxes>,
+                  <FormGroupError
+                    className="float-sm-left"
+                    errors={Object {}}
+                    inline={true}
+                    name="restricted"
+                  />,
+                ],
+                "className": "col-sm-10 clearfix",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": Array [
+                      <Radio
+                        checked={false}
+                        className=""
+                        id="restricted"
+                        label="Yes - this user can only do what I specify"
+                        name="restricted"
+                        onChange={[Function]}
+                        value="yes"
+                      />,
+                      <Radio
+                        checked={true}
+                        className=""
+                        id="unrestricted"
+                        label="No - this user has no access restrictions"
+                        name="restricted"
+                        onChange={[Function]}
+                        value="no"
+                      />,
+                    ],
+                    "className": "float-sm-left",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "checked": false,
+                        "className": "",
+                        "id": "restricted",
+                        "label": "Yes - this user can only do what I specify",
+                        "name": "restricted",
+                        "onChange": [Function],
+                        "value": "yes",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "checked": true,
+                        "className": "",
+                        "id": "unrestricted",
+                        "label": "No - this user has no access restrictions",
+                        "name": "restricted",
+                        "onChange": [Function],
+                        "value": "no",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                  ],
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "float-sm-left",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "restricted",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="offset-sm-2 col-sm-10"
+            >
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Saving"
+              >
+                Save
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="User settings saved."
+              />
+            </div>,
+            "className": "row",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Saving"
+                >
+                  Save
+                </SubmitButton>,
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="User settings saved."
+                />,
+              ],
+              "className": "offset-sm-2 col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Save",
+                  "className": "btn-default",
+                  "disabled": false,
+                  "disabledChildren": "Saving",
+                },
+                "ref": null,
+                "rendered": "Save",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "success": "User settings saved.",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+          "type": "div",
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

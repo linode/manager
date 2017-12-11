@@ -18,6 +18,22 @@ describe('components/Header', () => {
     sandbox.reset();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <Header
+        dispatch={dispatch}
+        username="peanut"
+        email="peanut@gmail.com"
+        events={events}
+        notifications={{ open: false }}
+        session={{ open: false }}
+      />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders username', () => {
     const header = shallow(
       <Header

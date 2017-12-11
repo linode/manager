@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -21,6 +21,12 @@ describe('users/user/layouts/EditUserPage', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(<EditUserPage dispatch={mockDispatch} user={testUser} />);
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('should commit changes to the API', async () => {
     const page = mount(
       <EditUserPage
@@ -35,7 +41,7 @@ describe('users/user/layouts/EditUserPage', () => {
       .simulate('change', createSimulatedEvent('email', 'the-email'));
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
 
     expect(dispatch.callCount).toBe(1);
 

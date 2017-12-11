@@ -1,0 +1,2972 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nodebalancers/layouts/IndexPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <IndexPage
+    dispatch={[Function]}
+    nodebalancers={
+      Object {
+        "ids": Array [
+          23,
+        ],
+        "nodebalancers": Object {
+          "23": Object {
+            "_configs": Object {
+              "configs": Object {
+                "1": Object {
+                  "_nodes": Object {
+                    "nodes": Object {
+                      "1": Object {
+                        "address": "192.168.4.5:80",
+                        "config_id": 0,
+                        "id": 1,
+                        "label": "greatest_node_ever",
+                        "mode": "accept",
+                        "nodebalancer_id": 23,
+                        "status": "online",
+                        "weight": 40,
+                      },
+                    },
+                  },
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 1,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 1,
+                  },
+                  "port": 80,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+                "2": Object {
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 2,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 0,
+                  },
+                  "port": 81,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+              },
+            },
+            "client_conn_throttle": 0,
+            "created": "2017-03-03T18:08:44",
+            "group": "",
+            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+            "id": 23,
+            "ipv4": "1.1.1.1",
+            "label": "nodebalancer-2",
+            "region": "us-east-1a",
+            "status": "new_active",
+            "updated": "2017-03-06T22:00:48",
+          },
+        },
+        "pagesFetched": Array [
+          1,
+        ],
+        "plural": "nodebalancers",
+        "singular": "nodebalancer",
+        "totalPages": 1,
+        "totalResults": 1,
+      }
+    }
+    selectedMap={Object {}}
+    transfer={
+      Object {
+        "quota": 5,
+        "used": 1,
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="NodeBalancers"
+        />,
+        <header
+          className="PrimaryPage-header"
+        >
+          <div
+            className="PrimaryPage-headerRow clearfix"
+          >
+            <h1
+              className="float-left"
+            >
+              NodeBalancers
+            </h1>
+            <PrimaryButton
+              buttonClass="btn-primary"
+              className="float-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add a NodeBalancer
+            </PrimaryButton>
+          </div>
+        </header>,
+        <div
+          className="PrimaryPage-body"
+        >
+          <List
+            className=""
+          >
+            <ListHeader
+              className="Menu"
+            >
+              <div
+                className="Menu-item"
+              >
+                <MassEditControl
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  dispatch={[Function]}
+                  massEditGroups={
+                    Array [
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "action": [Function],
+                            "name": "Delete",
+                          },
+                        ],
+                      },
+                    ]
+                  }
+                  objectType="nodebalancers"
+                  selectedKey="id"
+                  selectedMap={Object {}}
+                  toggleSelected={[Function]}
+                />
+              </div>
+              <div
+                className="Menu-item"
+              >
+                <Input
+                  className=""
+                  onChange={[Function]}
+                  placeholder="Filter..."
+                  value=""
+                />
+              </div>
+            </ListHeader>
+            <ListBody>
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "LinodeIPAddressColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "_configs": Object {
+                        "configs": Object {
+                          "1": Object {
+                            "_nodes": Object {
+                              "nodes": Object {
+                                "1": Object {
+                                  "address": "192.168.4.5:80",
+                                  "config_id": 0,
+                                  "id": 1,
+                                  "label": "greatest_node_ever",
+                                  "mode": "accept",
+                                  "nodebalancer_id": 23,
+                                  "status": "online",
+                                  "weight": 40,
+                                },
+                              },
+                            },
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 1,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 1,
+                            },
+                            "port": 80,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                          "2": Object {
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 2,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 0,
+                            },
+                            "port": 81,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                        },
+                      },
+                      "client_conn_throttle": 0,
+                      "created": "2017-03-03T18:08:44",
+                      "group": "",
+                      "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                      "id": 23,
+                      "ipv4": "1.1.1.1",
+                      "label": "nodebalancer-2",
+                      "region": "us-east-1a",
+                      "status": "new_active",
+                      "updated": "2017-03-06T22:00:48",
+                    },
+                  ]
+                }
+                disableHeader={true}
+                noDataMessage="No NodeBalancers found."
+                onToggleSelect={[Function]}
+                selectedMap={Object {}}
+              />
+            </ListBody>
+          </List>
+        </div>,
+        <TransferPool
+          transfer={
+            Object {
+              "quota": 5,
+              "used": 1,
+            }
+          }
+        />,
+      ],
+      "className": "PrimaryPage container",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "NodeBalancers",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="PrimaryPage-headerRow clearfix"
+          >
+            <h1
+              className="float-left"
+            >
+              NodeBalancers
+            </h1>
+            <PrimaryButton
+              buttonClass="btn-primary"
+              className="float-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add a NodeBalancer
+            </PrimaryButton>
+          </div>,
+          "className": "PrimaryPage-header",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <h1
+                className="float-left"
+              >
+                NodeBalancers
+              </h1>,
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a NodeBalancer
+              </PrimaryButton>,
+            ],
+            "className": "PrimaryPage-headerRow clearfix",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "NodeBalancers",
+                "className": "float-left",
+              },
+              "ref": null,
+              "rendered": "NodeBalancers",
+              "type": "h1",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "buttonClass": "btn-primary",
+                "children": "Add a NodeBalancer",
+                "className": "float-right",
+                "onClick": [Function],
+                "options": Array [],
+              },
+              "ref": null,
+              "rendered": "Add a NodeBalancer",
+              "type": [Function],
+            },
+          ],
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <List
+            className=""
+          >
+            <ListHeader
+              className="Menu"
+            >
+              <div
+                className="Menu-item"
+              >
+                <MassEditControl
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  dispatch={[Function]}
+                  massEditGroups={
+                    Array [
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "action": [Function],
+                            "name": "Delete",
+                          },
+                        ],
+                      },
+                    ]
+                  }
+                  objectType="nodebalancers"
+                  selectedKey="id"
+                  selectedMap={Object {}}
+                  toggleSelected={[Function]}
+                />
+              </div>
+              <div
+                className="Menu-item"
+              >
+                <Input
+                  className=""
+                  onChange={[Function]}
+                  placeholder="Filter..."
+                  value=""
+                />
+              </div>
+            </ListHeader>
+            <ListBody>
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "LinodeIPAddressColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "_configs": Object {
+                        "configs": Object {
+                          "1": Object {
+                            "_nodes": Object {
+                              "nodes": Object {
+                                "1": Object {
+                                  "address": "192.168.4.5:80",
+                                  "config_id": 0,
+                                  "id": 1,
+                                  "label": "greatest_node_ever",
+                                  "mode": "accept",
+                                  "nodebalancer_id": 23,
+                                  "status": "online",
+                                  "weight": 40,
+                                },
+                              },
+                            },
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 1,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 1,
+                            },
+                            "port": 80,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                          "2": Object {
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 2,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 0,
+                            },
+                            "port": 81,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                        },
+                      },
+                      "client_conn_throttle": 0,
+                      "created": "2017-03-03T18:08:44",
+                      "group": "",
+                      "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                      "id": 23,
+                      "ipv4": "1.1.1.1",
+                      "label": "nodebalancer-2",
+                      "region": "us-east-1a",
+                      "status": "new_active",
+                      "updated": "2017-03-06T22:00:48",
+                    },
+                  ]
+                }
+                disableHeader={true}
+                noDataMessage="No NodeBalancers found."
+                onToggleSelect={[Function]}
+                selectedMap={Object {}}
+              />
+            </ListBody>
+          </List>,
+          "className": "PrimaryPage-body",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="nodebalancers"
+                    selectedKey="id"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>,
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "LinodeIPAddressColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No NodeBalancers found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  <div
+                    className="Menu-item"
+                  >
+                    <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "group": "",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-2",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="nodebalancers"
+                      selectedKey="id"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />
+                  </div>,
+                  <div
+                    className="Menu-item"
+                  >
+                    <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />
+                  </div>,
+                ],
+                "className": "Menu",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "group": "",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-2",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="nodebalancers"
+                      selectedKey="id"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "class",
+                    "props": Object {
+                      "data": Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ],
+                      "dispatch": [Function],
+                      "massEditGroups": Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ],
+                      "objectType": "nodebalancers",
+                      "selectedKey": "id",
+                      "selectedMap": Object {},
+                      "toggleSelected": [Function],
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "onChange": [Function],
+                      "placeholder": "Filter...",
+                      "value": "",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "LinodeIPAddressColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No NodeBalancers found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "columns": Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "hrefFn": [Function],
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "LinodeIPAddressColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "ButtonColumn",
+                      "onClick": [Function],
+                      "text": "Delete",
+                    },
+                  ],
+                  "data": Array [
+                    Object {
+                      "_configs": Object {
+                        "configs": Object {
+                          "1": Object {
+                            "_nodes": Object {
+                              "nodes": Object {
+                                "1": Object {
+                                  "address": "192.168.4.5:80",
+                                  "config_id": 0,
+                                  "id": 1,
+                                  "label": "greatest_node_ever",
+                                  "mode": "accept",
+                                  "nodebalancer_id": 23,
+                                  "status": "online",
+                                  "weight": 40,
+                                },
+                              },
+                            },
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 1,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 1,
+                            },
+                            "port": 80,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                          "2": Object {
+                            "algorithm": "roundrobin",
+                            "check": "none",
+                            "check_attempts": 3,
+                            "check_body": "",
+                            "check_interval": 0,
+                            "check_passive": true,
+                            "check_path": "",
+                            "check_timeout": 30,
+                            "cipher_suite": "recommended",
+                            "id": 2,
+                            "nodebalancer_id": 23,
+                            "nodes_status": Object {
+                              "down": 0,
+                              "up": 0,
+                            },
+                            "port": 81,
+                            "protocol": "http",
+                            "stickiness": "none",
+                          },
+                        },
+                      },
+                      "client_conn_throttle": 0,
+                      "created": "2017-03-03T18:08:44",
+                      "group": "",
+                      "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                      "id": 23,
+                      "ipv4": "1.1.1.1",
+                      "label": "nodebalancer-2",
+                      "region": "us-east-1a",
+                      "status": "new_active",
+                      "updated": "2017-03-06T22:00:48",
+                    },
+                  ],
+                  "disableHeader": true,
+                  "noDataMessage": "No NodeBalancers found.",
+                  "onToggleSelect": [Function],
+                  "selectedMap": Object {},
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "transfer": Object {
+            "quota": 5,
+            "used": 1,
+          },
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="NodeBalancers"
+          />,
+          <header
+            className="PrimaryPage-header"
+          >
+            <div
+              className="PrimaryPage-headerRow clearfix"
+            >
+              <h1
+                className="float-left"
+              >
+                NodeBalancers
+              </h1>
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a NodeBalancer
+              </PrimaryButton>
+            </div>
+          </header>,
+          <div
+            className="PrimaryPage-body"
+          >
+            <List
+              className=""
+            >
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="nodebalancers"
+                    selectedKey="id"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "LinodeIPAddressColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No NodeBalancers found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>
+            </List>
+          </div>,
+          <TransferPool
+            transfer={
+              Object {
+                "quota": 5,
+                "used": 1,
+              }
+            }
+          />,
+        ],
+        "className": "PrimaryPage container",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "NodeBalancers",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="PrimaryPage-headerRow clearfix"
+            >
+              <h1
+                className="float-left"
+              >
+                NodeBalancers
+              </h1>
+              <PrimaryButton
+                buttonClass="btn-primary"
+                className="float-right"
+                onClick={[Function]}
+                options={Array []}
+              >
+                Add a NodeBalancer
+              </PrimaryButton>
+            </div>,
+            "className": "PrimaryPage-header",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <h1
+                  className="float-left"
+                >
+                  NodeBalancers
+                </h1>,
+                <PrimaryButton
+                  buttonClass="btn-primary"
+                  className="float-right"
+                  onClick={[Function]}
+                  options={Array []}
+                >
+                  Add a NodeBalancer
+                </PrimaryButton>,
+              ],
+              "className": "PrimaryPage-headerRow clearfix",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "NodeBalancers",
+                  "className": "float-left",
+                },
+                "ref": null,
+                "rendered": "NodeBalancers",
+                "type": "h1",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "buttonClass": "btn-primary",
+                  "children": "Add a NodeBalancer",
+                  "className": "float-right",
+                  "onClick": [Function],
+                  "options": Array [],
+                },
+                "ref": null,
+                "rendered": "Add a NodeBalancer",
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <List
+              className=""
+            >
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="nodebalancers"
+                    selectedKey="id"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>
+              <ListBody>
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "LinodeIPAddressColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ]
+                  }
+                  disableHeader={true}
+                  noDataMessage="No NodeBalancers found."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>
+            </List>,
+            "className": "PrimaryPage-body",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <ListHeader
+                  className="Menu"
+                >
+                  <div
+                    className="Menu-item"
+                  >
+                    <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "group": "",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-2",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="nodebalancers"
+                      selectedKey="id"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />
+                  </div>
+                  <div
+                    className="Menu-item"
+                  >
+                    <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />
+                  </div>
+                </ListHeader>,
+                <ListBody>
+                  <Table
+                    className=""
+                    columns={
+                      Array [
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "CheckboxColumn",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "hrefFn": [Function],
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "LinodeIPAddressColumn",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ButtonColumn",
+                          "onClick": [Function],
+                          "text": "Delete",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ]
+                    }
+                    disableHeader={true}
+                    noDataMessage="No NodeBalancers found."
+                    onToggleSelect={[Function]}
+                    selectedMap={Object {}}
+                  />
+                </ListBody>,
+              ],
+              "className": "",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": Array [
+                    <div
+                      className="Menu-item"
+                    >
+                      <MassEditControl
+                        data={
+                          Array [
+                            Object {
+                              "_configs": Object {
+                                "configs": Object {
+                                  "1": Object {
+                                    "_nodes": Object {
+                                      "nodes": Object {
+                                        "1": Object {
+                                          "address": "192.168.4.5:80",
+                                          "config_id": 0,
+                                          "id": 1,
+                                          "label": "greatest_node_ever",
+                                          "mode": "accept",
+                                          "nodebalancer_id": 23,
+                                          "status": "online",
+                                          "weight": 40,
+                                        },
+                                      },
+                                    },
+                                    "algorithm": "roundrobin",
+                                    "check": "none",
+                                    "check_attempts": 3,
+                                    "check_body": "",
+                                    "check_interval": 0,
+                                    "check_passive": true,
+                                    "check_path": "",
+                                    "check_timeout": 30,
+                                    "cipher_suite": "recommended",
+                                    "id": 1,
+                                    "nodebalancer_id": 23,
+                                    "nodes_status": Object {
+                                      "down": 0,
+                                      "up": 1,
+                                    },
+                                    "port": 80,
+                                    "protocol": "http",
+                                    "stickiness": "none",
+                                  },
+                                  "2": Object {
+                                    "algorithm": "roundrobin",
+                                    "check": "none",
+                                    "check_attempts": 3,
+                                    "check_body": "",
+                                    "check_interval": 0,
+                                    "check_passive": true,
+                                    "check_path": "",
+                                    "check_timeout": 30,
+                                    "cipher_suite": "recommended",
+                                    "id": 2,
+                                    "nodebalancer_id": 23,
+                                    "nodes_status": Object {
+                                      "down": 0,
+                                      "up": 0,
+                                    },
+                                    "port": 81,
+                                    "protocol": "http",
+                                    "stickiness": "none",
+                                  },
+                                },
+                              },
+                              "client_conn_throttle": 0,
+                              "created": "2017-03-03T18:08:44",
+                              "group": "",
+                              "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                              "id": 23,
+                              "ipv4": "1.1.1.1",
+                              "label": "nodebalancer-2",
+                              "region": "us-east-1a",
+                              "status": "new_active",
+                              "updated": "2017-03-06T22:00:48",
+                            },
+                          ]
+                        }
+                        dispatch={[Function]}
+                        massEditGroups={
+                          Array [
+                            Object {
+                              "elements": Array [
+                                Object {
+                                  "action": [Function],
+                                  "name": "Delete",
+                                },
+                              ],
+                            },
+                          ]
+                        }
+                        objectType="nodebalancers"
+                        selectedKey="id"
+                        selectedMap={Object {}}
+                        toggleSelected={[Function]}
+                      />
+                    </div>,
+                    <div
+                      className="Menu-item"
+                    >
+                      <Input
+                        className=""
+                        onChange={[Function]}
+                        placeholder="Filter..."
+                        value=""
+                      />
+                    </div>,
+                  ],
+                  "className": "Menu",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <MassEditControl
+                        data={
+                          Array [
+                            Object {
+                              "_configs": Object {
+                                "configs": Object {
+                                  "1": Object {
+                                    "_nodes": Object {
+                                      "nodes": Object {
+                                        "1": Object {
+                                          "address": "192.168.4.5:80",
+                                          "config_id": 0,
+                                          "id": 1,
+                                          "label": "greatest_node_ever",
+                                          "mode": "accept",
+                                          "nodebalancer_id": 23,
+                                          "status": "online",
+                                          "weight": 40,
+                                        },
+                                      },
+                                    },
+                                    "algorithm": "roundrobin",
+                                    "check": "none",
+                                    "check_attempts": 3,
+                                    "check_body": "",
+                                    "check_interval": 0,
+                                    "check_passive": true,
+                                    "check_path": "",
+                                    "check_timeout": 30,
+                                    "cipher_suite": "recommended",
+                                    "id": 1,
+                                    "nodebalancer_id": 23,
+                                    "nodes_status": Object {
+                                      "down": 0,
+                                      "up": 1,
+                                    },
+                                    "port": 80,
+                                    "protocol": "http",
+                                    "stickiness": "none",
+                                  },
+                                  "2": Object {
+                                    "algorithm": "roundrobin",
+                                    "check": "none",
+                                    "check_attempts": 3,
+                                    "check_body": "",
+                                    "check_interval": 0,
+                                    "check_passive": true,
+                                    "check_path": "",
+                                    "check_timeout": 30,
+                                    "cipher_suite": "recommended",
+                                    "id": 2,
+                                    "nodebalancer_id": 23,
+                                    "nodes_status": Object {
+                                      "down": 0,
+                                      "up": 0,
+                                    },
+                                    "port": 81,
+                                    "protocol": "http",
+                                    "stickiness": "none",
+                                  },
+                                },
+                              },
+                              "client_conn_throttle": 0,
+                              "created": "2017-03-03T18:08:44",
+                              "group": "",
+                              "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                              "id": 23,
+                              "ipv4": "1.1.1.1",
+                              "label": "nodebalancer-2",
+                              "region": "us-east-1a",
+                              "status": "new_active",
+                              "updated": "2017-03-06T22:00:48",
+                            },
+                          ]
+                        }
+                        dispatch={[Function]}
+                        massEditGroups={
+                          Array [
+                            Object {
+                              "elements": Array [
+                                Object {
+                                  "action": [Function],
+                                  "name": "Delete",
+                                },
+                              ],
+                            },
+                          ]
+                        }
+                        objectType="nodebalancers"
+                        selectedKey="id"
+                        selectedMap={Object {}}
+                        toggleSelected={[Function]}
+                      />,
+                      "className": "Menu-item",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "class",
+                      "props": Object {
+                        "data": Array [
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "group": "",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-2",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          },
+                        ],
+                        "dispatch": [Function],
+                        "massEditGroups": Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ],
+                        "objectType": "nodebalancers",
+                        "selectedKey": "id",
+                        "selectedMap": Object {},
+                        "toggleSelected": [Function],
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "div",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <Input
+                        className=""
+                        onChange={[Function]}
+                        placeholder="Filter..."
+                        value=""
+                      />,
+                      "className": "Menu-item",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "className": "",
+                        "onChange": [Function],
+                        "placeholder": "Filter...",
+                        "value": "",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "div",
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": <Table
+                    className=""
+                    columns={
+                      Array [
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "CheckboxColumn",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "hrefFn": [Function],
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "LinodeIPAddressColumn",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "ButtonColumn",
+                          "onClick": [Function],
+                          "text": "Delete",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "group": "",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-2",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      ]
+                    }
+                    disableHeader={true}
+                    noDataMessage="No NodeBalancers found."
+                    onToggleSelect={[Function]}
+                    selectedMap={Object {}}
+                  />,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "columns": Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "hrefFn": [Function],
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "LinodeIPAddressColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "ButtonColumn",
+                        "onClick": [Function],
+                        "text": "Delete",
+                      },
+                    ],
+                    "data": Array [
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "group": "",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-2",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    ],
+                    "disableHeader": true,
+                    "noDataMessage": "No NodeBalancers found.",
+                    "onToggleSelect": [Function],
+                    "selectedMap": Object {},
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                "type": [Function],
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "transfer": Object {
+              "quota": 5,
+              "used": 1,
+            },
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

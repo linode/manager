@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,6 +19,19 @@ describe('nodebalancers/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        transfer={{ used: 1, quota: 5 }}
+        nodebalancers={nodebalancers}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('renders a list of Nodebalancers', () => {
     const page = mount(
@@ -76,7 +89,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/nodebalancers/23', { method: 'DELETE' });
   });

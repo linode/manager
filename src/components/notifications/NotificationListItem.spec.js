@@ -23,6 +23,14 @@ describe('components/notifications/NotificationListItem', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <NotificationListItem event={events.events[386]} />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders unread notification', () => {
     const notification = shallow(makeNotificationListItem(events.events[385]));
     expect(notification.find('.NotificationList-listItem--unread').length).toBe(1);

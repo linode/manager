@@ -17,15 +17,29 @@ describe('domains/components/EditTXTRecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[4];
+    const wrapper = shallow(
+      <EditTXTRecord
+        dispatch={() => { }}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly for TXT record', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditTXTRecord
-        dispatch={() => {}}
+        dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
-        close={() => {}}
+        close={() => { }}
       />
     );
 

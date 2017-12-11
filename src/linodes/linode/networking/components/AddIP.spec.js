@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,6 +17,17 @@ describe('linodes/linode/networking/components/AddIP', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <AddIP
+        linode={testLinode}
+        dispatch={dispatch}
+        close={dispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('submits data onsubmit and closes modal', async () => {
     const page = mount(
       <AddIP
@@ -28,7 +39,7 @@ describe('linodes/linode/networking/components/AddIP', () => {
 
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
 
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

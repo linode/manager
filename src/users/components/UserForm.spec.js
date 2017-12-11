@@ -16,6 +16,17 @@ describe('users/layouts/UserForm', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <UserForm
+        dispatch={mockDispatch}
+        user={testUser}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders data in UserForm', () => {
     const page = shallow(
       <UserForm

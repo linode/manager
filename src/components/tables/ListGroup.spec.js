@@ -1,12 +1,16 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { ListGroup } from 'linode-components';
 
 
 describe('components/lists/ListGroup', function () {
-  it('should be defined', function () {
-    expect(ListGroup).toBeDefined();
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <ListGroup name="Example" />
+    );
+
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('should render a name', function () {

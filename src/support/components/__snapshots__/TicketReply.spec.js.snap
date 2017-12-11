@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`support/components/TicketReply should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TicketReply
+    createdField="opened"
+    reply={
+      Object {
+        "_replies": Object {
+          "replies": Array [
+            Object {
+              "created": "2017-03-30T16:48:10",
+              "created_by": "support",
+              "description": "This is the first response.",
+              "id": 1,
+            },
+          ],
+        },
+        "closed": null,
+        "description": "Hullo!",
+        "entity": Object {
+          "label": "awkward-aimless-alpha-22",
+          "type": "linode",
+        },
+        "id": 1,
+        "opened": "2017-03-03T01:22:32",
+        "opened_by": "tdude",
+        "status": "new",
+        "summary": "This is my ticket!",
+        "updated": "2017-03-03T01:22:32",
+        "updated_by": "tdude",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        "Hullo!",
+        null,
+      ],
+      "className": "TicketReply",
+      "header": <CardImageHeader
+        icon="https://gravatar.com/avatar/undefined"
+        iconClass=""
+        subtitle={
+          <TimeDisplay
+            time="2017-03-03T01:22:32"
+          />
+        }
+        tags={Array []}
+        title="tdude"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      "Hullo!",
+      null,
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          "Hullo!",
+          null,
+        ],
+        "className": "TicketReply",
+        "header": <CardImageHeader
+          icon="https://gravatar.com/avatar/undefined"
+          iconClass=""
+          subtitle={
+            <TimeDisplay
+              time="2017-03-03T01:22:32"
+            />
+          }
+          tags={Array []}
+          title="tdude"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        "Hullo!",
+        null,
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

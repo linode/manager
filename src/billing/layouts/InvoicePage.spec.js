@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { InvoicePage } from '~/billing/layouts/InvoicePage';
 import { api } from '~/data';
@@ -18,6 +18,17 @@ describe('billing/layouts/InvoicePage', () => {
   });
 
   const dispatch = sandbox.spy();
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <InvoicePage
+        dispatch={dispatch}
+        invoice={invoice}
+        items={items}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('renders a list of invoice items', () => {
     const page = mount(

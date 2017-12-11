@@ -1,0 +1,1390 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`settings/layouts/IndexPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <IndexPage
+    account={
+      Object {
+        "address_1": "123 Main St.",
+        "address_2": "Suite 101",
+        "balance": 10,
+        "city": "Philadelphia",
+        "company": "My Company LLC",
+        "country": "US",
+        "email": "jsmith@mycompany.com",
+        "first_name": "John",
+        "last_name": "Smith",
+        "network_helper": false,
+        "phone": "555-555-1212",
+        "state": "PA",
+        "zip": 19102,
+      }
+    }
+    dispatch={[Function]}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Account Settings"
+        />,
+        <header
+          className="main-header main-header--border"
+        >
+          <div
+            className="container"
+          >
+            <h1>
+              Account Settings
+            </h1>
+          </div>
+        </header>,
+        <div
+          className="container"
+        >
+          <Card
+            className=""
+            header={
+              <CardHeader
+                title="Network Helper"
+              />
+            }
+          >
+            <Form
+              analytics={
+                Object {
+                  "title": "Account Settings",
+                }
+              }
+              className=""
+              noSubmitEvent={false}
+              onSubmit={[Function]}
+            >
+              <FormGroup
+                className="row"
+              >
+                <label
+                  className="col-form-label col-sm-2"
+                >
+                  Default Behavior
+                </label>
+                <div
+                  className="col-sm-10"
+                >
+                  <Checkboxes>
+                    <Radio
+                      checked={true}
+                      className=""
+                      label="OFF - This is the legacy / old account behavior"
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="OFF"
+                    />
+                    <Radio
+                      checked={false}
+                      className=""
+                      label="ON  - This is new account behavior. You probably want this."
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="ON"
+                    />
+                  </Checkboxes>
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                    </small>
+                  </div>
+                </div>
+              </FormGroup>
+              <FormGroup
+                className="row"
+              >
+                <div
+                  className="offset-sm-2 col-sm-10"
+                >
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Saving"
+                  >
+                    Save
+                  </SubmitButton>
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Account saved."
+                  />
+                </div>
+              </FormGroup>
+            </Form>
+          </Card>
+        </div>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Account Settings",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="container"
+          >
+            <h1>
+              Account Settings
+            </h1>
+          </div>,
+          "className": "main-header main-header--border",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <h1>
+              Account Settings
+            </h1>,
+            "className": "container",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Account Settings",
+            },
+            "ref": null,
+            "rendered": "Account Settings",
+            "type": "h1",
+          },
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <Card
+            className=""
+            header={
+              <CardHeader
+                title="Network Helper"
+              />
+            }
+          >
+            <Form
+              analytics={
+                Object {
+                  "title": "Account Settings",
+                }
+              }
+              className=""
+              noSubmitEvent={false}
+              onSubmit={[Function]}
+            >
+              <FormGroup
+                className="row"
+              >
+                <label
+                  className="col-form-label col-sm-2"
+                >
+                  Default Behavior
+                </label>
+                <div
+                  className="col-sm-10"
+                >
+                  <Checkboxes>
+                    <Radio
+                      checked={true}
+                      className=""
+                      label="OFF - This is the legacy / old account behavior"
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="OFF"
+                    />
+                    <Radio
+                      checked={false}
+                      className=""
+                      label="ON  - This is new account behavior. You probably want this."
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="ON"
+                    />
+                  </Checkboxes>
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                    </small>
+                  </div>
+                </div>
+              </FormGroup>
+              <FormGroup
+                className="row"
+              >
+                <div
+                  className="offset-sm-2 col-sm-10"
+                >
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Saving"
+                  >
+                    Save
+                  </SubmitButton>
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Account saved."
+                  />
+                </div>
+              </FormGroup>
+            </Form>
+          </Card>,
+          "className": "container",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <Form
+              analytics={
+                Object {
+                  "title": "Account Settings",
+                }
+              }
+              className=""
+              noSubmitEvent={false}
+              onSubmit={[Function]}
+            >
+              <FormGroup
+                className="row"
+              >
+                <label
+                  className="col-form-label col-sm-2"
+                >
+                  Default Behavior
+                </label>
+                <div
+                  className="col-sm-10"
+                >
+                  <Checkboxes>
+                    <Radio
+                      checked={true}
+                      className=""
+                      label="OFF - This is the legacy / old account behavior"
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="OFF"
+                    />
+                    <Radio
+                      checked={false}
+                      className=""
+                      label="ON  - This is new account behavior. You probably want this."
+                      name="networkHelper"
+                      onChange={[Function]}
+                      value="ON"
+                    />
+                  </Checkboxes>
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                    </small>
+                  </div>
+                </div>
+              </FormGroup>
+              <FormGroup
+                className="row"
+              >
+                <div
+                  className="offset-sm-2 col-sm-10"
+                >
+                  <SubmitButton
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Saving"
+                  >
+                    Save
+                  </SubmitButton>
+                  <FormSummary
+                    className=""
+                    errors={Object {}}
+                    success="Account saved."
+                  />
+                </div>
+              </FormGroup>
+            </Form>,
+            "className": "",
+            "header": <CardHeader
+              title="Network Helper"
+            />,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "analytics": Object {
+                "title": "Account Settings",
+              },
+              "children": Array [
+                <FormGroup
+                  className="row"
+                >
+                  <label
+                    className="col-form-label col-sm-2"
+                  >
+                    Default Behavior
+                  </label>
+                  <div
+                    className="col-sm-10"
+                  >
+                    <Checkboxes>
+                      <Radio
+                        checked={true}
+                        className=""
+                        label="OFF - This is the legacy / old account behavior"
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="OFF"
+                      />
+                      <Radio
+                        checked={false}
+                        className=""
+                        label="ON  - This is new account behavior. You probably want this."
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="ON"
+                      />
+                    </Checkboxes>
+                    <div>
+                      <small
+                        className="text-muted"
+                      >
+                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                      </small>
+                    </div>
+                  </div>
+                </FormGroup>,
+                <FormGroup
+                  className="row"
+                >
+                  <div
+                    className="offset-sm-2 col-sm-10"
+                  >
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Saving"
+                    >
+                      Save
+                    </SubmitButton>
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Account saved."
+                    />
+                  </div>
+                </FormGroup>,
+              ],
+              "className": "",
+              "noSubmitEvent": false,
+              "onSubmit": [Function],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": Array [
+                    <label
+                      className="col-form-label col-sm-2"
+                    >
+                      Default Behavior
+                    </label>,
+                    <div
+                      className="col-sm-10"
+                    >
+                      <Checkboxes>
+                        <Radio
+                          checked={true}
+                          className=""
+                          label="OFF - This is the legacy / old account behavior"
+                          name="networkHelper"
+                          onChange={[Function]}
+                          value="OFF"
+                        />
+                        <Radio
+                          checked={false}
+                          className=""
+                          label="ON  - This is new account behavior. You probably want this."
+                          name="networkHelper"
+                          onChange={[Function]}
+                          value="ON"
+                        />
+                      </Checkboxes>
+                      <div>
+                        <small
+                          className="text-muted"
+                        >
+                          This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                        </small>
+                      </div>
+                    </div>,
+                  ],
+                  "className": "row",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Default Behavior",
+                      "className": "col-form-label col-sm-2",
+                    },
+                    "ref": null,
+                    "rendered": "Default Behavior",
+                    "type": "label",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        <Checkboxes>
+                          <Radio
+                            checked={true}
+                            className=""
+                            label="OFF - This is the legacy / old account behavior"
+                            name="networkHelper"
+                            onChange={[Function]}
+                            value="OFF"
+                          />
+                          <Radio
+                            checked={false}
+                            className=""
+                            label="ON  - This is new account behavior. You probably want this."
+                            name="networkHelper"
+                            onChange={[Function]}
+                            value="ON"
+                          />
+                        </Checkboxes>,
+                        <div>
+                          <small
+                            className="text-muted"
+                          >
+                            This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                          </small>
+                        </div>,
+                      ],
+                      "className": "col-sm-10",
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": Array [
+                            <Radio
+                              checked={true}
+                              className=""
+                              label="OFF - This is the legacy / old account behavior"
+                              name="networkHelper"
+                              onChange={[Function]}
+                              value="OFF"
+                            />,
+                            <Radio
+                              checked={false}
+                              className=""
+                              label="ON  - This is new account behavior. You probably want this."
+                              name="networkHelper"
+                              onChange={[Function]}
+                              value="ON"
+                            />,
+                          ],
+                        },
+                        "ref": null,
+                        "rendered": Array [
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "checked": true,
+                              "className": "",
+                              "label": "OFF - This is the legacy / old account behavior",
+                              "name": "networkHelper",
+                              "onChange": [Function],
+                              "value": "OFF",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "checked": false,
+                              "className": "",
+                              "label": "ON  - This is new account behavior. You probably want this.",
+                              "name": "networkHelper",
+                              "onChange": [Function],
+                              "value": "ON",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                        ],
+                        "type": [Function],
+                      },
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "children": <small
+                            className="text-muted"
+                          >
+                            This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                          </small>,
+                        },
+                        "ref": null,
+                        "rendered": Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": "This controls the default setting for the Network Helper on newly created Configuration Profiles.",
+                            "className": "text-muted",
+                          },
+                          "ref": null,
+                          "rendered": "This controls the default setting for the Network Helper on newly created Configuration Profiles.",
+                          "type": "small",
+                        },
+                        "type": "div",
+                      },
+                    ],
+                    "type": "div",
+                  },
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": <div
+                    className="offset-sm-2 col-sm-10"
+                  >
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Saving"
+                    >
+                      Save
+                    </SubmitButton>
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Account saved."
+                    />
+                  </div>,
+                  "className": "row",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <SubmitButton
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Saving"
+                      >
+                        Save
+                      </SubmitButton>,
+                      <FormSummary
+                        className=""
+                        errors={Object {}}
+                        success="Account saved."
+                      />,
+                    ],
+                    "className": "offset-sm-2 col-sm-10",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": "Save",
+                        "className": "btn-default",
+                        "disabled": false,
+                        "disabledChildren": "Saving",
+                      },
+                      "ref": null,
+                      "rendered": "Save",
+                      "type": [Function],
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "className": "",
+                        "errors": Object {},
+                        "success": "Account saved.",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                  ],
+                  "type": "div",
+                },
+                "type": [Function],
+              },
+            ],
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Account Settings"
+          />,
+          <header
+            className="main-header main-header--border"
+          >
+            <div
+              className="container"
+            >
+              <h1>
+                Account Settings
+              </h1>
+            </div>
+          </header>,
+          <div
+            className="container"
+          >
+            <Card
+              className=""
+              header={
+                <CardHeader
+                  title="Network Helper"
+                />
+              }
+            >
+              <Form
+                analytics={
+                  Object {
+                    "title": "Account Settings",
+                  }
+                }
+                className=""
+                noSubmitEvent={false}
+                onSubmit={[Function]}
+              >
+                <FormGroup
+                  className="row"
+                >
+                  <label
+                    className="col-form-label col-sm-2"
+                  >
+                    Default Behavior
+                  </label>
+                  <div
+                    className="col-sm-10"
+                  >
+                    <Checkboxes>
+                      <Radio
+                        checked={true}
+                        className=""
+                        label="OFF - This is the legacy / old account behavior"
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="OFF"
+                      />
+                      <Radio
+                        checked={false}
+                        className=""
+                        label="ON  - This is new account behavior. You probably want this."
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="ON"
+                      />
+                    </Checkboxes>
+                    <div>
+                      <small
+                        className="text-muted"
+                      >
+                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                      </small>
+                    </div>
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  className="row"
+                >
+                  <div
+                    className="offset-sm-2 col-sm-10"
+                  >
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Saving"
+                    >
+                      Save
+                    </SubmitButton>
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Account saved."
+                    />
+                  </div>
+                </FormGroup>
+              </Form>
+            </Card>
+          </div>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Account Settings",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="container"
+            >
+              <h1>
+                Account Settings
+              </h1>
+            </div>,
+            "className": "main-header main-header--border",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <h1>
+                Account Settings
+              </h1>,
+              "className": "container",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Account Settings",
+              },
+              "ref": null,
+              "rendered": "Account Settings",
+              "type": "h1",
+            },
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Card
+              className=""
+              header={
+                <CardHeader
+                  title="Network Helper"
+                />
+              }
+            >
+              <Form
+                analytics={
+                  Object {
+                    "title": "Account Settings",
+                  }
+                }
+                className=""
+                noSubmitEvent={false}
+                onSubmit={[Function]}
+              >
+                <FormGroup
+                  className="row"
+                >
+                  <label
+                    className="col-form-label col-sm-2"
+                  >
+                    Default Behavior
+                  </label>
+                  <div
+                    className="col-sm-10"
+                  >
+                    <Checkboxes>
+                      <Radio
+                        checked={true}
+                        className=""
+                        label="OFF - This is the legacy / old account behavior"
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="OFF"
+                      />
+                      <Radio
+                        checked={false}
+                        className=""
+                        label="ON  - This is new account behavior. You probably want this."
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="ON"
+                      />
+                    </Checkboxes>
+                    <div>
+                      <small
+                        className="text-muted"
+                      >
+                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                      </small>
+                    </div>
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  className="row"
+                >
+                  <div
+                    className="offset-sm-2 col-sm-10"
+                  >
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Saving"
+                    >
+                      Save
+                    </SubmitButton>
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Account saved."
+                    />
+                  </div>
+                </FormGroup>
+              </Form>
+            </Card>,
+            "className": "container",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": <Form
+                analytics={
+                  Object {
+                    "title": "Account Settings",
+                  }
+                }
+                className=""
+                noSubmitEvent={false}
+                onSubmit={[Function]}
+              >
+                <FormGroup
+                  className="row"
+                >
+                  <label
+                    className="col-form-label col-sm-2"
+                  >
+                    Default Behavior
+                  </label>
+                  <div
+                    className="col-sm-10"
+                  >
+                    <Checkboxes>
+                      <Radio
+                        checked={true}
+                        className=""
+                        label="OFF - This is the legacy / old account behavior"
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="OFF"
+                      />
+                      <Radio
+                        checked={false}
+                        className=""
+                        label="ON  - This is new account behavior. You probably want this."
+                        name="networkHelper"
+                        onChange={[Function]}
+                        value="ON"
+                      />
+                    </Checkboxes>
+                    <div>
+                      <small
+                        className="text-muted"
+                      >
+                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                      </small>
+                    </div>
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  className="row"
+                >
+                  <div
+                    className="offset-sm-2 col-sm-10"
+                  >
+                    <SubmitButton
+                      className="btn-default"
+                      disabled={false}
+                      disabledChildren="Saving"
+                    >
+                      Save
+                    </SubmitButton>
+                    <FormSummary
+                      className=""
+                      errors={Object {}}
+                      success="Account saved."
+                    />
+                  </div>
+                </FormGroup>
+              </Form>,
+              "className": "",
+              "header": <CardHeader
+                title="Network Helper"
+              />,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "analytics": Object {
+                  "title": "Account Settings",
+                },
+                "children": Array [
+                  <FormGroup
+                    className="row"
+                  >
+                    <label
+                      className="col-form-label col-sm-2"
+                    >
+                      Default Behavior
+                    </label>
+                    <div
+                      className="col-sm-10"
+                    >
+                      <Checkboxes>
+                        <Radio
+                          checked={true}
+                          className=""
+                          label="OFF - This is the legacy / old account behavior"
+                          name="networkHelper"
+                          onChange={[Function]}
+                          value="OFF"
+                        />
+                        <Radio
+                          checked={false}
+                          className=""
+                          label="ON  - This is new account behavior. You probably want this."
+                          name="networkHelper"
+                          onChange={[Function]}
+                          value="ON"
+                        />
+                      </Checkboxes>
+                      <div>
+                        <small
+                          className="text-muted"
+                        >
+                          This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                        </small>
+                      </div>
+                    </div>
+                  </FormGroup>,
+                  <FormGroup
+                    className="row"
+                  >
+                    <div
+                      className="offset-sm-2 col-sm-10"
+                    >
+                      <SubmitButton
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Saving"
+                      >
+                        Save
+                      </SubmitButton>
+                      <FormSummary
+                        className=""
+                        errors={Object {}}
+                        success="Account saved."
+                      />
+                    </div>
+                  </FormGroup>,
+                ],
+                "className": "",
+                "noSubmitEvent": false,
+                "onSubmit": [Function],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": Array [
+                      <label
+                        className="col-form-label col-sm-2"
+                      >
+                        Default Behavior
+                      </label>,
+                      <div
+                        className="col-sm-10"
+                      >
+                        <Checkboxes>
+                          <Radio
+                            checked={true}
+                            className=""
+                            label="OFF - This is the legacy / old account behavior"
+                            name="networkHelper"
+                            onChange={[Function]}
+                            value="OFF"
+                          />
+                          <Radio
+                            checked={false}
+                            className=""
+                            label="ON  - This is new account behavior. You probably want this."
+                            name="networkHelper"
+                            onChange={[Function]}
+                            value="ON"
+                          />
+                        </Checkboxes>
+                        <div>
+                          <small
+                            className="text-muted"
+                          >
+                            This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                          </small>
+                        </div>
+                      </div>,
+                    ],
+                    "className": "row",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": "Default Behavior",
+                        "className": "col-form-label col-sm-2",
+                      },
+                      "ref": null,
+                      "rendered": "Default Behavior",
+                      "type": "label",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": Array [
+                          <Checkboxes>
+                            <Radio
+                              checked={true}
+                              className=""
+                              label="OFF - This is the legacy / old account behavior"
+                              name="networkHelper"
+                              onChange={[Function]}
+                              value="OFF"
+                            />
+                            <Radio
+                              checked={false}
+                              className=""
+                              label="ON  - This is new account behavior. You probably want this."
+                              name="networkHelper"
+                              onChange={[Function]}
+                              value="ON"
+                            />
+                          </Checkboxes>,
+                          <div>
+                            <small
+                              className="text-muted"
+                            >
+                              This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                            </small>
+                          </div>,
+                        ],
+                        "className": "col-sm-10",
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "function",
+                          "props": Object {
+                            "children": Array [
+                              <Radio
+                                checked={true}
+                                className=""
+                                label="OFF - This is the legacy / old account behavior"
+                                name="networkHelper"
+                                onChange={[Function]}
+                                value="OFF"
+                              />,
+                              <Radio
+                                checked={false}
+                                className=""
+                                label="ON  - This is new account behavior. You probably want this."
+                                name="networkHelper"
+                                onChange={[Function]}
+                                value="ON"
+                              />,
+                            ],
+                          },
+                          "ref": null,
+                          "rendered": Array [
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "checked": true,
+                                "className": "",
+                                "label": "OFF - This is the legacy / old account behavior",
+                                "name": "networkHelper",
+                                "onChange": [Function],
+                                "value": "OFF",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "checked": false,
+                                "className": "",
+                                "label": "ON  - This is new account behavior. You probably want this.",
+                                "name": "networkHelper",
+                                "onChange": [Function],
+                                "value": "ON",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                          ],
+                          "type": [Function],
+                        },
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": <small
+                              className="text-muted"
+                            >
+                              This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                            </small>,
+                          },
+                          "ref": null,
+                          "rendered": Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "host",
+                            "props": Object {
+                              "children": "This controls the default setting for the Network Helper on newly created Configuration Profiles.",
+                              "className": "text-muted",
+                            },
+                            "ref": null,
+                            "rendered": "This controls the default setting for the Network Helper on newly created Configuration Profiles.",
+                            "type": "small",
+                          },
+                          "type": "div",
+                        },
+                      ],
+                      "type": "div",
+                    },
+                  ],
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <div
+                      className="offset-sm-2 col-sm-10"
+                    >
+                      <SubmitButton
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Saving"
+                      >
+                        Save
+                      </SubmitButton>
+                      <FormSummary
+                        className=""
+                        errors={Object {}}
+                        success="Account saved."
+                      />
+                    </div>,
+                    "className": "row",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        <SubmitButton
+                          className="btn-default"
+                          disabled={false}
+                          disabledChildren="Saving"
+                        >
+                          Save
+                        </SubmitButton>,
+                        <FormSummary
+                          className=""
+                          errors={Object {}}
+                          success="Account saved."
+                        />,
+                      ],
+                      "className": "offset-sm-2 col-sm-10",
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": "Save",
+                          "className": "btn-default",
+                          "disabled": false,
+                          "disabledChildren": "Saving",
+                        },
+                        "ref": null,
+                        "rendered": "Save",
+                        "type": [Function],
+                      },
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "className": "",
+                          "errors": Object {},
+                          "success": "Account saved.",
+                        },
+                        "ref": null,
+                        "rendered": null,
+                        "type": [Function],
+                      },
+                    ],
+                    "type": "div",
+                  },
+                  "type": [Function],
+                },
+              ],
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

@@ -11,16 +11,16 @@ describe('components/tables/cells/TableCell', function () {
   beforeEach(function () {
   });
 
-  it('should be defined', function () {
-    tableCell = shallow(
+  it('should render without error', () => {
+    const wrapper = shallow(
       <TableCell
+        className="example"
         column={{}}
         record={{}}
       />
     );
-    expect(TableCell).toBeDefined();
-    expect(tableCell).toBeDefined();
-    expect(tableCell.find('.TableCell').length).toBe(1);
+
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('should accept className from props', function () {

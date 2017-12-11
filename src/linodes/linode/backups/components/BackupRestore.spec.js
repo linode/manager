@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -19,6 +19,20 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const backup = testLinode._backups.snapshot.current;
+    const wrapper = shallow(
+      <BackupRestore
+        dispatch={dispatch}
+        linode={testLinode}
+        linodes={api.linodes}
+        backup={backup}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('should dispatch a restore request', async () => {
     const backup = testLinode._backups.snapshot.current;
     const page = mount(
@@ -31,13 +45,13 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
     );
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
 
     expect(dispatch.callCount).toBe(1);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/1234/backups/${backup.id}/restore`, {

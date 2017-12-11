@@ -20,6 +20,18 @@ describe('linodes/linode/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        linode={testLinode}
+        router={router}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('preloads type and configs', async () => {
     const _dispatch = sandbox.stub();
     _dispatch.returns({ id: 1241, type: { id: 'g5-standard-1' } });
@@ -49,7 +61,8 @@ describe('linodes/linode/layouts/IndexPage', () => {
         dispatch={dispatch}
         linode={testLinode}
         router={router}
-      />);
+      />
+    );
 
     const h1Link = page.find('h1 Link');
     expect(h1Link.props().to).toBe(`/linodes/${testLinode.label}`);

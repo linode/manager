@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -26,6 +26,18 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        stackscripts={stackscripts}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it.skip('renders a list of stackscripts', () => {
     const page = mount(
@@ -82,7 +94,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/stackscripts/38', { method: 'DELETE' });
   });
@@ -105,7 +117,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
     changeInput(modal, 'label', 'WordPress');
 
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/stackscripts/', {
