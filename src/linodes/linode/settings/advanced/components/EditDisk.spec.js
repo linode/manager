@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -18,6 +18,19 @@ describe('linodes/linode/settings/advanced/components/EditDisk', () => {
 
   const testDisk = testLinode1236._disks.disks[12345];
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <EditDisk
+        dispatch={dispatch}
+        linode={testLinode1236}
+        disk={testDisk}
+        free={0}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('should dismiss the modal when Cancel is clicked', () => {
     const dispatch = sandbox.spy();
     const modal = mount(
@@ -26,7 +39,8 @@ describe('linodes/linode/settings/advanced/components/EditDisk', () => {
         linode={testLinode1236}
         disk={testDisk}
         free={0}
-      />);
+      />
+    );
 
     modal.find('CancelButton').simulate('click');
     expect(dispatch.callCount).toBe(1);
@@ -46,7 +60,7 @@ describe('linodes/linode/settings/advanced/components/EditDisk', () => {
     changeInput(modal, 'label', 'The label');
     changeInput(modal, 'size', 1000);
 
-    await modal.find('Form').props().onSubmit({ preventDefault() {} });
+    await modal.find('Form').props().onSubmit({ preventDefault() { } });
 
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

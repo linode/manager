@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode, testLinode1235 } from '~/data/linodes';
@@ -33,6 +33,17 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     tabList.forEach(({ name }, i) => {
       expect(tabs.at(i).children().text()).toBe(name);
     });
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        linode={testLinode1235}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders enable backup page when backups are disabled', async () => {

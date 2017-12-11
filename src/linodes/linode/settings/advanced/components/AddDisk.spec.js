@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import AddDisk from '~/linodes/linode/settings/advanced/components/AddDisk';
 
@@ -17,6 +17,18 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <AddDisk
+        dispatch={() => { }}
+        linode={testLinode1236}
+        free={4096}
+        distributions={api.distributions}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('should drop filesystem and render password if a distro is selected', () => {
     const modal = mount(
       <AddDisk
@@ -24,7 +36,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         linode={testLinode1236}
         free={4096}
         distributions={api.distributions}
-      />);
+      />
+    );
 
     const distro = Object.keys(api.distributions.distributions)[0];
     changeInput(modal, 'distribution', distro);

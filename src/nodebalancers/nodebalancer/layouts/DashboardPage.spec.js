@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import { DashboardPage } from '~/nodebalancers/nodebalancer/layouts/DashboardPage';
@@ -13,6 +13,18 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
   });
 
   const dispatch = sandbox.stub();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <DashboardPage
+        dispatch={dispatch}
+        nodebalancer={configsNodeBalancer}
+        transfer={{ used: 1, quota: 5 }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('displays nodebalancer configs', () => {
     const page = mount(

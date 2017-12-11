@@ -1,0 +1,1885 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`support/components/TicketHelper should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TicketHelper />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        null,
+        <h3
+          className="sub-header"
+        >
+          Frequently Asked Questions
+        </h3>,
+        <ul
+          className="list-unstyled"
+        >
+          <li>
+            <LinkButton
+              id="availibility-button"
+              onClick={[Function]}
+            >
+              When will there be availibility in Tokyo, Singapore, or Frankfurt?
+            </LinkButton>
+            <p
+              className="hidden"
+              id="availibility"
+            >
+              <small>
+                Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                <ExternalLink
+                  to="https://blog.linode.com"
+                >
+                  our blog
+                </ExternalLink>
+                .
+              </small>
+            </p>
+          </li>
+          <li>
+            <LinkButton
+              onClick={[Function]}
+            >
+              What do I do if my IP address is blocked by the GFW?
+            </LinkButton>
+            <p
+              className="hidden"
+            >
+              <small>
+                Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+              </small>
+            </p>
+          </li>
+          <li>
+            <LinkButton
+              onClick={[Function]}
+            >
+              How do I transfer a Linode from one account to another?
+            </LinkButton>
+            <p
+              className="hidden"
+            >
+              <small>
+                To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+              </small>
+            </p>
+          </li>
+          <li>
+            <LinkButton
+              onClick={[Function]}
+            >
+              Am I charged for powered-off Linodes?
+            </LinkButton>
+            <p
+              className="hidden"
+            >
+              <small>
+                Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                <ExternalLink
+                  to="https://www.linode.com/docs/platform/billing-and-payments"
+                >
+                  billing
+                </ExternalLink>
+                 guide.
+              </small>
+            </p>
+          </li>
+          <li>
+            <LinkButton
+              onClick={[Function]}
+            >
+              Why is my network transfer pool lower than expected?
+            </LinkButton>
+            <p
+              className="hidden"
+            >
+              <small>
+                Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+              </small>
+            </p>
+          </li>
+          <li>
+            <LinkButton
+              onClick={[Function]}
+            >
+              Why does it say I'm using 100% of my disk?
+            </LinkButton>
+            <p
+              className="hidden"
+            >
+              <small>
+                With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                <ExternalLink
+                  to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                >
+                  disk images
+                </ExternalLink>
+                 guide for more information.
+              </small>
+            </p>
+          </li>
+        </ul>,
+        <h3
+          className="sub-header"
+        >
+          Resources
+        </h3>,
+        <ul
+          className="list-unstyled"
+        >
+          <li>
+            <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community forum
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink
+              to="https://www.linode.com/docs/"
+            >
+              User documentation and guides
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink
+              to="https://developers.linode.com/"
+            >
+              Developer documentation and guides
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink
+              to="https://status.linode.com/"
+            >
+              Overall system status
+            </ExternalLink>
+          </li>
+        </ul>,
+      ],
+      "className": "TicketHelper",
+      "header": null,
+    },
+    "ref": null,
+    "rendered": Array [
+      null,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Frequently Asked Questions",
+          "className": "sub-header",
+        },
+        "ref": null,
+        "rendered": "Frequently Asked Questions",
+        "type": "h3",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <li>
+              <LinkButton
+                id="availibility-button"
+                onClick={[Function]}
+              >
+                When will there be availibility in Tokyo, Singapore, or Frankfurt?
+              </LinkButton>
+              <p
+                className="hidden"
+                id="availibility"
+              >
+                <small>
+                  Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                  <ExternalLink
+                    to="https://blog.linode.com"
+                  >
+                    our blog
+                  </ExternalLink>
+                  .
+                </small>
+              </p>
+            </li>,
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                What do I do if my IP address is blocked by the GFW?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                </small>
+              </p>
+            </li>,
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                How do I transfer a Linode from one account to another?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                </small>
+              </p>
+            </li>,
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Am I charged for powered-off Linodes?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                  <ExternalLink
+                    to="https://www.linode.com/docs/platform/billing-and-payments"
+                  >
+                    billing
+                  </ExternalLink>
+                   guide.
+                </small>
+              </p>
+            </li>,
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Why is my network transfer pool lower than expected?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                </small>
+              </p>
+            </li>,
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Why does it say I'm using 100% of my disk?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                  <ExternalLink
+                    to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                  >
+                    disk images
+                  </ExternalLink>
+                   guide for more information.
+                </small>
+              </p>
+            </li>,
+          ],
+          "className": "list-unstyled",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  id="availibility-button"
+                  onClick={[Function]}
+                >
+                  When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                  id="availibility"
+                >
+                  <small>
+                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                    <ExternalLink
+                      to="https://blog.linode.com"
+                    >
+                      our blog
+                    </ExternalLink>
+                    .
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "When will there be availibility in Tokyo, Singapore, or Frankfurt?",
+                  "id": "availibility-button",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "When will there be availibility in Tokyo, Singapore, or Frankfurt?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                    <ExternalLink
+                      to="https://blog.linode.com"
+                    >
+                      our blog
+                    </ExternalLink>
+                    .
+                  </small>,
+                  "className": "hidden",
+                  "id": "availibility",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
+                      <ExternalLink
+                        to="https://blog.linode.com"
+                      >
+                        our blog
+                      </ExternalLink>,
+                      ".",
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": "our blog",
+                        "to": "https://blog.linode.com",
+                      },
+                      "ref": null,
+                      "rendered": "our blog",
+                      "type": [Function],
+                    },
+                    ".",
+                  ],
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  What do I do if my IP address is blocked by the GFW?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "What do I do if my IP address is blocked by the GFW?",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "What do I do if my IP address is blocked by the GFW?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                  </small>,
+                  "className": "hidden",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.",
+                  },
+                  "ref": null,
+                  "rendered": "Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.",
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  How do I transfer a Linode from one account to another?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "How do I transfer a Linode from one account to another?",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "How do I transfer a Linode from one account to another?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                  </small>,
+                  "className": "hidden",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.",
+                  },
+                  "ref": null,
+                  "rendered": "To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.",
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Am I charged for powered-off Linodes?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/platform/billing-and-payments"
+                    >
+                      billing
+                    </ExternalLink>
+                     guide.
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Am I charged for powered-off Linodes?",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "Am I charged for powered-off Linodes?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/platform/billing-and-payments"
+                    >
+                      billing
+                    </ExternalLink>
+                     guide.
+                  </small>,
+                  "className": "hidden",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
+                      <ExternalLink
+                        to="https://www.linode.com/docs/platform/billing-and-payments"
+                      >
+                        billing
+                      </ExternalLink>,
+                      " guide.",
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": "billing",
+                        "to": "https://www.linode.com/docs/platform/billing-and-payments",
+                      },
+                      "ref": null,
+                      "rendered": "billing",
+                      "type": [Function],
+                    },
+                    " guide.",
+                  ],
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Why is my network transfer pool lower than expected?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Why is my network transfer pool lower than expected?",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "Why is my network transfer pool lower than expected?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                  </small>,
+                  "className": "hidden",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.",
+                  },
+                  "ref": null,
+                  "rendered": "Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.",
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Why does it say I'm using 100% of my disk?
+                </LinkButton>,
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                    >
+                      disk images
+                    </ExternalLink>
+                     guide for more information.
+                  </small>
+                </p>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Why does it say I'm using 100% of my disk?",
+                  "onClick": [Function],
+                },
+                "ref": null,
+                "rendered": "Why does it say I'm using 100% of my disk?",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small>
+                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                    >
+                      disk images
+                    </ExternalLink>
+                     guide for more information.
+                  </small>,
+                  "className": "hidden",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
+                      <ExternalLink
+                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                      >
+                        disk images
+                      </ExternalLink>,
+                      " guide for more information.",
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "children": "disk images",
+                        "to": "https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles",
+                      },
+                      "ref": null,
+                      "rendered": "disk images",
+                      "type": [Function],
+                    },
+                    " guide for more information.",
+                  ],
+                  "type": "small",
+                },
+                "type": "p",
+              },
+            ],
+            "type": "li",
+          },
+        ],
+        "type": "ul",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Resources",
+          "className": "sub-header",
+        },
+        "ref": null,
+        "rendered": "Resources",
+        "type": "h3",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <li>
+              <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community forum
+              </ExternalLink>
+            </li>,
+            <li>
+              <ExternalLink
+                to="https://www.linode.com/docs/"
+              >
+                User documentation and guides
+              </ExternalLink>
+            </li>,
+            <li>
+              <ExternalLink
+                to="https://developers.linode.com/"
+              >
+                Developer documentation and guides
+              </ExternalLink>
+            </li>,
+            <li>
+              <ExternalLink
+                to="https://status.linode.com/"
+              >
+                Overall system status
+              </ExternalLink>
+            </li>,
+          ],
+          "className": "list-unstyled",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community forum
+              </ExternalLink>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Community forum",
+                "to": "https://forum.linode.com/",
+              },
+              "ref": null,
+              "rendered": "Community forum",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://www.linode.com/docs/"
+              >
+                User documentation and guides
+              </ExternalLink>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "User documentation and guides",
+                "to": "https://www.linode.com/docs/",
+              },
+              "ref": null,
+              "rendered": "User documentation and guides",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://developers.linode.com/"
+              >
+                Developer documentation and guides
+              </ExternalLink>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Developer documentation and guides",
+                "to": "https://developers.linode.com/",
+              },
+              "ref": null,
+              "rendered": "Developer documentation and guides",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://status.linode.com/"
+              >
+                Overall system status
+              </ExternalLink>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Overall system status",
+                "to": "https://status.linode.com/",
+              },
+              "ref": null,
+              "rendered": "Overall system status",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+        ],
+        "type": "ul",
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          null,
+          <h3
+            className="sub-header"
+          >
+            Frequently Asked Questions
+          </h3>,
+          <ul
+            className="list-unstyled"
+          >
+            <li>
+              <LinkButton
+                id="availibility-button"
+                onClick={[Function]}
+              >
+                When will there be availibility in Tokyo, Singapore, or Frankfurt?
+              </LinkButton>
+              <p
+                className="hidden"
+                id="availibility"
+              >
+                <small>
+                  Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                  <ExternalLink
+                    to="https://blog.linode.com"
+                  >
+                    our blog
+                  </ExternalLink>
+                  .
+                </small>
+              </p>
+            </li>
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                What do I do if my IP address is blocked by the GFW?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                </small>
+              </p>
+            </li>
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                How do I transfer a Linode from one account to another?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                </small>
+              </p>
+            </li>
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Am I charged for powered-off Linodes?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                  <ExternalLink
+                    to="https://www.linode.com/docs/platform/billing-and-payments"
+                  >
+                    billing
+                  </ExternalLink>
+                   guide.
+                </small>
+              </p>
+            </li>
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Why is my network transfer pool lower than expected?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                </small>
+              </p>
+            </li>
+            <li>
+              <LinkButton
+                onClick={[Function]}
+              >
+                Why does it say I'm using 100% of my disk?
+              </LinkButton>
+              <p
+                className="hidden"
+              >
+                <small>
+                  With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                  <ExternalLink
+                    to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                  >
+                    disk images
+                  </ExternalLink>
+                   guide for more information.
+                </small>
+              </p>
+            </li>
+          </ul>,
+          <h3
+            className="sub-header"
+          >
+            Resources
+          </h3>,
+          <ul
+            className="list-unstyled"
+          >
+            <li>
+              <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community forum
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink
+                to="https://www.linode.com/docs/"
+              >
+                User documentation and guides
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink
+                to="https://developers.linode.com/"
+              >
+                Developer documentation and guides
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink
+                to="https://status.linode.com/"
+              >
+                Overall system status
+              </ExternalLink>
+            </li>
+          </ul>,
+        ],
+        "className": "TicketHelper",
+        "header": null,
+      },
+      "ref": null,
+      "rendered": Array [
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Frequently Asked Questions",
+            "className": "sub-header",
+          },
+          "ref": null,
+          "rendered": "Frequently Asked Questions",
+          "type": "h3",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <li>
+                <LinkButton
+                  id="availibility-button"
+                  onClick={[Function]}
+                >
+                  When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                </LinkButton>
+                <p
+                  className="hidden"
+                  id="availibility"
+                >
+                  <small>
+                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                    <ExternalLink
+                      to="https://blog.linode.com"
+                    >
+                      our blog
+                    </ExternalLink>
+                    .
+                  </small>
+                </p>
+              </li>,
+              <li>
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  What do I do if my IP address is blocked by the GFW?
+                </LinkButton>
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                  </small>
+                </p>
+              </li>,
+              <li>
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  How do I transfer a Linode from one account to another?
+                </LinkButton>
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                  </small>
+                </p>
+              </li>,
+              <li>
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Am I charged for powered-off Linodes?
+                </LinkButton>
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/platform/billing-and-payments"
+                    >
+                      billing
+                    </ExternalLink>
+                     guide.
+                  </small>
+                </p>
+              </li>,
+              <li>
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Why is my network transfer pool lower than expected?
+                </LinkButton>
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                  </small>
+                </p>
+              </li>,
+              <li>
+                <LinkButton
+                  onClick={[Function]}
+                >
+                  Why does it say I'm using 100% of my disk?
+                </LinkButton>
+                <p
+                  className="hidden"
+                >
+                  <small>
+                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                    <ExternalLink
+                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                    >
+                      disk images
+                    </ExternalLink>
+                     guide for more information.
+                  </small>
+                </p>
+              </li>,
+            ],
+            "className": "list-unstyled",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    id="availibility-button"
+                    onClick={[Function]}
+                  >
+                    When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                    id="availibility"
+                  >
+                    <small>
+                      Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                      <ExternalLink
+                        to="https://blog.linode.com"
+                      >
+                        our blog
+                      </ExternalLink>
+                      .
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "When will there be availibility in Tokyo, Singapore, or Frankfurt?",
+                    "id": "availibility-button",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "When will there be availibility in Tokyo, Singapore, or Frankfurt?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                      <ExternalLink
+                        to="https://blog.linode.com"
+                      >
+                        our blog
+                      </ExternalLink>
+                      .
+                    </small>,
+                    "className": "hidden",
+                    "id": "availibility",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
+                        <ExternalLink
+                          to="https://blog.linode.com"
+                        >
+                          our blog
+                        </ExternalLink>,
+                        ".",
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": "our blog",
+                          "to": "https://blog.linode.com",
+                        },
+                        "ref": null,
+                        "rendered": "our blog",
+                        "type": [Function],
+                      },
+                      ".",
+                    ],
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    onClick={[Function]}
+                  >
+                    What do I do if my IP address is blocked by the GFW?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                  >
+                    <small>
+                      Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "What do I do if my IP address is blocked by the GFW?",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "What do I do if my IP address is blocked by the GFW?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                    </small>,
+                    "className": "hidden",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.",
+                    },
+                    "ref": null,
+                    "rendered": "Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.",
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    onClick={[Function]}
+                  >
+                    How do I transfer a Linode from one account to another?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                  >
+                    <small>
+                      To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "How do I transfer a Linode from one account to another?",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "How do I transfer a Linode from one account to another?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                    </small>,
+                    "className": "hidden",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.",
+                    },
+                    "ref": null,
+                    "rendered": "To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.",
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    onClick={[Function]}
+                  >
+                    Am I charged for powered-off Linodes?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                  >
+                    <small>
+                      Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                      <ExternalLink
+                        to="https://www.linode.com/docs/platform/billing-and-payments"
+                      >
+                        billing
+                      </ExternalLink>
+                       guide.
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "Am I charged for powered-off Linodes?",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "Am I charged for powered-off Linodes?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                      <ExternalLink
+                        to="https://www.linode.com/docs/platform/billing-and-payments"
+                      >
+                        billing
+                      </ExternalLink>
+                       guide.
+                    </small>,
+                    "className": "hidden",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
+                        <ExternalLink
+                          to="https://www.linode.com/docs/platform/billing-and-payments"
+                        >
+                          billing
+                        </ExternalLink>,
+                        " guide.",
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": "billing",
+                          "to": "https://www.linode.com/docs/platform/billing-and-payments",
+                        },
+                        "ref": null,
+                        "rendered": "billing",
+                        "type": [Function],
+                      },
+                      " guide.",
+                    ],
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    onClick={[Function]}
+                  >
+                    Why is my network transfer pool lower than expected?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                  >
+                    <small>
+                      Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "Why is my network transfer pool lower than expected?",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "Why is my network transfer pool lower than expected?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                    </small>,
+                    "className": "hidden",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.",
+                    },
+                    "ref": null,
+                    "rendered": "Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.",
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <LinkButton
+                    onClick={[Function]}
+                  >
+                    Why does it say I'm using 100% of my disk?
+                  </LinkButton>,
+                  <p
+                    className="hidden"
+                  >
+                    <small>
+                      With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                      <ExternalLink
+                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                      >
+                        disk images
+                      </ExternalLink>
+                       guide for more information.
+                    </small>
+                  </p>,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": "Why does it say I'm using 100% of my disk?",
+                    "onClick": [Function],
+                  },
+                  "ref": null,
+                  "rendered": "Why does it say I'm using 100% of my disk?",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small>
+                      With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                      <ExternalLink
+                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                      >
+                        disk images
+                      </ExternalLink>
+                       guide for more information.
+                    </small>,
+                    "className": "hidden",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
+                        <ExternalLink
+                          to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                        >
+                          disk images
+                        </ExternalLink>,
+                        " guide for more information.",
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": "disk images",
+                          "to": "https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles",
+                        },
+                        "ref": null,
+                        "rendered": "disk images",
+                        "type": [Function],
+                      },
+                      " guide for more information.",
+                    ],
+                    "type": "small",
+                  },
+                  "type": "p",
+                },
+              ],
+              "type": "li",
+            },
+          ],
+          "type": "ul",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Resources",
+            "className": "sub-header",
+          },
+          "ref": null,
+          "rendered": "Resources",
+          "type": "h3",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <li>
+                <ExternalLink
+                  to="https://forum.linode.com/"
+                >
+                  Community forum
+                </ExternalLink>
+              </li>,
+              <li>
+                <ExternalLink
+                  to="https://www.linode.com/docs/"
+                >
+                  User documentation and guides
+                </ExternalLink>
+              </li>,
+              <li>
+                <ExternalLink
+                  to="https://developers.linode.com/"
+                >
+                  Developer documentation and guides
+                </ExternalLink>
+              </li>,
+              <li>
+                <ExternalLink
+                  to="https://status.linode.com/"
+                >
+                  Overall system status
+                </ExternalLink>
+              </li>,
+            ],
+            "className": "list-unstyled",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ExternalLink
+                  to="https://forum.linode.com/"
+                >
+                  Community forum
+                </ExternalLink>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Community forum",
+                  "to": "https://forum.linode.com/",
+                },
+                "ref": null,
+                "rendered": "Community forum",
+                "type": [Function],
+              },
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ExternalLink
+                  to="https://www.linode.com/docs/"
+                >
+                  User documentation and guides
+                </ExternalLink>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "User documentation and guides",
+                  "to": "https://www.linode.com/docs/",
+                },
+                "ref": null,
+                "rendered": "User documentation and guides",
+                "type": [Function],
+              },
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ExternalLink
+                  to="https://developers.linode.com/"
+                >
+                  Developer documentation and guides
+                </ExternalLink>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Developer documentation and guides",
+                  "to": "https://developers.linode.com/",
+                },
+                "ref": null,
+                "rendered": "Developer documentation and guides",
+                "type": [Function],
+              },
+              "type": "li",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ExternalLink
+                  to="https://status.linode.com/"
+                >
+                  Overall system status
+                </ExternalLink>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Overall system status",
+                  "to": "https://status.linode.com/",
+                },
+                "ref": null,
+                "rendered": "Overall system status",
+                "type": [Function],
+              },
+              "type": "li",
+            },
+          ],
+          "type": "ul",
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

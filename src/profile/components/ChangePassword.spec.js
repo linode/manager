@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,6 +19,16 @@ describe('profile/components/ChangePassword', () => {
   });
 
   const dispatch = sandbox.stub();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <ChangePassword
+        dispatch={dispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('changes password', async () => {
     const page = mount(

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -21,6 +21,20 @@ describe('support/layouts/CreatePage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <CreatePage
+        linodes={api.linodes.linodes}
+        domains={api.domains.domains}
+        nodebalancers={api.nodebalancers.nodebalancers}
+        volumes={api.volumes.volumes}
+        dispatch={mockDispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('opens a ticket', async () => {

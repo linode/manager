@@ -18,6 +18,20 @@ describe('domains/components/EditNSRecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[4];
+    const wrapper = shallow(
+      <EditNSRecord
+        dispatch={() => { }}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,11 +19,22 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
   const ip = Object.values(testLinode._ips).filter(
     ip => ip.type === 'public' && ip.version === 'ipv4')[0];
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <EditRDNS
+        dispatch={dispatch}
+        close={() => { }}
+        ip={ip}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('renders fields correctly', () => {
     const page = mount(
       <EditRDNS
         dispatch={dispatch}
-        close={() => {}}
+        close={() => { }}
         ip={ip}
       />
     );
@@ -46,7 +57,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
 
     changeInput(page, 'hostname', 'test.com');
 
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
 
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

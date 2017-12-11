@@ -3,6 +3,14 @@ import { shallow } from 'enzyme';
 import Currency from '~/components/Currency';
 
 describe('components/Currency', () => {
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <Currency status={999.99} />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders negative values', () => {
     const component = shallow(
       <Currency value={-999} />

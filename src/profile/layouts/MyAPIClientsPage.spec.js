@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,6 +19,18 @@ describe('profile/layouts/MyAPIClientsPage', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <MyAPIClientsPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        clients={clients}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('renders a list of Clients', () => {
     const page = mount(
@@ -59,7 +71,7 @@ describe('profile/layouts/MyAPIClientsPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/account/oauth-clients/1', { method: 'DELETE' });
   });

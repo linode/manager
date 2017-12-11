@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,6 +19,18 @@ describe('profile/layouts/APITokensPage', () => {
   const dispatch = sandbox.spy();
 
   const tokensAndApps = { ...tokens.tokens, ...apps.apps };
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <APITokensPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        tokens={tokensAndApps}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('renders a list of Tokens', () => {
     const page = mount(
@@ -54,7 +66,7 @@ describe('profile/layouts/APITokensPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/profile/tokens/1', { method: 'DELETE' });
   });

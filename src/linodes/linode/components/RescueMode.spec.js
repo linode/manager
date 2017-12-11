@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -20,12 +20,24 @@ describe('linodes/linode/components/RescueMode', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <RescueMode
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('shows disks in rescue mode', async () => {
     const page = mount(
       <RescueMode
         dispatch={dispatch}
         linode={testLinode}
-      />);
+      />
+    );
     page.setState({ diskSlots: [12345, 12346] });
     expectObjectDeepEquals(page.find('.row-label').map(node => node.text()), [
       '/dev/sdh',

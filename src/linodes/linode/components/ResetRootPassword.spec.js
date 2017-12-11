@@ -16,13 +16,25 @@ describe('linodes/linode/components/ResetRootPassword', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <ResetRootPassword
+        dispatch={dispatch}
+        linode={testLinode1237}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('resets root password', async () => {
     const dispatch = sandbox.spy();
     const page = shallow(
       <ResetRootPassword
         dispatch={dispatch}
         linode={testLinode1237}
-      />);
+      />
+    );
     page.setState({ loading: false, disk: 1234, password: 'new password' });
 
     await page.instance().onSubmit();
