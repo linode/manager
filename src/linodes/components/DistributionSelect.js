@@ -13,7 +13,8 @@ export default function DistributionSelect(props) {
   vendorsOrdered.push('images');
 
   const imageOptions = props.images !== undefined ?
-    _.map(Object.values(props.images), image => {
+    _.map(Object.values(props.images), im => {
+      const image = { ...im };
       // ensure that each image has a vendor
       if (!image.vendor) {
         image.vendor = 'Images';
