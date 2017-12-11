@@ -22,6 +22,8 @@ describe('components/Banners', () => {
     const banner = shallow(
       <Banners
         banners={importantBanner}
+        params={{}}
+        linodes={{ linodes: {} }}
       />
     );
 
@@ -32,6 +34,8 @@ describe('components/Banners', () => {
     const banner = shallow(
       <Banners
         banners={importantBanners}
+        params={{}}
+        linodes={{ linodes: {} }}
       />
     );
 
@@ -42,6 +46,8 @@ describe('components/Banners', () => {
     const banner = shallow(
       <Banners
         banners={abuseBanner}
+        params={{}}
+        linodes={{ linodes: {} }}
       />
     );
 
@@ -52,6 +58,8 @@ describe('components/Banners', () => {
     const banner = shallow(
       <Banners
         banners={abuseBanners}
+        params={{}}
+        linodes={{ linodes: {} }}
       />
     );
 

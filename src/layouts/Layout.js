@@ -54,6 +54,8 @@ export class Layout extends Component {
     const { title, link } = this.state;
     const version = VERSION ? `v${VERSION}` : 'master';
     const githubRoot = `https://github.com/linode/manager/blob/${version}/`;
+    const params = this.props.params;
+    const linodes = this.props.linodes;
 
     return (
       <div
@@ -92,7 +94,11 @@ export class Layout extends Component {
             events={events}
           />
           <div className="Main">
-            <Banners banners={banners} />
+            <Banners
+              params={params}
+              linodes={linodes}
+              banners={banners}
+            />
             {errors.status ?
               <Error status={errors.status} /> :
               this.props.children}
@@ -117,6 +123,7 @@ Layout.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
   children: PropTypes.node.isRequired,
+  params: PropTypes.object,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   source: PropTypes.object,
