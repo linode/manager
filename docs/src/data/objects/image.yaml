@@ -62,3 +62,9 @@ schema:
     type: String
     value: your_username
     description: The name of the user who created this image, or linode for official images.
+  vendor:
+    type: String
+    value: Arch
+    description: The upstream distribution vendor. Consistent between releases of a distro.
+      None for private images.
+    filterable: true
