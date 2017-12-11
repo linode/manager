@@ -124,8 +124,6 @@ export class GraphGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { displayMode: 'small' };
-
     this.onChange = onChange.bind(this);
   }
 
@@ -145,7 +143,6 @@ export class GraphGroup extends Component {
 
   render() {
     const { timezone, allGraphData } = this.props;
-    const { displayMode } = this.state;
 
     const graphs = allGraphData.map((data) => {
       const currentUnit = this.state[data.title] || 0;
