@@ -40,11 +40,10 @@ export default class AttachVolume extends Component {
   }
 
   onLinodeChange = (e) => {
+    const linodeId = e.target.value;
     this.onChange(e);
     this.setState({ fetchingConfigs: true }, async () => {
-      const linodeId = e.target.value;
       const { allConfigs } = this.state;
-
       if (!allConfigs[linodeId]) {
         const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
         const linodeConfigs = Object.values(configs.configs).map(function (config) {
