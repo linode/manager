@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
 
 import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+  changeInput, expectDispatchOrStoreErrors, expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
@@ -54,7 +54,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
         disks: testLinode._disks,
         configs: testLinode._configs,
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/test-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/test-linode')),
     ]);
   });
 });

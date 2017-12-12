@@ -8,7 +8,6 @@ import { AddNodeBalancer } from '~/nodebalancers/components';
 import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 
@@ -42,7 +41,7 @@ describe('linodes/components/AddNodeBalancer', function () {
           label: 'node-1',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/nodebalancers/node-1')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/nodebalancers/node-1')),
     ], 2, [{ label: 'node-1' }]);
   });
 });
