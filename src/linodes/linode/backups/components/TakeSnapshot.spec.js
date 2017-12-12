@@ -7,7 +7,6 @@ import TakeSnapshot from '~/linodes/linode/backups/components/TakeSnapshot';
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
@@ -39,8 +38,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
           label: 'foobar',
         },
       }, { id: 1 }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${testLinode.label}/backups/1`)),
+      ([pushResult]) => expect(pushResult).toEqual(push(`/linodes/${testLinode.label}/backups/1`)),
     ], 2, [{ id: 1 }]);
   });
 
@@ -57,8 +55,7 @@ describe('linodes/linode/backups/components/TakeSnapshot', () => {
         method: 'POST',
         body: {},
       }, { id: 1 }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${testLinode.label}/backups/1`)),
+      ([pushResult]) => expect(pushResult).toEqual(push(`/linodes/${testLinode.label}/backups/1`)),
     ], 2, [{ id: 1 }]);
   });
 });

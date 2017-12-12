@@ -5,7 +5,10 @@ import sinon from 'sinon';
 
 import BackupRestore from '~/linodes/linode/backups/components/BackupRestore';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '~/test.helpers';
+import {
+  expectDispatchOrStoreErrors,
+  expectRequest,
+} from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
 
@@ -61,7 +64,7 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
           overwrite: false,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/test-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/test-linode')),
     ], 2);
   });
 });

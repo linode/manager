@@ -11,7 +11,6 @@ import { api } from '~/data';
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers.js';
 
@@ -128,7 +127,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
           distributions: [DEFAULT_DISTRIBUTION],
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/stackscripts/1')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/stackscripts/1')),
     ], 2, [{ id: 1 }]);
   });
 });

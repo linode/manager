@@ -7,9 +7,7 @@ import sinon from 'sinon';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditConfigPage';
 
-import {
-  changeInput, expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals,
-} from '~/test.helpers';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
 
@@ -287,8 +285,8 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           },
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${props.linode.label}/settings/advanced`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/linodes/${props.linode.label}/settings/advanced`)),
     ], 2);
   });
 });

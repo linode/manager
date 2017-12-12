@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import { RescueMode } from '~/linodes/linode/components';
 
 import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+  changeInput, expectDispatchOrStoreErrors, expectRequest,
 } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
 
@@ -39,9 +39,11 @@ describe('linodes/linode/components/RescueMode', () => {
       />
     );
     page.setState({ diskSlots: [12345, 12346] });
-    expectObjectDeepEquals(page.find('.row-label').map(node => node.text()), [
-      '/dev/sdh',
-    ]);
+    expect(
+      page.find('.row-label').map(node => node.text())
+    ).toEqual(
+      ['/dev/sdh']
+    );
   });
 
   it.skip('dispatches reboot to rescue mode', async () => {

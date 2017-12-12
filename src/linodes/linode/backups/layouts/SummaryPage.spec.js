@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { TimeDisplay } from '~/components';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '~/test.helpers';
+import { expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode, testLinode1235, testLinode1236 } from '~/data/linodes';
 
 
@@ -103,8 +103,8 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${testLinode1236.label}/backups/1`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/linodes/${testLinode1236.label}/backups/1`)),
     ], 2, [{ id: '1' }]);
   });
 
