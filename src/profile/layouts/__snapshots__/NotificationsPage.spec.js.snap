@@ -1,0 +1,419 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`profile/NotificationsPage should renders without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <NotificationsPage
+    enabled={true}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Notifications"
+        />,
+        <Card
+          className=""
+          header={
+            <CardHeader
+              title="Change email settings"
+            />
+          }
+        >
+          <Form
+            analytics={
+              Object {
+                "title": "Notifications Settings",
+              }
+            }
+            className=""
+            noSubmitEvent={false}
+            onSubmit={[Function]}
+          >
+            <p>
+              Email notifications are currently 
+              enabl
+              ed.
+            </p>
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Disabling"
+            >
+              Disabl
+              e
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Email notifications enabled."
+            />
+          </Form>
+        </Card>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Notifications",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <Form
+            analytics={
+              Object {
+                "title": "Notifications Settings",
+              }
+            }
+            className=""
+            noSubmitEvent={false}
+            onSubmit={[Function]}
+          >
+            <p>
+              Email notifications are currently 
+              enabl
+              ed.
+            </p>
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Disabling"
+            >
+              Disabl
+              e
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Email notifications enabled."
+            />
+          </Form>,
+          "className": "",
+          "header": <CardHeader
+            title="Change email settings"
+          />,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "analytics": Object {
+              "title": "Notifications Settings",
+            },
+            "children": Array [
+              <p>
+                Email notifications are currently 
+                enabl
+                ed.
+              </p>,
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabling"
+              >
+                Disabl
+                e
+              </SubmitButton>,
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Email notifications enabled."
+              />,
+            ],
+            "className": "",
+            "noSubmitEvent": false,
+            "onSubmit": [Function],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  "Email notifications are currently ",
+                  "enabl",
+                  "ed.",
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                "Email notifications are currently ",
+                "enabl",
+                "ed.",
+              ],
+              "type": "p",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  "Disabl",
+                  "e",
+                ],
+                "className": "btn-default",
+                "disabled": false,
+                "disabledChildren": "Disabling",
+              },
+              "ref": null,
+              "rendered": Array [
+                "Disabl",
+                "e",
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "errors": Object {},
+                "success": "Email notifications enabled.",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Notifications"
+          />,
+          <Card
+            className=""
+            header={
+              <CardHeader
+                title="Change email settings"
+              />
+            }
+          >
+            <Form
+              analytics={
+                Object {
+                  "title": "Notifications Settings",
+                }
+              }
+              className=""
+              noSubmitEvent={false}
+              onSubmit={[Function]}
+            >
+              <p>
+                Email notifications are currently 
+                enabl
+                ed.
+              </p>
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabling"
+              >
+                Disabl
+                e
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Email notifications enabled."
+              />
+            </Form>
+          </Card>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Notifications",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <Form
+              analytics={
+                Object {
+                  "title": "Notifications Settings",
+                }
+              }
+              className=""
+              noSubmitEvent={false}
+              onSubmit={[Function]}
+            >
+              <p>
+                Email notifications are currently 
+                enabl
+                ed.
+              </p>
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabling"
+              >
+                Disabl
+                e
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Email notifications enabled."
+              />
+            </Form>,
+            "className": "",
+            "header": <CardHeader
+              title="Change email settings"
+            />,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "analytics": Object {
+                "title": "Notifications Settings",
+              },
+              "children": Array [
+                <p>
+                  Email notifications are currently 
+                  enabl
+                  ed.
+                </p>,
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Disabling"
+                >
+                  Disabl
+                  e
+                </SubmitButton>,
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="Email notifications enabled."
+                />,
+              ],
+              "className": "",
+              "noSubmitEvent": false,
+              "onSubmit": [Function],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    "Email notifications are currently ",
+                    "enabl",
+                    "ed.",
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  "Email notifications are currently ",
+                  "enabl",
+                  "ed.",
+                ],
+                "type": "p",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": Array [
+                    "Disabl",
+                    "e",
+                  ],
+                  "className": "btn-default",
+                  "disabled": false,
+                  "disabledChildren": "Disabling",
+                },
+                "ref": null,
+                "rendered": Array [
+                  "Disabl",
+                  "e",
+                ],
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "success": "Email notifications enabled.",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;
