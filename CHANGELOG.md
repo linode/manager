@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.16.3] 2017-12-11
+### Fixed
+- always show user images last (after distributions) (#2838)
+- submit volume attachment requests with a numeric linode id
+- fix UI bugs where configs were not updated and errors were not reflected upon changing linodes in volume modals
+
 ## [0.16.2] 2017-12-11
 ### Fixed
 - Changing Region in Volume attach dialog did not reset Linode Config (#2812)
