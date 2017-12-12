@@ -140,6 +140,7 @@ export default class Header extends Component {
               height={35}
               width={35}
             />
+            <i className="fa fa-angle-down fa-fw" />
           </div>
         )}
         {!username ? null : (
