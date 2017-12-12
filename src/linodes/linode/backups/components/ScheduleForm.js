@@ -147,7 +147,7 @@ export class ScheduleForm extends Component {
         </FormGroup>
         <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton disabled={loading} />
+            <SubmitButton disabled={loading || !isScheduled} />
             <FormSummary errors={errors} success="Schedule settings saved." />
           </div>
         </FormGroup>
