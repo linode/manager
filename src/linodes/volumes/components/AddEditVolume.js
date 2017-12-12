@@ -49,6 +49,14 @@ export default class AddEditVolume extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  onRegionChange = async (e) => {
+    this.onChange(e);
+    this.setState({
+      linode: null,
+      config: null,
+    });
+  }
+
   onLinodeChange = async (e) => {
     const { allConfigs } = this.state;
     const linodeId = e.target.value;
@@ -64,7 +72,7 @@ export default class AddEditVolume extends Component {
       const linodeConfigs = Object.values(configs.data).map(function (config) {
         return {
           label: config.label,
-          value: config.id,
+          value: parseInt(config.id),
         };
       });
 
@@ -97,13 +105,9 @@ export default class AddEditVolume extends Component {
 
     const actions = [
       () => api.volumes[id ? 'put' : 'post'](data, ...[id].filter(Boolean)),
+      (volume) => volume && data.linode_id && linodeActions.volumes.one(volume, linode, volume.id),
       close,
     ];
-
-    if (!id && linode !== LinodeSelect.EMPTY) {
-      actions.splice(1, 0, (volume) =>
-        linodeActions.volumes.one(volume, linode, volume.id));
-    }
 
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
@@ -163,7 +167,7 @@ export default class AddEditVolume extends Component {
                 value={region}
                 name="region"
                 id="region"
-                onChange={this.onChange}
+                onChange={this.onRegionChange}
               />
             </ModalFormGroup>
           )}
