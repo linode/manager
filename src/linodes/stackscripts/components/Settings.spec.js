@@ -33,13 +33,13 @@ describe('linodes/stackscripts/components/Settings', () => {
       <Settings
         dispatch={dispatch}
         stackscript={testStackScript}
-        distributions={{}}
+        images={{}}
       />
     );
 
     changeInput(component, 'label', 'WordPress');
     changeInput(component, 'description', 'My stackscript');
-    changeInput(component, 'distributions', ['linode/debian6']);
+    changeInput(component, 'images', ['linode/debian6']);
     changeInput(component, 'isPublic', true);
 
     component.find('Form').props().onSubmit();
@@ -50,7 +50,7 @@ describe('linodes/stackscripts/components/Settings', () => {
         body: {
           label: 'WordPress',
           description: 'My stackscript',
-          distributions: ['linode/debian6'],
+          images: ['linode/debian6'],
           is_public: true,
         },
       }),

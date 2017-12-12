@@ -32,35 +32,35 @@ export default class Settings extends Component {
 
   componentWillMount(nextProps) {
     const {
-      distributions, label, description, is_public: isPublic,
+      images, label, description, is_public: isPublic,
     } = (nextProps || this.props).stackscript;
 
     this.setState({
       label,
       description,
       isPublic: isPublic || false,
-      distributions: distributions,
+      images: images,
     });
   }
 
   onSubmit = () => {
     const { dispatch, stackscript: { id } } = this.props;
-    const { label, description, isPublic, distributions } = this.state;
+    const { label, description, isPublic, images } = this.state;
     const data = {
       label,
       description,
-      distributions,
+      images,
       is_public: isPublic,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.stackscripts.put(data, id),
-      () => this.setState({ distributions: data.distributions }),
+      () => this.setState({ images: data.images }),
     ]));
   }
 
   render() {
-    const { errors, loading, label, description, distributions, isPublic } = this.state;
+    const { errors, loading, label, description, images, isPublic } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -92,15 +92,15 @@ export default class Settings extends Component {
         </FormGroup>
         <FormGroup>
           <div>
-            <label htmlFor="distributions" className="col-form-label">Target Distributions</label>
+            <label htmlFor="images" className="col-form-label">Target Images</label>
           </div>
           <div>
             <DistributionSelect
               onChange={this.onChange}
-              value={distributions}
-              distributions={this.props.distributions}
-              id="distributions"
-              name="distributions"
+              value={images}
+              images={this.props.images}
+              id="images"
+              name="images"
               multi
             />
           </div>
@@ -111,9 +111,10 @@ export default class Settings extends Component {
               label="Make public"
               onChange={this.onChange}
               value={isPublic}
+              checked={isPublic}
               id="isPublic"
               name="isPublic"
-              disabled={isPublic}
+              disabled={this.props.stackscript.is_public}
             />
             <div>
               <small className="text-muted">
@@ -134,5 +135,5 @@ export default class Settings extends Component {
 Settings.propTypes = {
   dispatch: PropTypes.func.isRequired,
   stackscript: PropTypes.object.isRequired,
-  distributions: PropTypes.object.isRequired,
+  images: PropTypes.object.isRequired,
 };

@@ -124,7 +124,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
         body: {
           label: 'WordPress',
           script: '#!/bin/bash\n\n# Your script goes here.',
-          distributions: [DEFAULT_DISTRIBUTION],
+          images: [DEFAULT_DISTRIBUTION],
         },
       }),
       ([pushResult]) => expect(pushResult).toEqual(push('/stackscripts/1')),

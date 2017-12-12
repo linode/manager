@@ -312,14 +312,14 @@ ShallowWrapper {
         },
         "created": "2016-07-06T16:47:27",
         "disk": 20480,
-        "distribution": Object {
+        "group": "Test Group",
+        "hypervisor": "kvm",
+        "id": 1234,
+        "image": Object {
           "id": "linode/ubuntu15.10",
           "label": "Ubuntu 15.10",
           "vendor": "Ubuntu",
         },
-        "group": "Test Group",
-        "hypervisor": "kvm",
-        "id": 1234,
         "ipv4": Array [
           "97.107.143.0",
           "97.107.143.1",
@@ -684,14 +684,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1233,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1233,
             "ipv4": Array [
               "97.107.143.3",
               "97.107.143.4",
@@ -1003,14 +1003,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1234,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1234,
             "ipv4": Array [
               "97.107.143.0",
               "97.107.143.1",
@@ -1375,14 +1375,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:50:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "",
+            "hypervisor": "kvm",
+            "id": 1235,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "",
-            "hypervisor": "kvm",
-            "id": 1235,
             "ipv4": Array [
               "97.107.143.6",
               "97.107.143.7",
@@ -1644,14 +1644,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:48:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1236,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1236,
             "ipv4": Array [
               "97.107.143.9",
               "97.107.143.10",
@@ -1963,14 +1963,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:49:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1237,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1237,
             "ipv4": Array [
               "97.107.143.12",
               "97.107.143.13",
@@ -2316,14 +2316,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1238,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1238,
             "ipv4": Array [
               "97.107.143.15",
               "97.107.143.16",
@@ -2597,14 +2597,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1239,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1239,
             "ipv4": Array [
               "97.107.143.18",
               "97.107.143.19",
@@ -2913,14 +2913,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1240,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1240,
             "ipv4": Array [
               "97.107.143.21",
               "97.107.143.22",
@@ -3194,14 +3194,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1241,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1241,
             "ipv4": Array [
               "97.107.143.24",
               "97.107.143.25",
@@ -3493,14 +3493,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1242,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1242,
             "ipv4": Array [
               "97.107.143.27",
               "97.107.143.28",
@@ -3812,14 +3812,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1243,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1243,
             "ipv4": Array [
               "97.107.143.30",
               "97.107.143.31",
@@ -4146,14 +4146,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1245,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1245,
             "ipv4": Array [
               "97.107.143.33",
               "97.107.143.34",
@@ -4465,10 +4465,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": null,
             "group": "Test Group",
             "hypervisor": "kvm",
             "id": 1246,
+            "image": Object {
+              "id": null,
+              "label": "Unknown",
+              "vendor": "unknown",
+            },
             "ipv4": Array [
               "97.107.143.37",
               "97.107.143.38",
@@ -4768,14 +4772,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1247,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1247,
             "ipv4": Array [
               "97.107.143.40",
             ],
@@ -5086,14 +5090,14 @@ ShallowWrapper {
             },
             "created": "2016-07-06T16:47:27",
             "disk": 20480,
-            "distribution": Object {
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1248,
+            "image": Object {
               "id": "linode/ubuntu15.10",
               "label": "Ubuntu 15.10",
               "vendor": "Ubuntu",
             },
-            "group": "Test Group",
-            "hypervisor": "kvm",
-            "id": 1248,
             "ipv4": Array [
               "97.107.143.44",
               "97.107.143.45",
@@ -5486,14 +5490,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1233,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1233,
                     "ipv4": Array [
                       "97.107.143.3",
                       "97.107.143.4",
@@ -5858,14 +5862,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:50:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "",
+                    "hypervisor": "kvm",
+                    "id": 1235,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "",
-                    "hypervisor": "kvm",
-                    "id": 1235,
                     "ipv4": Array [
                       "97.107.143.6",
                       "97.107.143.7",
@@ -6127,14 +6131,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:48:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1236,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1236,
                     "ipv4": Array [
                       "97.107.143.9",
                       "97.107.143.10",
@@ -6446,14 +6450,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:49:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1237,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1237,
                     "ipv4": Array [
                       "97.107.143.12",
                       "97.107.143.13",
@@ -6799,14 +6803,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1238,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1238,
                     "ipv4": Array [
                       "97.107.143.15",
                       "97.107.143.16",
@@ -7080,14 +7084,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1239,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1239,
                     "ipv4": Array [
                       "97.107.143.18",
                       "97.107.143.19",
@@ -7396,14 +7400,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1240,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1240,
                     "ipv4": Array [
                       "97.107.143.21",
                       "97.107.143.22",
@@ -7677,14 +7681,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1241,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1241,
                     "ipv4": Array [
                       "97.107.143.24",
                       "97.107.143.25",
@@ -7976,14 +7980,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1242,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1242,
                     "ipv4": Array [
                       "97.107.143.27",
                       "97.107.143.28",
@@ -8295,14 +8299,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1243,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1243,
                     "ipv4": Array [
                       "97.107.143.30",
                       "97.107.143.31",
@@ -8629,14 +8633,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1245,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1245,
                     "ipv4": Array [
                       "97.107.143.33",
                       "97.107.143.34",
@@ -8948,10 +8952,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": null,
                     "group": "Test Group",
                     "hypervisor": "kvm",
                     "id": 1246,
+                    "image": Object {
+                      "id": null,
+                      "label": "Unknown",
+                      "vendor": "unknown",
+                    },
                     "ipv4": Array [
                       "97.107.143.37",
                       "97.107.143.38",
@@ -9251,14 +9259,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1247,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1247,
                     "ipv4": Array [
                       "97.107.143.40",
                     ],
@@ -9569,14 +9577,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1248,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1248,
                     "ipv4": Array [
                       "97.107.143.44",
                       "97.107.143.45",
@@ -9893,14 +9901,14 @@ ShallowWrapper {
                   },
                   "created": "2016-07-06T16:47:27",
                   "disk": 20480,
-                  "distribution": Object {
+                  "group": "Test Group",
+                  "hypervisor": "kvm",
+                  "id": 1234,
+                  "image": Object {
                     "id": "linode/ubuntu15.10",
                     "label": "Ubuntu 15.10",
                     "vendor": "Ubuntu",
                   },
-                  "group": "Test Group",
-                  "hypervisor": "kvm",
-                  "id": 1234,
                   "ipv4": Array [
                     "97.107.143.0",
                     "97.107.143.1",
@@ -10331,14 +10339,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1233,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1233,
                       "ipv4": Array [
                         "97.107.143.3",
                         "97.107.143.4",
@@ -10703,14 +10711,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:50:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "",
+                      "hypervisor": "kvm",
+                      "id": 1235,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "",
-                      "hypervisor": "kvm",
-                      "id": 1235,
                       "ipv4": Array [
                         "97.107.143.6",
                         "97.107.143.7",
@@ -10972,14 +10980,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:48:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1236,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1236,
                       "ipv4": Array [
                         "97.107.143.9",
                         "97.107.143.10",
@@ -11291,14 +11299,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:49:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1237,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1237,
                       "ipv4": Array [
                         "97.107.143.12",
                         "97.107.143.13",
@@ -11644,14 +11652,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1238,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1238,
                       "ipv4": Array [
                         "97.107.143.15",
                         "97.107.143.16",
@@ -11925,14 +11933,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1239,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1239,
                       "ipv4": Array [
                         "97.107.143.18",
                         "97.107.143.19",
@@ -12241,14 +12249,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1240,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1240,
                       "ipv4": Array [
                         "97.107.143.21",
                         "97.107.143.22",
@@ -12522,14 +12530,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1241,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1241,
                       "ipv4": Array [
                         "97.107.143.24",
                         "97.107.143.25",
@@ -12821,14 +12829,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1242,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1242,
                       "ipv4": Array [
                         "97.107.143.27",
                         "97.107.143.28",
@@ -13140,14 +13148,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1243,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1243,
                       "ipv4": Array [
                         "97.107.143.30",
                         "97.107.143.31",
@@ -13474,14 +13482,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1245,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1245,
                       "ipv4": Array [
                         "97.107.143.33",
                         "97.107.143.34",
@@ -13793,10 +13801,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": null,
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1246,
+                      "image": Object {
+                        "id": null,
+                        "label": "Unknown",
+                        "vendor": "unknown",
+                      },
                       "ipv4": Array [
                         "97.107.143.37",
                         "97.107.143.38",
@@ -14096,14 +14108,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1247,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1247,
                       "ipv4": Array [
                         "97.107.143.40",
                       ],
@@ -14414,14 +14426,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1248,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1248,
                       "ipv4": Array [
                         "97.107.143.44",
                         "97.107.143.45",
@@ -14738,14 +14750,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1234,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1234,
                     "ipv4": Array [
                       "97.107.143.0",
                       "97.107.143.1",
@@ -15169,14 +15181,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1233,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1233,
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -15541,14 +15553,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:50:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "",
+                        "hypervisor": "kvm",
+                        "id": 1235,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "",
-                        "hypervisor": "kvm",
-                        "id": 1235,
                         "ipv4": Array [
                           "97.107.143.6",
                           "97.107.143.7",
@@ -15810,14 +15822,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:48:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1236,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1236,
                         "ipv4": Array [
                           "97.107.143.9",
                           "97.107.143.10",
@@ -16129,14 +16141,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:49:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1237,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1237,
                         "ipv4": Array [
                           "97.107.143.12",
                           "97.107.143.13",
@@ -16482,14 +16494,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1238,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1238,
                         "ipv4": Array [
                           "97.107.143.15",
                           "97.107.143.16",
@@ -16763,14 +16775,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1239,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1239,
                         "ipv4": Array [
                           "97.107.143.18",
                           "97.107.143.19",
@@ -17079,14 +17091,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1240,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1240,
                         "ipv4": Array [
                           "97.107.143.21",
                           "97.107.143.22",
@@ -17360,14 +17372,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1241,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1241,
                         "ipv4": Array [
                           "97.107.143.24",
                           "97.107.143.25",
@@ -17659,14 +17671,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1242,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1242,
                         "ipv4": Array [
                           "97.107.143.27",
                           "97.107.143.28",
@@ -17978,14 +17990,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1243,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1243,
                         "ipv4": Array [
                           "97.107.143.30",
                           "97.107.143.31",
@@ -18312,14 +18324,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1245,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1245,
                         "ipv4": Array [
                           "97.107.143.33",
                           "97.107.143.34",
@@ -18631,10 +18643,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": null,
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1246,
+                        "image": Object {
+                          "id": null,
+                          "label": "Unknown",
+                          "vendor": "unknown",
+                        },
                         "ipv4": Array [
                           "97.107.143.37",
                           "97.107.143.38",
@@ -18934,14 +18950,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1247,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1247,
                         "ipv4": Array [
                           "97.107.143.40",
                         ],
@@ -19252,14 +19268,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1248,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1248,
                         "ipv4": Array [
                           "97.107.143.44",
                           "97.107.143.45",
@@ -19576,14 +19592,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1234,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1234,
                       "ipv4": Array [
                         "97.107.143.0",
                         "97.107.143.1",
@@ -19965,14 +19981,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1233,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1233,
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -20337,14 +20353,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:50:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "",
+                          "hypervisor": "kvm",
+                          "id": 1235,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "",
-                          "hypervisor": "kvm",
-                          "id": 1235,
                           "ipv4": Array [
                             "97.107.143.6",
                             "97.107.143.7",
@@ -20606,14 +20622,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:48:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1236,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1236,
                           "ipv4": Array [
                             "97.107.143.9",
                             "97.107.143.10",
@@ -20925,14 +20941,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:49:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1237,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1237,
                           "ipv4": Array [
                             "97.107.143.12",
                             "97.107.143.13",
@@ -21278,14 +21294,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1238,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1238,
                           "ipv4": Array [
                             "97.107.143.15",
                             "97.107.143.16",
@@ -21559,14 +21575,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1239,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1239,
                           "ipv4": Array [
                             "97.107.143.18",
                             "97.107.143.19",
@@ -21875,14 +21891,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1240,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1240,
                           "ipv4": Array [
                             "97.107.143.21",
                             "97.107.143.22",
@@ -22156,14 +22172,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1241,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1241,
                           "ipv4": Array [
                             "97.107.143.24",
                             "97.107.143.25",
@@ -22455,14 +22471,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1242,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1242,
                           "ipv4": Array [
                             "97.107.143.27",
                             "97.107.143.28",
@@ -22774,14 +22790,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1243,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1243,
                           "ipv4": Array [
                             "97.107.143.30",
                             "97.107.143.31",
@@ -23108,14 +23124,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1245,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1245,
                           "ipv4": Array [
                             "97.107.143.33",
                             "97.107.143.34",
@@ -23427,10 +23443,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": null,
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1246,
+                          "image": Object {
+                            "id": null,
+                            "label": "Unknown",
+                            "vendor": "unknown",
+                          },
                           "ipv4": Array [
                             "97.107.143.37",
                             "97.107.143.38",
@@ -23730,14 +23750,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1247,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1247,
                           "ipv4": Array [
                             "97.107.143.40",
                           ],
@@ -24048,14 +24068,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1248,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1248,
                           "ipv4": Array [
                             "97.107.143.44",
                             "97.107.143.45",
@@ -24372,14 +24392,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1234,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1234,
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",
@@ -24745,14 +24765,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1233,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1233,
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -25117,14 +25137,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:50:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "",
+                        "hypervisor": "kvm",
+                        "id": 1235,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "",
-                        "hypervisor": "kvm",
-                        "id": 1235,
                         "ipv4": Array [
                           "97.107.143.6",
                           "97.107.143.7",
@@ -25386,14 +25406,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:48:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1236,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1236,
                         "ipv4": Array [
                           "97.107.143.9",
                           "97.107.143.10",
@@ -25705,14 +25725,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:49:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1237,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1237,
                         "ipv4": Array [
                           "97.107.143.12",
                           "97.107.143.13",
@@ -26058,14 +26078,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1238,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1238,
                         "ipv4": Array [
                           "97.107.143.15",
                           "97.107.143.16",
@@ -26339,14 +26359,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1239,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1239,
                         "ipv4": Array [
                           "97.107.143.18",
                           "97.107.143.19",
@@ -26655,14 +26675,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1240,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1240,
                         "ipv4": Array [
                           "97.107.143.21",
                           "97.107.143.22",
@@ -26936,14 +26956,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1241,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1241,
                         "ipv4": Array [
                           "97.107.143.24",
                           "97.107.143.25",
@@ -27235,14 +27255,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1242,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1242,
                         "ipv4": Array [
                           "97.107.143.27",
                           "97.107.143.28",
@@ -27554,14 +27574,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1243,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1243,
                         "ipv4": Array [
                           "97.107.143.30",
                           "97.107.143.31",
@@ -27888,14 +27908,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1245,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1245,
                         "ipv4": Array [
                           "97.107.143.33",
                           "97.107.143.34",
@@ -28207,10 +28227,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": null,
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1246,
+                        "image": Object {
+                          "id": null,
+                          "label": "Unknown",
+                          "vendor": "unknown",
+                        },
                         "ipv4": Array [
                           "97.107.143.37",
                           "97.107.143.38",
@@ -28510,14 +28534,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1247,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1247,
                         "ipv4": Array [
                           "97.107.143.40",
                         ],
@@ -28828,14 +28852,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1248,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1248,
                         "ipv4": Array [
                           "97.107.143.44",
                           "97.107.143.45",
@@ -29150,14 +29174,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1234,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1234,
                       "ipv4": Array [
                         "97.107.143.0",
                         "97.107.143.1",
@@ -29730,14 +29754,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1233,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1233,
                       "ipv4": Array [
                         "97.107.143.3",
                         "97.107.143.4",
@@ -30102,14 +30126,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:50:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "",
+                      "hypervisor": "kvm",
+                      "id": 1235,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "",
-                      "hypervisor": "kvm",
-                      "id": 1235,
                       "ipv4": Array [
                         "97.107.143.6",
                         "97.107.143.7",
@@ -30371,14 +30395,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:48:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1236,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1236,
                       "ipv4": Array [
                         "97.107.143.9",
                         "97.107.143.10",
@@ -30690,14 +30714,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:49:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1237,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1237,
                       "ipv4": Array [
                         "97.107.143.12",
                         "97.107.143.13",
@@ -31043,14 +31067,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1238,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1238,
                       "ipv4": Array [
                         "97.107.143.15",
                         "97.107.143.16",
@@ -31324,14 +31348,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1239,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1239,
                       "ipv4": Array [
                         "97.107.143.18",
                         "97.107.143.19",
@@ -31640,14 +31664,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1240,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1240,
                       "ipv4": Array [
                         "97.107.143.21",
                         "97.107.143.22",
@@ -31921,14 +31945,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1241,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1241,
                       "ipv4": Array [
                         "97.107.143.24",
                         "97.107.143.25",
@@ -32220,14 +32244,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1242,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1242,
                       "ipv4": Array [
                         "97.107.143.27",
                         "97.107.143.28",
@@ -32539,14 +32563,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1243,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1243,
                       "ipv4": Array [
                         "97.107.143.30",
                         "97.107.143.31",
@@ -32873,14 +32897,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1245,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1245,
                       "ipv4": Array [
                         "97.107.143.33",
                         "97.107.143.34",
@@ -33192,10 +33216,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": null,
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1246,
+                      "image": Object {
+                        "id": null,
+                        "label": "Unknown",
+                        "vendor": "unknown",
+                      },
                       "ipv4": Array [
                         "97.107.143.37",
                         "97.107.143.38",
@@ -33495,14 +33523,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1247,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1247,
                       "ipv4": Array [
                         "97.107.143.40",
                       ],
@@ -33813,14 +33841,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1248,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1248,
                       "ipv4": Array [
                         "97.107.143.44",
                         "97.107.143.45",
@@ -34137,14 +34165,14 @@ ShallowWrapper {
                     },
                     "created": "2016-07-06T16:47:27",
                     "disk": 20480,
-                    "distribution": Object {
+                    "group": "Test Group",
+                    "hypervisor": "kvm",
+                    "id": 1234,
+                    "image": Object {
                       "id": "linode/ubuntu15.10",
                       "label": "Ubuntu 15.10",
                       "vendor": "Ubuntu",
                     },
-                    "group": "Test Group",
-                    "hypervisor": "kvm",
-                    "id": 1234,
                     "ipv4": Array [
                       "97.107.143.0",
                       "97.107.143.1",
@@ -34575,14 +34603,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1233,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1233,
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -34947,14 +34975,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:50:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "",
+                        "hypervisor": "kvm",
+                        "id": 1235,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "",
-                        "hypervisor": "kvm",
-                        "id": 1235,
                         "ipv4": Array [
                           "97.107.143.6",
                           "97.107.143.7",
@@ -35216,14 +35244,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:48:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1236,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1236,
                         "ipv4": Array [
                           "97.107.143.9",
                           "97.107.143.10",
@@ -35535,14 +35563,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:49:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1237,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1237,
                         "ipv4": Array [
                           "97.107.143.12",
                           "97.107.143.13",
@@ -35888,14 +35916,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1238,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1238,
                         "ipv4": Array [
                           "97.107.143.15",
                           "97.107.143.16",
@@ -36169,14 +36197,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1239,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1239,
                         "ipv4": Array [
                           "97.107.143.18",
                           "97.107.143.19",
@@ -36485,14 +36513,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1240,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1240,
                         "ipv4": Array [
                           "97.107.143.21",
                           "97.107.143.22",
@@ -36766,14 +36794,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1241,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1241,
                         "ipv4": Array [
                           "97.107.143.24",
                           "97.107.143.25",
@@ -37065,14 +37093,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1242,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1242,
                         "ipv4": Array [
                           "97.107.143.27",
                           "97.107.143.28",
@@ -37384,14 +37412,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1243,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1243,
                         "ipv4": Array [
                           "97.107.143.30",
                           "97.107.143.31",
@@ -37718,14 +37746,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1245,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1245,
                         "ipv4": Array [
                           "97.107.143.33",
                           "97.107.143.34",
@@ -38037,10 +38065,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": null,
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1246,
+                        "image": Object {
+                          "id": null,
+                          "label": "Unknown",
+                          "vendor": "unknown",
+                        },
                         "ipv4": Array [
                           "97.107.143.37",
                           "97.107.143.38",
@@ -38340,14 +38372,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1247,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1247,
                         "ipv4": Array [
                           "97.107.143.40",
                         ],
@@ -38658,14 +38690,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1248,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1248,
                         "ipv4": Array [
                           "97.107.143.44",
                           "97.107.143.45",
@@ -38982,14 +39014,14 @@ ShallowWrapper {
                       },
                       "created": "2016-07-06T16:47:27",
                       "disk": 20480,
-                      "distribution": Object {
+                      "group": "Test Group",
+                      "hypervisor": "kvm",
+                      "id": 1234,
+                      "image": Object {
                         "id": "linode/ubuntu15.10",
                         "label": "Ubuntu 15.10",
                         "vendor": "Ubuntu",
                       },
-                      "group": "Test Group",
-                      "hypervisor": "kvm",
-                      "id": 1234,
                       "ipv4": Array [
                         "97.107.143.0",
                         "97.107.143.1",
@@ -39413,14 +39445,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1233,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1233,
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -39785,14 +39817,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:50:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "",
+                          "hypervisor": "kvm",
+                          "id": 1235,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "",
-                          "hypervisor": "kvm",
-                          "id": 1235,
                           "ipv4": Array [
                             "97.107.143.6",
                             "97.107.143.7",
@@ -40054,14 +40086,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:48:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1236,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1236,
                           "ipv4": Array [
                             "97.107.143.9",
                             "97.107.143.10",
@@ -40373,14 +40405,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:49:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1237,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1237,
                           "ipv4": Array [
                             "97.107.143.12",
                             "97.107.143.13",
@@ -40726,14 +40758,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1238,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1238,
                           "ipv4": Array [
                             "97.107.143.15",
                             "97.107.143.16",
@@ -41007,14 +41039,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1239,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1239,
                           "ipv4": Array [
                             "97.107.143.18",
                             "97.107.143.19",
@@ -41323,14 +41355,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1240,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1240,
                           "ipv4": Array [
                             "97.107.143.21",
                             "97.107.143.22",
@@ -41604,14 +41636,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1241,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1241,
                           "ipv4": Array [
                             "97.107.143.24",
                             "97.107.143.25",
@@ -41903,14 +41935,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1242,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1242,
                           "ipv4": Array [
                             "97.107.143.27",
                             "97.107.143.28",
@@ -42222,14 +42254,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1243,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1243,
                           "ipv4": Array [
                             "97.107.143.30",
                             "97.107.143.31",
@@ -42556,14 +42588,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1245,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1245,
                           "ipv4": Array [
                             "97.107.143.33",
                             "97.107.143.34",
@@ -42875,10 +42907,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": null,
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1246,
+                          "image": Object {
+                            "id": null,
+                            "label": "Unknown",
+                            "vendor": "unknown",
+                          },
                           "ipv4": Array [
                             "97.107.143.37",
                             "97.107.143.38",
@@ -43178,14 +43214,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1247,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1247,
                           "ipv4": Array [
                             "97.107.143.40",
                           ],
@@ -43496,14 +43532,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1248,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1248,
                           "ipv4": Array [
                             "97.107.143.44",
                             "97.107.143.45",
@@ -43820,14 +43856,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1234,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1234,
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",
@@ -44209,14 +44245,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1233,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1233,
                             "ipv4": Array [
                               "97.107.143.3",
                               "97.107.143.4",
@@ -44581,14 +44617,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:50:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "",
+                            "hypervisor": "kvm",
+                            "id": 1235,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "",
-                            "hypervisor": "kvm",
-                            "id": 1235,
                             "ipv4": Array [
                               "97.107.143.6",
                               "97.107.143.7",
@@ -44850,14 +44886,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:48:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1236,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1236,
                             "ipv4": Array [
                               "97.107.143.9",
                               "97.107.143.10",
@@ -45169,14 +45205,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:49:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1237,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1237,
                             "ipv4": Array [
                               "97.107.143.12",
                               "97.107.143.13",
@@ -45522,14 +45558,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1238,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1238,
                             "ipv4": Array [
                               "97.107.143.15",
                               "97.107.143.16",
@@ -45803,14 +45839,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1239,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1239,
                             "ipv4": Array [
                               "97.107.143.18",
                               "97.107.143.19",
@@ -46119,14 +46155,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1240,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1240,
                             "ipv4": Array [
                               "97.107.143.21",
                               "97.107.143.22",
@@ -46400,14 +46436,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1241,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1241,
                             "ipv4": Array [
                               "97.107.143.24",
                               "97.107.143.25",
@@ -46699,14 +46735,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1242,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1242,
                             "ipv4": Array [
                               "97.107.143.27",
                               "97.107.143.28",
@@ -47018,14 +47054,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1243,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1243,
                             "ipv4": Array [
                               "97.107.143.30",
                               "97.107.143.31",
@@ -47352,14 +47388,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1245,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1245,
                             "ipv4": Array [
                               "97.107.143.33",
                               "97.107.143.34",
@@ -47671,10 +47707,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": null,
                             "group": "Test Group",
                             "hypervisor": "kvm",
                             "id": 1246,
+                            "image": Object {
+                              "id": null,
+                              "label": "Unknown",
+                              "vendor": "unknown",
+                            },
                             "ipv4": Array [
                               "97.107.143.37",
                               "97.107.143.38",
@@ -47974,14 +48014,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1247,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1247,
                             "ipv4": Array [
                               "97.107.143.40",
                             ],
@@ -48292,14 +48332,14 @@ ShallowWrapper {
                             },
                             "created": "2016-07-06T16:47:27",
                             "disk": 20480,
-                            "distribution": Object {
+                            "group": "Test Group",
+                            "hypervisor": "kvm",
+                            "id": 1248,
+                            "image": Object {
                               "id": "linode/ubuntu15.10",
                               "label": "Ubuntu 15.10",
                               "vendor": "Ubuntu",
                             },
-                            "group": "Test Group",
-                            "hypervisor": "kvm",
-                            "id": 1248,
                             "ipv4": Array [
                               "97.107.143.44",
                               "97.107.143.45",
@@ -48616,14 +48656,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1234,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1234,
                           "ipv4": Array [
                             "97.107.143.0",
                             "97.107.143.1",
@@ -48989,14 +49029,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1233,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1233,
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -49361,14 +49401,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:50:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "",
+                          "hypervisor": "kvm",
+                          "id": 1235,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "",
-                          "hypervisor": "kvm",
-                          "id": 1235,
                           "ipv4": Array [
                             "97.107.143.6",
                             "97.107.143.7",
@@ -49630,14 +49670,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:48:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1236,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1236,
                           "ipv4": Array [
                             "97.107.143.9",
                             "97.107.143.10",
@@ -49949,14 +49989,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:49:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1237,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1237,
                           "ipv4": Array [
                             "97.107.143.12",
                             "97.107.143.13",
@@ -50302,14 +50342,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1238,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1238,
                           "ipv4": Array [
                             "97.107.143.15",
                             "97.107.143.16",
@@ -50583,14 +50623,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1239,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1239,
                           "ipv4": Array [
                             "97.107.143.18",
                             "97.107.143.19",
@@ -50899,14 +50939,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1240,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1240,
                           "ipv4": Array [
                             "97.107.143.21",
                             "97.107.143.22",
@@ -51180,14 +51220,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1241,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1241,
                           "ipv4": Array [
                             "97.107.143.24",
                             "97.107.143.25",
@@ -51479,14 +51519,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1242,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1242,
                           "ipv4": Array [
                             "97.107.143.27",
                             "97.107.143.28",
@@ -51798,14 +51838,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1243,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1243,
                           "ipv4": Array [
                             "97.107.143.30",
                             "97.107.143.31",
@@ -52132,14 +52172,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1245,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1245,
                           "ipv4": Array [
                             "97.107.143.33",
                             "97.107.143.34",
@@ -52451,10 +52491,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": null,
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1246,
+                          "image": Object {
+                            "id": null,
+                            "label": "Unknown",
+                            "vendor": "unknown",
+                          },
                           "ipv4": Array [
                             "97.107.143.37",
                             "97.107.143.38",
@@ -52754,14 +52798,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1247,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1247,
                           "ipv4": Array [
                             "97.107.143.40",
                           ],
@@ -53072,14 +53116,14 @@ ShallowWrapper {
                           },
                           "created": "2016-07-06T16:47:27",
                           "disk": 20480,
-                          "distribution": Object {
+                          "group": "Test Group",
+                          "hypervisor": "kvm",
+                          "id": 1248,
+                          "image": Object {
                             "id": "linode/ubuntu15.10",
                             "label": "Ubuntu 15.10",
                             "vendor": "Ubuntu",
                           },
-                          "group": "Test Group",
-                          "hypervisor": "kvm",
-                          "id": 1248,
                           "ipv4": Array [
                             "97.107.143.44",
                             "97.107.143.45",
@@ -53394,14 +53438,14 @@ ShallowWrapper {
                         },
                         "created": "2016-07-06T16:47:27",
                         "disk": 20480,
-                        "distribution": Object {
+                        "group": "Test Group",
+                        "hypervisor": "kvm",
+                        "id": 1234,
+                        "image": Object {
                           "id": "linode/ubuntu15.10",
                           "label": "Ubuntu 15.10",
                           "vendor": "Ubuntu",
                         },
-                        "group": "Test Group",
-                        "hypervisor": "kvm",
-                        "id": 1234,
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",

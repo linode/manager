@@ -14,11 +14,11 @@ ShallowWrapper {
         "deployments_active": 42,
         "deployments_total": 150,
         "description": "Installs the Linode API bindings",
-        "distributions": Array [
-          Object {},
-          Object {},
-        ],
         "id": 37,
+        "images": Array [
+          "linode/debian7",
+          "linode/debian8",
+        ],
         "is_public": true,
         "label": "Example StackScript",
         "rev_note": "Initial import",
@@ -92,22 +92,22 @@ ShallowWrapper {
           <div>
             <label
               className="col-form-label"
-              htmlFor="distributions"
+              htmlFor="images"
             >
-              Target Distributions
+              Target Images
             </label>
           </div>
           <div>
             <DistributionSelect
-              distributions={Object {}}
-              id="distributions"
+              id="images"
+              images={undefined}
               multi={true}
-              name="distributions"
+              name="images"
               onChange={[Function]}
               value={
                 Array [
-                  Object {},
-                  Object {},
+                  "linode/debian7",
+                  "linode/debian8",
                 ]
               }
             />
@@ -118,6 +118,7 @@ ShallowWrapper {
         >
           <div>
             <Checkbox
+              checked={true}
               className=""
               disabled={true}
               id="isPublic"
@@ -347,22 +348,22 @@ ShallowWrapper {
             <div>
               <label
                 className="col-form-label"
-                htmlFor="distributions"
+                htmlFor="images"
               >
-                Target Distributions
+                Target Images
               </label>
             </div>,
             <div>
               <DistributionSelect
-                distributions={Object {}}
-                id="distributions"
+                id="images"
+                images={undefined}
                 multi={true}
-                name="distributions"
+                name="images"
                 onChange={[Function]}
                 value={
                   Array [
-                    Object {},
-                    Object {},
+                    "linode/debian7",
+                    "linode/debian8",
                   ]
                 }
               />
@@ -379,9 +380,9 @@ ShallowWrapper {
             "props": Object {
               "children": <label
                 className="col-form-label"
-                htmlFor="distributions"
+                htmlFor="images"
               >
-                Target Distributions
+                Target Images
               </label>,
             },
             "ref": null,
@@ -390,12 +391,12 @@ ShallowWrapper {
               "key": undefined,
               "nodeType": "host",
               "props": Object {
-                "children": "Target Distributions",
+                "children": "Target Images",
                 "className": "col-form-label",
-                "htmlFor": "distributions",
+                "htmlFor": "images",
               },
               "ref": null,
-              "rendered": "Target Distributions",
+              "rendered": "Target Images",
               "type": "label",
             },
             "type": "div",
@@ -406,15 +407,15 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <DistributionSelect
-                distributions={Object {}}
-                id="distributions"
+                id="images"
+                images={undefined}
                 multi={true}
-                name="distributions"
+                name="images"
                 onChange={[Function]}
                 value={
                   Array [
-                    Object {},
-                    Object {},
+                    "linode/debian7",
+                    "linode/debian8",
                   ]
                 }
               />,
@@ -425,14 +426,14 @@ ShallowWrapper {
               "key": undefined,
               "nodeType": "function",
               "props": Object {
-                "distributions": Object {},
-                "id": "distributions",
+                "id": "images",
+                "images": undefined,
                 "multi": true,
-                "name": "distributions",
+                "name": "images",
                 "onChange": [Function],
                 "value": Array [
-                  Object {},
-                  Object {},
+                  "linode/debian7",
+                  "linode/debian8",
                 ],
               },
               "ref": null,
@@ -451,6 +452,7 @@ ShallowWrapper {
         "props": Object {
           "children": <div>
             <Checkbox
+              checked={true}
               className=""
               disabled={true}
               id="isPublic"
@@ -477,6 +479,7 @@ ShallowWrapper {
           "props": Object {
             "children": Array [
               <Checkbox
+                checked={true}
                 className=""
                 disabled={true}
                 id="isPublic"
@@ -501,6 +504,7 @@ ShallowWrapper {
               "key": undefined,
               "nodeType": "function",
               "props": Object {
+                "checked": true,
                 "className": "",
                 "disabled": true,
                 "id": "isPublic",
@@ -655,22 +659,22 @@ ShallowWrapper {
             <div>
               <label
                 className="col-form-label"
-                htmlFor="distributions"
+                htmlFor="images"
               >
-                Target Distributions
+                Target Images
               </label>
             </div>
             <div>
               <DistributionSelect
-                distributions={Object {}}
-                id="distributions"
+                id="images"
+                images={undefined}
                 multi={true}
-                name="distributions"
+                name="images"
                 onChange={[Function]}
                 value={
                   Array [
-                    Object {},
-                    Object {},
+                    "linode/debian7",
+                    "linode/debian8",
                   ]
                 }
               />
@@ -681,6 +685,7 @@ ShallowWrapper {
           >
             <div>
               <Checkbox
+                checked={true}
                 className=""
                 disabled={true}
                 id="isPublic"
@@ -910,22 +915,22 @@ ShallowWrapper {
               <div>
                 <label
                   className="col-form-label"
-                  htmlFor="distributions"
+                  htmlFor="images"
                 >
-                  Target Distributions
+                  Target Images
                 </label>
               </div>,
               <div>
                 <DistributionSelect
-                  distributions={Object {}}
-                  id="distributions"
+                  id="images"
+                  images={undefined}
                   multi={true}
-                  name="distributions"
+                  name="images"
                   onChange={[Function]}
                   value={
                     Array [
-                      Object {},
-                      Object {},
+                      "linode/debian7",
+                      "linode/debian8",
                     ]
                   }
                 />
@@ -942,9 +947,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <label
                   className="col-form-label"
-                  htmlFor="distributions"
+                  htmlFor="images"
                 >
-                  Target Distributions
+                  Target Images
                 </label>,
               },
               "ref": null,
@@ -953,12 +958,12 @@ ShallowWrapper {
                 "key": undefined,
                 "nodeType": "host",
                 "props": Object {
-                  "children": "Target Distributions",
+                  "children": "Target Images",
                   "className": "col-form-label",
-                  "htmlFor": "distributions",
+                  "htmlFor": "images",
                 },
                 "ref": null,
-                "rendered": "Target Distributions",
+                "rendered": "Target Images",
                 "type": "label",
               },
               "type": "div",
@@ -969,15 +974,15 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": <DistributionSelect
-                  distributions={Object {}}
-                  id="distributions"
+                  id="images"
+                  images={undefined}
                   multi={true}
-                  name="distributions"
+                  name="images"
                   onChange={[Function]}
                   value={
                     Array [
-                      Object {},
-                      Object {},
+                      "linode/debian7",
+                      "linode/debian8",
                     ]
                   }
                 />,
@@ -988,14 +993,14 @@ ShallowWrapper {
                 "key": undefined,
                 "nodeType": "function",
                 "props": Object {
-                  "distributions": Object {},
-                  "id": "distributions",
+                  "id": "images",
+                  "images": undefined,
                   "multi": true,
-                  "name": "distributions",
+                  "name": "images",
                   "onChange": [Function],
                   "value": Array [
-                    Object {},
-                    Object {},
+                    "linode/debian7",
+                    "linode/debian8",
                   ],
                 },
                 "ref": null,
@@ -1014,6 +1019,7 @@ ShallowWrapper {
           "props": Object {
             "children": <div>
               <Checkbox
+                checked={true}
                 className=""
                 disabled={true}
                 id="isPublic"
@@ -1040,6 +1046,7 @@ ShallowWrapper {
             "props": Object {
               "children": Array [
                 <Checkbox
+                  checked={true}
                   className=""
                   disabled={true}
                   id="isPublic"
@@ -1064,6 +1071,7 @@ ShallowWrapper {
                 "key": undefined,
                 "nodeType": "function",
                 "props": Object {
+                  "checked": true,
                   "className": "",
                   "disabled": true,
                   "id": "isPublic",

@@ -5,7 +5,7 @@ import {
 
 export const config = genConfig({
   plural: 'volumes',
-  endpoint: id => `/linode/volumes/${id}`,
+  endpoint: id => `/volumes/${id}`,
   supports: [ONE, MANY, POST, PUT, DELETE],
 });
 

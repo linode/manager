@@ -337,14 +337,14 @@ ShallowWrapper {
         },
         "created": "2016-07-06T16:50:27",
         "disk": 20480,
-        "distribution": Object {
+        "group": "",
+        "hypervisor": "kvm",
+        "id": 1235,
+        "image": Object {
           "id": "linode/ubuntu15.10",
           "label": "Ubuntu 15.10",
           "vendor": "Ubuntu",
         },
-        "group": "",
-        "hypervisor": "kvm",
-        "id": 1235,
         "ipv4": Array [
           "97.107.143.6",
           "97.107.143.7",
