@@ -32,7 +32,7 @@ describe('linodes/volumes/components/AttachVolume', function () {
       ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}/attach`, {
         method: 'POST',
         body: {
-          linode_id: '1234',
+          linode_id: 1234,
           config_id: 12345,
         },
       }),
