@@ -12,7 +12,7 @@ export function detachVolume(volumeId) {
 export function attachVolume(volumeId, linodeId, configId = null) {
   return async function (dispatch) {
     const data = {
-      linode_id: linodeId,
+      linode_id: parseInt(linodeId),
       config_id: (configId === null ? configId : parseInt(configId)),
     };
 
