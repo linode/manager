@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 const dayOptions = [
+  { value: 'Scheduling', label: 'Choose a time' },
   { value: 'Sunday', label: 'Sunday' },
   { value: 'Monday', label: 'Monday' },
   { value: 'Tuesday', label: 'Tuesday' },
@@ -45,7 +47,7 @@ export function createAdjustedScheduleOptions(timezone, day) {
   const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   const idx = days.indexOf(day.toLowerCase());
 
-  const list = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
+  let list = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
     const start = moment.utc({ hour })
       .day(idx)
       .add(1, 'hours')
@@ -64,7 +66,11 @@ export function createAdjustedScheduleOptions(timezone, day) {
     };
   });
 
-  return sortBy(list, (i) => i.label);
+  list = sortBy(list, (i) => i.label);
+
+  list.unshift({ label: 'Choose a day', value: '' });
+
+  return list;
 }
 
 export class ScheduleForm extends Component {
@@ -79,6 +85,7 @@ export class ScheduleForm extends Component {
     };
 
     this.onChange = onChange.bind(this);
+    this.disabledChildren = this.disabledChildren.bind(this);
   }
 
   onSubmit = () => {
@@ -90,9 +97,19 @@ export class ScheduleForm extends Component {
     ]));
   }
 
+  disabledChildren() {
+    if (this.state.loading) {
+      return 'Saving';
+    }
+    if (this.state.day === 'Scheduling') {
+      return 'Save';
+    }
+  }
+
   render() {
     const { errors, loading, window, day } = this.state;
     const { tz } = this.props;
+    const isScheduled = day !== 'Scheduling';
     const adjustedScheduleOptions = createAdjustedScheduleOptions(tz, day);
     const scheduleOption = find(adjustedScheduleOptions, (i) => i.value === window);
     const { start, finish } = scheduleOption;
@@ -111,13 +128,13 @@ export class ScheduleForm extends Component {
             <Select
               id="window"
               name="window"
-              value={window || ''}
+              value={isScheduled ? window : ''}
               onChange={this.onChange}
               options={adjustedScheduleOptions}
             />
-            <small className="form-text text-muted">
-            Daily backups will be attempted {start.format('HH:mm z')} - {finish.format('HH:mm z')}.
-            </small>
+            {isScheduled && <small className="form-text text-muted">
+              Daily backups will be attempted {start.format('HH:mm z')} - {finish.format('HH:mm z')}.
+            </small>}
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>
@@ -132,16 +149,19 @@ export class ScheduleForm extends Component {
               className="float-sm-left"
               options={dayOptions}
             />
-            <small className="form-text text-muted">
+            {isScheduled && <small className="form-text text-muted">
               Weekly Backups will be attempted between {start.format('dddd HH:mm z')}
               &nbsp;and {finish.format('dddd HH:mm z')}.
-            </small>
+            </small>}
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>
         <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton disabled={loading} />
+            <SubmitButton
+              disabled={loading || !isScheduled}
+              disabledChildren={this.disabledChildren()}
+            />
             <FormSummary errors={errors} success="Schedule settings saved." />
           </div>
         </FormGroup>
