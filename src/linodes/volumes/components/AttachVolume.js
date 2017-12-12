@@ -40,17 +40,16 @@ export default class AttachVolume extends Component {
   }
 
   onLinodeChange = (e) => {
+    const linodeId = e.target.value;
     this.onChange(e);
     this.setState({ fetchingConfigs: true }, async () => {
-      const linodeId = e.target.value;
       const { allConfigs } = this.state;
-
       if (!allConfigs[linodeId]) {
         const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
         const linodeConfigs = Object.values(configs.configs).map(function (config) {
           return {
             label: config.label,
-            value: config.id,
+            value: parseInt(config.id),
           };
         });
 
@@ -82,7 +81,7 @@ export default class AttachVolume extends Component {
       Object.values(linodes[linode]._configs.configs).map(function (config) {
         return {
           label: config.label,
-          value: config.id,
+          value: parseInt(config.id),
         };
       }
       ) : null;
@@ -115,8 +114,8 @@ export default class AttachVolume extends Component {
             onChange={this.onLinodeChange}
           />
         </ModalFormGroup>
-        {linodeConfigs.length <= 1 ? null :
-          <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+        {linodeConfigs.length === 1 ? null :
+          <ModalFormGroup label="Config" id="config" apiKey="config_id" errors={errors}>
             <Select
               options={linodeConfigs}
               value={config}
