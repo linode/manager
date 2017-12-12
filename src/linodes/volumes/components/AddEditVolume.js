@@ -130,9 +130,11 @@ export default class AddEditVolume extends Component {
     const newVolumeOnLinode = !volume && original;
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
-    const showLinodeConfigs = !existingVolume && (configs.length > 1);
+    const showLinodeConfigs = !existingVolume && (configs.length !== 1);
 
-    const filteredLinodes = _.pickBy(linodes, linode => linode.region === region);
+    const filteredLinodes = _.pickBy(linodes,
+      linode => linode.region === region
+    );
 
     return (
       <FormModalBody
@@ -201,7 +203,7 @@ export default class AddEditVolume extends Component {
             </div>
           )}
           {!showLinodeConfigs ? null :
-            <ModalFormGroup label="Config" id="config" apiKey="config" errors={errors}>
+            <ModalFormGroup label="Config" id="config" apiKey="config_id" errors={errors}>
               <Select
                 options={configs}
                 value={config}
