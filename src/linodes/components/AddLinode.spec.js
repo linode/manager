@@ -8,7 +8,6 @@ import { AddLinode } from '~/linodes/components';
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
@@ -49,7 +48,7 @@ describe('linodes/components/AddLinode', function () {
           type: testType.id,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
+      ([pushResult]) => expect(pushResult).toEqaule(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 
@@ -80,7 +79,7 @@ describe('linodes/components/AddLinode', function () {
           backups_enabled: true,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 });

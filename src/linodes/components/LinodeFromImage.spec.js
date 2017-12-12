@@ -3,22 +3,22 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { REGION_MAP } from '~/constants';
-import { CloneLinode } from '~/linodes/components';
+import { LinodeFromImage } from '~/linodes/components';
 
 import {
   changeInput,
   expectDispatchOrStoreErrors,
   expectRequest,
 } from '~/test.helpers';
-
 import { api } from '~/data';
 import { testType } from '~/data/types';
-import { testLinode } from '~/data/linodes';
+import { testImage } from '~/data/images';
 
 
-const { linodes: { linodes }, types: { types } } = api;
+const { types: { types } } = api;
+const { images } = api;
 
-describe('linodes/components/CloneLinode', function () {
+describe('linodes/components/LinodeFromImage', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
 
@@ -27,14 +27,14 @@ describe('linodes/components/CloneLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it.skip('clones a linode', async function () {
-    CloneLinode.trigger(dispatch, linodes, types);
+  it.skip('creates a linode from an image with backups', async function () {
+    LinodeFromImage.trigger(dispatch, types, images);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'label', 'clonedLinode');
-    changeInput(modal, 'linode', testLinode.id);
-    changeInput(modal, 'region', REGION_MAP.Asia[0]);
+    changeInput(modal, 'label', 'Ubuntu Linode');
+    changeInput(modal, 'region', REGION_MAP.Asia[1]);
     changeInput(modal, 'plan', testType.id);
+    changeInput(modal, 'image', testImage.id);
     changeInput(modal, 'backups', true);
 
     dispatch.reset();
@@ -42,15 +42,16 @@ describe('linodes/components/CloneLinode', function () {
     modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/clone`, {
+      ([fn]) => expectRequest(fn, '/linode/instances/', {
         method: 'POST',
         body: {
-          region: REGION_MAP.Asia[0],
+          label: 'Ubuntu Linode',
+          region: REGION_MAP.Asia[1],
           type: testType.id,
-          label: 'clonedLinode',
+          image: testImage.id,
           backups_enabled: true,
         },
-      }, { id: 1 }),
+      }),
       ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });

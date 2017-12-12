@@ -5,9 +5,7 @@ import sinon from 'sinon';
 
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
 
-import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
-} from '~/test.helpers';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
 
 
@@ -63,7 +61,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
         body: { group: 'foobar', label: 'my-new-label' },
       }),
       () => {},
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-new-label/settings')),
     ], 2);
   });
 });

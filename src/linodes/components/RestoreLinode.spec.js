@@ -7,7 +7,6 @@ import { RestoreLinode } from '~/linodes/components';
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
@@ -50,7 +49,7 @@ describe('linodes/components/RestoreLinode', function () {
           region: testLinode.region,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 
@@ -79,7 +78,7 @@ describe('linodes/components/RestoreLinode', function () {
           region: testLinode.region,
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 });
