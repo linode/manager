@@ -2,23 +2,23 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Input } from 'linode-components/forms';
+import { PrimaryButton } from 'linode-components';
+import { Input } from 'linode-components';
 import CreateHelper from '~/components/CreateHelper';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { ListBody } from 'linode-components/lists/bodies';
-import { ListHeader } from 'linode-components/lists/headers';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { ListHeader } from 'linode-components';
 import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
-} from 'linode-components/tables/cells';
+} from 'linode-components';
 import {
   RegionCell,
   IPAddressCell,
 } from '~/components/tables/cells';
-import { MassEditControl } from 'linode-components/lists/controls';
+import { MassEditControl } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';

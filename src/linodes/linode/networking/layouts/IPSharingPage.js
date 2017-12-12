@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
-import { Table } from 'linode-components/tables';
+} from 'linode-components';
+import { Table } from 'linode-components';
 import {
   CheckboxCell,
   LinkCell,
-} from 'linode-components/tables/cells';
+} from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/ad-hoc/networking';

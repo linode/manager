@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
+import { Card, CardHeader } from 'linode-components';
+import { Form, FormSummary, SubmitButton } from 'linode-components';
 
 import { toggleTFA } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';

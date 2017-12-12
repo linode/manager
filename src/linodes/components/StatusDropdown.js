@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { FormGroup } from 'linode-components/forms';
-import { Dropdown } from 'linode-components/dropdowns';
-import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+import { FormGroup } from 'linode-components';
+import { Dropdown } from 'linode-components';
+import { ConfirmModalBody, DeleteModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';

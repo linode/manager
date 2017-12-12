@@ -2,8 +2,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
+import { PrimaryButton } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
 
 import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
 

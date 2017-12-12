@@ -9,8 +9,8 @@ import {
   FormSummary,
   Select,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 import { sortBy, find } from 'lodash';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';

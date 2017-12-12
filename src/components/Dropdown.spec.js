@@ -1,8 +1,8 @@
 import React from 'react';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
-import { Dropdown } from 'linode-components/dropdowns';
-import { Button } from 'linode-components/buttons';
+import { Dropdown } from 'linode-components';
+import { Button } from 'linode-components';
 
 describe('components/Dropdown', () => {
   const sandbox = sinon.sandbox.create();

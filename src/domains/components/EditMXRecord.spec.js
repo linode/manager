@@ -7,7 +7,7 @@ import EditMXRecord from '~/domains/components/EditMXRecord';
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 
-import { Input } from 'linode-components/forms';
+import { Input } from 'linode-components';
 
 describe('domains/components/EditMXRecord', () => {
   const sandbox = sinon.sandbox.create();

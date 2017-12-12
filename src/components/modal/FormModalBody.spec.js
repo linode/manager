@@ -2,8 +2,8 @@ import { shallow, mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { FormModalBody } from 'linode-components/modals';
-import SubmitButton from 'linode-components/forms/SubmitButton';
+import { FormModalBody } from 'linode-components';
+import { SubmitButton } from 'linode-components';
 
 describe('components/modal/FormModalBody', () => {
   const sandbox = sinon.sandbox.create();

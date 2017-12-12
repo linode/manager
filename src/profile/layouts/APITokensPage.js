@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
-import { Table } from 'linode-components/tables';
-import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
+import { PrimaryButton } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody, ListGroup } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { Table } from 'linode-components';
+import { DropdownCell, CheckboxCell } from 'linode-components';
 
 import toggleSelected from '~/actions/select';
 import api from '~/api';

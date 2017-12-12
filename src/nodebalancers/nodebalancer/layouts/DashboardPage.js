@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { Table } from 'linode-components/tables';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
-import { DeleteModalBody } from 'linode-components/modals';
+import { PrimaryButton } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { Table } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { LinkCell, ButtonCell } from 'linode-components';
+import { DeleteModalBody } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';

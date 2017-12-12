@@ -5,9 +5,9 @@ import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
 import { ChainedDocumentTitle } from '~/components';
-import { Card, CardHeader } from 'linode-components/cards';
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
-import { Table } from 'linode-components/tables';
+import { Card, CardHeader } from 'linode-components';
+import { Breadcrumbs } from 'linode-components';
+import { Table } from 'linode-components';
 import Currency from '~/components/Currency';
 import { setSource } from '~/actions/source';
 

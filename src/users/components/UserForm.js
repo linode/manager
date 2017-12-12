@@ -4,13 +4,13 @@ import { push } from 'react-router-redux';
 
 import {
   Form, FormGroup, FormGroupError, PasswordInput, Input, Checkboxes, Radio, SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/generic/users';
-import { FormSummary } from 'linode-components/forms';
+import { FormSummary } from 'linode-components';
 
 
 export default class UserForm extends Component {

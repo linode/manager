@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 describe('components/Tabs', async () => {
   // eslint-disable-next-line react/prefer-stateless-function

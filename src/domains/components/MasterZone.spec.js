@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { formatDNSSeconds } from '~/domains/components/SelectDNSSeconds';
 import { MasterZone } from '~/domains/components/MasterZone';
 import { api } from '~/data';
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 
 const { domains } = api;
 
