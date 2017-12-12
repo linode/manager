@@ -69,14 +69,14 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#region').text()).toBe(testLinode.region);
   });
 
-  it.skip('renders distribution', () => {
+  it.skip('renders image', () => {
     const page = mount(
       <DashboardPage
         {...props}
       />
     );
 
-    expect(page.find('#distro').text()).toBe(`${testLinode.distribution.label}Rebuild`);
+    expect(page.find('#distro').text()).toBe(`${testLinode.image.label}Rebuild`);
   });
 
   it.skip('renders unknown distribution', () => {

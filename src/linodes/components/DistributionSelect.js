@@ -9,31 +9,31 @@ import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 
 
 export default function DistributionSelect(props) {
-  // The API returns vendors with inconsistent casing, so we normalize that before
-  // we group on vendor.
-  const withVendorLowerCased = _.map(Object.values(props.distributions), d => ({
-    ...d,
-    value: d.id,
-    vendorLower: d.vendor.toLowerCase(),
-  }));
+  const vendorsOrdered = [...DISTRIBUTION_DISPLAY_ORDER];
+  vendorsOrdered.push('images');
 
-  const withImages = props.images !== undefined ?
-    _.map(Object.values(props.images), i => ({
-      ...i,
-      value: i.id,
-      vendor: 'Images',
-      vendorLower: 'images',
-    })) : [];
+  const imageOptions = props.images !== undefined ?
+    _.map(Object.values(props.images), im => {
+      const image = { ...im };
+      // ensure that each image has a vendor
+      if (!image.vendor) {
+        image.vendor = 'Images';
+      }
+      image.vendorLower = _.lowerCase(image.vendor);
+      // add the value prop for the sake of the Select
+      image.value = image.id;
+      // add the image's vendor to the order array if it's not already there
+      vendorsOrdered.includes(image.vendorLower) || vendorsOrdered.push(image.vendorLower);
+      return image;
+    }) : [];
 
-  const vendorsUnsorted = _.map(
-    _.groupBy(withVendorLowerCased.concat(withImages), 'vendorLower'),
-    (v) => ({
-      label: v[0].vendor,
-      options: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
+  const vendoredOptions = _.map(
+    _.groupBy(imageOptions, 'vendorLower'),
+    (vendorOptions) => ({
+      label: vendorOptions[0].vendor,
+      options: _.orderBy(vendorOptions, ['recommended', 'created'], ['desc', 'desc']),
     })
   );
-
-  const vendorByName = vendor => vendorsUnsorted.find(v => v.label.toLowerCase() === vendor);
 
   const options = [];
 
@@ -41,8 +41,8 @@ export default function DistributionSelect(props) {
     options.push({ label: 'No image', value: 'none' });
   }
 
-  for (const vendorName of DISTRIBUTION_DISPLAY_ORDER) {
-    const byName = vendorByName(vendorName);
+  for (const vendorName of vendorsOrdered) {
+    const byName = vendoredOptions.find(v => _.lowerCase(v.label) === vendorName);
 
     if (byName) {
       options.push(byName);
@@ -66,8 +66,7 @@ export default function DistributionSelect(props) {
 
 DistributionSelect.propTypes = {
   ..._.omit(Select.propTypes, 'options'),
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   allowNone: PropTypes.bool,
   options: PropTypes.array,
 };

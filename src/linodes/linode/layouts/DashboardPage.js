@@ -47,7 +47,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode, dispatch } = this.props;
+    const { username, linode, dispatch, images } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -76,7 +76,7 @@ export class DashboardPage extends Component {
             <div className="row">
               <div className="col-sm-4 row-label">Deployed From</div>
               <div className="col-sm-8" id="distro">
-                <DistroStyle linode={linode} />
+                <DistroStyle linode={linode} images={images} />
                 <div>
                   <small className="text-muted">
                     <Link to={`/linodes/${linode.label}/rebuild`}>Rebuild</Link>
@@ -209,6 +209,7 @@ export class DashboardPage extends Component {
 
 DashboardPage.propTypes = {
   linode: PropTypes.object,
+  images: PropTypes.object.isRequired,
   username: PropTypes.string,
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
@@ -217,9 +218,10 @@ DashboardPage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
+  const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
-  return { linode, username, timezone, transfer };
+  return { linode, username, timezone, transfer, images };
 }
 
 export default connect(select)(DashboardPage);
