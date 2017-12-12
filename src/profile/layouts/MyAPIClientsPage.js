@@ -138,6 +138,7 @@ export class MyAPIClientsPage extends Component {
                 tooltipEnabled: true,
                 label: 'Label',
               },
+              { label: 'Access', dataFn: (client) => client.public ? 'Public' : 'Private' },
               { dataKey: 'id', label: 'ID' },
               { dataKey: 'redirect_uri', label: 'Redirect URI' },
               {
