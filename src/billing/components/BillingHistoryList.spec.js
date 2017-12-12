@@ -29,6 +29,6 @@ describe('billing/components/BillingHistoryList', () => {
     );
 
     const rowCount = Object.keys(invoices.invoices).length + payments.payments.length;
-    expect(page.find('.TableRow').length).to.equal(rowCount);
+    expect(page.find('.TableRow').length).toBe(rowCount);
   });
 });
