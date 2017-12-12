@@ -121,19 +121,20 @@ export default class VolumesList extends Component {
       {
         elements: [
           {
-            name: 'Edit', action: () =>
-              AddEditVolume.trigger(dispatch, linodes, record),
+            name: 'Edit',
+            action: () => AddEditVolume.trigger(dispatch, linodes, record),
           },
           {
             name: 'Resize',
             action: () => ResizeVolume.trigger(dispatch, record),
           },
-          record.linode_id === null ?
-            {
-              name: 'Attach', action: () =>
-                AttachVolume.trigger(dispatch, linodes, record),
-            } :
-            { name: 'Detach', action: () => this.detachVolumes(record) },
+          record.linode_id === null ? {
+            name: 'Attach',
+            action: () => AttachVolume.trigger(dispatch, linodes, record),
+          } : {
+            name: 'Detach',
+            action: () => this.detachVolumes(record),
+          },
         ],
       },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },

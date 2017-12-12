@@ -3,7 +3,7 @@ import { fetch } from '../fetch';
 
 
 export function detachVolume(volumeId) {
-  return async function(dispatch) {
+  return async function (dispatch) {
     await dispatch(fetch.post(`/volumes/${volumeId}/detach`));
     dispatch(actions.one({ linode_id: null }, volumeId));
   };
@@ -26,7 +26,7 @@ export function attachVolume(volumeId, linodeId, configId = null) {
 }
 
 export function resizeVolume(volumeId, size) {
-  return async function(dispatch) {
+  return async function (dispatch) {
     await dispatch(fetch.post(`/volumes/${volumeId}/resize`, { size }));
     dispatch(actions.one({ size: size }, volumeId));
   };
