@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Code } from 'linode-components/formats';
-import { FormModalBody } from 'linode-components/modals';
+import { ExternalLink } from 'linode-components';
+import { Code } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 

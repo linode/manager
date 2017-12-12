@@ -2,15 +2,15 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { LinkButton } from 'linode-components/buttons';
-import { Dropdown } from 'linode-components/dropdowns';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { ListHeader } from 'linode-components/lists/headers';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { Table } from 'linode-components/tables';
-import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
+import { LinkButton } from 'linode-components';
+import { Dropdown } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { Table } from 'linode-components';
+import { CheckboxCell, LabelCell, TableCell } from 'linode-components';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';

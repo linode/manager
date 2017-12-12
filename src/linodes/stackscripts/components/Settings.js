@@ -9,8 +9,8 @@ import {
   FormSummary,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import * as utilities from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -27,7 +27,7 @@ export default class Settings extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {

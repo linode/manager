@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import moment from 'moment';
 
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 
 export default function SelectExpiration(props) {

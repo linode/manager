@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 
-import { TableCell } from 'linode-components/tables/cells';
+import { TableCell } from 'linode-components';
 
 
 describe('components/tables/cells/TableCell', function () {

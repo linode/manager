@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
-import { Table } from 'linode-components/tables';
-import { LinkCell } from 'linode-components/tables/cells';
+import { Table } from 'linode-components';
+import { LinkCell } from 'linode-components';
 import Currency from '~/components/Currency';
 
 export const BillingHistoryList = props => {

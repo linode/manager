@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -10,9 +10,9 @@ import {
   SubmitButton,
   Select,
   PasswordInput,
-} from 'linode-components/forms';
-import { FormModalBody } from 'linode-components/modals';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { FormModalBody } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { resetPassword } from '~/api/ad-hoc/linodes';
 import { showModal, hideModal } from '~/actions/modal';

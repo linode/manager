@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 
-import { DeleteModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { removeSelected } from '~/actions/select';

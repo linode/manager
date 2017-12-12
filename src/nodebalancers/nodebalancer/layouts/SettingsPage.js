@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -11,7 +11,7 @@ import {
   FormSummary,
   SubmitButton,
   Input,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import { setSource } from '~/actions';
 import api from '~/api';
