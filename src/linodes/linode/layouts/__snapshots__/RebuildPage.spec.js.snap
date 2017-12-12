@@ -10,43 +10,105 @@ ShallowWrapper {
       Object {
         "linode/arch2016.05": Object {
           "_polling": false,
-          "architecture": "x86_64",
-          "disk_minimum": 550,
+          "created": "2009-01-01T00:00:00",
+          "creator": "linode",
+          "deprecated": false,
+          "description": "Test Image",
+          "filesystem": "ext4",
           "id": "linode/arch2016.05",
+          "is_public": true,
           "label": "Arch Linux 2016.05",
+          "last_used": "2009-08-17T00:00:00",
+          "min_deploy_size": 550,
           "recommended": true,
-          "updated": "2009-08-17T00:00:00",
+          "status": "available",
+          "type": "manual",
           "vendor": "Arch",
         },
         "linode/debian6": Object {
           "_polling": false,
-          "architecture": "x86_64",
-          "disk_minimum": 550,
+          "created": "2009-01-01T00:00:00",
+          "creator": "linode",
+          "deprecated": false,
+          "description": "Test Image",
+          "filesystem": "ext4",
           "id": "linode/debian6",
+          "is_public": true,
           "label": "Debian 6",
+          "last_used": "2009-08-17T00:00:00",
+          "min_deploy_size": 550,
           "recommended": false,
-          "updated": "2009-08-17T00:00:00",
+          "status": "available",
+          "type": "manual",
           "vendor": "Debian",
         },
         "linode/debian7": Object {
           "_polling": false,
-          "architecture": "x86_64",
-          "disk_minimum": 550,
+          "created": "2009-01-01T00:00:00",
+          "creator": "linode",
+          "deprecated": false,
+          "description": "Test Image",
+          "filesystem": "ext4",
           "id": "linode/debian7",
+          "is_public": true,
           "label": "Debian 7",
+          "last_used": "2009-08-17T00:00:00",
+          "min_deploy_size": 550,
           "recommended": true,
-          "updated": "2009-08-17T00:00:00",
+          "status": "available",
+          "type": "manual",
           "vendor": "Debian",
         },
         "linode/debian8.1": Object {
           "_polling": false,
-          "architecture": "x86_64",
-          "disk_minimum": 550,
+          "created": "2009-01-01T00:00:00",
+          "creator": "linode",
+          "deprecated": false,
+          "description": "Test Image",
+          "filesystem": "ext4",
           "id": "linode/debian8.1",
+          "is_public": true,
           "label": "Debian 8.1",
+          "last_used": "2009-08-17T00:00:00",
+          "min_deploy_size": 550,
           "recommended": true,
-          "updated": "2009-08-17T00:00:00",
+          "status": "available",
+          "type": "manual",
           "vendor": "Debian",
+        },
+        "private/38": Object {
+          "_polling": false,
+          "created": "2017-08-08T13:55:16",
+          "creator": "zues",
+          "deprecated": false,
+          "description": "image details",
+          "filesystem": "ext4",
+          "id": "private/38",
+          "is_public": false,
+          "label": "testImage",
+          "last_used": "2017-089-08T13:55:16",
+          "min_deploy_size": 2048,
+          "recommended": true,
+          "status": "available",
+          "type": "manual",
+          "vendor": "Unknown",
+        },
+        "private/39": Object {
+          "_polling": false,
+          "created": "2017-08-08T13:55:16",
+          "creator": "zues",
+          "deprecated": false,
+          "description": "image from deleted disk",
+          "filesystem": "raw",
+          "id": "private/39",
+          "is_public": false,
+          "label": "nextImage",
+          "last_used": "2017-089-08T13:55:16",
+          "min_deploy_size": 2048,
+          "recommended": true,
+          "status": "available",
+          "type": "automatic",
+          "vendor": "Unknown",
         },
       }
     }
@@ -328,14 +390,14 @@ ShallowWrapper {
         },
         "created": "2016-07-06T16:47:27",
         "disk": 20480,
-        "distribution": Object {
+        "group": "Test Group",
+        "hypervisor": "kvm",
+        "id": 1234,
+        "image": Object {
           "id": "linode/ubuntu15.10",
           "label": "Ubuntu 15.10",
           "vendor": "Ubuntu",
         },
-        "group": "Test Group",
-        "hypervisor": "kvm",
-        "id": 1234,
         "ipv4": Array [
           "97.107.143.0",
           "97.107.143.1",
@@ -415,14 +477,14 @@ ShallowWrapper {
               <Input
                 className=""
                 disabled={true}
-                value="Unknown"
+                value="Ubuntu 15.10"
               />
             </div>
           </FormGroup>
           <FormGroup
             className="row"
             errors={Object {}}
-            name="distribution"
+            name="image"
           >
             <label
               className="col-sm-3 col-form-label"
@@ -433,53 +495,9 @@ ShallowWrapper {
               className="col-sm-9"
             >
               <DistributionSelect
-                distributions={
-                  Object {
-                    "linode/arch2016.05": Object {
-                      "_polling": false,
-                      "architecture": "x86_64",
-                      "disk_minimum": 550,
-                      "id": "linode/arch2016.05",
-                      "label": "Arch Linux 2016.05",
-                      "recommended": true,
-                      "updated": "2009-08-17T00:00:00",
-                      "vendor": "Arch",
-                    },
-                    "linode/debian6": Object {
-                      "_polling": false,
-                      "architecture": "x86_64",
-                      "disk_minimum": 550,
-                      "id": "linode/debian6",
-                      "label": "Debian 6",
-                      "recommended": false,
-                      "updated": "2009-08-17T00:00:00",
-                      "vendor": "Debian",
-                    },
-                    "linode/debian7": Object {
-                      "_polling": false,
-                      "architecture": "x86_64",
-                      "disk_minimum": 550,
-                      "id": "linode/debian7",
-                      "label": "Debian 7",
-                      "recommended": true,
-                      "updated": "2009-08-17T00:00:00",
-                      "vendor": "Debian",
-                    },
-                    "linode/debian8.1": Object {
-                      "_polling": false,
-                      "architecture": "x86_64",
-                      "disk_minimum": 550,
-                      "id": "linode/debian8.1",
-                      "label": "Debian 8.1",
-                      "recommended": true,
-                      "updated": "2009-08-17T00:00:00",
-                      "vendor": "Debian",
-                    },
-                  }
-                }
-                id="distribution"
+                id="image"
                 images={undefined}
-                name="distribution"
+                name="image"
                 onChange={[Function]}
                 value="linode/ubuntu15.10"
               />
@@ -487,7 +505,7 @@ ShallowWrapper {
                 className=""
                 errors={Object {}}
                 inline={false}
-                name="distribution"
+                name="image"
               />
             </div>
           </FormGroup>
@@ -596,14 +614,14 @@ ShallowWrapper {
                 <Input
                   className=""
                   disabled={true}
-                  value="Unknown"
+                  value="Ubuntu 15.10"
                 />
               </div>
             </FormGroup>,
             <FormGroup
               className="row"
               errors={Object {}}
-              name="distribution"
+              name="image"
             >
               <label
                 className="col-sm-3 col-form-label"
@@ -614,53 +632,9 @@ ShallowWrapper {
                 className="col-sm-9"
               >
                 <DistributionSelect
-                  distributions={
-                    Object {
-                      "linode/arch2016.05": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/arch2016.05",
-                        "label": "Arch Linux 2016.05",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Arch",
-                      },
-                      "linode/debian6": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian6",
-                        "label": "Debian 6",
-                        "recommended": false,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                      "linode/debian7": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian7",
-                        "label": "Debian 7",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                      "linode/debian8.1": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian8.1",
-                        "label": "Debian 8.1",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                    }
-                  }
-                  id="distribution"
+                  id="image"
                   images={undefined}
-                  name="distribution"
+                  name="image"
                   onChange={[Function]}
                   value="linode/ubuntu15.10"
                 />
@@ -668,7 +642,7 @@ ShallowWrapper {
                   className=""
                   errors={Object {}}
                   inline={false}
-                  name="distribution"
+                  name="image"
                 />
               </div>
             </FormGroup>,
@@ -747,7 +721,7 @@ ShallowWrapper {
                   <Input
                     className=""
                     disabled={true}
-                    value="Unknown"
+                    value="Ubuntu 15.10"
                   />
                 </div>,
               ],
@@ -775,7 +749,7 @@ ShallowWrapper {
                   "children": <Input
                     className=""
                     disabled={true}
-                    value="Unknown"
+                    value="Ubuntu 15.10"
                   />,
                   "className": "col-sm-9",
                 },
@@ -787,7 +761,7 @@ ShallowWrapper {
                   "props": Object {
                     "className": "",
                     "disabled": true,
-                    "value": "Unknown",
+                    "value": "Ubuntu 15.10",
                   },
                   "ref": null,
                   "rendered": null,
@@ -813,53 +787,9 @@ ShallowWrapper {
                   className="col-sm-9"
                 >
                   <DistributionSelect
-                    distributions={
-                      Object {
-                        "linode/arch2016.05": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/arch2016.05",
-                          "label": "Arch Linux 2016.05",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Arch",
-                        },
-                        "linode/debian6": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian6",
-                          "label": "Debian 6",
-                          "recommended": false,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian7": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian7",
-                          "label": "Debian 7",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian8.1": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian8.1",
-                          "label": "Debian 8.1",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                      }
-                    }
-                    id="distribution"
+                    id="image"
                     images={undefined}
-                    name="distribution"
+                    name="image"
                     onChange={[Function]}
                     value="linode/ubuntu15.10"
                   />
@@ -867,13 +797,13 @@ ShallowWrapper {
                     className=""
                     errors={Object {}}
                     inline={false}
-                    name="distribution"
+                    name="image"
                   />
                 </div>,
               ],
               "className": "row",
               "errors": Object {},
-              "name": "distribution",
+              "name": "image",
             },
             "ref": null,
             "rendered": Array [
@@ -896,53 +826,9 @@ ShallowWrapper {
                 "props": Object {
                   "children": Array [
                     <DistributionSelect
-                      distributions={
-                        Object {
-                          "linode/arch2016.05": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/arch2016.05",
-                            "label": "Arch Linux 2016.05",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Arch",
-                          },
-                          "linode/debian6": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian6",
-                            "label": "Debian 6",
-                            "recommended": false,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian7": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian7",
-                            "label": "Debian 7",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian8.1": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian8.1",
-                            "label": "Debian 8.1",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                        }
-                      }
-                      id="distribution"
+                      id="image"
                       images={undefined}
-                      name="distribution"
+                      name="image"
                       onChange={[Function]}
                       value="linode/ubuntu15.10"
                     />,
@@ -950,7 +836,7 @@ ShallowWrapper {
                       className=""
                       errors={Object {}}
                       inline={false}
-                      name="distribution"
+                      name="image"
                     />,
                   ],
                   "className": "col-sm-9",
@@ -962,51 +848,9 @@ ShallowWrapper {
                     "key": undefined,
                     "nodeType": "function",
                     "props": Object {
-                      "distributions": Object {
-                        "linode/arch2016.05": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/arch2016.05",
-                          "label": "Arch Linux 2016.05",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Arch",
-                        },
-                        "linode/debian6": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian6",
-                          "label": "Debian 6",
-                          "recommended": false,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian7": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian7",
-                          "label": "Debian 7",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian8.1": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian8.1",
-                          "label": "Debian 8.1",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                      },
-                      "id": "distribution",
+                      "id": "image",
                       "images": undefined,
-                      "name": "distribution",
+                      "name": "image",
                       "onChange": [Function],
                       "value": "linode/ubuntu15.10",
                     },
@@ -1022,7 +866,7 @@ ShallowWrapper {
                       "className": "",
                       "errors": Object {},
                       "inline": false,
-                      "name": "distribution",
+                      "name": "image",
                     },
                     "ref": null,
                     "rendered": null,
@@ -1270,14 +1114,14 @@ ShallowWrapper {
                 <Input
                   className=""
                   disabled={true}
-                  value="Unknown"
+                  value="Ubuntu 15.10"
                 />
               </div>
             </FormGroup>
             <FormGroup
               className="row"
               errors={Object {}}
-              name="distribution"
+              name="image"
             >
               <label
                 className="col-sm-3 col-form-label"
@@ -1288,53 +1132,9 @@ ShallowWrapper {
                 className="col-sm-9"
               >
                 <DistributionSelect
-                  distributions={
-                    Object {
-                      "linode/arch2016.05": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/arch2016.05",
-                        "label": "Arch Linux 2016.05",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Arch",
-                      },
-                      "linode/debian6": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian6",
-                        "label": "Debian 6",
-                        "recommended": false,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                      "linode/debian7": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian7",
-                        "label": "Debian 7",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                      "linode/debian8.1": Object {
-                        "_polling": false,
-                        "architecture": "x86_64",
-                        "disk_minimum": 550,
-                        "id": "linode/debian8.1",
-                        "label": "Debian 8.1",
-                        "recommended": true,
-                        "updated": "2009-08-17T00:00:00",
-                        "vendor": "Debian",
-                      },
-                    }
-                  }
-                  id="distribution"
+                  id="image"
                   images={undefined}
-                  name="distribution"
+                  name="image"
                   onChange={[Function]}
                   value="linode/ubuntu15.10"
                 />
@@ -1342,7 +1142,7 @@ ShallowWrapper {
                   className=""
                   errors={Object {}}
                   inline={false}
-                  name="distribution"
+                  name="image"
                 />
               </div>
             </FormGroup>
@@ -1451,14 +1251,14 @@ ShallowWrapper {
                   <Input
                     className=""
                     disabled={true}
-                    value="Unknown"
+                    value="Ubuntu 15.10"
                   />
                 </div>
               </FormGroup>,
               <FormGroup
                 className="row"
                 errors={Object {}}
-                name="distribution"
+                name="image"
               >
                 <label
                   className="col-sm-3 col-form-label"
@@ -1469,53 +1269,9 @@ ShallowWrapper {
                   className="col-sm-9"
                 >
                   <DistributionSelect
-                    distributions={
-                      Object {
-                        "linode/arch2016.05": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/arch2016.05",
-                          "label": "Arch Linux 2016.05",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Arch",
-                        },
-                        "linode/debian6": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian6",
-                          "label": "Debian 6",
-                          "recommended": false,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian7": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian7",
-                          "label": "Debian 7",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                        "linode/debian8.1": Object {
-                          "_polling": false,
-                          "architecture": "x86_64",
-                          "disk_minimum": 550,
-                          "id": "linode/debian8.1",
-                          "label": "Debian 8.1",
-                          "recommended": true,
-                          "updated": "2009-08-17T00:00:00",
-                          "vendor": "Debian",
-                        },
-                      }
-                    }
-                    id="distribution"
+                    id="image"
                     images={undefined}
-                    name="distribution"
+                    name="image"
                     onChange={[Function]}
                     value="linode/ubuntu15.10"
                   />
@@ -1523,7 +1279,7 @@ ShallowWrapper {
                     className=""
                     errors={Object {}}
                     inline={false}
-                    name="distribution"
+                    name="image"
                   />
                 </div>
               </FormGroup>,
@@ -1602,7 +1358,7 @@ ShallowWrapper {
                     <Input
                       className=""
                       disabled={true}
-                      value="Unknown"
+                      value="Ubuntu 15.10"
                     />
                   </div>,
                 ],
@@ -1630,7 +1386,7 @@ ShallowWrapper {
                     "children": <Input
                       className=""
                       disabled={true}
-                      value="Unknown"
+                      value="Ubuntu 15.10"
                     />,
                     "className": "col-sm-9",
                   },
@@ -1642,7 +1398,7 @@ ShallowWrapper {
                     "props": Object {
                       "className": "",
                       "disabled": true,
-                      "value": "Unknown",
+                      "value": "Ubuntu 15.10",
                     },
                     "ref": null,
                     "rendered": null,
@@ -1668,53 +1424,9 @@ ShallowWrapper {
                     className="col-sm-9"
                   >
                     <DistributionSelect
-                      distributions={
-                        Object {
-                          "linode/arch2016.05": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/arch2016.05",
-                            "label": "Arch Linux 2016.05",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Arch",
-                          },
-                          "linode/debian6": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian6",
-                            "label": "Debian 6",
-                            "recommended": false,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian7": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian7",
-                            "label": "Debian 7",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian8.1": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian8.1",
-                            "label": "Debian 8.1",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                        }
-                      }
-                      id="distribution"
+                      id="image"
                       images={undefined}
-                      name="distribution"
+                      name="image"
                       onChange={[Function]}
                       value="linode/ubuntu15.10"
                     />
@@ -1722,13 +1434,13 @@ ShallowWrapper {
                       className=""
                       errors={Object {}}
                       inline={false}
-                      name="distribution"
+                      name="image"
                     />
                   </div>,
                 ],
                 "className": "row",
                 "errors": Object {},
-                "name": "distribution",
+                "name": "image",
               },
               "ref": null,
               "rendered": Array [
@@ -1751,53 +1463,9 @@ ShallowWrapper {
                   "props": Object {
                     "children": Array [
                       <DistributionSelect
-                        distributions={
-                          Object {
-                            "linode/arch2016.05": Object {
-                              "_polling": false,
-                              "architecture": "x86_64",
-                              "disk_minimum": 550,
-                              "id": "linode/arch2016.05",
-                              "label": "Arch Linux 2016.05",
-                              "recommended": true,
-                              "updated": "2009-08-17T00:00:00",
-                              "vendor": "Arch",
-                            },
-                            "linode/debian6": Object {
-                              "_polling": false,
-                              "architecture": "x86_64",
-                              "disk_minimum": 550,
-                              "id": "linode/debian6",
-                              "label": "Debian 6",
-                              "recommended": false,
-                              "updated": "2009-08-17T00:00:00",
-                              "vendor": "Debian",
-                            },
-                            "linode/debian7": Object {
-                              "_polling": false,
-                              "architecture": "x86_64",
-                              "disk_minimum": 550,
-                              "id": "linode/debian7",
-                              "label": "Debian 7",
-                              "recommended": true,
-                              "updated": "2009-08-17T00:00:00",
-                              "vendor": "Debian",
-                            },
-                            "linode/debian8.1": Object {
-                              "_polling": false,
-                              "architecture": "x86_64",
-                              "disk_minimum": 550,
-                              "id": "linode/debian8.1",
-                              "label": "Debian 8.1",
-                              "recommended": true,
-                              "updated": "2009-08-17T00:00:00",
-                              "vendor": "Debian",
-                            },
-                          }
-                        }
-                        id="distribution"
+                        id="image"
                         images={undefined}
-                        name="distribution"
+                        name="image"
                         onChange={[Function]}
                         value="linode/ubuntu15.10"
                       />,
@@ -1805,7 +1473,7 @@ ShallowWrapper {
                         className=""
                         errors={Object {}}
                         inline={false}
-                        name="distribution"
+                        name="image"
                       />,
                     ],
                     "className": "col-sm-9",
@@ -1817,51 +1485,9 @@ ShallowWrapper {
                       "key": undefined,
                       "nodeType": "function",
                       "props": Object {
-                        "distributions": Object {
-                          "linode/arch2016.05": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/arch2016.05",
-                            "label": "Arch Linux 2016.05",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Arch",
-                          },
-                          "linode/debian6": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian6",
-                            "label": "Debian 6",
-                            "recommended": false,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian7": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian7",
-                            "label": "Debian 7",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                          "linode/debian8.1": Object {
-                            "_polling": false,
-                            "architecture": "x86_64",
-                            "disk_minimum": 550,
-                            "id": "linode/debian8.1",
-                            "label": "Debian 8.1",
-                            "recommended": true,
-                            "updated": "2009-08-17T00:00:00",
-                            "vendor": "Debian",
-                          },
-                        },
-                        "id": "distribution",
+                        "id": "image",
                         "images": undefined,
-                        "name": "distribution",
+                        "name": "image",
                         "onChange": [Function],
                         "value": "linode/ubuntu15.10",
                       },
@@ -1877,7 +1503,7 @@ ShallowWrapper {
                         "className": "",
                         "errors": Object {},
                         "inline": false,
-                        "name": "distribution",
+                        "name": "image",
                       },
                       "ref": null,
                       "rendered": null,

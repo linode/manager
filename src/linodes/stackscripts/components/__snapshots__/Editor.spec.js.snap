@@ -13,11 +13,11 @@ ShallowWrapper {
         "deployments_active": 42,
         "deployments_total": 150,
         "description": "Installs the Linode API bindings",
-        "distributions": Array [
-          Object {},
-          Object {},
-        ],
         "id": 37,
+        "images": Array [
+          "linode/debian7",
+          "linode/debian8",
+        ],
         "is_public": true,
         "label": "Example StackScript",
         "rev_note": "Initial import",
