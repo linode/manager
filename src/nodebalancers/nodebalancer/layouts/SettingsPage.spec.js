@@ -6,7 +6,6 @@ import sinon from 'sinon';
 import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
@@ -87,9 +86,8 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     const fn = dispatch.firstCall.args[0];
     await expectDispatchOrStoreErrors(fn, [
       null,
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult,
-        push('/nodebalancers/newlabel/settings')),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push('/nodebalancers/newlabel/settings')),
     ]);
   });
 });

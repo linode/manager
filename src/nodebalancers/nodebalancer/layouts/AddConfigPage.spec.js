@@ -9,7 +9,6 @@ import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
   expectRequest,
-  expectObjectDeepEquals,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
 
@@ -81,8 +80,8 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
           check_body: '',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
     ], 2, [{ id: 5 }]);
   });
 
@@ -139,8 +138,8 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
           ssl_key: 'Some ssl key',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/nodebalancers/${configsNodeBalancer.label}/configs/5`)),
     ], 2, [{ id: 5 }]);
   });
 });

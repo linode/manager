@@ -8,7 +8,6 @@ import { CreatePage } from '~/support/layouts/CreatePage';
 import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
@@ -78,7 +77,7 @@ describe('support/layouts/CreatePage', () => {
           description: 'This is my new description!',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/2')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/support/2')),
     ], 2, [{ id: 2 }]);
   });
 });
