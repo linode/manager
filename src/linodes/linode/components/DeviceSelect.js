@@ -2,7 +2,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { FormGroup, FormGroupError, Select } from 'linode-components/forms';
+import { FormGroup, FormGroupError, Select } from 'linode-components';
 
 
 export default function DeviceSelect(props) {

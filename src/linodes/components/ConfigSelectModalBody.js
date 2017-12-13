@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { push } from 'react-router-redux';
 
-import { ModalFormGroup, Radio } from 'linode-components/forms';
-import { FormModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Radio } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal } from '~/actions/modal';
 import { rebootLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -31,12 +31,32 @@ export default class ConfigSelectModalBody extends Component {
     ]));
   }
 
+  onCreateConfig = () => {
+    const { dispatch, linode } = this.props;
+
+    return dispatch(push(`/linodes/${linode.label}/settings/advanced/configs/create`));
+  }
+
   render() {
     const { dispatch, linode, action, title } = this.props;
     const { errors, configId } = this.state;
 
     const buttonText = action === rebootLinode ? 'Reboot' : 'Power On';
     const buttonDisabledText = action === rebootLinode ? 'Rebooting' : 'Powering On';
+
+    if (Object.values(linode._configs.configs).length === 0) {
+      return (
+        <FormModalBody
+          onCancel={() => dispatch(hideModal())}
+          onSubmit={this.onCreateConfig}
+          buttonText="Create A Config"
+          buttonDisabledText={buttonDisabledText}
+        >
+          This Linode has no configuration profiles associated with it.
+          You must create one to boot this Linode.
+        </FormModalBody>
+      );
+    }
 
     return (
       <FormModalBody

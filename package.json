@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.16.1",
+  "version": "0.16.4",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -58,6 +58,7 @@
     "jsonpath": "^0.2.11",
     "mockdate": "^1.0.4",
     "node-sass": "^3.4.2",
+    "pre-commit": "^1.2.2",
     "qrious": "^2.2.0",
     "react-addons-test-utils": "^15.1.0",
     "redux-devtools": "^3.3.1",
@@ -66,7 +67,7 @@
     "sass-loader": "^3.1.2",
     "sinon": "^4.1.2",
     "style-loader": "^0.13.0",
-    "webpack": "^2.6.1",
+    "webpack": "^3.10",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.4",
     "xunit-file": "^0.0.9"
@@ -82,8 +83,7 @@
     "history": "^2.1.2",
     "isomorphic-fetch": "^2.2.0",
     "jest": "^21.2.1",
-    "linode-components": "file:./components",
-    "linode-styleguide": "file:./styleguide",
+    "linode-components": "https://github.com/linode/linode-react-components.git#v0.0.5",
     "lodash": "^4.16.4",
     "md5": "^2.1.0",
     "moment": "^2.17.1",
@@ -107,6 +107,10 @@
     "xterm": "^2.0.1",
     "zxcvbn": "^4.4.2"
   },
+  "pre-commit": [
+    "test",
+    "lint"
+  ],
   "jest": {
     "coverageDirectory": "<rootDir>/coverage",
     "collectCoverageFrom": [

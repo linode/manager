@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';

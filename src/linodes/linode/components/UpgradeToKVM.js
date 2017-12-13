@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { ExternalLink } from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
 import { showModal, hideModal } from '~/actions/modal';
 import { kvmifyLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';

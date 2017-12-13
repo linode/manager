@@ -5,7 +5,7 @@ import { mount, shallow } from 'enzyme';
 import { state } from '~/data';
 import { testLinode, testLinode1235, testLinode1237 } from '~/data/linodes';
 import { expectRequest } from '~/test.helpers';
-import { Dropdown } from 'linode-components/dropdowns';
+import { Dropdown } from 'linode-components';
 import { IndexPage } from '~/linodes/linode/layouts/IndexPage';
 
 describe('linodes/linode/layouts/IndexPage', () => {

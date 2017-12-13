@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-import { MassEditDropdown } from 'linode-components/lists/controls';
+import { MassEditDropdown } from 'linode-components';
 
 
 describe('components/lists/MassEditDropdown', function () {

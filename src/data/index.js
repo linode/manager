@@ -4,7 +4,6 @@ import deepFreeze from 'deep-freeze';
 
 import { linodes } from './linodes';
 import { stackscripts } from './stackscripts';
-import { distributions } from './distributions';
 import { regions } from './regions';
 import { types } from './types';
 import { kernels } from './kernels';
@@ -20,6 +19,7 @@ import { tickets } from './tickets';
 import { volumes } from './volumes';
 import { images } from './images';
 import { invoices } from './invoices';
+import { payments } from './payments';
 
 function calculateTotalResults(data) {
   return Object.keys(data).length;
@@ -60,7 +60,6 @@ export const authentication = { token: 'token' };
 export const api = fakeAPI([
   [linodes, 'linode', 'linodes'],
   [stackscripts, 'stackscript', 'stackscripts'],
-  [distributions, 'distribution', 'distributions'],
   [regions, 'region', 'regions'],
   [types, 'type', 'types'],
   [kernels, 'kernel', 'kernels'],
@@ -76,6 +75,7 @@ export const api = fakeAPI([
   [volumes, 'volume', 'volumes'],
   [images, 'image', 'images'],
   [invoices, 'invoices', 'invoices'],
+  [payments, 'payments', 'payments'],
 ]);
 
 export const state = deepFreeze({

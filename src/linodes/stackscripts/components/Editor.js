@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { CodeEditor } from 'linode-components/editors';
+import { CodeEditor } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   Input,
   SubmitButton,
-} from 'linode-components/forms';
-import * as utilities from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -26,7 +26,7 @@ export default class Editor extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {

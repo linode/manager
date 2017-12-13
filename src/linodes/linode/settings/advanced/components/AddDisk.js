@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
@@ -14,11 +14,10 @@ import { DistributionSelect } from '~/linodes/components';
 export default class AddDisk extends Component {
   static title = 'Add a Disk'
 
-  static trigger(dispatch, linode, distributions, images, free) {
+  static trigger(dispatch, linode, images, free) {
     return dispatch(showModal(AddDisk.title, (
       <AddDisk
         dispatch={dispatch}
-        distributions={distributions}
         images={images}
         linode={linode}
         free={free}
@@ -33,7 +32,7 @@ export default class AddDisk extends Component {
       errors: {},
       label: '',
       size: props.free,
-      distribution: '',
+      image: '',
       password: '',
       filesystem: 'ext4',
     };
@@ -43,13 +42,12 @@ export default class AddDisk extends Component {
 
   onSubmit = () => {
     const { dispatch, linode } = this.props;
-    const { label, size, distribution, password, filesystem } = this.state;
+    const { label, size, image, password, filesystem } = this.state;
     const data = {
       label,
       filesystem,
       size: parseInt(size),
-      distribution: !/^\d+$/.test(distribution) ? distribution : null,
-      image: /^\d+$/.test(distribution) ? parseInt(distribution) : null,
+      image,
       root_pass: password || null,
     };
 
@@ -60,12 +58,12 @@ export default class AddDisk extends Component {
   }
 
   render() {
-    const { dispatch, free, distributions: { distributions }, images } = this.props;
-    const { label, size, distribution, filesystem, password, errors } = this.state;
+    const { dispatch, free, images } = this.props;
+    const { label, size, image, filesystem, password, errors } = this.state;
 
     let minimumStorageSize = 8;
-    if (distributions[distribution]) {
-      minimumStorageSize = distributions[distribution].disk_minimum;
+    if (images[image]) {
+      minimumStorageSize = images[image].min_deploy_size;
     }
 
     const filesystemOptions = [
@@ -95,22 +93,21 @@ export default class AddDisk extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup
-            id="distribution"
+            id="image"
             label="Image"
-            apiKey="distribution"
+            apiKey="image"
             errors={errors}
           >
             <DistributionSelect
-              id="distribution"
-              name="distribution"
-              value={distribution}
-              distributions={distributions}
+              id="image"
+              name="image"
+              value={image}
               images={images}
               onChange={this.onChange}
               allowNone
             />
           </ModalFormGroup>
-          {distribution ? (
+          {image ? (
             <ModalFormGroup id="password" label="Root Password" apiKey="root_pass" errors={errors}>
               <PasswordInput
                 name="password"
@@ -149,8 +146,7 @@ export default class AddDisk extends Component {
 }
 
 AddDisk.propTypes = {
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
   free: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,

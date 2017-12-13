@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup, FormGroupError, Form, FormSummary, Input, SubmitButton, PasswordInput,
-} from 'linode-components/forms';
-import { ConfirmModalBody } from 'linode-components/modals';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
@@ -22,9 +22,6 @@ import { selectLinode } from '../utilities';
 
 export class RebuildPage extends Component {
   static async preload({ dispatch, getState }) {
-    if (!getState().api.distributions.ids.length) {
-      await dispatch(api.distributions.all());
-    }
     if (!getState().api.images.ids.length) {
       await dispatch(api.images.all());
     }
@@ -33,10 +30,10 @@ export class RebuildPage extends Component {
   constructor(props) {
     super(props);
 
-    const distribution = props.linode.distribution;
+    const image = props.linode.image;
 
     this.state = {
-      distribution: distribution ? distribution.id : undefined,
+      image: image ? image.id : undefined,
       password: '',
       errors: {},
       loading: false,
@@ -51,22 +48,20 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id, label }, distributions, images } = this.props;
-    const { password, distribution } = this.state;
-    const isDistro = !/^\d+$/.test(distribution);
-    const distroLabel = isDistro ? distributions[distribution].label : images[distribution].label;
+    const { dispatch, linode: { id, label } } = this.props;
+    const { password, image } = this.state;
+    const imageVendor = this.props.linode.image.vendor;
 
     const data = {
-      distribution: isDistro ? distribution : null,
-      image: !isDistro ? parseInt(distribution) : null,
+      image: image,
       root_pass: password,
     };
 
     const callback = async () => {
       await dispatch(dispatchOrStoreErrors.call(this, [
         () => rebuildLinode(id, data),
-        () => this.setState({ password: '', distribution }),
-      ], ['distribution']));
+        () => this.setState({ password: '', image }),
+      ], ['image']));
 
       // We want to hide the modal regardless of the status of the call.
       dispatch(hideModal());
@@ -79,17 +74,15 @@ export class RebuildPage extends Component {
       >
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
-          Are you sure you want to rebuild <strong>{label}</strong> with {distroLabel}?
+          Are you sure you want to rebuild <strong>{label}</strong> with {imageVendor}?
         </p>
       </ConfirmModalBody>
     )));
   }
 
   render() {
-    const { distributions, images, linode } = this.props;
-    const { distribution, errors, loading } = this.state;
-
-    const currentDistribution = linode.distribution ? linode.distribution.id : null;
+    const { images, linode } = this.props;
+    const { image, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Rebuild" />}>
@@ -106,22 +99,21 @@ export class RebuildPage extends Component {
             <div className="col-sm-9">
               <Input
                 disabled
-                value={(distributions[currentDistribution] || { label: 'Unknown' }).label}
+                value={linode.image.label}
               />
             </div>
           </FormGroup>
-          <FormGroup errors={errors} name="distribution" className="row">
+          <FormGroup errors={errors} name="image" className="row">
             <label className="col-sm-3 col-form-label">New Image</label>
             <div className="col-sm-9">
               <DistributionSelect
-                distributions={distributions}
                 images={images}
-                value={distribution}
-                name="distribution"
-                id="distribution"
+                value={image}
+                name="image"
+                id="image"
                 onChange={this.onChange}
               />
-              <FormGroupError errors={errors} name="distribution" inline={false} />
+              <FormGroupError errors={errors} name="image" inline={false} />
             </div>
           </FormGroup>
           <FormGroup errors={errors} name="root_pass" className="row">
@@ -154,16 +146,14 @@ export class RebuildPage extends Component {
 
 RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
 };
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { distributions } = state.api.distributions;
   const { images } = state.api.images;
-  return { linode, distributions, images };
+  return { linode, images };
 }
 
 export default connect(select)(RebuildPage);
