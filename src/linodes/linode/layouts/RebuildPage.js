@@ -94,7 +94,7 @@ export class RebuildPage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Rebuild Linode' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="image">
             <label className="col-sm-3 col-form-label">Current Image</label>
             <div className="col-sm-9">
               <Input
@@ -129,7 +129,7 @@ export class RebuildPage extends Component {
               <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={loading}

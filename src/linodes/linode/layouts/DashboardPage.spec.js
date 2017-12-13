@@ -24,6 +24,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     timezone: 'UTC',
     transfer: { usage: 1, quota: 5 },
     username: 'tdude',
+    images: {},
   };
 
   it('should render without error', () => {

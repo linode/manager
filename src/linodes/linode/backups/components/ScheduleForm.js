@@ -139,7 +139,7 @@ export class ScheduleForm extends Component {
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton disabled={loading} />
             <FormSummary errors={errors} success="Schedule settings saved." />

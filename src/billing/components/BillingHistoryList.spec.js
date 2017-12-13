@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import { BillingHistoryList } from '~/billing/components/BillingHistoryList';
 import { api } from '~/data';
@@ -24,21 +24,9 @@ describe('billing/components/BillingHistoryList', () => {
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-  it('renders a list of invoices', () => {
-    const page = mount(
-      <BillingHistoryList
-        dispatch={dispatch}
-        account={account}
-        invoices={invoices.invoices}
         payments={payments.payments}
       />
     );
-
-    const rowCount = Object.keys(invoices.invoices).length + payments.payments.length;
-    expect(page.find('.TableRow').length).toBe(rowCount);
+    expect(wrapper).toMatchSnapshot();
   });
 });

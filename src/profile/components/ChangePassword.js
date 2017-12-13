@@ -75,7 +75,7 @@ export default class ChangePassword extends Component {
               <FormGroupError errors={errors} name="expires" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-10 offset-sm-2">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Password changed." />

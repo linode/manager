@@ -54,6 +54,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="last-revision"
         >
           <label
             className="col-sm-3 col-form-label"
@@ -73,6 +74,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="next-revision"
         >
           <label
             className="col-sm-3 col-form-label"
@@ -94,6 +96,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="submit"
         >
           <div
             className="offset-sm-3 col-sm-9"
@@ -170,6 +173,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "last-revision",
         },
         "ref": null,
         "rendered": Array [
@@ -242,6 +246,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "next-revision",
         },
         "ref": null,
         "rendered": Array [
@@ -315,6 +320,7 @@ ShallowWrapper {
             />
           </div>,
           "className": "row",
+          "name": "submit",
         },
         "ref": null,
         "rendered": Object {
@@ -393,6 +399,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="last-revision"
           >
             <label
               className="col-sm-3 col-form-label"
@@ -412,6 +419,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="next-revision"
           >
             <label
               className="col-sm-3 col-form-label"
@@ -433,6 +441,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-3 col-sm-9"
@@ -509,6 +518,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "last-revision",
           },
           "ref": null,
           "rendered": Array [
@@ -581,6 +591,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "next-revision",
           },
           "ref": null,
           "rendered": Array [
@@ -654,6 +665,7 @@ ShallowWrapper {
               />
             </div>,
             "className": "row",
+            "name": "submit",
           },
           "ref": null,
           "rendered": Object {

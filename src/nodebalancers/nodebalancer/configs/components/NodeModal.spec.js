@@ -25,6 +25,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <NodeModal
+        title="NodeModal"
         dispatch={dispatch}
         confirmTest="Edit"
         configId="1"
@@ -38,6 +39,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   it('renders node modal with data', () => {
     const page = mount(
       <NodeModal
+        title="NodeModal"
         dispatch={dispatch}
         confirmTest="Edit"
         configId="1"
@@ -55,6 +57,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   it('updates node', async () => {
     const page = mount(
       <NodeModal
+        title="NodeModal"
         dispatch={dispatch}
         confirmTest="Edit"
         configId="1"
@@ -82,6 +85,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   it('creates node', async () => {
     const page = mount(
       <NodeModal
+        title="NodeModal"
         dispatch={dispatch}
         confirmTest="Edit"
         configId="1"

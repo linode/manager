@@ -250,7 +250,7 @@ export default class CreateOrEditConfig extends Component {
               this.setState({ devices: { ...this.state.devices, [name]: value } })}
           />
         ))}
-        <FormGroup className="row">
+        <FormGroup className="row" name="initrd">
           <label htmlFor="initrd" className="col-sm-2 col-form-label">initrd</label>
           <div className="col-sm-10">
             <Select
@@ -307,7 +307,7 @@ export default class CreateOrEditConfig extends Component {
           </div>
         </FormGroup>
         <h3 className="sub-header">Filesystem/Boot Helpers</h3>
-        <FormGroup className="row">
+        <FormGroup className="row" name="helpers">
           <label className="col-sm-2 col-form-label">Boot helpers</label>
           <div className="col-md-8">
             <Checkboxes>
@@ -363,7 +363,7 @@ export default class CreateOrEditConfig extends Component {
             </Checkboxes>
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
               disabled={loading}

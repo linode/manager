@@ -32,6 +32,7 @@ ShallowWrapper {
       >
         <FormGroup
           className="row"
+          name="timezone-form"
         >
           <label
             className="col-sm-2 col-form-label"
@@ -2437,6 +2438,7 @@ ShallowWrapper {
         </FormGroup>
         <FormGroup
           className="row"
+          name="submit"
         >
           <div
             className="offset-sm-2 col-sm-10"
@@ -2473,6 +2475,7 @@ ShallowWrapper {
         "children": Array [
           <FormGroup
             className="row"
+            name="timezone-form"
           >
             <label
               className="col-sm-2 col-form-label"
@@ -4878,6 +4881,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-2 col-sm-10"
@@ -7312,6 +7316,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "timezone-form",
           },
           "ref": null,
           "rendered": Array [
@@ -12172,6 +12177,7 @@ ShallowWrapper {
               />
             </div>,
             "className": "row",
+            "name": "submit",
           },
           "ref": null,
           "rendered": Object {
@@ -12252,6 +12258,7 @@ ShallowWrapper {
         >
           <FormGroup
             className="row"
+            name="timezone-form"
           >
             <label
               className="col-sm-2 col-form-label"
@@ -14657,6 +14664,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-2 col-sm-10"
@@ -14693,6 +14701,7 @@ ShallowWrapper {
           "children": Array [
             <FormGroup
               className="row"
+              name="timezone-form"
             >
               <label
                 className="col-sm-2 col-form-label"
@@ -17098,6 +17107,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="submit"
             >
               <div
                 className="offset-sm-2 col-sm-10"
@@ -19532,6 +19542,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "timezone-form",
             },
             "ref": null,
             "rendered": Array [
@@ -24392,6 +24403,7 @@ ShallowWrapper {
                 />
               </div>,
               "className": "row",
+              "name": "submit",
             },
             "ref": null,
             "rendered": Object {

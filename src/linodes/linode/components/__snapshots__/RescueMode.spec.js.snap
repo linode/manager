@@ -677,6 +677,7 @@ ShallowWrapper {
         />
         <FormGroup
           className="row"
+          name="finnix"
         >
           <label
             className="col-sm-3 row-label"
@@ -692,6 +693,7 @@ ShallowWrapper {
         </FormGroup>
         <FormGroup
           className="row"
+          name="submit"
         >
           <div
             className="offset-sm-3 col-sm-9"
@@ -1057,6 +1059,7 @@ ShallowWrapper {
           ],
           <FormGroup
             className="row"
+            name="finnix"
           >
             <label
               className="col-sm-3 row-label"
@@ -1072,6 +1075,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-3 col-sm-9"
@@ -1461,6 +1465,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "finnix",
           },
           "ref": null,
           "rendered": Array [
@@ -1519,6 +1524,7 @@ ShallowWrapper {
               />
             </div>,
             "className": "row",
+            "name": "submit",
           },
           "ref": null,
           "rendered": Object {
@@ -1924,6 +1930,7 @@ ShallowWrapper {
           />
           <FormGroup
             className="row"
+            name="finnix"
           >
             <label
               className="col-sm-3 row-label"
@@ -1939,6 +1946,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-3 col-sm-9"
@@ -2304,6 +2312,7 @@ ShallowWrapper {
             ],
             <FormGroup
               className="row"
+              name="finnix"
             >
               <label
                 className="col-sm-3 row-label"
@@ -2319,6 +2328,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="submit"
             >
               <div
                 className="offset-sm-3 col-sm-9"
@@ -2708,6 +2718,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "finnix",
             },
             "ref": null,
             "rendered": Array [
@@ -2766,6 +2777,7 @@ ShallowWrapper {
                 />
               </div>,
               "className": "row",
+              "name": "submit",
             },
             "ref": null,
             "rendered": Object {

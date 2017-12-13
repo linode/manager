@@ -182,6 +182,7 @@ ShallowWrapper {
         </FormGroup>
         <FormGroup
           className="row"
+          name="submit"
         >
           <div
             className="offset-sm-3 col-sm-9"
@@ -295,6 +296,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-3 col-sm-9"
@@ -649,6 +651,7 @@ ShallowWrapper {
               />
             </div>,
             "className": "row",
+            "name": "submit",
           },
           "ref": null,
           "rendered": Object {
@@ -809,6 +812,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="offset-sm-3 col-sm-9"
@@ -922,6 +926,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="submit"
             >
               <div
                 className="offset-sm-3 col-sm-9"
@@ -1276,6 +1281,7 @@ ShallowWrapper {
                 />
               </div>,
               "className": "row",
+              "name": "submit",
             },
             "ref": null,
             "rendered": Object {

@@ -19,8 +19,10 @@ describe('domains/components/EditCNAMERecord', () => {
   it('should render without error', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[2];
+
     const wrapper = shallow(
       <EditCNAMERecord
+        title="EditCNAMERecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -35,6 +37,7 @@ describe('domains/components/EditCNAMERecord', () => {
     const currentRecord = currentZone._records.records[2];
     const wrapper = shallow(
       <EditCNAMERecord
+        title="EditCNAMERecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -64,6 +67,7 @@ describe('domains/components/EditCNAMERecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditCNAMERecord
+        title="EditCNAMERecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -108,6 +112,7 @@ describe('domains/components/EditCNAMERecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditCNAMERecord
+        title="EditCNAMERecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

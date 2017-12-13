@@ -117,7 +117,7 @@ export class CreditCardPage extends Component {
                   inline={false}
                 />
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="col-sm-9 offset-sm-3">
                   <SubmitButton
                     disabled={loading}

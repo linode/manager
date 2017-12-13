@@ -7,6 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <CreateOrEditApplication
     close={[Function]}
     dispatch={[Function]}
+    title="CreateOrEditApplication"
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -22,7 +23,7 @@ ShallowWrapper {
     "props": Object {
       "analytics": Object {
         "action": "add",
-        "title": undefined,
+        "title": "CreateOrEditApplication",
       },
       "buttonDisabledText": "Saving",
       "buttonText": "Save",
@@ -327,7 +328,7 @@ ShallowWrapper {
       "props": Object {
         "analytics": Object {
           "action": "add",
-          "title": undefined,
+          "title": "CreateOrEditApplication",
         },
         "buttonDisabledText": "Saving",
         "buttonText": "Save",

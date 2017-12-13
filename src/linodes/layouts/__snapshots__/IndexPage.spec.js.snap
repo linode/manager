@@ -6,6 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <IndexPage
     dispatch={[Function]}
+    images={Object {}}
     linodes={
       Object {
         "1233": Object {
@@ -4774,6 +4775,7 @@ ShallowWrapper {
         "used": 1,
       }
     }
+    types={Object {}}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

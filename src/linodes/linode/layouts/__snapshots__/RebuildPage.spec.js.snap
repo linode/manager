@@ -465,6 +465,7 @@ ShallowWrapper {
         >
           <FormGroup
             className="row"
+            name="image"
           >
             <label
               className="col-sm-3 col-form-label"
@@ -542,6 +543,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="submit"
           >
             <div
               className="col-sm-9 offset-sm-3"
@@ -602,6 +604,7 @@ ShallowWrapper {
           "children": Array [
             <FormGroup
               className="row"
+              name="image"
             >
               <label
                 className="col-sm-3 col-form-label"
@@ -679,6 +682,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="submit"
             >
               <div
                 className="col-sm-9 offset-sm-3"
@@ -726,6 +730,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "image",
             },
             "ref": null,
             "rendered": Array [
@@ -1014,6 +1019,7 @@ ShallowWrapper {
                 />
               </div>,
               "className": "row",
+              "name": "submit",
             },
             "ref": null,
             "rendered": Object {
@@ -1102,6 +1108,7 @@ ShallowWrapper {
           >
             <FormGroup
               className="row"
+              name="image"
             >
               <label
                 className="col-sm-3 col-form-label"
@@ -1179,6 +1186,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="submit"
             >
               <div
                 className="col-sm-9 offset-sm-3"
@@ -1239,6 +1247,7 @@ ShallowWrapper {
             "children": Array [
               <FormGroup
                 className="row"
+                name="image"
               >
                 <label
                   className="col-sm-3 col-form-label"
@@ -1316,6 +1325,7 @@ ShallowWrapper {
               </FormGroup>,
               <FormGroup
                 className="row"
+                name="submit"
               >
                 <div
                   className="col-sm-9 offset-sm-3"
@@ -1363,6 +1373,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "image",
               },
               "ref": null,
               "rendered": Array [
@@ -1651,6 +1662,7 @@ ShallowWrapper {
                   />
                 </div>,
                 "className": "row",
+                "name": "submit",
               },
               "ref": null,
               "rendered": Object {

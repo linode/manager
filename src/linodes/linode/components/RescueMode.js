@@ -73,11 +73,11 @@ export default class RescueMode extends Component {
               errors={errors}
             />
           ))}
-          <FormGroup className="row">
+          <FormGroup className="row" name="finnix">
             <label className="col-sm-3 row-label">/dev/{slots[slots.length - 1]}</label>
             <div className="col-sm-9">Finnix Media</div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-3 col-sm-9">
               <SubmitButton
                 disabled={loading}

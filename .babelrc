@@ -1,23 +1,58 @@
 {
-  "presets": ["stage-0", "react", "es2015"],
-  "compact": true,
+  "presets": [
+    "stage-0",
+    "react",
+    "es2015"
+  ],
+  "compact": "true",
   "plugins": [
-    ["transform-runtime",
-    {
-      "helpers": false,
-      "polyfill": false
-    }],
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false
+      }
+    ],
     "transform-class-properties",
-    ["babel-root-import", [{
-      "rootPathSuffix": "src"
-    }, {
-      "rootPathSuffix": "test",
-      "rootPathPrefix": "@",
-    }]]
+    [
+      "babel-root-import",
+      {
+        "rootPathSuffix": "src"
+      },
+      {
+        "rootPathSuffix": "test",
+        "rootPathPrefix": "@"
+      }
+    ]
   ],
   "env": {
-    "development": {
-      "presets": ["react-hmre"]
+
+    "test": {
+      "presets": [
+        "stage-0",
+        "react",
+        "es2015"
+      ],
+      "plugins": [
+        [
+          "transform-runtime",
+          {
+            "helpers": false,
+            "polyfill": false
+          }
+        ],
+        "transform-class-properties",
+        [
+          "babel-root-import",
+          {
+            "rootPathSuffix": "src"
+          },
+          {
+            "rootPathSuffix": "test",
+            "rootPathPrefix": "@"
+          }
+        ]
+      ]
     }
   }
 }

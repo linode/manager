@@ -22,6 +22,7 @@ describe('domains/components/EditSRVRecord', () => {
     const currentRecord = currentZone._records.records[6];
     const wrapper = shallow(
       <EditSRVRecord
+        title="EditSRVRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -36,6 +37,7 @@ describe('domains/components/EditSRVRecord', () => {
     const currentRecord = currentZone._records.records[6];
     const page = shallow(
       <EditSRVRecord
+        title="EditSRVRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -88,6 +90,7 @@ describe('domains/components/EditSRVRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditSRVRecord
+        title="EditSRVRecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -157,6 +160,7 @@ describe('domains/components/EditSRVRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditSRVRecord
+        title="EditSRVRecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

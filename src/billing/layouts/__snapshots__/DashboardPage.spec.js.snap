@@ -426,6 +426,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="account-form"
           >
             <div
               className="col-sm-2 row-label"
@@ -459,6 +460,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="email"
           >
             <div
               className="col-sm-2 row-label"
@@ -479,6 +481,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="history"
           >
             <div
               className="col-sm-12"
@@ -883,6 +886,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="billing-history"
           >
             <div
               className="col-sm-12 text-right"
@@ -903,6 +907,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="abbout-balance"
           >
             <div
               className="col-sm-2 row-label"
@@ -953,6 +958,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="account-form"
           >
             <div
               className="col-sm-2 row-label"
@@ -986,6 +992,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="email"
           >
             <div
               className="col-sm-2 row-label"
@@ -1006,6 +1013,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="history"
           >
             <div
               className="col-sm-12"
@@ -1410,6 +1418,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="billing-history"
           >
             <div
               className="col-sm-12 text-right"
@@ -1430,6 +1439,7 @@ ShallowWrapper {
           </h3>
           <FormGroup
             className="row"
+            name="abbout-balance"
           >
             <div
               className="col-sm-2 row-label"
@@ -1472,6 +1482,7 @@ ShallowWrapper {
             </h3>,
             <FormGroup
               className="row"
+              name="account-form"
             >
               <div
                 className="col-sm-2 row-label"
@@ -1505,6 +1516,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="email"
             >
               <div
                 className="col-sm-2 row-label"
@@ -1525,6 +1537,7 @@ ShallowWrapper {
             </h3>,
             <FormGroup
               className="row"
+              name="history"
             >
               <div
                 className="col-sm-12"
@@ -1929,6 +1942,7 @@ ShallowWrapper {
             </FormGroup>,
             <FormGroup
               className="row"
+              name="billing-history"
             >
               <div
                 className="col-sm-12 text-right"
@@ -1949,6 +1963,7 @@ ShallowWrapper {
             </h3>,
             <FormGroup
               className="row"
+              name="abbout-balance"
             >
               <div
                 className="col-sm-2 row-label"
@@ -2032,6 +2047,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "account-form",
             },
             "ref": null,
             "rendered": Array [
@@ -2184,6 +2200,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "email",
             },
             "ref": null,
             "rendered": Array [
@@ -2633,6 +2650,7 @@ ShallowWrapper {
                 />
               </div>,
               "className": "row",
+              "name": "history",
             },
             "ref": null,
             "rendered": Object {
@@ -3460,6 +3478,7 @@ ShallowWrapper {
                 </Link>
               </div>,
               "className": "row",
+              "name": "billing-history",
             },
             "ref": null,
             "rendered": Object {
@@ -3539,6 +3558,7 @@ ShallowWrapper {
                 </div>,
               ],
               "className": "row",
+              "name": "abbout-balance",
             },
             "ref": null,
             "rendered": Array [
@@ -3658,6 +3678,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="account-form"
             >
               <div
                 className="col-sm-2 row-label"
@@ -3691,6 +3712,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="email"
             >
               <div
                 className="col-sm-2 row-label"
@@ -3711,6 +3733,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="history"
             >
               <div
                 className="col-sm-12"
@@ -4115,6 +4138,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="billing-history"
             >
               <div
                 className="col-sm-12 text-right"
@@ -4135,6 +4159,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="abbout-balance"
             >
               <div
                 className="col-sm-2 row-label"
@@ -4185,6 +4210,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="account-form"
             >
               <div
                 className="col-sm-2 row-label"
@@ -4218,6 +4244,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="email"
             >
               <div
                 className="col-sm-2 row-label"
@@ -4238,6 +4265,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="history"
             >
               <div
                 className="col-sm-12"
@@ -4642,6 +4670,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="billing-history"
             >
               <div
                 className="col-sm-12 text-right"
@@ -4662,6 +4691,7 @@ ShallowWrapper {
             </h3>
             <FormGroup
               className="row"
+              name="abbout-balance"
             >
               <div
                 className="col-sm-2 row-label"
@@ -4704,6 +4734,7 @@ ShallowWrapper {
               </h3>,
               <FormGroup
                 className="row"
+                name="account-form"
               >
                 <div
                   className="col-sm-2 row-label"
@@ -4737,6 +4768,7 @@ ShallowWrapper {
               </FormGroup>,
               <FormGroup
                 className="row"
+                name="email"
               >
                 <div
                   className="col-sm-2 row-label"
@@ -4757,6 +4789,7 @@ ShallowWrapper {
               </h3>,
               <FormGroup
                 className="row"
+                name="history"
               >
                 <div
                   className="col-sm-12"
@@ -5161,6 +5194,7 @@ ShallowWrapper {
               </FormGroup>,
               <FormGroup
                 className="row"
+                name="billing-history"
               >
                 <div
                   className="col-sm-12 text-right"
@@ -5181,6 +5215,7 @@ ShallowWrapper {
               </h3>,
               <FormGroup
                 className="row"
+                name="abbout-balance"
               >
                 <div
                   className="col-sm-2 row-label"
@@ -5264,6 +5299,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "account-form",
               },
               "ref": null,
               "rendered": Array [
@@ -5416,6 +5452,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "email",
               },
               "ref": null,
               "rendered": Array [
@@ -5865,6 +5902,7 @@ ShallowWrapper {
                   />
                 </div>,
                 "className": "row",
+                "name": "history",
               },
               "ref": null,
               "rendered": Object {
@@ -6692,6 +6730,7 @@ ShallowWrapper {
                   </Link>
                 </div>,
                 "className": "row",
+                "name": "billing-history",
               },
               "ref": null,
               "rendered": Object {
@@ -6771,6 +6810,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "abbout-balance",
               },
               "ref": null,
               "rendered": Array [

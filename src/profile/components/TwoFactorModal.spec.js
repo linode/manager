@@ -18,9 +18,8 @@ describe('profile/components/TwoFactorModal', () => {
     const wrapper = shallow(
       <TwoFactorModal
         dispatch={dispatch}
-        toggleTwoFactor={() => { }}
         secret={'qrCode'}
-        profile={profile}
+        username={profile.username}
       />
     );
     expect(wrapper).toMatchSnapshot();
@@ -30,9 +29,8 @@ describe('profile/components/TwoFactorModal', () => {
     const page = mount(
       <TwoFactorModal
         dispatch={dispatch}
-        toggleTwoFactor={() => { }}
         secret={'qrCode'}
-        profile={profile}
+        username={profile.username}
       />
     );
 

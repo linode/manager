@@ -8,6 +8,7 @@ ShallowWrapper {
     close={[Function]}
     dispatch={[Function]}
     id={4}
+    title="EditMXRecord"
     zone={
       Object {
         "_polling": false,
@@ -131,7 +132,7 @@ ShallowWrapper {
     "props": Object {
       "analytics": Object {
         "action": "edit",
-        "title": undefined,
+        "title": "EditMXRecord",
       },
       "buttonDisabledText": "Saving",
       "buttonText": "Save",
@@ -373,7 +374,7 @@ ShallowWrapper {
       "props": Object {
         "analytics": Object {
           "action": "edit",
-          "title": undefined,
+          "title": "EditMXRecord",
         },
         "buttonDisabledText": "Saving",
         "buttonText": "Save",

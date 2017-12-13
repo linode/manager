@@ -101,7 +101,7 @@ export class MakeAPaymentPage extends Component {
                 </div>
                 <FormGroupError errors={errors} className="offset-sm-3 col-sm-6" name="cvv" />
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="col-sm-9 offset-sm-3">
                   <SubmitButton
                     disabled={loading}

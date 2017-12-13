@@ -335,7 +335,7 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="check_passive" />
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
               disabled={loading}

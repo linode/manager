@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Currency
-    status={999.99}
+    value={999.99}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -19,11 +19,11 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "host",
     "props": Object {
-      "children": "$NaN",
+      "children": "$999.99",
       "className": "currency",
     },
     "ref": null,
-    "rendered": "$NaN",
+    "rendered": "$999.99",
     "type": "span",
   },
   Symbol(enzyme.__nodes__): Array [
@@ -32,11 +32,11 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "host",
       "props": Object {
-        "children": "$NaN",
+        "children": "$999.99",
         "className": "currency",
       },
       "ref": null,
-      "rendered": "$NaN",
+      "rendered": "$999.99",
       "type": "span",
     },
   ],

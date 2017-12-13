@@ -132,7 +132,7 @@ export class IPSharingPage extends Component {
             onSubmit={this.onSubmit}
             analytics={{ title: 'IP sharing settings' }}
           >
-            <FormGroup>
+            <FormGroup name="ip-sharing">
               <Table
                 className="Table--secondary"
                 columns={[

@@ -397,6 +397,7 @@ ShallowWrapper {
         },
       }
     }
+    payments={Object {}}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -816,6 +817,7 @@ ShallowWrapper {
                   },
                 }
               }
+              payments={Object {}}
             />
             <div
               className="row"
@@ -1254,6 +1256,7 @@ ShallowWrapper {
                   },
                 }
               }
+              payments={Object {}}
             />
             <div
               className="row"
@@ -1671,6 +1674,7 @@ ShallowWrapper {
                     },
                   }
                 }
+                payments={Object {}}
               />,
               <div
                 className="row"
@@ -2087,6 +2091,7 @@ ShallowWrapper {
                     "total": 12,
                   },
                 },
+                "payments": Object {},
               },
               "ref": null,
               "rendered": null,
@@ -2579,6 +2584,7 @@ ShallowWrapper {
                     },
                   }
                 }
+                payments={Object {}}
               />
               <div
                 className="row"
@@ -3017,6 +3023,7 @@ ShallowWrapper {
                     },
                   }
                 }
+                payments={Object {}}
               />
               <div
                 className="row"
@@ -3434,6 +3441,7 @@ ShallowWrapper {
                       },
                     }
                   }
+                  payments={Object {}}
                 />,
                 <div
                   className="row"
@@ -3850,6 +3858,7 @@ ShallowWrapper {
                       "total": 12,
                     },
                   },
+                  "payments": Object {},
                 },
                 "ref": null,
                 "rendered": null,
