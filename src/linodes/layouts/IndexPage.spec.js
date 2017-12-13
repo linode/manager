@@ -22,6 +22,8 @@ describe('linodes/layouts/IndexPage', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <IndexPage
+        images={{}}
+        types={{}}
         dispatch={dispatch}
         selectedMap={{}}
         transfer={{ used: 1, quota: 5 }}
@@ -34,6 +36,8 @@ describe('linodes/layouts/IndexPage', () => {
   it.skip('renders a list of Linodes', () => {
     const page = mount(
       <IndexPage
+        images={{}}
+        types={{}}
         dispatch={dispatch}
         selectedMap={{}}
         transfer={{ used: 1, quota: 5 }}
@@ -48,6 +52,8 @@ describe('linodes/layouts/IndexPage', () => {
   it.skip('deletes selected linodes when delete is pressed', async () => {
     const page = mount(
       <IndexPage
+        images={{}}
+        types={{}}
         dispatch={dispatch}
         selectedMap={{ 1234: true }}
         transfer={{ used: 1, quota: 5 }}

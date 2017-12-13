@@ -127,7 +127,7 @@ export default class ResetRootPassword extends Component {
               <FormGroupError errors={errors} name="password" inline={false} />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={disabled || loading}

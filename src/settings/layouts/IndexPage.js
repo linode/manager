@@ -68,7 +68,7 @@ export class IndexPage extends Component {
               onSubmit={this.onSubmit}
               analytics={{ title: 'Account Settings' }}
             >
-              <FormGroup className="row">
+              <FormGroup className="row" name="default">
                 <label className="col-form-label col-sm-2">Default Behavior</label>
                 <div className="col-sm-10">
                   <Checkboxes>
@@ -95,7 +95,7 @@ export class IndexPage extends Component {
                   </div>
                 </div>
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="offset-sm-2 col-sm-10">
                   <SubmitButton disabled={loading} />
                   <FormSummary errors={errors} success="Account saved." />

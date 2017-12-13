@@ -127,7 +127,7 @@ export class DashboardPage extends Component {
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />} className="full-height">
-            <FormGroup className="row">
+            <FormGroup name="ip-list-details" className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
@@ -142,7 +142,7 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="list-form">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Console
               </label>

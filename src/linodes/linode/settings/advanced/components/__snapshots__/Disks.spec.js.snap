@@ -6,6 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Disks
     dispatch={[Function]}
+    images={Object {}}
     linode={
       Object {
         "_backups": Object {

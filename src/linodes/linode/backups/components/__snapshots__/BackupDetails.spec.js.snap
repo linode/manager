@@ -372,6 +372,7 @@ ShallowWrapper {
         null,
         <FormGroup
           className="row"
+          name="type"
         >
           <div
             className="col-sm-3 row-label"
@@ -387,6 +388,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="started"
         >
           <div
             className="col-sm-3 row-label"
@@ -404,6 +406,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="finished"
         >
           <div
             className="col-sm-3 row-label"
@@ -421,6 +424,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="duration"
         >
           <div
             className="col-sm-3 row-label"
@@ -436,6 +440,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="region"
         >
           <div
             className="col-sm-3 row-label"
@@ -480,6 +485,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="config"
         >
           <div
             className="col-sm-3 row-label"
@@ -497,6 +503,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="disks"
         >
           <div
             className="col-sm-3 row-label"
@@ -527,6 +534,7 @@ ShallowWrapper {
         </FormGroup>,
         <FormGroup
           className="row"
+          name="space"
         >
           <div
             className="col-sm-3 row-label"
@@ -569,6 +577,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "type",
         },
         "ref": null,
         "rendered": Array [
@@ -621,6 +630,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "started",
         },
         "ref": null,
         "rendered": Array [
@@ -685,6 +695,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "finished",
         },
         "ref": null,
         "rendered": Array [
@@ -747,6 +758,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "duration",
         },
         "ref": null,
         "rendered": Array [
@@ -826,6 +838,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "region",
         },
         "ref": null,
         "rendered": Array [
@@ -942,6 +955,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "config",
         },
         "ref": null,
         "rendered": Array [
@@ -1023,6 +1037,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "disks",
         },
         "ref": null,
         "rendered": Array [
@@ -1141,6 +1156,7 @@ ShallowWrapper {
             </div>,
           ],
           "className": "row",
+          "name": "space",
         },
         "ref": null,
         "rendered": Array [
@@ -1186,6 +1202,7 @@ ShallowWrapper {
           null,
           <FormGroup
             className="row"
+            name="type"
           >
             <div
               className="col-sm-3 row-label"
@@ -1201,6 +1218,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="started"
           >
             <div
               className="col-sm-3 row-label"
@@ -1218,6 +1236,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="finished"
           >
             <div
               className="col-sm-3 row-label"
@@ -1235,6 +1254,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="duration"
           >
             <div
               className="col-sm-3 row-label"
@@ -1250,6 +1270,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="region"
           >
             <div
               className="col-sm-3 row-label"
@@ -1294,6 +1315,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="config"
           >
             <div
               className="col-sm-3 row-label"
@@ -1311,6 +1333,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="disks"
           >
             <div
               className="col-sm-3 row-label"
@@ -1341,6 +1364,7 @@ ShallowWrapper {
           </FormGroup>,
           <FormGroup
             className="row"
+            name="space"
           >
             <div
               className="col-sm-3 row-label"
@@ -1383,6 +1407,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "type",
           },
           "ref": null,
           "rendered": Array [
@@ -1435,6 +1460,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "started",
           },
           "ref": null,
           "rendered": Array [
@@ -1499,6 +1525,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "finished",
           },
           "ref": null,
           "rendered": Array [
@@ -1561,6 +1588,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "duration",
           },
           "ref": null,
           "rendered": Array [
@@ -1640,6 +1668,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "region",
           },
           "ref": null,
           "rendered": Array [
@@ -1756,6 +1785,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "config",
           },
           "ref": null,
           "rendered": Array [
@@ -1837,6 +1867,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "disks",
           },
           "ref": null,
           "rendered": Array [
@@ -1955,6 +1986,7 @@ ShallowWrapper {
               </div>,
             ],
             "className": "row",
+            "name": "space",
           },
           "ref": null,
           "rendered": Array [

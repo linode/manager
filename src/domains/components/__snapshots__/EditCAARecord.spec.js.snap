@@ -8,6 +8,7 @@ ShallowWrapper {
     close={[Function]}
     dispatch={[Function]}
     id={7}
+    title="EditCAARecord"
     zone={
       Object {
         "_polling": false,
@@ -131,7 +132,7 @@ ShallowWrapper {
     "props": Object {
       "analytics": Object {
         "action": "edit",
-        "title": undefined,
+        "title": "EditCAARecord",
       },
       "buttonDisabledText": "Saving",
       "buttonText": "Save",
@@ -500,7 +501,7 @@ ShallowWrapper {
       "props": Object {
         "analytics": Object {
           "action": "edit",
-          "title": undefined,
+          "title": "EditCAARecord",
         },
         "buttonDisabledText": "Saving",
         "buttonText": "Save",

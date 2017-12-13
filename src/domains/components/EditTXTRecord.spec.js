@@ -22,6 +22,7 @@ describe('domains/components/EditTXTRecord', () => {
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -36,6 +37,7 @@ describe('domains/components/EditTXTRecord', () => {
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -69,6 +71,7 @@ describe('domains/components/EditTXTRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -114,6 +117,7 @@ describe('domains/components/EditTXTRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

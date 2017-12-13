@@ -21,6 +21,7 @@ ShallowWrapper {
       }
     }
     nodebalancerId="23"
+    title="NodeModal"
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -36,7 +37,7 @@ ShallowWrapper {
     "props": Object {
       "analytics": Object {
         "action": "edit",
-        "title": undefined,
+        "title": "NodeModal",
       },
       "buttonDisabledText": "Saving",
       "buttonText": "Save",
@@ -419,7 +420,7 @@ ShallowWrapper {
       "props": Object {
         "analytics": Object {
           "action": "edit",
-          "title": undefined,
+          "title": "NodeModal",
         },
         "buttonDisabledText": "Saving",
         "buttonText": "Save",

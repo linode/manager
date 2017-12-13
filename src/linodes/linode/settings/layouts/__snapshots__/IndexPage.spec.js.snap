@@ -380,7 +380,9 @@ ShallowWrapper {
         "vcpus": 2,
       }
     }
-  />,
+  >
+    <div />
+  </IndexPage>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -397,7 +399,7 @@ ShallowWrapper {
         <SideEffect(ChainedDocumentTitle)
           title="Settings"
         />,
-        undefined,
+        <div />,
       ],
       "className": "",
       "isSubTabs": true,
@@ -431,7 +433,15 @@ ShallowWrapper {
         "rendered": null,
         "type": [Function],
       },
-      undefined,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {},
+        "ref": null,
+        "rendered": null,
+        "type": "div",
+      },
     ],
     "type": [Function],
   },
@@ -445,7 +455,7 @@ ShallowWrapper {
           <SideEffect(ChainedDocumentTitle)
             title="Settings"
           />,
-          undefined,
+          <div />,
         ],
         "className": "",
         "isSubTabs": true,
@@ -479,7 +489,15 @@ ShallowWrapper {
           "rendered": null,
           "type": [Function],
         },
-        undefined,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
       ],
       "type": [Function],
     },

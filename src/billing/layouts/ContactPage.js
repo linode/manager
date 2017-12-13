@@ -233,7 +233,7 @@ export class ContactPage extends Component {
                   <FormGroupError errors={errors} name="phone" />
                 </div>
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="col-sm-9 offset-sm-3">
                   <SubmitButton
                     disabled={loading}

@@ -6,6 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <DashboardPage
     dispatch={[Function]}
+    images={Object {}}
     linode={
       Object {
         "_backups": Object {
@@ -418,7 +419,7 @@ ShallowWrapper {
                   id="distro"
                 >
                   <DistroStyle
-                    images={undefined}
+                    images={Object {}}
                     linode={
                       Object {
                         "_backups": Object {
@@ -1157,6 +1158,7 @@ ShallowWrapper {
             >
               <FormGroup
                 className="row"
+                name="ip-list-details"
               >
                 <label
                   className="col-sm-4 col-form-label"
@@ -1195,6 +1197,7 @@ ShallowWrapper {
               </FormGroup>
               <FormGroup
                 className="row"
+                name="list-form"
               >
                 <label
                   className="col-sm-4 col-form-label"
@@ -1859,7 +1862,7 @@ ShallowWrapper {
                     id="distro"
                   >
                     <DistroStyle
-                      images={undefined}
+                      images={Object {}}
                       linode={
                         Object {
                           "_backups": Object {
@@ -2598,6 +2601,7 @@ ShallowWrapper {
               >
                 <FormGroup
                   className="row"
+                  name="ip-list-details"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -2636,6 +2640,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="list-form"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -3087,7 +3092,7 @@ ShallowWrapper {
                     id="distro"
                   >
                     <DistroStyle
-                      images={undefined}
+                      images={Object {}}
                       linode={
                         Object {
                           "_backups": Object {
@@ -3873,7 +3878,7 @@ ShallowWrapper {
                       id="distro"
                     >
                       <DistroStyle
-                        images={undefined}
+                        images={Object {}}
                         linode={
                           Object {
                             "_backups": Object {
@@ -4820,7 +4825,7 @@ ShallowWrapper {
                         id="distro"
                       >
                         <DistroStyle
-                          images={undefined}
+                          images={Object {}}
                           linode={
                             Object {
                               "_backups": Object {
@@ -5181,7 +5186,7 @@ ShallowWrapper {
                       "props": Object {
                         "children": Array [
                           <DistroStyle
-                            images={undefined}
+                            images={Object {}}
                             linode={
                               Object {
                                 "_backups": Object {
@@ -5528,7 +5533,7 @@ ShallowWrapper {
                           "key": undefined,
                           "nodeType": "function",
                           "props": Object {
-                            "images": undefined,
+                            "images": Object {},
                             "linode": Object {
                               "_backups": Object {
                                 "daily": Object {
@@ -7159,6 +7164,7 @@ ShallowWrapper {
               >
                 <FormGroup
                   className="row"
+                  name="ip-list-details"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -7197,6 +7203,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="list-form"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -7577,6 +7584,7 @@ ShallowWrapper {
                 "children": Array [
                   <FormGroup
                     className="row"
+                    name="ip-list-details"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -7615,6 +7623,7 @@ ShallowWrapper {
                   </FormGroup>,
                   <FormGroup
                     className="row"
+                    name="list-form"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -8033,6 +8042,7 @@ ShallowWrapper {
                       </div>,
                     ],
                     "className": "row",
+                    "name": "ip-list-details",
                   },
                   "ref": null,
                   "rendered": Array [
@@ -8545,6 +8555,7 @@ ShallowWrapper {
                       </div>,
                     ],
                     "className": "row",
+                    "name": "list-form",
                   },
                   "ref": null,
                   "rendered": Array [
@@ -10950,7 +10961,7 @@ ShallowWrapper {
                     id="distro"
                   >
                     <DistroStyle
-                      images={undefined}
+                      images={Object {}}
                       linode={
                         Object {
                           "_backups": Object {
@@ -11689,6 +11700,7 @@ ShallowWrapper {
               >
                 <FormGroup
                   className="row"
+                  name="ip-list-details"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -11727,6 +11739,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="list-form"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -12391,7 +12404,7 @@ ShallowWrapper {
                       id="distro"
                     >
                       <DistroStyle
-                        images={undefined}
+                        images={Object {}}
                         linode={
                           Object {
                             "_backups": Object {
@@ -13130,6 +13143,7 @@ ShallowWrapper {
                 >
                   <FormGroup
                     className="row"
+                    name="ip-list-details"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -13168,6 +13182,7 @@ ShallowWrapper {
                   </FormGroup>
                   <FormGroup
                     className="row"
+                    name="list-form"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -13619,7 +13634,7 @@ ShallowWrapper {
                       id="distro"
                     >
                       <DistroStyle
-                        images={undefined}
+                        images={Object {}}
                         linode={
                           Object {
                             "_backups": Object {
@@ -14405,7 +14420,7 @@ ShallowWrapper {
                         id="distro"
                       >
                         <DistroStyle
-                          images={undefined}
+                          images={Object {}}
                           linode={
                             Object {
                               "_backups": Object {
@@ -15352,7 +15367,7 @@ ShallowWrapper {
                           id="distro"
                         >
                           <DistroStyle
-                            images={undefined}
+                            images={Object {}}
                             linode={
                               Object {
                                 "_backups": Object {
@@ -15713,7 +15728,7 @@ ShallowWrapper {
                         "props": Object {
                           "children": Array [
                             <DistroStyle
-                              images={undefined}
+                              images={Object {}}
                               linode={
                                 Object {
                                   "_backups": Object {
@@ -16060,7 +16075,7 @@ ShallowWrapper {
                             "key": undefined,
                             "nodeType": "function",
                             "props": Object {
-                              "images": undefined,
+                              "images": Object {},
                               "linode": Object {
                                 "_backups": Object {
                                   "daily": Object {
@@ -17691,6 +17706,7 @@ ShallowWrapper {
                 >
                   <FormGroup
                     className="row"
+                    name="ip-list-details"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -17729,6 +17745,7 @@ ShallowWrapper {
                   </FormGroup>
                   <FormGroup
                     className="row"
+                    name="list-form"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -18109,6 +18126,7 @@ ShallowWrapper {
                   "children": Array [
                     <FormGroup
                       className="row"
+                      name="ip-list-details"
                     >
                       <label
                         className="col-sm-4 col-form-label"
@@ -18147,6 +18165,7 @@ ShallowWrapper {
                     </FormGroup>,
                     <FormGroup
                       className="row"
+                      name="list-form"
                     >
                       <label
                         className="col-sm-4 col-form-label"
@@ -18565,6 +18584,7 @@ ShallowWrapper {
                         </div>,
                       ],
                       "className": "row",
+                      "name": "ip-list-details",
                     },
                     "ref": null,
                     "rendered": Array [
@@ -19077,6 +19097,7 @@ ShallowWrapper {
                         </div>,
                       ],
                       "className": "row",
+                      "name": "list-form",
                     },
                     "ref": null,
                     "rendered": Array [

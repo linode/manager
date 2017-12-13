@@ -22,6 +22,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <Disks
+        images={{}}
         dispatch={dispatch}
         selectedMap={{}}
         linode={testLinode}
@@ -33,6 +34,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
   it.skip('renders a list of disks', () => {
     const page = mount(
       <Disks
+        images={{}}
         dispatch={dispatch}
         selectedMap={{}}
         linode={testLinode}
@@ -49,6 +51,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
   it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
       <Disks
+        images={{}}
         dispatch={dispatch}
         linode={testLinode}
         selectedMap={{}}
@@ -66,6 +69,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
   it.skip('deletes selected volumes when delete is pressed', async () => {
     const page = mount(
       <Disks
+        images={{}}
         dispatch={dispatch}
         linode={testLinode}
         selectedMap={{ 12345: true }}

@@ -60,7 +60,7 @@ export default class ChangeEmail extends Component {
               <FormGroupError errors={errors} name="email" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Email saved." />

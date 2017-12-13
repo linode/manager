@@ -27,7 +27,9 @@ describe('linodes/linode/layouts/IndexPage', () => {
         dispatch={dispatch}
         linode={testLinode}
         router={router}
-      />
+      >
+        <div></div>
+      </IndexPage>
     );
     expect(wrapper).toMatchSnapshot();
   });

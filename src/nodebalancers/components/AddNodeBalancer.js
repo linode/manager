@@ -79,7 +79,7 @@ export default class AddNodeBalancer extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Plan">
+          <ModalFormGroup label="Plan" id="node-balancer">
             <Input disabled value="NodeBalancer ($20.00/mo)" />
           </ModalFormGroup>
         </div>

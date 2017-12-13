@@ -23,6 +23,7 @@ describe('domains/components/EditNSRecord', () => {
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditNSRecord
+        title="EditNSRRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -37,6 +38,7 @@ describe('domains/components/EditNSRecord', () => {
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditNSRecord
+        title="EditNSRRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -62,6 +64,7 @@ describe('domains/components/EditNSRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditNSRecord
+        title="EditNSRRecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -99,6 +102,7 @@ describe('domains/components/EditNSRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditNSRecord
+        title="EditNSRRecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

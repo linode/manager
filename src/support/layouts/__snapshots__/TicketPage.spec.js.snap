@@ -187,6 +187,7 @@ ShallowWrapper {
                 >
                   <FormGroup
                     className=""
+                    name="ticket-reply"
                   >
                     <label
                       className="row-label"
@@ -211,6 +212,7 @@ ShallowWrapper {
                   <FormGroup
                     className=""
                     errors={Object {}}
+                    name="ticket-attachements"
                   >
                     <div>
                       <label
@@ -239,7 +241,7 @@ ShallowWrapper {
                     className="clearfix"
                   >
                     <div
-                      className="text-sm-right"
+                      className="text- sm-right"
                     >
                       <SubmitButton
                         className="btn-default"
@@ -718,6 +720,7 @@ ShallowWrapper {
                 >
                   <FormGroup
                     className=""
+                    name="ticket-reply"
                   >
                     <label
                       className="row-label"
@@ -742,6 +745,7 @@ ShallowWrapper {
                   <FormGroup
                     className=""
                     errors={Object {}}
+                    name="ticket-attachements"
                   >
                     <div>
                       <label
@@ -770,7 +774,7 @@ ShallowWrapper {
                     className="clearfix"
                   >
                     <div
-                      className="text-sm-right"
+                      className="text- sm-right"
                     >
                       <SubmitButton
                         className="btn-default"
@@ -868,6 +872,7 @@ ShallowWrapper {
                   >
                     <FormGroup
                       className=""
+                      name="ticket-reply"
                     >
                       <label
                         className="row-label"
@@ -892,6 +897,7 @@ ShallowWrapper {
                     <FormGroup
                       className=""
                       errors={Object {}}
+                      name="ticket-attachements"
                     >
                       <div>
                         <label
@@ -920,7 +926,7 @@ ShallowWrapper {
                       className="clearfix"
                     >
                       <div
-                        className="text-sm-right"
+                        className="text- sm-right"
                       >
                         <SubmitButton
                           className="btn-default"
@@ -1018,6 +1024,7 @@ ShallowWrapper {
                     >
                       <FormGroup
                         className=""
+                        name="ticket-reply"
                       >
                         <label
                           className="row-label"
@@ -1042,6 +1049,7 @@ ShallowWrapper {
                       <FormGroup
                         className=""
                         errors={Object {}}
+                        name="ticket-attachements"
                       >
                         <div>
                           <label
@@ -1070,7 +1078,7 @@ ShallowWrapper {
                         className="clearfix"
                       >
                         <div
-                          className="text-sm-right"
+                          className="text- sm-right"
                         >
                           <SubmitButton
                             className="btn-default"
@@ -1223,6 +1231,7 @@ ShallowWrapper {
                     >
                       <FormGroup
                         className=""
+                        name="ticket-reply"
                       >
                         <label
                           className="row-label"
@@ -1247,6 +1256,7 @@ ShallowWrapper {
                       <FormGroup
                         className=""
                         errors={Object {}}
+                        name="ticket-attachements"
                       >
                         <div>
                           <label
@@ -1275,7 +1285,7 @@ ShallowWrapper {
                         className="clearfix"
                       >
                         <div
-                          className="text-sm-right"
+                          className="text- sm-right"
                         >
                           <SubmitButton
                             className="btn-default"
@@ -1307,6 +1317,7 @@ ShallowWrapper {
                       "children": Array [
                         <FormGroup
                           className=""
+                          name="ticket-reply"
                         >
                           <label
                             className="row-label"
@@ -1331,6 +1342,7 @@ ShallowWrapper {
                         <FormGroup
                           className=""
                           errors={Object {}}
+                          name="ticket-attachements"
                         >
                           <div>
                             <label
@@ -1359,7 +1371,7 @@ ShallowWrapper {
                           className="clearfix"
                         >
                           <div
-                            className="text-sm-right"
+                            className="text- sm-right"
                           >
                             <SubmitButton
                               className="btn-default"
@@ -1409,6 +1421,7 @@ ShallowWrapper {
                             />,
                           ],
                           "className": "",
+                          "name": "ticket-reply",
                         },
                         "ref": null,
                         "rendered": Array [
@@ -1488,6 +1501,7 @@ ShallowWrapper {
                           ],
                           "className": "",
                           "errors": Object {},
+                          "name": "ticket-attachements",
                         },
                         "ref": null,
                         "rendered": Array [
@@ -1558,7 +1572,7 @@ ShallowWrapper {
                         "nodeType": "host",
                         "props": Object {
                           "children": <div
-                            className="text-sm-right"
+                            className="text- sm-right"
                           >
                             <SubmitButton
                               className="btn-default"
@@ -1595,7 +1609,7 @@ ShallowWrapper {
                                 success="Response submitted."
                               />,
                             ],
-                            "className": "text-sm-right",
+                            "className": "text- sm-right",
                           },
                           "ref": null,
                           "rendered": Array [
@@ -1804,6 +1818,7 @@ ShallowWrapper {
                   >
                     <FormGroup
                       className=""
+                      name="ticket-reply"
                     >
                       <label
                         className="row-label"
@@ -1828,6 +1843,7 @@ ShallowWrapper {
                     <FormGroup
                       className=""
                       errors={Object {}}
+                      name="ticket-attachements"
                     >
                       <div>
                         <label
@@ -1856,7 +1872,7 @@ ShallowWrapper {
                       className="clearfix"
                     >
                       <div
-                        className="text-sm-right"
+                        className="text- sm-right"
                       >
                         <SubmitButton
                           className="btn-default"
@@ -2335,6 +2351,7 @@ ShallowWrapper {
                   >
                     <FormGroup
                       className=""
+                      name="ticket-reply"
                     >
                       <label
                         className="row-label"
@@ -2359,6 +2376,7 @@ ShallowWrapper {
                     <FormGroup
                       className=""
                       errors={Object {}}
+                      name="ticket-attachements"
                     >
                       <div>
                         <label
@@ -2387,7 +2405,7 @@ ShallowWrapper {
                       className="clearfix"
                     >
                       <div
-                        className="text-sm-right"
+                        className="text- sm-right"
                       >
                         <SubmitButton
                           className="btn-default"
@@ -2485,6 +2503,7 @@ ShallowWrapper {
                     >
                       <FormGroup
                         className=""
+                        name="ticket-reply"
                       >
                         <label
                           className="row-label"
@@ -2509,6 +2528,7 @@ ShallowWrapper {
                       <FormGroup
                         className=""
                         errors={Object {}}
+                        name="ticket-attachements"
                       >
                         <div>
                           <label
@@ -2537,7 +2557,7 @@ ShallowWrapper {
                         className="clearfix"
                       >
                         <div
-                          className="text-sm-right"
+                          className="text- sm-right"
                         >
                           <SubmitButton
                             className="btn-default"
@@ -2635,6 +2655,7 @@ ShallowWrapper {
                       >
                         <FormGroup
                           className=""
+                          name="ticket-reply"
                         >
                           <label
                             className="row-label"
@@ -2659,6 +2680,7 @@ ShallowWrapper {
                         <FormGroup
                           className=""
                           errors={Object {}}
+                          name="ticket-attachements"
                         >
                           <div>
                             <label
@@ -2687,7 +2709,7 @@ ShallowWrapper {
                           className="clearfix"
                         >
                           <div
-                            className="text-sm-right"
+                            className="text- sm-right"
                           >
                             <SubmitButton
                               className="btn-default"
@@ -2840,6 +2862,7 @@ ShallowWrapper {
                       >
                         <FormGroup
                           className=""
+                          name="ticket-reply"
                         >
                           <label
                             className="row-label"
@@ -2864,6 +2887,7 @@ ShallowWrapper {
                         <FormGroup
                           className=""
                           errors={Object {}}
+                          name="ticket-attachements"
                         >
                           <div>
                             <label
@@ -2892,7 +2916,7 @@ ShallowWrapper {
                           className="clearfix"
                         >
                           <div
-                            className="text-sm-right"
+                            className="text- sm-right"
                           >
                             <SubmitButton
                               className="btn-default"
@@ -2924,6 +2948,7 @@ ShallowWrapper {
                         "children": Array [
                           <FormGroup
                             className=""
+                            name="ticket-reply"
                           >
                             <label
                               className="row-label"
@@ -2948,6 +2973,7 @@ ShallowWrapper {
                           <FormGroup
                             className=""
                             errors={Object {}}
+                            name="ticket-attachements"
                           >
                             <div>
                               <label
@@ -2976,7 +3002,7 @@ ShallowWrapper {
                             className="clearfix"
                           >
                             <div
-                              className="text-sm-right"
+                              className="text- sm-right"
                             >
                               <SubmitButton
                                 className="btn-default"
@@ -3026,6 +3052,7 @@ ShallowWrapper {
                               />,
                             ],
                             "className": "",
+                            "name": "ticket-reply",
                           },
                           "ref": null,
                           "rendered": Array [
@@ -3105,6 +3132,7 @@ ShallowWrapper {
                             ],
                             "className": "",
                             "errors": Object {},
+                            "name": "ticket-attachements",
                           },
                           "ref": null,
                           "rendered": Array [
@@ -3175,7 +3203,7 @@ ShallowWrapper {
                           "nodeType": "host",
                           "props": Object {
                             "children": <div
-                              className="text-sm-right"
+                              className="text- sm-right"
                             >
                               <SubmitButton
                                 className="btn-default"
@@ -3212,7 +3240,7 @@ ShallowWrapper {
                                   success="Response submitted."
                                 />,
                               ],
-                              "className": "text-sm-right",
+                              "className": "text- sm-right",
                             },
                             "ref": null,
                             "rendered": Array [

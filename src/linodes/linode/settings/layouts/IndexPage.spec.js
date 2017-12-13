@@ -20,7 +20,9 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linode={testLinode1235}
-      />
+      >
+        <div></div>
+      </IndexPage>
     );
     expect(wrapper).toMatchSnapshot();
   });
@@ -30,7 +32,9 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linode={testLinode1235}
-      />
+      >
+        <div></div>
+      </IndexPage>
     );
 
     const tabList = [

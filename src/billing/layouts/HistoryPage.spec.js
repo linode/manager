@@ -23,6 +23,7 @@ describe('billing/layouts/HistoryPage', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <HistoryPage
+        payments={{}}
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}
@@ -34,6 +35,7 @@ describe('billing/layouts/HistoryPage', () => {
   it('renders account balance', () => {
     page = mount(
       <HistoryPage
+        payments={{}}
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}

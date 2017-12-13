@@ -5119,6 +5119,7 @@ ShallowWrapper {
         >
           <FormGroup
             className="row"
+            name="transfer"
           >
             <div
               className="col-lg-6 col-md-12 col-sm-12"
@@ -5215,6 +5216,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className="row"
+            name="IPs"
           >
             <div
               className="col-lg-6 col-md-12 col-sm-12"
@@ -5952,6 +5954,7 @@ ShallowWrapper {
           >
             <FormGroup
               className="row"
+              name="transfer"
             >
               <div
                 className="col-lg-6 col-md-12 col-sm-12"
@@ -6048,6 +6051,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="IPs"
             >
               <div
                 className="col-lg-6 col-md-12 col-sm-12"
@@ -6793,6 +6797,7 @@ ShallowWrapper {
             "children": Array [
               <FormGroup
                 className="row"
+                name="transfer"
               >
                 <div
                   className="col-lg-6 col-md-12 col-sm-12"
@@ -6889,6 +6894,7 @@ ShallowWrapper {
               </FormGroup>,
               <FormGroup
                 className="row"
+                name="IPs"
               >
                 <div
                   className="col-lg-6 col-md-12 col-sm-12"
@@ -7702,6 +7708,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "transfer",
               },
               "ref": null,
               "rendered": Array [
@@ -8630,6 +8637,7 @@ ShallowWrapper {
                   </div>,
                 ],
                 "className": "row",
+                "name": "IPs",
               },
               "ref": null,
               "rendered": Array [
@@ -10093,6 +10101,7 @@ ShallowWrapper {
           >
             <FormGroup
               className="row"
+              name="transfer"
             >
               <div
                 className="col-lg-6 col-md-12 col-sm-12"
@@ -10189,6 +10198,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className="row"
+              name="IPs"
             >
               <div
                 className="col-lg-6 col-md-12 col-sm-12"
@@ -10926,6 +10936,7 @@ ShallowWrapper {
             >
               <FormGroup
                 className="row"
+                name="transfer"
               >
                 <div
                   className="col-lg-6 col-md-12 col-sm-12"
@@ -11022,6 +11033,7 @@ ShallowWrapper {
               </FormGroup>
               <FormGroup
                 className="row"
+                name="IPs"
               >
                 <div
                   className="col-lg-6 col-md-12 col-sm-12"
@@ -11767,6 +11779,7 @@ ShallowWrapper {
               "children": Array [
                 <FormGroup
                   className="row"
+                  name="transfer"
                 >
                   <div
                     className="col-lg-6 col-md-12 col-sm-12"
@@ -11863,6 +11876,7 @@ ShallowWrapper {
                 </FormGroup>,
                 <FormGroup
                   className="row"
+                  name="IPs"
                 >
                   <div
                     className="col-lg-6 col-md-12 col-sm-12"
@@ -12676,6 +12690,7 @@ ShallowWrapper {
                     </div>,
                   ],
                   "className": "row",
+                  "name": "transfer",
                 },
                 "ref": null,
                 "rendered": Array [
@@ -13604,6 +13619,7 @@ ShallowWrapper {
                     </div>,
                   ],
                   "className": "row",
+                  "name": "IPs",
                 },
                 "ref": null,
                 "rendered": Array [

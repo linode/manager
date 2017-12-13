@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { IndexPage } from './IndexPage';
+import { IndexPage } from './IndexPage.js';
 
 describe('users/IndexPage', () => {
   it('should render without error', () => {

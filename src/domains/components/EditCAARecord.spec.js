@@ -23,6 +23,7 @@ describe('domains/components/EditCAARecord', () => {
     const currentRecord = currentZone._records.records[7];
     const wrapper = shallow(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -38,6 +39,7 @@ describe('domains/components/EditCAARecord', () => {
     const currentRecord = currentZone._records.records[7];
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -65,6 +67,7 @@ describe('domains/components/EditCAARecord', () => {
     const close = sandbox.spy();
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -108,6 +111,7 @@ describe('domains/components/EditCAARecord', () => {
     const close = sandbox.spy();
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

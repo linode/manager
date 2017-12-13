@@ -1063,6 +1063,7 @@ ShallowWrapper {
         </div>
         <FormGroup
           className=""
+          name="submit"
         >
           <SubmitButton
             className="btn-default"
@@ -2052,6 +2053,7 @@ ShallowWrapper {
           ],
           <FormGroup
             className=""
+            name="submit"
           >
             <SubmitButton
               className="btn-default"
@@ -2780,7 +2782,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -2792,7 +2794,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -2804,7 +2806,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -3613,7 +3615,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -3625,7 +3627,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -3637,7 +3639,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -4446,7 +4448,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -4458,7 +4460,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -4470,7 +4472,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -5279,7 +5281,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -5291,7 +5293,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -5303,7 +5305,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -6112,7 +6114,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -6124,7 +6126,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -6136,7 +6138,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -7095,7 +7097,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -7107,7 +7109,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -7119,7 +7121,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -8386,7 +8388,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "0",
                         "nodeType": "host",
                         "props": Object {
                           "children": "None",
@@ -8398,7 +8400,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "1",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Only",
@@ -8410,7 +8412,7 @@ ShallowWrapper {
                       },
                       Object {
                         "instance": null,
-                        "key": undefined,
+                        "key": "2",
                         "nodeType": "host",
                         "props": Object {
                           "children": "Read-Write",
@@ -8922,6 +8924,7 @@ ShallowWrapper {
               />,
             ],
             "className": "",
+            "name": "submit",
           },
           "ref": null,
           "rendered": Array [
@@ -9933,6 +9936,7 @@ ShallowWrapper {
           </div>
           <FormGroup
             className=""
+            name="submit"
           >
             <SubmitButton
               className="btn-default"
@@ -10922,6 +10926,7 @@ ShallowWrapper {
             ],
             <FormGroup
               className=""
+              name="submit"
             >
               <SubmitButton
                 className="btn-default"
@@ -11650,7 +11655,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -11662,7 +11667,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -11674,7 +11679,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -12483,7 +12488,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -12495,7 +12500,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -12507,7 +12512,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -13316,7 +13321,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -13328,7 +13333,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -13340,7 +13345,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -14149,7 +14154,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -14161,7 +14166,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -14173,7 +14178,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -14982,7 +14987,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -14994,7 +14999,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -15006,7 +15011,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -15965,7 +15970,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -15977,7 +15982,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -15989,7 +15994,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -17256,7 +17261,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "0",
                           "nodeType": "host",
                           "props": Object {
                             "children": "None",
@@ -17268,7 +17273,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "1",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Only",
@@ -17280,7 +17285,7 @@ ShallowWrapper {
                         },
                         Object {
                           "instance": null,
-                          "key": undefined,
+                          "key": "2",
                           "nodeType": "host",
                           "props": Object {
                             "children": "Read-Write",
@@ -17792,6 +17797,7 @@ ShallowWrapper {
                 />,
               ],
               "className": "",
+              "name": "submit",
             },
             "ref": null,
             "rendered": Array [
