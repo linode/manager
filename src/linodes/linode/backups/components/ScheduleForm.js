@@ -101,7 +101,7 @@ export class ScheduleForm extends Component {
     if (this.state.loading) {
       return 'Saving';
     }
-    if (this.state.day === 'Scheduling' || this.state.window === '') {
+    if (this.state.day === 'Scheduling' || !this.state.window || this.state.window === '') {
       return 'Save';
     }
   }
@@ -110,7 +110,7 @@ export class ScheduleForm extends Component {
     const { errors, loading, window, day } = this.state;
     const { tz } = this.props;
     const dayIsSet = day !== 'Scheduling';
-    const timeIsSet = window !== '';
+    const timeIsSet = window && window !== '';
     const isScheduled = timeIsSet && dayIsSet;
     const adjustedScheduleOptions = createAdjustedScheduleOptions(tz, day);
     const scheduleOption = find(adjustedScheduleOptions, (i) => i.value === window);
@@ -158,7 +158,7 @@ export class ScheduleForm extends Component {
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>}
-        <FormGroup className="row">
+        <FormGroup name="submit" className="row">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
               disabled={loading || !dayIsSet || !timeIsSet}
