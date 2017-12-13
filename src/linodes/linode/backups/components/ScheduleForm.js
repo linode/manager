@@ -17,7 +17,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 const dayOptions = [
-  { value: 'Scheduling', label: 'Choose a time' },
+  { value: 'Scheduling', label: 'Choose a day' },
   { value: 'Sunday', label: 'Sunday' },
   { value: 'Monday', label: 'Monday' },
   { value: 'Tuesday', label: 'Tuesday' },
@@ -68,7 +68,7 @@ export function createAdjustedScheduleOptions(timezone, day) {
 
   list = sortBy(list, (i) => i.label);
 
-  list.unshift({ label: 'Choose a day', value: '' });
+  list.unshift({ label: 'Choose a time', value: '' });
 
   return list;
 }
@@ -101,7 +101,7 @@ export class ScheduleForm extends Component {
     if (this.state.loading) {
       return 'Saving';
     }
-    if (this.state.day === 'Scheduling') {
+    if (this.state.day === 'Scheduling' || this.state.window === '') {
       return 'Save';
     }
   }
@@ -109,7 +109,9 @@ export class ScheduleForm extends Component {
   render() {
     const { errors, loading, window, day } = this.state;
     const { tz } = this.props;
-    const isScheduled = day !== 'Scheduling';
+    const dayIsSet = day !== 'Scheduling';
+    const timeIsSet = window !== '';
+    const isScheduled = timeIsSet && dayIsSet;
     const adjustedScheduleOptions = createAdjustedScheduleOptions(tz, day);
     const scheduleOption = find(adjustedScheduleOptions, (i) => i.value === window);
     const { start, finish } = scheduleOption;
@@ -120,24 +122,6 @@ export class ScheduleForm extends Component {
         onSubmit={this.onSubmit}
         analytics={{ title: 'Backups Schedule' }}
       >
-        <FormGroup name="window" errors={errors} className="row">
-          <label htmlFor="window" className="col-sm-2 col-form-label">
-            Time of Day ({timezoneAbbr})
-          </label>
-          <div className="col-sm-10">
-            <Select
-              id="window"
-              name="window"
-              value={isScheduled ? window : ''}
-              onChange={this.onChange}
-              options={adjustedScheduleOptions}
-            />
-            {isScheduled && <small className="form-text text-muted">
-              Daily backups will be attempted {start.format('HH:mm z')} - {finish.format('HH:mm z')}.
-            </small>}
-            <FormGroupError errors={errors} name="day" />
-          </div>
-        </FormGroup>
         <FormGroup name="day" errors={errors} className="row">
           <label htmlFor="day" className="col-sm-2 col-form-label">Day of Week</label>
           <div className="col-sm-10 clearfix">
@@ -156,10 +140,28 @@ export class ScheduleForm extends Component {
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>
+        {dayIsSet && <FormGroup name="window" errors={errors} className="row">
+          <label htmlFor="window" className="col-sm-2 col-form-label">
+            Time of Day ({timezoneAbbr})
+          </label>
+          <div className="col-sm-10">
+            <Select
+              id="window"
+              name="window"
+              value={dayIsSet ? window : ''}
+              onChange={this.onChange}
+              options={adjustedScheduleOptions}
+            />
+            {isScheduled && <small className="form-text text-muted">
+              Daily backups will be attempted {start.format('HH:mm z')} - {finish.format('HH:mm z')}.
+            </small>}
+            <FormGroupError errors={errors} name="day" />
+          </div>
+        </FormGroup>}
         <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
-              disabled={loading || !isScheduled}
+              disabled={loading || !dayIsSet || !timeIsSet}
               disabledChildren={this.disabledChildren()}
             />
             <FormSummary errors={errors} success="Schedule settings saved." />
