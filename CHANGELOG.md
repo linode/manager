@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.16.4] 2017-12-12
+### Fixed
+- 0.16.3 changes were lost in a squash
+
 ## [0.16.3] 2017-12-11
 ### Fixed
 - always show user images last (after distributions) (#2838)

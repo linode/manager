@@ -10,7 +10,6 @@ import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 
 export default function DistributionSelect(props) {
   const vendorsOrdered = [...DISTRIBUTION_DISPLAY_ORDER];
-  vendorsOrdered.push('images');
 
   const imageOptions = props.images !== undefined ?
     _.map(Object.values(props.images), im => {
@@ -23,9 +22,14 @@ export default function DistributionSelect(props) {
       // add the value prop for the sake of the Select
       image.value = image.id;
       // add the image's vendor to the order array if it's not already there
-      vendorsOrdered.includes(image.vendorLower) || vendorsOrdered.push(image.vendorLower);
+      if (!vendorsOrdered.includes(image.vendorLower) && image.vendorLower !== 'images') {
+        vendorsOrdered.push(image.vendorLower);
+      }
       return image;
     }) : [];
+
+  // user created images are always displayed last
+  vendorsOrdered.push('images');
 
   const vendoredOptions = _.map(
     _.groupBy(imageOptions, 'vendorLower'),
