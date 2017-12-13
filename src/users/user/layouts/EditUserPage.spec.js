@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -21,11 +21,11 @@ describe('users/user/layouts/EditUserPage', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(<EditUserPage dispatch={mockDispatch} user={testUser} />);
-    expect(wrapper).toMatchSnapshot();
-  });
+  // it('should render without error', () => {
+  //   const mockDispatch = jest.fn();
+  //   const wrapper = shallow(<EditUserPage dispatch={mockDispatch} user={testUser} />);
+  //   expect(wrapper).toMatchSnapshot();
+  // });
 
   it('should commit changes to the API', async () => {
     const page = mount(
