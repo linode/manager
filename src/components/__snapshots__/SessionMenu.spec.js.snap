@@ -1,0 +1,2251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/SessionMenu should render closed without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SessionMenu />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <ul
+        className="SessionMenu-body"
+      >
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/profile"
+          >
+            My Profile
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <a
+            href="mailto:feedback@linode.com"
+          >
+            Submit Feedback
+          </a>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-header"
+        >
+          Account
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/settings"
+          >
+            Account Settings
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/billing"
+          >
+            Billing
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/users"
+          >
+            Users
+          </Link>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-header"
+        >
+          Resources
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://forum.linode.com/"
+          >
+            Community Forum
+          </ExternalLink>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://linode.com/docs"
+          >
+            User Documentation
+          </ExternalLink>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://developers.linode.com"
+          >
+            Developer Documentation
+          </ExternalLink>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/logout"
+          >
+            Log out
+          </Link>
+        </li>
+      </ul>,
+      "className": "SessionMenu ",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-header"
+          >
+            Account
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-header"
+          >
+            Resources
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>
+          </li>,
+        ],
+        "className": "SessionMenu-body",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "My Profile",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/profile",
+            },
+            "ref": null,
+            "rendered": "My Profile",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Submit Feedback",
+              "href": "mailto:feedback@linode.com",
+            },
+            "ref": null,
+            "rendered": "Submit Feedback",
+            "type": "a",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Account",
+            "className": "SessionMenu-header",
+          },
+          "ref": null,
+          "rendered": "Account",
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Account Settings",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/settings",
+            },
+            "ref": null,
+            "rendered": "Account Settings",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Billing",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/billing",
+            },
+            "ref": null,
+            "rendered": "Billing",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Users",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/users",
+            },
+            "ref": null,
+            "rendered": "Users",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Resources",
+            "className": "SessionMenu-header",
+          },
+          "ref": null,
+          "rendered": "Resources",
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Community Forum",
+              "to": "https://forum.linode.com/",
+            },
+            "ref": null,
+            "rendered": "Community Forum",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "User Documentation",
+              "to": "https://linode.com/docs",
+            },
+            "ref": null,
+            "rendered": "User Documentation",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Developer Documentation",
+              "to": "https://developers.linode.com",
+            },
+            "ref": null,
+            "rendered": "Developer Documentation",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Log out",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/logout",
+            },
+            "ref": null,
+            "rendered": "Log out",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+      ],
+      "type": "ul",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <ul
+          className="SessionMenu-body"
+        >
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-header"
+          >
+            Account
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-header"
+          >
+            Resources
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>
+          </li>
+        </ul>,
+        "className": "SessionMenu ",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/profile"
+              >
+                My Profile
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <a
+                href="mailto:feedback@linode.com"
+              >
+                Submit Feedback
+              </a>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-header"
+            >
+              Account
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/settings"
+              >
+                Account Settings
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/billing"
+              >
+                Billing
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/users"
+              >
+                Users
+              </Link>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-header"
+            >
+              Resources
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community Forum
+              </ExternalLink>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://linode.com/docs"
+              >
+                User Documentation
+              </ExternalLink>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://developers.linode.com"
+              >
+                Developer Documentation
+              </ExternalLink>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/logout"
+              >
+                Log out
+              </Link>
+            </li>,
+          ],
+          "className": "SessionMenu-body",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/profile"
+              >
+                My Profile
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "My Profile",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/profile",
+              },
+              "ref": null,
+              "rendered": "My Profile",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <a
+                href="mailto:feedback@linode.com"
+              >
+                Submit Feedback
+              </a>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Submit Feedback",
+                "href": "mailto:feedback@linode.com",
+              },
+              "ref": null,
+              "rendered": "Submit Feedback",
+              "type": "a",
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Account",
+              "className": "SessionMenu-header",
+            },
+            "ref": null,
+            "rendered": "Account",
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/settings"
+              >
+                Account Settings
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Account Settings",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/settings",
+              },
+              "ref": null,
+              "rendered": "Account Settings",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/billing"
+              >
+                Billing
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Billing",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/billing",
+              },
+              "ref": null,
+              "rendered": "Billing",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/users"
+              >
+                Users
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Users",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/users",
+              },
+              "ref": null,
+              "rendered": "Users",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Resources",
+              "className": "SessionMenu-header",
+            },
+            "ref": null,
+            "rendered": "Resources",
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community Forum
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Community Forum",
+                "to": "https://forum.linode.com/",
+              },
+              "ref": null,
+              "rendered": "Community Forum",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://linode.com/docs"
+              >
+                User Documentation
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "User Documentation",
+                "to": "https://linode.com/docs",
+              },
+              "ref": null,
+              "rendered": "User Documentation",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://developers.linode.com"
+              >
+                Developer Documentation
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Developer Documentation",
+                "to": "https://developers.linode.com",
+              },
+              "ref": null,
+              "rendered": "Developer Documentation",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/logout"
+              >
+                Log out
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Log out",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/logout",
+              },
+              "ref": null,
+              "rendered": "Log out",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+        ],
+        "type": "ul",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`components/SessionMenu should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SessionMenu
+    open={true}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <ul
+        className="SessionMenu-body"
+      >
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/profile"
+          >
+            My Profile
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <a
+            href="mailto:feedback@linode.com"
+          >
+            Submit Feedback
+          </a>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-header"
+        >
+          Account
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/settings"
+          >
+            Account Settings
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/billing"
+          >
+            Billing
+          </Link>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/users"
+          >
+            Users
+          </Link>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-header"
+        >
+          Resources
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://forum.linode.com/"
+          >
+            Community Forum
+          </ExternalLink>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://linode.com/docs"
+          >
+            User Documentation
+          </ExternalLink>
+        </li>
+        <li
+          className="SessionMenu-item"
+        >
+          <ExternalLink
+            to="https://developers.linode.com"
+          >
+            Developer Documentation
+          </ExternalLink>
+        </li>
+        <hr />
+        <li
+          className="SessionMenu-item"
+        >
+          <Link
+            onlyActiveOnIndex={false}
+            style={Object {}}
+            to="/logout"
+          >
+            Log out
+          </Link>
+        </li>
+      </ul>,
+      "className": "SessionMenu SessionMenu--open",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-header"
+          >
+            Account
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-header"
+          >
+            Resources
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>
+          </li>,
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>
+          </li>,
+          <hr />,
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>
+          </li>,
+        ],
+        "className": "SessionMenu-body",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "My Profile",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/profile",
+            },
+            "ref": null,
+            "rendered": "My Profile",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Submit Feedback",
+              "href": "mailto:feedback@linode.com",
+            },
+            "ref": null,
+            "rendered": "Submit Feedback",
+            "type": "a",
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Account",
+            "className": "SessionMenu-header",
+          },
+          "ref": null,
+          "rendered": "Account",
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Account Settings",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/settings",
+            },
+            "ref": null,
+            "rendered": "Account Settings",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Billing",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/billing",
+            },
+            "ref": null,
+            "rendered": "Billing",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Users",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/users",
+            },
+            "ref": null,
+            "rendered": "Users",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Resources",
+            "className": "SessionMenu-header",
+          },
+          "ref": null,
+          "rendered": "Resources",
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Community Forum",
+              "to": "https://forum.linode.com/",
+            },
+            "ref": null,
+            "rendered": "Community Forum",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "User Documentation",
+              "to": "https://linode.com/docs",
+            },
+            "ref": null,
+            "rendered": "User Documentation",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Developer Documentation",
+              "to": "https://developers.linode.com",
+            },
+            "ref": null,
+            "rendered": "Developer Documentation",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "hr",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>,
+            "className": "SessionMenu-item",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "children": "Log out",
+              "onlyActiveOnIndex": false,
+              "style": Object {},
+              "to": "/logout",
+            },
+            "ref": null,
+            "rendered": "Log out",
+            "type": [Function],
+          },
+          "type": "li",
+        },
+      ],
+      "type": "ul",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <ul
+          className="SessionMenu-body"
+        >
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/profile"
+            >
+              My Profile
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <a
+              href="mailto:feedback@linode.com"
+            >
+              Submit Feedback
+            </a>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-header"
+          >
+            Account
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/settings"
+            >
+              Account Settings
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/billing"
+            >
+              Billing
+            </Link>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/users"
+            >
+              Users
+            </Link>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-header"
+          >
+            Resources
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://forum.linode.com/"
+            >
+              Community Forum
+            </ExternalLink>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://linode.com/docs"
+            >
+              User Documentation
+            </ExternalLink>
+          </li>
+          <li
+            className="SessionMenu-item"
+          >
+            <ExternalLink
+              to="https://developers.linode.com"
+            >
+              Developer Documentation
+            </ExternalLink>
+          </li>
+          <hr />
+          <li
+            className="SessionMenu-item"
+          >
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/logout"
+            >
+              Log out
+            </Link>
+          </li>
+        </ul>,
+        "className": "SessionMenu SessionMenu--open",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/profile"
+              >
+                My Profile
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <a
+                href="mailto:feedback@linode.com"
+              >
+                Submit Feedback
+              </a>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-header"
+            >
+              Account
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/settings"
+              >
+                Account Settings
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/billing"
+              >
+                Billing
+              </Link>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/users"
+              >
+                Users
+              </Link>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-header"
+            >
+              Resources
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community Forum
+              </ExternalLink>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://linode.com/docs"
+              >
+                User Documentation
+              </ExternalLink>
+            </li>,
+            <li
+              className="SessionMenu-item"
+            >
+              <ExternalLink
+                to="https://developers.linode.com"
+              >
+                Developer Documentation
+              </ExternalLink>
+            </li>,
+            <hr />,
+            <li
+              className="SessionMenu-item"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/logout"
+              >
+                Log out
+              </Link>
+            </li>,
+          ],
+          "className": "SessionMenu-body",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/profile"
+              >
+                My Profile
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "My Profile",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/profile",
+              },
+              "ref": null,
+              "rendered": "My Profile",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <a
+                href="mailto:feedback@linode.com"
+              >
+                Submit Feedback
+              </a>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Submit Feedback",
+                "href": "mailto:feedback@linode.com",
+              },
+              "ref": null,
+              "rendered": "Submit Feedback",
+              "type": "a",
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Account",
+              "className": "SessionMenu-header",
+            },
+            "ref": null,
+            "rendered": "Account",
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/settings"
+              >
+                Account Settings
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Account Settings",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/settings",
+              },
+              "ref": null,
+              "rendered": "Account Settings",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/billing"
+              >
+                Billing
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Billing",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/billing",
+              },
+              "ref": null,
+              "rendered": "Billing",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/users"
+              >
+                Users
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Users",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/users",
+              },
+              "ref": null,
+              "rendered": "Users",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Resources",
+              "className": "SessionMenu-header",
+            },
+            "ref": null,
+            "rendered": "Resources",
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://forum.linode.com/"
+              >
+                Community Forum
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Community Forum",
+                "to": "https://forum.linode.com/",
+              },
+              "ref": null,
+              "rendered": "Community Forum",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://linode.com/docs"
+              >
+                User Documentation
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "User Documentation",
+                "to": "https://linode.com/docs",
+              },
+              "ref": null,
+              "rendered": "User Documentation",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <ExternalLink
+                to="https://developers.linode.com"
+              >
+                Developer Documentation
+              </ExternalLink>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Developer Documentation",
+                "to": "https://developers.linode.com",
+              },
+              "ref": null,
+              "rendered": "Developer Documentation",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "hr",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/logout"
+              >
+                Log out
+              </Link>,
+              "className": "SessionMenu-item",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "children": "Log out",
+                "onlyActiveOnIndex": false,
+                "style": Object {},
+                "to": "/logout",
+              },
+              "ref": null,
+              "rendered": "Log out",
+              "type": [Function],
+            },
+            "type": "li",
+          },
+        ],
+        "type": "ul",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;
