@@ -31,31 +31,25 @@ export default class VolumesList extends Component {
     super(props);
 
     this.state = { filter: '' };
-
-    this.deleteVolumes = this.deleteVolumes.bind(this);
-    this.detachVolumes = this.detachVolumes.bind(this);
-    this.renderAttached = this.renderAttached.bind(this);
-    this.renderVolumeActions = this.renderVolumeActions.bind(this);
   }
 
-  detachVolumes() {
-    return confirmThenDelete(
-      this.props.dispatch,
-      'volume',
-      this.removeFromLinodeAndCall(detachVolume),
-      this.props.objectType,
-      undefined,
-      'detach',
-      'detaching');
-  }
+  detachVolumes = () => confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(detachVolume),
+    this.props.objectType,
+    undefined,
+    'detach',
+    'detaching'
+  );
 
-  deleteVolumes() {
-    return confirmThenDelete(
-      this.props.dispatch,
-      'volume',
-      this.removeFromLinodeAndCall(api.volumes.delete),
-      this.props.objectType);
-  }
+
+  deleteVolumes = () => confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(api.volumes.delete),
+    this.props.objectType
+  );
 
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {

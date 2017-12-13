@@ -61,7 +61,7 @@ export class PaymentPage extends Component {
                   headerClassName: 'IntegerColumn text-right',
                   className: 'text-right',
                   formatFn: (usd) => {
-                    return <Currency value={usd} />;
+                    return <Currency value={-usd} />;
                   },
                 },
               ]}
@@ -70,7 +70,7 @@ export class PaymentPage extends Component {
             />
             <div className="row">
               <div className="col-sm-12 text-right">
-                <strong>Payment Total: {<Currency value={payment.usd} />}</strong>
+                <strong>Payment Total: <Currency value={-payment.usd} /></strong>
               </div>
             </div>
           </Card>
