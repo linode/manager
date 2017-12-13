@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { ListGroup } from 'linode-components/lists/bodies';
+import { ListGroup } from 'linode-components';
 
 
 describe('components/lists/ListGroup', function () {

@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
+import { ExternalLink } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
@@ -17,8 +18,8 @@ export class StackScriptPage extends Component {
   static async preload({ dispatch, getState }, { stackscriptId }) {
     const requests = [api.stackscripts.one([stackscriptId])];
 
-    if (!getState().api.distributions.ids.length) {
-      requests.push(api.distributions.all());
+    if (!getState().api.images.ids.length) {
+      requests.push(api.images.all());
     }
 
     return Promise.all(requests.map(dispatch));
@@ -30,7 +31,7 @@ export class StackScriptPage extends Component {
   }
 
   render() {
-    const { stackscript, dispatch, distributions } = this.props;
+    const { stackscript, dispatch, images } = this.props;
 
     return (
       <div>
@@ -53,7 +54,7 @@ export class StackScriptPage extends Component {
                   <Settings
                     dispatch={dispatch}
                     stackscript={stackscript}
-                    distributions={distributions}
+                    images={_.filter(images, i => i.is_public)}
                   />
                 </Card>
               </section>
@@ -92,13 +93,13 @@ export class StackScriptPage extends Component {
 StackScriptPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   stackscript: PropTypes.object.isRequired,
-  distributions: PropTypes.object.isRequired,
+  images: PropTypes.object.isRequired,
 };
 
 function select(state, props) {
   return {
     stackscript: state.api.stackscripts.stackscripts[props.params.stackscriptId],
-    distributions: state.api.distributions.distributions,
+    images: state.api.images.images,
   };
 }
 

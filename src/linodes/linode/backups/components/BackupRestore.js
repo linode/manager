@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Checkbox,
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { ConfirmModalBody } from 'linode-components/modals';
+} from 'linode-components';
+import { onChange } from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/ad-hoc/backups';

@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { DeleteModalBody } from 'linode-components/modals';
-import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { Table } from 'linode-components/tables';
-import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
+import { DeleteModalBody } from 'linode-components';
+import { PrimaryButton } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { Table } from 'linode-components';
+import { ButtonCell, LabelCell } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';

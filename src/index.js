@@ -7,8 +7,8 @@ import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import Raven from 'raven-js';
 
-import { InternalError, NotFound } from 'linode-components/errors';
-import { ModalShell } from 'linode-components/modals';
+import { InternalError, NotFound } from 'linode-components';
+import { ModalShell } from 'linode-components';
 
 import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';

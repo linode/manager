@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { CancelButton, ExternalLink } from 'linode-components/buttons';
+import { CancelButton, ExternalLink } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -18,8 +18,8 @@ import {
   Checkboxes,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';

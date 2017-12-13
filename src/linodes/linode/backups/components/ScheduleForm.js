@@ -9,8 +9,8 @@ import {
   FormSummary,
   Select,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 import { sortBy, find } from 'lodash';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -48,12 +48,12 @@ export function createAdjustedScheduleOptions(timezone, day) {
   const list = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
     const start = moment.utc({ hour })
       .day(idx)
-      .add(1, 'hours')
+      .add(moment.duration({ hours: 1 }))
       .tz(timezone);
 
     const finish = moment.utc({ hour })
       .day(idx)
-      .add(3, 'hours')
+      .add(moment.duration({ hours: 3 }))
       .tz(timezone);
 
     return {

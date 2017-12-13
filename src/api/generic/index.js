@@ -1,8 +1,8 @@
 // Add file names to this list for their actions and reducers to be exported.
 const generics = [
-  'distributions', 'regions', 'types', 'linodes', 'volumes', 'stackscripts', 'kernels', 'domains',
+  'images', 'regions', 'types', 'linodes', 'volumes', 'stackscripts', 'kernels', 'domains',
   'nodebalancers', 'profile', 'account', 'events', 'tokens', 'clients', 'users', 'tickets', 'apps',
-  'invoices', 'payments', 'images', 'banners',
+  'invoices', 'payments', 'banners',
 ];
 
 // eslint-disable-next-line global-require

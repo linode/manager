@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { Dropdown } from 'linode-components/dropdowns';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
-import { Table } from 'linode-components/tables';
-import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
+import { PrimaryButton } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { Dropdown } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { Table } from 'linode-components';
+import { CheckboxCell, LabelCell, TableCell } from 'linode-components';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
@@ -91,7 +91,7 @@ export default class Disks extends Component {
   }
 
   render() {
-    const { dispatch, linode, distributions, images, selectedMap } = this.props;
+    const { dispatch, linode, images, selectedMap } = this.props;
     const { filter } = this.state;
     const disks = Object.values(linode._disks.disks);
     const free = this.freeSpace();
@@ -104,7 +104,7 @@ export default class Disks extends Component {
       <PrimaryButton
         className="float-right"
         buttonClass="btn-default"
-        onClick={() => AddDisk.trigger(dispatch, linode, distributions, images, free)}
+        onClick={() => AddDisk.trigger(dispatch, linode, images, free)}
       >
         Add a Disk
       </PrimaryButton>
@@ -168,7 +168,6 @@ export default class Disks extends Component {
 Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
-  distributions: PropTypes.object.isRequired,
-  images: PropTypes.object,
+  images: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
 };

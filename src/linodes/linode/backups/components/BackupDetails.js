@@ -2,8 +2,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import { Card, CardHeader } from 'linode-components';
+import { Form, FormGroup, SubmitButton } from 'linode-components';
 
 import TimeDisplay from '~/components/TimeDisplay';
 import Region from '~/linodes/components/Region';

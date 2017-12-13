@@ -100,7 +100,7 @@ function createTestLinode(id) {
     memory: 2048,
     disk: 20480,
     vcpus: 2,
-    distribution: {
+    image: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
       label: 'Ubuntu 15.10',
@@ -479,7 +479,11 @@ export const testLinode1245 = {
 
 export const testLinode1246 = {
   ...createTestLinode(1246),
-  distribution: null,
+  image: {
+    id: null,
+    label: 'Unknown',
+    vendor: 'unknown',
+  },
 };
 
 const rdnsIP1247 = { ...createTestIPv4(1247), rdns: 'host.rdns.tld' };

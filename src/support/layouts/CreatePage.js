@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 import {
   Input,
   Select,
@@ -14,8 +14,8 @@ import {
   FormSummary,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';

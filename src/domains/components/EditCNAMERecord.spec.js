@@ -6,7 +6,7 @@ import EditCNAMERecord from '~/domains/components/EditCNAMERecord';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
-import { Input } from 'linode-components/forms/';
+import { Input } from 'linode-components';
 import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 describe('domains/components/EditCNAMERecord', () => {

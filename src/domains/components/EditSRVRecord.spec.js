@@ -3,7 +3,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import EditSRVRecord from '~/domains/components/EditSRVRecord';
-import { Input, Select } from 'linode-components/forms';
+import { Input, Select } from 'linode-components';
 import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';

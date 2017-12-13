@@ -24,12 +24,12 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     const page = mount(
       <RebuildPage
         dispatch={dispatch}
-        distributions={api.distributions.distributions}
+        images={api.images.images}
         linode={testLinode}
       />
     );
 
-    changeInput(page, 'distribution', 'linode/debian7');
+    changeInput(page, 'image', 'linode/debian7');
     changeInput(page, 'password', 'new password');
 
     dispatch.reset();
@@ -46,7 +46,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
       ([fn]) => expectRequest(fn, '/linode/instances/1234/rebuild', {
         method: 'POST',
         body: {
-          distribution: 'linode/debian7',
+          image: 'linode/debian7',
           root_pass: 'new password',
         },
       }, {
