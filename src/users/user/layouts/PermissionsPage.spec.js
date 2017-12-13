@@ -17,12 +17,6 @@ describe('users/user/layouts/PermissionsPage', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(<PermissionsPage dispatch={mockDispatch} user={testUser2} />);
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders permissions', () => {
     const page = mount(
       <PermissionsPage
