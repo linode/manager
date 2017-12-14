@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 
-import { PasswordInput } from 'linode-components/forms';
+import { PasswordInput } from 'linode-components';
 
 describe('components/forms/PasswordInput', () => {
   const sandbox = sinon.sandbox.create();

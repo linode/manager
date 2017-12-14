@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -12,8 +12,8 @@ import {
   SubmitButton,
   Textarea,
   Input,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';

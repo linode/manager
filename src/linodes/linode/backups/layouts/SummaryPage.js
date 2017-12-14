@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Form, SubmitButton, FormSummary } from 'linode-components/forms';
-import { Card, CardHeader } from 'linode-components/cards';
+import { Form, SubmitButton, FormSummary } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
 
 import { TimeDisplay } from '~/components';
 

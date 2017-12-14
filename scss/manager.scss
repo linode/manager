@@ -1,6 +1,5 @@
 // TODO: these need to be imported through shared package
-@import '../components/scss/linode-components';
-@import '../styleguide/scss/index';
+@import '../node_modules/linode-components/scss/linode-components';
 
 @import 'components/index';
 @import 'layout/index';

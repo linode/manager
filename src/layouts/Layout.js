@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Error } from 'linode-components/errors';
-import { ModalShell } from 'linode-components/modals';
+import { ExternalLink } from 'linode-components';
+import { Error } from 'linode-components';
+import { ModalShell } from 'linode-components';
 
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup, PasswordInput } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, ModalFormGroup, PasswordInput } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -19,12 +19,12 @@ import PlanSelect from './PlanSelect';
 export default class AddLinode extends Component {
   static title = 'Add a Linode'
 
-  static trigger(dispatch, distributions, plans) {
+  static trigger(dispatch, images, plans) {
     return dispatch(showModal(AddLinode.title, (
       <AddLinode
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
-        distributions={distributions}
+        images={images}
         plans={plans}
       />
     )));
@@ -40,20 +40,20 @@ export default class AddLinode extends Component {
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    const { label, distribution, region, plan, backups, password } = this.state;
+    const { label, image, region, plan, backups, password } = this.state;
 
     const data = {
       label,
-      distribution,
+      image,
       region,
       type: plan,
       backups_enabled: backups,
       root_pass: password,
     };
 
-    if (distribution === 'none') {
+    if (image === 'none') {
       delete data.root_pass;
-      delete data.distribution;
+      delete data.image;
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -63,8 +63,8 @@ export default class AddLinode extends Component {
   }
 
   render() {
-    const { close, distributions, plans } = this.props;
-    const { errors, label, distribution, region, plan, backups, password } = this.state;
+    const { close, images, plans } = this.props;
+    const { errors, label, image, region, plan, backups, password } = this.state;
 
     return (
       <FormModalBody
@@ -87,15 +87,15 @@ export default class AddLinode extends Component {
           </ModalFormGroup>
           <ModalFormGroup
             label="Image"
-            id="distribution"
-            apiKey="distribution"
+            id="image"
+            apiKey="image"
             errors={errors}
           >
             <DistributionSelect
-              distributions={distributions}
-              value={distribution}
-              name="distribution"
-              id="distribution"
+              images={images}
+              value={image}
+              name="image"
+              id="image"
               onChange={this.onChange}
               allowNone
             />
@@ -123,7 +123,7 @@ export default class AddLinode extends Component {
               name="password"
               id="password"
               onChange={this.onChange}
-              disabled={distribution === 'none'}
+              disabled={image === 'none'}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
@@ -145,6 +145,6 @@ export default class AddLinode extends Component {
 AddLinode.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  distributions: PropTypes.object.isRequired,
+  images: PropTypes.object.isRequired,
   plans: PropTypes.object.isRequired,
 };

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 
 export const FIVE_MINUTES = 300;

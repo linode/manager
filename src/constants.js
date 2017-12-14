@@ -53,7 +53,7 @@ export const LinodeStatesReadable = {
   booting: 'Powering On',
   provisioning: 'Provisioning',
   rebooting: 'Rebooting',
-  rebuilding: 'Powering Off',
+  rebuilding: 'Rebuilding',
   restoring: 'Restoring',
 };
 
@@ -255,7 +255,6 @@ export const DISTRIBUTION_DISPLAY_ORDER = [
   'opensuse',
   'gentoo',
   'slackware',
-  'images',
 ];
 
 export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';

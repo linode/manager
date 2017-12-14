@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { AddSlave } from '~/domains/components';
-import { Textarea, Input } from 'linode-components/forms';
+import { Textarea, Input } from 'linode-components';
 
 import {
   expectDispatchOrStoreErrors, expectRequest, createSimulatedEvent,

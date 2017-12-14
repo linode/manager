@@ -2,22 +2,23 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { Dropdown } from 'linode-components/dropdowns';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
-import { ListBody } from 'linode-components/lists/bodies';
+import _ from 'lodash';
+import { PrimaryButton } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
+import { Dropdown } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { ListBody } from 'linode-components';
 import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
-import { DeleteModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components';
 import {
   LabelCell,
   CheckboxCell,
   TableCell,
-} from 'linode-components/tables/cells';
+} from 'linode-components';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
@@ -145,9 +146,11 @@ export class IndexPage extends Component {
                 label: 'Created',
               },
               {
-                cellComponent: TimeCell,
-                timeKey: 'last_used',
-                label: 'Deployed',
+                cellComponent: LabelCell,
+                dataKey: 'status',
+                headerClassName: 'StatusColumn',
+                titleKey: 'status',
+                label: 'Status',
               },
               { cellComponent: this.renderImageActions },
             ]}
@@ -181,7 +184,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(images.images).length ?
-            this.renderImages(images.images) :
+            this.renderImages(_.filter(images.images, i => !i.is_public)) :
             <CreateHelper
               label="Images"
               onClick={() => AddImage.trigger(dispatch, linodes)}

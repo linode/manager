@@ -2,15 +2,15 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { LinkButton } from 'linode-components/buttons';
-import { Dropdown } from 'linode-components/dropdowns';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { ListHeader } from 'linode-components/lists/headers';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { Table } from 'linode-components/tables';
-import { CheckboxCell, LabelCell, TableCell } from 'linode-components/tables/cells';
+import { LinkButton } from 'linode-components';
+import { Dropdown } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { Table } from 'linode-components';
+import { CheckboxCell, LabelCell, TableCell } from 'linode-components';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
@@ -31,31 +31,25 @@ export default class VolumesList extends Component {
     super(props);
 
     this.state = { filter: '' };
-
-    this.deleteVolumes = this.deleteVolumes.bind(this);
-    this.detachVolumes = this.detachVolumes.bind(this);
-    this.renderAttached = this.renderAttached.bind(this);
-    this.renderVolumeActions = this.renderVolumeActions.bind(this);
   }
 
-  detachVolumes() {
-    return confirmThenDelete(
-      this.props.dispatch,
-      'volume',
-      this.removeFromLinodeAndCall(detachVolume),
-      this.props.objectType,
-      undefined,
-      'detach',
-      'detaching');
-  }
+  detachVolumes = () => confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(detachVolume),
+    this.props.objectType,
+    undefined,
+    'detach',
+    'detaching'
+  );
 
-  deleteVolumes() {
-    return confirmThenDelete(
-      this.props.dispatch,
-      'volume',
-      this.removeFromLinodeAndCall(api.volumes.delete),
-      this.props.objectType);
-  }
+
+  deleteVolumes = () => confirmThenDelete(
+    this.props.dispatch,
+    'volume',
+    this.removeFromLinodeAndCall(api.volumes.delete),
+    this.props.objectType
+  );
 
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {
@@ -121,19 +115,20 @@ export default class VolumesList extends Component {
       {
         elements: [
           {
-            name: 'Edit', action: () =>
-              AddEditVolume.trigger(dispatch, linodes, record),
+            name: 'Edit',
+            action: () => AddEditVolume.trigger(dispatch, linodes, record),
           },
           {
             name: 'Resize',
             action: () => ResizeVolume.trigger(dispatch, record),
           },
-          record.linode_id === null ?
-            {
-              name: 'Attach', action: () =>
-                AttachVolume.trigger(dispatch, linodes, record),
-            } :
-            { name: 'Detach', action: () => this.detachVolumes(record) },
+          record.linode_id === null ? {
+            name: 'Attach',
+            action: () => AttachVolume.trigger(dispatch, linodes, record),
+          } : {
+            name: 'Detach',
+            action: () => this.detachVolumes(record),
+          },
         ],
       },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },

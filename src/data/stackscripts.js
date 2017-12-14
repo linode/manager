@@ -2,9 +2,9 @@ export const apiTestStackScript = {
   id: 37,
   label: 'Example StackScript',
   description: 'Installs the Linode API bindings',
-  distributions: [
-    {},
-    {},
+  images: [
+    'linode/debian7',
+    'linode/debian8',
   ],
   deployments_total: 150,
   deployments_active: 42,

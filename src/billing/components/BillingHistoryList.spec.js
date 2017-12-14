@@ -7,7 +7,7 @@ import { api } from '~/data';
 import { account } from '~/data/account';
 
 
-const { invoices } = api;
+const { invoices, payments } = api;
 
 describe('billing/components/BillingHistoryList', () => {
   const sandbox = sinon.sandbox.create();
@@ -24,10 +24,11 @@ describe('billing/components/BillingHistoryList', () => {
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}
+        payments={payments.payments}
       />
     );
 
-    const rowCount = Object.keys(invoices.invoices).length;
-    expect(page.find('.TableRow').length).toEqual(rowCount);
+    const rowCount = Object.keys(invoices.invoices).length + payments.payments.length;
+    expect(page.find('.TableRow').length).toBe(rowCount);
   });
 });

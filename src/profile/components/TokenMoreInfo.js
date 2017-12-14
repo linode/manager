@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ConfirmModalBody } from 'linode-components/modals';
-import { Table } from 'linode-components/tables';
+import { ConfirmModalBody } from 'linode-components';
+import { Table } from 'linode-components';
 import { AuthScopeCell } from '~/components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';

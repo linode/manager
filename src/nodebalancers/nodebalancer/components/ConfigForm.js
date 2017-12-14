@@ -12,8 +12,8 @@ import {
   Checkbox,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';

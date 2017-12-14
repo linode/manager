@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { NotFound } from 'linode-components/errors';
+import { NotFound } from 'linode-components';
 
 describe('layouts/NotFound', () => {
   it('should return 404 Not Found', () => {
