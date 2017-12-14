@@ -49,8 +49,10 @@ describe('profile/layouts/MyAPIClientsPage', () => {
     expect(firstClient.find('td').at(2).text())
       .toBe('My client');
     expect(firstClient.find('td').at(3).text())
-      .toBe('1');
+      .toBe('Private');
     expect(firstClient.find('td').at(4).text())
+      .toBe('1');
+    expect(firstClient.find('td').at(5).text())
       .toBe('http://localhost:3000/oauth/callback');
   });
 

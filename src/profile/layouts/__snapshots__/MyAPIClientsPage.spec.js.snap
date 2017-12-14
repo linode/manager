@@ -134,10 +134,15 @@ ShallowWrapper {
                     "tooltipEnabled": true,
                   },
                   Object {
+                    "dataFn": [Function],
+                    "label": "Access",
+                  },
+                  Object {
                     "dataKey": "id",
                     "label": "ID",
                   },
                   Object {
+                    "className": "u-hscroll-overflow",
                     "dataKey": "redirect_uri",
                     "label": "Redirect URI",
                   },
@@ -292,10 +297,15 @@ ShallowWrapper {
                       "tooltipEnabled": true,
                     },
                     Object {
+                      "dataFn": [Function],
+                      "label": "Access",
+                    },
+                    Object {
                       "dataKey": "id",
                       "label": "ID",
                     },
                     Object {
+                      "className": "u-hscroll-overflow",
                       "dataKey": "redirect_uri",
                       "label": "Redirect URI",
                     },
@@ -522,10 +532,15 @@ ShallowWrapper {
                       "tooltipEnabled": true,
                     },
                     Object {
+                      "dataFn": [Function],
+                      "label": "Access",
+                    },
+                    Object {
                       "dataKey": "id",
                       "label": "ID",
                     },
                     Object {
+                      "className": "u-hscroll-overflow",
                       "dataKey": "redirect_uri",
                       "label": "Redirect URI",
                     },
@@ -578,10 +593,15 @@ ShallowWrapper {
                     "tooltipEnabled": true,
                   },
                   Object {
+                    "dataFn": [Function],
+                    "label": "Access",
+                  },
+                  Object {
                     "dataKey": "id",
                     "label": "ID",
                   },
                   Object {
+                    "className": "u-hscroll-overflow",
                     "dataKey": "redirect_uri",
                     "label": "Redirect URI",
                   },
@@ -714,10 +734,15 @@ ShallowWrapper {
                       "tooltipEnabled": true,
                     },
                     Object {
+                      "dataFn": [Function],
+                      "label": "Access",
+                    },
+                    Object {
                       "dataKey": "id",
                       "label": "ID",
                     },
                     Object {
+                      "className": "u-hscroll-overflow",
                       "dataKey": "redirect_uri",
                       "label": "Redirect URI",
                     },
@@ -872,10 +897,15 @@ ShallowWrapper {
                         "tooltipEnabled": true,
                       },
                       Object {
+                        "dataFn": [Function],
+                        "label": "Access",
+                      },
+                      Object {
                         "dataKey": "id",
                         "label": "ID",
                       },
                       Object {
+                        "className": "u-hscroll-overflow",
                         "dataKey": "redirect_uri",
                         "label": "Redirect URI",
                       },
@@ -1102,10 +1132,15 @@ ShallowWrapper {
                         "tooltipEnabled": true,
                       },
                       Object {
+                        "dataFn": [Function],
+                        "label": "Access",
+                      },
+                      Object {
                         "dataKey": "id",
                         "label": "ID",
                       },
                       Object {
+                        "className": "u-hscroll-overflow",
                         "dataKey": "redirect_uri",
                         "label": "Redirect URI",
                       },
@@ -1158,10 +1193,15 @@ ShallowWrapper {
                       "tooltipEnabled": true,
                     },
                     Object {
+                      "dataFn": [Function],
+                      "label": "Access",
+                    },
+                    Object {
                       "dataKey": "id",
                       "label": "ID",
                     },
                     Object {
+                      "className": "u-hscroll-overflow",
                       "dataKey": "redirect_uri",
                       "label": "Redirect URI",
                     },

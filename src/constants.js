@@ -53,7 +53,7 @@ export const LinodeStatesReadable = {
   booting: 'Powering On',
   provisioning: 'Provisioning',
   rebooting: 'Rebooting',
-  rebuilding: 'Powering Off',
+  rebuilding: 'Rebuilding',
   restoring: 'Restoring',
 };
 
