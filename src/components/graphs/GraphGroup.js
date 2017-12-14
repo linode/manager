@@ -124,6 +124,8 @@ export class GraphGroup extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {};
+
     this.onChange = onChange.bind(this);
   }
 
@@ -164,9 +166,6 @@ export class GraphGroup extends Component {
 
     return (
       <div className="GraphGroup">
-        <div className="Menu">
-          <div className="Menu-item Menu-item--right">Last 24 Hours</div>
-        </div>
         <div className="row">{graphs}</div>
       </div>
     );
