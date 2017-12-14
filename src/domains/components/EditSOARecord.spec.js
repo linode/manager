@@ -18,6 +18,18 @@ describe('domains/components/EditSOARecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains[1];
+    const wrapper = shallow(
+      <EditSOARecord
+        dispatch={() => { }}
+        domains={currentZone}
+        close={() => () => { }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains[1];
     const wrapper = shallow(

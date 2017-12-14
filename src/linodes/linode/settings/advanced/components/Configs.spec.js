@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,6 +17,18 @@ describe('linodes/linode/settings/advanced/components/Configs', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <Configs
+        dispatch={dispatch}
+        selectedMap={{}}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it.skip('renders a list of configs', () => {
     const page = mount(

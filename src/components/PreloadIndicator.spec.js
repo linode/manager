@@ -3,6 +3,14 @@ import { shallow } from 'enzyme';
 import { PreloadIndicator } from '~/components/PreloadIndicator';
 
 describe('components/PreloadIndicator', () => {
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <PreloadIndicator mode="running" />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('uses the given mode for the css class', () => {
     const indicator = shallow(<PreloadIndicator mode="running" />);
 

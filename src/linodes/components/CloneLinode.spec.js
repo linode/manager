@@ -8,7 +8,6 @@ import { CloneLinode } from '~/linodes/components';
 import {
   changeInput,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 
@@ -52,7 +51,7 @@ describe('linodes/components/CloneLinode', function () {
           backups_enabled: true,
         },
       }, { id: 1 }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-linode')),
     ], 2, [{ label: 'my-linode' }]);
   });
 });

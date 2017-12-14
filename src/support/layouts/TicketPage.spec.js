@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,13 +17,25 @@ describe('support/layouts/TicketPage', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <TicketPage
+        ticket={testTicket}
+        replies={testTicket._replies.replies}
+        dispatch={mockDispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders each response', () => {
     const { replies } = testTicket._replies;
     const page = mount(
       <TicketPage
         ticket={testTicket}
         replies={testTicket._replies.replies}
-        dispatch={() => {}}
+        dispatch={() => { }}
       />
     );
 

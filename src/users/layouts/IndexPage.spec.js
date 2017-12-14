@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -22,6 +22,14 @@ describe('users/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage dispatch={mockDispatch} selectedMap={{}} profile={profile} users={users} />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it('renders a list of Users', () => {
     const page = mount(
@@ -84,7 +92,7 @@ describe('users/layouts/IndexPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    modal.find('Form').props().onSubmit({ preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/account/users/testuser1', { method: 'DELETE' });
   });

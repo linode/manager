@@ -18,6 +18,16 @@ describe('linodes/components/ConfigSelectModalBody', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <ConfigSelectModalBody
+        linode={linodes.linodes['1238']}
+        action={powerOnLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('renders power on button text', () => {
     const modal = shallow(
       <ConfigSelectModalBody

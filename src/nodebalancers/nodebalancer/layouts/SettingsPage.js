@@ -91,7 +91,7 @@ export class SettingsPage extends Component {
               </small></div>
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-3 col-sm-9">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Settings saved." />

@@ -1,0 +1,2210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`linodes/linode/settings/advanced/components/AddDisk should render without errors 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <AddDisk
+    dispatch={[Function]}
+    free={4096}
+    images={
+      Object {
+        "ids": Array [
+          "private/38",
+          "private/39",
+          "linode/arch2016.05",
+          "linode/debian7",
+          "linode/debian8.1",
+          "linode/debian6",
+        ],
+        "images": Object {
+          "linode/arch2016.05": Object {
+            "_polling": false,
+            "created": "2009-01-01T00:00:00",
+            "creator": "linode",
+            "deprecated": false,
+            "description": "Test Image",
+            "filesystem": "ext4",
+            "id": "linode/arch2016.05",
+            "is_public": true,
+            "label": "Arch Linux 2016.05",
+            "last_used": "2009-08-17T00:00:00",
+            "min_deploy_size": 550,
+            "recommended": true,
+            "status": "available",
+            "type": "manual",
+            "vendor": "Arch",
+          },
+          "linode/debian6": Object {
+            "_polling": false,
+            "created": "2009-01-01T00:00:00",
+            "creator": "linode",
+            "deprecated": false,
+            "description": "Test Image",
+            "filesystem": "ext4",
+            "id": "linode/debian6",
+            "is_public": true,
+            "label": "Debian 6",
+            "last_used": "2009-08-17T00:00:00",
+            "min_deploy_size": 550,
+            "recommended": false,
+            "status": "available",
+            "type": "manual",
+            "vendor": "Debian",
+          },
+          "linode/debian7": Object {
+            "_polling": false,
+            "created": "2009-01-01T00:00:00",
+            "creator": "linode",
+            "deprecated": false,
+            "description": "Test Image",
+            "filesystem": "ext4",
+            "id": "linode/debian7",
+            "is_public": true,
+            "label": "Debian 7",
+            "last_used": "2009-08-17T00:00:00",
+            "min_deploy_size": 550,
+            "recommended": true,
+            "status": "available",
+            "type": "manual",
+            "vendor": "Debian",
+          },
+          "linode/debian8.1": Object {
+            "_polling": false,
+            "created": "2009-01-01T00:00:00",
+            "creator": "linode",
+            "deprecated": false,
+            "description": "Test Image",
+            "filesystem": "ext4",
+            "id": "linode/debian8.1",
+            "is_public": true,
+            "label": "Debian 8.1",
+            "last_used": "2009-08-17T00:00:00",
+            "min_deploy_size": 550,
+            "recommended": true,
+            "status": "available",
+            "type": "manual",
+            "vendor": "Debian",
+          },
+          "private/38": Object {
+            "_polling": false,
+            "created": "2017-08-08T13:55:16",
+            "creator": "zues",
+            "deprecated": false,
+            "description": "image details",
+            "filesystem": "ext4",
+            "id": "private/38",
+            "is_public": false,
+            "label": "testImage",
+            "last_used": "2017-089-08T13:55:16",
+            "min_deploy_size": 2048,
+            "recommended": true,
+            "status": "available",
+            "type": "manual",
+            "vendor": "Unknown",
+          },
+          "private/39": Object {
+            "_polling": false,
+            "created": "2017-08-08T13:55:16",
+            "creator": "zues",
+            "deprecated": false,
+            "description": "image from deleted disk",
+            "filesystem": "raw",
+            "id": "private/39",
+            "is_public": false,
+            "label": "nextImage",
+            "last_used": "2017-089-08T13:55:16",
+            "min_deploy_size": 2048,
+            "recommended": true,
+            "status": "available",
+            "type": "automatic",
+            "vendor": "Unknown",
+          },
+        },
+        "pagesFetched": Array [
+          1,
+        ],
+        "plural": "images",
+        "singular": "image",
+        "totalPages": 1,
+        "totalResults": 6,
+      }
+    }
+    linode={
+      Object {
+        "_backups": Object {
+          "daily": null,
+          "snapshot": Object {
+            "current": null,
+            "in_progress": null,
+          },
+          "weekly": Array [],
+        },
+        "_configs": Object {
+          "configs": Object {
+            "12345": Object {
+              "comments": "Test comments",
+              "created": "2015-09-29 11:21:38 +0000",
+              "devices": Object {
+                "sda": Object {
+                  "disk_id": 12345,
+                },
+                "sdb": Object {
+                  "disk_id": 12346,
+                },
+                "sdc": null,
+                "sdd": null,
+                "sde": null,
+                "sdf": null,
+                "sdg": null,
+                "sdh": null,
+              },
+              "helpers": Object {
+                "devtmpfs_automount": false,
+                "distro": true,
+                "modules_dep": true,
+                "network": true,
+                "updatedb_disabled": true,
+              },
+              "id": 12345,
+              "initrd": "",
+              "kernel": "linode/latest_64",
+              "label": "Test config",
+              "memory_limit": 1024,
+              "root_device": "/dev/sda",
+              "run_level": "default",
+              "updated": "2015-09-29 11:21:38 +0000",
+              "virt_mode": "paravirt",
+            },
+          },
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 1,
+        },
+        "_disks": Object {
+          "disks": Object {
+            "12345": Object {
+              "created": "2016-08-09T19:47:11",
+              "filesystem": "ext4",
+              "id": 12345,
+              "label": "Arch Linux 2015.08 Disk",
+              "size": 6144,
+              "updated": "2016-08-09T19:47:11",
+            },
+            "12346": Object {
+              "created": "2016-08-09T19:47:11",
+              "filesystem": "swap",
+              "id": 12346,
+              "label": "Swap Disk",
+              "size": 6144,
+              "updated": "2016-08-09T19:47:11",
+            },
+          },
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 2,
+        },
+        "_ips": Object {
+          "2600:3c03::f03c:91ff:fe0a:7": Object {
+            "address": "2600:3c03::f03c:91ff:fe0a:7",
+            "gateway": "fe80::1",
+            "key": "2600:3c03::f03c:91ff:fe0a:7",
+            "linode_id": 1236,
+            "prefix": "64",
+            "rdns": "li1-1.members.linode.com",
+            "type": "slaac",
+            "version": "ipv6",
+          },
+          "97.107.143.11": Object {
+            "address": "97.107.143.11",
+            "gateway": "97.107.143.0",
+            "key": "97.107.143.11",
+            "linode_id": 1236,
+            "prefix": 17,
+            "rdns": "li1-1.members.linode.com",
+            "type": "private",
+            "version": "ipv4",
+          },
+          "97.107.143.9": Object {
+            "address": "97.107.143.9",
+            "gateway": "97.107.143.0",
+            "key": "97.107.143.9",
+            "linode_id": 1236,
+            "prefix": 24,
+            "rdns": "li1-1.members.linode.com",
+            "type": "public",
+            "version": "ipv4",
+          },
+          "fe80::f03c:91ff:fe0a:181f": Object {
+            "address": "fe80::f03c:91ff:fe0a:181f",
+            "key": "fe80::f03c:91ff:fe0a:181f",
+            "linode_id": 1236,
+            "type": "link-local",
+            "version": "ipv6",
+          },
+        },
+        "_polling": false,
+        "_shared": Array [],
+        "_stats": Object {
+          "cpu": Array [
+            Array [
+              1490378700000,
+              1.67,
+            ],
+          ],
+          "io": Object {
+            "io": Array [
+              Array [
+                1490379000000,
+                0.91,
+              ],
+            ],
+            "swap": Array [
+              Array [
+                1490378100000,
+                0,
+              ],
+            ],
+          },
+          "netv4": Object {
+            "in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+          },
+          "netv6": Object {
+            "in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_in": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+            "private_out": Array [
+              Array [
+                1490377800000,
+                0,
+              ],
+            ],
+          },
+        },
+        "_volumes": Object {
+          "pagesFetched": Array [
+            0,
+          ],
+          "totalPages": 1,
+          "totalResults": 1,
+          "volumes": Object {
+            "38": Object {
+              "created": "2017-08-08T13:55:16",
+              "id": 38,
+              "label": "test",
+              "linode_id": null,
+              "region": "us-east-1a",
+              "size": 20,
+              "status": "active",
+              "updated": "2017-08-08T04:00:00",
+            },
+          },
+        },
+        "alerts": Object {
+          "cpu": 90,
+          "io": 5000,
+          "network_in": 5,
+          "network_out": 5,
+          "tranfer_quota": 80,
+        },
+        "backups": Object {
+          "enabled": false,
+          "schedule": Object {
+            "day": "Monday",
+            "window": "W10",
+          },
+        },
+        "created": "2016-07-06T16:48:27",
+        "disk": 20480,
+        "group": "Test Group",
+        "hypervisor": "kvm",
+        "id": 1236,
+        "image": Object {
+          "id": "linode/ubuntu15.10",
+          "label": "Ubuntu 15.10",
+          "vendor": "Ubuntu",
+        },
+        "ipv4": Array [
+          "97.107.143.9",
+          "97.107.143.10",
+        ],
+        "ipv6": "2600:3c03::f03c:91ff:fe0a:6",
+        "label": "test-linode-2",
+        "memory": 2048,
+        "region": "us-east-1a",
+        "status": "offline",
+        "type": Object {
+          "_polling": false,
+          "addons": Object {
+            "backups": Object {
+              "price": Object {
+                "monthly": 2.5,
+              },
+            },
+          },
+          "class": "standard",
+          "disk": 24576,
+          "id": "linode2048.5",
+          "label": "Linode 2048",
+          "memory": 2048,
+          "network_out": 125,
+          "price": Object {
+            "hourly": 0.015,
+            "monthly": 10,
+          },
+          "service_type": "linode",
+          "transfer": 2000,
+          "vcpus": 2,
+        },
+        "vcpus": 2,
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "analytics": Object {
+        "action": "add",
+        "title": "Add a Disk",
+      },
+      "buttonDisabledText": "Adding Disk",
+      "buttonText": "Add Disk",
+      "children": <div>
+        <ModalFormGroup
+          apiKey="label"
+          errors={Object {}}
+          id="label"
+          label="Label"
+        >
+          <Input
+            className=""
+            id="label"
+            name="label"
+            onChange={[Function]}
+            placeholder="Label"
+            value=""
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="image"
+          errors={Object {}}
+          id="image"
+          label="Image"
+        >
+          <DistributionSelect
+            allowNone={true}
+            id="image"
+            images={
+              Object {
+                "ids": Array [
+                  "private/38",
+                  "private/39",
+                  "linode/arch2016.05",
+                  "linode/debian7",
+                  "linode/debian8.1",
+                  "linode/debian6",
+                ],
+                "images": Object {
+                  "linode/arch2016.05": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/arch2016.05",
+                    "is_public": true,
+                    "label": "Arch Linux 2016.05",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Arch",
+                  },
+                  "linode/debian6": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian6",
+                    "is_public": true,
+                    "label": "Debian 6",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": false,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "linode/debian7": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian7",
+                    "is_public": true,
+                    "label": "Debian 7",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "linode/debian8.1": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian8.1",
+                    "is_public": true,
+                    "label": "Debian 8.1",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "private/38": Object {
+                    "_polling": false,
+                    "created": "2017-08-08T13:55:16",
+                    "creator": "zues",
+                    "deprecated": false,
+                    "description": "image details",
+                    "filesystem": "ext4",
+                    "id": "private/38",
+                    "is_public": false,
+                    "label": "testImage",
+                    "last_used": "2017-089-08T13:55:16",
+                    "min_deploy_size": 2048,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Unknown",
+                  },
+                  "private/39": Object {
+                    "_polling": false,
+                    "created": "2017-08-08T13:55:16",
+                    "creator": "zues",
+                    "deprecated": false,
+                    "description": "image from deleted disk",
+                    "filesystem": "raw",
+                    "id": "private/39",
+                    "is_public": false,
+                    "label": "nextImage",
+                    "last_used": "2017-089-08T13:55:16",
+                    "min_deploy_size": 2048,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "automatic",
+                    "vendor": "Unknown",
+                  },
+                },
+                "pagesFetched": Array [
+                  1,
+                ],
+                "plural": "images",
+                "singular": "image",
+                "totalPages": 1,
+                "totalResults": 6,
+              }
+            }
+            name="image"
+            onChange={[Function]}
+            value=""
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="filesystem"
+          errors={Object {}}
+          id="filesystem"
+          label="Filesystem"
+        >
+          <Select
+            analytics={
+              Object {
+                "noTrack": false,
+              }
+            }
+            className=""
+            id="filesystem"
+            name="filesystem"
+            onChange={[Function]}
+            options={
+              Array [
+                Object {
+                  "label": "ext3",
+                  "value": "ext3",
+                },
+                Object {
+                  "label": "ext4",
+                  "value": "ext4",
+                },
+                Object {
+                  "label": "swap",
+                  "value": "swap",
+                },
+                Object {
+                  "label": "raw",
+                  "value": "raw",
+                },
+              ]
+            }
+            value="ext4"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="size"
+          errors={Object {}}
+          id="size"
+          label="Size"
+        >
+          <Input
+            className=""
+            id="size"
+            label="MB"
+            max={4096}
+            min={8}
+            name="size"
+            onChange={[Function]}
+            type="number"
+            value={4096}
+          />
+        </ModalFormGroup>
+      </div>,
+      "errors": Object {},
+      "noCancel": false,
+      "noCancelEvent": false,
+      "noSubmit": false,
+      "onCancel": [Function],
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <ModalFormGroup
+            apiKey="label"
+            errors={Object {}}
+            id="label"
+            label="Label"
+          >
+            <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              placeholder="Label"
+              value=""
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="image"
+            errors={Object {}}
+            id="image"
+            label="Image"
+          >
+            <DistributionSelect
+              allowNone={true}
+              id="image"
+              images={
+                Object {
+                  "ids": Array [
+                    "private/38",
+                    "private/39",
+                    "linode/arch2016.05",
+                    "linode/debian7",
+                    "linode/debian8.1",
+                    "linode/debian6",
+                  ],
+                  "images": Object {
+                    "linode/arch2016.05": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/arch2016.05",
+                      "is_public": true,
+                      "label": "Arch Linux 2016.05",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Arch",
+                    },
+                    "linode/debian6": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian6",
+                      "is_public": true,
+                      "label": "Debian 6",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": false,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian7": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian7",
+                      "is_public": true,
+                      "label": "Debian 7",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian8.1": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian8.1",
+                      "is_public": true,
+                      "label": "Debian 8.1",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "private/38": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image details",
+                      "filesystem": "ext4",
+                      "id": "private/38",
+                      "is_public": false,
+                      "label": "testImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Unknown",
+                    },
+                    "private/39": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image from deleted disk",
+                      "filesystem": "raw",
+                      "id": "private/39",
+                      "is_public": false,
+                      "label": "nextImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "automatic",
+                      "vendor": "Unknown",
+                    },
+                  },
+                  "pagesFetched": Array [
+                    1,
+                  ],
+                  "plural": "images",
+                  "singular": "image",
+                  "totalPages": 1,
+                  "totalResults": 6,
+                }
+              }
+              name="image"
+              onChange={[Function]}
+              value=""
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="filesystem"
+            errors={Object {}}
+            id="filesystem"
+            label="Filesystem"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="filesystem"
+              name="filesystem"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "ext3",
+                    "value": "ext3",
+                  },
+                  Object {
+                    "label": "ext4",
+                    "value": "ext4",
+                  },
+                  Object {
+                    "label": "swap",
+                    "value": "swap",
+                  },
+                  Object {
+                    "label": "raw",
+                    "value": "raw",
+                  },
+                ]
+              }
+              value="ext4"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="size"
+            errors={Object {}}
+            id="size"
+            label="Size"
+          >
+            <Input
+              className=""
+              id="size"
+              label="MB"
+              max={4096}
+              min={8}
+              name="size"
+              onChange={[Function]}
+              type="number"
+              value={4096}
+            />
+          </ModalFormGroup>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "label",
+            "children": <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              placeholder="Label"
+              value=""
+            />,
+            "errors": Object {},
+            "id": "label",
+            "label": "Label",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "label",
+              "name": "label",
+              "onChange": [Function],
+              "placeholder": "Label",
+              "value": "",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "image",
+            "children": <DistributionSelect
+              allowNone={true}
+              id="image"
+              images={
+                Object {
+                  "ids": Array [
+                    "private/38",
+                    "private/39",
+                    "linode/arch2016.05",
+                    "linode/debian7",
+                    "linode/debian8.1",
+                    "linode/debian6",
+                  ],
+                  "images": Object {
+                    "linode/arch2016.05": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/arch2016.05",
+                      "is_public": true,
+                      "label": "Arch Linux 2016.05",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Arch",
+                    },
+                    "linode/debian6": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian6",
+                      "is_public": true,
+                      "label": "Debian 6",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": false,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian7": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian7",
+                      "is_public": true,
+                      "label": "Debian 7",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian8.1": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian8.1",
+                      "is_public": true,
+                      "label": "Debian 8.1",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "private/38": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image details",
+                      "filesystem": "ext4",
+                      "id": "private/38",
+                      "is_public": false,
+                      "label": "testImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Unknown",
+                    },
+                    "private/39": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image from deleted disk",
+                      "filesystem": "raw",
+                      "id": "private/39",
+                      "is_public": false,
+                      "label": "nextImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "automatic",
+                      "vendor": "Unknown",
+                    },
+                  },
+                  "pagesFetched": Array [
+                    1,
+                  ],
+                  "plural": "images",
+                  "singular": "image",
+                  "totalPages": 1,
+                  "totalResults": 6,
+                }
+              }
+              name="image"
+              onChange={[Function]}
+              value=""
+            />,
+            "errors": Object {},
+            "id": "image",
+            "label": "Image",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "allowNone": true,
+              "id": "image",
+              "images": Object {
+                "ids": Array [
+                  "private/38",
+                  "private/39",
+                  "linode/arch2016.05",
+                  "linode/debian7",
+                  "linode/debian8.1",
+                  "linode/debian6",
+                ],
+                "images": Object {
+                  "linode/arch2016.05": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/arch2016.05",
+                    "is_public": true,
+                    "label": "Arch Linux 2016.05",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Arch",
+                  },
+                  "linode/debian6": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian6",
+                    "is_public": true,
+                    "label": "Debian 6",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": false,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "linode/debian7": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian7",
+                    "is_public": true,
+                    "label": "Debian 7",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "linode/debian8.1": Object {
+                    "_polling": false,
+                    "created": "2009-01-01T00:00:00",
+                    "creator": "linode",
+                    "deprecated": false,
+                    "description": "Test Image",
+                    "filesystem": "ext4",
+                    "id": "linode/debian8.1",
+                    "is_public": true,
+                    "label": "Debian 8.1",
+                    "last_used": "2009-08-17T00:00:00",
+                    "min_deploy_size": 550,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Debian",
+                  },
+                  "private/38": Object {
+                    "_polling": false,
+                    "created": "2017-08-08T13:55:16",
+                    "creator": "zues",
+                    "deprecated": false,
+                    "description": "image details",
+                    "filesystem": "ext4",
+                    "id": "private/38",
+                    "is_public": false,
+                    "label": "testImage",
+                    "last_used": "2017-089-08T13:55:16",
+                    "min_deploy_size": 2048,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "manual",
+                    "vendor": "Unknown",
+                  },
+                  "private/39": Object {
+                    "_polling": false,
+                    "created": "2017-08-08T13:55:16",
+                    "creator": "zues",
+                    "deprecated": false,
+                    "description": "image from deleted disk",
+                    "filesystem": "raw",
+                    "id": "private/39",
+                    "is_public": false,
+                    "label": "nextImage",
+                    "last_used": "2017-089-08T13:55:16",
+                    "min_deploy_size": 2048,
+                    "recommended": true,
+                    "status": "available",
+                    "type": "automatic",
+                    "vendor": "Unknown",
+                  },
+                },
+                "pagesFetched": Array [
+                  1,
+                ],
+                "plural": "images",
+                "singular": "image",
+                "totalPages": 1,
+                "totalResults": 6,
+              },
+              "name": "image",
+              "onChange": [Function],
+              "value": "",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "filesystem",
+            "children": <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="filesystem"
+              name="filesystem"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "ext3",
+                    "value": "ext3",
+                  },
+                  Object {
+                    "label": "ext4",
+                    "value": "ext4",
+                  },
+                  Object {
+                    "label": "swap",
+                    "value": "swap",
+                  },
+                  Object {
+                    "label": "raw",
+                    "value": "raw",
+                  },
+                ]
+              }
+              value="ext4"
+            />,
+            "errors": Object {},
+            "id": "filesystem",
+            "label": "Filesystem",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "analytics": Object {
+                "noTrack": false,
+              },
+              "className": "",
+              "id": "filesystem",
+              "name": "filesystem",
+              "onChange": [Function],
+              "options": Array [
+                Object {
+                  "label": "ext3",
+                  "value": "ext3",
+                },
+                Object {
+                  "label": "ext4",
+                  "value": "ext4",
+                },
+                Object {
+                  "label": "swap",
+                  "value": "swap",
+                },
+                Object {
+                  "label": "raw",
+                  "value": "raw",
+                },
+              ],
+              "value": "ext4",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "size",
+            "children": <Input
+              className=""
+              id="size"
+              label="MB"
+              max={4096}
+              min={8}
+              name="size"
+              onChange={[Function]}
+              type="number"
+              value={4096}
+            />,
+            "errors": Object {},
+            "id": "size",
+            "label": "Size",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "size",
+              "label": "MB",
+              "max": 4096,
+              "min": 8,
+              "name": "size",
+              "onChange": [Function],
+              "type": "number",
+              "value": 4096,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "analytics": Object {
+          "action": "add",
+          "title": "Add a Disk",
+        },
+        "buttonDisabledText": "Adding Disk",
+        "buttonText": "Add Disk",
+        "children": <div>
+          <ModalFormGroup
+            apiKey="label"
+            errors={Object {}}
+            id="label"
+            label="Label"
+          >
+            <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              placeholder="Label"
+              value=""
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="image"
+            errors={Object {}}
+            id="image"
+            label="Image"
+          >
+            <DistributionSelect
+              allowNone={true}
+              id="image"
+              images={
+                Object {
+                  "ids": Array [
+                    "private/38",
+                    "private/39",
+                    "linode/arch2016.05",
+                    "linode/debian7",
+                    "linode/debian8.1",
+                    "linode/debian6",
+                  ],
+                  "images": Object {
+                    "linode/arch2016.05": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/arch2016.05",
+                      "is_public": true,
+                      "label": "Arch Linux 2016.05",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Arch",
+                    },
+                    "linode/debian6": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian6",
+                      "is_public": true,
+                      "label": "Debian 6",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": false,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian7": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian7",
+                      "is_public": true,
+                      "label": "Debian 7",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian8.1": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian8.1",
+                      "is_public": true,
+                      "label": "Debian 8.1",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "private/38": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image details",
+                      "filesystem": "ext4",
+                      "id": "private/38",
+                      "is_public": false,
+                      "label": "testImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Unknown",
+                    },
+                    "private/39": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image from deleted disk",
+                      "filesystem": "raw",
+                      "id": "private/39",
+                      "is_public": false,
+                      "label": "nextImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "automatic",
+                      "vendor": "Unknown",
+                    },
+                  },
+                  "pagesFetched": Array [
+                    1,
+                  ],
+                  "plural": "images",
+                  "singular": "image",
+                  "totalPages": 1,
+                  "totalResults": 6,
+                }
+              }
+              name="image"
+              onChange={[Function]}
+              value=""
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="filesystem"
+            errors={Object {}}
+            id="filesystem"
+            label="Filesystem"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="filesystem"
+              name="filesystem"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "ext3",
+                    "value": "ext3",
+                  },
+                  Object {
+                    "label": "ext4",
+                    "value": "ext4",
+                  },
+                  Object {
+                    "label": "swap",
+                    "value": "swap",
+                  },
+                  Object {
+                    "label": "raw",
+                    "value": "raw",
+                  },
+                ]
+              }
+              value="ext4"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="size"
+            errors={Object {}}
+            id="size"
+            label="Size"
+          >
+            <Input
+              className=""
+              id="size"
+              label="MB"
+              max={4096}
+              min={8}
+              name="size"
+              onChange={[Function]}
+              type="number"
+              value={4096}
+            />
+          </ModalFormGroup>
+        </div>,
+        "errors": Object {},
+        "noCancel": false,
+        "noCancelEvent": false,
+        "noSubmit": false,
+        "onCancel": [Function],
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <ModalFormGroup
+              apiKey="label"
+              errors={Object {}}
+              id="label"
+              label="Label"
+            >
+              <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                placeholder="Label"
+                value=""
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="image"
+              errors={Object {}}
+              id="image"
+              label="Image"
+            >
+              <DistributionSelect
+                allowNone={true}
+                id="image"
+                images={
+                  Object {
+                    "ids": Array [
+                      "private/38",
+                      "private/39",
+                      "linode/arch2016.05",
+                      "linode/debian7",
+                      "linode/debian8.1",
+                      "linode/debian6",
+                    ],
+                    "images": Object {
+                      "linode/arch2016.05": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/arch2016.05",
+                        "is_public": true,
+                        "label": "Arch Linux 2016.05",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Arch",
+                      },
+                      "linode/debian6": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian6",
+                        "is_public": true,
+                        "label": "Debian 6",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": false,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "linode/debian7": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian7",
+                        "is_public": true,
+                        "label": "Debian 7",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "linode/debian8.1": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian8.1",
+                        "is_public": true,
+                        "label": "Debian 8.1",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "private/38": Object {
+                        "_polling": false,
+                        "created": "2017-08-08T13:55:16",
+                        "creator": "zues",
+                        "deprecated": false,
+                        "description": "image details",
+                        "filesystem": "ext4",
+                        "id": "private/38",
+                        "is_public": false,
+                        "label": "testImage",
+                        "last_used": "2017-089-08T13:55:16",
+                        "min_deploy_size": 2048,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Unknown",
+                      },
+                      "private/39": Object {
+                        "_polling": false,
+                        "created": "2017-08-08T13:55:16",
+                        "creator": "zues",
+                        "deprecated": false,
+                        "description": "image from deleted disk",
+                        "filesystem": "raw",
+                        "id": "private/39",
+                        "is_public": false,
+                        "label": "nextImage",
+                        "last_used": "2017-089-08T13:55:16",
+                        "min_deploy_size": 2048,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "automatic",
+                        "vendor": "Unknown",
+                      },
+                    },
+                    "pagesFetched": Array [
+                      1,
+                    ],
+                    "plural": "images",
+                    "singular": "image",
+                    "totalPages": 1,
+                    "totalResults": 6,
+                  }
+                }
+                name="image"
+                onChange={[Function]}
+                value=""
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="filesystem"
+              errors={Object {}}
+              id="filesystem"
+              label="Filesystem"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="filesystem"
+                name="filesystem"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "ext3",
+                      "value": "ext3",
+                    },
+                    Object {
+                      "label": "ext4",
+                      "value": "ext4",
+                    },
+                    Object {
+                      "label": "swap",
+                      "value": "swap",
+                    },
+                    Object {
+                      "label": "raw",
+                      "value": "raw",
+                    },
+                  ]
+                }
+                value="ext4"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="size"
+              errors={Object {}}
+              id="size"
+              label="Size"
+            >
+              <Input
+                className=""
+                id="size"
+                label="MB"
+                max={4096}
+                min={8}
+                name="size"
+                onChange={[Function]}
+                type="number"
+                value={4096}
+              />
+            </ModalFormGroup>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "label",
+              "children": <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                placeholder="Label"
+                value=""
+              />,
+              "errors": Object {},
+              "id": "label",
+              "label": "Label",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "label",
+                "name": "label",
+                "onChange": [Function],
+                "placeholder": "Label",
+                "value": "",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "image",
+              "children": <DistributionSelect
+                allowNone={true}
+                id="image"
+                images={
+                  Object {
+                    "ids": Array [
+                      "private/38",
+                      "private/39",
+                      "linode/arch2016.05",
+                      "linode/debian7",
+                      "linode/debian8.1",
+                      "linode/debian6",
+                    ],
+                    "images": Object {
+                      "linode/arch2016.05": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/arch2016.05",
+                        "is_public": true,
+                        "label": "Arch Linux 2016.05",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Arch",
+                      },
+                      "linode/debian6": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian6",
+                        "is_public": true,
+                        "label": "Debian 6",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": false,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "linode/debian7": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian7",
+                        "is_public": true,
+                        "label": "Debian 7",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "linode/debian8.1": Object {
+                        "_polling": false,
+                        "created": "2009-01-01T00:00:00",
+                        "creator": "linode",
+                        "deprecated": false,
+                        "description": "Test Image",
+                        "filesystem": "ext4",
+                        "id": "linode/debian8.1",
+                        "is_public": true,
+                        "label": "Debian 8.1",
+                        "last_used": "2009-08-17T00:00:00",
+                        "min_deploy_size": 550,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Debian",
+                      },
+                      "private/38": Object {
+                        "_polling": false,
+                        "created": "2017-08-08T13:55:16",
+                        "creator": "zues",
+                        "deprecated": false,
+                        "description": "image details",
+                        "filesystem": "ext4",
+                        "id": "private/38",
+                        "is_public": false,
+                        "label": "testImage",
+                        "last_used": "2017-089-08T13:55:16",
+                        "min_deploy_size": 2048,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "manual",
+                        "vendor": "Unknown",
+                      },
+                      "private/39": Object {
+                        "_polling": false,
+                        "created": "2017-08-08T13:55:16",
+                        "creator": "zues",
+                        "deprecated": false,
+                        "description": "image from deleted disk",
+                        "filesystem": "raw",
+                        "id": "private/39",
+                        "is_public": false,
+                        "label": "nextImage",
+                        "last_used": "2017-089-08T13:55:16",
+                        "min_deploy_size": 2048,
+                        "recommended": true,
+                        "status": "available",
+                        "type": "automatic",
+                        "vendor": "Unknown",
+                      },
+                    },
+                    "pagesFetched": Array [
+                      1,
+                    ],
+                    "plural": "images",
+                    "singular": "image",
+                    "totalPages": 1,
+                    "totalResults": 6,
+                  }
+                }
+                name="image"
+                onChange={[Function]}
+                value=""
+              />,
+              "errors": Object {},
+              "id": "image",
+              "label": "Image",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "allowNone": true,
+                "id": "image",
+                "images": Object {
+                  "ids": Array [
+                    "private/38",
+                    "private/39",
+                    "linode/arch2016.05",
+                    "linode/debian7",
+                    "linode/debian8.1",
+                    "linode/debian6",
+                  ],
+                  "images": Object {
+                    "linode/arch2016.05": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/arch2016.05",
+                      "is_public": true,
+                      "label": "Arch Linux 2016.05",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Arch",
+                    },
+                    "linode/debian6": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian6",
+                      "is_public": true,
+                      "label": "Debian 6",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": false,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian7": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian7",
+                      "is_public": true,
+                      "label": "Debian 7",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "linode/debian8.1": Object {
+                      "_polling": false,
+                      "created": "2009-01-01T00:00:00",
+                      "creator": "linode",
+                      "deprecated": false,
+                      "description": "Test Image",
+                      "filesystem": "ext4",
+                      "id": "linode/debian8.1",
+                      "is_public": true,
+                      "label": "Debian 8.1",
+                      "last_used": "2009-08-17T00:00:00",
+                      "min_deploy_size": 550,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Debian",
+                    },
+                    "private/38": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image details",
+                      "filesystem": "ext4",
+                      "id": "private/38",
+                      "is_public": false,
+                      "label": "testImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "manual",
+                      "vendor": "Unknown",
+                    },
+                    "private/39": Object {
+                      "_polling": false,
+                      "created": "2017-08-08T13:55:16",
+                      "creator": "zues",
+                      "deprecated": false,
+                      "description": "image from deleted disk",
+                      "filesystem": "raw",
+                      "id": "private/39",
+                      "is_public": false,
+                      "label": "nextImage",
+                      "last_used": "2017-089-08T13:55:16",
+                      "min_deploy_size": 2048,
+                      "recommended": true,
+                      "status": "available",
+                      "type": "automatic",
+                      "vendor": "Unknown",
+                    },
+                  },
+                  "pagesFetched": Array [
+                    1,
+                  ],
+                  "plural": "images",
+                  "singular": "image",
+                  "totalPages": 1,
+                  "totalResults": 6,
+                },
+                "name": "image",
+                "onChange": [Function],
+                "value": "",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "filesystem",
+              "children": <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="filesystem"
+                name="filesystem"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "ext3",
+                      "value": "ext3",
+                    },
+                    Object {
+                      "label": "ext4",
+                      "value": "ext4",
+                    },
+                    Object {
+                      "label": "swap",
+                      "value": "swap",
+                    },
+                    Object {
+                      "label": "raw",
+                      "value": "raw",
+                    },
+                  ]
+                }
+                value="ext4"
+              />,
+              "errors": Object {},
+              "id": "filesystem",
+              "label": "Filesystem",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "analytics": Object {
+                  "noTrack": false,
+                },
+                "className": "",
+                "id": "filesystem",
+                "name": "filesystem",
+                "onChange": [Function],
+                "options": Array [
+                  Object {
+                    "label": "ext3",
+                    "value": "ext3",
+                  },
+                  Object {
+                    "label": "ext4",
+                    "value": "ext4",
+                  },
+                  Object {
+                    "label": "swap",
+                    "value": "swap",
+                  },
+                  Object {
+                    "label": "raw",
+                    "value": "raw",
+                  },
+                ],
+                "value": "ext4",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "size",
+              "children": <Input
+                className=""
+                id="size"
+                label="MB"
+                max={4096}
+                min={8}
+                name="size"
+                onChange={[Function]}
+                type="number"
+                value={4096}
+              />,
+              "errors": Object {},
+              "id": "size",
+              "label": "Size",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "size",
+                "label": "MB",
+                "max": 4096,
+                "min": 8,
+                "name": "size",
+                "onChange": [Function],
+                "type": "number",
+                "value": 4096,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+        ],
+        "type": "div",
+      },
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

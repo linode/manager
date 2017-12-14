@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
 
 import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+  changeInput, expectDispatchOrStoreErrors, expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
@@ -17,6 +17,18 @@ describe('linodes/linode/layouts/RebuildPage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <RebuildPage
+        dispatch={dispatch}
+        distributions={api.images.images}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('rebuilds the linode', async () => {
@@ -54,7 +66,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
         disks: testLinode._disks,
         configs: testLinode._configs,
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/test-linode')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/test-linode')),
     ]);
   });
 });

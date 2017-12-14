@@ -11,6 +11,24 @@ describe('components/Dropdown', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <Dropdown
+        groups={[
+          { elements: [{ action: () => { }, name: 'Drew' }] },
+          {
+            elements: [
+              { action: () => { }, name: 'Phil' },
+              { action: () => { }, name: 'Will' },
+            ],
+          },
+        ]}
+      />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown

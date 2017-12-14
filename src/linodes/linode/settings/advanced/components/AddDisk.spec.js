@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import AddDisk from '~/linodes/linode/settings/advanced/components/AddDisk';
 
@@ -16,7 +16,18 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
   afterEach(() => {
     sandbox.restore();
   });
+  it('should render without errors', () => {
+    const wrapper = shallow(
+      <AddDisk
+        dispatch={() => { }}
+        linode={testLinode1236}
+        free={4096}
+        images={api.images}
+      />
+    );
 
+    expect(wrapper).toMatchSnapshot();
+  });
   it.skip('should drop filesystem and render password if a image is selected', () => {
     const modal = mount(
       <AddDisk
@@ -24,7 +35,8 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
         linode={testLinode1236}
         free={4096}
         images={api.images}
-      />);
+      />
+    );
 
     const image = Object.keys(api.images.images)[0];
     changeInput(modal, 'image', image);

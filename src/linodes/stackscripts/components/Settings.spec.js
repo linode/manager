@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -15,6 +15,18 @@ describe('linodes/stackscripts/components/Settings', () => {
   });
 
   const dispatch = sandbox.spy();
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <Settings
+        dispatch={dispatch}
+        stackscript={testStackScript}
+        distributions={{}}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it.skip('saves stackscript settings', async () => {
     const component = mount(

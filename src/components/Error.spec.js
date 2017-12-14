@@ -12,6 +12,14 @@ describe('components/Error', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <Error status={404} />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders a 404 component', () => {
     const error = shallow(<Error status={404} />);
 

@@ -1,0 +1,378 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`profiles/ReferralsPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <ReferralsPage
+    referrals={
+      Object {
+        "code": "ABC123",
+        "completed": Array [],
+        "credit": 999.99,
+        "pending": Array [],
+        "total": 0,
+        "url": "http://somesite.com/?referral=ABC123",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Referrals"
+        />,
+        <p>
+          Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.
+        </p>,
+        <div
+          className="row"
+        >
+          <div
+            className="col-sm-2 row-label"
+          >
+            Referral Code
+          </div>
+          <div
+            className="col-sm-10"
+          >
+            ABC123
+          </div>
+        </div>,
+        <div
+          className="row"
+        >
+          <div
+            className="col-sm-2 row-label"
+          >
+            Referral URL
+          </div>
+          <div
+            className="col-sm-10"
+          >
+            http://somesite.com/?referral=ABC123
+          </div>
+        </div>,
+      ],
+      "className": "",
+      "header": <CardHeader
+        nav="You have 0 total referrals:  completed
+    ($999.99) and  pending"
+        title="Referrals"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Referrals",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.",
+        },
+        "ref": null,
+        "rendered": "Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.",
+        "type": "p",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="col-sm-2 row-label"
+            >
+              Referral Code
+            </div>,
+            <div
+              className="col-sm-10"
+            >
+              ABC123
+            </div>,
+          ],
+          "className": "row",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Referral Code",
+              "className": "col-sm-2 row-label",
+            },
+            "ref": null,
+            "rendered": "Referral Code",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "ABC123",
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": "ABC123",
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="col-sm-2 row-label"
+            >
+              Referral URL
+            </div>,
+            <div
+              className="col-sm-10"
+            >
+              http://somesite.com/?referral=ABC123
+            </div>,
+          ],
+          "className": "row",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Referral URL",
+              "className": "col-sm-2 row-label",
+            },
+            "ref": null,
+            "rendered": "Referral URL",
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "http://somesite.com/?referral=ABC123",
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": "http://somesite.com/?referral=ABC123",
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Referrals"
+          />,
+          <p>
+            Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.
+          </p>,
+          <div
+            className="row"
+          >
+            <div
+              className="col-sm-2 row-label"
+            >
+              Referral Code
+            </div>
+            <div
+              className="col-sm-10"
+            >
+              ABC123
+            </div>
+          </div>,
+          <div
+            className="row"
+          >
+            <div
+              className="col-sm-2 row-label"
+            >
+              Referral URL
+            </div>
+            <div
+              className="col-sm-10"
+            >
+              http://somesite.com/?referral=ABC123
+            </div>
+          </div>,
+        ],
+        "className": "",
+        "header": <CardHeader
+          nav="You have 0 total referrals:  completed
+    ($999.99) and  pending"
+          title="Referrals"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Referrals",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.",
+          },
+          "ref": null,
+          "rendered": "Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.",
+          "type": "p",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <div
+                className="col-sm-2 row-label"
+              >
+                Referral Code
+              </div>,
+              <div
+                className="col-sm-10"
+              >
+                ABC123
+              </div>,
+            ],
+            "className": "row",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Referral Code",
+                "className": "col-sm-2 row-label",
+              },
+              "ref": null,
+              "rendered": "Referral Code",
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "ABC123",
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": "ABC123",
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <div
+                className="col-sm-2 row-label"
+              >
+                Referral URL
+              </div>,
+              <div
+                className="col-sm-10"
+              >
+                http://somesite.com/?referral=ABC123
+              </div>,
+            ],
+            "className": "row",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Referral URL",
+                "className": "col-sm-2 row-label",
+              },
+              "ref": null,
+              "rendered": "Referral URL",
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "http://somesite.com/?referral=ABC123",
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": "http://somesite.com/?referral=ABC123",
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

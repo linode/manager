@@ -1,0 +1,1428 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`domains/components/EditSRVRecord should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <EditSRVRecord
+    close={[Function]}
+    dispatch={[Function]}
+    id={6}
+    title="EditSRVRecord"
+    zone={
+      Object {
+        "_polling": false,
+        "_records": Object {
+          "records": Object {
+            "1": Object {
+              "id": 1,
+              "name": "sub1",
+              "port": 80,
+              "priority": 10,
+              "protocol": null,
+              "service": null,
+              "target": "4.4.4.4",
+              "ttl_sec": 0,
+              "type": "A",
+              "weight": 5,
+            },
+            "2": Object {
+              "id": 2,
+              "name": "sub2",
+              "port": 80,
+              "priority": 10,
+              "protocol": null,
+              "service": null,
+              "target": "sub1.example.com",
+              "ttl_sec": 0,
+              "type": "CNAME",
+              "weight": 5,
+            },
+            "3": Object {
+              "id": 3,
+              "name": "",
+              "port": 0,
+              "priority": 10,
+              "protocol": null,
+              "service": null,
+              "target": "mail1.example.com",
+              "ttl_sec": 0,
+              "type": "MX",
+              "weight": 0,
+            },
+            "4": Object {
+              "id": 4,
+              "name": "",
+              "port": 0,
+              "priority": 0,
+              "protocol": null,
+              "service": null,
+              "target": "ns5.linode.com",
+              "ttl_sec": 0,
+              "type": "NS",
+              "weight": 0,
+            },
+            "5": Object {
+              "id": 5,
+              "name": "key",
+              "port": 80,
+              "priority": 10,
+              "protocol": null,
+              "service": null,
+              "target": "value",
+              "ttl_sec": 0,
+              "type": "TXT",
+              "weight": 5,
+            },
+            "6": Object {
+              "id": 6,
+              "name": "_sip",
+              "port": 80,
+              "priority": 10,
+              "protocol": "_tcp",
+              "service": "_sip",
+              "target": "ns1.service.com",
+              "ttl_sec": 0,
+              "type": "SRV",
+              "weight": 5,
+            },
+            "7": Object {
+              "id": 7,
+              "name": "www.mywebsite.com",
+              "tag": "issue",
+              "target": "certsign.ro",
+              "ttl_sec": 0,
+              "type": "CAA",
+            },
+          },
+        },
+        "axfr_ips": Array [
+          "44.55.66.77",
+        ],
+        "description": "Example Description",
+        "domain": "example.com",
+        "expire_sec": 604800,
+        "group": "Example Display Group",
+        "id": 1,
+        "master_ips": Array [
+          "127.0.0.1",
+          "255.255.255.1",
+          "123.123.123.7",
+        ],
+        "refresh_sec": 14400,
+        "retry_sec": 3600,
+        "soa_email": "admin@example.com",
+        "status": "active",
+        "ttl_sec": 3600,
+        "type": "master",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "analytics": Object {
+        "action": "edit",
+        "title": "EditSRVRecord",
+      },
+      "buttonDisabledText": "Saving",
+      "buttonText": "Save",
+      "children": <div>
+        <ModalFormGroup
+          apiKey="name"
+          errors={Object {}}
+          id="service"
+          label="Service"
+        >
+          <Input
+            className=""
+            id="service"
+            name="service"
+            onChange={[Function]}
+            placeholder="_sip"
+            value="_sip"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="protocol"
+          errors={Object {}}
+          id="protocol"
+          label="Protocol"
+        >
+          <Select
+            analytics={
+              Object {
+                "noTrack": false,
+              }
+            }
+            className=""
+            id="protocol"
+            name="protocol"
+            onChange={[Function]}
+            options={
+              Array [
+                Object {
+                  "label": "tcp",
+                  "value": "_tcp",
+                },
+                Object {
+                  "label": "udp",
+                  "value": "_udp",
+                },
+                Object {
+                  "label": "xmpp",
+                  "value": "_xmpp",
+                },
+                Object {
+                  "label": "tls",
+                  "value": "_tls",
+                },
+                Object {
+                  "label": "smtp",
+                  "value": "_smtp",
+                },
+              ]
+            }
+            value="_tcp"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="target"
+          errors={Object {}}
+          id="target"
+          label="Target"
+        >
+          <Input
+            className=""
+            id="target"
+            name="target"
+            onChange={[Function]}
+            placeholder="www"
+            value="ns1.service.com"
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="priority"
+          errors={Object {}}
+          id="priority"
+          label="Priority"
+        >
+          <Input
+            className=""
+            id="priority"
+            max={255}
+            min={0}
+            name="priority"
+            onChange={[Function]}
+            placeholder="10"
+            type="number"
+            value={10}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="weight"
+          errors={Object {}}
+          id="weight"
+          label="Weight"
+        >
+          <Input
+            className=""
+            id="weight"
+            max={255}
+            min={0}
+            name="weight"
+            onChange={[Function]}
+            placeholder="5"
+            type="number"
+            value={5}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="port"
+          errors={Object {}}
+          id="port"
+          label="Port"
+        >
+          <Input
+            className=""
+            id="port"
+            max={65535}
+            min={0}
+            name="port"
+            onChange={[Function]}
+            placeholder="80"
+            type="number"
+            value={80}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          apiKey="ttl_sec"
+          errors={Object {}}
+          id="ttl"
+          label="TTL"
+        >
+          <SelectDNSSeconds
+            defaultSeconds={3600}
+            id="ttl"
+            name="ttl"
+            onChange={[Function]}
+            value={0}
+          />
+        </ModalFormGroup>
+      </div>,
+      "errors": Object {},
+      "noCancel": false,
+      "noCancelEvent": false,
+      "noSubmit": false,
+      "onCancel": [Function],
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <ModalFormGroup
+            apiKey="name"
+            errors={Object {}}
+            id="service"
+            label="Service"
+          >
+            <Input
+              className=""
+              id="service"
+              name="service"
+              onChange={[Function]}
+              placeholder="_sip"
+              value="_sip"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="protocol"
+            errors={Object {}}
+            id="protocol"
+            label="Protocol"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="protocol"
+              name="protocol"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "tcp",
+                    "value": "_tcp",
+                  },
+                  Object {
+                    "label": "udp",
+                    "value": "_udp",
+                  },
+                  Object {
+                    "label": "xmpp",
+                    "value": "_xmpp",
+                  },
+                  Object {
+                    "label": "tls",
+                    "value": "_tls",
+                  },
+                  Object {
+                    "label": "smtp",
+                    "value": "_smtp",
+                  },
+                ]
+              }
+              value="_tcp"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="target"
+            errors={Object {}}
+            id="target"
+            label="Target"
+          >
+            <Input
+              className=""
+              id="target"
+              name="target"
+              onChange={[Function]}
+              placeholder="www"
+              value="ns1.service.com"
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="priority"
+            errors={Object {}}
+            id="priority"
+            label="Priority"
+          >
+            <Input
+              className=""
+              id="priority"
+              max={255}
+              min={0}
+              name="priority"
+              onChange={[Function]}
+              placeholder="10"
+              type="number"
+              value={10}
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="weight"
+            errors={Object {}}
+            id="weight"
+            label="Weight"
+          >
+            <Input
+              className=""
+              id="weight"
+              max={255}
+              min={0}
+              name="weight"
+              onChange={[Function]}
+              placeholder="5"
+              type="number"
+              value={5}
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="port"
+            errors={Object {}}
+            id="port"
+            label="Port"
+          >
+            <Input
+              className=""
+              id="port"
+              max={65535}
+              min={0}
+              name="port"
+              onChange={[Function]}
+              placeholder="80"
+              type="number"
+              value={80}
+            />
+          </ModalFormGroup>,
+          <ModalFormGroup
+            apiKey="ttl_sec"
+            errors={Object {}}
+            id="ttl"
+            label="TTL"
+          >
+            <SelectDNSSeconds
+              defaultSeconds={3600}
+              id="ttl"
+              name="ttl"
+              onChange={[Function]}
+              value={0}
+            />
+          </ModalFormGroup>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "name",
+            "children": <Input
+              className=""
+              id="service"
+              name="service"
+              onChange={[Function]}
+              placeholder="_sip"
+              value="_sip"
+            />,
+            "errors": Object {},
+            "id": "service",
+            "label": "Service",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "service",
+              "name": "service",
+              "onChange": [Function],
+              "placeholder": "_sip",
+              "value": "_sip",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "protocol",
+            "children": <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="protocol"
+              name="protocol"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "tcp",
+                    "value": "_tcp",
+                  },
+                  Object {
+                    "label": "udp",
+                    "value": "_udp",
+                  },
+                  Object {
+                    "label": "xmpp",
+                    "value": "_xmpp",
+                  },
+                  Object {
+                    "label": "tls",
+                    "value": "_tls",
+                  },
+                  Object {
+                    "label": "smtp",
+                    "value": "_smtp",
+                  },
+                ]
+              }
+              value="_tcp"
+            />,
+            "errors": Object {},
+            "id": "protocol",
+            "label": "Protocol",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "analytics": Object {
+                "noTrack": false,
+              },
+              "className": "",
+              "id": "protocol",
+              "name": "protocol",
+              "onChange": [Function],
+              "options": Array [
+                Object {
+                  "label": "tcp",
+                  "value": "_tcp",
+                },
+                Object {
+                  "label": "udp",
+                  "value": "_udp",
+                },
+                Object {
+                  "label": "xmpp",
+                  "value": "_xmpp",
+                },
+                Object {
+                  "label": "tls",
+                  "value": "_tls",
+                },
+                Object {
+                  "label": "smtp",
+                  "value": "_smtp",
+                },
+              ],
+              "value": "_tcp",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "target",
+            "children": <Input
+              className=""
+              id="target"
+              name="target"
+              onChange={[Function]}
+              placeholder="www"
+              value="ns1.service.com"
+            />,
+            "errors": Object {},
+            "id": "target",
+            "label": "Target",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "target",
+              "name": "target",
+              "onChange": [Function],
+              "placeholder": "www",
+              "value": "ns1.service.com",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "priority",
+            "children": <Input
+              className=""
+              id="priority"
+              max={255}
+              min={0}
+              name="priority"
+              onChange={[Function]}
+              placeholder="10"
+              type="number"
+              value={10}
+            />,
+            "errors": Object {},
+            "id": "priority",
+            "label": "Priority",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "priority",
+              "max": 255,
+              "min": 0,
+              "name": "priority",
+              "onChange": [Function],
+              "placeholder": "10",
+              "type": "number",
+              "value": 10,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "weight",
+            "children": <Input
+              className=""
+              id="weight"
+              max={255}
+              min={0}
+              name="weight"
+              onChange={[Function]}
+              placeholder="5"
+              type="number"
+              value={5}
+            />,
+            "errors": Object {},
+            "id": "weight",
+            "label": "Weight",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "weight",
+              "max": 255,
+              "min": 0,
+              "name": "weight",
+              "onChange": [Function],
+              "placeholder": "5",
+              "type": "number",
+              "value": 5,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "port",
+            "children": <Input
+              className=""
+              id="port"
+              max={65535}
+              min={0}
+              name="port"
+              onChange={[Function]}
+              placeholder="80"
+              type="number"
+              value={80}
+            />,
+            "errors": Object {},
+            "id": "port",
+            "label": "Port",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "id": "port",
+              "max": 65535,
+              "min": 0,
+              "name": "port",
+              "onChange": [Function],
+              "placeholder": "80",
+              "type": "number",
+              "value": 80,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "apiKey": "ttl_sec",
+            "children": <SelectDNSSeconds
+              defaultSeconds={3600}
+              id="ttl"
+              name="ttl"
+              onChange={[Function]}
+              value={0}
+            />,
+            "errors": Object {},
+            "id": "ttl",
+            "label": "TTL",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "defaultSeconds": 3600,
+              "id": "ttl",
+              "name": "ttl",
+              "onChange": [Function],
+              "value": 0,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "analytics": Object {
+          "action": "edit",
+          "title": "EditSRVRecord",
+        },
+        "buttonDisabledText": "Saving",
+        "buttonText": "Save",
+        "children": <div>
+          <ModalFormGroup
+            apiKey="name"
+            errors={Object {}}
+            id="service"
+            label="Service"
+          >
+            <Input
+              className=""
+              id="service"
+              name="service"
+              onChange={[Function]}
+              placeholder="_sip"
+              value="_sip"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="protocol"
+            errors={Object {}}
+            id="protocol"
+            label="Protocol"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="protocol"
+              name="protocol"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "tcp",
+                    "value": "_tcp",
+                  },
+                  Object {
+                    "label": "udp",
+                    "value": "_udp",
+                  },
+                  Object {
+                    "label": "xmpp",
+                    "value": "_xmpp",
+                  },
+                  Object {
+                    "label": "tls",
+                    "value": "_tls",
+                  },
+                  Object {
+                    "label": "smtp",
+                    "value": "_smtp",
+                  },
+                ]
+              }
+              value="_tcp"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="target"
+            errors={Object {}}
+            id="target"
+            label="Target"
+          >
+            <Input
+              className=""
+              id="target"
+              name="target"
+              onChange={[Function]}
+              placeholder="www"
+              value="ns1.service.com"
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="priority"
+            errors={Object {}}
+            id="priority"
+            label="Priority"
+          >
+            <Input
+              className=""
+              id="priority"
+              max={255}
+              min={0}
+              name="priority"
+              onChange={[Function]}
+              placeholder="10"
+              type="number"
+              value={10}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="weight"
+            errors={Object {}}
+            id="weight"
+            label="Weight"
+          >
+            <Input
+              className=""
+              id="weight"
+              max={255}
+              min={0}
+              name="weight"
+              onChange={[Function]}
+              placeholder="5"
+              type="number"
+              value={5}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="port"
+            errors={Object {}}
+            id="port"
+            label="Port"
+          >
+            <Input
+              className=""
+              id="port"
+              max={65535}
+              min={0}
+              name="port"
+              onChange={[Function]}
+              placeholder="80"
+              type="number"
+              value={80}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup
+            apiKey="ttl_sec"
+            errors={Object {}}
+            id="ttl"
+            label="TTL"
+          >
+            <SelectDNSSeconds
+              defaultSeconds={3600}
+              id="ttl"
+              name="ttl"
+              onChange={[Function]}
+              value={0}
+            />
+          </ModalFormGroup>
+        </div>,
+        "errors": Object {},
+        "noCancel": false,
+        "noCancelEvent": false,
+        "noSubmit": false,
+        "onCancel": [Function],
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <ModalFormGroup
+              apiKey="name"
+              errors={Object {}}
+              id="service"
+              label="Service"
+            >
+              <Input
+                className=""
+                id="service"
+                name="service"
+                onChange={[Function]}
+                placeholder="_sip"
+                value="_sip"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="protocol"
+              errors={Object {}}
+              id="protocol"
+              label="Protocol"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="protocol"
+                name="protocol"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "tcp",
+                      "value": "_tcp",
+                    },
+                    Object {
+                      "label": "udp",
+                      "value": "_udp",
+                    },
+                    Object {
+                      "label": "xmpp",
+                      "value": "_xmpp",
+                    },
+                    Object {
+                      "label": "tls",
+                      "value": "_tls",
+                    },
+                    Object {
+                      "label": "smtp",
+                      "value": "_smtp",
+                    },
+                  ]
+                }
+                value="_tcp"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="target"
+              errors={Object {}}
+              id="target"
+              label="Target"
+            >
+              <Input
+                className=""
+                id="target"
+                name="target"
+                onChange={[Function]}
+                placeholder="www"
+                value="ns1.service.com"
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="priority"
+              errors={Object {}}
+              id="priority"
+              label="Priority"
+            >
+              <Input
+                className=""
+                id="priority"
+                max={255}
+                min={0}
+                name="priority"
+                onChange={[Function]}
+                placeholder="10"
+                type="number"
+                value={10}
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="weight"
+              errors={Object {}}
+              id="weight"
+              label="Weight"
+            >
+              <Input
+                className=""
+                id="weight"
+                max={255}
+                min={0}
+                name="weight"
+                onChange={[Function]}
+                placeholder="5"
+                type="number"
+                value={5}
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="port"
+              errors={Object {}}
+              id="port"
+              label="Port"
+            >
+              <Input
+                className=""
+                id="port"
+                max={65535}
+                min={0}
+                name="port"
+                onChange={[Function]}
+                placeholder="80"
+                type="number"
+                value={80}
+              />
+            </ModalFormGroup>,
+            <ModalFormGroup
+              apiKey="ttl_sec"
+              errors={Object {}}
+              id="ttl"
+              label="TTL"
+            >
+              <SelectDNSSeconds
+                defaultSeconds={3600}
+                id="ttl"
+                name="ttl"
+                onChange={[Function]}
+                value={0}
+              />
+            </ModalFormGroup>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "name",
+              "children": <Input
+                className=""
+                id="service"
+                name="service"
+                onChange={[Function]}
+                placeholder="_sip"
+                value="_sip"
+              />,
+              "errors": Object {},
+              "id": "service",
+              "label": "Service",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "service",
+                "name": "service",
+                "onChange": [Function],
+                "placeholder": "_sip",
+                "value": "_sip",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "protocol",
+              "children": <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="protocol"
+                name="protocol"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "tcp",
+                      "value": "_tcp",
+                    },
+                    Object {
+                      "label": "udp",
+                      "value": "_udp",
+                    },
+                    Object {
+                      "label": "xmpp",
+                      "value": "_xmpp",
+                    },
+                    Object {
+                      "label": "tls",
+                      "value": "_tls",
+                    },
+                    Object {
+                      "label": "smtp",
+                      "value": "_smtp",
+                    },
+                  ]
+                }
+                value="_tcp"
+              />,
+              "errors": Object {},
+              "id": "protocol",
+              "label": "Protocol",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "analytics": Object {
+                  "noTrack": false,
+                },
+                "className": "",
+                "id": "protocol",
+                "name": "protocol",
+                "onChange": [Function],
+                "options": Array [
+                  Object {
+                    "label": "tcp",
+                    "value": "_tcp",
+                  },
+                  Object {
+                    "label": "udp",
+                    "value": "_udp",
+                  },
+                  Object {
+                    "label": "xmpp",
+                    "value": "_xmpp",
+                  },
+                  Object {
+                    "label": "tls",
+                    "value": "_tls",
+                  },
+                  Object {
+                    "label": "smtp",
+                    "value": "_smtp",
+                  },
+                ],
+                "value": "_tcp",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "target",
+              "children": <Input
+                className=""
+                id="target"
+                name="target"
+                onChange={[Function]}
+                placeholder="www"
+                value="ns1.service.com"
+              />,
+              "errors": Object {},
+              "id": "target",
+              "label": "Target",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "target",
+                "name": "target",
+                "onChange": [Function],
+                "placeholder": "www",
+                "value": "ns1.service.com",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "priority",
+              "children": <Input
+                className=""
+                id="priority"
+                max={255}
+                min={0}
+                name="priority"
+                onChange={[Function]}
+                placeholder="10"
+                type="number"
+                value={10}
+              />,
+              "errors": Object {},
+              "id": "priority",
+              "label": "Priority",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "priority",
+                "max": 255,
+                "min": 0,
+                "name": "priority",
+                "onChange": [Function],
+                "placeholder": "10",
+                "type": "number",
+                "value": 10,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "weight",
+              "children": <Input
+                className=""
+                id="weight"
+                max={255}
+                min={0}
+                name="weight"
+                onChange={[Function]}
+                placeholder="5"
+                type="number"
+                value={5}
+              />,
+              "errors": Object {},
+              "id": "weight",
+              "label": "Weight",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "weight",
+                "max": 255,
+                "min": 0,
+                "name": "weight",
+                "onChange": [Function],
+                "placeholder": "5",
+                "type": "number",
+                "value": 5,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "port",
+              "children": <Input
+                className=""
+                id="port"
+                max={65535}
+                min={0}
+                name="port"
+                onChange={[Function]}
+                placeholder="80"
+                type="number"
+                value={80}
+              />,
+              "errors": Object {},
+              "id": "port",
+              "label": "Port",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "port",
+                "max": 65535,
+                "min": 0,
+                "name": "port",
+                "onChange": [Function],
+                "placeholder": "80",
+                "type": "number",
+                "value": 80,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "apiKey": "ttl_sec",
+              "children": <SelectDNSSeconds
+                defaultSeconds={3600}
+                id="ttl"
+                name="ttl"
+                onChange={[Function]}
+                value={0}
+              />,
+              "errors": Object {},
+              "id": "ttl",
+              "label": "TTL",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "defaultSeconds": 3600,
+                "id": "ttl",
+                "name": "ttl",
+                "onChange": [Function],
+                "value": 0,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": [Function],
+          },
+        ],
+        "type": "div",
+      },
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

@@ -20,6 +20,18 @@ describe('domains/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        domains={domains}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.only('renders with minimum required props', () => {
     const wrapper = shallow(
       <IndexPage

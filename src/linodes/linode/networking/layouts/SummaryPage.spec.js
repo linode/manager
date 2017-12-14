@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
@@ -22,6 +22,16 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     ip => ip.version === 'ipv4');
   const ipv6s = Object.values(testLinode._ips).filter(
     ip => ip.version === 'ipv6');
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <SummaryPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it.skip('renders ipv4 addresses', function () {
     const page = mount(

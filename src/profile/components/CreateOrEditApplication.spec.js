@@ -21,9 +21,22 @@ describe('profile/components/CreateOrEditApplication', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <CreateOrEditApplication
+        title="CreateOrEditApplication"
+        dispatch={dispatch}
+        close={dispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('creates a new application', async () => {
     const page = shallow(
       <CreateOrEditApplication
+        title="CreateOrEditApplication"
         dispatch={dispatch}
         close={dispatch}
       />
@@ -59,6 +72,7 @@ describe('profile/components/CreateOrEditApplication', () => {
   it('fails on a larger file', async () => {
     const page = shallow(
       <CreateOrEditApplication
+        title="CreateOrEditApplication"
         dispatch={dispatch}
         close={dispatch}
       />
@@ -81,6 +95,7 @@ describe('profile/components/CreateOrEditApplication', () => {
     const close = sandbox.spy();
     const page = shallow(
       <CreateOrEditApplication
+        title="CreateOrEditApplication"
         dispatch={dispatch}
         close={close}
         label="My awesome client"
@@ -114,12 +129,13 @@ describe('profile/components/CreateOrEditApplication', () => {
   it('has the public field disabled upon edit', async () => {
     const page = shallow(
       <CreateOrEditApplication
+        title="CreateOrEditApplication"
         dispatch={dispatch}
         close={close}
         label="My awesome client"
         redirect_uri="http://example.com"
         id="1"
-        public
+        public={false}
         forEdit
       />
     );

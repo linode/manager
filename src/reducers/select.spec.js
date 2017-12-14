@@ -1,5 +1,4 @@
 import deepFreeze from 'deep-freeze';
-import { expectObjectDeepEquals } from '~/test.helpers';
 
 import select from '~/reducers/select';
 import { TOGGLE_SELECTED } from '~/actions/select';
@@ -8,7 +7,7 @@ import toggleSelected from '~/actions/select';
 
 describe('reducers/select reducer', () => {
   it('should handle initial state', () => {
-    expectObjectDeepEquals(select(undefined, { }), { selected: { } });
+    expect(select(undefined, { })).toEqual({ selected: { } });
   });
 
   it('should no-op on arbitrary actions', () => {
@@ -16,7 +15,7 @@ describe('reducers/select reducer', () => {
     deepFreeze(state);
 
     const newState = select(state, { type: 'foobar' });
-    expectObjectDeepEquals(newState, state);
+    expect(newState).toEqual(state);
   });
 
   it('should add to the selection on TOGGLE_SELECTED', () => {
@@ -24,7 +23,7 @@ describe('reducers/select reducer', () => {
     deepFreeze(state);
 
     const newState = select(state, toggleSelected('example', '1234'));
-    expectObjectDeepEquals(newState, {
+    expect(newState).toEqual({
       selected: {
         example: {
           1234: true,
@@ -38,7 +37,7 @@ describe('reducers/select reducer', () => {
       objectType: 'example',
       selectedIds: ['1234', '1235'],
     });
-    expectObjectDeepEquals(multiNewState, {
+    expect(multiNewState).toEqual({
       selected: {
         example: {
           1234: true,
@@ -60,7 +59,7 @@ describe('reducers/select reducer', () => {
     deepFreeze(state);
 
     const newState = select(state, toggleSelected('example', '1234'));
-    expectObjectDeepEquals(newState, {
+    expect(newState).toEqual({
       selected: {
         example: {
           1235: true,
@@ -69,7 +68,7 @@ describe('reducers/select reducer', () => {
     });
 
     const altNewState = select(newState, toggleSelected('example', '1234'));
-    expectObjectDeepEquals(altNewState, {
+    expect(altNewState).toEqual({
       selected: {
         example: {
           1234: true,

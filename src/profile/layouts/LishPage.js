@@ -109,7 +109,7 @@ export class LishPage extends Component {
                 <FormGroupError errors={errors} name="authorized_keys" inline={false} />
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="submit">
               <div className="offset-sm-2 col-sm-10">
                 <SubmitButton disabled={loading} />
                 <FormSummary errors={errors} success="Lish settings saved." />

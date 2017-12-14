@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -6,7 +6,6 @@ import sinon from 'sinon';
 import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
@@ -20,6 +19,17 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <SettingsPage
+        dispatch={dispatch}
+        nodebalancer={configsNodeBalancer}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('renders display page', async () => {
@@ -44,7 +54,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     );
 
     dispatch.reset();
-    page.find('Form').simulate('submit', { preventDefault() {} });
+    page.find('Form').simulate('submit', { preventDefault() { } });
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
@@ -71,14 +81,13 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
     dispatch.reset();
 
-    await page.find('Form').simulate('submit', { preventDefault() {} });
+    await page.find('Form').simulate('submit', { preventDefault() { } });
 
     const fn = dispatch.firstCall.args[0];
     await expectDispatchOrStoreErrors(fn, [
       null,
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult,
-        push('/nodebalancers/newlabel/settings')),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push('/nodebalancers/newlabel/settings')),
     ]);
   });
 });

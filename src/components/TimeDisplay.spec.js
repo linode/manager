@@ -4,6 +4,13 @@ import moment from 'moment';
 import TimeDisplay from '~/components/TimeDisplay';
 
 describe('components/TimeDisplay', () => {
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <TimeDisplay time="2017-03-30T16:48:10" />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders properly', () => {
     const timeIso = '2017-03-30T16:48:10';
     const tDisplay = shallow(<TimeDisplay time={timeIso} />);

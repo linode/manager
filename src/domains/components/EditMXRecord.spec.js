@@ -16,11 +16,27 @@ describe('domains/components/EditMXRecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[4];
+    const wrapper = shallow(
+      <EditMXRecord
+        title="EditMXRecord"
+        dispatch={() => { }}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditMXRecord
+        title="EditMXRecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -45,6 +61,7 @@ describe('domains/components/EditMXRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditMXRecord
+        title="EditMXRecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -86,6 +103,7 @@ describe('domains/components/EditMXRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditMXRecord
+        title="EditMXRecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

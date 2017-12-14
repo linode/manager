@@ -17,15 +17,31 @@ describe('domains/components/EditTXTRecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[4];
+    const wrapper = shallow(
+      <EditTXTRecord
+        title="EditTXTRecord"
+        dispatch={() => { }}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly for TXT record', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const wrapper = shallow(
       <EditTXTRecord
-        dispatch={() => {}}
+        title="EditTXTRecord"
+        dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
-        close={() => {}}
+        close={() => { }}
       />
     );
 
@@ -55,6 +71,7 @@ describe('domains/components/EditTXTRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -100,6 +117,7 @@ describe('domains/components/EditTXTRecord', () => {
     const close = sandbox.spy();
     const wrapper = shallow(
       <EditTXTRecord
+        title="EditTXTRecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

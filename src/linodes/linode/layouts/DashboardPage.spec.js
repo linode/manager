@@ -24,7 +24,17 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     timezone: 'UTC',
     transfer: { usage: 1, quota: 5 },
     username: 'tdude',
+    images: {},
   };
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <DashboardPage
+        {...props}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 
   it.skip('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;

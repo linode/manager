@@ -47,7 +47,7 @@ export class DashboardPage extends Component {
         <section>
           <Card header={<CardHeader title="Account Information" />}>
             <h3 className="sub-header">Contact</h3>
-            <FormGroup className="row">
+            <FormGroup className="row" name="account-form">
               <div className="col-sm-2 row-label">
                 Address
               </div>
@@ -57,7 +57,7 @@ export class DashboardPage extends Component {
                 </ul>
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="email">
               <div className="col-sm-2 row-label">
                 Email
               </div>
@@ -66,18 +66,18 @@ export class DashboardPage extends Component {
               </div>
             </FormGroup>
             <h3 className="sub-header">Recent Billing Activity</h3>
-            <FormGroup className="row">
+            <FormGroup className="row" name="history">
               <div className="col-sm-12">
                 <BillingHistoryList payments={[]} {...this.props} days={30} />
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="billing-history">
               <div className="col-sm-12 text-right">
                 <Link to="/billing/history">Billing History</Link>
               </div>
             </FormGroup>
             <h3 className="sub-header">Account Balance</h3>
-            <FormGroup className="row">
+            <FormGroup className="row" name="abbout-balance">
               <div className="col-sm-2 row-label">
                 Account Balance
               </div>

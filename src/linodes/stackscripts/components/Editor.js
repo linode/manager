@@ -59,13 +59,13 @@ export default class Editor extends Component {
             name="script"
           />
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="last-revision">
           <label htmlFor="revision" className="col-sm-3 col-form-label">
             Last Revision Note
           </label>
           <div className="col-sm-9"><Input value={lastRevision} disabled /></div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="next-revision">
           <label htmlFor="revision" className="col-sm-3 col-form-label">Next Revision Note</label>
           <div className="col-sm-9">
             <Input
@@ -76,7 +76,7 @@ export default class Editor extends Component {
             />
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-3 col-sm-9">
             <SubmitButton disabled={loading} />
             <FormSummary errors={errors} success="Revision saved." />

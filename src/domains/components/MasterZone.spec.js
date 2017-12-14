@@ -19,6 +19,21 @@ describe('domains/components/MasterZone', () => {
 
   const dispatch = sandbox.spy();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const currentZone = domains.domains[2];
+    const wrapper = shallow(
+      <MasterZone
+        dispatch={dispatch}
+        domain={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders a domain with no records', () => {
     const currentZone = domains.domains[2];
 

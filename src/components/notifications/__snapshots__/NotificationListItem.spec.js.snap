@@ -1,0 +1,404 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/notifications/NotificationListItem should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <NotificationListItem
+    event={
+      Object {
+        "action": "linode_reboot",
+        "created": "2016-11-21T20:03:40",
+        "entity": Object {
+          "label": "linode-www2",
+        },
+        "finished": null,
+        "id": 386,
+        "label_message": "",
+        "linode_id": 1237,
+        "nodebalancer_id": null,
+        "percent_complete": 100,
+        "read": true,
+        "seen": false,
+        "stackscript_id": null,
+        "status": "finished",
+        "updated": "2016-11-21T20:12:40",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "children": <div>
+        <div>
+          <strong>
+            linode-www2
+          </strong>
+           rebooted 
+        </div>
+        <div>
+          <small>
+            <span
+              className="text-muted"
+            >
+              <TimeDisplay
+                time="2016-11-21T20:03:40"
+              />
+               by 
+            </span>
+            <strong />
+          </small>
+        </div>
+      </div>,
+      "className": "NotificationList-listItem NotificationList-listItem--read",
+      "onClick": [Function],
+      "onlyActiveOnIndex": false,
+      "style": Object {},
+      "to": "/linodes/linode-www2",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div>
+            <strong>
+              linode-www2
+            </strong>
+             rebooted 
+          </div>,
+          <div>
+            <small>
+              <span
+                className="text-muted"
+              >
+                <TimeDisplay
+                  time="2016-11-21T20:03:40"
+                />
+                 by 
+              </span>
+              <strong />
+            </small>
+          </div>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <strong>
+                linode-www2
+              </strong>,
+              " rebooted ",
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "linode-www2",
+              },
+              "ref": null,
+              "rendered": "linode-www2",
+              "type": "strong",
+            },
+            " rebooted ",
+          ],
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <small>
+              <span
+                className="text-muted"
+              >
+                <TimeDisplay
+                  time="2016-11-21T20:03:40"
+                />
+                 by 
+              </span>
+              <strong />
+            </small>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <span
+                  className="text-muted"
+                >
+                  <TimeDisplay
+                    time="2016-11-21T20:03:40"
+                  />
+                   by 
+                </span>,
+                <strong />,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <TimeDisplay
+                      time="2016-11-21T20:03:40"
+                    />,
+                    " by ",
+                  ],
+                  "className": "text-muted",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "time": "2016-11-21T20:03:40",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  " by ",
+                ],
+                "type": "span",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": undefined,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": "strong",
+              },
+            ],
+            "type": "small",
+          },
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "children": <div>
+          <div>
+            <strong>
+              linode-www2
+            </strong>
+             rebooted 
+          </div>
+          <div>
+            <small>
+              <span
+                className="text-muted"
+              >
+                <TimeDisplay
+                  time="2016-11-21T20:03:40"
+                />
+                 by 
+              </span>
+              <strong />
+            </small>
+          </div>
+        </div>,
+        "className": "NotificationList-listItem NotificationList-listItem--read",
+        "onClick": [Function],
+        "onlyActiveOnIndex": false,
+        "style": Object {},
+        "to": "/linodes/linode-www2",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div>
+              <strong>
+                linode-www2
+              </strong>
+               rebooted 
+            </div>,
+            <div>
+              <small>
+                <span
+                  className="text-muted"
+                >
+                  <TimeDisplay
+                    time="2016-11-21T20:03:40"
+                  />
+                   by 
+                </span>
+                <strong />
+              </small>
+            </div>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <strong>
+                  linode-www2
+                </strong>,
+                " rebooted ",
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "linode-www2",
+                },
+                "ref": null,
+                "rendered": "linode-www2",
+                "type": "strong",
+              },
+              " rebooted ",
+            ],
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <small>
+                <span
+                  className="text-muted"
+                >
+                  <TimeDisplay
+                    time="2016-11-21T20:03:40"
+                  />
+                   by 
+                </span>
+                <strong />
+              </small>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <span
+                    className="text-muted"
+                  >
+                    <TimeDisplay
+                      time="2016-11-21T20:03:40"
+                    />
+                     by 
+                  </span>,
+                  <strong />,
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <TimeDisplay
+                        time="2016-11-21T20:03:40"
+                      />,
+                      " by ",
+                    ],
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "time": "2016-11-21T20:03:40",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    " by ",
+                  ],
+                  "type": "span",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": undefined,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": "strong",
+                },
+              ],
+              "type": "small",
+            },
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
 
 import { NotificationList } from '~/components/notifications';
@@ -20,6 +20,15 @@ describe('components/notifications/NotificationList', () => {
   afterEach(() => {
     sandbox.restore();
   });
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <NotificationList events={api.events} />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
 
   it('implements default state', () => {
     expect(notificationList.instance().state).toBeDefined();

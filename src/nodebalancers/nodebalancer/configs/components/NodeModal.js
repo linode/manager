@@ -157,7 +157,7 @@ export default class NodeModal extends Component {
 NodeModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  configId: PropTypes.number.isRequired,
+  configId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   nodebalancerId: PropTypes.number.isRequired,
   node: PropTypes.object,
 };
