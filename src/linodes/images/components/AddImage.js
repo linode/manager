@@ -34,7 +34,7 @@ export default class AddImage extends Component {
     this.state = {
       linode,
       linodes,
-      disk,
+      disk: 'None',
       allDisks: {},
       disks: false,
       errors: {},
@@ -42,6 +42,30 @@ export default class AddImage extends Component {
     };
 
     this.onChange = onChange.bind(this);
+  }
+
+  isSimpleLinode = disks => {
+    // A "Simple Linode" has two disks: one ext3 or ext4 disk and one swap disk
+    const regularCount = disks.filter(
+      disk => ['ext3', 'ext4'].indexOf(disk.filesystem) > -1).length;
+    const swapCount = disks.filter(
+      disk => disk.filesystem === 'swap').length;
+    return disks.length === 2 && regularCount === 1 && swapCount === 1;
+  }
+
+  disksByType = disks => {
+    const rawDisks = disks.filter(disk => disk.filesystem === 'raw');
+    const swapDisks = disks.filter(disk => disk.filesystem === 'swap');
+    const regularDisks = disks.filter(disk => ['ext3', 'ext4'].indexOf(disk.filesystem) > -1);
+    const initDisks = disks.filter(disk => disk.filesystem === 'ext2');
+    const diskOptions = [...regularDisks, ...initDisks];
+    return {
+      rawDisks: rawDisks,
+      swapDisks: swapDisks,
+      regularDisks: regularDisks,
+      initDisks: initDisks,
+      diskOptions: diskOptions
+    };
   }
 
   onLinodeChange = async (e) => {
@@ -56,13 +80,12 @@ export default class AddImage extends Component {
 
     this.setState({
       loading: true,
-      disk: null,
+      disk: 1,
     });
 
     if (!allDisks[linodeId]) {
       const disks = await this.props.dispatch(api.linodes.disks.all([linodeId]));
       const linodeDisks = Object.values(disks.data)
-        .filter(disk => disk.filesystem !== 'swap')
         .map(
           disk => ({
             label: disk.label,
@@ -73,9 +96,15 @@ export default class AddImage extends Component {
         );
 
       this.setState({
-        allDisks: { ...allDisks, [linodeId]: linodeDisks },
         loading: false,
+        allDisks: { ...allDisks, [linodeId]: linodeDisks },
       });
+    } else {
+      const { diskOptions } = this.disksByType(allDisks[linodeId]);
+      this.setState({
+        loading: false,
+        disk: diskOptions.length ? diskOptions[0].value : 1,
+      })
     }
   }
 
@@ -92,23 +121,12 @@ export default class AddImage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
-  getDiskObject = (disks, disk) => {
-    return Object.values(disks).map(function (diskObj) {
-      if (diskObj.value === disk) {
-        return diskObj;
-      }
-    })[0];
-  }
-
   render() {
     const { dispatch } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
-    let disks = allDisks[linode] || [];
-    // swap has already been filtered out
-    const hasRawDisks = disks.filter(disk => disk.filesystem === 'raw').length > 0;
-    const isSimpleLinode = !hasRawDisks && disks.length <= 1;
-    // now that we know isSimpleLinode, filter out raw disks
-    disks = disks.filter(disk => disk.filesystem !== 'raw');
+    const disks = allDisks[linode] || [];
+    const isSimpleLinode = this.isSimpleLinode(disks);
+    let { rawDisks, swapDisks, regularDisks, diskOptions } = this.disksByType(disks);
 
     return (
       <FormModalBody
@@ -133,29 +151,38 @@ export default class AddImage extends Component {
               </small>
             </ModalFormGroup>
             : null}
-          {!isSimpleLinode ?
+          {(!loading && !isSimpleLinode) &&
             <ModalFormGroup label="Disk" id="disk" apiKey="disk">
-              {disks.length ?
+              {diskOptions.length ?
+                /* UX request:
+                   If a Linode is not a "Simple Linode" but it only has one option,
+                   still show the select field!
+                 */
                 <Select
-                  options={disks}
+                  options={diskOptions}
                   value={disk}
                   name="disk"
                   id="disk"
                   onChange={this.onChange}
-                />
-                :
+                /> :
+                /* UX request:
+                   If a Linode is not a "Simple Linode" but it has no options, e.g. the
+                   linode has no disks, or only raw or swap disks, then show a disabled
+                   input to indicate to this customer that they can choose disks if they
+                   modify their Linode's config.
+                 */
                 <Input
-                  value={loading ? '' : 'None'}
+                  value=''
                   disabled
                 />
               }
-              {(disks.length === 0 && hasRawDisks) &&
+              {(diskOptions.length === 0 && (rawDisks.length > 0 || swapDisks.length > 0)) &&
                 <small className="text-muted">
-                  Cannot create images from raw disks.
+                  Cannot create images from raw disks or swap volumes.
                 </small>
               }
             </ModalFormGroup>
-            : null}
+          }
           <ModalFormGroup errors={errors} id="label" label="Label" apiKey="label">
             <Input
               id="label"
