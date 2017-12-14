@@ -149,20 +149,33 @@ export default class CreateOrEditConfig extends Component {
           <label className="col-form-label col-sm-2">Virtualization mode</label>
           <div className="col-sm-10">
             <Checkboxes>
-              <Radio
-                name="virtMode"
-                checked={virtMode === 'paravirt'}
-                value="paravirt"
-                label="Paravirtualization"
-                onChange={this.onChange}
-              />
-              <Radio
-                name="virtMode"
-                checked={virtMode === 'fullvirt'}
-                value="fullvirt"
-                onChange={this.onChange}
-                label="Full virtualization"
-              />
+              <div className="row">
+                <div className="col-md-3">
+                  <Radio
+                    name="virtMode"
+                    checked={virtMode === 'paravirt'}
+                    value="paravirt"
+                    label="Paravirtualization"
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className="col-md-9 Radio-label">
+                  Controls if devices inside your virtual machine are paravirtualized
+                  or fully virtualized.
+                </div>
+                <div className="col-md-3">
+                  <Radio
+                    name="virtMode"
+                    checked={virtMode === 'fullvirt'}
+                    value="fullvirt"
+                    onChange={this.onChange}
+                    label="Full virtualization"
+                  />
+                </div>
+                <div className="col-md-9 Radio-label">
+                  Paravirt is what you want, unless you're doing weird things.
+                </div>
+              </div>
             </Checkboxes>
           </div>
         </FormGroup>

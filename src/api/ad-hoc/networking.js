@@ -100,21 +100,22 @@ export function assignIPs(region, assignments) {
 
 export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
-    const { linode_id: linodeId, address } = ip;
+    const { linode_id: linodeId, address, version } = ip;
     const rawAddress = address.split('/')[0].trim();
-    await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
+    let _ip = await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
       { rdns }));
 
-    const { _ips } = getState().api.linodes.linodes[linodeId];
+    // for ipv4 the response is an object
+    // for ipv6 the response is an array
+    _ip = Array.isArray(_ip) ? _ip.find(x => x.address === rawAddress) : _ip;
 
-    // This call above is likely to fail, so wait till now to update state.
+    const { _ips } = getState().api.linodes.linodes[linodeId];
     return dispatch(actions.one({
       _ips: {
         ..._ips,
-        [rawAddress]: {
-          ...ip,
-          address: rawAddress,
-          rdns: _ips[address].rdns,
+        [_ip.address]: {
+          ..._ip,
+          version: version,
         },
       },
     }, linodeId));
