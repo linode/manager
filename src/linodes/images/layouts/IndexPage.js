@@ -146,11 +146,10 @@ export class IndexPage extends Component {
                 label: 'Created',
               },
               {
-                cellComponent: LabelCell,
-                dataKey: 'status',
                 headerClassName: 'StatusColumn',
                 titleKey: 'status',
                 label: 'Status',
+                dataFn: (image) => _.capitalize(image.status),
               },
               { cellComponent: this.renderImageActions },
             ]}
