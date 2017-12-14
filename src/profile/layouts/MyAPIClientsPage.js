@@ -26,7 +26,6 @@ import { confirmThenDelete } from '~/utilities';
 import { renderSecret } from '../components/CreatePersonalAccessToken';
 import CreateOrEditApplication from '../components/CreateOrEditApplication';
 
-
 const OBJECT_TYPE = 'clients';
 
 export class MyAPIClientsPage extends Component {
@@ -140,7 +139,7 @@ export class MyAPIClientsPage extends Component {
               },
               { label: 'Access', dataFn: (client) => client.public ? 'Public' : 'Private' },
               { dataKey: 'id', label: 'ID' },
-              { dataKey: 'redirect_uri', label: 'Redirect URI' },
+              { dataKey: 'redirect_uri', label: 'Redirect URI', className: 'u-hscroll-overflow' },
               {
                 cellComponent: DropdownCell,
                 headerClassName: 'DropdownColumn',
