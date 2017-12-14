@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { testLinode1235 } from '~/data/linodes';
 import { IndexPage } from '~/linodes/linode/settings/layouts/IndexPage';
@@ -14,12 +14,27 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        linode={testLinode1235}
+      >
+        <div></div>
+      </IndexPage>
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('renders tabs with correct names and links', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         linode={testLinode1235}
-      />
+      >
+        <div></div>
+      </IndexPage>
     );
 
     const tabList = [

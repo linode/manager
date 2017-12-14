@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,6 +17,13 @@ describe('linodes/components/StatusDropdown', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders correct options for offline Linodes', () => {

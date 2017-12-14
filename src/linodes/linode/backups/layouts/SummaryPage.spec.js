@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { TimeDisplay } from '~/components';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '~/test.helpers';
+import { expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode, testLinode1235, testLinode1236 } from '~/data/linodes';
 
 
@@ -17,6 +17,17 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <SummaryPage
+        dispatch={dispatch}
+        linode={testLinode1236}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders backup blocks with no backups present', () => {
@@ -81,7 +92,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     );
 
     dispatch.reset();
-    page.find('Form').props().onSubmit({ preventDefault() {} });
+    page.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
 
     const modal = mount(dispatch.firstCall.args[0].body);
@@ -92,8 +103,8 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${testLinode1236.label}/backups/1`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/linodes/${testLinode1236.label}/backups/1`)),
     ], 2, [{ id: '1' }]);
   });
 

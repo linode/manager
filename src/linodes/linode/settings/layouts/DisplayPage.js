@@ -81,7 +81,7 @@ export class DisplayPage extends Component {
               <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-1 col-sm-11">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Display settings saved." />

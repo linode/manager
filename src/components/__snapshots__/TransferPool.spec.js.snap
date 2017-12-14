@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/TransferPool should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TransferPool
+    transfer={Object {}}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <div
+          className="TransferPool-gauge"
+        >
+          <div
+            className="TransferPool-bar"
+            style={
+              Object {
+                "width": "NaN%",
+              }
+            }
+          />
+        </div>,
+        <div>
+          GB Used, 
+          NaN
+          GB Remaining, 
+          GB Quota
+        </div>,
+        <small
+          className="text-muted"
+        >
+          Your transfer is prorated and will reset next month
+        </small>,
+      ],
+      "className": "TransferPool offset-md-3 col-md-6 text-center",
+      "header": <CardHeader
+        title="This Month's Network Transfer Pool"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="TransferPool-bar"
+            style={
+              Object {
+                "width": "NaN%",
+              }
+            }
+          />,
+          "className": "TransferPool-gauge",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "className": "TransferPool-bar",
+            "style": Object {
+              "width": "NaN%",
+            },
+          },
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            undefined,
+            "GB Used, ",
+            NaN,
+            "GB Remaining, ",
+            undefined,
+            "GB Quota",
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          undefined,
+          "GB Used, ",
+          NaN,
+          "GB Remaining, ",
+          undefined,
+          "GB Quota",
+        ],
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Your transfer is prorated and will reset next month",
+          "className": "text-muted",
+        },
+        "ref": null,
+        "rendered": "Your transfer is prorated and will reset next month",
+        "type": "small",
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <div
+            className="TransferPool-gauge"
+          >
+            <div
+              className="TransferPool-bar"
+              style={
+                Object {
+                  "width": "NaN%",
+                }
+              }
+            />
+          </div>,
+          <div>
+            GB Used, 
+            NaN
+            GB Remaining, 
+            GB Quota
+          </div>,
+          <small
+            className="text-muted"
+          >
+            Your transfer is prorated and will reset next month
+          </small>,
+        ],
+        "className": "TransferPool offset-md-3 col-md-6 text-center",
+        "header": <CardHeader
+          title="This Month's Network Transfer Pool"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="TransferPool-bar"
+              style={
+                Object {
+                  "width": "NaN%",
+                }
+              }
+            />,
+            "className": "TransferPool-gauge",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "className": "TransferPool-bar",
+              "style": Object {
+                "width": "NaN%",
+              },
+            },
+            "ref": null,
+            "rendered": null,
+            "type": "div",
+          },
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              undefined,
+              "GB Used, ",
+              NaN,
+              "GB Remaining, ",
+              undefined,
+              "GB Quota",
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            undefined,
+            "GB Used, ",
+            NaN,
+            "GB Remaining, ",
+            undefined,
+            "GB Quota",
+          ],
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Your transfer is prorated and will reset next month",
+            "className": "text-muted",
+          },
+          "ref": null,
+          "rendered": "Your transfer is prorated and will reset next month",
+          "type": "small",
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

@@ -133,6 +133,6 @@ CreateOrEditApplication.propTypes = {
   id: PropTypes.string,
   redirect_uri: PropTypes.string,
   thumbnail: PropTypes.string,
-  public: PropTypes.boolean,
-  forEdit: PropTypes.boolean,
+  public: PropTypes.bool,
+  forEdit: PropTypes.bool,
 };

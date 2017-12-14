@@ -244,8 +244,8 @@ export class PermissionsPage extends Component {
                   <thead>
                     <tr>
                       <th className="LabelColumn">{section.title}</th>
-                      {headerColumns.map(column => (
-                        <th className="PermissionsCheckboxColumn">{column.label}</th>
+                      {headerColumns.map((column, index) => (
+                        <th className="PermissionsCheckboxColumn" key={index}>{column.label}</th>
                       ))}
                     </tr>
                   </thead>
@@ -288,7 +288,7 @@ export class PermissionsPage extends Component {
             </div>
           ))}
 
-          <FormGroup>
+          <FormGroup name="submit">
             <SubmitButton disabled={loading}>Save</SubmitButton>
             <FormSummary errors={errors} success="Permissions saved." />
           </FormGroup>

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -13,6 +13,17 @@ describe('settings/layouts/IndexPage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        account={account}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('submit network helper', async () => {

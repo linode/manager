@@ -17,6 +17,23 @@ describe('domains/components/EditARecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[1];
+    const wrapper = shallow(
+      <EditARecord
+        dispatch={dispatch}
+        zone={currentZone}
+        title="boop"
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly', () => {
     const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];

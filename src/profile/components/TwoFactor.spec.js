@@ -12,6 +12,17 @@ describe('profile/components/TwoFactor', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <TwoFactor
+        dispatch={dispatch}
+        tfaEnabled
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('disable two factor called', async () => {
     const page = shallow(
       <TwoFactor
@@ -24,7 +35,7 @@ describe('profile/components/TwoFactor', () => {
     expect(button.props().children).toBe('Disable');
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/profile/tfa-disable', {
@@ -45,7 +56,7 @@ describe('profile/components/TwoFactor', () => {
     expect(button.props().children).toBe('Enable');
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/profile/tfa-enable', {

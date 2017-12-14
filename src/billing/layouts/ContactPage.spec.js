@@ -16,6 +16,16 @@ describe('billing/layouts/ContactPage', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <ContactPage
+        dispatch={dispatch}
+        account={account}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
   it('updates contact info', async () => {
     const dispatch = sandbox.stub();
     page = shallow(

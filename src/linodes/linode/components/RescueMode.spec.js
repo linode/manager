@@ -1,11 +1,11 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
 import { RescueMode } from '~/linodes/linode/components';
 
 import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+  changeInput, expectDispatchOrStoreErrors, expectRequest,
 } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
 
@@ -20,16 +20,30 @@ describe('linodes/linode/components/RescueMode', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <RescueMode
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('shows disks in rescue mode', async () => {
     const page = mount(
       <RescueMode
         dispatch={dispatch}
         linode={testLinode}
-      />);
+      />
+    );
     page.setState({ diskSlots: [12345, 12346] });
-    expectObjectDeepEquals(page.find('.row-label').map(node => node.text()), [
-      '/dev/sdh',
-    ]);
+    expect(
+      page.find('.row-label').map(node => node.text())
+    ).toEqual(
+      ['/dev/sdh']
+    );
   });
 
   it.skip('dispatches reboot to rescue mode', async () => {

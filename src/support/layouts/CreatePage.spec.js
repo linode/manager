@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -8,7 +8,6 @@ import { CreatePage } from '~/support/layouts/CreatePage';
 import {
   createSimulatedEvent,
   expectDispatchOrStoreErrors,
-  expectObjectDeepEquals,
   expectRequest,
 } from '~/test.helpers';
 import { api } from '~/data';
@@ -21,6 +20,20 @@ describe('support/layouts/CreatePage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <CreatePage
+        linodes={api.linodes.linodes}
+        domains={api.domains.domains}
+        nodebalancers={api.nodebalancers.nodebalancers}
+        volumes={api.volumes.volumes}
+        dispatch={mockDispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('opens a ticket', async () => {
@@ -64,7 +77,7 @@ describe('support/layouts/CreatePage', () => {
           description: 'This is my new description!',
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/2')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/support/2')),
     ], 2, [{ id: 2 }]);
   });
 });

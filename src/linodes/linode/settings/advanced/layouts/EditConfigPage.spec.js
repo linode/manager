@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -7,9 +7,7 @@ import sinon from 'sinon';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditConfigPage';
 
-import {
-  changeInput, expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals,
-} from '~/test.helpers';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
 
@@ -30,6 +28,19 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     kernels: api.kernels,
     volumes: testLinode._volumes.volumes,
     account: { network_helper: true },
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <EditConfigPage
+        {...props}
+        create
+        params={{ linodeLabel: 'test-linode-1233' }}
+        dispatch={dispatch}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('uses network helper default on create', () => {
@@ -242,7 +253,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     changeInput(page, 'label', 'new label');
     changeInput(page, 'isMaxRam', true);
 
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
@@ -274,8 +285,8 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
           },
         },
       }),
-      ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/linodes/${props.linode.label}/settings/advanced`)),
+      ([pushResult]) => expect(pushResult)
+        .toEqual(push(`/linodes/${props.linode.label}/settings/advanced`)),
     ], 2);
   });
 });

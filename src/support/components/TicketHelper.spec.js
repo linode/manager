@@ -4,6 +4,13 @@ import { shallow } from 'enzyme';
 import TicketHelper from '~/support/components/TicketHelper';
 
 describe('support/components/TicketHelper', () => {
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <TicketHelper />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('shows and hides faq sections on click', () => {
     const page = shallow(<TicketHelper />);
 

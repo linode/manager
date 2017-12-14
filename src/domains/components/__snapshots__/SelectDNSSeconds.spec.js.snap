@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/SelectDNSSeconds should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <SelectDNSSeconds
+    defaultSeconds={0}
+    id="ttl"
+    name="ttl"
+    onChange={[Function]}
+    value={0}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "analytics": Object {
+        "noTrack": false,
+      },
+      "className": "",
+      "id": "ttl",
+      "name": "ttl",
+      "onChange": [Function],
+      "options": Array [
+        Object {
+          "label": "300 (5 minutes)",
+          "value": "300",
+        },
+        Object {
+          "label": "3600 (1 hour)",
+          "value": "3600",
+        },
+        Object {
+          "label": "7200 (2 hours)",
+          "value": "7200",
+        },
+        Object {
+          "label": "14400 (4 hours)",
+          "value": "14400",
+        },
+        Object {
+          "label": "28800 (8 hours)",
+          "value": "28800",
+        },
+        Object {
+          "label": "57600 (16 hours)",
+          "value": "57600",
+        },
+        Object {
+          "label": "Default (1 day)",
+          "value": "86400",
+        },
+        Object {
+          "label": "172800 (2 days)",
+          "value": "172800",
+        },
+        Object {
+          "label": "345600 (4 days)",
+          "value": "345600",
+        },
+        Object {
+          "label": "604800 (1 week)",
+          "value": "604800",
+        },
+        Object {
+          "label": "1209600 (2 weeks)",
+          "value": "1209600",
+        },
+        Object {
+          "label": "2419200 (4 weeks)",
+          "value": "2419200",
+        },
+      ],
+      "value": "86400",
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "analytics": Object {
+          "noTrack": false,
+        },
+        "className": "",
+        "id": "ttl",
+        "name": "ttl",
+        "onChange": [Function],
+        "options": Array [
+          Object {
+            "label": "300 (5 minutes)",
+            "value": "300",
+          },
+          Object {
+            "label": "3600 (1 hour)",
+            "value": "3600",
+          },
+          Object {
+            "label": "7200 (2 hours)",
+            "value": "7200",
+          },
+          Object {
+            "label": "14400 (4 hours)",
+            "value": "14400",
+          },
+          Object {
+            "label": "28800 (8 hours)",
+            "value": "28800",
+          },
+          Object {
+            "label": "57600 (16 hours)",
+            "value": "57600",
+          },
+          Object {
+            "label": "Default (1 day)",
+            "value": "86400",
+          },
+          Object {
+            "label": "172800 (2 days)",
+            "value": "172800",
+          },
+          Object {
+            "label": "345600 (4 days)",
+            "value": "345600",
+          },
+          Object {
+            "label": "604800 (1 week)",
+            "value": "604800",
+          },
+          Object {
+            "label": "1209600 (2 weeks)",
+            "value": "1209600",
+          },
+          Object {
+            "label": "2419200 (4 weeks)",
+            "value": "2419200",
+          },
+        ],
+        "value": "86400",
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

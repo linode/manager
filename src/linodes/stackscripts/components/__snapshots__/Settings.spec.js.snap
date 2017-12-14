@@ -1,0 +1,1183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`linodes/stackscripts/components/Settings should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Settings
+    dispatch={[Function]}
+    distributions={Object {}}
+    stackscript={
+      Object {
+        "_polling": false,
+        "created": "2015-09-29T11:21:01",
+        "deployments_active": 42,
+        "deployments_total": 150,
+        "description": "Installs the Linode API bindings",
+        "id": 37,
+        "images": Array [
+          "linode/debian7",
+          "linode/debian8",
+        ],
+        "is_public": true,
+        "label": "Example StackScript",
+        "rev_note": "Initial import",
+        "script": "#!/bin/bash",
+        "updated": "2015-10-15T10:02:01",
+        "user_defined_fields": Array [
+          Object {},
+          Object {},
+        ],
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <FormGroup
+          className=""
+        >
+          <div>
+            <label
+              className="col-form-label"
+              htmlFor="label"
+            >
+              Label
+            </label>
+          </div>
+          <div>
+            <Input
+              className=""
+              id="label"
+              name="label"
+              onChange={[Function]}
+              value="Example StackScript"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className=""
+        >
+          <div>
+            <label
+              className="col-form-label"
+              htmlFor="description"
+            >
+              Description
+            </label>
+          </div>
+          <div>
+            <Textarea
+              className=""
+              id="description"
+              name="description"
+              onChange={[Function]}
+              value="Installs the Linode API bindings"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className=""
+        >
+          <div>
+            <label
+              className="col-form-label"
+              htmlFor="images"
+            >
+              Target Images
+            </label>
+          </div>
+          <div>
+            <DistributionSelect
+              id="images"
+              images={undefined}
+              multi={true}
+              name="images"
+              onChange={[Function]}
+              value={
+                Array [
+                  "linode/debian7",
+                  "linode/debian8",
+                ]
+              }
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className=""
+        >
+          <div>
+            <Checkbox
+              checked={true}
+              className=""
+              disabled={true}
+              id="isPublic"
+              label="Make public"
+              name="isPublic"
+              onChange={[Function]}
+              value={true}
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Once you've made a StackScript public, you cannot make it private.
+              </small>
+            </div>
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className=""
+        >
+          <SubmitButton
+            className="btn-default"
+            disabled={false}
+            disabledChildren="Saving"
+          >
+            Save
+          </SubmitButton>
+          <FormSummary
+            className=""
+            errors={Object {}}
+            success="Settings saved."
+          />
+        </FormGroup>,
+      ],
+      "className": "",
+      "noSubmitEvent": false,
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="label"
+              >
+                Label
+              </label>
+            </div>,
+            <div>
+              <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                value="Example StackScript"
+              />
+            </div>,
+          ],
+          "className": "",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <label
+                className="col-form-label"
+                htmlFor="label"
+              >
+                Label
+              </label>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Label",
+                "className": "col-form-label",
+                "htmlFor": "label",
+              },
+              "ref": null,
+              "rendered": "Label",
+              "type": "label",
+            },
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                value="Example StackScript"
+              />,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "label",
+                "name": "label",
+                "onChange": [Function],
+                "value": "Example StackScript",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="description"
+              >
+                Description
+              </label>
+            </div>,
+            <div>
+              <Textarea
+                className=""
+                id="description"
+                name="description"
+                onChange={[Function]}
+                value="Installs the Linode API bindings"
+              />
+            </div>,
+          ],
+          "className": "",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <label
+                className="col-form-label"
+                htmlFor="description"
+              >
+                Description
+              </label>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Description",
+                "className": "col-form-label",
+                "htmlFor": "description",
+              },
+              "ref": null,
+              "rendered": "Description",
+              "type": "label",
+            },
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <Textarea
+                className=""
+                id="description"
+                name="description"
+                onChange={[Function]}
+                value="Installs the Linode API bindings"
+              />,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "id": "description",
+                "name": "description",
+                "onChange": [Function],
+                "value": "Installs the Linode API bindings",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="images"
+              >
+                Target Images
+              </label>
+            </div>,
+            <div>
+              <DistributionSelect
+                id="images"
+                images={undefined}
+                multi={true}
+                name="images"
+                onChange={[Function]}
+                value={
+                  Array [
+                    "linode/debian7",
+                    "linode/debian8",
+                  ]
+                }
+              />
+            </div>,
+          ],
+          "className": "",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <label
+                className="col-form-label"
+                htmlFor="images"
+              >
+                Target Images
+              </label>,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Target Images",
+                "className": "col-form-label",
+                "htmlFor": "images",
+              },
+              "ref": null,
+              "rendered": "Target Images",
+              "type": "label",
+            },
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <DistributionSelect
+                id="images"
+                images={undefined}
+                multi={true}
+                name="images"
+                onChange={[Function]}
+                value={
+                  Array [
+                    "linode/debian7",
+                    "linode/debian8",
+                  ]
+                }
+              />,
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "id": "images",
+                "images": undefined,
+                "multi": true,
+                "name": "images",
+                "onChange": [Function],
+                "value": Array [
+                  "linode/debian7",
+                  "linode/debian8",
+                ],
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <div>
+            <Checkbox
+              checked={true}
+              className=""
+              disabled={true}
+              id="isPublic"
+              label="Make public"
+              name="isPublic"
+              onChange={[Function]}
+              value={true}
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Once you've made a StackScript public, you cannot make it private.
+              </small>
+            </div>
+          </div>,
+          "className": "",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <Checkbox
+                checked={true}
+                className=""
+                disabled={true}
+                id="isPublic"
+                label="Make public"
+                name="isPublic"
+                onChange={[Function]}
+                value={true}
+              />,
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Once you've made a StackScript public, you cannot make it private.
+                </small>
+              </div>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "checked": true,
+                "className": "",
+                "disabled": true,
+                "id": "isPublic",
+                "label": "Make public",
+                "name": "isPublic",
+                "onChange": [Function],
+                "value": true,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <small
+                  className="text-muted"
+                >
+                  Once you've made a StackScript public, you cannot make it private.
+                </small>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Once you've made a StackScript public, you cannot make it private.",
+                  "className": "text-muted",
+                },
+                "ref": null,
+                "rendered": "Once you've made a StackScript public, you cannot make it private.",
+                "type": "small",
+              },
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Saving"
+            >
+              Save
+            </SubmitButton>,
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Settings saved."
+            />,
+          ],
+          "className": "",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Save",
+              "className": "btn-default",
+              "disabled": false,
+              "disabledChildren": "Saving",
+            },
+            "ref": null,
+            "rendered": "Save",
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "className": "",
+              "errors": Object {},
+              "success": "Settings saved.",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+        ],
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <FormGroup
+            className=""
+          >
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="label"
+              >
+                Label
+              </label>
+            </div>
+            <div>
+              <Input
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                value="Example StackScript"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className=""
+          >
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="description"
+              >
+                Description
+              </label>
+            </div>
+            <div>
+              <Textarea
+                className=""
+                id="description"
+                name="description"
+                onChange={[Function]}
+                value="Installs the Linode API bindings"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className=""
+          >
+            <div>
+              <label
+                className="col-form-label"
+                htmlFor="images"
+              >
+                Target Images
+              </label>
+            </div>
+            <div>
+              <DistributionSelect
+                id="images"
+                images={undefined}
+                multi={true}
+                name="images"
+                onChange={[Function]}
+                value={
+                  Array [
+                    "linode/debian7",
+                    "linode/debian8",
+                  ]
+                }
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className=""
+          >
+            <div>
+              <Checkbox
+                checked={true}
+                className=""
+                disabled={true}
+                id="isPublic"
+                label="Make public"
+                name="isPublic"
+                onChange={[Function]}
+                value={true}
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Once you've made a StackScript public, you cannot make it private.
+                </small>
+              </div>
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className=""
+          >
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Saving"
+            >
+              Save
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Settings saved."
+            />
+          </FormGroup>,
+        ],
+        "className": "",
+        "noSubmitEvent": false,
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <div>
+                <label
+                  className="col-form-label"
+                  htmlFor="label"
+                >
+                  Label
+                </label>
+              </div>,
+              <div>
+                <Input
+                  className=""
+                  id="label"
+                  name="label"
+                  onChange={[Function]}
+                  value="Example StackScript"
+                />
+              </div>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <label
+                  className="col-form-label"
+                  htmlFor="label"
+                >
+                  Label
+                </label>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Label",
+                  "className": "col-form-label",
+                  "htmlFor": "label",
+                },
+                "ref": null,
+                "rendered": "Label",
+                "type": "label",
+              },
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <Input
+                  className=""
+                  id="label"
+                  name="label"
+                  onChange={[Function]}
+                  value="Example StackScript"
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "label",
+                  "name": "label",
+                  "onChange": [Function],
+                  "value": "Example StackScript",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <div>
+                <label
+                  className="col-form-label"
+                  htmlFor="description"
+                >
+                  Description
+                </label>
+              </div>,
+              <div>
+                <Textarea
+                  className=""
+                  id="description"
+                  name="description"
+                  onChange={[Function]}
+                  value="Installs the Linode API bindings"
+                />
+              </div>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <label
+                  className="col-form-label"
+                  htmlFor="description"
+                >
+                  Description
+                </label>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Description",
+                  "className": "col-form-label",
+                  "htmlFor": "description",
+                },
+                "ref": null,
+                "rendered": "Description",
+                "type": "label",
+              },
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <Textarea
+                  className=""
+                  id="description"
+                  name="description"
+                  onChange={[Function]}
+                  value="Installs the Linode API bindings"
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "description",
+                  "name": "description",
+                  "onChange": [Function],
+                  "value": "Installs the Linode API bindings",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <div>
+                <label
+                  className="col-form-label"
+                  htmlFor="images"
+                >
+                  Target Images
+                </label>
+              </div>,
+              <div>
+                <DistributionSelect
+                  id="images"
+                  images={undefined}
+                  multi={true}
+                  name="images"
+                  onChange={[Function]}
+                  value={
+                    Array [
+                      "linode/debian7",
+                      "linode/debian8",
+                    ]
+                  }
+                />
+              </div>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <label
+                  className="col-form-label"
+                  htmlFor="images"
+                >
+                  Target Images
+                </label>,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "Target Images",
+                  "className": "col-form-label",
+                  "htmlFor": "images",
+                },
+                "ref": null,
+                "rendered": "Target Images",
+                "type": "label",
+              },
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <DistributionSelect
+                  id="images"
+                  images={undefined}
+                  multi={true}
+                  name="images"
+                  onChange={[Function]}
+                  value={
+                    Array [
+                      "linode/debian7",
+                      "linode/debian8",
+                    ]
+                  }
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "id": "images",
+                  "images": undefined,
+                  "multi": true,
+                  "name": "images",
+                  "onChange": [Function],
+                  "value": Array [
+                    "linode/debian7",
+                    "linode/debian8",
+                  ],
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <div>
+              <Checkbox
+                checked={true}
+                className=""
+                disabled={true}
+                id="isPublic"
+                label="Make public"
+                name="isPublic"
+                onChange={[Function]}
+                value={true}
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Once you've made a StackScript public, you cannot make it private.
+                </small>
+              </div>
+            </div>,
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Checkbox
+                  checked={true}
+                  className=""
+                  disabled={true}
+                  id="isPublic"
+                  label="Make public"
+                  name="isPublic"
+                  onChange={[Function]}
+                  value={true}
+                />,
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Once you've made a StackScript public, you cannot make it private.
+                  </small>
+                </div>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "checked": true,
+                  "className": "",
+                  "disabled": true,
+                  "id": "isPublic",
+                  "label": "Make public",
+                  "name": "isPublic",
+                  "onChange": [Function],
+                  "value": true,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small
+                    className="text-muted"
+                  >
+                    Once you've made a StackScript public, you cannot make it private.
+                  </small>,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Once you've made a StackScript public, you cannot make it private.",
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": "Once you've made a StackScript public, you cannot make it private.",
+                  "type": "small",
+                },
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Saving"
+              >
+                Save
+              </SubmitButton>,
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Settings saved."
+              />,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Save",
+                "className": "btn-default",
+                "disabled": false,
+                "disabledChildren": "Saving",
+              },
+              "ref": null,
+              "rendered": "Save",
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "errors": Object {},
+                "success": "Settings saved.",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -13,20 +13,31 @@ describe('profile/components/TwoFactorModal', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <TwoFactorModal
+        dispatch={dispatch}
+        secret={'qrCode'}
+        username={profile.username}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('confirm two factor called', async () => {
     const page = mount(
       <TwoFactorModal
         dispatch={dispatch}
-        toggleTwoFactor={() => {}}
         secret={'qrCode'}
-        profile={profile}
+        username={profile.username}
       />
     );
 
     page.instance().setState({ tfaCode: 'theCode' });
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    await page.find('Form').props().onSubmit({ preventDefault() { } });
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/profile/tfa-enable-confirm', {

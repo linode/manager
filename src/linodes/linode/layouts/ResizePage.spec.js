@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,6 +17,17 @@ describe('linodes/linode/layouts/ResizePage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const wrapper = shallow(
+      <ResizePage
+        dispatch={dispatch}
+        types={api.types}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('resize the linode', async () => {

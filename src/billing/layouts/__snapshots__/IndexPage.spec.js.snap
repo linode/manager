@@ -1,0 +1,383 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`billing/IndexPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <IndexPage
+    dispatch={[Function]}
+  >
+    <div />
+  </IndexPage>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Billing"
+        />,
+        <header
+          className="main-header"
+        >
+          <div
+            className="container"
+          >
+            <h1
+              className="float-sm-left"
+            >
+              Billing
+            </h1>
+          </div>
+        </header>,
+        <div
+          className="main-header-fix"
+        />,
+        <Tabs
+          className=""
+          isSubTabs={false}
+          onClick={[Function]}
+          pathname="blank"
+          tabs={
+            Array [
+              Object {
+                "link": "/billing/",
+                "name": "Dashboard",
+              },
+              Object {
+                "link": "/billing/contact",
+                "name": "Contact Info",
+              },
+              Object {
+                "link": "/billing/creditcard",
+                "name": "Update Credit Card",
+              },
+              Object {
+                "link": "/billing/payment",
+                "name": "Make A Payment",
+              },
+              Object {
+                "link": "/billing/history",
+                "name": "History",
+              },
+            ]
+          }
+        >
+          <div />
+        </Tabs>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Billing",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="container"
+          >
+            <h1
+              className="float-sm-left"
+            >
+              Billing
+            </h1>
+          </div>,
+          "className": "main-header",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <h1
+              className="float-sm-left"
+            >
+              Billing
+            </h1>,
+            "className": "container",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Billing",
+              "className": "float-sm-left",
+            },
+            "ref": null,
+            "rendered": "Billing",
+            "type": "h1",
+          },
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "className": "main-header-fix",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <div />,
+          "className": "",
+          "isSubTabs": false,
+          "onClick": [Function],
+          "pathname": "blank",
+          "tabs": Array [
+            Object {
+              "link": "/billing/",
+              "name": "Dashboard",
+            },
+            Object {
+              "link": "/billing/contact",
+              "name": "Contact Info",
+            },
+            Object {
+              "link": "/billing/creditcard",
+              "name": "Update Credit Card",
+            },
+            Object {
+              "link": "/billing/payment",
+              "name": "Make A Payment",
+            },
+            Object {
+              "link": "/billing/history",
+              "name": "History",
+            },
+          ],
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {},
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Billing"
+          />,
+          <header
+            className="main-header"
+          >
+            <div
+              className="container"
+            >
+              <h1
+                className="float-sm-left"
+              >
+                Billing
+              </h1>
+            </div>
+          </header>,
+          <div
+            className="main-header-fix"
+          />,
+          <Tabs
+            className=""
+            isSubTabs={false}
+            onClick={[Function]}
+            pathname="blank"
+            tabs={
+              Array [
+                Object {
+                  "link": "/billing/",
+                  "name": "Dashboard",
+                },
+                Object {
+                  "link": "/billing/contact",
+                  "name": "Contact Info",
+                },
+                Object {
+                  "link": "/billing/creditcard",
+                  "name": "Update Credit Card",
+                },
+                Object {
+                  "link": "/billing/payment",
+                  "name": "Make A Payment",
+                },
+                Object {
+                  "link": "/billing/history",
+                  "name": "History",
+                },
+              ]
+            }
+          >
+            <div />
+          </Tabs>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Billing",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="container"
+            >
+              <h1
+                className="float-sm-left"
+              >
+                Billing
+              </h1>
+            </div>,
+            "className": "main-header",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <h1
+                className="float-sm-left"
+              >
+                Billing
+              </h1>,
+              "className": "container",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Billing",
+                "className": "float-sm-left",
+              },
+              "ref": null,
+              "rendered": "Billing",
+              "type": "h1",
+            },
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "className": "main-header-fix",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <div />,
+            "className": "",
+            "isSubTabs": false,
+            "onClick": [Function],
+            "pathname": "blank",
+            "tabs": Array [
+              Object {
+                "link": "/billing/",
+                "name": "Dashboard",
+              },
+              Object {
+                "link": "/billing/contact",
+                "name": "Contact Info",
+              },
+              Object {
+                "link": "/billing/creditcard",
+                "name": "Update Credit Card",
+              },
+              Object {
+                "link": "/billing/payment",
+                "name": "Make A Payment",
+              },
+              Object {
+                "link": "/billing/history",
+                "name": "History",
+              },
+            ],
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {},
+            "ref": null,
+            "rendered": null,
+            "type": "div",
+          },
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

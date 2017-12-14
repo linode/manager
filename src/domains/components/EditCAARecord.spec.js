@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -18,11 +18,28 @@ describe('domains/components/EditCAARecord', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[7];
+    const wrapper = shallow(
+      <EditCAARecord
+        title="EditCAARecord"
+        dispatch={() => { }}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={() => { }}
+      />
+    );
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders fields correctly for CAA record', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[7];
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={() => { }}
         zone={currentZone}
         id={currentRecord.id}
@@ -50,6 +67,7 @@ describe('domains/components/EditCAARecord', () => {
     const close = sandbox.spy();
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -93,6 +111,7 @@ describe('domains/components/EditCAARecord', () => {
     const close = sandbox.spy();
     const page = mount(
       <EditCAARecord
+        title="EditCAARecord"
         dispatch={dispatch}
         zone={currentZone}
         close={close}

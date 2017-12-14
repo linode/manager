@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import { BillingHistoryList } from '~/billing/components/BillingHistoryList';
 import { api } from '~/data';
@@ -17,9 +17,9 @@ describe('billing/components/BillingHistoryList', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('renders a list of invoices', () => {
-    const page = mount(
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
       <BillingHistoryList
         dispatch={dispatch}
         account={account}
@@ -27,8 +27,6 @@ describe('billing/components/BillingHistoryList', () => {
         payments={payments.payments}
       />
     );
-
-    const rowCount = Object.keys(invoices.invoices).length + payments.payments.length;
-    expect(page.find('.TableRow').length).toBe(rowCount);
+    expect(wrapper).toMatchSnapshot();
   });
 });

@@ -1,0 +1,1665 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nodebalancers/nodebalancer/layouts/IndexPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <IndexPage
+    dispatch={[Function]}
+    nodebalancer={
+      Object {
+        "_configs": Object {
+          "configs": Object {
+            "1": Object {
+              "_nodes": Object {
+                "nodes": Object {
+                  "1": Object {
+                    "address": "192.168.4.5:80",
+                    "config_id": 0,
+                    "id": 1,
+                    "label": "greatest_node_ever",
+                    "mode": "accept",
+                    "nodebalancer_id": 23,
+                    "status": "online",
+                    "weight": 40,
+                  },
+                },
+              },
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 1,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 1,
+              },
+              "port": 80,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+            "2": Object {
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 2,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 0,
+              },
+              "port": 81,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+          },
+        },
+        "client_conn_throttle": 0,
+        "created": "2017-03-03T18:08:44",
+        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+        "id": 23,
+        "ipv4": "1.1.1.1",
+        "label": "nodebalancer-1",
+        "region": "us-east-1a",
+        "status": "new_active",
+        "updated": "2017-03-06T22:00:48",
+      }
+    }
+    params={Object {}}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="nodebalancer-1"
+        />,
+        <header
+          className="main-header"
+        >
+          <div
+            className="container clearfix"
+          >
+            <div
+              className="float-sm-left"
+            >
+              <Breadcrumbs
+                crumbs={
+                  Array [
+                    Object {
+                      "label": "NodeBalancers",
+                      "to": "/nodebalancers",
+                    },
+                  ]
+                }
+              />
+              <h1
+                title={23}
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/nodebalancers/nodebalancer-1"
+                >
+                  <GroupLabel
+                    object={
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-1",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      }
+                    }
+                  />
+                </Link>
+              </h1>
+            </div>
+          </div>
+        </header>,
+        <div
+          className="main-header-fix"
+        />,
+        <Tabs
+          className=""
+          isSubTabs={false}
+          onClick={[Function]}
+          pathname="blank"
+          tabs={
+            Array [
+              Object {
+                "link": "/nodebalancers/nodebalancer-1",
+                "name": "Dashboard",
+              },
+              Object {
+                "link": "/nodebalancers/nodebalancer-1/settings",
+                "name": "Settings",
+              },
+            ]
+          }
+        />,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "nodebalancer-1",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="container clearfix"
+          >
+            <div
+              className="float-sm-left"
+            >
+              <Breadcrumbs
+                crumbs={
+                  Array [
+                    Object {
+                      "label": "NodeBalancers",
+                      "to": "/nodebalancers",
+                    },
+                  ]
+                }
+              />
+              <h1
+                title={23}
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/nodebalancers/nodebalancer-1"
+                >
+                  <GroupLabel
+                    object={
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-1",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      }
+                    }
+                  />
+                </Link>
+              </h1>
+            </div>
+          </div>,
+          "className": "main-header",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="float-sm-left"
+            >
+              <Breadcrumbs
+                crumbs={
+                  Array [
+                    Object {
+                      "label": "NodeBalancers",
+                      "to": "/nodebalancers",
+                    },
+                  ]
+                }
+              />
+              <h1
+                title={23}
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/nodebalancers/nodebalancer-1"
+                >
+                  <GroupLabel
+                    object={
+                      Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-1",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      }
+                    }
+                  />
+                </Link>
+              </h1>
+            </div>,
+            "className": "container clearfix",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Breadcrumbs
+                  crumbs={
+                    Array [
+                      Object {
+                        "label": "NodeBalancers",
+                        "to": "/nodebalancers",
+                      },
+                    ]
+                  }
+                />,
+                <h1
+                  title={23}
+                >
+                  <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/nodebalancers/nodebalancer-1"
+                  >
+                    <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />
+                  </Link>
+                </h1>,
+              ],
+              "className": "float-sm-left",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "crumbs": Array [
+                    Object {
+                      "label": "NodeBalancers",
+                      "to": "/nodebalancers",
+                    },
+                  ],
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/nodebalancers/nodebalancer-1"
+                  >
+                    <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />
+                  </Link>,
+                  "title": 23,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "children": <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />,
+                    "onlyActiveOnIndex": false,
+                    "style": Object {},
+                    "to": "/nodebalancers/nodebalancer-1",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "object": Object {
+                        "_configs": Object {
+                          "configs": Object {
+                            "1": Object {
+                              "_nodes": Object {
+                                "nodes": Object {
+                                  "1": Object {
+                                    "address": "192.168.4.5:80",
+                                    "config_id": 0,
+                                    "id": 1,
+                                    "label": "greatest_node_ever",
+                                    "mode": "accept",
+                                    "nodebalancer_id": 23,
+                                    "status": "online",
+                                    "weight": 40,
+                                  },
+                                },
+                              },
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 1,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 1,
+                              },
+                              "port": 80,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                            "2": Object {
+                              "algorithm": "roundrobin",
+                              "check": "none",
+                              "check_attempts": 3,
+                              "check_body": "",
+                              "check_interval": 0,
+                              "check_passive": true,
+                              "check_path": "",
+                              "check_timeout": 30,
+                              "cipher_suite": "recommended",
+                              "id": 2,
+                              "nodebalancer_id": 23,
+                              "nodes_status": Object {
+                                "down": 0,
+                                "up": 0,
+                              },
+                              "port": 81,
+                              "protocol": "http",
+                              "stickiness": "none",
+                            },
+                          },
+                        },
+                        "client_conn_throttle": 0,
+                        "created": "2017-03-03T18:08:44",
+                        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                        "id": 23,
+                        "ipv4": "1.1.1.1",
+                        "label": "nodebalancer-1",
+                        "region": "us-east-1a",
+                        "status": "new_active",
+                        "updated": "2017-03-06T22:00:48",
+                      },
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+                "type": "h1",
+              },
+            ],
+            "type": "div",
+          },
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "className": "main-header-fix",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": "div",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": undefined,
+          "className": "",
+          "isSubTabs": false,
+          "onClick": [Function],
+          "pathname": "blank",
+          "tabs": Array [
+            Object {
+              "link": "/nodebalancers/nodebalancer-1",
+              "name": "Dashboard",
+            },
+            Object {
+              "link": "/nodebalancers/nodebalancer-1/settings",
+              "name": "Settings",
+            },
+          ],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="nodebalancer-1"
+          />,
+          <header
+            className="main-header"
+          >
+            <div
+              className="container clearfix"
+            >
+              <div
+                className="float-sm-left"
+              >
+                <Breadcrumbs
+                  crumbs={
+                    Array [
+                      Object {
+                        "label": "NodeBalancers",
+                        "to": "/nodebalancers",
+                      },
+                    ]
+                  }
+                />
+                <h1
+                  title={23}
+                >
+                  <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/nodebalancers/nodebalancer-1"
+                  >
+                    <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />
+                  </Link>
+                </h1>
+              </div>
+            </div>
+          </header>,
+          <div
+            className="main-header-fix"
+          />,
+          <Tabs
+            className=""
+            isSubTabs={false}
+            onClick={[Function]}
+            pathname="blank"
+            tabs={
+              Array [
+                Object {
+                  "link": "/nodebalancers/nodebalancer-1",
+                  "name": "Dashboard",
+                },
+                Object {
+                  "link": "/nodebalancers/nodebalancer-1/settings",
+                  "name": "Settings",
+                },
+              ]
+            }
+          />,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "nodebalancer-1",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="container clearfix"
+            >
+              <div
+                className="float-sm-left"
+              >
+                <Breadcrumbs
+                  crumbs={
+                    Array [
+                      Object {
+                        "label": "NodeBalancers",
+                        "to": "/nodebalancers",
+                      },
+                    ]
+                  }
+                />
+                <h1
+                  title={23}
+                >
+                  <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/nodebalancers/nodebalancer-1"
+                  >
+                    <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />
+                  </Link>
+                </h1>
+              </div>
+            </div>,
+            "className": "main-header",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <div
+                className="float-sm-left"
+              >
+                <Breadcrumbs
+                  crumbs={
+                    Array [
+                      Object {
+                        "label": "NodeBalancers",
+                        "to": "/nodebalancers",
+                      },
+                    ]
+                  }
+                />
+                <h1
+                  title={23}
+                >
+                  <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/nodebalancers/nodebalancer-1"
+                  >
+                    <GroupLabel
+                      object={
+                        Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        }
+                      }
+                    />
+                  </Link>
+                </h1>
+              </div>,
+              "className": "container clearfix",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Breadcrumbs
+                    crumbs={
+                      Array [
+                        Object {
+                          "label": "NodeBalancers",
+                          "to": "/nodebalancers",
+                        },
+                      ]
+                    }
+                  />,
+                  <h1
+                    title={23}
+                  >
+                    <Link
+                      onlyActiveOnIndex={false}
+                      style={Object {}}
+                      to="/nodebalancers/nodebalancer-1"
+                    >
+                      <GroupLabel
+                        object={
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-1",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          }
+                        }
+                      />
+                    </Link>
+                  </h1>,
+                ],
+                "className": "float-sm-left",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "crumbs": Array [
+                      Object {
+                        "label": "NodeBalancers",
+                        "to": "/nodebalancers",
+                      },
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <Link
+                      onlyActiveOnIndex={false}
+                      style={Object {}}
+                      to="/nodebalancers/nodebalancer-1"
+                    >
+                      <GroupLabel
+                        object={
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-1",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          }
+                        }
+                      />
+                    </Link>,
+                    "title": 23,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "class",
+                    "props": Object {
+                      "children": <GroupLabel
+                        object={
+                          Object {
+                            "_configs": Object {
+                              "configs": Object {
+                                "1": Object {
+                                  "_nodes": Object {
+                                    "nodes": Object {
+                                      "1": Object {
+                                        "address": "192.168.4.5:80",
+                                        "config_id": 0,
+                                        "id": 1,
+                                        "label": "greatest_node_ever",
+                                        "mode": "accept",
+                                        "nodebalancer_id": 23,
+                                        "status": "online",
+                                        "weight": 40,
+                                      },
+                                    },
+                                  },
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 1,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 1,
+                                  },
+                                  "port": 80,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                                "2": Object {
+                                  "algorithm": "roundrobin",
+                                  "check": "none",
+                                  "check_attempts": 3,
+                                  "check_body": "",
+                                  "check_interval": 0,
+                                  "check_passive": true,
+                                  "check_path": "",
+                                  "check_timeout": 30,
+                                  "cipher_suite": "recommended",
+                                  "id": 2,
+                                  "nodebalancer_id": 23,
+                                  "nodes_status": Object {
+                                    "down": 0,
+                                    "up": 0,
+                                  },
+                                  "port": 81,
+                                  "protocol": "http",
+                                  "stickiness": "none",
+                                },
+                              },
+                            },
+                            "client_conn_throttle": 0,
+                            "created": "2017-03-03T18:08:44",
+                            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                            "id": 23,
+                            "ipv4": "1.1.1.1",
+                            "label": "nodebalancer-1",
+                            "region": "us-east-1a",
+                            "status": "new_active",
+                            "updated": "2017-03-06T22:00:48",
+                          }
+                        }
+                      />,
+                      "onlyActiveOnIndex": false,
+                      "style": Object {},
+                      "to": "/nodebalancers/nodebalancer-1",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "object": Object {
+                          "_configs": Object {
+                            "configs": Object {
+                              "1": Object {
+                                "_nodes": Object {
+                                  "nodes": Object {
+                                    "1": Object {
+                                      "address": "192.168.4.5:80",
+                                      "config_id": 0,
+                                      "id": 1,
+                                      "label": "greatest_node_ever",
+                                      "mode": "accept",
+                                      "nodebalancer_id": 23,
+                                      "status": "online",
+                                      "weight": 40,
+                                    },
+                                  },
+                                },
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 1,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 1,
+                                },
+                                "port": 80,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                              "2": Object {
+                                "algorithm": "roundrobin",
+                                "check": "none",
+                                "check_attempts": 3,
+                                "check_body": "",
+                                "check_interval": 0,
+                                "check_passive": true,
+                                "check_path": "",
+                                "check_timeout": 30,
+                                "cipher_suite": "recommended",
+                                "id": 2,
+                                "nodebalancer_id": 23,
+                                "nodes_status": Object {
+                                  "down": 0,
+                                  "up": 0,
+                                },
+                                "port": 81,
+                                "protocol": "http",
+                                "stickiness": "none",
+                              },
+                            },
+                          },
+                          "client_conn_throttle": 0,
+                          "created": "2017-03-03T18:08:44",
+                          "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                          "id": 23,
+                          "ipv4": "1.1.1.1",
+                          "label": "nodebalancer-1",
+                          "region": "us-east-1a",
+                          "status": "new_active",
+                          "updated": "2017-03-06T22:00:48",
+                        },
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": [Function],
+                  },
+                  "type": "h1",
+                },
+              ],
+              "type": "div",
+            },
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "className": "main-header-fix",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": "div",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": undefined,
+            "className": "",
+            "isSubTabs": false,
+            "onClick": [Function],
+            "pathname": "blank",
+            "tabs": Array [
+              Object {
+                "link": "/nodebalancers/nodebalancer-1",
+                "name": "Dashboard",
+              },
+              Object {
+                "link": "/nodebalancers/nodebalancer-1/settings",
+                "name": "Settings",
+              },
+            ],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

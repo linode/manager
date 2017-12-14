@@ -17,6 +17,19 @@ describe('linodes/linode/backups/components/BackupDetails', () => {
     sandbox.restore();
   });
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const backup = testLinode._backups.daily;
+    const wrapper = shallow(
+      <BackupDetails
+        dispatch={dispatch}
+        linode={testLinode}
+        backup={backup}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it.skip('renders fields', () => {
     const backup = testLinode._backups.daily;
     const page = mount(

@@ -148,7 +148,7 @@ export class CreatePage extends Component {
                 <FormGroupError errors={errors} name="description" inline={false} />
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="submit">
               <div className="col-sm-10 offset-sm-2">
                 <SubmitButton disabled={loading} disabledChildren="Opening Ticket">
                   Open Ticket
@@ -167,11 +167,11 @@ CreatePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   domains: PropTypes.object.isRequired,
-  volumes: PropTypes.object.isRequired,
+  volumes: PropTypes.array.isRequired,
   nodebalancers: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     nodebalancers: state.api.nodebalancers.nodebalancers,
     linodes: state.api.linodes.linodes,
@@ -180,4 +180,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(CreatePage);
+export default connect(mapStateToProps)(CreatePage);

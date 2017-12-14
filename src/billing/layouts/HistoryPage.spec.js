@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { HistoryPage } from '~/billing/layouts/HistoryPage';
 import { api } from '~/data';
@@ -15,14 +15,27 @@ describe('billing/layouts/HistoryPage', () => {
 
   afterEach(() => {
     sandbox.restore();
-    page.unmount();
   });
 
   const dispatch = sandbox.spy();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <HistoryPage
+        payments={{}}
+        dispatch={dispatch}
+        account={account}
+        invoices={invoices.invoices}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('renders account balance', () => {
     page = mount(
       <HistoryPage
+        payments={{}}
         dispatch={dispatch}
         account={account}
         invoices={invoices.invoices}
@@ -30,5 +43,7 @@ describe('billing/layouts/HistoryPage', () => {
     );
 
     expect(page.find('strong').text()).toEqual('Current Balance: $10.00');
+
+    page.unmount();
   });
 });

@@ -85,7 +85,7 @@ export default class BackupRestore extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Restore Backup', action: 'restore' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="restore-form">
             <div className="col-sm-3 col-form-label">
               Restore to
             </div>
@@ -105,7 +105,7 @@ export default class BackupRestore extends Component {
               </div>
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="overrite">
             <div className="offset-sm-3 col-sm-9">
               <Checkbox
                 id="overwrite"
@@ -117,7 +117,7 @@ export default class BackupRestore extends Component {
               />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="restore">
             <div className="offset-sm-3 col-sm-9">
               <SubmitButton disabled={loading} disabledChildren="Restoring">
                 Restore

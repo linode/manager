@@ -17,6 +17,19 @@ describe('profile/components/EditPersonalAccessToken', () => {
 
   const dispatch = sandbox.stub();
 
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <EditPersonalAccessToken
+        dispatch={dispatch}
+        close={close}
+        label={testToken.label}
+        id={testToken.id}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
+
   it('modifies a token', async () => {
     const close = sandbox.spy();
     const page = shallow(

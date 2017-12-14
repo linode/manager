@@ -1,13 +1,11 @@
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
 
-import {
-  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
-} from '~/test.helpers';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode } from '~/data/linodes';
 
 
@@ -16,6 +14,17 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <DisplayPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('makes request to save changes', async () => {
@@ -63,7 +72,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
         body: { group: 'foobar', label: 'my-new-label' },
       }),
       () => {},
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
+      ([pushResult]) => expect(pushResult).toEqual(push('/linodes/my-new-label/settings')),
     ], 2);
   });
 });

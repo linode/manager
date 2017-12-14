@@ -68,7 +68,7 @@ export class ResizePage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Resize Linode' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="current">
             <label className="col-sm-3 col-form-label">Current Plan</label>
             <div className="col-sm-9">
               <Input disabled value={planStyle(types.types[currentType])} />
@@ -87,7 +87,7 @@ export class ResizePage extends Component {
               <FormGroupError errors={errors} name="type" inline={false} />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={loading}

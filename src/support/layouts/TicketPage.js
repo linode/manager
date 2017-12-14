@@ -102,7 +102,7 @@ export class TicketPage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Ticket Response', action: 'add' }}
         >
-          <FormGroup>
+          <FormGroup name="ticket-reply">
             <label htmlFor="reply" className="row-label">Write a reply:</label>
             <Textarea
               name="reply"
@@ -113,7 +113,7 @@ export class TicketPage extends Component {
             />
             <FormGroupError inline={false} errors={errors} name="description" />
           </FormGroup>
-          <FormGroup errors={errors}>
+          <FormGroup name="ticket-attachements" errors={errors}>
             <div>
               <label htmlFor="attachments" className="row-label">Add attachments:</label>
             </div>
@@ -127,7 +127,7 @@ export class TicketPage extends Component {
             <FormGroupError inline={false} errors={errors} name="attachments" />
           </FormGroup>
           <div className="clearfix">
-            <div className="text-sm-right">
+            <div className="text- sm-right">
               <SubmitButton disabled={loading} disabledChildren="Submitting">Submit</SubmitButton>
               <FormSummary errors={errors} success="Response submitted." />
             </div>
@@ -186,7 +186,7 @@ export class TicketPage extends Component {
 TicketPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   ticket: PropTypes.object.isRequired,
-  replies: PropTypes.object.isRequired,
+  replies: PropTypes.array.isRequired,
 };
 
 function select(state, props) {

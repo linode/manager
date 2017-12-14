@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 
 import { IndexPage } from '~/support/layouts/IndexPage';
 import { api } from '~/data';
@@ -11,6 +11,17 @@ describe('support/layouts/IndexPage', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  it('should render without error', () => {
+    const mockDispatch = jest.fn();
+    const wrapper = shallow(
+      <IndexPage
+        dispatch={mockDispatch}
+        tickets={api.tickets}
+      />
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 
   it('renders a list of tickets', () => {

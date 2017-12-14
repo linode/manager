@@ -1,0 +1,767 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/Dropdown should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Dropdown
+    analytics={Object {}}
+    dropdownIcon="fa-caret-down"
+    duplicateFirst={true}
+    groups={
+      Array [
+        Object {
+          "elements": Array [
+            Object {
+              "action": [Function],
+              "name": "Drew",
+            },
+          ],
+        },
+        Object {
+          "elements": Array [
+            Object {
+              "action": [Function],
+              "name": "Phil",
+            },
+            Object {
+              "action": [Function],
+              "name": "Will",
+            },
+          ],
+        },
+      ]
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <Button
+          buttonClass="btn-default"
+          className="Dropdown-first"
+          disabled={false}
+          id="drew"
+          onClick={[Function]}
+          to={undefined}
+          type="button"
+        >
+          Drew
+        </Button>,
+        <Button
+          aria-expanded={false}
+          aria-haspopup="true"
+          buttonClass="btn-default"
+          className="Dropdown-toggle"
+          data-toggle="dropdown"
+          disabled={false}
+          id=""
+          onClick={[Function]}
+          type="button"
+        >
+          <i
+            className="fa fa-caret-down"
+          />
+        </Button>,
+        <div
+          className="Dropdown-menu Dropdown-menu--right"
+        >
+          <div
+            className="Dropdown-group"
+          >
+            <div
+              className="Dropdown-elements"
+            >
+              <button
+                className="Dropdown-item"
+                id="drew"
+                onMouseDown={[Function]}
+                type="button"
+              >
+                Drew
+              </button>
+            </div>
+          </div>
+          <div
+            className="Dropdown-group"
+          >
+            <div
+              className="Dropdown-elements"
+            >
+              <button
+                className="Dropdown-item"
+                id="phil"
+                onMouseDown={[Function]}
+                type="button"
+              >
+                Phil
+              </button>
+              <button
+                className="Dropdown-item"
+                id="will"
+                onMouseDown={[Function]}
+                type="button"
+              >
+                Will
+              </button>
+            </div>
+          </div>
+        </div>,
+      ],
+      "className": "Dropdown btn-group ",
+      "onBlur": [Function],
+      "tabIndex": "-1",
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "buttonClass": "btn-default",
+          "children": Array [
+            null,
+            "Drew",
+          ],
+          "className": "Dropdown-first",
+          "disabled": false,
+          "id": "drew",
+          "onClick": [Function],
+          "to": undefined,
+          "type": "button",
+        },
+        "ref": null,
+        "rendered": Array [
+          null,
+          "Drew",
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "aria-expanded": false,
+          "aria-haspopup": "true",
+          "buttonClass": "btn-default",
+          "children": <i
+            className="fa fa-caret-down"
+          />,
+          "className": "Dropdown-toggle",
+          "data-toggle": "dropdown",
+          "disabled": false,
+          "id": "",
+          "onClick": [Function],
+          "type": "button",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "className": "fa fa-caret-down",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": "i",
+        },
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <div
+              className="Dropdown-group"
+            >
+              <div
+                className="Dropdown-elements"
+              >
+                <button
+                  className="Dropdown-item"
+                  id="drew"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Drew
+                </button>
+              </div>
+            </div>,
+            <div
+              className="Dropdown-group"
+            >
+              <div
+                className="Dropdown-elements"
+              >
+                <button
+                  className="Dropdown-item"
+                  id="phil"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Phil
+                </button>
+                <button
+                  className="Dropdown-item"
+                  id="will"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Will
+                </button>
+              </div>
+            </div>,
+          ],
+          "className": "Dropdown-menu Dropdown-menu--right",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": "0",
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                null,
+                <div
+                  className="Dropdown-elements"
+                >
+                  <button
+                    className="Dropdown-item"
+                    id="drew"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Drew
+                  </button>
+                </div>,
+              ],
+              "className": "Dropdown-group",
+            },
+            "ref": null,
+            "rendered": Array [
+              null,
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <button
+                      className="Dropdown-item"
+                      id="drew"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Drew
+                    </button>,
+                  ],
+                  "className": "Dropdown-elements",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": "Drew",
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Drew",
+                      "className": "Dropdown-item",
+                      "id": "drew",
+                      "onMouseDown": [Function],
+                      "type": "button",
+                    },
+                    "ref": null,
+                    "rendered": "Drew",
+                    "type": "button",
+                  },
+                ],
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+          Object {
+            "instance": null,
+            "key": "1",
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                null,
+                <div
+                  className="Dropdown-elements"
+                >
+                  <button
+                    className="Dropdown-item"
+                    id="phil"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Phil
+                  </button>
+                  <button
+                    className="Dropdown-item"
+                    id="will"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Will
+                  </button>
+                </div>,
+              ],
+              "className": "Dropdown-group",
+            },
+            "ref": null,
+            "rendered": Array [
+              null,
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <button
+                      className="Dropdown-item"
+                      id="phil"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Phil
+                    </button>,
+                    <button
+                      className="Dropdown-item"
+                      id="will"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Will
+                    </button>,
+                  ],
+                  "className": "Dropdown-elements",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": "Phil",
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Phil",
+                      "className": "Dropdown-item",
+                      "id": "phil",
+                      "onMouseDown": [Function],
+                      "type": "button",
+                    },
+                    "ref": null,
+                    "rendered": "Phil",
+                    "type": "button",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": "Will",
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Will",
+                      "className": "Dropdown-item",
+                      "id": "will",
+                      "onMouseDown": [Function],
+                      "type": "button",
+                    },
+                    "ref": null,
+                    "rendered": "Will",
+                    "type": "button",
+                  },
+                ],
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <Button
+            buttonClass="btn-default"
+            className="Dropdown-first"
+            disabled={false}
+            id="drew"
+            onClick={[Function]}
+            to={undefined}
+            type="button"
+          >
+            Drew
+          </Button>,
+          <Button
+            aria-expanded={false}
+            aria-haspopup="true"
+            buttonClass="btn-default"
+            className="Dropdown-toggle"
+            data-toggle="dropdown"
+            disabled={false}
+            id=""
+            onClick={[Function]}
+            type="button"
+          >
+            <i
+              className="fa fa-caret-down"
+            />
+          </Button>,
+          <div
+            className="Dropdown-menu Dropdown-menu--right"
+          >
+            <div
+              className="Dropdown-group"
+            >
+              <div
+                className="Dropdown-elements"
+              >
+                <button
+                  className="Dropdown-item"
+                  id="drew"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Drew
+                </button>
+              </div>
+            </div>
+            <div
+              className="Dropdown-group"
+            >
+              <div
+                className="Dropdown-elements"
+              >
+                <button
+                  className="Dropdown-item"
+                  id="phil"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Phil
+                </button>
+                <button
+                  className="Dropdown-item"
+                  id="will"
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  Will
+                </button>
+              </div>
+            </div>
+          </div>,
+        ],
+        "className": "Dropdown btn-group ",
+        "onBlur": [Function],
+        "tabIndex": "-1",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "buttonClass": "btn-default",
+            "children": Array [
+              null,
+              "Drew",
+            ],
+            "className": "Dropdown-first",
+            "disabled": false,
+            "id": "drew",
+            "onClick": [Function],
+            "to": undefined,
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": Array [
+            null,
+            "Drew",
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "aria-expanded": false,
+            "aria-haspopup": "true",
+            "buttonClass": "btn-default",
+            "children": <i
+              className="fa fa-caret-down"
+            />,
+            "className": "Dropdown-toggle",
+            "data-toggle": "dropdown",
+            "disabled": false,
+            "id": "",
+            "onClick": [Function],
+            "type": "button",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "className": "fa fa-caret-down",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": "i",
+          },
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <div
+                className="Dropdown-group"
+              >
+                <div
+                  className="Dropdown-elements"
+                >
+                  <button
+                    className="Dropdown-item"
+                    id="drew"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Drew
+                  </button>
+                </div>
+              </div>,
+              <div
+                className="Dropdown-group"
+              >
+                <div
+                  className="Dropdown-elements"
+                >
+                  <button
+                    className="Dropdown-item"
+                    id="phil"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Phil
+                  </button>
+                  <button
+                    className="Dropdown-item"
+                    id="will"
+                    onMouseDown={[Function]}
+                    type="button"
+                  >
+                    Will
+                  </button>
+                </div>
+              </div>,
+            ],
+            "className": "Dropdown-menu Dropdown-menu--right",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": "0",
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  null,
+                  <div
+                    className="Dropdown-elements"
+                  >
+                    <button
+                      className="Dropdown-item"
+                      id="drew"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Drew
+                    </button>
+                  </div>,
+                ],
+                "className": "Dropdown-group",
+              },
+              "ref": null,
+              "rendered": Array [
+                null,
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <button
+                        className="Dropdown-item"
+                        id="drew"
+                        onMouseDown={[Function]}
+                        type="button"
+                      >
+                        Drew
+                      </button>,
+                    ],
+                    "className": "Dropdown-elements",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": "Drew",
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": "Drew",
+                        "className": "Dropdown-item",
+                        "id": "drew",
+                        "onMouseDown": [Function],
+                        "type": "button",
+                      },
+                      "ref": null,
+                      "rendered": "Drew",
+                      "type": "button",
+                    },
+                  ],
+                  "type": "div",
+                },
+              ],
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": "1",
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  null,
+                  <div
+                    className="Dropdown-elements"
+                  >
+                    <button
+                      className="Dropdown-item"
+                      id="phil"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Phil
+                    </button>
+                    <button
+                      className="Dropdown-item"
+                      id="will"
+                      onMouseDown={[Function]}
+                      type="button"
+                    >
+                      Will
+                    </button>
+                  </div>,
+                ],
+                "className": "Dropdown-group",
+              },
+              "ref": null,
+              "rendered": Array [
+                null,
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      <button
+                        className="Dropdown-item"
+                        id="phil"
+                        onMouseDown={[Function]}
+                        type="button"
+                      >
+                        Phil
+                      </button>,
+                      <button
+                        className="Dropdown-item"
+                        id="will"
+                        onMouseDown={[Function]}
+                        type="button"
+                      >
+                        Will
+                      </button>,
+                    ],
+                    "className": "Dropdown-elements",
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    Object {
+                      "instance": null,
+                      "key": "Phil",
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": "Phil",
+                        "className": "Dropdown-item",
+                        "id": "phil",
+                        "onMouseDown": [Function],
+                        "type": "button",
+                      },
+                      "ref": null,
+                      "rendered": "Phil",
+                      "type": "button",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": "Will",
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": "Will",
+                        "className": "Dropdown-item",
+                        "id": "will",
+                        "onMouseDown": [Function],
+                        "type": "button",
+                      },
+                      "ref": null,
+                      "rendered": "Will",
+                      "type": "button",
+                    },
+                  ],
+                  "type": "div",
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;
