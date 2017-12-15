@@ -461,6 +461,7 @@ ShallowWrapper {
           <PrimaryButton
             buttonClass="btn-default"
             className="float-right"
+            disabled={false}
             onClick={[Function]}
             options={Array []}
           >
@@ -1023,6 +1024,7 @@ ShallowWrapper {
             <PrimaryButton
               buttonClass="btn-default"
               className="float-right"
+              disabled={false}
               onClick={[Function]}
               options={Array []}
             >

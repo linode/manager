@@ -105,6 +105,7 @@ export default class Disks extends Component {
         className="float-right"
         buttonClass="btn-default"
         onClick={() => AddDisk.trigger(dispatch, linode, images, free)}
+        disabled={free === 0}
       >
         Add a Disk
       </PrimaryButton>
