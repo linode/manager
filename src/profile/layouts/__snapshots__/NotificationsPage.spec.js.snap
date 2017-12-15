@@ -6,7 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <NotificationsPage
     enabled={true}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -22,45 +22,45 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Notifications"
-        />,
+/>,
         <Card
           className=""
           header={
-            <CardHeader
-              title="Change email settings"
-            />
+                    <CardHeader
+                              title="Change email settings"
+                    />
           }
-        >
+>
           <Form
-            analytics={
-              Object {
-                "title": "Notifications Settings",
-              }
-            }
-            className=""
-            noSubmitEvent={false}
-            onSubmit={[Function]}
+                    analytics={
+                              Object {
+                                        "title": "Notifications Settings",
+                                      }
+                    }
+                    className=""
+                    noSubmitEvent={false}
+                    onSubmit={[Function]}
           >
-            <p>
-              Email notifications are currently 
-              enabl
-              ed.
-            </p>
-            <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Disabling"
-            >
-              Disabl
-              e
-            </SubmitButton>
-            <FormSummary
-              className=""
-              errors={Object {}}
-              success="Email notifications enabled."
-            />
+                    <p>
+                              Email notifications are currently 
+                              enabl
+                              ed.
+                    </p>
+                    <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Disabling"
+                    >
+                              Disabl
+                              e
+                    </SubmitButton>
+                    <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="Email notifications enabled."
+                    />
           </Form>
-        </Card>,
+</Card>,
       ],
     },
     "ref": null,
@@ -83,37 +83,37 @@ ShallowWrapper {
         "props": Object {
           "children": <Form
             analytics={
-              Object {
-                "title": "Notifications Settings",
-              }
+                        Object {
+                                    "title": "Notifications Settings",
+                                  }
             }
             className=""
             noSubmitEvent={false}
             onSubmit={[Function]}
-          >
+>
             <p>
-              Email notifications are currently 
-              enabl
-              ed.
+                        Email notifications are currently 
+                        enabl
+                        ed.
             </p>
             <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Disabling"
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Disabling"
             >
-              Disabl
-              e
+                        Disabl
+                        e
             </SubmitButton>
             <FormSummary
-              className=""
-              errors={Object {}}
-              success="Email notifications enabled."
+                        className=""
+                        errors={Object {}}
+                        success="Email notifications enabled."
             />
-          </Form>,
+</Form>,
           "className": "",
           "header": <CardHeader
             title="Change email settings"
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -129,20 +129,20 @@ ShallowWrapper {
                 Email notifications are currently 
                 enabl
                 ed.
-              </p>,
+</p>,
               <SubmitButton
                 className="btn-default"
                 disabled={false}
                 disabledChildren="Disabling"
-              >
+>
                 Disabl
                 e
-              </SubmitButton>,
+</SubmitButton>,
               <FormSummary
                 className=""
                 errors={Object {}}
                 success="Email notifications enabled."
-              />,
+/>,
             ],
             "className": "",
             "noSubmitEvent": false,
@@ -219,45 +219,45 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Notifications"
-          />,
+/>,
           <Card
             className=""
             header={
-              <CardHeader
-                title="Change email settings"
-              />
+                        <CardHeader
+                                    title="Change email settings"
+                        />
             }
-          >
+>
             <Form
-              analytics={
-                Object {
-                  "title": "Notifications Settings",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
+                        analytics={
+                                    Object {
+                                                "title": "Notifications Settings",
+                                              }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
             >
-              <p>
-                Email notifications are currently 
-                enabl
-                ed.
-              </p>
-              <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Disabling"
-              >
-                Disabl
-                e
-              </SubmitButton>
-              <FormSummary
-                className=""
-                errors={Object {}}
-                success="Email notifications enabled."
-              />
+                        <p>
+                                    Email notifications are currently 
+                                    enabl
+                                    ed.
+                        </p>
+                        <SubmitButton
+                                    className="btn-default"
+                                    disabled={false}
+                                    disabledChildren="Disabling"
+                        >
+                                    Disabl
+                                    e
+                        </SubmitButton>
+                        <FormSummary
+                                    className=""
+                                    errors={Object {}}
+                                    success="Email notifications enabled."
+                        />
             </Form>
-          </Card>,
+</Card>,
         ],
       },
       "ref": null,
@@ -280,37 +280,37 @@ ShallowWrapper {
           "props": Object {
             "children": <Form
               analytics={
-                Object {
-                  "title": "Notifications Settings",
-                }
+                            Object {
+                                          "title": "Notifications Settings",
+                                        }
               }
               className=""
               noSubmitEvent={false}
               onSubmit={[Function]}
-            >
+>
               <p>
-                Email notifications are currently 
-                enabl
-                ed.
+                            Email notifications are currently 
+                            enabl
+                            ed.
               </p>
               <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Disabling"
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Disabling"
               >
-                Disabl
-                e
+                            Disabl
+                            e
               </SubmitButton>
               <FormSummary
-                className=""
-                errors={Object {}}
-                success="Email notifications enabled."
+                            className=""
+                            errors={Object {}}
+                            success="Email notifications enabled."
               />
-            </Form>,
+</Form>,
             "className": "",
             "header": <CardHeader
               title="Change email settings"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {
@@ -326,20 +326,20 @@ ShallowWrapper {
                   Email notifications are currently 
                   enabl
                   ed.
-                </p>,
+</p>,
                 <SubmitButton
                   className="btn-default"
                   disabled={false}
                   disabledChildren="Disabling"
-                >
+>
                   Disabl
                   e
-                </SubmitButton>,
+</SubmitButton>,
                 <FormSummary
                   className=""
                   errors={Object {}}
                   success="Email notifications enabled."
-                />,
+/>,
               ],
               "className": "",
               "noSubmitEvent": false,

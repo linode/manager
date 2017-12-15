@@ -7,33 +7,33 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TicketReply
     createdField="opened"
     reply={
-      Object {
-        "_replies": Object {
-          "replies": Array [
-            Object {
-              "created": "2017-03-30T16:48:10",
-              "created_by": "support",
-              "description": "This is the first response.",
-              "id": 1,
+        Object {
+            "_replies": Object {
+              "replies": Array [
+                Object {
+                  "created": "2017-03-30T16:48:10",
+                  "created_by": "support",
+                  "description": "This is the first response.",
+                  "id": 1,
+                },
+              ],
             },
-          ],
-        },
-        "closed": null,
-        "description": "Hullo!",
-        "entity": Object {
-          "label": "awkward-aimless-alpha-22",
-          "type": "linode",
-        },
-        "id": 1,
-        "opened": "2017-03-03T01:22:32",
-        "opened_by": "tdude",
-        "status": "new",
-        "summary": "This is my ticket!",
-        "updated": "2017-03-03T01:22:32",
-        "updated_by": "tdude",
-      }
+            "closed": null,
+            "description": "Hullo!",
+            "entity": Object {
+              "label": "awkward-aimless-alpha-22",
+              "type": "linode",
+            },
+            "id": 1,
+            "opened": "2017-03-03T01:22:32",
+            "opened_by": "tdude",
+            "status": "new",
+            "summary": "This is my ticket!",
+            "updated": "2017-03-03T01:22:32",
+            "updated_by": "tdude",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -55,13 +55,13 @@ ShallowWrapper {
         icon="https://gravatar.com/avatar/undefined"
         iconClass=""
         subtitle={
-          <TimeDisplay
-            time="2017-03-03T01:22:32"
-          />
+                <TimeDisplay
+                        time="2017-03-03T01:22:32"
+                />
         }
         tags={Array []}
         title="tdude"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Array [
@@ -85,13 +85,13 @@ ShallowWrapper {
           icon="https://gravatar.com/avatar/undefined"
           iconClass=""
           subtitle={
-            <TimeDisplay
-              time="2017-03-03T01:22:32"
-            />
+                    <TimeDisplay
+                              time="2017-03-03T01:22:32"
+                    />
           }
           tags={Array []}
           title="tdude"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Array [

@@ -9,30 +9,30 @@ ShallowWrapper {
     dropdownIcon="fa-caret-down"
     duplicateFirst={true}
     groups={
-      Array [
-        Object {
-          "elements": Array [
+        Array [
             Object {
-              "action": [Function],
-              "name": "Drew",
-            },
-          ],
-        },
-        Object {
-          "elements": Array [
-            Object {
-              "action": [Function],
-              "name": "Phil",
+              "elements": Array [
+                Object {
+                  "action": [Function],
+                  "name": "Drew",
+                },
+              ],
             },
             Object {
-              "action": [Function],
-              "name": "Will",
+              "elements": Array [
+                Object {
+                  "action": [Function],
+                  "name": "Phil",
+                },
+                Object {
+                  "action": [Function],
+                  "name": "Will",
+                },
+              ],
             },
-          ],
-        },
-      ]
+          ]
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -54,9 +54,9 @@ ShallowWrapper {
           onClick={[Function]}
           to={undefined}
           type="button"
-        >
+>
           Drew
-        </Button>,
+</Button>,
         <Button
           aria-expanded={false}
           aria-haspopup="true"
@@ -67,55 +67,55 @@ ShallowWrapper {
           id=""
           onClick={[Function]}
           type="button"
-        >
+>
           <i
-            className="fa fa-caret-down"
+                    className="fa fa-caret-down"
           />
-        </Button>,
+</Button>,
         <div
           className="Dropdown-menu Dropdown-menu--right"
-        >
+>
           <div
-            className="Dropdown-group"
+                    className="Dropdown-group"
           >
-            <div
-              className="Dropdown-elements"
-            >
-              <button
-                className="Dropdown-item"
-                id="drew"
-                onMouseDown={[Function]}
-                type="button"
-              >
-                Drew
-              </button>
-            </div>
+                    <div
+                              className="Dropdown-elements"
+                    >
+                              <button
+                                        className="Dropdown-item"
+                                        id="drew"
+                                        onMouseDown={[Function]}
+                                        type="button"
+                              >
+                                        Drew
+                              </button>
+                    </div>
           </div>
           <div
-            className="Dropdown-group"
+                    className="Dropdown-group"
           >
-            <div
-              className="Dropdown-elements"
-            >
-              <button
-                className="Dropdown-item"
-                id="phil"
-                onMouseDown={[Function]}
-                type="button"
-              >
-                Phil
-              </button>
-              <button
-                className="Dropdown-item"
-                id="will"
-                onMouseDown={[Function]}
-                type="button"
-              >
-                Will
-              </button>
-            </div>
+                    <div
+                              className="Dropdown-elements"
+                    >
+                              <button
+                                        className="Dropdown-item"
+                                        id="phil"
+                                        onMouseDown={[Function]}
+                                        type="button"
+                              >
+                                        Phil
+                              </button>
+                              <button
+                                        className="Dropdown-item"
+                                        id="will"
+                                        onMouseDown={[Function]}
+                                        type="button"
+                              >
+                                        Will
+                              </button>
+                    </div>
           </div>
-        </div>,
+</div>,
       ],
       "className": "Dropdown btn-group ",
       "onBlur": [Function],
@@ -157,7 +157,7 @@ ShallowWrapper {
           "buttonClass": "btn-default",
           "children": <i
             className="fa fa-caret-down"
-          />,
+/>,
           "className": "Dropdown-toggle",
           "data-toggle": "dropdown",
           "disabled": false,
@@ -187,44 +187,44 @@ ShallowWrapper {
           "children": Array [
             <div
               className="Dropdown-group"
-            >
+>
               <div
-                className="Dropdown-elements"
+                            className="Dropdown-elements"
               >
-                <button
-                  className="Dropdown-item"
-                  id="drew"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Drew
-                </button>
+                            <button
+                                          className="Dropdown-item"
+                                          id="drew"
+                                          onMouseDown={[Function]}
+                                          type="button"
+                            >
+                                          Drew
+                            </button>
               </div>
-            </div>,
+</div>,
             <div
               className="Dropdown-group"
-            >
+>
               <div
-                className="Dropdown-elements"
+                            className="Dropdown-elements"
               >
-                <button
-                  className="Dropdown-item"
-                  id="phil"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Phil
-                </button>
-                <button
-                  className="Dropdown-item"
-                  id="will"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Will
-                </button>
+                            <button
+                                          className="Dropdown-item"
+                                          id="phil"
+                                          onMouseDown={[Function]}
+                                          type="button"
+                            >
+                                          Phil
+                            </button>
+                            <button
+                                          className="Dropdown-item"
+                                          id="will"
+                                          onMouseDown={[Function]}
+                                          type="button"
+                            >
+                                          Will
+                            </button>
               </div>
-            </div>,
+</div>,
           ],
           "className": "Dropdown-menu Dropdown-menu--right",
         },
@@ -239,16 +239,16 @@ ShallowWrapper {
                 null,
                 <div
                   className="Dropdown-elements"
-                >
+>
                   <button
-                    className="Dropdown-item"
-                    id="drew"
-                    onMouseDown={[Function]}
-                    type="button"
+                                    className="Dropdown-item"
+                                    id="drew"
+                                    onMouseDown={[Function]}
+                                    type="button"
                   >
-                    Drew
+                                    Drew
                   </button>
-                </div>,
+</div>,
               ],
               "className": "Dropdown-group",
             },
@@ -266,9 +266,9 @@ ShallowWrapper {
                       id="drew"
                       onMouseDown={[Function]}
                       type="button"
-                    >
+>
                       Drew
-                    </button>,
+</button>,
                   ],
                   "className": "Dropdown-elements",
                 },
@@ -304,24 +304,24 @@ ShallowWrapper {
                 null,
                 <div
                   className="Dropdown-elements"
-                >
+>
                   <button
-                    className="Dropdown-item"
-                    id="phil"
-                    onMouseDown={[Function]}
-                    type="button"
+                                    className="Dropdown-item"
+                                    id="phil"
+                                    onMouseDown={[Function]}
+                                    type="button"
                   >
-                    Phil
+                                    Phil
                   </button>
                   <button
-                    className="Dropdown-item"
-                    id="will"
-                    onMouseDown={[Function]}
-                    type="button"
+                                    className="Dropdown-item"
+                                    id="will"
+                                    onMouseDown={[Function]}
+                                    type="button"
                   >
-                    Will
+                                    Will
                   </button>
-                </div>,
+</div>,
               ],
               "className": "Dropdown-group",
             },
@@ -339,17 +339,17 @@ ShallowWrapper {
                       id="phil"
                       onMouseDown={[Function]}
                       type="button"
-                    >
+>
                       Phil
-                    </button>,
+</button>,
                     <button
                       className="Dropdown-item"
                       id="will"
                       onMouseDown={[Function]}
                       type="button"
-                    >
+>
                       Will
-                    </button>,
+</button>,
                   ],
                   "className": "Dropdown-elements",
                 },
@@ -412,9 +412,9 @@ ShallowWrapper {
             onClick={[Function]}
             to={undefined}
             type="button"
-          >
+>
             Drew
-          </Button>,
+</Button>,
           <Button
             aria-expanded={false}
             aria-haspopup="true"
@@ -425,55 +425,55 @@ ShallowWrapper {
             id=""
             onClick={[Function]}
             type="button"
-          >
+>
             <i
-              className="fa fa-caret-down"
+                        className="fa fa-caret-down"
             />
-          </Button>,
+</Button>,
           <div
             className="Dropdown-menu Dropdown-menu--right"
-          >
+>
             <div
-              className="Dropdown-group"
+                        className="Dropdown-group"
             >
-              <div
-                className="Dropdown-elements"
-              >
-                <button
-                  className="Dropdown-item"
-                  id="drew"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Drew
-                </button>
-              </div>
+                        <div
+                                    className="Dropdown-elements"
+                        >
+                                    <button
+                                                className="Dropdown-item"
+                                                id="drew"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                    >
+                                                Drew
+                                    </button>
+                        </div>
             </div>
             <div
-              className="Dropdown-group"
+                        className="Dropdown-group"
             >
-              <div
-                className="Dropdown-elements"
-              >
-                <button
-                  className="Dropdown-item"
-                  id="phil"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Phil
-                </button>
-                <button
-                  className="Dropdown-item"
-                  id="will"
-                  onMouseDown={[Function]}
-                  type="button"
-                >
-                  Will
-                </button>
-              </div>
+                        <div
+                                    className="Dropdown-elements"
+                        >
+                                    <button
+                                                className="Dropdown-item"
+                                                id="phil"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                    >
+                                                Phil
+                                    </button>
+                                    <button
+                                                className="Dropdown-item"
+                                                id="will"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                    >
+                                                Will
+                                    </button>
+                        </div>
             </div>
-          </div>,
+</div>,
         ],
         "className": "Dropdown btn-group ",
         "onBlur": [Function],
@@ -515,7 +515,7 @@ ShallowWrapper {
             "buttonClass": "btn-default",
             "children": <i
               className="fa fa-caret-down"
-            />,
+/>,
             "className": "Dropdown-toggle",
             "data-toggle": "dropdown",
             "disabled": false,
@@ -545,44 +545,44 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="Dropdown-group"
-              >
+>
                 <div
-                  className="Dropdown-elements"
+                                className="Dropdown-elements"
                 >
-                  <button
-                    className="Dropdown-item"
-                    id="drew"
-                    onMouseDown={[Function]}
-                    type="button"
-                  >
-                    Drew
-                  </button>
+                                <button
+                                                className="Dropdown-item"
+                                                id="drew"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                >
+                                                Drew
+                                </button>
                 </div>
-              </div>,
+</div>,
               <div
                 className="Dropdown-group"
-              >
+>
                 <div
-                  className="Dropdown-elements"
+                                className="Dropdown-elements"
                 >
-                  <button
-                    className="Dropdown-item"
-                    id="phil"
-                    onMouseDown={[Function]}
-                    type="button"
-                  >
-                    Phil
-                  </button>
-                  <button
-                    className="Dropdown-item"
-                    id="will"
-                    onMouseDown={[Function]}
-                    type="button"
-                  >
-                    Will
-                  </button>
+                                <button
+                                                className="Dropdown-item"
+                                                id="phil"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                >
+                                                Phil
+                                </button>
+                                <button
+                                                className="Dropdown-item"
+                                                id="will"
+                                                onMouseDown={[Function]}
+                                                type="button"
+                                >
+                                                Will
+                                </button>
                 </div>
-              </div>,
+</div>,
             ],
             "className": "Dropdown-menu Dropdown-menu--right",
           },
@@ -597,16 +597,16 @@ ShallowWrapper {
                   null,
                   <div
                     className="Dropdown-elements"
-                  >
+>
                     <button
-                      className="Dropdown-item"
-                      id="drew"
-                      onMouseDown={[Function]}
-                      type="button"
+                                        className="Dropdown-item"
+                                        id="drew"
+                                        onMouseDown={[Function]}
+                                        type="button"
                     >
-                      Drew
+                                        Drew
                     </button>
-                  </div>,
+</div>,
                 ],
                 "className": "Dropdown-group",
               },
@@ -624,9 +624,9 @@ ShallowWrapper {
                         id="drew"
                         onMouseDown={[Function]}
                         type="button"
-                      >
+>
                         Drew
-                      </button>,
+</button>,
                     ],
                     "className": "Dropdown-elements",
                   },
@@ -662,24 +662,24 @@ ShallowWrapper {
                   null,
                   <div
                     className="Dropdown-elements"
-                  >
+>
                     <button
-                      className="Dropdown-item"
-                      id="phil"
-                      onMouseDown={[Function]}
-                      type="button"
+                                        className="Dropdown-item"
+                                        id="phil"
+                                        onMouseDown={[Function]}
+                                        type="button"
                     >
-                      Phil
+                                        Phil
                     </button>
                     <button
-                      className="Dropdown-item"
-                      id="will"
-                      onMouseDown={[Function]}
-                      type="button"
+                                        className="Dropdown-item"
+                                        id="will"
+                                        onMouseDown={[Function]}
+                                        type="button"
                     >
-                      Will
+                                        Will
                     </button>
-                  </div>,
+</div>,
                 ],
                 "className": "Dropdown-group",
               },
@@ -697,17 +697,17 @@ ShallowWrapper {
                         id="phil"
                         onMouseDown={[Function]}
                         type="button"
-                      >
+>
                         Phil
-                      </button>,
+</button>,
                       <button
                         className="Dropdown-item"
                         id="will"
                         onMouseDown={[Function]}
                         type="button"
-                      >
+>
                         Will
-                      </button>,
+</button>,
                     ],
                     "className": "Dropdown-elements",
                   },

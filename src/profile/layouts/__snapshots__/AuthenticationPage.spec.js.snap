@@ -7,12 +7,12 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <AuthenticationPage
     dispatch={[Function]}
     profile={
-      Object {
-        "email": "user@address.com",
-        "timezone": "US/Eastern",
-      }
+        Object {
+            "email": "user@address.com",
+            "timezone": "US/Eastern",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -28,17 +28,17 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Password & Authentication"
-        />,
+/>,
         <section>
           <ChangePassword
-            dispatch={[Function]}
+                    dispatch={[Function]}
           />
-        </section>,
+</section>,
         <TwoFactor
           dispatch={[Function]}
           tfaEnabled={undefined}
           username={undefined}
-        />,
+/>,
       ],
     },
     "ref": null,
@@ -61,7 +61,7 @@ ShallowWrapper {
         "props": Object {
           "children": <ChangePassword
             dispatch={[Function]}
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -102,17 +102,17 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Password & Authentication"
-          />,
+/>,
           <section>
             <ChangePassword
-              dispatch={[Function]}
+                        dispatch={[Function]}
             />
-          </section>,
+</section>,
           <TwoFactor
             dispatch={[Function]}
             tfaEnabled={undefined}
             username={undefined}
-          />,
+/>,
         ],
       },
       "ref": null,
@@ -135,7 +135,7 @@ ShallowWrapper {
           "props": Object {
             "children": <ChangePassword
               dispatch={[Function]}
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {

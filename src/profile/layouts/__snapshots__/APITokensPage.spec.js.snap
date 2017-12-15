@@ -8,28 +8,28 @@ ShallowWrapper {
     dispatch={[Function]}
     selectedMap={Object {}}
     tokens={
-      Object {
-        "1": Object {
-          "_polling": false,
-          "created": "2016-12-12T15:07:47",
-          "expiry": "2290-09-26T14:07:47",
-          "id": 1,
-          "label": "personal",
-          "scopes": "*",
-          "token": "3b124d11f2f264e0...",
-        },
-        "2": Object {
-          "_polling": false,
-          "created": "2016-12-12T15:07:47",
-          "expiry": "2290-09-26T14:07:47",
-          "id": 2,
-          "label": "Test client",
-          "scopes": "linodes:*,nodebalancers:create",
-          "thumbnail_url": null,
-        },
-      }
+        Object {
+            "1": Object {
+              "_polling": false,
+              "created": "2016-12-12T15:07:47",
+              "expiry": "2290-09-26T14:07:47",
+              "id": 1,
+              "label": "personal",
+              "scopes": "*",
+              "token": "3b124d11f2f264e0...",
+            },
+            "2": Object {
+              "_polling": false,
+              "created": "2016-12-12T15:07:47",
+              "expiry": "2290-09-26T14:07:47",
+              "id": 2,
+              "label": "Test client",
+              "scopes": "linodes:*,nodebalancers:create",
+              "thumbnail_url": null,
+            },
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -45,196 +45,196 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="API Tokens"
-        />,
+/>,
         <header
           className="NavigationHeader clearfix"
-        >
+>
           <PrimaryButton
-            buttonClass="btn-secondary"
-            className="float-right"
-            onClick={[Function]}
-            options={Array []}
+                    buttonClass="btn-secondary"
+                    className="float-right"
+                    onClick={[Function]}
+                    options={Array []}
           >
-            Create a Personal Access Token
+                    Create a Personal Access Token
           </PrimaryButton>
-        </header>,
+</header>,
         <List
           className=""
-        >
+>
           <ListHeader
-            className="Menu"
+                    className="Menu"
           >
-            <div
-              className="Menu-item"
-            >
-              <MassEditControl
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2016-12-12T15:07:47",
-                      "expiry": "2290-09-26T14:07:47",
-                      "id": 1,
-                      "label": "personal",
-                      "scopes": "*",
-                      "token": "3b124d11f2f264e0...",
-                    },
-                    Object {
-                      "_polling": false,
-                      "created": "2016-12-12T15:07:47",
-                      "expiry": "2290-09-26T14:07:47",
-                      "id": 2,
-                      "label": "Test client",
-                      "scopes": "linodes:*,nodebalancers:create",
-                      "thumbnail_url": null,
-                    },
-                  ]
-                }
-                dispatch={[Function]}
-                massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Revoke",
-                        },
-                      ],
-                    },
-                  ]
-                }
-                objectType="tokens"
-                selectedKey="id"
-                selectedMap={Object {}}
-                toggleSelected={[Function]}
-              />
-            </div>
-            <div
-              className="Menu-item"
-            >
-              <Input
-                className=""
-                onChange={[Function]}
-                placeholder="Filter..."
-                value=""
-              />
-            </div>
+                    <div
+                              className="Menu-item"
+                    >
+                              <MassEditControl
+                                        data={
+                                                  Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 1,
+                                                              "label": "personal",
+                                                              "scopes": "*",
+                                                              "token": "3b124d11f2f264e0...",
+                                                            },
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 2,
+                                                              "label": "Test client",
+                                                              "scopes": "linodes:*,nodebalancers:create",
+                                                              "thumbnail_url": null,
+                                                            },
+                                                          ]
+                                        }
+                                        dispatch={[Function]}
+                                        massEditGroups={
+                                                  Array [
+                                                            Object {
+                                                              "elements": Array [
+                                                                Object {
+                                                                  "action": [Function],
+                                                                  "name": "Revoke",
+                                                                },
+                                                              ],
+                                                            },
+                                                          ]
+                                        }
+                                        objectType="tokens"
+                                        selectedKey="id"
+                                        selectedMap={Object {}}
+                                        toggleSelected={[Function]}
+                              />
+                    </div>
+                    <div
+                              className="Menu-item"
+                    >
+                              <Input
+                                        className=""
+                                        onChange={[Function]}
+                                        placeholder="Filter..."
+                                        value=""
+                              />
+                    </div>
           </ListHeader>
           <ListBody>
-            <ListGroup
-              name="Personal Access Tokens"
-            >
-              <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "CheckboxColumn",
-                    },
-                    Object {
-                      "dataKey": "label",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "label": "Created",
-                      "timeKey": "created",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "label": "Expires",
-                      "timeKey": "expiry",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "groups": [Function],
-                      "headerClassName": "DropdownColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2016-12-12T15:07:47",
-                      "expiry": "2290-09-26T14:07:47",
-                      "id": 1,
-                      "label": "personal",
-                      "scopes": "*",
-                      "token": "3b124d11f2f264e0...",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No tokens found."
-                onToggleSelect={[Function]}
-                selectedMap={Object {}}
-              />
-            </ListGroup>
-            <ListGroup
-              name="Test client"
-            >
-              <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "CheckboxColumn",
-                    },
-                    Object {
-                      "dataKey": "label",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "label": "Created",
-                      "timeKey": "created",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "label": "Expires",
-                      "timeKey": "expiry",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "groups": [Function],
-                      "headerClassName": "DropdownColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2016-12-12T15:07:47",
-                      "expiry": "2290-09-26T14:07:47",
-                      "id": 2,
-                      "label": "Test client",
-                      "scopes": "linodes:*,nodebalancers:create",
-                      "thumbnail_url": null,
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No tokens found."
-                onToggleSelect={[Function]}
-                selectedMap={Object {}}
-              />
-            </ListGroup>
+                    <ListGroup
+                              name="Personal Access Tokens"
+                    >
+                              <Table
+                                        className=""
+                                        columns={
+                                                  Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "CheckboxColumn",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "label",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Type",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Created",
+                                                              "timeKey": "created",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Expires",
+                                                              "timeKey": "expiry",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "groups": [Function],
+                                                              "headerClassName": "DropdownColumn",
+                                                            },
+                                                          ]
+                                        }
+                                        data={
+                                                  Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 1,
+                                                              "label": "personal",
+                                                              "scopes": "*",
+                                                              "token": "3b124d11f2f264e0...",
+                                                            },
+                                                          ]
+                                        }
+                                        disableHeader={false}
+                                        noDataMessage="No tokens found."
+                                        onToggleSelect={[Function]}
+                                        selectedMap={Object {}}
+                              />
+                    </ListGroup>
+                    <ListGroup
+                              name="Test client"
+                    >
+                              <Table
+                                        className=""
+                                        columns={
+                                                  Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "CheckboxColumn",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "label",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Type",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Created",
+                                                              "timeKey": "created",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Expires",
+                                                              "timeKey": "expiry",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "groups": [Function],
+                                                              "headerClassName": "DropdownColumn",
+                                                            },
+                                                          ]
+                                        }
+                                        data={
+                                                  Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 2,
+                                                              "label": "Test client",
+                                                              "scopes": "linodes:*,nodebalancers:create",
+                                                              "thumbnail_url": null,
+                                                            },
+                                                          ]
+                                        }
+                                        disableHeader={false}
+                                        noDataMessage="No tokens found."
+                                        onToggleSelect={[Function]}
+                                        selectedMap={Object {}}
+                              />
+                    </ListGroup>
           </ListBody>
-        </List>,
+</List>,
       ],
     },
     "ref": null,
@@ -260,9 +260,9 @@ ShallowWrapper {
             className="float-right"
             onClick={[Function]}
             options={Array []}
-          >
+>
             Create a Personal Access Token
-          </PrimaryButton>,
+</PrimaryButton>,
           "className": "NavigationHeader clearfix",
         },
         "ref": null,
@@ -291,177 +291,177 @@ ShallowWrapper {
           "children": Array [
             <ListHeader
               className="Menu"
-            >
+>
               <div
-                className="Menu-item"
+                            className="Menu-item"
               >
-                <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 1,
-                        "label": "personal",
-                        "scopes": "*",
-                        "token": "3b124d11f2f264e0...",
-                      },
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 2,
-                        "label": "Test client",
-                        "scopes": "linodes:*,nodebalancers:create",
-                        "thumbnail_url": null,
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Revoke",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="tokens"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />
+                            <MassEditControl
+                                          data={
+                                                        Array [
+                                                                      Object {
+                                                                        "_polling": false,
+                                                                        "created": "2016-12-12T15:07:47",
+                                                                        "expiry": "2290-09-26T14:07:47",
+                                                                        "id": 1,
+                                                                        "label": "personal",
+                                                                        "scopes": "*",
+                                                                        "token": "3b124d11f2f264e0...",
+                                                                      },
+                                                                      Object {
+                                                                        "_polling": false,
+                                                                        "created": "2016-12-12T15:07:47",
+                                                                        "expiry": "2290-09-26T14:07:47",
+                                                                        "id": 2,
+                                                                        "label": "Test client",
+                                                                        "scopes": "linodes:*,nodebalancers:create",
+                                                                        "thumbnail_url": null,
+                                                                      },
+                                                                    ]
+                                          }
+                                          dispatch={[Function]}
+                                          massEditGroups={
+                                                        Array [
+                                                                      Object {
+                                                                        "elements": Array [
+                                                                          Object {
+                                                                            "action": [Function],
+                                                                            "name": "Revoke",
+                                                                          },
+                                                                        ],
+                                                                      },
+                                                                    ]
+                                          }
+                                          objectType="tokens"
+                                          selectedKey="id"
+                                          selectedMap={Object {}}
+                                          toggleSelected={[Function]}
+                            />
               </div>
               <div
-                className="Menu-item"
+                            className="Menu-item"
               >
-                <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />
+                            <Input
+                                          className=""
+                                          onChange={[Function]}
+                                          placeholder="Filter..."
+                                          value=""
+                            />
               </div>
-            </ListHeader>,
+</ListHeader>,
             <ListBody>
               <ListGroup
-                name="Personal Access Tokens"
+                            name="Personal Access Tokens"
               >
-                <Table
-                  className=""
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "dataKey": "label",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Created",
-                        "timeKey": "created",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Expires",
-                        "timeKey": "expiry",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 1,
-                        "label": "personal",
-                        "scopes": "*",
-                        "token": "3b124d11f2f264e0...",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="No tokens found."
-                  onToggleSelect={[Function]}
-                  selectedMap={Object {}}
-                />
+                            <Table
+                                          className=""
+                                          columns={
+                                                        Array [
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "headerClassName": "CheckboxColumn",
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "label",
+                                                                        "label": "Label",
+                                                                        "tooltipEnabled": true,
+                                                                      },
+                                                                      Object {
+                                                                        "dataFn": [Function],
+                                                                        "label": "Type",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "label": "Created",
+                                                                        "timeKey": "created",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "label": "Expires",
+                                                                        "timeKey": "expiry",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "groups": [Function],
+                                                                        "headerClassName": "DropdownColumn",
+                                                                      },
+                                                                    ]
+                                          }
+                                          data={
+                                                        Array [
+                                                                      Object {
+                                                                        "_polling": false,
+                                                                        "created": "2016-12-12T15:07:47",
+                                                                        "expiry": "2290-09-26T14:07:47",
+                                                                        "id": 1,
+                                                                        "label": "personal",
+                                                                        "scopes": "*",
+                                                                        "token": "3b124d11f2f264e0...",
+                                                                      },
+                                                                    ]
+                                          }
+                                          disableHeader={false}
+                                          noDataMessage="No tokens found."
+                                          onToggleSelect={[Function]}
+                                          selectedMap={Object {}}
+                            />
               </ListGroup>
               <ListGroup
-                name="Test client"
+                            name="Test client"
               >
-                <Table
-                  className=""
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "dataKey": "label",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Created",
-                        "timeKey": "created",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Expires",
-                        "timeKey": "expiry",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 2,
-                        "label": "Test client",
-                        "scopes": "linodes:*,nodebalancers:create",
-                        "thumbnail_url": null,
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="No tokens found."
-                  onToggleSelect={[Function]}
-                  selectedMap={Object {}}
-                />
+                            <Table
+                                          className=""
+                                          columns={
+                                                        Array [
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "headerClassName": "CheckboxColumn",
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "label",
+                                                                        "label": "Label",
+                                                                        "tooltipEnabled": true,
+                                                                      },
+                                                                      Object {
+                                                                        "dataFn": [Function],
+                                                                        "label": "Type",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "label": "Created",
+                                                                        "timeKey": "created",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "label": "Expires",
+                                                                        "timeKey": "expiry",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "groups": [Function],
+                                                                        "headerClassName": "DropdownColumn",
+                                                                      },
+                                                                    ]
+                                          }
+                                          data={
+                                                        Array [
+                                                                      Object {
+                                                                        "_polling": false,
+                                                                        "created": "2016-12-12T15:07:47",
+                                                                        "expiry": "2290-09-26T14:07:47",
+                                                                        "id": 2,
+                                                                        "label": "Test client",
+                                                                        "scopes": "linodes:*,nodebalancers:create",
+                                                                        "thumbnail_url": null,
+                                                                      },
+                                                                    ]
+                                          }
+                                          disableHeader={false}
+                                          noDataMessage="No tokens found."
+                                          onToggleSelect={[Function]}
+                                          selectedMap={Object {}}
+                            />
               </ListGroup>
-            </ListBody>,
+</ListBody>,
           ],
           "className": "",
         },
@@ -475,59 +475,59 @@ ShallowWrapper {
               "children": Array [
                 <div
                   className="Menu-item"
-                >
+>
                   <MassEditControl
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
-                    }
-                    dispatch={[Function]}
-                    massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Revoke",
-                            },
-                          ],
-                        },
-                      ]
-                    }
-                    objectType="tokens"
-                    selectedKey="id"
-                    selectedMap={Object {}}
-                    toggleSelected={[Function]}
+                                    data={
+                                                      Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 1,
+                                                                          "label": "personal",
+                                                                          "scopes": "*",
+                                                                          "token": "3b124d11f2f264e0...",
+                                                                        },
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 2,
+                                                                          "label": "Test client",
+                                                                          "scopes": "linodes:*,nodebalancers:create",
+                                                                          "thumbnail_url": null,
+                                                                        },
+                                                                      ]
+                                    }
+                                    dispatch={[Function]}
+                                    massEditGroups={
+                                                      Array [
+                                                                        Object {
+                                                                          "elements": Array [
+                                                                            Object {
+                                                                              "action": [Function],
+                                                                              "name": "Revoke",
+                                                                            },
+                                                                          ],
+                                                                        },
+                                                                      ]
+                                    }
+                                    objectType="tokens"
+                                    selectedKey="id"
+                                    selectedMap={Object {}}
+                                    toggleSelected={[Function]}
                   />
-                </div>,
+</div>,
                 <div
                   className="Menu-item"
-                >
+>
                   <Input
-                    className=""
-                    onChange={[Function]}
-                    placeholder="Filter..."
-                    value=""
+                                    className=""
+                                    onChange={[Function]}
+                                    placeholder="Filter..."
+                                    value=""
                   />
-                </div>,
+</div>,
               ],
               "className": "Menu",
             },
@@ -540,45 +540,45 @@ ShallowWrapper {
                 "props": Object {
                   "children": <MassEditControl
                     data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 1,
+                                                              "label": "personal",
+                                                              "scopes": "*",
+                                                              "token": "3b124d11f2f264e0...",
+                                                            },
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 2,
+                                                              "label": "Test client",
+                                                              "scopes": "linodes:*,nodebalancers:create",
+                                                              "thumbnail_url": null,
+                                                            },
+                                                          ]
                     }
                     dispatch={[Function]}
                     massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Revoke",
-                            },
-                          ],
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "elements": Array [
+                                                                Object {
+                                                                  "action": [Function],
+                                                                  "name": "Revoke",
+                                                                },
+                                                              ],
+                                                            },
+                                                          ]
                     }
                     objectType="tokens"
                     selectedKey="id"
                     selectedMap={Object {}}
                     toggleSelected={[Function]}
-                  />,
+/>,
                   "className": "Menu-item",
                 },
                 "ref": null,
@@ -639,7 +639,7 @@ ShallowWrapper {
                     onChange={[Function]}
                     placeholder="Filter..."
                     value=""
-                  />,
+/>,
                   "className": "Menu-item",
                 },
                 "ref": null,
@@ -670,116 +670,116 @@ ShallowWrapper {
               "children": Array [
                 <ListGroup
                   name="Personal Access Tokens"
-                >
+>
                   <Table
-                    className=""
-                    columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
-                    }
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                      ]
-                    }
-                    disableHeader={false}
-                    noDataMessage="No tokens found."
-                    onToggleSelect={[Function]}
-                    selectedMap={Object {}}
+                                    className=""
+                                    columns={
+                                                      Array [
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "CheckboxColumn",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "label",
+                                                                          "label": "Label",
+                                                                          "tooltipEnabled": true,
+                                                                        },
+                                                                        Object {
+                                                                          "dataFn": [Function],
+                                                                          "label": "Type",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Created",
+                                                                          "timeKey": "created",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Expires",
+                                                                          "timeKey": "expiry",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "groups": [Function],
+                                                                          "headerClassName": "DropdownColumn",
+                                                                        },
+                                                                      ]
+                                    }
+                                    data={
+                                                      Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 1,
+                                                                          "label": "personal",
+                                                                          "scopes": "*",
+                                                                          "token": "3b124d11f2f264e0...",
+                                                                        },
+                                                                      ]
+                                    }
+                                    disableHeader={false}
+                                    noDataMessage="No tokens found."
+                                    onToggleSelect={[Function]}
+                                    selectedMap={Object {}}
                   />
-                </ListGroup>,
+</ListGroup>,
                 <ListGroup
                   name="Test client"
-                >
+>
                   <Table
-                    className=""
-                    columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
-                    }
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
-                    }
-                    disableHeader={false}
-                    noDataMessage="No tokens found."
-                    onToggleSelect={[Function]}
-                    selectedMap={Object {}}
+                                    className=""
+                                    columns={
+                                                      Array [
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "CheckboxColumn",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "label",
+                                                                          "label": "Label",
+                                                                          "tooltipEnabled": true,
+                                                                        },
+                                                                        Object {
+                                                                          "dataFn": [Function],
+                                                                          "label": "Type",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Created",
+                                                                          "timeKey": "created",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Expires",
+                                                                          "timeKey": "expiry",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "groups": [Function],
+                                                                          "headerClassName": "DropdownColumn",
+                                                                        },
+                                                                      ]
+                                    }
+                                    data={
+                                                      Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 2,
+                                                                          "label": "Test client",
+                                                                          "scopes": "linodes:*,nodebalancers:create",
+                                                                          "thumbnail_url": null,
+                                                                        },
+                                                                      ]
+                                    }
+                                    disableHeader={false}
+                                    noDataMessage="No tokens found."
+                                    onToggleSelect={[Function]}
+                                    selectedMap={Object {}}
                   />
-                </ListGroup>,
+</ListGroup>,
               ],
             },
             "ref": null,
@@ -792,55 +792,55 @@ ShallowWrapper {
                   "children": <Table
                     className=""
                     columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "CheckboxColumn",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "label",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Type",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Created",
+                                                              "timeKey": "created",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Expires",
+                                                              "timeKey": "expiry",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "groups": [Function],
+                                                              "headerClassName": "DropdownColumn",
+                                                            },
+                                                          ]
                     }
                     data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 1,
+                                                              "label": "personal",
+                                                              "scopes": "*",
+                                                              "token": "3b124d11f2f264e0...",
+                                                            },
+                                                          ]
                     }
                     disableHeader={false}
                     noDataMessage="No tokens found."
                     onToggleSelect={[Function]}
                     selectedMap={Object {}}
-                  />,
+/>,
                   "name": "Personal Access Tokens",
                 },
                 "ref": null,
@@ -910,55 +910,55 @@ ShallowWrapper {
                   "children": <Table
                     className=""
                     columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "CheckboxColumn",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "label",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Type",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Created",
+                                                              "timeKey": "created",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "label": "Expires",
+                                                              "timeKey": "expiry",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "groups": [Function],
+                                                              "headerClassName": "DropdownColumn",
+                                                            },
+                                                          ]
                     }
                     data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2016-12-12T15:07:47",
+                                                              "expiry": "2290-09-26T14:07:47",
+                                                              "id": 2,
+                                                              "label": "Test client",
+                                                              "scopes": "linodes:*,nodebalancers:create",
+                                                              "thumbnail_url": null,
+                                                            },
+                                                          ]
                     }
                     disableHeader={false}
                     noDataMessage="No tokens found."
                     onToggleSelect={[Function]}
                     selectedMap={Object {}}
-                  />,
+/>,
                   "name": "Test client",
                 },
                 "ref": null,
@@ -1038,196 +1038,196 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="API Tokens"
-          />,
+/>,
           <header
             className="NavigationHeader clearfix"
-          >
+>
             <PrimaryButton
-              buttonClass="btn-secondary"
-              className="float-right"
-              onClick={[Function]}
-              options={Array []}
+                        buttonClass="btn-secondary"
+                        className="float-right"
+                        onClick={[Function]}
+                        options={Array []}
             >
-              Create a Personal Access Token
+                        Create a Personal Access Token
             </PrimaryButton>
-          </header>,
+</header>,
           <List
             className=""
-          >
+>
             <ListHeader
-              className="Menu"
+                        className="Menu"
             >
-              <div
-                className="Menu-item"
-              >
-                <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 1,
-                        "label": "personal",
-                        "scopes": "*",
-                        "token": "3b124d11f2f264e0...",
-                      },
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 2,
-                        "label": "Test client",
-                        "scopes": "linodes:*,nodebalancers:create",
-                        "thumbnail_url": null,
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Revoke",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="tokens"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />
-              </div>
-              <div
-                className="Menu-item"
-              >
-                <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />
-              </div>
+                        <div
+                                    className="Menu-item"
+                        >
+                                    <MassEditControl
+                                                data={
+                                                            Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 1,
+                                                                          "label": "personal",
+                                                                          "scopes": "*",
+                                                                          "token": "3b124d11f2f264e0...",
+                                                                        },
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 2,
+                                                                          "label": "Test client",
+                                                                          "scopes": "linodes:*,nodebalancers:create",
+                                                                          "thumbnail_url": null,
+                                                                        },
+                                                                      ]
+                                                }
+                                                dispatch={[Function]}
+                                                massEditGroups={
+                                                            Array [
+                                                                        Object {
+                                                                          "elements": Array [
+                                                                            Object {
+                                                                              "action": [Function],
+                                                                              "name": "Revoke",
+                                                                            },
+                                                                          ],
+                                                                        },
+                                                                      ]
+                                                }
+                                                objectType="tokens"
+                                                selectedKey="id"
+                                                selectedMap={Object {}}
+                                                toggleSelected={[Function]}
+                                    />
+                        </div>
+                        <div
+                                    className="Menu-item"
+                        >
+                                    <Input
+                                                className=""
+                                                onChange={[Function]}
+                                                placeholder="Filter..."
+                                                value=""
+                                    />
+                        </div>
             </ListHeader>
             <ListBody>
-              <ListGroup
-                name="Personal Access Tokens"
-              >
-                <Table
-                  className=""
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "dataKey": "label",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Created",
-                        "timeKey": "created",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Expires",
-                        "timeKey": "expiry",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 1,
-                        "label": "personal",
-                        "scopes": "*",
-                        "token": "3b124d11f2f264e0...",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="No tokens found."
-                  onToggleSelect={[Function]}
-                  selectedMap={Object {}}
-                />
-              </ListGroup>
-              <ListGroup
-                name="Test client"
-              >
-                <Table
-                  className=""
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "dataKey": "label",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Created",
-                        "timeKey": "created",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "label": "Expires",
-                        "timeKey": "expiry",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2016-12-12T15:07:47",
-                        "expiry": "2290-09-26T14:07:47",
-                        "id": 2,
-                        "label": "Test client",
-                        "scopes": "linodes:*,nodebalancers:create",
-                        "thumbnail_url": null,
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="No tokens found."
-                  onToggleSelect={[Function]}
-                  selectedMap={Object {}}
-                />
-              </ListGroup>
+                        <ListGroup
+                                    name="Personal Access Tokens"
+                        >
+                                    <Table
+                                                className=""
+                                                columns={
+                                                            Array [
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "CheckboxColumn",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "label",
+                                                                          "label": "Label",
+                                                                          "tooltipEnabled": true,
+                                                                        },
+                                                                        Object {
+                                                                          "dataFn": [Function],
+                                                                          "label": "Type",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Created",
+                                                                          "timeKey": "created",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Expires",
+                                                                          "timeKey": "expiry",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "groups": [Function],
+                                                                          "headerClassName": "DropdownColumn",
+                                                                        },
+                                                                      ]
+                                                }
+                                                data={
+                                                            Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 1,
+                                                                          "label": "personal",
+                                                                          "scopes": "*",
+                                                                          "token": "3b124d11f2f264e0...",
+                                                                        },
+                                                                      ]
+                                                }
+                                                disableHeader={false}
+                                                noDataMessage="No tokens found."
+                                                onToggleSelect={[Function]}
+                                                selectedMap={Object {}}
+                                    />
+                        </ListGroup>
+                        <ListGroup
+                                    name="Test client"
+                        >
+                                    <Table
+                                                className=""
+                                                columns={
+                                                            Array [
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "CheckboxColumn",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "label",
+                                                                          "label": "Label",
+                                                                          "tooltipEnabled": true,
+                                                                        },
+                                                                        Object {
+                                                                          "dataFn": [Function],
+                                                                          "label": "Type",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Created",
+                                                                          "timeKey": "created",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "label": "Expires",
+                                                                          "timeKey": "expiry",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "groups": [Function],
+                                                                          "headerClassName": "DropdownColumn",
+                                                                        },
+                                                                      ]
+                                                }
+                                                data={
+                                                            Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "created": "2016-12-12T15:07:47",
+                                                                          "expiry": "2290-09-26T14:07:47",
+                                                                          "id": 2,
+                                                                          "label": "Test client",
+                                                                          "scopes": "linodes:*,nodebalancers:create",
+                                                                          "thumbnail_url": null,
+                                                                        },
+                                                                      ]
+                                                }
+                                                disableHeader={false}
+                                                noDataMessage="No tokens found."
+                                                onToggleSelect={[Function]}
+                                                selectedMap={Object {}}
+                                    />
+                        </ListGroup>
             </ListBody>
-          </List>,
+</List>,
         ],
       },
       "ref": null,
@@ -1253,9 +1253,9 @@ ShallowWrapper {
               className="float-right"
               onClick={[Function]}
               options={Array []}
-            >
+>
               Create a Personal Access Token
-            </PrimaryButton>,
+</PrimaryButton>,
             "className": "NavigationHeader clearfix",
           },
           "ref": null,
@@ -1284,177 +1284,177 @@ ShallowWrapper {
             "children": Array [
               <ListHeader
                 className="Menu"
-              >
+>
                 <div
-                  className="Menu-item"
+                                className="Menu-item"
                 >
-                  <MassEditControl
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
-                    }
-                    dispatch={[Function]}
-                    massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Revoke",
-                            },
-                          ],
-                        },
-                      ]
-                    }
-                    objectType="tokens"
-                    selectedKey="id"
-                    selectedMap={Object {}}
-                    toggleSelected={[Function]}
-                  />
+                                <MassEditControl
+                                                data={
+                                                                Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 1,
+                                                                                  "label": "personal",
+                                                                                  "scopes": "*",
+                                                                                  "token": "3b124d11f2f264e0...",
+                                                                                },
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 2,
+                                                                                  "label": "Test client",
+                                                                                  "scopes": "linodes:*,nodebalancers:create",
+                                                                                  "thumbnail_url": null,
+                                                                                },
+                                                                              ]
+                                                }
+                                                dispatch={[Function]}
+                                                massEditGroups={
+                                                                Array [
+                                                                                Object {
+                                                                                  "elements": Array [
+                                                                                    Object {
+                                                                                      "action": [Function],
+                                                                                      "name": "Revoke",
+                                                                                    },
+                                                                                  ],
+                                                                                },
+                                                                              ]
+                                                }
+                                                objectType="tokens"
+                                                selectedKey="id"
+                                                selectedMap={Object {}}
+                                                toggleSelected={[Function]}
+                                />
                 </div>
                 <div
-                  className="Menu-item"
+                                className="Menu-item"
                 >
-                  <Input
-                    className=""
-                    onChange={[Function]}
-                    placeholder="Filter..."
-                    value=""
-                  />
+                                <Input
+                                                className=""
+                                                onChange={[Function]}
+                                                placeholder="Filter..."
+                                                value=""
+                                />
                 </div>
-              </ListHeader>,
+</ListHeader>,
               <ListBody>
                 <ListGroup
-                  name="Personal Access Tokens"
+                                name="Personal Access Tokens"
                 >
-                  <Table
-                    className=""
-                    columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
-                    }
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 1,
-                          "label": "personal",
-                          "scopes": "*",
-                          "token": "3b124d11f2f264e0...",
-                        },
-                      ]
-                    }
-                    disableHeader={false}
-                    noDataMessage="No tokens found."
-                    onToggleSelect={[Function]}
-                    selectedMap={Object {}}
-                  />
+                                <Table
+                                                className=""
+                                                columns={
+                                                                Array [
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "headerClassName": "CheckboxColumn",
+                                                                                },
+                                                                                Object {
+                                                                                  "dataKey": "label",
+                                                                                  "label": "Label",
+                                                                                  "tooltipEnabled": true,
+                                                                                },
+                                                                                Object {
+                                                                                  "dataFn": [Function],
+                                                                                  "label": "Type",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Created",
+                                                                                  "timeKey": "created",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Expires",
+                                                                                  "timeKey": "expiry",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "groups": [Function],
+                                                                                  "headerClassName": "DropdownColumn",
+                                                                                },
+                                                                              ]
+                                                }
+                                                data={
+                                                                Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 1,
+                                                                                  "label": "personal",
+                                                                                  "scopes": "*",
+                                                                                  "token": "3b124d11f2f264e0...",
+                                                                                },
+                                                                              ]
+                                                }
+                                                disableHeader={false}
+                                                noDataMessage="No tokens found."
+                                                onToggleSelect={[Function]}
+                                                selectedMap={Object {}}
+                                />
                 </ListGroup>
                 <ListGroup
-                  name="Test client"
+                                name="Test client"
                 >
-                  <Table
-                    className=""
-                    columns={
-                      Array [
-                        Object {
-                          "cellComponent": [Function],
-                          "headerClassName": "CheckboxColumn",
-                        },
-                        Object {
-                          "dataKey": "label",
-                          "label": "Label",
-                          "tooltipEnabled": true,
-                        },
-                        Object {
-                          "dataFn": [Function],
-                          "label": "Type",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Created",
-                          "timeKey": "created",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "label": "Expires",
-                          "timeKey": "expiry",
-                        },
-                        Object {
-                          "cellComponent": [Function],
-                          "groups": [Function],
-                          "headerClassName": "DropdownColumn",
-                        },
-                      ]
-                    }
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "created": "2016-12-12T15:07:47",
-                          "expiry": "2290-09-26T14:07:47",
-                          "id": 2,
-                          "label": "Test client",
-                          "scopes": "linodes:*,nodebalancers:create",
-                          "thumbnail_url": null,
-                        },
-                      ]
-                    }
-                    disableHeader={false}
-                    noDataMessage="No tokens found."
-                    onToggleSelect={[Function]}
-                    selectedMap={Object {}}
-                  />
+                                <Table
+                                                className=""
+                                                columns={
+                                                                Array [
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "headerClassName": "CheckboxColumn",
+                                                                                },
+                                                                                Object {
+                                                                                  "dataKey": "label",
+                                                                                  "label": "Label",
+                                                                                  "tooltipEnabled": true,
+                                                                                },
+                                                                                Object {
+                                                                                  "dataFn": [Function],
+                                                                                  "label": "Type",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Created",
+                                                                                  "timeKey": "created",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Expires",
+                                                                                  "timeKey": "expiry",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "groups": [Function],
+                                                                                  "headerClassName": "DropdownColumn",
+                                                                                },
+                                                                              ]
+                                                }
+                                                data={
+                                                                Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 2,
+                                                                                  "label": "Test client",
+                                                                                  "scopes": "linodes:*,nodebalancers:create",
+                                                                                  "thumbnail_url": null,
+                                                                                },
+                                                                              ]
+                                                }
+                                                disableHeader={false}
+                                                noDataMessage="No tokens found."
+                                                onToggleSelect={[Function]}
+                                                selectedMap={Object {}}
+                                />
                 </ListGroup>
-              </ListBody>,
+</ListBody>,
             ],
             "className": "",
           },
@@ -1468,59 +1468,59 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="Menu-item"
-                  >
+>
                     <MassEditControl
-                      data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 1,
-                            "label": "personal",
-                            "scopes": "*",
-                            "token": "3b124d11f2f264e0...",
-                          },
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 2,
-                            "label": "Test client",
-                            "scopes": "linodes:*,nodebalancers:create",
-                            "thumbnail_url": null,
-                          },
-                        ]
-                      }
-                      dispatch={[Function]}
-                      massEditGroups={
-                        Array [
-                          Object {
-                            "elements": Array [
-                              Object {
-                                "action": [Function],
-                                "name": "Revoke",
-                              },
-                            ],
-                          },
-                        ]
-                      }
-                      objectType="tokens"
-                      selectedKey="id"
-                      selectedMap={Object {}}
-                      toggleSelected={[Function]}
+                                        data={
+                                                            Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 1,
+                                                                                  "label": "personal",
+                                                                                  "scopes": "*",
+                                                                                  "token": "3b124d11f2f264e0...",
+                                                                                },
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 2,
+                                                                                  "label": "Test client",
+                                                                                  "scopes": "linodes:*,nodebalancers:create",
+                                                                                  "thumbnail_url": null,
+                                                                                },
+                                                                              ]
+                                        }
+                                        dispatch={[Function]}
+                                        massEditGroups={
+                                                            Array [
+                                                                                Object {
+                                                                                  "elements": Array [
+                                                                                    Object {
+                                                                                      "action": [Function],
+                                                                                      "name": "Revoke",
+                                                                                    },
+                                                                                  ],
+                                                                                },
+                                                                              ]
+                                        }
+                                        objectType="tokens"
+                                        selectedKey="id"
+                                        selectedMap={Object {}}
+                                        toggleSelected={[Function]}
                     />
-                  </div>,
+</div>,
                   <div
                     className="Menu-item"
-                  >
+>
                     <Input
-                      className=""
-                      onChange={[Function]}
-                      placeholder="Filter..."
-                      value=""
+                                        className=""
+                                        onChange={[Function]}
+                                        placeholder="Filter..."
+                                        value=""
                     />
-                  </div>,
+</div>,
                 ],
                 "className": "Menu",
               },
@@ -1533,45 +1533,45 @@ ShallowWrapper {
                   "props": Object {
                     "children": <MassEditControl
                       data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 1,
-                            "label": "personal",
-                            "scopes": "*",
-                            "token": "3b124d11f2f264e0...",
-                          },
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 2,
-                            "label": "Test client",
-                            "scopes": "linodes:*,nodebalancers:create",
-                            "thumbnail_url": null,
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "_polling": false,
+                                                                    "created": "2016-12-12T15:07:47",
+                                                                    "expiry": "2290-09-26T14:07:47",
+                                                                    "id": 1,
+                                                                    "label": "personal",
+                                                                    "scopes": "*",
+                                                                    "token": "3b124d11f2f264e0...",
+                                                                  },
+                                                                  Object {
+                                                                    "_polling": false,
+                                                                    "created": "2016-12-12T15:07:47",
+                                                                    "expiry": "2290-09-26T14:07:47",
+                                                                    "id": 2,
+                                                                    "label": "Test client",
+                                                                    "scopes": "linodes:*,nodebalancers:create",
+                                                                    "thumbnail_url": null,
+                                                                  },
+                                                                ]
                       }
                       dispatch={[Function]}
                       massEditGroups={
-                        Array [
-                          Object {
-                            "elements": Array [
-                              Object {
-                                "action": [Function],
-                                "name": "Revoke",
-                              },
-                            ],
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "elements": Array [
+                                                                      Object {
+                                                                        "action": [Function],
+                                                                        "name": "Revoke",
+                                                                      },
+                                                                    ],
+                                                                  },
+                                                                ]
                       }
                       objectType="tokens"
                       selectedKey="id"
                       selectedMap={Object {}}
                       toggleSelected={[Function]}
-                    />,
+/>,
                     "className": "Menu-item",
                   },
                   "ref": null,
@@ -1632,7 +1632,7 @@ ShallowWrapper {
                       onChange={[Function]}
                       placeholder="Filter..."
                       value=""
-                    />,
+/>,
                     "className": "Menu-item",
                   },
                   "ref": null,
@@ -1663,116 +1663,116 @@ ShallowWrapper {
                 "children": Array [
                   <ListGroup
                     name="Personal Access Tokens"
-                  >
+>
                     <Table
-                      className=""
-                      columns={
-                        Array [
-                          Object {
-                            "cellComponent": [Function],
-                            "headerClassName": "CheckboxColumn",
-                          },
-                          Object {
-                            "dataKey": "label",
-                            "label": "Label",
-                            "tooltipEnabled": true,
-                          },
-                          Object {
-                            "dataFn": [Function],
-                            "label": "Type",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Created",
-                            "timeKey": "created",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Expires",
-                            "timeKey": "expiry",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "groups": [Function],
-                            "headerClassName": "DropdownColumn",
-                          },
-                        ]
-                      }
-                      data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 1,
-                            "label": "personal",
-                            "scopes": "*",
-                            "token": "3b124d11f2f264e0...",
-                          },
-                        ]
-                      }
-                      disableHeader={false}
-                      noDataMessage="No tokens found."
-                      onToggleSelect={[Function]}
-                      selectedMap={Object {}}
+                                        className=""
+                                        columns={
+                                                            Array [
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "headerClassName": "CheckboxColumn",
+                                                                                },
+                                                                                Object {
+                                                                                  "dataKey": "label",
+                                                                                  "label": "Label",
+                                                                                  "tooltipEnabled": true,
+                                                                                },
+                                                                                Object {
+                                                                                  "dataFn": [Function],
+                                                                                  "label": "Type",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Created",
+                                                                                  "timeKey": "created",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Expires",
+                                                                                  "timeKey": "expiry",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "groups": [Function],
+                                                                                  "headerClassName": "DropdownColumn",
+                                                                                },
+                                                                              ]
+                                        }
+                                        data={
+                                                            Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 1,
+                                                                                  "label": "personal",
+                                                                                  "scopes": "*",
+                                                                                  "token": "3b124d11f2f264e0...",
+                                                                                },
+                                                                              ]
+                                        }
+                                        disableHeader={false}
+                                        noDataMessage="No tokens found."
+                                        onToggleSelect={[Function]}
+                                        selectedMap={Object {}}
                     />
-                  </ListGroup>,
+</ListGroup>,
                   <ListGroup
                     name="Test client"
-                  >
+>
                     <Table
-                      className=""
-                      columns={
-                        Array [
-                          Object {
-                            "cellComponent": [Function],
-                            "headerClassName": "CheckboxColumn",
-                          },
-                          Object {
-                            "dataKey": "label",
-                            "label": "Label",
-                            "tooltipEnabled": true,
-                          },
-                          Object {
-                            "dataFn": [Function],
-                            "label": "Type",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Created",
-                            "timeKey": "created",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Expires",
-                            "timeKey": "expiry",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "groups": [Function],
-                            "headerClassName": "DropdownColumn",
-                          },
-                        ]
-                      }
-                      data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 2,
-                            "label": "Test client",
-                            "scopes": "linodes:*,nodebalancers:create",
-                            "thumbnail_url": null,
-                          },
-                        ]
-                      }
-                      disableHeader={false}
-                      noDataMessage="No tokens found."
-                      onToggleSelect={[Function]}
-                      selectedMap={Object {}}
+                                        className=""
+                                        columns={
+                                                            Array [
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "headerClassName": "CheckboxColumn",
+                                                                                },
+                                                                                Object {
+                                                                                  "dataKey": "label",
+                                                                                  "label": "Label",
+                                                                                  "tooltipEnabled": true,
+                                                                                },
+                                                                                Object {
+                                                                                  "dataFn": [Function],
+                                                                                  "label": "Type",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Created",
+                                                                                  "timeKey": "created",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "label": "Expires",
+                                                                                  "timeKey": "expiry",
+                                                                                },
+                                                                                Object {
+                                                                                  "cellComponent": [Function],
+                                                                                  "groups": [Function],
+                                                                                  "headerClassName": "DropdownColumn",
+                                                                                },
+                                                                              ]
+                                        }
+                                        data={
+                                                            Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "created": "2016-12-12T15:07:47",
+                                                                                  "expiry": "2290-09-26T14:07:47",
+                                                                                  "id": 2,
+                                                                                  "label": "Test client",
+                                                                                  "scopes": "linodes:*,nodebalancers:create",
+                                                                                  "thumbnail_url": null,
+                                                                                },
+                                                                              ]
+                                        }
+                                        disableHeader={false}
+                                        noDataMessage="No tokens found."
+                                        onToggleSelect={[Function]}
+                                        selectedMap={Object {}}
                     />
-                  </ListGroup>,
+</ListGroup>,
                 ],
               },
               "ref": null,
@@ -1785,55 +1785,55 @@ ShallowWrapper {
                     "children": <Table
                       className=""
                       columns={
-                        Array [
-                          Object {
-                            "cellComponent": [Function],
-                            "headerClassName": "CheckboxColumn",
-                          },
-                          Object {
-                            "dataKey": "label",
-                            "label": "Label",
-                            "tooltipEnabled": true,
-                          },
-                          Object {
-                            "dataFn": [Function],
-                            "label": "Type",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Created",
-                            "timeKey": "created",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Expires",
-                            "timeKey": "expiry",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "groups": [Function],
-                            "headerClassName": "DropdownColumn",
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "headerClassName": "CheckboxColumn",
+                                                                  },
+                                                                  Object {
+                                                                    "dataKey": "label",
+                                                                    "label": "Label",
+                                                                    "tooltipEnabled": true,
+                                                                  },
+                                                                  Object {
+                                                                    "dataFn": [Function],
+                                                                    "label": "Type",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "label": "Created",
+                                                                    "timeKey": "created",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "label": "Expires",
+                                                                    "timeKey": "expiry",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "groups": [Function],
+                                                                    "headerClassName": "DropdownColumn",
+                                                                  },
+                                                                ]
                       }
                       data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 1,
-                            "label": "personal",
-                            "scopes": "*",
-                            "token": "3b124d11f2f264e0...",
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "_polling": false,
+                                                                    "created": "2016-12-12T15:07:47",
+                                                                    "expiry": "2290-09-26T14:07:47",
+                                                                    "id": 1,
+                                                                    "label": "personal",
+                                                                    "scopes": "*",
+                                                                    "token": "3b124d11f2f264e0...",
+                                                                  },
+                                                                ]
                       }
                       disableHeader={false}
                       noDataMessage="No tokens found."
                       onToggleSelect={[Function]}
                       selectedMap={Object {}}
-                    />,
+/>,
                     "name": "Personal Access Tokens",
                   },
                   "ref": null,
@@ -1903,55 +1903,55 @@ ShallowWrapper {
                     "children": <Table
                       className=""
                       columns={
-                        Array [
-                          Object {
-                            "cellComponent": [Function],
-                            "headerClassName": "CheckboxColumn",
-                          },
-                          Object {
-                            "dataKey": "label",
-                            "label": "Label",
-                            "tooltipEnabled": true,
-                          },
-                          Object {
-                            "dataFn": [Function],
-                            "label": "Type",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Created",
-                            "timeKey": "created",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "label": "Expires",
-                            "timeKey": "expiry",
-                          },
-                          Object {
-                            "cellComponent": [Function],
-                            "groups": [Function],
-                            "headerClassName": "DropdownColumn",
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "headerClassName": "CheckboxColumn",
+                                                                  },
+                                                                  Object {
+                                                                    "dataKey": "label",
+                                                                    "label": "Label",
+                                                                    "tooltipEnabled": true,
+                                                                  },
+                                                                  Object {
+                                                                    "dataFn": [Function],
+                                                                    "label": "Type",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "label": "Created",
+                                                                    "timeKey": "created",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "label": "Expires",
+                                                                    "timeKey": "expiry",
+                                                                  },
+                                                                  Object {
+                                                                    "cellComponent": [Function],
+                                                                    "groups": [Function],
+                                                                    "headerClassName": "DropdownColumn",
+                                                                  },
+                                                                ]
                       }
                       data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "created": "2016-12-12T15:07:47",
-                            "expiry": "2290-09-26T14:07:47",
-                            "id": 2,
-                            "label": "Test client",
-                            "scopes": "linodes:*,nodebalancers:create",
-                            "thumbnail_url": null,
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "_polling": false,
+                                                                    "created": "2016-12-12T15:07:47",
+                                                                    "expiry": "2290-09-26T14:07:47",
+                                                                    "id": 2,
+                                                                    "label": "Test client",
+                                                                    "scopes": "linodes:*,nodebalancers:create",
+                                                                    "thumbnail_url": null,
+                                                                  },
+                                                                ]
                       }
                       disableHeader={false}
                       noDataMessage="No tokens found."
                       onToggleSelect={[Function]}
                       selectedMap={Object {}}
-                    />,
+/>,
                     "name": "Test client",
                   },
                   "ref": null,

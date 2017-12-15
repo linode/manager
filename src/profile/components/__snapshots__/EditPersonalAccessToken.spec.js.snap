@@ -9,7 +9,7 @@ ShallowWrapper {
     dispatch={[Function]}
     id={1}
     label="personal"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -32,16 +32,16 @@ ShallowWrapper {
         errors={Object {}}
         id="label"
         label="Label"
-      >
+>
         <Input
-          className=""
-          id="label"
-          name="label"
-          onChange={[Function]}
-          placeholder="My token"
-          value="personal"
+                className=""
+                id="label"
+                name="label"
+                onChange={[Function]}
+                placeholder="My token"
+                value="personal"
         />
-      </ModalFormGroup>,
+</ModalFormGroup>,
       "errors": Object {},
       "noCancel": false,
       "noCancelEvent": false,
@@ -63,7 +63,7 @@ ShallowWrapper {
           onChange={[Function]}
           placeholder="My token"
           value="personal"
-        />,
+/>,
         "errors": Object {},
         "id": "label",
         "label": "Label",
@@ -105,16 +105,16 @@ ShallowWrapper {
           errors={Object {}}
           id="label"
           label="Label"
-        >
+>
           <Input
-            className=""
-            id="label"
-            name="label"
-            onChange={[Function]}
-            placeholder="My token"
-            value="personal"
+                    className=""
+                    id="label"
+                    name="label"
+                    onChange={[Function]}
+                    placeholder="My token"
+                    value="personal"
           />
-        </ModalFormGroup>,
+</ModalFormGroup>,
         "errors": Object {},
         "noCancel": false,
         "noCancelEvent": false,
@@ -136,7 +136,7 @@ ShallowWrapper {
             onChange={[Function]}
             placeholder="My token"
             value="personal"
-          />,
+/>,
           "errors": Object {},
           "id": "label",
           "label": "Label",

@@ -8,7 +8,7 @@ ShallowWrapper {
     close={[Function]}
     dispatch={[Function]}
     title="CreateOrEditApplication"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -29,66 +29,66 @@ ShallowWrapper {
       "buttonText": "Save",
       "children": <div>
         <ModalFormGroup
-          apiKey="label"
-          errors={Object {}}
-          id="label"
-          label="Label"
+                apiKey="label"
+                errors={Object {}}
+                id="label"
+                label="Label"
         >
-          <Input
-            className=""
-            id="label"
-            name="label"
-            onChange={[Function]}
-            placeholder="My client"
-            value=""
-          />
+                <Input
+                        className=""
+                        id="label"
+                        name="label"
+                        onChange={[Function]}
+                        placeholder="My client"
+                        value=""
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="redirect_uri"
-          errors={Object {}}
-          id="redirect"
-          label="Redirect URI"
+                apiKey="redirect_uri"
+                errors={Object {}}
+                id="redirect"
+                label="Redirect URI"
         >
-          <Input
-            className=""
-            id="redirect"
-            name="redirect"
-            onChange={[Function]}
-            placeholder="http://localhost:3000/oauth/callback"
-            value=""
-          />
+                <Input
+                        className=""
+                        id="redirect"
+                        name="redirect"
+                        onChange={[Function]}
+                        placeholder="http://localhost:3000/oauth/callback"
+                        value=""
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="thumbnail"
-          errors={Object {}}
-          id="thumbnail"
-          label="Thumbnail"
+                apiKey="thumbnail"
+                errors={Object {}}
+                id="thumbnail"
+                label="Thumbnail"
         >
-          <Input
-            className=""
-            id="thumbnail"
-            name="thumbnail"
-            onChange={[Function]}
-            type="file"
-          />
+                <Input
+                        className=""
+                        id="thumbnail"
+                        name="thumbnail"
+                        onChange={[Function]}
+                        type="file"
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="public"
-          errors={Object {}}
-          id="public"
-          label="Public"
+                apiKey="public"
+                errors={Object {}}
+                id="public"
+                label="Public"
         >
-          <Input
-            checked={false}
-            className=""
-            disabled={undefined}
-            id="public_"
-            name="public_"
-            onChange={[Function]}
-            type="checkbox"
-          />
+                <Input
+                        checked={false}
+                        className=""
+                        disabled={undefined}
+                        id="public_"
+                        name="public_"
+                        onChange={[Function]}
+                        type="checkbox"
+                />
         </ModalFormGroup>
-      </div>,
+</div>,
       "errors": Object {},
       "noCancel": false,
       "noCancelEvent": false,
@@ -108,61 +108,61 @@ ShallowWrapper {
             errors={Object {}}
             id="label"
             label="Label"
-          >
+>
             <Input
-              className=""
-              id="label"
-              name="label"
-              onChange={[Function]}
-              placeholder="My client"
-              value=""
+                        className=""
+                        id="label"
+                        name="label"
+                        onChange={[Function]}
+                        placeholder="My client"
+                        value=""
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="redirect_uri"
             errors={Object {}}
             id="redirect"
             label="Redirect URI"
-          >
+>
             <Input
-              className=""
-              id="redirect"
-              name="redirect"
-              onChange={[Function]}
-              placeholder="http://localhost:3000/oauth/callback"
-              value=""
+                        className=""
+                        id="redirect"
+                        name="redirect"
+                        onChange={[Function]}
+                        placeholder="http://localhost:3000/oauth/callback"
+                        value=""
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="thumbnail"
             errors={Object {}}
             id="thumbnail"
             label="Thumbnail"
-          >
+>
             <Input
-              className=""
-              id="thumbnail"
-              name="thumbnail"
-              onChange={[Function]}
-              type="file"
+                        className=""
+                        id="thumbnail"
+                        name="thumbnail"
+                        onChange={[Function]}
+                        type="file"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="public"
             errors={Object {}}
             id="public"
             label="Public"
-          >
+>
             <Input
-              checked={false}
-              className=""
-              disabled={undefined}
-              id="public_"
-              name="public_"
-              onChange={[Function]}
-              type="checkbox"
+                        checked={false}
+                        className=""
+                        disabled={undefined}
+                        id="public_"
+                        name="public_"
+                        onChange={[Function]}
+                        type="checkbox"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
         ],
       },
       "ref": null,
@@ -180,7 +180,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="My client"
               value=""
-            />,
+/>,
             "errors": Object {},
             "id": "label",
             "label": "Label",
@@ -217,7 +217,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="http://localhost:3000/oauth/callback"
               value=""
-            />,
+/>,
             "errors": Object {},
             "id": "redirect",
             "label": "Redirect URI",
@@ -253,7 +253,7 @@ ShallowWrapper {
               name="thumbnail"
               onChange={[Function]}
               type="file"
-            />,
+/>,
             "errors": Object {},
             "id": "thumbnail",
             "label": "Thumbnail",
@@ -290,7 +290,7 @@ ShallowWrapper {
               name="public_"
               onChange={[Function]}
               type="checkbox"
-            />,
+/>,
             "errors": Object {},
             "id": "public",
             "label": "Public",
@@ -334,66 +334,66 @@ ShallowWrapper {
         "buttonText": "Save",
         "children": <div>
           <ModalFormGroup
-            apiKey="label"
-            errors={Object {}}
-            id="label"
-            label="Label"
+                    apiKey="label"
+                    errors={Object {}}
+                    id="label"
+                    label="Label"
           >
-            <Input
-              className=""
-              id="label"
-              name="label"
-              onChange={[Function]}
-              placeholder="My client"
-              value=""
-            />
+                    <Input
+                              className=""
+                              id="label"
+                              name="label"
+                              onChange={[Function]}
+                              placeholder="My client"
+                              value=""
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="redirect_uri"
-            errors={Object {}}
-            id="redirect"
-            label="Redirect URI"
+                    apiKey="redirect_uri"
+                    errors={Object {}}
+                    id="redirect"
+                    label="Redirect URI"
           >
-            <Input
-              className=""
-              id="redirect"
-              name="redirect"
-              onChange={[Function]}
-              placeholder="http://localhost:3000/oauth/callback"
-              value=""
-            />
+                    <Input
+                              className=""
+                              id="redirect"
+                              name="redirect"
+                              onChange={[Function]}
+                              placeholder="http://localhost:3000/oauth/callback"
+                              value=""
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="thumbnail"
-            errors={Object {}}
-            id="thumbnail"
-            label="Thumbnail"
+                    apiKey="thumbnail"
+                    errors={Object {}}
+                    id="thumbnail"
+                    label="Thumbnail"
           >
-            <Input
-              className=""
-              id="thumbnail"
-              name="thumbnail"
-              onChange={[Function]}
-              type="file"
-            />
+                    <Input
+                              className=""
+                              id="thumbnail"
+                              name="thumbnail"
+                              onChange={[Function]}
+                              type="file"
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="public"
-            errors={Object {}}
-            id="public"
-            label="Public"
+                    apiKey="public"
+                    errors={Object {}}
+                    id="public"
+                    label="Public"
           >
-            <Input
-              checked={false}
-              className=""
-              disabled={undefined}
-              id="public_"
-              name="public_"
-              onChange={[Function]}
-              type="checkbox"
-            />
+                    <Input
+                              checked={false}
+                              className=""
+                              disabled={undefined}
+                              id="public_"
+                              name="public_"
+                              onChange={[Function]}
+                              type="checkbox"
+                    />
           </ModalFormGroup>
-        </div>,
+</div>,
         "errors": Object {},
         "noCancel": false,
         "noCancelEvent": false,
@@ -413,61 +413,61 @@ ShallowWrapper {
               errors={Object {}}
               id="label"
               label="Label"
-            >
+>
               <Input
-                className=""
-                id="label"
-                name="label"
-                onChange={[Function]}
-                placeholder="My client"
-                value=""
+                            className=""
+                            id="label"
+                            name="label"
+                            onChange={[Function]}
+                            placeholder="My client"
+                            value=""
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="redirect_uri"
               errors={Object {}}
               id="redirect"
               label="Redirect URI"
-            >
+>
               <Input
-                className=""
-                id="redirect"
-                name="redirect"
-                onChange={[Function]}
-                placeholder="http://localhost:3000/oauth/callback"
-                value=""
+                            className=""
+                            id="redirect"
+                            name="redirect"
+                            onChange={[Function]}
+                            placeholder="http://localhost:3000/oauth/callback"
+                            value=""
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="thumbnail"
               errors={Object {}}
               id="thumbnail"
               label="Thumbnail"
-            >
+>
               <Input
-                className=""
-                id="thumbnail"
-                name="thumbnail"
-                onChange={[Function]}
-                type="file"
+                            className=""
+                            id="thumbnail"
+                            name="thumbnail"
+                            onChange={[Function]}
+                            type="file"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="public"
               errors={Object {}}
               id="public"
               label="Public"
-            >
+>
               <Input
-                checked={false}
-                className=""
-                disabled={undefined}
-                id="public_"
-                name="public_"
-                onChange={[Function]}
-                type="checkbox"
+                            checked={false}
+                            className=""
+                            disabled={undefined}
+                            id="public_"
+                            name="public_"
+                            onChange={[Function]}
+                            type="checkbox"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
           ],
         },
         "ref": null,
@@ -485,7 +485,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="My client"
                 value=""
-              />,
+/>,
               "errors": Object {},
               "id": "label",
               "label": "Label",
@@ -522,7 +522,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="http://localhost:3000/oauth/callback"
                 value=""
-              />,
+/>,
               "errors": Object {},
               "id": "redirect",
               "label": "Redirect URI",
@@ -558,7 +558,7 @@ ShallowWrapper {
                 name="thumbnail"
                 onChange={[Function]}
                 type="file"
-              />,
+/>,
               "errors": Object {},
               "id": "thumbnail",
               "label": "Thumbnail",
@@ -595,7 +595,7 @@ ShallowWrapper {
                 name="public_"
                 onChange={[Function]}
                 type="checkbox"
-              />,
+/>,
               "errors": Object {},
               "id": "public",
               "label": "Public",

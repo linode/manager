@@ -8,108 +8,108 @@ ShallowWrapper {
     dispatch={[Function]}
     email="peanut@gmail.com"
     events={
-      Object {
-        "events": Object {
-          "385": Object {
-            "action": "linode_reboot",
-            "created": "2016-11-21T20:03:40",
-            "entity": Object {
-              "label": "linode-www2",
+        Object {
+            "events": Object {
+              "385": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
+              "386": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 386,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": true,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:12:40",
+              },
+              "387": Object {
+                "action": "linode_shutdown",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
+              "388": Object {
+                "action": "linode_boot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
             },
-            "finished": null,
-            "id": 385,
-            "label_message": "",
-            "linode_id": 1237,
-            "nodebalancer_id": null,
-            "percent_complete": 100,
-            "read": false,
-            "seen": false,
-            "stackscript_id": null,
-            "status": "finished",
-            "updated": "2016-11-21T20:03:40",
-          },
-          "386": Object {
-            "action": "linode_reboot",
-            "created": "2016-11-21T20:03:40",
-            "entity": Object {
-              "label": "linode-www2",
-            },
-            "finished": null,
-            "id": 386,
-            "label_message": "",
-            "linode_id": 1237,
-            "nodebalancer_id": null,
-            "percent_complete": 100,
-            "read": true,
-            "seen": false,
-            "stackscript_id": null,
-            "status": "finished",
-            "updated": "2016-11-21T20:12:40",
-          },
-          "387": Object {
-            "action": "linode_shutdown",
-            "created": "2016-11-21T20:03:40",
-            "entity": Object {
-              "label": "linode-www2",
-            },
-            "finished": null,
-            "id": 385,
-            "label_message": "",
-            "linode_id": 1237,
-            "nodebalancer_id": null,
-            "percent_complete": 100,
-            "read": false,
-            "seen": false,
-            "stackscript_id": null,
-            "status": "finished",
-            "updated": "2016-11-21T20:03:40",
-          },
-          "388": Object {
-            "action": "linode_boot",
-            "created": "2016-11-21T20:03:40",
-            "entity": Object {
-              "label": "linode-www2",
-            },
-            "finished": null,
-            "id": 385,
-            "label_message": "",
-            "linode_id": 1237,
-            "nodebalancer_id": null,
-            "percent_complete": 100,
-            "read": false,
-            "seen": false,
-            "stackscript_id": null,
-            "status": "finished",
-            "updated": "2016-11-21T20:03:40",
-          },
-        },
-        "ids": Array [
-          385,
-          386,
-          385,
-          385,
-        ],
-        "pagesFetched": Array [
-          1,
-        ],
-        "plural": "events",
-        "singular": "event",
-        "totalPages": 1,
-        "totalResults": 4,
-      }
+            "ids": Array [
+              385,
+              386,
+              385,
+              385,
+            ],
+            "pagesFetched": Array [
+              1,
+            ],
+            "plural": "events",
+            "singular": "event",
+            "totalPages": 1,
+            "totalResults": 4,
+          }
     }
     notifications={
-      Object {
-        "open": false,
-      }
+        Object {
+            "open": false,
+          }
     }
     session={
-      Object {
-        "open": false,
-      }
+        Object {
+            "open": false,
+          }
     }
     username="peanut"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -125,90 +125,90 @@ ShallowWrapper {
       "children": Array [
         <div
           className="MainHeader-brand"
-        >
+>
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/"
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/"
           >
-            <span
-              className="MainHeader-logo"
-            >
-              <img
-                alt="Linode Logo"
-                height={40}
-                src="rabble rabble"
-                width={35}
-              />
-            </span>
+                    <span
+                              className="MainHeader-logo"
+                    >
+                              <img
+                                        alt="Linode Logo"
+                                        height={40}
+                                        src="logo.svg"
+                                        width={35}
+                              />
+                    </span>
           </Link>
-        </div>,
+</div>,
         <renderLink
           alsoHighlightOn={
-            Array [
-              "/stackscripts",
-              "/volumes",
-              "/images",
-            ]
+                    Array [
+                              "/stackscripts",
+                              "/volumes",
+                              "/images",
+                            ]
           }
           label="Linodes"
           to="/linodes"
-        />,
+/>,
         <renderLink
           label="NodeBalancers"
           to="/nodebalancers"
-        />,
+/>,
         <renderLink
           label="Domains"
           to="/domains"
-        />,
+/>,
         <renderLink
           label="Support"
           to="/support"
-        />,
+/>,
         <div
           className="MainHeader-session"
           onClick={[Function]}
-        >
+>
           <span
-            className="MainHeader-username"
+                    className="MainHeader-username"
           >
-            peanut
+                    peanut
           </span>
           <img
-            alt="User Avatar"
-            className="MainHeader-gravatar"
-            height={35}
-            src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
-            width={35}
+                    alt="User Avatar"
+                    className="MainHeader-gravatar"
+                    height={35}
+                    src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
+                    width={35}
           />
-        </div>,
+</div>,
         <div
           className="MainHeader-notifications"
           onClick={[Function]}
-        >
+>
           <i
-            className="fa fa-bell-o"
+                    className="fa fa-bell-o"
           />
           <span
-            className="MainHeader-badge Badge"
+                    className="MainHeader-badge Badge"
           >
-            4
+                    4
           </span>
-        </div>,
+</div>,
       ],
       "contextHeader": undefined,
       "infoHeader": <div
         className="MiniHeader-text"
-      >
+>
         This is the early-access Linode Manager. Click 
         <a
-          href="https://manager.linode.com"
+                href="https://manager.linode.com"
         >
-          here
+                here
         </a>
          to go back to the classic Linode Manager.
-      </div>,
+</div>,
     },
     "ref": null,
     "rendered": Array [
@@ -221,18 +221,18 @@ ShallowWrapper {
             onlyActiveOnIndex={false}
             style={Object {}}
             to="/"
-          >
+>
             <span
-              className="MainHeader-logo"
+                        className="MainHeader-logo"
             >
-              <img
-                alt="Linode Logo"
-                height={40}
-                src="rabble rabble"
-                width={35}
-              />
+                        <img
+                                    alt="Linode Logo"
+                                    height={40}
+                                    src="logo.svg"
+                                    width={35}
+                        />
             </span>
-          </Link>,
+</Link>,
           "className": "MainHeader-brand",
         },
         "ref": null,
@@ -243,14 +243,14 @@ ShallowWrapper {
           "props": Object {
             "children": <span
               className="MainHeader-logo"
-            >
+>
               <img
-                alt="Linode Logo"
-                height={40}
-                src="rabble rabble"
-                width={35}
+                            alt="Linode Logo"
+                            height={40}
+                            src="logo.svg"
+                            width={35}
               />
-            </span>,
+</span>,
             "onlyActiveOnIndex": false,
             "style": Object {},
             "to": "/",
@@ -264,9 +264,9 @@ ShallowWrapper {
               "children": <img
                 alt="Linode Logo"
                 height={40}
-                src="rabble rabble"
+                src="logo.svg"
                 width={35}
-              />,
+/>,
               "className": "MainHeader-logo",
             },
             "ref": null,
@@ -277,7 +277,7 @@ ShallowWrapper {
               "props": Object {
                 "alt": "Linode Logo",
                 "height": 40,
-                "src": "rabble rabble",
+                "src": "logo.svg",
                 "width": 35,
               },
               "ref": null,
@@ -351,16 +351,16 @@ ShallowWrapper {
           "children": Array [
             <span
               className="MainHeader-username"
-            >
+>
               peanut
-            </span>,
+</span>,
             <img
               alt="User Avatar"
               className="MainHeader-gravatar"
               height={35}
               src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
               width={35}
-            />,
+/>,
           ],
           "className": "MainHeader-session",
           "onClick": [Function],
@@ -405,12 +405,12 @@ ShallowWrapper {
           "children": Array [
             <i
               className="fa fa-bell-o"
-            />,
+/>,
             <span
               className="MainHeader-badge Badge"
-            >
+>
               4
-            </span>,
+</span>,
           ],
           "className": "MainHeader-notifications",
           "onClick": [Function],
@@ -455,90 +455,90 @@ ShallowWrapper {
         "children": Array [
           <div
             className="MainHeader-brand"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/"
             >
-              <span
-                className="MainHeader-logo"
-              >
-                <img
-                  alt="Linode Logo"
-                  height={40}
-                  src="rabble rabble"
-                  width={35}
-                />
-              </span>
+                        <span
+                                    className="MainHeader-logo"
+                        >
+                                    <img
+                                                alt="Linode Logo"
+                                                height={40}
+                                                src="logo.svg"
+                                                width={35}
+                                    />
+                        </span>
             </Link>
-          </div>,
+</div>,
           <renderLink
             alsoHighlightOn={
-              Array [
-                "/stackscripts",
-                "/volumes",
-                "/images",
-              ]
+                        Array [
+                                    "/stackscripts",
+                                    "/volumes",
+                                    "/images",
+                                  ]
             }
             label="Linodes"
             to="/linodes"
-          />,
+/>,
           <renderLink
             label="NodeBalancers"
             to="/nodebalancers"
-          />,
+/>,
           <renderLink
             label="Domains"
             to="/domains"
-          />,
+/>,
           <renderLink
             label="Support"
             to="/support"
-          />,
+/>,
           <div
             className="MainHeader-session"
             onClick={[Function]}
-          >
+>
             <span
-              className="MainHeader-username"
+                        className="MainHeader-username"
             >
-              peanut
+                        peanut
             </span>
             <img
-              alt="User Avatar"
-              className="MainHeader-gravatar"
-              height={35}
-              src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
-              width={35}
+                        alt="User Avatar"
+                        className="MainHeader-gravatar"
+                        height={35}
+                        src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
+                        width={35}
             />
-          </div>,
+</div>,
           <div
             className="MainHeader-notifications"
             onClick={[Function]}
-          >
+>
             <i
-              className="fa fa-bell-o"
+                        className="fa fa-bell-o"
             />
             <span
-              className="MainHeader-badge Badge"
+                        className="MainHeader-badge Badge"
             >
-              4
+                        4
             </span>
-          </div>,
+</div>,
         ],
         "contextHeader": undefined,
         "infoHeader": <div
           className="MiniHeader-text"
-        >
+>
           This is the early-access Linode Manager. Click 
           <a
-            href="https://manager.linode.com"
+                    href="https://manager.linode.com"
           >
-            here
+                    here
           </a>
            to go back to the classic Linode Manager.
-        </div>,
+</div>,
       },
       "ref": null,
       "rendered": Array [
@@ -551,18 +551,18 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/"
-            >
+>
               <span
-                className="MainHeader-logo"
+                            className="MainHeader-logo"
               >
-                <img
-                  alt="Linode Logo"
-                  height={40}
-                  src="rabble rabble"
-                  width={35}
-                />
+                            <img
+                                          alt="Linode Logo"
+                                          height={40}
+                                          src="logo.svg"
+                                          width={35}
+                            />
               </span>
-            </Link>,
+</Link>,
             "className": "MainHeader-brand",
           },
           "ref": null,
@@ -573,14 +573,14 @@ ShallowWrapper {
             "props": Object {
               "children": <span
                 className="MainHeader-logo"
-              >
+>
                 <img
-                  alt="Linode Logo"
-                  height={40}
-                  src="rabble rabble"
-                  width={35}
+                                alt="Linode Logo"
+                                height={40}
+                                src="logo.svg"
+                                width={35}
                 />
-              </span>,
+</span>,
               "onlyActiveOnIndex": false,
               "style": Object {},
               "to": "/",
@@ -594,9 +594,9 @@ ShallowWrapper {
                 "children": <img
                   alt="Linode Logo"
                   height={40}
-                  src="rabble rabble"
+                  src="logo.svg"
                   width={35}
-                />,
+/>,
                 "className": "MainHeader-logo",
               },
               "ref": null,
@@ -607,7 +607,7 @@ ShallowWrapper {
                 "props": Object {
                   "alt": "Linode Logo",
                   "height": 40,
-                  "src": "rabble rabble",
+                  "src": "logo.svg",
                   "width": 35,
                 },
                 "ref": null,
@@ -681,16 +681,16 @@ ShallowWrapper {
             "children": Array [
               <span
                 className="MainHeader-username"
-              >
+>
                 peanut
-              </span>,
+</span>,
               <img
                 alt="User Avatar"
                 className="MainHeader-gravatar"
                 height={35}
                 src="https://gravatar.com/avatar/3567f505ca6767e0bef9249fbb3cf990"
                 width={35}
-              />,
+/>,
             ],
             "className": "MainHeader-session",
             "onClick": [Function],
@@ -735,12 +735,12 @@ ShallowWrapper {
             "children": Array [
               <i
                 className="fa fa-bell-o"
-              />,
+/>,
               <span
                 className="MainHeader-badge Badge"
-              >
+>
                 4
-              </span>,
+</span>,
             ],
             "className": "MainHeader-notifications",
             "onClick": [Function],

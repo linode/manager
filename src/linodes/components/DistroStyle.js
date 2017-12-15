@@ -2,8 +2,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { distros as distroAssets } from '~/assets';
-
+import distroAssets from '~/assets/distros';
 
 export default function DistroStyle(props) {
   const { linode } = props;

@@ -6,12 +6,12 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <GroupLabel
     object={
-      Object {
-        "group": "A",
-        "label": "B",
-      }
+        Object {
+            "group": "A",
+            "label": "B",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -27,13 +27,13 @@ ShallowWrapper {
       "children": Array [
         <span
           className="text-muted"
-        >
+>
           A
            / 
-        </span>,
+</span>,
         <strong>
           B
-        </strong>,
+</strong>,
       ],
     },
     "ref": null,
@@ -79,13 +79,13 @@ ShallowWrapper {
         "children": Array [
           <span
             className="text-muted"
-          >
+>
             A
              / 
-          </span>,
+</span>,
           <strong>
             B
-          </strong>,
+</strong>,
         ],
       },
       "ref": null,

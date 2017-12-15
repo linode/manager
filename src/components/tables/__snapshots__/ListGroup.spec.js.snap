@@ -6,7 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <ListGroup
     name="Example"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -22,9 +22,9 @@ ShallowWrapper {
       "children": Array [
         <div
           className="ListGroup-label"
-        >
+>
           Example
-        </div>,
+</div>,
         undefined,
       ],
       "className": "ListGroup",
@@ -56,9 +56,9 @@ ShallowWrapper {
         "children": Array [
           <div
             className="ListGroup-label"
-          >
+>
             Example
-          </div>,
+</div>,
           undefined,
         ],
         "className": "ListGroup",

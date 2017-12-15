@@ -7,15 +7,15 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <UserForm
     dispatch={[Function]}
     user={
-      Object {
-        "_polling": false,
-        "email": "example1@domain.com",
-        "password": "crisprcas9",
-        "restricted": false,
-        "username": "testuser1",
-      }
+        Object {
+            "_polling": false,
+            "email": "example1@domain.com",
+            "password": "crisprcas9",
+            "restricted": false,
+            "username": "testuser1",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -37,124 +37,124 @@ ShallowWrapper {
           className="row"
           errors={Object {}}
           name="username"
-        >
+>
           <label
-            className="col-sm-2 col-form-label"
-            htmlFor="username"
+                    className="col-sm-2 col-form-label"
+                    htmlFor="username"
           >
-            Username
+                    Username
           </label>
           <div
-            className="col-sm-10 clearfix"
+                    className="col-sm-10 clearfix"
           >
-            <Input
-              className="float-sm-left"
-              id="username"
-              name="username"
-              onChange={[Function]}
-              value="testuser1"
-            />
-            <FormGroupError
-              className="float-sm-left"
-              errors={Object {}}
-              inline={true}
-              name="username"
-            />
+                    <Input
+                              className="float-sm-left"
+                              id="username"
+                              name="username"
+                              onChange={[Function]}
+                              value="testuser1"
+                    />
+                    <FormGroupError
+                              className="float-sm-left"
+                              errors={Object {}}
+                              inline={true}
+                              name="username"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           errors={Object {}}
           name="email"
-        >
+>
           <label
-            className="col-sm-2 col-form-label"
-            htmlFor="email"
+                    className="col-sm-2 col-form-label"
+                    htmlFor="email"
           >
-            Email
+                    Email
           </label>
           <div
-            className="col-sm-10 clearfix"
+                    className="col-sm-10 clearfix"
           >
-            <Input
-              className="float-sm-left"
-              id="email"
-              name="email"
-              onChange={[Function]}
-              value="example1@domain.com"
-            />
-            <FormGroupError
-              className="float-sm-left"
-              errors={Object {}}
-              inline={true}
-              name="email"
-            />
+                    <Input
+                              className="float-sm-left"
+                              id="email"
+                              name="email"
+                              onChange={[Function]}
+                              value="example1@domain.com"
+                    />
+                    <FormGroupError
+                              className="float-sm-left"
+                              errors={Object {}}
+                              inline={true}
+                              name="email"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         null,
         <FormGroup
           className="row"
           errors={Object {}}
           name="restricted"
-        >
+>
           <label
-            className="col-sm-2 col-form-label"
+                    className="col-sm-2 col-form-label"
           >
-            Restricted
+                    Restricted
           </label>
           <div
-            className="col-sm-10 clearfix"
+                    className="col-sm-10 clearfix"
           >
-            <Checkboxes
-              className="float-sm-left"
-            >
-              <Radio
-                checked={false}
-                className=""
-                id="restricted"
-                label="Yes - this user can only do what I specify"
-                name="restricted"
-                onChange={[Function]}
-                value="yes"
-              />
-              <Radio
-                checked={true}
-                className=""
-                id="unrestricted"
-                label="No - this user has no access restrictions"
-                name="restricted"
-                onChange={[Function]}
-                value="no"
-              />
-            </Checkboxes>
-            <FormGroupError
-              className="float-sm-left"
-              errors={Object {}}
-              inline={true}
-              name="restricted"
-            />
+                    <Checkboxes
+                              className="float-sm-left"
+                    >
+                              <Radio
+                                        checked={false}
+                                        className=""
+                                        id="restricted"
+                                        label="Yes - this user can only do what I specify"
+                                        name="restricted"
+                                        onChange={[Function]}
+                                        value="yes"
+                              />
+                              <Radio
+                                        checked={true}
+                                        className=""
+                                        id="unrestricted"
+                                        label="No - this user has no access restrictions"
+                                        name="restricted"
+                                        onChange={[Function]}
+                                        value="no"
+                              />
+                    </Checkboxes>
+                    <FormGroupError
+                              className="float-sm-left"
+                              errors={Object {}}
+                              inline={true}
+                              name="restricted"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <div
           className="row"
-        >
+>
           <div
-            className="offset-sm-2 col-sm-10"
+                    className="offset-sm-2 col-sm-10"
           >
-            <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Saving"
-            >
-              Save
-            </SubmitButton>
-            <FormSummary
-              className=""
-              errors={Object {}}
-              success="User settings saved."
-            />
+                    <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Saving"
+                    >
+                              Save
+                    </SubmitButton>
+                    <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="User settings saved."
+                    />
           </div>
-        </div>,
+</div>,
       ],
       "className": "",
       "noSubmitEvent": false,
@@ -171,26 +171,26 @@ ShallowWrapper {
             <label
               className="col-sm-2 col-form-label"
               htmlFor="username"
-            >
+>
               Username
-            </label>,
+</label>,
             <div
               className="col-sm-10 clearfix"
-            >
+>
               <Input
-                className="float-sm-left"
-                id="username"
-                name="username"
-                onChange={[Function]}
-                value="testuser1"
+                            className="float-sm-left"
+                            id="username"
+                            name="username"
+                            onChange={[Function]}
+                            value="testuser1"
               />
               <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="username"
+                            className="float-sm-left"
+                            errors={Object {}}
+                            inline={true}
+                            name="username"
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "errors": Object {},
@@ -223,13 +223,13 @@ ShallowWrapper {
                   name="username"
                   onChange={[Function]}
                   value="testuser1"
-                />,
+/>,
                 <FormGroupError
                   className="float-sm-left"
                   errors={Object {}}
                   inline={true}
                   name="username"
-                />,
+/>,
               ],
               "className": "col-sm-10 clearfix",
             },
@@ -279,26 +279,26 @@ ShallowWrapper {
             <label
               className="col-sm-2 col-form-label"
               htmlFor="email"
-            >
+>
               Email
-            </label>,
+</label>,
             <div
               className="col-sm-10 clearfix"
-            >
+>
               <Input
-                className="float-sm-left"
-                id="email"
-                name="email"
-                onChange={[Function]}
-                value="example1@domain.com"
+                            className="float-sm-left"
+                            id="email"
+                            name="email"
+                            onChange={[Function]}
+                            value="example1@domain.com"
               />
               <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="email"
+                            className="float-sm-left"
+                            errors={Object {}}
+                            inline={true}
+                            name="email"
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "errors": Object {},
@@ -331,13 +331,13 @@ ShallowWrapper {
                   name="email"
                   onChange={[Function]}
                   value="example1@domain.com"
-                />,
+/>,
                 <FormGroupError
                   className="float-sm-left"
                   errors={Object {}}
                   inline={true}
                   name="email"
-                />,
+/>,
               ],
               "className": "col-sm-10 clearfix",
             },
@@ -387,41 +387,41 @@ ShallowWrapper {
           "children": Array [
             <label
               className="col-sm-2 col-form-label"
-            >
+>
               Restricted
-            </label>,
+</label>,
             <div
               className="col-sm-10 clearfix"
-            >
+>
               <Checkboxes
-                className="float-sm-left"
+                            className="float-sm-left"
               >
-                <Radio
-                  checked={false}
-                  className=""
-                  id="restricted"
-                  label="Yes - this user can only do what I specify"
-                  name="restricted"
-                  onChange={[Function]}
-                  value="yes"
-                />
-                <Radio
-                  checked={true}
-                  className=""
-                  id="unrestricted"
-                  label="No - this user has no access restrictions"
-                  name="restricted"
-                  onChange={[Function]}
-                  value="no"
-                />
+                            <Radio
+                                          checked={false}
+                                          className=""
+                                          id="restricted"
+                                          label="Yes - this user can only do what I specify"
+                                          name="restricted"
+                                          onChange={[Function]}
+                                          value="yes"
+                            />
+                            <Radio
+                                          checked={true}
+                                          className=""
+                                          id="unrestricted"
+                                          label="No - this user has no access restrictions"
+                                          name="restricted"
+                                          onChange={[Function]}
+                                          value="no"
+                            />
               </Checkboxes>
               <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="restricted"
+                            className="float-sm-left"
+                            errors={Object {}}
+                            inline={true}
+                            name="restricted"
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "errors": Object {},
@@ -449,32 +449,32 @@ ShallowWrapper {
               "children": Array [
                 <Checkboxes
                   className="float-sm-left"
-                >
+>
                   <Radio
-                    checked={false}
-                    className=""
-                    id="restricted"
-                    label="Yes - this user can only do what I specify"
-                    name="restricted"
-                    onChange={[Function]}
-                    value="yes"
+                                    checked={false}
+                                    className=""
+                                    id="restricted"
+                                    label="Yes - this user can only do what I specify"
+                                    name="restricted"
+                                    onChange={[Function]}
+                                    value="yes"
                   />
                   <Radio
-                    checked={true}
-                    className=""
-                    id="unrestricted"
-                    label="No - this user has no access restrictions"
-                    name="restricted"
-                    onChange={[Function]}
-                    value="no"
+                                    checked={true}
+                                    className=""
+                                    id="unrestricted"
+                                    label="No - this user has no access restrictions"
+                                    name="restricted"
+                                    onChange={[Function]}
+                                    value="no"
                   />
-                </Checkboxes>,
+</Checkboxes>,
                 <FormGroupError
                   className="float-sm-left"
                   errors={Object {}}
                   inline={true}
                   name="restricted"
-                />,
+/>,
               ],
               "className": "col-sm-10 clearfix",
             },
@@ -494,7 +494,7 @@ ShallowWrapper {
                       name="restricted"
                       onChange={[Function]}
                       value="yes"
-                    />,
+/>,
                     <Radio
                       checked={true}
                       className=""
@@ -503,7 +503,7 @@ ShallowWrapper {
                       name="restricted"
                       onChange={[Function]}
                       value="no"
-                    />,
+/>,
                   ],
                   "className": "float-sm-left",
                 },
@@ -573,20 +573,20 @@ ShallowWrapper {
         "props": Object {
           "children": <div
             className="offset-sm-2 col-sm-10"
-          >
+>
             <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Saving"
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Saving"
             >
-              Save
+                        Save
             </SubmitButton>
             <FormSummary
-              className=""
-              errors={Object {}}
-              success="User settings saved."
+                        className=""
+                        errors={Object {}}
+                        success="User settings saved."
             />
-          </div>,
+</div>,
           "className": "row",
         },
         "ref": null,
@@ -600,14 +600,14 @@ ShallowWrapper {
                 className="btn-default"
                 disabled={false}
                 disabledChildren="Saving"
-              >
+>
                 Save
-              </SubmitButton>,
+</SubmitButton>,
               <FormSummary
                 className=""
                 errors={Object {}}
                 success="User settings saved."
-              />,
+/>,
             ],
             "className": "offset-sm-2 col-sm-10",
           },
@@ -663,124 +663,124 @@ ShallowWrapper {
             className="row"
             errors={Object {}}
             name="username"
-          >
+>
             <label
-              className="col-sm-2 col-form-label"
-              htmlFor="username"
+                        className="col-sm-2 col-form-label"
+                        htmlFor="username"
             >
-              Username
+                        Username
             </label>
             <div
-              className="col-sm-10 clearfix"
+                        className="col-sm-10 clearfix"
             >
-              <Input
-                className="float-sm-left"
-                id="username"
-                name="username"
-                onChange={[Function]}
-                value="testuser1"
-              />
-              <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="username"
-              />
+                        <Input
+                                    className="float-sm-left"
+                                    id="username"
+                                    name="username"
+                                    onChange={[Function]}
+                                    value="testuser1"
+                        />
+                        <FormGroupError
+                                    className="float-sm-left"
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="username"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             errors={Object {}}
             name="email"
-          >
+>
             <label
-              className="col-sm-2 col-form-label"
-              htmlFor="email"
+                        className="col-sm-2 col-form-label"
+                        htmlFor="email"
             >
-              Email
+                        Email
             </label>
             <div
-              className="col-sm-10 clearfix"
+                        className="col-sm-10 clearfix"
             >
-              <Input
-                className="float-sm-left"
-                id="email"
-                name="email"
-                onChange={[Function]}
-                value="example1@domain.com"
-              />
-              <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="email"
-              />
+                        <Input
+                                    className="float-sm-left"
+                                    id="email"
+                                    name="email"
+                                    onChange={[Function]}
+                                    value="example1@domain.com"
+                        />
+                        <FormGroupError
+                                    className="float-sm-left"
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="email"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           null,
           <FormGroup
             className="row"
             errors={Object {}}
             name="restricted"
-          >
+>
             <label
-              className="col-sm-2 col-form-label"
+                        className="col-sm-2 col-form-label"
             >
-              Restricted
+                        Restricted
             </label>
             <div
-              className="col-sm-10 clearfix"
+                        className="col-sm-10 clearfix"
             >
-              <Checkboxes
-                className="float-sm-left"
-              >
-                <Radio
-                  checked={false}
-                  className=""
-                  id="restricted"
-                  label="Yes - this user can only do what I specify"
-                  name="restricted"
-                  onChange={[Function]}
-                  value="yes"
-                />
-                <Radio
-                  checked={true}
-                  className=""
-                  id="unrestricted"
-                  label="No - this user has no access restrictions"
-                  name="restricted"
-                  onChange={[Function]}
-                  value="no"
-                />
-              </Checkboxes>
-              <FormGroupError
-                className="float-sm-left"
-                errors={Object {}}
-                inline={true}
-                name="restricted"
-              />
+                        <Checkboxes
+                                    className="float-sm-left"
+                        >
+                                    <Radio
+                                                checked={false}
+                                                className=""
+                                                id="restricted"
+                                                label="Yes - this user can only do what I specify"
+                                                name="restricted"
+                                                onChange={[Function]}
+                                                value="yes"
+                                    />
+                                    <Radio
+                                                checked={true}
+                                                className=""
+                                                id="unrestricted"
+                                                label="No - this user has no access restrictions"
+                                                name="restricted"
+                                                onChange={[Function]}
+                                                value="no"
+                                    />
+                        </Checkboxes>
+                        <FormGroupError
+                                    className="float-sm-left"
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="restricted"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <div
             className="row"
-          >
+>
             <div
-              className="offset-sm-2 col-sm-10"
+                        className="offset-sm-2 col-sm-10"
             >
-              <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Saving"
-              >
-                Save
-              </SubmitButton>
-              <FormSummary
-                className=""
-                errors={Object {}}
-                success="User settings saved."
-              />
+                        <SubmitButton
+                                    className="btn-default"
+                                    disabled={false}
+                                    disabledChildren="Saving"
+                        >
+                                    Save
+                        </SubmitButton>
+                        <FormSummary
+                                    className=""
+                                    errors={Object {}}
+                                    success="User settings saved."
+                        />
             </div>
-          </div>,
+</div>,
         ],
         "className": "",
         "noSubmitEvent": false,
@@ -797,26 +797,26 @@ ShallowWrapper {
               <label
                 className="col-sm-2 col-form-label"
                 htmlFor="username"
-              >
+>
                 Username
-              </label>,
+</label>,
               <div
                 className="col-sm-10 clearfix"
-              >
+>
                 <Input
-                  className="float-sm-left"
-                  id="username"
-                  name="username"
-                  onChange={[Function]}
-                  value="testuser1"
+                                className="float-sm-left"
+                                id="username"
+                                name="username"
+                                onChange={[Function]}
+                                value="testuser1"
                 />
                 <FormGroupError
-                  className="float-sm-left"
-                  errors={Object {}}
-                  inline={true}
-                  name="username"
+                                className="float-sm-left"
+                                errors={Object {}}
+                                inline={true}
+                                name="username"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "errors": Object {},
@@ -849,13 +849,13 @@ ShallowWrapper {
                     name="username"
                     onChange={[Function]}
                     value="testuser1"
-                  />,
+/>,
                   <FormGroupError
                     className="float-sm-left"
                     errors={Object {}}
                     inline={true}
                     name="username"
-                  />,
+/>,
                 ],
                 "className": "col-sm-10 clearfix",
               },
@@ -905,26 +905,26 @@ ShallowWrapper {
               <label
                 className="col-sm-2 col-form-label"
                 htmlFor="email"
-              >
+>
                 Email
-              </label>,
+</label>,
               <div
                 className="col-sm-10 clearfix"
-              >
+>
                 <Input
-                  className="float-sm-left"
-                  id="email"
-                  name="email"
-                  onChange={[Function]}
-                  value="example1@domain.com"
+                                className="float-sm-left"
+                                id="email"
+                                name="email"
+                                onChange={[Function]}
+                                value="example1@domain.com"
                 />
                 <FormGroupError
-                  className="float-sm-left"
-                  errors={Object {}}
-                  inline={true}
-                  name="email"
+                                className="float-sm-left"
+                                errors={Object {}}
+                                inline={true}
+                                name="email"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "errors": Object {},
@@ -957,13 +957,13 @@ ShallowWrapper {
                     name="email"
                     onChange={[Function]}
                     value="example1@domain.com"
-                  />,
+/>,
                   <FormGroupError
                     className="float-sm-left"
                     errors={Object {}}
                     inline={true}
                     name="email"
-                  />,
+/>,
                 ],
                 "className": "col-sm-10 clearfix",
               },
@@ -1013,41 +1013,41 @@ ShallowWrapper {
             "children": Array [
               <label
                 className="col-sm-2 col-form-label"
-              >
+>
                 Restricted
-              </label>,
+</label>,
               <div
                 className="col-sm-10 clearfix"
-              >
+>
                 <Checkboxes
-                  className="float-sm-left"
+                                className="float-sm-left"
                 >
-                  <Radio
-                    checked={false}
-                    className=""
-                    id="restricted"
-                    label="Yes - this user can only do what I specify"
-                    name="restricted"
-                    onChange={[Function]}
-                    value="yes"
-                  />
-                  <Radio
-                    checked={true}
-                    className=""
-                    id="unrestricted"
-                    label="No - this user has no access restrictions"
-                    name="restricted"
-                    onChange={[Function]}
-                    value="no"
-                  />
+                                <Radio
+                                                checked={false}
+                                                className=""
+                                                id="restricted"
+                                                label="Yes - this user can only do what I specify"
+                                                name="restricted"
+                                                onChange={[Function]}
+                                                value="yes"
+                                />
+                                <Radio
+                                                checked={true}
+                                                className=""
+                                                id="unrestricted"
+                                                label="No - this user has no access restrictions"
+                                                name="restricted"
+                                                onChange={[Function]}
+                                                value="no"
+                                />
                 </Checkboxes>
                 <FormGroupError
-                  className="float-sm-left"
-                  errors={Object {}}
-                  inline={true}
-                  name="restricted"
+                                className="float-sm-left"
+                                errors={Object {}}
+                                inline={true}
+                                name="restricted"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "errors": Object {},
@@ -1075,32 +1075,32 @@ ShallowWrapper {
                 "children": Array [
                   <Checkboxes
                     className="float-sm-left"
-                  >
+>
                     <Radio
-                      checked={false}
-                      className=""
-                      id="restricted"
-                      label="Yes - this user can only do what I specify"
-                      name="restricted"
-                      onChange={[Function]}
-                      value="yes"
+                                        checked={false}
+                                        className=""
+                                        id="restricted"
+                                        label="Yes - this user can only do what I specify"
+                                        name="restricted"
+                                        onChange={[Function]}
+                                        value="yes"
                     />
                     <Radio
-                      checked={true}
-                      className=""
-                      id="unrestricted"
-                      label="No - this user has no access restrictions"
-                      name="restricted"
-                      onChange={[Function]}
-                      value="no"
+                                        checked={true}
+                                        className=""
+                                        id="unrestricted"
+                                        label="No - this user has no access restrictions"
+                                        name="restricted"
+                                        onChange={[Function]}
+                                        value="no"
                     />
-                  </Checkboxes>,
+</Checkboxes>,
                   <FormGroupError
                     className="float-sm-left"
                     errors={Object {}}
                     inline={true}
                     name="restricted"
-                  />,
+/>,
                 ],
                 "className": "col-sm-10 clearfix",
               },
@@ -1120,7 +1120,7 @@ ShallowWrapper {
                         name="restricted"
                         onChange={[Function]}
                         value="yes"
-                      />,
+/>,
                       <Radio
                         checked={true}
                         className=""
@@ -1129,7 +1129,7 @@ ShallowWrapper {
                         name="restricted"
                         onChange={[Function]}
                         value="no"
-                      />,
+/>,
                     ],
                     "className": "float-sm-left",
                   },
@@ -1199,20 +1199,20 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="offset-sm-2 col-sm-10"
-            >
+>
               <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Saving"
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Saving"
               >
-                Save
+                            Save
               </SubmitButton>
               <FormSummary
-                className=""
-                errors={Object {}}
-                success="User settings saved."
+                            className=""
+                            errors={Object {}}
+                            success="User settings saved."
               />
-            </div>,
+</div>,
             "className": "row",
           },
           "ref": null,
@@ -1226,14 +1226,14 @@ ShallowWrapper {
                   className="btn-default"
                   disabled={false}
                   disabledChildren="Saving"
-                >
+>
                   Save
-                </SubmitButton>,
+</SubmitButton>,
                 <FormSummary
                   className=""
                   errors={Object {}}
                   success="User settings saved."
-                />,
+/>,
               ],
               "className": "offset-sm-2 col-sm-10",
             },

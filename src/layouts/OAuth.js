@@ -5,10 +5,13 @@ import { push } from 'react-router-redux';
 
 import { LOGIN_ROOT, ENVIRONMENT } from '~/constants';
 import { rawFetch } from '~/fetch';
-import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
-
 import { getStorage, setStorage } from '~/storage';
+
+const {
+  REACT_APP_CLIENT_ID: clientId,
+  REACT_APP_CLIENT_SECRET: clientSecret
+} = process.env;
 
 function getImplicitParams() {
   const hashParams = window.location.hash.substr(1).split('&');

@@ -8,29 +8,29 @@ ShallowWrapper {
     dispatch={[Function]}
     distributions={Object {}}
     stackscript={
-      Object {
-        "_polling": false,
-        "created": "2015-09-29T11:21:01",
-        "deployments_active": 42,
-        "deployments_total": 150,
-        "description": "Installs the Linode API bindings",
-        "id": 37,
-        "images": Array [
-          "linode/debian7",
-          "linode/debian8",
-        ],
-        "is_public": true,
-        "label": "Example StackScript",
-        "rev_note": "Initial import",
-        "script": "#!/bin/bash",
-        "updated": "2015-10-15T10:02:01",
-        "user_defined_fields": Array [
-          Object {},
-          Object {},
-        ],
-      }
+        Object {
+            "_polling": false,
+            "created": "2015-09-29T11:21:01",
+            "deployments_active": 42,
+            "deployments_total": 150,
+            "description": "Installs the Linode API bindings",
+            "id": 37,
+            "images": Array [
+              "linode/debian7",
+              "linode/debian8",
+            ],
+            "is_public": true,
+            "label": "Example StackScript",
+            "rev_note": "Initial import",
+            "script": "#!/bin/bash",
+            "updated": "2015-10-15T10:02:01",
+            "user_defined_fields": Array [
+              Object {},
+              Object {},
+            ],
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -46,112 +46,112 @@ ShallowWrapper {
       "children": Array [
         <FormGroup
           className=""
-        >
+>
           <div>
-            <label
-              className="col-form-label"
-              htmlFor="label"
-            >
-              Label
-            </label>
+                    <label
+                              className="col-form-label"
+                              htmlFor="label"
+                    >
+                              Label
+                    </label>
           </div>
           <div>
-            <Input
-              className=""
-              id="label"
-              name="label"
-              onChange={[Function]}
-              value="Example StackScript"
-            />
+                    <Input
+                              className=""
+                              id="label"
+                              name="label"
+                              onChange={[Function]}
+                              value="Example StackScript"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className=""
-        >
+>
           <div>
-            <label
-              className="col-form-label"
-              htmlFor="description"
-            >
-              Description
-            </label>
+                    <label
+                              className="col-form-label"
+                              htmlFor="description"
+                    >
+                              Description
+                    </label>
           </div>
           <div>
-            <Textarea
-              className=""
-              id="description"
-              name="description"
-              onChange={[Function]}
-              value="Installs the Linode API bindings"
-            />
+                    <Textarea
+                              className=""
+                              id="description"
+                              name="description"
+                              onChange={[Function]}
+                              value="Installs the Linode API bindings"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className=""
-        >
+>
           <div>
-            <label
-              className="col-form-label"
-              htmlFor="images"
-            >
-              Target Images
-            </label>
+                    <label
+                              className="col-form-label"
+                              htmlFor="images"
+                    >
+                              Target Images
+                    </label>
           </div>
           <div>
-            <DistributionSelect
-              id="images"
-              images={undefined}
-              multi={true}
-              name="images"
-              onChange={[Function]}
-              value={
-                Array [
-                  "linode/debian7",
-                  "linode/debian8",
-                ]
-              }
-            />
+                    <DistributionSelect
+                              id="images"
+                              images={undefined}
+                              multi={true}
+                              name="images"
+                              onChange={[Function]}
+                              value={
+                                        Array [
+                                                  "linode/debian7",
+                                                  "linode/debian8",
+                                                ]
+                              }
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className=""
-        >
+>
           <div>
-            <Checkbox
-              checked={true}
-              className=""
-              disabled={true}
-              id="isPublic"
-              label="Make public"
-              name="isPublic"
-              onChange={[Function]}
-              value={true}
-            />
-            <div>
-              <small
-                className="text-muted"
-              >
-                Once you've made a StackScript public, you cannot make it private.
-              </small>
-            </div>
+                    <Checkbox
+                              checked={true}
+                              className=""
+                              disabled={true}
+                              id="isPublic"
+                              label="Make public"
+                              name="isPublic"
+                              onChange={[Function]}
+                              value={true}
+                    />
+                    <div>
+                              <small
+                                        className="text-muted"
+                              >
+                                        Once you've made a StackScript public, you cannot make it private.
+                              </small>
+                    </div>
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className=""
-        >
+>
           <SubmitButton
-            className="btn-default"
-            disabled={false}
-            disabledChildren="Saving"
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Saving"
           >
-            Save
+                    Save
           </SubmitButton>
           <FormSummary
-            className=""
-            errors={Object {}}
-            success="Settings saved."
+                    className=""
+                    errors={Object {}}
+                    success="Settings saved."
           />
-        </FormGroup>,
+</FormGroup>,
       ],
       "className": "",
       "noSubmitEvent": false,
@@ -167,21 +167,21 @@ ShallowWrapper {
           "children": Array [
             <div>
               <label
-                className="col-form-label"
-                htmlFor="label"
+                            className="col-form-label"
+                            htmlFor="label"
               >
-                Label
+                            Label
               </label>
-            </div>,
+</div>,
             <div>
               <Input
-                className=""
-                id="label"
-                name="label"
-                onChange={[Function]}
-                value="Example StackScript"
+                            className=""
+                            id="label"
+                            name="label"
+                            onChange={[Function]}
+                            value="Example StackScript"
               />
-            </div>,
+</div>,
           ],
           "className": "",
         },
@@ -195,9 +195,9 @@ ShallowWrapper {
               "children": <label
                 className="col-form-label"
                 htmlFor="label"
-              >
+>
                 Label
-              </label>,
+</label>,
             },
             "ref": null,
             "rendered": Object {
@@ -226,7 +226,7 @@ ShallowWrapper {
                 name="label"
                 onChange={[Function]}
                 value="Example StackScript"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -257,21 +257,21 @@ ShallowWrapper {
           "children": Array [
             <div>
               <label
-                className="col-form-label"
-                htmlFor="description"
+                            className="col-form-label"
+                            htmlFor="description"
               >
-                Description
+                            Description
               </label>
-            </div>,
+</div>,
             <div>
               <Textarea
-                className=""
-                id="description"
-                name="description"
-                onChange={[Function]}
-                value="Installs the Linode API bindings"
+                            className=""
+                            id="description"
+                            name="description"
+                            onChange={[Function]}
+                            value="Installs the Linode API bindings"
               />
-            </div>,
+</div>,
           ],
           "className": "",
         },
@@ -285,9 +285,9 @@ ShallowWrapper {
               "children": <label
                 className="col-form-label"
                 htmlFor="description"
-              >
+>
                 Description
-              </label>,
+</label>,
             },
             "ref": null,
             "rendered": Object {
@@ -316,7 +316,7 @@ ShallowWrapper {
                 name="description"
                 onChange={[Function]}
                 value="Installs the Linode API bindings"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -347,27 +347,27 @@ ShallowWrapper {
           "children": Array [
             <div>
               <label
-                className="col-form-label"
-                htmlFor="images"
+                            className="col-form-label"
+                            htmlFor="images"
               >
-                Target Images
+                            Target Images
               </label>
-            </div>,
+</div>,
             <div>
               <DistributionSelect
-                id="images"
-                images={undefined}
-                multi={true}
-                name="images"
-                onChange={[Function]}
-                value={
-                  Array [
-                    "linode/debian7",
-                    "linode/debian8",
-                  ]
-                }
+                            id="images"
+                            images={undefined}
+                            multi={true}
+                            name="images"
+                            onChange={[Function]}
+                            value={
+                                          Array [
+                                                        "linode/debian7",
+                                                        "linode/debian8",
+                                                      ]
+                            }
               />
-            </div>,
+</div>,
           ],
           "className": "",
         },
@@ -381,9 +381,9 @@ ShallowWrapper {
               "children": <label
                 className="col-form-label"
                 htmlFor="images"
-              >
+>
                 Target Images
-              </label>,
+</label>,
             },
             "ref": null,
             "rendered": Object {
@@ -413,12 +413,12 @@ ShallowWrapper {
                 name="images"
                 onChange={[Function]}
                 value={
-                  Array [
-                    "linode/debian7",
-                    "linode/debian8",
-                  ]
+                                Array [
+                                                "linode/debian7",
+                                                "linode/debian8",
+                                              ]
                 }
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -452,23 +452,23 @@ ShallowWrapper {
         "props": Object {
           "children": <div>
             <Checkbox
-              checked={true}
-              className=""
-              disabled={true}
-              id="isPublic"
-              label="Make public"
-              name="isPublic"
-              onChange={[Function]}
-              value={true}
+                        checked={true}
+                        className=""
+                        disabled={true}
+                        id="isPublic"
+                        label="Make public"
+                        name="isPublic"
+                        onChange={[Function]}
+                        value={true}
             />
             <div>
-              <small
-                className="text-muted"
-              >
-                Once you've made a StackScript public, you cannot make it private.
-              </small>
+                        <small
+                                    className="text-muted"
+                        >
+                                    Once you've made a StackScript public, you cannot make it private.
+                        </small>
             </div>
-          </div>,
+</div>,
           "className": "",
         },
         "ref": null,
@@ -487,14 +487,14 @@ ShallowWrapper {
                 name="isPublic"
                 onChange={[Function]}
                 value={true}
-              />,
+/>,
               <div>
                 <small
-                  className="text-muted"
+                                className="text-muted"
                 >
-                  Once you've made a StackScript public, you cannot make it private.
+                                Once you've made a StackScript public, you cannot make it private.
                 </small>
-              </div>,
+</div>,
             ],
           },
           "ref": null,
@@ -524,9 +524,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <small
                   className="text-muted"
-                >
+>
                   Once you've made a StackScript public, you cannot make it private.
-                </small>,
+</small>,
               },
               "ref": null,
               "rendered": Object {
@@ -558,14 +558,14 @@ ShallowWrapper {
               className="btn-default"
               disabled={false}
               disabledChildren="Saving"
-            >
+>
               Save
-            </SubmitButton>,
+</SubmitButton>,
             <FormSummary
               className=""
               errors={Object {}}
               success="Settings saved."
-            />,
+/>,
           ],
           "className": "",
         },
@@ -613,112 +613,112 @@ ShallowWrapper {
         "children": Array [
           <FormGroup
             className=""
-          >
+>
             <div>
-              <label
-                className="col-form-label"
-                htmlFor="label"
-              >
-                Label
-              </label>
+                        <label
+                                    className="col-form-label"
+                                    htmlFor="label"
+                        >
+                                    Label
+                        </label>
             </div>
             <div>
-              <Input
-                className=""
-                id="label"
-                name="label"
-                onChange={[Function]}
-                value="Example StackScript"
-              />
+                        <Input
+                                    className=""
+                                    id="label"
+                                    name="label"
+                                    onChange={[Function]}
+                                    value="Example StackScript"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className=""
-          >
+>
             <div>
-              <label
-                className="col-form-label"
-                htmlFor="description"
-              >
-                Description
-              </label>
+                        <label
+                                    className="col-form-label"
+                                    htmlFor="description"
+                        >
+                                    Description
+                        </label>
             </div>
             <div>
-              <Textarea
-                className=""
-                id="description"
-                name="description"
-                onChange={[Function]}
-                value="Installs the Linode API bindings"
-              />
+                        <Textarea
+                                    className=""
+                                    id="description"
+                                    name="description"
+                                    onChange={[Function]}
+                                    value="Installs the Linode API bindings"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className=""
-          >
+>
             <div>
-              <label
-                className="col-form-label"
-                htmlFor="images"
-              >
-                Target Images
-              </label>
+                        <label
+                                    className="col-form-label"
+                                    htmlFor="images"
+                        >
+                                    Target Images
+                        </label>
             </div>
             <div>
-              <DistributionSelect
-                id="images"
-                images={undefined}
-                multi={true}
-                name="images"
-                onChange={[Function]}
-                value={
-                  Array [
-                    "linode/debian7",
-                    "linode/debian8",
-                  ]
-                }
-              />
+                        <DistributionSelect
+                                    id="images"
+                                    images={undefined}
+                                    multi={true}
+                                    name="images"
+                                    onChange={[Function]}
+                                    value={
+                                                Array [
+                                                            "linode/debian7",
+                                                            "linode/debian8",
+                                                          ]
+                                    }
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className=""
-          >
+>
             <div>
-              <Checkbox
-                checked={true}
-                className=""
-                disabled={true}
-                id="isPublic"
-                label="Make public"
-                name="isPublic"
-                onChange={[Function]}
-                value={true}
-              />
-              <div>
-                <small
-                  className="text-muted"
-                >
-                  Once you've made a StackScript public, you cannot make it private.
-                </small>
-              </div>
+                        <Checkbox
+                                    checked={true}
+                                    className=""
+                                    disabled={true}
+                                    id="isPublic"
+                                    label="Make public"
+                                    name="isPublic"
+                                    onChange={[Function]}
+                                    value={true}
+                        />
+                        <div>
+                                    <small
+                                                className="text-muted"
+                                    >
+                                                Once you've made a StackScript public, you cannot make it private.
+                                    </small>
+                        </div>
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className=""
-          >
+>
             <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Saving"
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Saving"
             >
-              Save
+                        Save
             </SubmitButton>
             <FormSummary
-              className=""
-              errors={Object {}}
-              success="Settings saved."
+                        className=""
+                        errors={Object {}}
+                        success="Settings saved."
             />
-          </FormGroup>,
+</FormGroup>,
         ],
         "className": "",
         "noSubmitEvent": false,
@@ -734,21 +734,21 @@ ShallowWrapper {
             "children": Array [
               <div>
                 <label
-                  className="col-form-label"
-                  htmlFor="label"
+                                className="col-form-label"
+                                htmlFor="label"
                 >
-                  Label
+                                Label
                 </label>
-              </div>,
+</div>,
               <div>
                 <Input
-                  className=""
-                  id="label"
-                  name="label"
-                  onChange={[Function]}
-                  value="Example StackScript"
+                                className=""
+                                id="label"
+                                name="label"
+                                onChange={[Function]}
+                                value="Example StackScript"
                 />
-              </div>,
+</div>,
             ],
             "className": "",
           },
@@ -762,9 +762,9 @@ ShallowWrapper {
                 "children": <label
                   className="col-form-label"
                   htmlFor="label"
-                >
+>
                   Label
-                </label>,
+</label>,
               },
               "ref": null,
               "rendered": Object {
@@ -793,7 +793,7 @@ ShallowWrapper {
                   name="label"
                   onChange={[Function]}
                   value="Example StackScript"
-                />,
+/>,
               },
               "ref": null,
               "rendered": Object {
@@ -824,21 +824,21 @@ ShallowWrapper {
             "children": Array [
               <div>
                 <label
-                  className="col-form-label"
-                  htmlFor="description"
+                                className="col-form-label"
+                                htmlFor="description"
                 >
-                  Description
+                                Description
                 </label>
-              </div>,
+</div>,
               <div>
                 <Textarea
-                  className=""
-                  id="description"
-                  name="description"
-                  onChange={[Function]}
-                  value="Installs the Linode API bindings"
+                                className=""
+                                id="description"
+                                name="description"
+                                onChange={[Function]}
+                                value="Installs the Linode API bindings"
                 />
-              </div>,
+</div>,
             ],
             "className": "",
           },
@@ -852,9 +852,9 @@ ShallowWrapper {
                 "children": <label
                   className="col-form-label"
                   htmlFor="description"
-                >
+>
                   Description
-                </label>,
+</label>,
               },
               "ref": null,
               "rendered": Object {
@@ -883,7 +883,7 @@ ShallowWrapper {
                   name="description"
                   onChange={[Function]}
                   value="Installs the Linode API bindings"
-                />,
+/>,
               },
               "ref": null,
               "rendered": Object {
@@ -914,27 +914,27 @@ ShallowWrapper {
             "children": Array [
               <div>
                 <label
-                  className="col-form-label"
-                  htmlFor="images"
+                                className="col-form-label"
+                                htmlFor="images"
                 >
-                  Target Images
+                                Target Images
                 </label>
-              </div>,
+</div>,
               <div>
                 <DistributionSelect
-                  id="images"
-                  images={undefined}
-                  multi={true}
-                  name="images"
-                  onChange={[Function]}
-                  value={
-                    Array [
-                      "linode/debian7",
-                      "linode/debian8",
-                    ]
-                  }
+                                id="images"
+                                images={undefined}
+                                multi={true}
+                                name="images"
+                                onChange={[Function]}
+                                value={
+                                                Array [
+                                                                "linode/debian7",
+                                                                "linode/debian8",
+                                                              ]
+                                }
                 />
-              </div>,
+</div>,
             ],
             "className": "",
           },
@@ -948,9 +948,9 @@ ShallowWrapper {
                 "children": <label
                   className="col-form-label"
                   htmlFor="images"
-                >
+>
                   Target Images
-                </label>,
+</label>,
               },
               "ref": null,
               "rendered": Object {
@@ -980,12 +980,12 @@ ShallowWrapper {
                   name="images"
                   onChange={[Function]}
                   value={
-                    Array [
-                      "linode/debian7",
-                      "linode/debian8",
-                    ]
+                                    Array [
+                                                      "linode/debian7",
+                                                      "linode/debian8",
+                                                    ]
                   }
-                />,
+/>,
               },
               "ref": null,
               "rendered": Object {
@@ -1019,23 +1019,23 @@ ShallowWrapper {
           "props": Object {
             "children": <div>
               <Checkbox
-                checked={true}
-                className=""
-                disabled={true}
-                id="isPublic"
-                label="Make public"
-                name="isPublic"
-                onChange={[Function]}
-                value={true}
+                            checked={true}
+                            className=""
+                            disabled={true}
+                            id="isPublic"
+                            label="Make public"
+                            name="isPublic"
+                            onChange={[Function]}
+                            value={true}
               />
               <div>
-                <small
-                  className="text-muted"
-                >
-                  Once you've made a StackScript public, you cannot make it private.
-                </small>
+                            <small
+                                          className="text-muted"
+                            >
+                                          Once you've made a StackScript public, you cannot make it private.
+                            </small>
               </div>
-            </div>,
+</div>,
             "className": "",
           },
           "ref": null,
@@ -1054,14 +1054,14 @@ ShallowWrapper {
                   name="isPublic"
                   onChange={[Function]}
                   value={true}
-                />,
+/>,
                 <div>
                   <small
-                    className="text-muted"
+                                    className="text-muted"
                   >
-                    Once you've made a StackScript public, you cannot make it private.
+                                    Once you've made a StackScript public, you cannot make it private.
                   </small>
-                </div>,
+</div>,
               ],
             },
             "ref": null,
@@ -1091,9 +1091,9 @@ ShallowWrapper {
                 "props": Object {
                   "children": <small
                     className="text-muted"
-                  >
+>
                     Once you've made a StackScript public, you cannot make it private.
-                  </small>,
+</small>,
                 },
                 "ref": null,
                 "rendered": Object {
@@ -1125,14 +1125,14 @@ ShallowWrapper {
                 className="btn-default"
                 disabled={false}
                 disabledChildren="Saving"
-              >
+>
                 Save
-              </SubmitButton>,
+</SubmitButton>,
               <FormSummary
                 className=""
                 errors={Object {}}
                 success="Settings saved."
-              />,
+/>,
             ],
             "className": "",
           },

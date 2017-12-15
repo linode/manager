@@ -1,3 +1,7 @@
+import 'bootstrap/scss/bootstrap.scss';
+import 'font-awesome/scss/font-awesome.scss';
+import './scss/manager.scss';
+
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
@@ -35,9 +39,6 @@ import Support from '~/support';
 import Users from '~/users';
 import Volumes from '~/linodes/volumes';
 import Images from '~/linodes/images';
-
-// eslint-disable-next-line no-unused-vars
-import styles from '../scss/manager.scss';
 
 
 const history = syncHistoryWithStore(browserHistory, store);
@@ -111,60 +112,52 @@ window.handleError = function (e) {
   return null;
 };
 
-const init = () => {
-  try {
-    render(
-      <Provider store={store}>
-        <div>
-          <ChainedDocumentTitle title="Linode Manager" />
-          <Router
-            history={history}
-            onUpdate={onPageChange}
-            dispatch={store.dispatch}
-            render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
-          >
-            <Route
-              path="/logout"
-              component={Logout}
-            />
-            <Route path="oauth">
-              <Route path="callback" component={OAuthCallbackPage} />
-            </Route>
-            <Route
-              path="/linodes/:linodeLabel/weblish"
-              component={Weblish}
-            />
-            <Route
-              onChange={() => store.dispatch(hideModal())}
-              path="/"
-              component={Layout}
-            >
-              <IndexRedirect to="/linodes" />
-              {Linodes}
-              {StackScripts}
-              {NodeBalancers}
-              {Domains}
-              {Profile}
-              {Users}
-              {Billing}
-              {Volumes}
-              {Images}
-              {Settings}
-              {Support}
-              <Route path="*" component={NotFound} />
-            </Route>
-          </Router>
-          <DevTools />
-        </div>
-      </Provider>,
-      document.getElementById('root')
-    );
-  } catch (e) {
-    window.handleError(e);
-  }
-};
-
-window.init = init;
+render(
+  <Provider store={store}>
+    <div>
+      <ChainedDocumentTitle title="Linode Manager" />
+      <Router
+        history={history}
+        onUpdate={onPageChange}
+        dispatch={store.dispatch}
+        render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
+      >
+        <Route
+          path="/logout"
+          component={Logout}
+        />
+        <Route path="oauth">
+          <Route path="callback" component={OAuthCallbackPage} />
+        </Route>
+        <Route
+          path="/linodes/:linodeLabel/weblish"
+          component={Weblish}
+        />
+        <Route
+          onChange={() => store.dispatch(hideModal())}
+          path="/"
+          component={Layout}
+        >
+          <IndexRedirect to="/linodes" />
+          {Linodes}
+          {StackScripts}
+          {NodeBalancers}
+          {Domains}
+          {Profile}
+          {Users}
+          {Billing}
+          {Volumes}
+          {Images}
+          {Settings}
+          {Support}
+          <Route path="*" component={NotFound} />
+        </Route>
+      </Router>
+      <DevTools />
+    </div>
+  </Provider>,
+  document.getElementById('root')
+);
 
 // React is not in a great state right now w.r.t. error handling in render functions.
 // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461

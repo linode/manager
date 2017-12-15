@@ -7,7 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <TwoFactor
     dispatch={[Function]}
     tfaEnabled={true}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -22,37 +22,37 @@ ShallowWrapper {
     "props": Object {
       "children": <Form
         analytics={
-          Object {
-            "title": "Change Two-Factor Authentication",
-          }
+                Object {
+                        "title": "Change Two-Factor Authentication",
+                      }
         }
         className=""
         noSubmitEvent={false}
         onSubmit={[Function]}
-      >
+>
         <p>
-          Two-factor authentication (TFA) is currently 
-          <strong>
-            enabled
-          </strong>
-          .
+                Two-factor authentication (TFA) is currently 
+                <strong>
+                        enabled
+                </strong>
+                .
         </p>
         <SubmitButton
-          className="btn-default"
-          disabled={false}
-          disabledChildren="Disabling"
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabling"
         >
-          Disable
+                Disable
         </SubmitButton>
         <FormSummary
-          className=""
-          errors={Object {}}
+                className=""
+                errors={Object {}}
         />
-      </Form>,
+</Form>,
       "className": "",
       "header": <CardHeader
         title="Change Two-Factor Authentication"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Object {
@@ -67,21 +67,21 @@ ShallowWrapper {
           <p>
             Two-factor authentication (TFA) is currently 
             <strong>
-              enabled
+                        enabled
             </strong>
             .
-          </p>,
+</p>,
           <SubmitButton
             className="btn-default"
             disabled={false}
             disabledChildren="Disabling"
-          >
+>
             Disable
-          </SubmitButton>,
+</SubmitButton>,
           <FormSummary
             className=""
             errors={Object {}}
-          />,
+/>,
         ],
         "className": "",
         "noSubmitEvent": false,
@@ -98,7 +98,7 @@ ShallowWrapper {
               "Two-factor authentication (TFA) is currently ",
               <strong>
                 enabled
-              </strong>,
+</strong>,
               ".",
             ],
           },
@@ -159,37 +159,37 @@ ShallowWrapper {
       "props": Object {
         "children": <Form
           analytics={
-            Object {
-              "title": "Change Two-Factor Authentication",
-            }
+                    Object {
+                              "title": "Change Two-Factor Authentication",
+                            }
           }
           className=""
           noSubmitEvent={false}
           onSubmit={[Function]}
-        >
+>
           <p>
-            Two-factor authentication (TFA) is currently 
-            <strong>
-              enabled
-            </strong>
-            .
+                    Two-factor authentication (TFA) is currently 
+                    <strong>
+                              enabled
+                    </strong>
+                    .
           </p>
           <SubmitButton
-            className="btn-default"
-            disabled={false}
-            disabledChildren="Disabling"
+                    className="btn-default"
+                    disabled={false}
+                    disabledChildren="Disabling"
           >
-            Disable
+                    Disable
           </SubmitButton>
           <FormSummary
-            className=""
-            errors={Object {}}
+                    className=""
+                    errors={Object {}}
           />
-        </Form>,
+</Form>,
         "className": "",
         "header": <CardHeader
           title="Change Two-Factor Authentication"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Object {
@@ -204,21 +204,21 @@ ShallowWrapper {
             <p>
               Two-factor authentication (TFA) is currently 
               <strong>
-                enabled
+                            enabled
               </strong>
               .
-            </p>,
+</p>,
             <SubmitButton
               className="btn-default"
               disabled={false}
               disabledChildren="Disabling"
-            >
+>
               Disable
-            </SubmitButton>,
+</SubmitButton>,
             <FormSummary
               className=""
               errors={Object {}}
-            />,
+/>,
           ],
           "className": "",
           "noSubmitEvent": false,
@@ -235,7 +235,7 @@ ShallowWrapper {
                 "Two-factor authentication (TFA) is currently ",
                 <strong>
                   enabled
-                </strong>,
+</strong>,
                 ".",
               ],
             },

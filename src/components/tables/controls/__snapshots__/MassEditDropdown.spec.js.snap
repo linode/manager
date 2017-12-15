@@ -7,19 +7,19 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <MassEditDropdown
     checked={false}
     groups={
-      Array [
-        Object {
-          "elements": Array [
+        Array [
             Object {
-              "action": [Function],
-              "name": "Test",
+              "elements": Array [
+                Object {
+                  "action": [Function],
+                  "name": "Test",
+                },
+              ],
             },
-          ],
-        },
-      ]
+          ]
     }
     onChange={[Function]}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -35,34 +35,34 @@ ShallowWrapper {
       "children": Array [
         <span
           className="input-group-addon"
-        >
+>
           <input
-            checked={false}
-            id="select-all"
-            name="select-all"
-            onChange={[Function]}
-            type="checkbox"
+                    checked={false}
+                    id="select-all"
+                    name="select-all"
+                    onChange={[Function]}
+                    type="checkbox"
           />
-        </span>,
+</span>,
         <Dropdown
           analytics={Object {}}
           disabled={undefined}
           dropdownIcon="fa-caret-down"
           duplicateFirst={true}
           groups={
-            Array [
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Test",
-                  },
-                ],
-              },
-            ]
+                    Array [
+                              Object {
+                                "elements": Array [
+                                  Object {
+                                    "action": [Function],
+                                    "name": "Test",
+                                  },
+                                ],
+                              },
+                            ]
           }
           leftOriented={true}
-        />,
+/>,
       ],
       "className": "input-group",
     },
@@ -79,7 +79,7 @@ ShallowWrapper {
             name="select-all"
             onChange={[Function]}
             type="checkbox"
-          />,
+/>,
           "className": "input-group-addon",
         },
         "ref": null,
@@ -137,34 +137,34 @@ ShallowWrapper {
         "children": Array [
           <span
             className="input-group-addon"
-          >
+>
             <input
-              checked={false}
-              id="select-all"
-              name="select-all"
-              onChange={[Function]}
-              type="checkbox"
+                        checked={false}
+                        id="select-all"
+                        name="select-all"
+                        onChange={[Function]}
+                        type="checkbox"
             />
-          </span>,
+</span>,
           <Dropdown
             analytics={Object {}}
             disabled={undefined}
             dropdownIcon="fa-caret-down"
             duplicateFirst={true}
             groups={
-              Array [
-                Object {
-                  "elements": Array [
-                    Object {
-                      "action": [Function],
-                      "name": "Test",
-                    },
-                  ],
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "elements": Array [
+                                        Object {
+                                          "action": [Function],
+                                          "name": "Test",
+                                        },
+                                      ],
+                                    },
+                                  ]
             }
             leftOriented={true}
-          />,
+/>,
         ],
         "className": "input-group",
       },
@@ -181,7 +181,7 @@ ShallowWrapper {
               name="select-all"
               onChange={[Function]}
               type="checkbox"
-            />,
+/>,
             "className": "input-group-addon",
           },
           "ref": null,

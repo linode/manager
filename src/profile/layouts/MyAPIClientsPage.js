@@ -20,7 +20,7 @@ import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
 import { API_ROOT } from '~/constants';
-import { DefaultClientThumb } from '~/assets';
+import DefaultClientThumb from '~/assets/default/cube.png';
 import { confirmThenDelete } from '~/utilities';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';

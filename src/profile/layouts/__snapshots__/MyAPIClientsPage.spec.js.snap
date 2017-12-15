@@ -6,33 +6,33 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <MyAPIClientsPage
     clients={
-      Object {
-        "clients": Object {
-          "1": Object {
-            "_polling": false,
-            "id": "1",
-            "label": "My client",
-            "redirect_uri": "http://localhost:3000/oauth/callback",
-            "secret": "<REDACTED>",
-            "status": "active",
-            "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-          },
-        },
-        "ids": Array [
-          "1",
-        ],
-        "pagesFetched": Array [
-          1,
-        ],
-        "plural": "clients",
-        "singular": "client",
-        "totalPages": 1,
-        "totalResults": 1,
-      }
+        Object {
+            "clients": Object {
+              "1": Object {
+                "_polling": false,
+                "id": "1",
+                "label": "My client",
+                "redirect_uri": "http://localhost:3000/oauth/callback",
+                "secret": "<REDACTED>",
+                "status": "active",
+                "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+              },
+            },
+            "ids": Array [
+              "1",
+            ],
+            "pagesFetched": Array [
+              1,
+            ],
+            "plural": "clients",
+            "singular": "client",
+            "totalPages": 1,
+            "totalResults": 1,
+          }
     }
     dispatch={[Function]}
     selectedMap={Object {}}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -48,131 +48,131 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="My API Clients"
-        />,
+/>,
         <header
           className="NavigationHeader clearfix"
-        >
+>
           <PrimaryButton
-            buttonClass="btn-secondary"
-            className="float-right"
-            onClick={[Function]}
-            options={Array []}
+                    buttonClass="btn-secondary"
+                    className="float-right"
+                    onClick={[Function]}
+                    options={Array []}
           >
-            Create an OAuth Client
+                    Create an OAuth Client
           </PrimaryButton>
-        </header>,
+</header>,
         <List
           className=""
-        >
+>
           <ListHeader
-            className="Menu"
+                    className="Menu"
           >
-            <div
-              className="Menu-item"
-            >
-              <MassEditControl
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "id": "1",
-                      "label": "My client",
-                      "redirect_uri": "http://localhost:3000/oauth/callback",
-                      "secret": "<REDACTED>",
-                      "status": "active",
-                      "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                    },
-                  ]
-                }
-                dispatch={[Function]}
-                massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ]
-                }
-                objectType="clients"
-                selectedKey="id"
-                selectedMap={Object {}}
-                toggleSelected={[Function]}
-              />
-            </div>
-            <div
-              className="Menu-item"
-            >
-              <Input
-                className=""
-                onChange={[Function]}
-                placeholder="Filter..."
-                value=""
-              />
-            </div>
+                    <div
+                              className="Menu-item"
+                    >
+                              <MassEditControl
+                                        data={
+                                                  Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "id": "1",
+                                                              "label": "My client",
+                                                              "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                              "secret": "<REDACTED>",
+                                                              "status": "active",
+                                                              "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                            },
+                                                          ]
+                                        }
+                                        dispatch={[Function]}
+                                        massEditGroups={
+                                                  Array [
+                                                            Object {
+                                                              "elements": Array [
+                                                                Object {
+                                                                  "action": [Function],
+                                                                  "name": "Delete",
+                                                                },
+                                                              ],
+                                                            },
+                                                          ]
+                                        }
+                                        objectType="clients"
+                                        selectedKey="id"
+                                        selectedMap={Object {}}
+                                        toggleSelected={[Function]}
+                              />
+                    </div>
+                    <div
+                              className="Menu-item"
+                    >
+                              <Input
+                                        className=""
+                                        onChange={[Function]}
+                                        placeholder="Filter..."
+                                        value=""
+                              />
+                    </div>
           </ListHeader>
           <ListBody>
-            <Table
-              className=""
-              columns={
-                Array [
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "CheckboxColumn",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "ThumbnailColumn",
-                    "srcFn": [Function],
-                  },
-                  Object {
-                    "dataFn": [Function],
-                    "label": "Label",
-                    "tooltipEnabled": true,
-                  },
-                  Object {
-                    "dataFn": [Function],
-                    "label": "Access",
-                  },
-                  Object {
-                    "dataKey": "id",
-                    "label": "ID",
-                  },
-                  Object {
-                    "className": "u-hscroll-overflow",
-                    "dataKey": "redirect_uri",
-                    "label": "Redirect URI",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "groups": [Function],
-                    "headerClassName": "DropdownColumn",
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {
-                    "_polling": false,
-                    "id": "1",
-                    "label": "My client",
-                    "redirect_uri": "http://localhost:3000/oauth/callback",
-                    "secret": "<REDACTED>",
-                    "status": "active",
-                    "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                  },
-                ]
-              }
-              disableHeader={false}
-              noDataMessage="No clients found."
-              onToggleSelect={[Function]}
-              selectedMap={Object {}}
-            />
+                    <Table
+                              className=""
+                              columns={
+                                        Array [
+                                                  Object {
+                                                    "cellComponent": [Function],
+                                                    "headerClassName": "CheckboxColumn",
+                                                  },
+                                                  Object {
+                                                    "cellComponent": [Function],
+                                                    "headerClassName": "ThumbnailColumn",
+                                                    "srcFn": [Function],
+                                                  },
+                                                  Object {
+                                                    "dataFn": [Function],
+                                                    "label": "Label",
+                                                    "tooltipEnabled": true,
+                                                  },
+                                                  Object {
+                                                    "dataFn": [Function],
+                                                    "label": "Access",
+                                                  },
+                                                  Object {
+                                                    "dataKey": "id",
+                                                    "label": "ID",
+                                                  },
+                                                  Object {
+                                                    "className": "u-hscroll-overflow",
+                                                    "dataKey": "redirect_uri",
+                                                    "label": "Redirect URI",
+                                                  },
+                                                  Object {
+                                                    "cellComponent": [Function],
+                                                    "groups": [Function],
+                                                    "headerClassName": "DropdownColumn",
+                                                  },
+                                                ]
+                              }
+                              data={
+                                        Array [
+                                                  Object {
+                                                    "_polling": false,
+                                                    "id": "1",
+                                                    "label": "My client",
+                                                    "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                    "secret": "<REDACTED>",
+                                                    "status": "active",
+                                                    "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                  },
+                                                ]
+                              }
+                              disableHeader={false}
+                              noDataMessage="No clients found."
+                              onToggleSelect={[Function]}
+                              selectedMap={Object {}}
+                    />
           </ListBody>
-        </List>,
+</List>,
       ],
     },
     "ref": null,
@@ -198,9 +198,9 @@ ShallowWrapper {
             className="float-right"
             onClick={[Function]}
             options={Array []}
-          >
+>
             Create an OAuth Client
-          </PrimaryButton>,
+</PrimaryButton>,
           "className": "NavigationHeader clearfix",
         },
         "ref": null,
@@ -229,112 +229,112 @@ ShallowWrapper {
           "children": Array [
             <ListHeader
               className="Menu"
-            >
+>
               <div
-                className="Menu-item"
+                            className="Menu-item"
               >
-                <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "id": "1",
-                        "label": "My client",
-                        "redirect_uri": "http://localhost:3000/oauth/callback",
-                        "secret": "<REDACTED>",
-                        "status": "active",
-                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="clients"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />
+                            <MassEditControl
+                                          data={
+                                                        Array [
+                                                                      Object {
+                                                                        "_polling": false,
+                                                                        "id": "1",
+                                                                        "label": "My client",
+                                                                        "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                        "secret": "<REDACTED>",
+                                                                        "status": "active",
+                                                                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                      },
+                                                                    ]
+                                          }
+                                          dispatch={[Function]}
+                                          massEditGroups={
+                                                        Array [
+                                                                      Object {
+                                                                        "elements": Array [
+                                                                          Object {
+                                                                            "action": [Function],
+                                                                            "name": "Delete",
+                                                                          },
+                                                                        ],
+                                                                      },
+                                                                    ]
+                                          }
+                                          objectType="clients"
+                                          selectedKey="id"
+                                          selectedMap={Object {}}
+                                          toggleSelected={[Function]}
+                            />
               </div>
               <div
-                className="Menu-item"
+                            className="Menu-item"
               >
-                <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />
+                            <Input
+                                          className=""
+                                          onChange={[Function]}
+                                          placeholder="Filter..."
+                                          value=""
+                            />
               </div>
-            </ListHeader>,
+</ListHeader>,
             <ListBody>
               <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "CheckboxColumn",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ThumbnailColumn",
-                      "srcFn": [Function],
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Access",
-                    },
-                    Object {
-                      "dataKey": "id",
-                      "label": "ID",
-                    },
-                    Object {
-                      "className": "u-hscroll-overflow",
-                      "dataKey": "redirect_uri",
-                      "label": "Redirect URI",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "groups": [Function],
-                      "headerClassName": "DropdownColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "id": "1",
-                      "label": "My client",
-                      "redirect_uri": "http://localhost:3000/oauth/callback",
-                      "secret": "<REDACTED>",
-                      "status": "active",
-                      "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No clients found."
-                onToggleSelect={[Function]}
-                selectedMap={Object {}}
+                            className=""
+                            columns={
+                                          Array [
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "headerClassName": "CheckboxColumn",
+                                                        },
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "headerClassName": "ThumbnailColumn",
+                                                          "srcFn": [Function],
+                                                        },
+                                                        Object {
+                                                          "dataFn": [Function],
+                                                          "label": "Label",
+                                                          "tooltipEnabled": true,
+                                                        },
+                                                        Object {
+                                                          "dataFn": [Function],
+                                                          "label": "Access",
+                                                        },
+                                                        Object {
+                                                          "dataKey": "id",
+                                                          "label": "ID",
+                                                        },
+                                                        Object {
+                                                          "className": "u-hscroll-overflow",
+                                                          "dataKey": "redirect_uri",
+                                                          "label": "Redirect URI",
+                                                        },
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "groups": [Function],
+                                                          "headerClassName": "DropdownColumn",
+                                                        },
+                                                      ]
+                            }
+                            data={
+                                          Array [
+                                                        Object {
+                                                          "_polling": false,
+                                                          "id": "1",
+                                                          "label": "My client",
+                                                          "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                          "secret": "<REDACTED>",
+                                                          "status": "active",
+                                                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                        },
+                                                      ]
+                            }
+                            disableHeader={false}
+                            noDataMessage="No clients found."
+                            onToggleSelect={[Function]}
+                            selectedMap={Object {}}
               />
-            </ListBody>,
+</ListBody>,
           ],
           "className": "",
         },
@@ -348,50 +348,50 @@ ShallowWrapper {
               "children": Array [
                 <div
                   className="Menu-item"
-                >
+>
                   <MassEditControl
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "id": "1",
-                          "label": "My client",
-                          "redirect_uri": "http://localhost:3000/oauth/callback",
-                          "secret": "<REDACTED>",
-                          "status": "active",
-                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                        },
-                      ]
-                    }
-                    dispatch={[Function]}
-                    massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Delete",
-                            },
-                          ],
-                        },
-                      ]
-                    }
-                    objectType="clients"
-                    selectedKey="id"
-                    selectedMap={Object {}}
-                    toggleSelected={[Function]}
+                                    data={
+                                                      Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "id": "1",
+                                                                          "label": "My client",
+                                                                          "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                          "secret": "<REDACTED>",
+                                                                          "status": "active",
+                                                                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                        },
+                                                                      ]
+                                    }
+                                    dispatch={[Function]}
+                                    massEditGroups={
+                                                      Array [
+                                                                        Object {
+                                                                          "elements": Array [
+                                                                            Object {
+                                                                              "action": [Function],
+                                                                              "name": "Delete",
+                                                                            },
+                                                                          ],
+                                                                        },
+                                                                      ]
+                                    }
+                                    objectType="clients"
+                                    selectedKey="id"
+                                    selectedMap={Object {}}
+                                    toggleSelected={[Function]}
                   />
-                </div>,
+</div>,
                 <div
                   className="Menu-item"
-                >
+>
                   <Input
-                    className=""
-                    onChange={[Function]}
-                    placeholder="Filter..."
-                    value=""
+                                    className=""
+                                    onChange={[Function]}
+                                    placeholder="Filter..."
+                                    value=""
                   />
-                </div>,
+</div>,
               ],
               "className": "Menu",
             },
@@ -404,36 +404,36 @@ ShallowWrapper {
                 "props": Object {
                   "children": <MassEditControl
                     data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "id": "1",
-                          "label": "My client",
-                          "redirect_uri": "http://localhost:3000/oauth/callback",
-                          "secret": "<REDACTED>",
-                          "status": "active",
-                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "id": "1",
+                                                              "label": "My client",
+                                                              "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                              "secret": "<REDACTED>",
+                                                              "status": "active",
+                                                              "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                            },
+                                                          ]
                     }
                     dispatch={[Function]}
                     massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Delete",
-                            },
-                          ],
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "elements": Array [
+                                                                Object {
+                                                                  "action": [Function],
+                                                                  "name": "Delete",
+                                                                },
+                                                              ],
+                                                            },
+                                                          ]
                     }
                     objectType="clients"
                     selectedKey="id"
                     selectedMap={Object {}}
                     toggleSelected={[Function]}
-                  />,
+/>,
                   "className": "Menu-item",
                 },
                 "ref": null,
@@ -485,7 +485,7 @@ ShallowWrapper {
                     onChange={[Function]}
                     placeholder="Filter..."
                     value=""
-                  />,
+/>,
                   "className": "Menu-item",
                 },
                 "ref": null,
@@ -516,59 +516,59 @@ ShallowWrapper {
               "children": <Table
                 className=""
                 columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "CheckboxColumn",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ThumbnailColumn",
-                      "srcFn": [Function],
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Access",
-                    },
-                    Object {
-                      "dataKey": "id",
-                      "label": "ID",
-                    },
-                    Object {
-                      "className": "u-hscroll-overflow",
-                      "dataKey": "redirect_uri",
-                      "label": "Redirect URI",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "groups": [Function],
-                      "headerClassName": "DropdownColumn",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "CheckboxColumn",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "ThumbnailColumn",
+                                                  "srcFn": [Function],
+                                                },
+                                                Object {
+                                                  "dataFn": [Function],
+                                                  "label": "Label",
+                                                  "tooltipEnabled": true,
+                                                },
+                                                Object {
+                                                  "dataFn": [Function],
+                                                  "label": "Access",
+                                                },
+                                                Object {
+                                                  "dataKey": "id",
+                                                  "label": "ID",
+                                                },
+                                                Object {
+                                                  "className": "u-hscroll-overflow",
+                                                  "dataKey": "redirect_uri",
+                                                  "label": "Redirect URI",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "groups": [Function],
+                                                  "headerClassName": "DropdownColumn",
+                                                },
+                                              ]
                 }
                 data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "id": "1",
-                      "label": "My client",
-                      "redirect_uri": "http://localhost:3000/oauth/callback",
-                      "secret": "<REDACTED>",
-                      "status": "active",
-                      "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "_polling": false,
+                                                  "id": "1",
+                                                  "label": "My client",
+                                                  "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                  "secret": "<REDACTED>",
+                                                  "status": "active",
+                                                  "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                },
+                                              ]
                 }
                 disableHeader={false}
                 noDataMessage="No clients found."
                 onToggleSelect={[Function]}
                 selectedMap={Object {}}
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -648,131 +648,131 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="My API Clients"
-          />,
+/>,
           <header
             className="NavigationHeader clearfix"
-          >
+>
             <PrimaryButton
-              buttonClass="btn-secondary"
-              className="float-right"
-              onClick={[Function]}
-              options={Array []}
+                        buttonClass="btn-secondary"
+                        className="float-right"
+                        onClick={[Function]}
+                        options={Array []}
             >
-              Create an OAuth Client
+                        Create an OAuth Client
             </PrimaryButton>
-          </header>,
+</header>,
           <List
             className=""
-          >
+>
             <ListHeader
-              className="Menu"
+                        className="Menu"
             >
-              <div
-                className="Menu-item"
-              >
-                <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "id": "1",
-                        "label": "My client",
-                        "redirect_uri": "http://localhost:3000/oauth/callback",
-                        "secret": "<REDACTED>",
-                        "status": "active",
-                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="clients"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />
-              </div>
-              <div
-                className="Menu-item"
-              >
-                <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />
-              </div>
+                        <div
+                                    className="Menu-item"
+                        >
+                                    <MassEditControl
+                                                data={
+                                                            Array [
+                                                                        Object {
+                                                                          "_polling": false,
+                                                                          "id": "1",
+                                                                          "label": "My client",
+                                                                          "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                          "secret": "<REDACTED>",
+                                                                          "status": "active",
+                                                                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                        },
+                                                                      ]
+                                                }
+                                                dispatch={[Function]}
+                                                massEditGroups={
+                                                            Array [
+                                                                        Object {
+                                                                          "elements": Array [
+                                                                            Object {
+                                                                              "action": [Function],
+                                                                              "name": "Delete",
+                                                                            },
+                                                                          ],
+                                                                        },
+                                                                      ]
+                                                }
+                                                objectType="clients"
+                                                selectedKey="id"
+                                                selectedMap={Object {}}
+                                                toggleSelected={[Function]}
+                                    />
+                        </div>
+                        <div
+                                    className="Menu-item"
+                        >
+                                    <Input
+                                                className=""
+                                                onChange={[Function]}
+                                                placeholder="Filter..."
+                                                value=""
+                                    />
+                        </div>
             </ListHeader>
             <ListBody>
-              <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "CheckboxColumn",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ThumbnailColumn",
-                      "srcFn": [Function],
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataFn": [Function],
-                      "label": "Access",
-                    },
-                    Object {
-                      "dataKey": "id",
-                      "label": "ID",
-                    },
-                    Object {
-                      "className": "u-hscroll-overflow",
-                      "dataKey": "redirect_uri",
-                      "label": "Redirect URI",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "groups": [Function],
-                      "headerClassName": "DropdownColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "id": "1",
-                      "label": "My client",
-                      "redirect_uri": "http://localhost:3000/oauth/callback",
-                      "secret": "<REDACTED>",
-                      "status": "active",
-                      "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No clients found."
-                onToggleSelect={[Function]}
-                selectedMap={Object {}}
-              />
+                        <Table
+                                    className=""
+                                    columns={
+                                                Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "CheckboxColumn",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "ThumbnailColumn",
+                                                              "srcFn": [Function],
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataFn": [Function],
+                                                              "label": "Access",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "id",
+                                                              "label": "ID",
+                                                            },
+                                                            Object {
+                                                              "className": "u-hscroll-overflow",
+                                                              "dataKey": "redirect_uri",
+                                                              "label": "Redirect URI",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "groups": [Function],
+                                                              "headerClassName": "DropdownColumn",
+                                                            },
+                                                          ]
+                                    }
+                                    data={
+                                                Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "id": "1",
+                                                              "label": "My client",
+                                                              "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                              "secret": "<REDACTED>",
+                                                              "status": "active",
+                                                              "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                            },
+                                                          ]
+                                    }
+                                    disableHeader={false}
+                                    noDataMessage="No clients found."
+                                    onToggleSelect={[Function]}
+                                    selectedMap={Object {}}
+                        />
             </ListBody>
-          </List>,
+</List>,
         ],
       },
       "ref": null,
@@ -798,9 +798,9 @@ ShallowWrapper {
               className="float-right"
               onClick={[Function]}
               options={Array []}
-            >
+>
               Create an OAuth Client
-            </PrimaryButton>,
+</PrimaryButton>,
             "className": "NavigationHeader clearfix",
           },
           "ref": null,
@@ -829,112 +829,112 @@ ShallowWrapper {
             "children": Array [
               <ListHeader
                 className="Menu"
-              >
+>
                 <div
-                  className="Menu-item"
+                                className="Menu-item"
                 >
-                  <MassEditControl
-                    data={
-                      Array [
-                        Object {
-                          "_polling": false,
-                          "id": "1",
-                          "label": "My client",
-                          "redirect_uri": "http://localhost:3000/oauth/callback",
-                          "secret": "<REDACTED>",
-                          "status": "active",
-                          "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                        },
-                      ]
-                    }
-                    dispatch={[Function]}
-                    massEditGroups={
-                      Array [
-                        Object {
-                          "elements": Array [
-                            Object {
-                              "action": [Function],
-                              "name": "Delete",
-                            },
-                          ],
-                        },
-                      ]
-                    }
-                    objectType="clients"
-                    selectedKey="id"
-                    selectedMap={Object {}}
-                    toggleSelected={[Function]}
-                  />
+                                <MassEditControl
+                                                data={
+                                                                Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "id": "1",
+                                                                                  "label": "My client",
+                                                                                  "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                                  "secret": "<REDACTED>",
+                                                                                  "status": "active",
+                                                                                  "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                                },
+                                                                              ]
+                                                }
+                                                dispatch={[Function]}
+                                                massEditGroups={
+                                                                Array [
+                                                                                Object {
+                                                                                  "elements": Array [
+                                                                                    Object {
+                                                                                      "action": [Function],
+                                                                                      "name": "Delete",
+                                                                                    },
+                                                                                  ],
+                                                                                },
+                                                                              ]
+                                                }
+                                                objectType="clients"
+                                                selectedKey="id"
+                                                selectedMap={Object {}}
+                                                toggleSelected={[Function]}
+                                />
                 </div>
                 <div
-                  className="Menu-item"
+                                className="Menu-item"
                 >
-                  <Input
-                    className=""
-                    onChange={[Function]}
-                    placeholder="Filter..."
-                    value=""
-                  />
+                                <Input
+                                                className=""
+                                                onChange={[Function]}
+                                                placeholder="Filter..."
+                                                value=""
+                                />
                 </div>
-              </ListHeader>,
+</ListHeader>,
               <ListBody>
                 <Table
-                  className=""
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ThumbnailColumn",
-                        "srcFn": [Function],
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Access",
-                      },
-                      Object {
-                        "dataKey": "id",
-                        "label": "ID",
-                      },
-                      Object {
-                        "className": "u-hscroll-overflow",
-                        "dataKey": "redirect_uri",
-                        "label": "Redirect URI",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "id": "1",
-                        "label": "My client",
-                        "redirect_uri": "http://localhost:3000/oauth/callback",
-                        "secret": "<REDACTED>",
-                        "status": "active",
-                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="No clients found."
-                  onToggleSelect={[Function]}
-                  selectedMap={Object {}}
+                                className=""
+                                columns={
+                                                Array [
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "headerClassName": "CheckboxColumn",
+                                                                },
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "headerClassName": "ThumbnailColumn",
+                                                                  "srcFn": [Function],
+                                                                },
+                                                                Object {
+                                                                  "dataFn": [Function],
+                                                                  "label": "Label",
+                                                                  "tooltipEnabled": true,
+                                                                },
+                                                                Object {
+                                                                  "dataFn": [Function],
+                                                                  "label": "Access",
+                                                                },
+                                                                Object {
+                                                                  "dataKey": "id",
+                                                                  "label": "ID",
+                                                                },
+                                                                Object {
+                                                                  "className": "u-hscroll-overflow",
+                                                                  "dataKey": "redirect_uri",
+                                                                  "label": "Redirect URI",
+                                                                },
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "groups": [Function],
+                                                                  "headerClassName": "DropdownColumn",
+                                                                },
+                                                              ]
+                                }
+                                data={
+                                                Array [
+                                                                Object {
+                                                                  "_polling": false,
+                                                                  "id": "1",
+                                                                  "label": "My client",
+                                                                  "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                  "secret": "<REDACTED>",
+                                                                  "status": "active",
+                                                                  "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                },
+                                                              ]
+                                }
+                                disableHeader={false}
+                                noDataMessage="No clients found."
+                                onToggleSelect={[Function]}
+                                selectedMap={Object {}}
                 />
-              </ListBody>,
+</ListBody>,
             ],
             "className": "",
           },
@@ -948,50 +948,50 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="Menu-item"
-                  >
+>
                     <MassEditControl
-                      data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "id": "1",
-                            "label": "My client",
-                            "redirect_uri": "http://localhost:3000/oauth/callback",
-                            "secret": "<REDACTED>",
-                            "status": "active",
-                            "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                          },
-                        ]
-                      }
-                      dispatch={[Function]}
-                      massEditGroups={
-                        Array [
-                          Object {
-                            "elements": Array [
-                              Object {
-                                "action": [Function],
-                                "name": "Delete",
-                              },
-                            ],
-                          },
-                        ]
-                      }
-                      objectType="clients"
-                      selectedKey="id"
-                      selectedMap={Object {}}
-                      toggleSelected={[Function]}
+                                        data={
+                                                            Array [
+                                                                                Object {
+                                                                                  "_polling": false,
+                                                                                  "id": "1",
+                                                                                  "label": "My client",
+                                                                                  "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                                  "secret": "<REDACTED>",
+                                                                                  "status": "active",
+                                                                                  "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                                },
+                                                                              ]
+                                        }
+                                        dispatch={[Function]}
+                                        massEditGroups={
+                                                            Array [
+                                                                                Object {
+                                                                                  "elements": Array [
+                                                                                    Object {
+                                                                                      "action": [Function],
+                                                                                      "name": "Delete",
+                                                                                    },
+                                                                                  ],
+                                                                                },
+                                                                              ]
+                                        }
+                                        objectType="clients"
+                                        selectedKey="id"
+                                        selectedMap={Object {}}
+                                        toggleSelected={[Function]}
                     />
-                  </div>,
+</div>,
                   <div
                     className="Menu-item"
-                  >
+>
                     <Input
-                      className=""
-                      onChange={[Function]}
-                      placeholder="Filter..."
-                      value=""
+                                        className=""
+                                        onChange={[Function]}
+                                        placeholder="Filter..."
+                                        value=""
                     />
-                  </div>,
+</div>,
                 ],
                 "className": "Menu",
               },
@@ -1004,36 +1004,36 @@ ShallowWrapper {
                   "props": Object {
                     "children": <MassEditControl
                       data={
-                        Array [
-                          Object {
-                            "_polling": false,
-                            "id": "1",
-                            "label": "My client",
-                            "redirect_uri": "http://localhost:3000/oauth/callback",
-                            "secret": "<REDACTED>",
-                            "status": "active",
-                            "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "_polling": false,
+                                                                    "id": "1",
+                                                                    "label": "My client",
+                                                                    "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                                    "secret": "<REDACTED>",
+                                                                    "status": "active",
+                                                                    "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                                  },
+                                                                ]
                       }
                       dispatch={[Function]}
                       massEditGroups={
-                        Array [
-                          Object {
-                            "elements": Array [
-                              Object {
-                                "action": [Function],
-                                "name": "Delete",
-                              },
-                            ],
-                          },
-                        ]
+                                            Array [
+                                                                  Object {
+                                                                    "elements": Array [
+                                                                      Object {
+                                                                        "action": [Function],
+                                                                        "name": "Delete",
+                                                                      },
+                                                                    ],
+                                                                  },
+                                                                ]
                       }
                       objectType="clients"
                       selectedKey="id"
                       selectedMap={Object {}}
                       toggleSelected={[Function]}
-                    />,
+/>,
                     "className": "Menu-item",
                   },
                   "ref": null,
@@ -1085,7 +1085,7 @@ ShallowWrapper {
                       onChange={[Function]}
                       placeholder="Filter..."
                       value=""
-                    />,
+/>,
                     "className": "Menu-item",
                   },
                   "ref": null,
@@ -1116,59 +1116,59 @@ ShallowWrapper {
                 "children": <Table
                   className=""
                   columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "CheckboxColumn",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ThumbnailColumn",
-                        "srcFn": [Function],
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataFn": [Function],
-                        "label": "Access",
-                      },
-                      Object {
-                        "dataKey": "id",
-                        "label": "ID",
-                      },
-                      Object {
-                        "className": "u-hscroll-overflow",
-                        "dataKey": "redirect_uri",
-                        "label": "Redirect URI",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "groups": [Function],
-                        "headerClassName": "DropdownColumn",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "headerClassName": "CheckboxColumn",
+                                                      },
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "headerClassName": "ThumbnailColumn",
+                                                        "srcFn": [Function],
+                                                      },
+                                                      Object {
+                                                        "dataFn": [Function],
+                                                        "label": "Label",
+                                                        "tooltipEnabled": true,
+                                                      },
+                                                      Object {
+                                                        "dataFn": [Function],
+                                                        "label": "Access",
+                                                      },
+                                                      Object {
+                                                        "dataKey": "id",
+                                                        "label": "ID",
+                                                      },
+                                                      Object {
+                                                        "className": "u-hscroll-overflow",
+                                                        "dataKey": "redirect_uri",
+                                                        "label": "Redirect URI",
+                                                      },
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "groups": [Function],
+                                                        "headerClassName": "DropdownColumn",
+                                                      },
+                                                    ]
                   }
                   data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "id": "1",
-                        "label": "My client",
-                        "redirect_uri": "http://localhost:3000/oauth/callback",
-                        "secret": "<REDACTED>",
-                        "status": "active",
-                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "_polling": false,
+                                                        "id": "1",
+                                                        "label": "My client",
+                                                        "redirect_uri": "http://localhost:3000/oauth/callback",
+                                                        "secret": "<REDACTED>",
+                                                        "status": "active",
+                                                        "thumbnail_url": "/account/oauth-clients/1/thumbnail",
+                                                      },
+                                                    ]
                   }
                   disableHeader={false}
                   noDataMessage="No clients found."
                   onToggleSelect={[Function]}
                   selectedMap={Object {}}
-                />,
+/>,
               },
               "ref": null,
               "rendered": Object {

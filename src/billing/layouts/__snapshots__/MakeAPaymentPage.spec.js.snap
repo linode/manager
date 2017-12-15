@@ -7,7 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <MakeAPaymentPage
     balance={999}
     dispatch={[Function]}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -23,146 +23,146 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Make a Payment"
-        />,
+/>,
         <section>
           <Card
-            className=""
-            header={
-              <CardHeader
-                title="Make a Payment"
-              />
-            }
+                    className=""
+                    header={
+                              <CardHeader
+                                        title="Make a Payment"
+                              />
+                    }
           >
-            <Form
-              analytics={
-                Object {
-                  "title": "Make Payment",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
-            >
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="balance"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Balance
-                </label>
-                <div
-                  className="col-sm-5 col-form-text"
-                >
-                  <Currency
-                    value={999}
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="balance"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="usd"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Amount to Charge
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="usd"
-                    maxLength={7}
-                    name="usd"
-                    onChange={[Function]}
-                    pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (USD)
-                  </small>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="usd"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="cvv"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  CVV
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="cvv"
-                    maxLength={4}
-                    name="cvv"
-                    onChange={[Function]}
-                    pattern="[0-9]{3,4}"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (Optional)
-                  </small>
-                </div>
-                <FormGroupError
-                  className="offset-sm-3 col-sm-6"
-                  errors={Object {}}
-                  inline={true}
-                  name="cvv"
-                />
-              </FormGroup>
-              <FormGroup
-                className="row"
-                name="submit"
-              >
-                <div
-                  className="col-sm-9 offset-sm-3"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Make a Payment
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Payment Made."
-                  />
-                </div>
-              </FormGroup>
-            </Form>
+                    <Form
+                              analytics={
+                                        Object {
+                                                  "title": "Make Payment",
+                                                }
+                              }
+                              className=""
+                              noSubmitEvent={false}
+                              onSubmit={[Function]}
+                    >
+                              <FormGroup
+                                        className="row"
+                                        errors={Object {}}
+                                        name="balance"
+                              >
+                                        <label
+                                                  className="col-sm-3 col-form-label"
+                                        >
+                                                  Balance
+                                        </label>
+                                        <div
+                                                  className="col-sm-5 col-form-text"
+                                        >
+                                                  <Currency
+                                                            value={999}
+                                                  />
+                                                  <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="balance"
+                                                  />
+                                        </div>
+                              </FormGroup>
+                              <FormGroup
+                                        className="row"
+                                        errors={Object {}}
+                                        name="usd"
+                              >
+                                        <label
+                                                  className="col-sm-3 col-form-label"
+                                        >
+                                                  Amount to Charge
+                                        </label>
+                                        <div
+                                                  className="col-sm-5"
+                                        >
+                                                  <Input
+                                                            className=""
+                                                            id="usd"
+                                                            maxLength={7}
+                                                            name="usd"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                            type="text"
+                                                            value={undefined}
+                                                  />
+                                                  <small
+                                                            className="text-muted col-sm-1"
+                                                  >
+                                                            (USD)
+                                                  </small>
+                                                  <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="usd"
+                                                  />
+                                        </div>
+                              </FormGroup>
+                              <FormGroup
+                                        className="row"
+                                        errors={Object {}}
+                                        name="cvv"
+                              >
+                                        <label
+                                                  className="col-sm-3 col-form-label"
+                                        >
+                                                  CVV
+                                        </label>
+                                        <div
+                                                  className="col-sm-5"
+                                        >
+                                                  <Input
+                                                            className=""
+                                                            id="cvv"
+                                                            maxLength={4}
+                                                            name="cvv"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{3,4}"
+                                                            type="text"
+                                                            value={undefined}
+                                                  />
+                                                  <small
+                                                            className="text-muted col-sm-1"
+                                                  >
+                                                            (Optional)
+                                                  </small>
+                                        </div>
+                                        <FormGroupError
+                                                  className="offset-sm-3 col-sm-6"
+                                                  errors={Object {}}
+                                                  inline={true}
+                                                  name="cvv"
+                                        />
+                              </FormGroup>
+                              <FormGroup
+                                        className="row"
+                                        name="submit"
+                              >
+                                        <div
+                                                  className="col-sm-9 offset-sm-3"
+                                        >
+                                                  <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                                  >
+                                                            Make a Payment
+                                                  </SubmitButton>
+                                                  <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Payment Made."
+                                                  />
+                                        </div>
+                              </FormGroup>
+                    </Form>
           </Card>
-        </section>,
+</section>,
       ],
     },
     "ref": null,
@@ -186,140 +186,140 @@ ShallowWrapper {
           "children": <Card
             className=""
             header={
-              <CardHeader
-                title="Make a Payment"
-              />
+                        <CardHeader
+                                    title="Make a Payment"
+                        />
             }
-          >
+>
             <Form
-              analytics={
-                Object {
-                  "title": "Make Payment",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
+                        analytics={
+                                    Object {
+                                                "title": "Make Payment",
+                                              }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
             >
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="balance"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Balance
-                </label>
-                <div
-                  className="col-sm-5 col-form-text"
-                >
-                  <Currency
-                    value={999}
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="balance"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="usd"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Amount to Charge
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="usd"
-                    maxLength={7}
-                    name="usd"
-                    onChange={[Function]}
-                    pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (USD)
-                  </small>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="usd"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="cvv"
-              >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  CVV
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="cvv"
-                    maxLength={4}
-                    name="cvv"
-                    onChange={[Function]}
-                    pattern="[0-9]{3,4}"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (Optional)
-                  </small>
-                </div>
-                <FormGroupError
-                  className="offset-sm-3 col-sm-6"
-                  errors={Object {}}
-                  inline={true}
-                  name="cvv"
-                />
-              </FormGroup>
-              <FormGroup
-                className="row"
-                name="submit"
-              >
-                <div
-                  className="col-sm-9 offset-sm-3"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Make a Payment
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Payment Made."
-                  />
-                </div>
-              </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    errors={Object {}}
+                                    name="balance"
+                        >
+                                    <label
+                                                className="col-sm-3 col-form-label"
+                                    >
+                                                Balance
+                                    </label>
+                                    <div
+                                                className="col-sm-5 col-form-text"
+                                    >
+                                                <Currency
+                                                            value={999}
+                                                />
+                                                <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="balance"
+                                                />
+                                    </div>
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    errors={Object {}}
+                                    name="usd"
+                        >
+                                    <label
+                                                className="col-sm-3 col-form-label"
+                                    >
+                                                Amount to Charge
+                                    </label>
+                                    <div
+                                                className="col-sm-5"
+                                    >
+                                                <Input
+                                                            className=""
+                                                            id="usd"
+                                                            maxLength={7}
+                                                            name="usd"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                            type="text"
+                                                            value={undefined}
+                                                />
+                                                <small
+                                                            className="text-muted col-sm-1"
+                                                >
+                                                            (USD)
+                                                </small>
+                                                <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="usd"
+                                                />
+                                    </div>
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    errors={Object {}}
+                                    name="cvv"
+                        >
+                                    <label
+                                                className="col-sm-3 col-form-label"
+                                    >
+                                                CVV
+                                    </label>
+                                    <div
+                                                className="col-sm-5"
+                                    >
+                                                <Input
+                                                            className=""
+                                                            id="cvv"
+                                                            maxLength={4}
+                                                            name="cvv"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{3,4}"
+                                                            type="text"
+                                                            value={undefined}
+                                                />
+                                                <small
+                                                            className="text-muted col-sm-1"
+                                                >
+                                                            (Optional)
+                                                </small>
+                                    </div>
+                                    <FormGroupError
+                                                className="offset-sm-3 col-sm-6"
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="cvv"
+                                    />
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    name="submit"
+                        >
+                                    <div
+                                                className="col-sm-9 offset-sm-3"
+                                    >
+                                                <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                                >
+                                                            Make a Payment
+                                                </SubmitButton>
+                                                <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Payment Made."
+                                                />
+                                    </div>
+                        </FormGroup>
             </Form>
-          </Card>,
+</Card>,
         },
         "ref": null,
         "rendered": Object {
@@ -329,136 +329,136 @@ ShallowWrapper {
           "props": Object {
             "children": <Form
               analytics={
-                Object {
-                  "title": "Make Payment",
-                }
+                            Object {
+                                          "title": "Make Payment",
+                                        }
               }
               className=""
               noSubmitEvent={false}
               onSubmit={[Function]}
-            >
+>
               <FormGroup
-                className="row"
-                errors={Object {}}
-                name="balance"
+                            className="row"
+                            errors={Object {}}
+                            name="balance"
               >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Balance
-                </label>
-                <div
-                  className="col-sm-5 col-form-text"
-                >
-                  <Currency
-                    value={999}
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="balance"
-                  />
-                </div>
+                            <label
+                                          className="col-sm-3 col-form-label"
+                            >
+                                          Balance
+                            </label>
+                            <div
+                                          className="col-sm-5 col-form-text"
+                            >
+                                          <Currency
+                                                        value={999}
+                                          />
+                                          <FormGroupError
+                                                        className=""
+                                                        errors={Object {}}
+                                                        inline={true}
+                                                        name="balance"
+                                          />
+                            </div>
               </FormGroup>
               <FormGroup
-                className="row"
-                errors={Object {}}
-                name="usd"
+                            className="row"
+                            errors={Object {}}
+                            name="usd"
               >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  Amount to Charge
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="usd"
-                    maxLength={7}
-                    name="usd"
-                    onChange={[Function]}
-                    pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (USD)
-                  </small>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="usd"
-                  />
-                </div>
+                            <label
+                                          className="col-sm-3 col-form-label"
+                            >
+                                          Amount to Charge
+                            </label>
+                            <div
+                                          className="col-sm-5"
+                            >
+                                          <Input
+                                                        className=""
+                                                        id="usd"
+                                                        maxLength={7}
+                                                        name="usd"
+                                                        onChange={[Function]}
+                                                        pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                        type="text"
+                                                        value={undefined}
+                                          />
+                                          <small
+                                                        className="text-muted col-sm-1"
+                                          >
+                                                        (USD)
+                                          </small>
+                                          <FormGroupError
+                                                        className=""
+                                                        errors={Object {}}
+                                                        inline={true}
+                                                        name="usd"
+                                          />
+                            </div>
               </FormGroup>
               <FormGroup
-                className="row"
-                errors={Object {}}
-                name="cvv"
+                            className="row"
+                            errors={Object {}}
+                            name="cvv"
               >
-                <label
-                  className="col-sm-3 col-form-label"
-                >
-                  CVV
-                </label>
-                <div
-                  className="col-sm-5"
-                >
-                  <Input
-                    className=""
-                    id="cvv"
-                    maxLength={4}
-                    name="cvv"
-                    onChange={[Function]}
-                    pattern="[0-9]{3,4}"
-                    type="text"
-                    value={undefined}
-                  />
-                  <small
-                    className="text-muted col-sm-1"
-                  >
-                    (Optional)
-                  </small>
-                </div>
-                <FormGroupError
-                  className="offset-sm-3 col-sm-6"
-                  errors={Object {}}
-                  inline={true}
-                  name="cvv"
-                />
+                            <label
+                                          className="col-sm-3 col-form-label"
+                            >
+                                          CVV
+                            </label>
+                            <div
+                                          className="col-sm-5"
+                            >
+                                          <Input
+                                                        className=""
+                                                        id="cvv"
+                                                        maxLength={4}
+                                                        name="cvv"
+                                                        onChange={[Function]}
+                                                        pattern="[0-9]{3,4}"
+                                                        type="text"
+                                                        value={undefined}
+                                          />
+                                          <small
+                                                        className="text-muted col-sm-1"
+                                          >
+                                                        (Optional)
+                                          </small>
+                            </div>
+                            <FormGroupError
+                                          className="offset-sm-3 col-sm-6"
+                                          errors={Object {}}
+                                          inline={true}
+                                          name="cvv"
+                            />
               </FormGroup>
               <FormGroup
-                className="row"
-                name="submit"
+                            className="row"
+                            name="submit"
               >
-                <div
-                  className="col-sm-9 offset-sm-3"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Make a Payment
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Payment Made."
-                  />
-                </div>
+                            <div
+                                          className="col-sm-9 offset-sm-3"
+                            >
+                                          <SubmitButton
+                                                        className="btn-default"
+                                                        disabled={false}
+                                                        disabledChildren="Saving"
+                                          >
+                                                        Make a Payment
+                                          </SubmitButton>
+                                          <FormSummary
+                                                        className=""
+                                                        errors={Object {}}
+                                                        success="Payment Made."
+                                          />
+                            </div>
               </FormGroup>
-            </Form>,
+</Form>,
             "className": "",
             "header": <CardHeader
               title="Make a Payment"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {
@@ -474,119 +474,119 @@ ShallowWrapper {
                   className="row"
                   errors={Object {}}
                   name="balance"
-                >
+>
                   <label
-                    className="col-sm-3 col-form-label"
+                                    className="col-sm-3 col-form-label"
                   >
-                    Balance
+                                    Balance
                   </label>
                   <div
-                    className="col-sm-5 col-form-text"
+                                    className="col-sm-5 col-form-text"
                   >
-                    <Currency
-                      value={999}
-                    />
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="balance"
-                    />
+                                    <Currency
+                                                      value={999}
+                                    />
+                                    <FormGroupError
+                                                      className=""
+                                                      errors={Object {}}
+                                                      inline={true}
+                                                      name="balance"
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   errors={Object {}}
                   name="usd"
-                >
+>
                   <label
-                    className="col-sm-3 col-form-label"
+                                    className="col-sm-3 col-form-label"
                   >
-                    Amount to Charge
+                                    Amount to Charge
                   </label>
                   <div
-                    className="col-sm-5"
+                                    className="col-sm-5"
                   >
-                    <Input
-                      className=""
-                      id="usd"
-                      maxLength={7}
-                      name="usd"
-                      onChange={[Function]}
-                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (USD)
-                    </small>
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="usd"
-                    />
+                                    <Input
+                                                      className=""
+                                                      id="usd"
+                                                      maxLength={7}
+                                                      name="usd"
+                                                      onChange={[Function]}
+                                                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                      type="text"
+                                                      value={undefined}
+                                    />
+                                    <small
+                                                      className="text-muted col-sm-1"
+                                    >
+                                                      (USD)
+                                    </small>
+                                    <FormGroupError
+                                                      className=""
+                                                      errors={Object {}}
+                                                      inline={true}
+                                                      name="usd"
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   errors={Object {}}
                   name="cvv"
-                >
+>
                   <label
-                    className="col-sm-3 col-form-label"
+                                    className="col-sm-3 col-form-label"
                   >
-                    CVV
+                                    CVV
                   </label>
                   <div
-                    className="col-sm-5"
+                                    className="col-sm-5"
                   >
-                    <Input
-                      className=""
-                      id="cvv"
-                      maxLength={4}
-                      name="cvv"
-                      onChange={[Function]}
-                      pattern="[0-9]{3,4}"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (Optional)
-                    </small>
+                                    <Input
+                                                      className=""
+                                                      id="cvv"
+                                                      maxLength={4}
+                                                      name="cvv"
+                                                      onChange={[Function]}
+                                                      pattern="[0-9]{3,4}"
+                                                      type="text"
+                                                      value={undefined}
+                                    />
+                                    <small
+                                                      className="text-muted col-sm-1"
+                                    >
+                                                      (Optional)
+                                    </small>
                   </div>
                   <FormGroupError
-                    className="offset-sm-3 col-sm-6"
-                    errors={Object {}}
-                    inline={true}
-                    name="cvv"
+                                    className="offset-sm-3 col-sm-6"
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="cvv"
                   />
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   name="submit"
-                >
+>
                   <div
-                    className="col-sm-9 offset-sm-3"
+                                    className="col-sm-9 offset-sm-3"
                   >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Make a Payment
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Payment Made."
-                    />
+                                    <SubmitButton
+                                                      className="btn-default"
+                                                      disabled={false}
+                                                      disabledChildren="Saving"
+                                    >
+                                                      Make a Payment
+                                    </SubmitButton>
+                                    <FormSummary
+                                                      className=""
+                                                      errors={Object {}}
+                                                      success="Payment Made."
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
               ],
               "className": "",
               "noSubmitEvent": false,
@@ -602,22 +602,22 @@ ShallowWrapper {
                   "children": Array [
                     <label
                       className="col-sm-3 col-form-label"
-                    >
+>
                       Balance
-                    </label>,
+</label>,
                     <div
                       className="col-sm-5 col-form-text"
-                    >
+>
                       <Currency
-                        value={999}
+                                            value={999}
                       />
                       <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={true}
-                        name="balance"
+                                            className=""
+                                            errors={Object {}}
+                                            inline={true}
+                                            name="balance"
                       />
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                   "errors": Object {},
@@ -645,13 +645,13 @@ ShallowWrapper {
                       "children": Array [
                         <Currency
                           value={999}
-                        />,
+/>,
                         <FormGroupError
                           className=""
                           errors={Object {}}
                           inline={true}
                           name="balance"
-                        />,
+/>,
                       ],
                       "className": "col-sm-5 col-form-text",
                     },
@@ -696,34 +696,34 @@ ShallowWrapper {
                   "children": Array [
                     <label
                       className="col-sm-3 col-form-label"
-                    >
+>
                       Amount to Charge
-                    </label>,
+</label>,
                     <div
                       className="col-sm-5"
-                    >
+>
                       <Input
-                        className=""
-                        id="usd"
-                        maxLength={7}
-                        name="usd"
-                        onChange={[Function]}
-                        pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                        type="text"
-                        value={undefined}
+                                            className=""
+                                            id="usd"
+                                            maxLength={7}
+                                            name="usd"
+                                            onChange={[Function]}
+                                            pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                            type="text"
+                                            value={undefined}
                       />
                       <small
-                        className="text-muted col-sm-1"
+                                            className="text-muted col-sm-1"
                       >
-                        (USD)
+                                            (USD)
                       </small>
                       <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={true}
-                        name="usd"
+                                            className=""
+                                            errors={Object {}}
+                                            inline={true}
+                                            name="usd"
                       />
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                   "errors": Object {},
@@ -758,18 +758,18 @@ ShallowWrapper {
                           pattern="[0-9]{0,7}(.[0-9]{0,2})?"
                           type="text"
                           value={undefined}
-                        />,
+/>,
                         <small
                           className="text-muted col-sm-1"
-                        >
+>
                           (USD)
-                        </small>,
+</small>,
                         <FormGroupError
                           className=""
                           errors={Object {}}
                           inline={true}
                           name="usd"
-                        />,
+/>,
                       ],
                       "className": "col-sm-5",
                     },
@@ -833,34 +833,34 @@ ShallowWrapper {
                   "children": Array [
                     <label
                       className="col-sm-3 col-form-label"
-                    >
+>
                       CVV
-                    </label>,
+</label>,
                     <div
                       className="col-sm-5"
-                    >
+>
                       <Input
-                        className=""
-                        id="cvv"
-                        maxLength={4}
-                        name="cvv"
-                        onChange={[Function]}
-                        pattern="[0-9]{3,4}"
-                        type="text"
-                        value={undefined}
+                                            className=""
+                                            id="cvv"
+                                            maxLength={4}
+                                            name="cvv"
+                                            onChange={[Function]}
+                                            pattern="[0-9]{3,4}"
+                                            type="text"
+                                            value={undefined}
                       />
                       <small
-                        className="text-muted col-sm-1"
+                                            className="text-muted col-sm-1"
                       >
-                        (Optional)
+                                            (Optional)
                       </small>
-                    </div>,
+</div>,
                     <FormGroupError
                       className="offset-sm-3 col-sm-6"
                       errors={Object {}}
                       inline={true}
                       name="cvv"
-                    />,
+/>,
                   ],
                   "className": "row",
                   "errors": Object {},
@@ -895,12 +895,12 @@ ShallowWrapper {
                           pattern="[0-9]{3,4}"
                           type="text"
                           value={undefined}
-                        />,
+/>,
                         <small
                           className="text-muted col-sm-1"
-                        >
+>
                           (Optional)
-                        </small>,
+</small>,
                       ],
                       "className": "col-sm-5",
                     },
@@ -963,20 +963,20 @@ ShallowWrapper {
                 "props": Object {
                   "children": <div
                     className="col-sm-9 offset-sm-3"
-                  >
+>
                     <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
+                                        className="btn-default"
+                                        disabled={false}
+                                        disabledChildren="Saving"
                     >
-                      Make a Payment
+                                        Make a Payment
                     </SubmitButton>
                     <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Payment Made."
+                                        className=""
+                                        errors={Object {}}
+                                        success="Payment Made."
                     />
-                  </div>,
+</div>,
                   "className": "row",
                   "name": "submit",
                 },
@@ -991,14 +991,14 @@ ShallowWrapper {
                         className="btn-default"
                         disabled={false}
                         disabledChildren="Saving"
-                      >
+>
                         Make a Payment
-                      </SubmitButton>,
+</SubmitButton>,
                       <FormSummary
                         className=""
                         errors={Object {}}
                         success="Payment Made."
-                      />,
+/>,
                     ],
                     "className": "col-sm-9 offset-sm-3",
                   },
@@ -1055,146 +1055,146 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Make a Payment"
-          />,
+/>,
           <section>
             <Card
-              className=""
-              header={
-                <CardHeader
-                  title="Make a Payment"
-                />
-              }
+                        className=""
+                        header={
+                                    <CardHeader
+                                                title="Make a Payment"
+                                    />
+                        }
             >
-              <Form
-                analytics={
-                  Object {
-                    "title": "Make Payment",
-                  }
-                }
-                className=""
-                noSubmitEvent={false}
-                onSubmit={[Function]}
-              >
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="balance"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Balance
-                  </label>
-                  <div
-                    className="col-sm-5 col-form-text"
-                  >
-                    <Currency
-                      value={999}
-                    />
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="balance"
-                    />
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="usd"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Amount to Charge
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="usd"
-                      maxLength={7}
-                      name="usd"
-                      onChange={[Function]}
-                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (USD)
-                    </small>
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="usd"
-                    />
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="cvv"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    CVV
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="cvv"
-                      maxLength={4}
-                      name="cvv"
-                      onChange={[Function]}
-                      pattern="[0-9]{3,4}"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (Optional)
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className="offset-sm-3 col-sm-6"
-                    errors={Object {}}
-                    inline={true}
-                    name="cvv"
-                  />
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  name="submit"
-                >
-                  <div
-                    className="col-sm-9 offset-sm-3"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Make a Payment
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Payment Made."
-                    />
-                  </div>
-                </FormGroup>
-              </Form>
+                        <Form
+                                    analytics={
+                                                Object {
+                                                            "title": "Make Payment",
+                                                          }
+                                    }
+                                    className=""
+                                    noSubmitEvent={false}
+                                    onSubmit={[Function]}
+                        >
+                                    <FormGroup
+                                                className="row"
+                                                errors={Object {}}
+                                                name="balance"
+                                    >
+                                                <label
+                                                            className="col-sm-3 col-form-label"
+                                                >
+                                                            Balance
+                                                </label>
+                                                <div
+                                                            className="col-sm-5 col-form-text"
+                                                >
+                                                            <Currency
+                                                                        value={999}
+                                                            />
+                                                            <FormGroupError
+                                                                        className=""
+                                                                        errors={Object {}}
+                                                                        inline={true}
+                                                                        name="balance"
+                                                            />
+                                                </div>
+                                    </FormGroup>
+                                    <FormGroup
+                                                className="row"
+                                                errors={Object {}}
+                                                name="usd"
+                                    >
+                                                <label
+                                                            className="col-sm-3 col-form-label"
+                                                >
+                                                            Amount to Charge
+                                                </label>
+                                                <div
+                                                            className="col-sm-5"
+                                                >
+                                                            <Input
+                                                                        className=""
+                                                                        id="usd"
+                                                                        maxLength={7}
+                                                                        name="usd"
+                                                                        onChange={[Function]}
+                                                                        pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                                        type="text"
+                                                                        value={undefined}
+                                                            />
+                                                            <small
+                                                                        className="text-muted col-sm-1"
+                                                            >
+                                                                        (USD)
+                                                            </small>
+                                                            <FormGroupError
+                                                                        className=""
+                                                                        errors={Object {}}
+                                                                        inline={true}
+                                                                        name="usd"
+                                                            />
+                                                </div>
+                                    </FormGroup>
+                                    <FormGroup
+                                                className="row"
+                                                errors={Object {}}
+                                                name="cvv"
+                                    >
+                                                <label
+                                                            className="col-sm-3 col-form-label"
+                                                >
+                                                            CVV
+                                                </label>
+                                                <div
+                                                            className="col-sm-5"
+                                                >
+                                                            <Input
+                                                                        className=""
+                                                                        id="cvv"
+                                                                        maxLength={4}
+                                                                        name="cvv"
+                                                                        onChange={[Function]}
+                                                                        pattern="[0-9]{3,4}"
+                                                                        type="text"
+                                                                        value={undefined}
+                                                            />
+                                                            <small
+                                                                        className="text-muted col-sm-1"
+                                                            >
+                                                                        (Optional)
+                                                            </small>
+                                                </div>
+                                                <FormGroupError
+                                                            className="offset-sm-3 col-sm-6"
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="cvv"
+                                                />
+                                    </FormGroup>
+                                    <FormGroup
+                                                className="row"
+                                                name="submit"
+                                    >
+                                                <div
+                                                            className="col-sm-9 offset-sm-3"
+                                                >
+                                                            <SubmitButton
+                                                                        className="btn-default"
+                                                                        disabled={false}
+                                                                        disabledChildren="Saving"
+                                                            >
+                                                                        Make a Payment
+                                                            </SubmitButton>
+                                                            <FormSummary
+                                                                        className=""
+                                                                        errors={Object {}}
+                                                                        success="Payment Made."
+                                                            />
+                                                </div>
+                                    </FormGroup>
+                        </Form>
             </Card>
-          </section>,
+</section>,
         ],
       },
       "ref": null,
@@ -1218,140 +1218,140 @@ ShallowWrapper {
             "children": <Card
               className=""
               header={
-                <CardHeader
-                  title="Make a Payment"
-                />
+                            <CardHeader
+                                          title="Make a Payment"
+                            />
               }
-            >
+>
               <Form
-                analytics={
-                  Object {
-                    "title": "Make Payment",
-                  }
-                }
-                className=""
-                noSubmitEvent={false}
-                onSubmit={[Function]}
+                            analytics={
+                                          Object {
+                                                        "title": "Make Payment",
+                                                      }
+                            }
+                            className=""
+                            noSubmitEvent={false}
+                            onSubmit={[Function]}
               >
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="balance"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Balance
-                  </label>
-                  <div
-                    className="col-sm-5 col-form-text"
-                  >
-                    <Currency
-                      value={999}
-                    />
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="balance"
-                    />
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="usd"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Amount to Charge
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="usd"
-                      maxLength={7}
-                      name="usd"
-                      onChange={[Function]}
-                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (USD)
-                    </small>
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="usd"
-                    />
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="cvv"
-                >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    CVV
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="cvv"
-                      maxLength={4}
-                      name="cvv"
-                      onChange={[Function]}
-                      pattern="[0-9]{3,4}"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (Optional)
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className="offset-sm-3 col-sm-6"
-                    errors={Object {}}
-                    inline={true}
-                    name="cvv"
-                  />
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  name="submit"
-                >
-                  <div
-                    className="col-sm-9 offset-sm-3"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Make a Payment
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Payment Made."
-                    />
-                  </div>
-                </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          errors={Object {}}
+                                          name="balance"
+                            >
+                                          <label
+                                                        className="col-sm-3 col-form-label"
+                                          >
+                                                        Balance
+                                          </label>
+                                          <div
+                                                        className="col-sm-5 col-form-text"
+                                          >
+                                                        <Currency
+                                                                      value={999}
+                                                        />
+                                                        <FormGroupError
+                                                                      className=""
+                                                                      errors={Object {}}
+                                                                      inline={true}
+                                                                      name="balance"
+                                                        />
+                                          </div>
+                            </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          errors={Object {}}
+                                          name="usd"
+                            >
+                                          <label
+                                                        className="col-sm-3 col-form-label"
+                                          >
+                                                        Amount to Charge
+                                          </label>
+                                          <div
+                                                        className="col-sm-5"
+                                          >
+                                                        <Input
+                                                                      className=""
+                                                                      id="usd"
+                                                                      maxLength={7}
+                                                                      name="usd"
+                                                                      onChange={[Function]}
+                                                                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                                      type="text"
+                                                                      value={undefined}
+                                                        />
+                                                        <small
+                                                                      className="text-muted col-sm-1"
+                                                        >
+                                                                      (USD)
+                                                        </small>
+                                                        <FormGroupError
+                                                                      className=""
+                                                                      errors={Object {}}
+                                                                      inline={true}
+                                                                      name="usd"
+                                                        />
+                                          </div>
+                            </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          errors={Object {}}
+                                          name="cvv"
+                            >
+                                          <label
+                                                        className="col-sm-3 col-form-label"
+                                          >
+                                                        CVV
+                                          </label>
+                                          <div
+                                                        className="col-sm-5"
+                                          >
+                                                        <Input
+                                                                      className=""
+                                                                      id="cvv"
+                                                                      maxLength={4}
+                                                                      name="cvv"
+                                                                      onChange={[Function]}
+                                                                      pattern="[0-9]{3,4}"
+                                                                      type="text"
+                                                                      value={undefined}
+                                                        />
+                                                        <small
+                                                                      className="text-muted col-sm-1"
+                                                        >
+                                                                      (Optional)
+                                                        </small>
+                                          </div>
+                                          <FormGroupError
+                                                        className="offset-sm-3 col-sm-6"
+                                                        errors={Object {}}
+                                                        inline={true}
+                                                        name="cvv"
+                                          />
+                            </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          name="submit"
+                            >
+                                          <div
+                                                        className="col-sm-9 offset-sm-3"
+                                          >
+                                                        <SubmitButton
+                                                                      className="btn-default"
+                                                                      disabled={false}
+                                                                      disabledChildren="Saving"
+                                                        >
+                                                                      Make a Payment
+                                                        </SubmitButton>
+                                                        <FormSummary
+                                                                      className=""
+                                                                      errors={Object {}}
+                                                                      success="Payment Made."
+                                                        />
+                                          </div>
+                            </FormGroup>
               </Form>
-            </Card>,
+</Card>,
           },
           "ref": null,
           "rendered": Object {
@@ -1361,136 +1361,136 @@ ShallowWrapper {
             "props": Object {
               "children": <Form
                 analytics={
-                  Object {
-                    "title": "Make Payment",
-                  }
+                                Object {
+                                                "title": "Make Payment",
+                                              }
                 }
                 className=""
                 noSubmitEvent={false}
                 onSubmit={[Function]}
-              >
+>
                 <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="balance"
+                                className="row"
+                                errors={Object {}}
+                                name="balance"
                 >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Balance
-                  </label>
-                  <div
-                    className="col-sm-5 col-form-text"
-                  >
-                    <Currency
-                      value={999}
-                    />
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="balance"
-                    />
-                  </div>
+                                <label
+                                                className="col-sm-3 col-form-label"
+                                >
+                                                Balance
+                                </label>
+                                <div
+                                                className="col-sm-5 col-form-text"
+                                >
+                                                <Currency
+                                                                value={999}
+                                                />
+                                                <FormGroupError
+                                                                className=""
+                                                                errors={Object {}}
+                                                                inline={true}
+                                                                name="balance"
+                                                />
+                                </div>
                 </FormGroup>
                 <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="usd"
+                                className="row"
+                                errors={Object {}}
+                                name="usd"
                 >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    Amount to Charge
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="usd"
-                      maxLength={7}
-                      name="usd"
-                      onChange={[Function]}
-                      pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (USD)
-                    </small>
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="usd"
-                    />
-                  </div>
+                                <label
+                                                className="col-sm-3 col-form-label"
+                                >
+                                                Amount to Charge
+                                </label>
+                                <div
+                                                className="col-sm-5"
+                                >
+                                                <Input
+                                                                className=""
+                                                                id="usd"
+                                                                maxLength={7}
+                                                                name="usd"
+                                                                onChange={[Function]}
+                                                                pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                                type="text"
+                                                                value={undefined}
+                                                />
+                                                <small
+                                                                className="text-muted col-sm-1"
+                                                >
+                                                                (USD)
+                                                </small>
+                                                <FormGroupError
+                                                                className=""
+                                                                errors={Object {}}
+                                                                inline={true}
+                                                                name="usd"
+                                                />
+                                </div>
                 </FormGroup>
                 <FormGroup
-                  className="row"
-                  errors={Object {}}
-                  name="cvv"
+                                className="row"
+                                errors={Object {}}
+                                name="cvv"
                 >
-                  <label
-                    className="col-sm-3 col-form-label"
-                  >
-                    CVV
-                  </label>
-                  <div
-                    className="col-sm-5"
-                  >
-                    <Input
-                      className=""
-                      id="cvv"
-                      maxLength={4}
-                      name="cvv"
-                      onChange={[Function]}
-                      pattern="[0-9]{3,4}"
-                      type="text"
-                      value={undefined}
-                    />
-                    <small
-                      className="text-muted col-sm-1"
-                    >
-                      (Optional)
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className="offset-sm-3 col-sm-6"
-                    errors={Object {}}
-                    inline={true}
-                    name="cvv"
-                  />
+                                <label
+                                                className="col-sm-3 col-form-label"
+                                >
+                                                CVV
+                                </label>
+                                <div
+                                                className="col-sm-5"
+                                >
+                                                <Input
+                                                                className=""
+                                                                id="cvv"
+                                                                maxLength={4}
+                                                                name="cvv"
+                                                                onChange={[Function]}
+                                                                pattern="[0-9]{3,4}"
+                                                                type="text"
+                                                                value={undefined}
+                                                />
+                                                <small
+                                                                className="text-muted col-sm-1"
+                                                >
+                                                                (Optional)
+                                                </small>
+                                </div>
+                                <FormGroupError
+                                                className="offset-sm-3 col-sm-6"
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="cvv"
+                                />
                 </FormGroup>
                 <FormGroup
-                  className="row"
-                  name="submit"
+                                className="row"
+                                name="submit"
                 >
-                  <div
-                    className="col-sm-9 offset-sm-3"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Make a Payment
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Payment Made."
-                    />
-                  </div>
+                                <div
+                                                className="col-sm-9 offset-sm-3"
+                                >
+                                                <SubmitButton
+                                                                className="btn-default"
+                                                                disabled={false}
+                                                                disabledChildren="Saving"
+                                                >
+                                                                Make a Payment
+                                                </SubmitButton>
+                                                <FormSummary
+                                                                className=""
+                                                                errors={Object {}}
+                                                                success="Payment Made."
+                                                />
+                                </div>
                 </FormGroup>
-              </Form>,
+</Form>,
               "className": "",
               "header": <CardHeader
                 title="Make a Payment"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -1506,119 +1506,119 @@ ShallowWrapper {
                     className="row"
                     errors={Object {}}
                     name="balance"
-                  >
+>
                     <label
-                      className="col-sm-3 col-form-label"
+                                        className="col-sm-3 col-form-label"
                     >
-                      Balance
+                                        Balance
                     </label>
                     <div
-                      className="col-sm-5 col-form-text"
+                                        className="col-sm-5 col-form-text"
                     >
-                      <Currency
-                        value={999}
-                      />
-                      <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={true}
-                        name="balance"
-                      />
+                                        <Currency
+                                                            value={999}
+                                        />
+                                        <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="balance"
+                                        />
                     </div>
-                  </FormGroup>,
+</FormGroup>,
                   <FormGroup
                     className="row"
                     errors={Object {}}
                     name="usd"
-                  >
+>
                     <label
-                      className="col-sm-3 col-form-label"
+                                        className="col-sm-3 col-form-label"
                     >
-                      Amount to Charge
+                                        Amount to Charge
                     </label>
                     <div
-                      className="col-sm-5"
+                                        className="col-sm-5"
                     >
-                      <Input
-                        className=""
-                        id="usd"
-                        maxLength={7}
-                        name="usd"
-                        onChange={[Function]}
-                        pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                        type="text"
-                        value={undefined}
-                      />
-                      <small
-                        className="text-muted col-sm-1"
-                      >
-                        (USD)
-                      </small>
-                      <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={true}
-                        name="usd"
-                      />
+                                        <Input
+                                                            className=""
+                                                            id="usd"
+                                                            maxLength={7}
+                                                            name="usd"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                            type="text"
+                                                            value={undefined}
+                                        />
+                                        <small
+                                                            className="text-muted col-sm-1"
+                                        >
+                                                            (USD)
+                                        </small>
+                                        <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="usd"
+                                        />
                     </div>
-                  </FormGroup>,
+</FormGroup>,
                   <FormGroup
                     className="row"
                     errors={Object {}}
                     name="cvv"
-                  >
+>
                     <label
-                      className="col-sm-3 col-form-label"
+                                        className="col-sm-3 col-form-label"
                     >
-                      CVV
+                                        CVV
                     </label>
                     <div
-                      className="col-sm-5"
+                                        className="col-sm-5"
                     >
-                      <Input
-                        className=""
-                        id="cvv"
-                        maxLength={4}
-                        name="cvv"
-                        onChange={[Function]}
-                        pattern="[0-9]{3,4}"
-                        type="text"
-                        value={undefined}
-                      />
-                      <small
-                        className="text-muted col-sm-1"
-                      >
-                        (Optional)
-                      </small>
+                                        <Input
+                                                            className=""
+                                                            id="cvv"
+                                                            maxLength={4}
+                                                            name="cvv"
+                                                            onChange={[Function]}
+                                                            pattern="[0-9]{3,4}"
+                                                            type="text"
+                                                            value={undefined}
+                                        />
+                                        <small
+                                                            className="text-muted col-sm-1"
+                                        >
+                                                            (Optional)
+                                        </small>
                     </div>
                     <FormGroupError
-                      className="offset-sm-3 col-sm-6"
-                      errors={Object {}}
-                      inline={true}
-                      name="cvv"
+                                        className="offset-sm-3 col-sm-6"
+                                        errors={Object {}}
+                                        inline={true}
+                                        name="cvv"
                     />
-                  </FormGroup>,
+</FormGroup>,
                   <FormGroup
                     className="row"
                     name="submit"
-                  >
+>
                     <div
-                      className="col-sm-9 offset-sm-3"
+                                        className="col-sm-9 offset-sm-3"
                     >
-                      <SubmitButton
-                        className="btn-default"
-                        disabled={false}
-                        disabledChildren="Saving"
-                      >
-                        Make a Payment
-                      </SubmitButton>
-                      <FormSummary
-                        className=""
-                        errors={Object {}}
-                        success="Payment Made."
-                      />
+                                        <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                        >
+                                                            Make a Payment
+                                        </SubmitButton>
+                                        <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Payment Made."
+                                        />
                     </div>
-                  </FormGroup>,
+</FormGroup>,
                 ],
                 "className": "",
                 "noSubmitEvent": false,
@@ -1634,22 +1634,22 @@ ShallowWrapper {
                     "children": Array [
                       <label
                         className="col-sm-3 col-form-label"
-                      >
+>
                         Balance
-                      </label>,
+</label>,
                       <div
                         className="col-sm-5 col-form-text"
-                      >
+>
                         <Currency
-                          value={999}
+                                                value={999}
                         />
                         <FormGroupError
-                          className=""
-                          errors={Object {}}
-                          inline={true}
-                          name="balance"
+                                                className=""
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="balance"
                         />
-                      </div>,
+</div>,
                     ],
                     "className": "row",
                     "errors": Object {},
@@ -1677,13 +1677,13 @@ ShallowWrapper {
                         "children": Array [
                           <Currency
                             value={999}
-                          />,
+/>,
                           <FormGroupError
                             className=""
                             errors={Object {}}
                             inline={true}
                             name="balance"
-                          />,
+/>,
                         ],
                         "className": "col-sm-5 col-form-text",
                       },
@@ -1728,34 +1728,34 @@ ShallowWrapper {
                     "children": Array [
                       <label
                         className="col-sm-3 col-form-label"
-                      >
+>
                         Amount to Charge
-                      </label>,
+</label>,
                       <div
                         className="col-sm-5"
-                      >
+>
                         <Input
-                          className=""
-                          id="usd"
-                          maxLength={7}
-                          name="usd"
-                          onChange={[Function]}
-                          pattern="[0-9]{0,7}(.[0-9]{0,2})?"
-                          type="text"
-                          value={undefined}
+                                                className=""
+                                                id="usd"
+                                                maxLength={7}
+                                                name="usd"
+                                                onChange={[Function]}
+                                                pattern="[0-9]{0,7}(.[0-9]{0,2})?"
+                                                type="text"
+                                                value={undefined}
                         />
                         <small
-                          className="text-muted col-sm-1"
+                                                className="text-muted col-sm-1"
                         >
-                          (USD)
+                                                (USD)
                         </small>
                         <FormGroupError
-                          className=""
-                          errors={Object {}}
-                          inline={true}
-                          name="usd"
+                                                className=""
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="usd"
                         />
-                      </div>,
+</div>,
                     ],
                     "className": "row",
                     "errors": Object {},
@@ -1790,18 +1790,18 @@ ShallowWrapper {
                             pattern="[0-9]{0,7}(.[0-9]{0,2})?"
                             type="text"
                             value={undefined}
-                          />,
+/>,
                           <small
                             className="text-muted col-sm-1"
-                          >
+>
                             (USD)
-                          </small>,
+</small>,
                           <FormGroupError
                             className=""
                             errors={Object {}}
                             inline={true}
                             name="usd"
-                          />,
+/>,
                         ],
                         "className": "col-sm-5",
                       },
@@ -1865,34 +1865,34 @@ ShallowWrapper {
                     "children": Array [
                       <label
                         className="col-sm-3 col-form-label"
-                      >
+>
                         CVV
-                      </label>,
+</label>,
                       <div
                         className="col-sm-5"
-                      >
+>
                         <Input
-                          className=""
-                          id="cvv"
-                          maxLength={4}
-                          name="cvv"
-                          onChange={[Function]}
-                          pattern="[0-9]{3,4}"
-                          type="text"
-                          value={undefined}
+                                                className=""
+                                                id="cvv"
+                                                maxLength={4}
+                                                name="cvv"
+                                                onChange={[Function]}
+                                                pattern="[0-9]{3,4}"
+                                                type="text"
+                                                value={undefined}
                         />
                         <small
-                          className="text-muted col-sm-1"
+                                                className="text-muted col-sm-1"
                         >
-                          (Optional)
+                                                (Optional)
                         </small>
-                      </div>,
+</div>,
                       <FormGroupError
                         className="offset-sm-3 col-sm-6"
                         errors={Object {}}
                         inline={true}
                         name="cvv"
-                      />,
+/>,
                     ],
                     "className": "row",
                     "errors": Object {},
@@ -1927,12 +1927,12 @@ ShallowWrapper {
                             pattern="[0-9]{3,4}"
                             type="text"
                             value={undefined}
-                          />,
+/>,
                           <small
                             className="text-muted col-sm-1"
-                          >
+>
                             (Optional)
-                          </small>,
+</small>,
                         ],
                         "className": "col-sm-5",
                       },
@@ -1995,20 +1995,20 @@ ShallowWrapper {
                   "props": Object {
                     "children": <div
                       className="col-sm-9 offset-sm-3"
-                    >
+>
                       <SubmitButton
-                        className="btn-default"
-                        disabled={false}
-                        disabledChildren="Saving"
+                                            className="btn-default"
+                                            disabled={false}
+                                            disabledChildren="Saving"
                       >
-                        Make a Payment
+                                            Make a Payment
                       </SubmitButton>
                       <FormSummary
-                        className=""
-                        errors={Object {}}
-                        success="Payment Made."
+                                            className=""
+                                            errors={Object {}}
+                                            success="Payment Made."
                       />
-                    </div>,
+</div>,
                     "className": "row",
                     "name": "submit",
                   },
@@ -2023,14 +2023,14 @@ ShallowWrapper {
                           className="btn-default"
                           disabled={false}
                           disabledChildren="Saving"
-                        >
+>
                           Make a Payment
-                        </SubmitButton>,
+</SubmitButton>,
                         <FormSummary
                           className=""
                           errors={Object {}}
                           success="Payment Made."
-                        />,
+/>,
                       ],
                       "className": "col-sm-9 offset-sm-3",
                     },

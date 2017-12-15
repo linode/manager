@@ -7,29 +7,29 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <LishPage
     dispatch={[Function]}
     profile={
-      Object {
-        "authorized_keys": Array [
-          "foobar",
-        ],
-        "email": "user@example.com",
-        "email_notifications": true,
-        "ip_whitelist_enabled": false,
-        "lish_auth_method": "password_keys",
-        "referrals": Object {
-          "code": "",
-          "completed": 0,
-          "credit": 0,
-          "pending": 0,
-          "total": 0,
-          "url": null,
-        },
-        "restricted": false,
-        "timezone": "US/Eastern",
-        "two_factor_auth": true,
-        "username": "theuser",
-      }
+        Object {
+            "authorized_keys": Array [
+              "foobar",
+            ],
+            "email": "user@example.com",
+            "email_notifications": true,
+            "ip_whitelist_enabled": false,
+            "lish_auth_method": "password_keys",
+            "referrals": Object {
+              "code": "",
+              "completed": 0,
+              "credit": 0,
+              "pending": 0,
+              "total": 0,
+              "url": null,
+            },
+            "restricted": false,
+            "timezone": "US/Eastern",
+            "two_factor_auth": true,
+            "username": "theuser",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -45,134 +45,134 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Lish"
-        />,
+/>,
         <Card
           className=""
           header={
-            <CardHeader
-              title="Change Lish settings"
-            />
+                    <CardHeader
+                              title="Change Lish settings"
+                    />
           }
-        >
+>
           <Form
-            analytics={
-              Object {
-                "title": "Change Lish Settings",
-              }
-            }
-            className=""
-            noSubmitEvent={false}
-            onSubmit={[Function]}
-          >
-            <FormGroup
-              className="row"
-              errors={Object {}}
-              name="lish_auth_method"
-            >
-              <label
-                className="col-sm-2 col-form-label"
-                htmlFor="authorization"
-              >
-                Authorization mode
-              </label>
-              <div
-                className="col-sm-10"
-              >
-                <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
+                    analytics={
+                              Object {
+                                        "title": "Change Lish Settings",
+                                      }
                     }
-                  }
-                  className="input-md"
-                  id="authorization"
-                  name="authorization"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Allow both password and key authorization",
-                        "value": "password_keys",
-                      },
-                      Object {
-                        "label": "Allow key authentication only",
-                        "value": "keys_only",
-                      },
-                      Object {
-                        "label": "Disable Lish",
-                        "value": "disabled",
-                      },
-                    ]
-                  }
-                  value="password_keys"
-                />
-                <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={true}
-                  name="lish_auth_method"
-                />
-              </div>
-            </FormGroup>
-            <FormGroup
-              className="row"
-              errors={Object {}}
-              name="authorized_keys"
-            >
-              <label
-                className="col-sm-2 col-form-label"
-                htmlFor="keys"
-              >
-                Lish keys:
-              </label>
-              <div
-                className="col-sm-10"
-              >
-                <Textarea
-                  className="textarea-md"
-                  id="keys"
-                  name="keys"
-                  onChange={[Function]}
-                  value="foobar"
-                />
-                <div>
-                  <small
-                    className="text-muted"
-                  >
-                    Place your SSH public keys here, one per line, for use with Lish console access.
-                  </small>
-                </div>
-                <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={false}
-                  name="authorized_keys"
-                />
-              </div>
-            </FormGroup>
-            <FormGroup
-              className="row"
-              name="submit"
-            >
-              <div
-                className="offset-sm-2 col-sm-10"
-              >
-                <SubmitButton
-                  className="btn-default"
-                  disabled={false}
-                  disabledChildren="Saving"
-                >
-                  Save
-                </SubmitButton>
-                <FormSummary
-                  className=""
-                  errors={Object {}}
-                  success="Lish settings saved."
-                />
-              </div>
-            </FormGroup>
+                    className=""
+                    noSubmitEvent={false}
+                    onSubmit={[Function]}
+          >
+                    <FormGroup
+                              className="row"
+                              errors={Object {}}
+                              name="lish_auth_method"
+                    >
+                              <label
+                                        className="col-sm-2 col-form-label"
+                                        htmlFor="authorization"
+                              >
+                                        Authorization mode
+                              </label>
+                              <div
+                                        className="col-sm-10"
+                              >
+                                        <Select
+                                                  analytics={
+                                                            Object {
+                                                                      "noTrack": false,
+                                                                    }
+                                                  }
+                                                  className="input-md"
+                                                  id="authorization"
+                                                  name="authorization"
+                                                  onChange={[Function]}
+                                                  options={
+                                                            Array [
+                                                                      Object {
+                                                                        "label": "Allow both password and key authorization",
+                                                                        "value": "password_keys",
+                                                                      },
+                                                                      Object {
+                                                                        "label": "Allow key authentication only",
+                                                                        "value": "keys_only",
+                                                                      },
+                                                                      Object {
+                                                                        "label": "Disable Lish",
+                                                                        "value": "disabled",
+                                                                      },
+                                                                    ]
+                                                  }
+                                                  value="password_keys"
+                                        />
+                                        <FormGroupError
+                                                  className=""
+                                                  errors={Object {}}
+                                                  inline={true}
+                                                  name="lish_auth_method"
+                                        />
+                              </div>
+                    </FormGroup>
+                    <FormGroup
+                              className="row"
+                              errors={Object {}}
+                              name="authorized_keys"
+                    >
+                              <label
+                                        className="col-sm-2 col-form-label"
+                                        htmlFor="keys"
+                              >
+                                        Lish keys:
+                              </label>
+                              <div
+                                        className="col-sm-10"
+                              >
+                                        <Textarea
+                                                  className="textarea-md"
+                                                  id="keys"
+                                                  name="keys"
+                                                  onChange={[Function]}
+                                                  value="foobar"
+                                        />
+                                        <div>
+                                                  <small
+                                                            className="text-muted"
+                                                  >
+                                                            Place your SSH public keys here, one per line, for use with Lish console access.
+                                                  </small>
+                                        </div>
+                                        <FormGroupError
+                                                  className=""
+                                                  errors={Object {}}
+                                                  inline={false}
+                                                  name="authorized_keys"
+                                        />
+                              </div>
+                    </FormGroup>
+                    <FormGroup
+                              className="row"
+                              name="submit"
+                    >
+                              <div
+                                        className="offset-sm-2 col-sm-10"
+                              >
+                                        <SubmitButton
+                                                  className="btn-default"
+                                                  disabled={false}
+                                                  disabledChildren="Saving"
+                                        >
+                                                  Save
+                                        </SubmitButton>
+                                        <FormSummary
+                                                  className=""
+                                                  errors={Object {}}
+                                                  success="Lish settings saved."
+                                        />
+                              </div>
+                    </FormGroup>
           </Form>
-        </Card>,
+</Card>,
       ],
     },
     "ref": null,
@@ -195,126 +195,126 @@ ShallowWrapper {
         "props": Object {
           "children": <Form
             analytics={
-              Object {
-                "title": "Change Lish Settings",
-              }
+                        Object {
+                                    "title": "Change Lish Settings",
+                                  }
             }
             className=""
             noSubmitEvent={false}
             onSubmit={[Function]}
-          >
+>
             <FormGroup
-              className="row"
-              errors={Object {}}
-              name="lish_auth_method"
+                        className="row"
+                        errors={Object {}}
+                        name="lish_auth_method"
             >
-              <label
-                className="col-sm-2 col-form-label"
-                htmlFor="authorization"
-              >
-                Authorization mode
-              </label>
-              <div
-                className="col-sm-10"
-              >
-                <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
-                    }
-                  }
-                  className="input-md"
-                  id="authorization"
-                  name="authorization"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Allow both password and key authorization",
-                        "value": "password_keys",
-                      },
-                      Object {
-                        "label": "Allow key authentication only",
-                        "value": "keys_only",
-                      },
-                      Object {
-                        "label": "Disable Lish",
-                        "value": "disabled",
-                      },
-                    ]
-                  }
-                  value="password_keys"
-                />
-                <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={true}
-                  name="lish_auth_method"
-                />
-              </div>
+                        <label
+                                    className="col-sm-2 col-form-label"
+                                    htmlFor="authorization"
+                        >
+                                    Authorization mode
+                        </label>
+                        <div
+                                    className="col-sm-10"
+                        >
+                                    <Select
+                                                analytics={
+                                                            Object {
+                                                                        "noTrack": false,
+                                                                      }
+                                                }
+                                                className="input-md"
+                                                id="authorization"
+                                                name="authorization"
+                                                onChange={[Function]}
+                                                options={
+                                                            Array [
+                                                                        Object {
+                                                                          "label": "Allow both password and key authorization",
+                                                                          "value": "password_keys",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Allow key authentication only",
+                                                                          "value": "keys_only",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Disable Lish",
+                                                                          "value": "disabled",
+                                                                        },
+                                                                      ]
+                                                }
+                                                value="password_keys"
+                                    />
+                                    <FormGroupError
+                                                className=""
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="lish_auth_method"
+                                    />
+                        </div>
             </FormGroup>
             <FormGroup
-              className="row"
-              errors={Object {}}
-              name="authorized_keys"
+                        className="row"
+                        errors={Object {}}
+                        name="authorized_keys"
             >
-              <label
-                className="col-sm-2 col-form-label"
-                htmlFor="keys"
-              >
-                Lish keys:
-              </label>
-              <div
-                className="col-sm-10"
-              >
-                <Textarea
-                  className="textarea-md"
-                  id="keys"
-                  name="keys"
-                  onChange={[Function]}
-                  value="foobar"
-                />
-                <div>
-                  <small
-                    className="text-muted"
-                  >
-                    Place your SSH public keys here, one per line, for use with Lish console access.
-                  </small>
-                </div>
-                <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={false}
-                  name="authorized_keys"
-                />
-              </div>
+                        <label
+                                    className="col-sm-2 col-form-label"
+                                    htmlFor="keys"
+                        >
+                                    Lish keys:
+                        </label>
+                        <div
+                                    className="col-sm-10"
+                        >
+                                    <Textarea
+                                                className="textarea-md"
+                                                id="keys"
+                                                name="keys"
+                                                onChange={[Function]}
+                                                value="foobar"
+                                    />
+                                    <div>
+                                                <small
+                                                            className="text-muted"
+                                                >
+                                                            Place your SSH public keys here, one per line, for use with Lish console access.
+                                                </small>
+                                    </div>
+                                    <FormGroupError
+                                                className=""
+                                                errors={Object {}}
+                                                inline={false}
+                                                name="authorized_keys"
+                                    />
+                        </div>
             </FormGroup>
             <FormGroup
-              className="row"
-              name="submit"
+                        className="row"
+                        name="submit"
             >
-              <div
-                className="offset-sm-2 col-sm-10"
-              >
-                <SubmitButton
-                  className="btn-default"
-                  disabled={false}
-                  disabledChildren="Saving"
-                >
-                  Save
-                </SubmitButton>
-                <FormSummary
-                  className=""
-                  errors={Object {}}
-                  success="Lish settings saved."
-                />
-              </div>
+                        <div
+                                    className="offset-sm-2 col-sm-10"
+                        >
+                                    <SubmitButton
+                                                className="btn-default"
+                                                disabled={false}
+                                                disabledChildren="Saving"
+                                    >
+                                                Save
+                                    </SubmitButton>
+                                    <FormSummary
+                                                className=""
+                                                errors={Object {}}
+                                                success="Lish settings saved."
+                                    />
+                        </div>
             </FormGroup>
-          </Form>,
+</Form>,
           "className": "",
           "header": <CardHeader
             title="Change Lish settings"
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -330,109 +330,109 @@ ShallowWrapper {
                 className="row"
                 errors={Object {}}
                 name="lish_auth_method"
-              >
+>
                 <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="authorization"
+                                className="col-sm-2 col-form-label"
+                                htmlFor="authorization"
                 >
-                  Authorization mode
+                                Authorization mode
                 </label>
                 <div
-                  className="col-sm-10"
+                                className="col-sm-10"
                 >
-                  <Select
-                    analytics={
-                      Object {
-                        "noTrack": false,
-                      }
-                    }
-                    className="input-md"
-                    id="authorization"
-                    name="authorization"
-                    onChange={[Function]}
-                    options={
-                      Array [
-                        Object {
-                          "label": "Allow both password and key authorization",
-                          "value": "password_keys",
-                        },
-                        Object {
-                          "label": "Allow key authentication only",
-                          "value": "keys_only",
-                        },
-                        Object {
-                          "label": "Disable Lish",
-                          "value": "disabled",
-                        },
-                      ]
-                    }
-                    value="password_keys"
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="lish_auth_method"
-                  />
+                                <Select
+                                                analytics={
+                                                                Object {
+                                                                                "noTrack": false,
+                                                                              }
+                                                }
+                                                className="input-md"
+                                                id="authorization"
+                                                name="authorization"
+                                                onChange={[Function]}
+                                                options={
+                                                                Array [
+                                                                                Object {
+                                                                                  "label": "Allow both password and key authorization",
+                                                                                  "value": "password_keys",
+                                                                                },
+                                                                                Object {
+                                                                                  "label": "Allow key authentication only",
+                                                                                  "value": "keys_only",
+                                                                                },
+                                                                                Object {
+                                                                                  "label": "Disable Lish",
+                                                                                  "value": "disabled",
+                                                                                },
+                                                                              ]
+                                                }
+                                                value="password_keys"
+                                />
+                                <FormGroupError
+                                                className=""
+                                                errors={Object {}}
+                                                inline={true}
+                                                name="lish_auth_method"
+                                />
                 </div>
-              </FormGroup>,
+</FormGroup>,
               <FormGroup
                 className="row"
                 errors={Object {}}
                 name="authorized_keys"
-              >
+>
                 <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="keys"
+                                className="col-sm-2 col-form-label"
+                                htmlFor="keys"
                 >
-                  Lish keys:
+                                Lish keys:
                 </label>
                 <div
-                  className="col-sm-10"
+                                className="col-sm-10"
                 >
-                  <Textarea
-                    className="textarea-md"
-                    id="keys"
-                    name="keys"
-                    onChange={[Function]}
-                    value="foobar"
-                  />
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      Place your SSH public keys here, one per line, for use with Lish console access.
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={false}
-                    name="authorized_keys"
-                  />
+                                <Textarea
+                                                className="textarea-md"
+                                                id="keys"
+                                                name="keys"
+                                                onChange={[Function]}
+                                                value="foobar"
+                                />
+                                <div>
+                                                <small
+                                                                className="text-muted"
+                                                >
+                                                                Place your SSH public keys here, one per line, for use with Lish console access.
+                                                </small>
+                                </div>
+                                <FormGroupError
+                                                className=""
+                                                errors={Object {}}
+                                                inline={false}
+                                                name="authorized_keys"
+                                />
                 </div>
-              </FormGroup>,
+</FormGroup>,
               <FormGroup
                 className="row"
                 name="submit"
-              >
+>
                 <div
-                  className="offset-sm-2 col-sm-10"
+                                className="offset-sm-2 col-sm-10"
                 >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Lish settings saved."
-                  />
+                                <SubmitButton
+                                                className="btn-default"
+                                                disabled={false}
+                                                disabledChildren="Saving"
+                                >
+                                                Save
+                                </SubmitButton>
+                                <FormSummary
+                                                className=""
+                                                errors={Object {}}
+                                                success="Lish settings saved."
+                                />
                 </div>
-              </FormGroup>,
+</FormGroup>,
             ],
             "className": "",
             "noSubmitEvent": false,
@@ -449,47 +449,47 @@ ShallowWrapper {
                   <label
                     className="col-sm-2 col-form-label"
                     htmlFor="authorization"
-                  >
+>
                     Authorization mode
-                  </label>,
+</label>,
                   <div
                     className="col-sm-10"
-                  >
+>
                     <Select
-                      analytics={
-                        Object {
-                          "noTrack": false,
-                        }
-                      }
-                      className="input-md"
-                      id="authorization"
-                      name="authorization"
-                      onChange={[Function]}
-                      options={
-                        Array [
-                          Object {
-                            "label": "Allow both password and key authorization",
-                            "value": "password_keys",
-                          },
-                          Object {
-                            "label": "Allow key authentication only",
-                            "value": "keys_only",
-                          },
-                          Object {
-                            "label": "Disable Lish",
-                            "value": "disabled",
-                          },
-                        ]
-                      }
-                      value="password_keys"
+                                        analytics={
+                                                            Object {
+                                                                                "noTrack": false,
+                                                                              }
+                                        }
+                                        className="input-md"
+                                        id="authorization"
+                                        name="authorization"
+                                        onChange={[Function]}
+                                        options={
+                                                            Array [
+                                                                                Object {
+                                                                                  "label": "Allow both password and key authorization",
+                                                                                  "value": "password_keys",
+                                                                                },
+                                                                                Object {
+                                                                                  "label": "Allow key authentication only",
+                                                                                  "value": "keys_only",
+                                                                                },
+                                                                                Object {
+                                                                                  "label": "Disable Lish",
+                                                                                  "value": "disabled",
+                                                                                },
+                                                                              ]
+                                        }
+                                        value="password_keys"
                     />
                     <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="lish_auth_method"
+                                        className=""
+                                        errors={Object {}}
+                                        inline={true}
+                                        name="lish_auth_method"
                     />
-                  </div>,
+</div>,
                 ],
                 "className": "row",
                 "errors": Object {},
@@ -518,38 +518,38 @@ ShallowWrapper {
                     "children": Array [
                       <Select
                         analytics={
-                          Object {
-                            "noTrack": false,
-                          }
+                                                Object {
+                                                                        "noTrack": false,
+                                                                      }
                         }
                         className="input-md"
                         id="authorization"
                         name="authorization"
                         onChange={[Function]}
                         options={
-                          Array [
-                            Object {
-                              "label": "Allow both password and key authorization",
-                              "value": "password_keys",
-                            },
-                            Object {
-                              "label": "Allow key authentication only",
-                              "value": "keys_only",
-                            },
-                            Object {
-                              "label": "Disable Lish",
-                              "value": "disabled",
-                            },
-                          ]
+                                                Array [
+                                                                        Object {
+                                                                          "label": "Allow both password and key authorization",
+                                                                          "value": "password_keys",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Allow key authentication only",
+                                                                          "value": "keys_only",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Disable Lish",
+                                                                          "value": "disabled",
+                                                                        },
+                                                                      ]
                         }
                         value="password_keys"
-                      />,
+/>,
                       <FormGroupError
                         className=""
                         errors={Object {}}
                         inline={true}
                         name="lish_auth_method"
-                      />,
+/>,
                     ],
                     "className": "col-sm-10",
                   },
@@ -616,33 +616,33 @@ ShallowWrapper {
                   <label
                     className="col-sm-2 col-form-label"
                     htmlFor="keys"
-                  >
+>
                     Lish keys:
-                  </label>,
+</label>,
                   <div
                     className="col-sm-10"
-                  >
+>
                     <Textarea
-                      className="textarea-md"
-                      id="keys"
-                      name="keys"
-                      onChange={[Function]}
-                      value="foobar"
+                                        className="textarea-md"
+                                        id="keys"
+                                        name="keys"
+                                        onChange={[Function]}
+                                        value="foobar"
                     />
                     <div>
-                      <small
-                        className="text-muted"
-                      >
-                        Place your SSH public keys here, one per line, for use with Lish console access.
-                      </small>
+                                        <small
+                                                            className="text-muted"
+                                        >
+                                                            Place your SSH public keys here, one per line, for use with Lish console access.
+                                        </small>
                     </div>
                     <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={false}
-                      name="authorized_keys"
+                                        className=""
+                                        errors={Object {}}
+                                        inline={false}
+                                        name="authorized_keys"
                     />
-                  </div>,
+</div>,
                 ],
                 "className": "row",
                 "errors": Object {},
@@ -675,20 +675,20 @@ ShallowWrapper {
                         name="keys"
                         onChange={[Function]}
                         value="foobar"
-                      />,
+/>,
                       <div>
                         <small
-                          className="text-muted"
+                                                className="text-muted"
                         >
-                          Place your SSH public keys here, one per line, for use with Lish console access.
+                                                Place your SSH public keys here, one per line, for use with Lish console access.
                         </small>
-                      </div>,
+</div>,
                       <FormGroupError
                         className=""
                         errors={Object {}}
                         inline={false}
                         name="authorized_keys"
-                      />,
+/>,
                     ],
                     "className": "col-sm-10",
                   },
@@ -716,9 +716,9 @@ ShallowWrapper {
                       "props": Object {
                         "children": <small
                           className="text-muted"
-                        >
+>
                           Place your SSH public keys here, one per line, for use with Lish console access.
-                        </small>,
+</small>,
                       },
                       "ref": null,
                       "rendered": Object {
@@ -762,20 +762,20 @@ ShallowWrapper {
               "props": Object {
                 "children": <div
                   className="offset-sm-2 col-sm-10"
-                >
+>
                   <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
+                                    className="btn-default"
+                                    disabled={false}
+                                    disabledChildren="Saving"
                   >
-                    Save
+                                    Save
                   </SubmitButton>
                   <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Lish settings saved."
+                                    className=""
+                                    errors={Object {}}
+                                    success="Lish settings saved."
                   />
-                </div>,
+</div>,
                 "className": "row",
                 "name": "submit",
               },
@@ -790,14 +790,14 @@ ShallowWrapper {
                       className="btn-default"
                       disabled={false}
                       disabledChildren="Saving"
-                    >
+>
                       Save
-                    </SubmitButton>,
+</SubmitButton>,
                     <FormSummary
                       className=""
                       errors={Object {}}
                       success="Lish settings saved."
-                    />,
+/>,
                   ],
                   "className": "offset-sm-2 col-sm-10",
                 },
@@ -852,134 +852,134 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Lish"
-          />,
+/>,
           <Card
             className=""
             header={
-              <CardHeader
-                title="Change Lish settings"
-              />
+                        <CardHeader
+                                    title="Change Lish settings"
+                        />
             }
-          >
+>
             <Form
-              analytics={
-                Object {
-                  "title": "Change Lish Settings",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
+                        analytics={
+                                    Object {
+                                                "title": "Change Lish Settings",
+                                              }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
             >
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="lish_auth_method"
-              >
-                <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="authorization"
-                >
-                  Authorization mode
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Select
-                    analytics={
-                      Object {
-                        "noTrack": false,
-                      }
-                    }
-                    className="input-md"
-                    id="authorization"
-                    name="authorization"
-                    onChange={[Function]}
-                    options={
-                      Array [
-                        Object {
-                          "label": "Allow both password and key authorization",
-                          "value": "password_keys",
-                        },
-                        Object {
-                          "label": "Allow key authentication only",
-                          "value": "keys_only",
-                        },
-                        Object {
-                          "label": "Disable Lish",
-                          "value": "disabled",
-                        },
-                      ]
-                    }
-                    value="password_keys"
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="lish_auth_method"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                errors={Object {}}
-                name="authorized_keys"
-              >
-                <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="keys"
-                >
-                  Lish keys:
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Textarea
-                    className="textarea-md"
-                    id="keys"
-                    name="keys"
-                    onChange={[Function]}
-                    value="foobar"
-                  />
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      Place your SSH public keys here, one per line, for use with Lish console access.
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={false}
-                    name="authorized_keys"
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                name="submit"
-              >
-                <div
-                  className="offset-sm-2 col-sm-10"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Lish settings saved."
-                  />
-                </div>
-              </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    errors={Object {}}
+                                    name="lish_auth_method"
+                        >
+                                    <label
+                                                className="col-sm-2 col-form-label"
+                                                htmlFor="authorization"
+                                    >
+                                                Authorization mode
+                                    </label>
+                                    <div
+                                                className="col-sm-10"
+                                    >
+                                                <Select
+                                                            analytics={
+                                                                        Object {
+                                                                                    "noTrack": false,
+                                                                                  }
+                                                            }
+                                                            className="input-md"
+                                                            id="authorization"
+                                                            name="authorization"
+                                                            onChange={[Function]}
+                                                            options={
+                                                                        Array [
+                                                                                    Object {
+                                                                                      "label": "Allow both password and key authorization",
+                                                                                      "value": "password_keys",
+                                                                                    },
+                                                                                    Object {
+                                                                                      "label": "Allow key authentication only",
+                                                                                      "value": "keys_only",
+                                                                                    },
+                                                                                    Object {
+                                                                                      "label": "Disable Lish",
+                                                                                      "value": "disabled",
+                                                                                    },
+                                                                                  ]
+                                                            }
+                                                            value="password_keys"
+                                                />
+                                                <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={true}
+                                                            name="lish_auth_method"
+                                                />
+                                    </div>
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    errors={Object {}}
+                                    name="authorized_keys"
+                        >
+                                    <label
+                                                className="col-sm-2 col-form-label"
+                                                htmlFor="keys"
+                                    >
+                                                Lish keys:
+                                    </label>
+                                    <div
+                                                className="col-sm-10"
+                                    >
+                                                <Textarea
+                                                            className="textarea-md"
+                                                            id="keys"
+                                                            name="keys"
+                                                            onChange={[Function]}
+                                                            value="foobar"
+                                                />
+                                                <div>
+                                                            <small
+                                                                        className="text-muted"
+                                                            >
+                                                                        Place your SSH public keys here, one per line, for use with Lish console access.
+                                                            </small>
+                                                </div>
+                                                <FormGroupError
+                                                            className=""
+                                                            errors={Object {}}
+                                                            inline={false}
+                                                            name="authorized_keys"
+                                                />
+                                    </div>
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    name="submit"
+                        >
+                                    <div
+                                                className="offset-sm-2 col-sm-10"
+                                    >
+                                                <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                                >
+                                                            Save
+                                                </SubmitButton>
+                                                <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Lish settings saved."
+                                                />
+                                    </div>
+                        </FormGroup>
             </Form>
-          </Card>,
+</Card>,
         ],
       },
       "ref": null,
@@ -1002,126 +1002,126 @@ ShallowWrapper {
           "props": Object {
             "children": <Form
               analytics={
-                Object {
-                  "title": "Change Lish Settings",
-                }
+                            Object {
+                                          "title": "Change Lish Settings",
+                                        }
               }
               className=""
               noSubmitEvent={false}
               onSubmit={[Function]}
-            >
+>
               <FormGroup
-                className="row"
-                errors={Object {}}
-                name="lish_auth_method"
+                            className="row"
+                            errors={Object {}}
+                            name="lish_auth_method"
               >
-                <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="authorization"
-                >
-                  Authorization mode
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Select
-                    analytics={
-                      Object {
-                        "noTrack": false,
-                      }
-                    }
-                    className="input-md"
-                    id="authorization"
-                    name="authorization"
-                    onChange={[Function]}
-                    options={
-                      Array [
-                        Object {
-                          "label": "Allow both password and key authorization",
-                          "value": "password_keys",
-                        },
-                        Object {
-                          "label": "Allow key authentication only",
-                          "value": "keys_only",
-                        },
-                        Object {
-                          "label": "Disable Lish",
-                          "value": "disabled",
-                        },
-                      ]
-                    }
-                    value="password_keys"
-                  />
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="lish_auth_method"
-                  />
-                </div>
+                            <label
+                                          className="col-sm-2 col-form-label"
+                                          htmlFor="authorization"
+                            >
+                                          Authorization mode
+                            </label>
+                            <div
+                                          className="col-sm-10"
+                            >
+                                          <Select
+                                                        analytics={
+                                                                      Object {
+                                                                                    "noTrack": false,
+                                                                                  }
+                                                        }
+                                                        className="input-md"
+                                                        id="authorization"
+                                                        name="authorization"
+                                                        onChange={[Function]}
+                                                        options={
+                                                                      Array [
+                                                                                    Object {
+                                                                                      "label": "Allow both password and key authorization",
+                                                                                      "value": "password_keys",
+                                                                                    },
+                                                                                    Object {
+                                                                                      "label": "Allow key authentication only",
+                                                                                      "value": "keys_only",
+                                                                                    },
+                                                                                    Object {
+                                                                                      "label": "Disable Lish",
+                                                                                      "value": "disabled",
+                                                                                    },
+                                                                                  ]
+                                                        }
+                                                        value="password_keys"
+                                          />
+                                          <FormGroupError
+                                                        className=""
+                                                        errors={Object {}}
+                                                        inline={true}
+                                                        name="lish_auth_method"
+                                          />
+                            </div>
               </FormGroup>
               <FormGroup
-                className="row"
-                errors={Object {}}
-                name="authorized_keys"
+                            className="row"
+                            errors={Object {}}
+                            name="authorized_keys"
               >
-                <label
-                  className="col-sm-2 col-form-label"
-                  htmlFor="keys"
-                >
-                  Lish keys:
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Textarea
-                    className="textarea-md"
-                    id="keys"
-                    name="keys"
-                    onChange={[Function]}
-                    value="foobar"
-                  />
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      Place your SSH public keys here, one per line, for use with Lish console access.
-                    </small>
-                  </div>
-                  <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={false}
-                    name="authorized_keys"
-                  />
-                </div>
+                            <label
+                                          className="col-sm-2 col-form-label"
+                                          htmlFor="keys"
+                            >
+                                          Lish keys:
+                            </label>
+                            <div
+                                          className="col-sm-10"
+                            >
+                                          <Textarea
+                                                        className="textarea-md"
+                                                        id="keys"
+                                                        name="keys"
+                                                        onChange={[Function]}
+                                                        value="foobar"
+                                          />
+                                          <div>
+                                                        <small
+                                                                      className="text-muted"
+                                                        >
+                                                                      Place your SSH public keys here, one per line, for use with Lish console access.
+                                                        </small>
+                                          </div>
+                                          <FormGroupError
+                                                        className=""
+                                                        errors={Object {}}
+                                                        inline={false}
+                                                        name="authorized_keys"
+                                          />
+                            </div>
               </FormGroup>
               <FormGroup
-                className="row"
-                name="submit"
+                            className="row"
+                            name="submit"
               >
-                <div
-                  className="offset-sm-2 col-sm-10"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Lish settings saved."
-                  />
-                </div>
+                            <div
+                                          className="offset-sm-2 col-sm-10"
+                            >
+                                          <SubmitButton
+                                                        className="btn-default"
+                                                        disabled={false}
+                                                        disabledChildren="Saving"
+                                          >
+                                                        Save
+                                          </SubmitButton>
+                                          <FormSummary
+                                                        className=""
+                                                        errors={Object {}}
+                                                        success="Lish settings saved."
+                                          />
+                            </div>
               </FormGroup>
-            </Form>,
+</Form>,
             "className": "",
             "header": <CardHeader
               title="Change Lish settings"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {
@@ -1137,109 +1137,109 @@ ShallowWrapper {
                   className="row"
                   errors={Object {}}
                   name="lish_auth_method"
-                >
+>
                   <label
-                    className="col-sm-2 col-form-label"
-                    htmlFor="authorization"
+                                    className="col-sm-2 col-form-label"
+                                    htmlFor="authorization"
                   >
-                    Authorization mode
+                                    Authorization mode
                   </label>
                   <div
-                    className="col-sm-10"
+                                    className="col-sm-10"
                   >
-                    <Select
-                      analytics={
-                        Object {
-                          "noTrack": false,
-                        }
-                      }
-                      className="input-md"
-                      id="authorization"
-                      name="authorization"
-                      onChange={[Function]}
-                      options={
-                        Array [
-                          Object {
-                            "label": "Allow both password and key authorization",
-                            "value": "password_keys",
-                          },
-                          Object {
-                            "label": "Allow key authentication only",
-                            "value": "keys_only",
-                          },
-                          Object {
-                            "label": "Disable Lish",
-                            "value": "disabled",
-                          },
-                        ]
-                      }
-                      value="password_keys"
-                    />
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={true}
-                      name="lish_auth_method"
-                    />
+                                    <Select
+                                                      analytics={
+                                                                        Object {
+                                                                                          "noTrack": false,
+                                                                                        }
+                                                      }
+                                                      className="input-md"
+                                                      id="authorization"
+                                                      name="authorization"
+                                                      onChange={[Function]}
+                                                      options={
+                                                                        Array [
+                                                                                          Object {
+                                                                                            "label": "Allow both password and key authorization",
+                                                                                            "value": "password_keys",
+                                                                                          },
+                                                                                          Object {
+                                                                                            "label": "Allow key authentication only",
+                                                                                            "value": "keys_only",
+                                                                                          },
+                                                                                          Object {
+                                                                                            "label": "Disable Lish",
+                                                                                            "value": "disabled",
+                                                                                          },
+                                                                                        ]
+                                                      }
+                                                      value="password_keys"
+                                    />
+                                    <FormGroupError
+                                                      className=""
+                                                      errors={Object {}}
+                                                      inline={true}
+                                                      name="lish_auth_method"
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   errors={Object {}}
                   name="authorized_keys"
-                >
+>
                   <label
-                    className="col-sm-2 col-form-label"
-                    htmlFor="keys"
+                                    className="col-sm-2 col-form-label"
+                                    htmlFor="keys"
                   >
-                    Lish keys:
+                                    Lish keys:
                   </label>
                   <div
-                    className="col-sm-10"
+                                    className="col-sm-10"
                   >
-                    <Textarea
-                      className="textarea-md"
-                      id="keys"
-                      name="keys"
-                      onChange={[Function]}
-                      value="foobar"
-                    />
-                    <div>
-                      <small
-                        className="text-muted"
-                      >
-                        Place your SSH public keys here, one per line, for use with Lish console access.
-                      </small>
-                    </div>
-                    <FormGroupError
-                      className=""
-                      errors={Object {}}
-                      inline={false}
-                      name="authorized_keys"
-                    />
+                                    <Textarea
+                                                      className="textarea-md"
+                                                      id="keys"
+                                                      name="keys"
+                                                      onChange={[Function]}
+                                                      value="foobar"
+                                    />
+                                    <div>
+                                                      <small
+                                                                        className="text-muted"
+                                                      >
+                                                                        Place your SSH public keys here, one per line, for use with Lish console access.
+                                                      </small>
+                                    </div>
+                                    <FormGroupError
+                                                      className=""
+                                                      errors={Object {}}
+                                                      inline={false}
+                                                      name="authorized_keys"
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   name="submit"
-                >
+>
                   <div
-                    className="offset-sm-2 col-sm-10"
+                                    className="offset-sm-2 col-sm-10"
                   >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Save
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Lish settings saved."
-                    />
+                                    <SubmitButton
+                                                      className="btn-default"
+                                                      disabled={false}
+                                                      disabledChildren="Saving"
+                                    >
+                                                      Save
+                                    </SubmitButton>
+                                    <FormSummary
+                                                      className=""
+                                                      errors={Object {}}
+                                                      success="Lish settings saved."
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
               ],
               "className": "",
               "noSubmitEvent": false,
@@ -1256,47 +1256,47 @@ ShallowWrapper {
                     <label
                       className="col-sm-2 col-form-label"
                       htmlFor="authorization"
-                    >
+>
                       Authorization mode
-                    </label>,
+</label>,
                     <div
                       className="col-sm-10"
-                    >
+>
                       <Select
-                        analytics={
-                          Object {
-                            "noTrack": false,
-                          }
-                        }
-                        className="input-md"
-                        id="authorization"
-                        name="authorization"
-                        onChange={[Function]}
-                        options={
-                          Array [
-                            Object {
-                              "label": "Allow both password and key authorization",
-                              "value": "password_keys",
-                            },
-                            Object {
-                              "label": "Allow key authentication only",
-                              "value": "keys_only",
-                            },
-                            Object {
-                              "label": "Disable Lish",
-                              "value": "disabled",
-                            },
-                          ]
-                        }
-                        value="password_keys"
+                                            analytics={
+                                                                  Object {
+                                                                                        "noTrack": false,
+                                                                                      }
+                                            }
+                                            className="input-md"
+                                            id="authorization"
+                                            name="authorization"
+                                            onChange={[Function]}
+                                            options={
+                                                                  Array [
+                                                                                        Object {
+                                                                                          "label": "Allow both password and key authorization",
+                                                                                          "value": "password_keys",
+                                                                                        },
+                                                                                        Object {
+                                                                                          "label": "Allow key authentication only",
+                                                                                          "value": "keys_only",
+                                                                                        },
+                                                                                        Object {
+                                                                                          "label": "Disable Lish",
+                                                                                          "value": "disabled",
+                                                                                        },
+                                                                                      ]
+                                            }
+                                            value="password_keys"
                       />
                       <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={true}
-                        name="lish_auth_method"
+                                            className=""
+                                            errors={Object {}}
+                                            inline={true}
+                                            name="lish_auth_method"
                       />
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                   "errors": Object {},
@@ -1325,38 +1325,38 @@ ShallowWrapper {
                       "children": Array [
                         <Select
                           analytics={
-                            Object {
-                              "noTrack": false,
-                            }
+                                                    Object {
+                                                                              "noTrack": false,
+                                                                            }
                           }
                           className="input-md"
                           id="authorization"
                           name="authorization"
                           onChange={[Function]}
                           options={
-                            Array [
-                              Object {
-                                "label": "Allow both password and key authorization",
-                                "value": "password_keys",
-                              },
-                              Object {
-                                "label": "Allow key authentication only",
-                                "value": "keys_only",
-                              },
-                              Object {
-                                "label": "Disable Lish",
-                                "value": "disabled",
-                              },
-                            ]
+                                                    Array [
+                                                                              Object {
+                                                                                "label": "Allow both password and key authorization",
+                                                                                "value": "password_keys",
+                                                                              },
+                                                                              Object {
+                                                                                "label": "Allow key authentication only",
+                                                                                "value": "keys_only",
+                                                                              },
+                                                                              Object {
+                                                                                "label": "Disable Lish",
+                                                                                "value": "disabled",
+                                                                              },
+                                                                            ]
                           }
                           value="password_keys"
-                        />,
+/>,
                         <FormGroupError
                           className=""
                           errors={Object {}}
                           inline={true}
                           name="lish_auth_method"
-                        />,
+/>,
                       ],
                       "className": "col-sm-10",
                     },
@@ -1423,33 +1423,33 @@ ShallowWrapper {
                     <label
                       className="col-sm-2 col-form-label"
                       htmlFor="keys"
-                    >
+>
                       Lish keys:
-                    </label>,
+</label>,
                     <div
                       className="col-sm-10"
-                    >
+>
                       <Textarea
-                        className="textarea-md"
-                        id="keys"
-                        name="keys"
-                        onChange={[Function]}
-                        value="foobar"
+                                            className="textarea-md"
+                                            id="keys"
+                                            name="keys"
+                                            onChange={[Function]}
+                                            value="foobar"
                       />
                       <div>
-                        <small
-                          className="text-muted"
-                        >
-                          Place your SSH public keys here, one per line, for use with Lish console access.
-                        </small>
+                                            <small
+                                                                  className="text-muted"
+                                            >
+                                                                  Place your SSH public keys here, one per line, for use with Lish console access.
+                                            </small>
                       </div>
                       <FormGroupError
-                        className=""
-                        errors={Object {}}
-                        inline={false}
-                        name="authorized_keys"
+                                            className=""
+                                            errors={Object {}}
+                                            inline={false}
+                                            name="authorized_keys"
                       />
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                   "errors": Object {},
@@ -1482,20 +1482,20 @@ ShallowWrapper {
                           name="keys"
                           onChange={[Function]}
                           value="foobar"
-                        />,
+/>,
                         <div>
                           <small
-                            className="text-muted"
+                                                    className="text-muted"
                           >
-                            Place your SSH public keys here, one per line, for use with Lish console access.
+                                                    Place your SSH public keys here, one per line, for use with Lish console access.
                           </small>
-                        </div>,
+</div>,
                         <FormGroupError
                           className=""
                           errors={Object {}}
                           inline={false}
                           name="authorized_keys"
-                        />,
+/>,
                       ],
                       "className": "col-sm-10",
                     },
@@ -1523,9 +1523,9 @@ ShallowWrapper {
                         "props": Object {
                           "children": <small
                             className="text-muted"
-                          >
+>
                             Place your SSH public keys here, one per line, for use with Lish console access.
-                          </small>,
+</small>,
                         },
                         "ref": null,
                         "rendered": Object {
@@ -1569,20 +1569,20 @@ ShallowWrapper {
                 "props": Object {
                   "children": <div
                     className="offset-sm-2 col-sm-10"
-                  >
+>
                     <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
+                                        className="btn-default"
+                                        disabled={false}
+                                        disabledChildren="Saving"
                     >
-                      Save
+                                        Save
                     </SubmitButton>
                     <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Lish settings saved."
+                                        className=""
+                                        errors={Object {}}
+                                        success="Lish settings saved."
                     />
-                  </div>,
+</div>,
                   "className": "row",
                   "name": "submit",
                 },
@@ -1597,14 +1597,14 @@ ShallowWrapper {
                         className="btn-default"
                         disabled={false}
                         disabledChildren="Saving"
-                      >
+>
                         Save
-                      </SubmitButton>,
+</SubmitButton>,
                       <FormSummary
                         className=""
                         errors={Object {}}
                         success="Lish settings saved."
-                      />,
+/>,
                     ],
                     "className": "offset-sm-2 col-sm-10",
                   },

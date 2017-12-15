@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import { flags } from '~/assets';
-
+import flags from '~/assets/flags';
 
 export default function Region(props) {
   const { obj } = props;

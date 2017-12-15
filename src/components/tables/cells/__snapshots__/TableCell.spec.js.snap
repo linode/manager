@@ -8,7 +8,7 @@ ShallowWrapper {
     className="example"
     column={Object {}}
     record={Object {}}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -23,7 +23,7 @@ ShallowWrapper {
     "props": Object {
       "children": <div
         className="TableCell-content"
-      />,
+/>,
       "className": "TableCell example ",
     },
     "ref": null,
@@ -49,7 +49,7 @@ ShallowWrapper {
       "props": Object {
         "children": <div
           className="TableCell-content"
-        />,
+/>,
         "className": "TableCell example ",
       },
       "ref": null,

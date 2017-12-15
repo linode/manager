@@ -19,112 +19,112 @@ ShallowWrapper {
     "props": Object {
       "children": <ul
         className="SessionMenu-body"
-      >
+>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/profile"
-          >
-            My Profile
-          </Link>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/profile"
+                >
+                        My Profile
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <a
-            href="mailto:feedback@linode.com"
-          >
-            Submit Feedback
-          </a>
-        </li>
-        <hr />
-        <li
-          className="SessionMenu-header"
-        >
-          Account
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/settings"
-          >
-            Account Settings
-          </Link>
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/billing"
-          >
-            Billing
-          </Link>
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/users"
-          >
-            Users
-          </Link>
+                <a
+                        href="mailto:feedback@linode.com"
+                >
+                        Submit Feedback
+                </a>
         </li>
         <hr />
         <li
-          className="SessionMenu-header"
+                className="SessionMenu-header"
         >
-          Resources
+                Account
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://forum.linode.com/"
-          >
-            Community Forum
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/settings"
+                >
+                        Account Settings
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://linode.com/docs"
-          >
-            User Documentation
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/billing"
+                >
+                        Billing
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://developers.linode.com"
-          >
-            Developer Documentation
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/users"
+                >
+                        Users
+                </Link>
         </li>
         <hr />
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-header"
         >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/logout"
-          >
-            Log out
-          </Link>
+                Resources
         </li>
-      </ul>,
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://forum.linode.com/"
+                >
+                        Community Forum
+                </ExternalLink>
+        </li>
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://linode.com/docs"
+                >
+                        User Documentation
+                </ExternalLink>
+        </li>
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://developers.linode.com"
+                >
+                        Developer Documentation
+                </ExternalLink>
+        </li>
+        <hr />
+        <li
+                className="SessionMenu-item"
+        >
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/logout"
+                >
+                        Log out
+                </Link>
+        </li>
+</ul>,
       "className": "SessionMenu ",
     },
     "ref": null,
@@ -136,108 +136,108 @@ ShallowWrapper {
         "children": Array [
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/profile"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/profile"
             >
-              My Profile
+                        My Profile
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <a
-              href="mailto:feedback@linode.com"
+                        href="mailto:feedback@linode.com"
             >
-              Submit Feedback
+                        Submit Feedback
             </a>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-header"
-          >
+>
             Account
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/settings"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/settings"
             >
-              Account Settings
+                        Account Settings
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/billing"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/billing"
             >
-              Billing
+                        Billing
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/users"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/users"
             >
-              Users
+                        Users
             </Link>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-header"
-          >
+>
             Resources
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://forum.linode.com/"
+                        to="https://forum.linode.com/"
             >
-              Community Forum
+                        Community Forum
             </ExternalLink>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://linode.com/docs"
+                        to="https://linode.com/docs"
             >
-              User Documentation
+                        User Documentation
             </ExternalLink>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://developers.linode.com"
+                        to="https://developers.linode.com"
             >
-              Developer Documentation
+                        Developer Documentation
             </ExternalLink>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/logout"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/logout"
             >
-              Log out
+                        Log out
             </Link>
-          </li>,
+</li>,
         ],
         "className": "SessionMenu-body",
       },
@@ -252,9 +252,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/profile"
-            >
+>
               My Profile
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -281,9 +281,9 @@ ShallowWrapper {
           "props": Object {
             "children": <a
               href="mailto:feedback@linode.com"
-            >
+>
               Submit Feedback
-            </a>,
+</a>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -331,9 +331,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/settings"
-            >
+>
               Account Settings
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -362,9 +362,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/billing"
-            >
+>
               Billing
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -393,9 +393,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/users"
-            >
+>
               Users
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -443,9 +443,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://forum.linode.com/"
-            >
+>
               Community Forum
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -470,9 +470,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://linode.com/docs"
-            >
+>
               User Documentation
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -497,9 +497,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://developers.linode.com"
-            >
+>
               Developer Documentation
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -535,9 +535,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/logout"
-            >
+>
               Log out
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -570,112 +570,112 @@ ShallowWrapper {
       "props": Object {
         "children": <ul
           className="SessionMenu-body"
-        >
+>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/profile"
-            >
-              My Profile
-            </Link>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/profile"
+                    >
+                              My Profile
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <a
-              href="mailto:feedback@linode.com"
-            >
-              Submit Feedback
-            </a>
-          </li>
-          <hr />
-          <li
-            className="SessionMenu-header"
-          >
-            Account
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/settings"
-            >
-              Account Settings
-            </Link>
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/billing"
-            >
-              Billing
-            </Link>
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/users"
-            >
-              Users
-            </Link>
+                    <a
+                              href="mailto:feedback@linode.com"
+                    >
+                              Submit Feedback
+                    </a>
           </li>
           <hr />
           <li
-            className="SessionMenu-header"
+                    className="SessionMenu-header"
           >
-            Resources
+                    Account
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://forum.linode.com/"
-            >
-              Community Forum
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/settings"
+                    >
+                              Account Settings
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://linode.com/docs"
-            >
-              User Documentation
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/billing"
+                    >
+                              Billing
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://developers.linode.com"
-            >
-              Developer Documentation
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/users"
+                    >
+                              Users
+                    </Link>
           </li>
           <hr />
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-header"
           >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/logout"
-            >
-              Log out
-            </Link>
+                    Resources
           </li>
-        </ul>,
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://forum.linode.com/"
+                    >
+                              Community Forum
+                    </ExternalLink>
+          </li>
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://linode.com/docs"
+                    >
+                              User Documentation
+                    </ExternalLink>
+          </li>
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://developers.linode.com"
+                    >
+                              Developer Documentation
+                    </ExternalLink>
+          </li>
+          <hr />
+          <li
+                    className="SessionMenu-item"
+          >
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/logout"
+                    >
+                              Log out
+                    </Link>
+          </li>
+</ul>,
         "className": "SessionMenu ",
       },
       "ref": null,
@@ -687,108 +687,108 @@ ShallowWrapper {
           "children": Array [
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/profile"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/profile"
               >
-                My Profile
+                            My Profile
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <a
-                href="mailto:feedback@linode.com"
+                            href="mailto:feedback@linode.com"
               >
-                Submit Feedback
+                            Submit Feedback
               </a>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-header"
-            >
+>
               Account
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/settings"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/settings"
               >
-                Account Settings
+                            Account Settings
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/billing"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/billing"
               >
-                Billing
+                            Billing
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/users"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/users"
               >
-                Users
+                            Users
               </Link>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-header"
-            >
+>
               Resources
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://forum.linode.com/"
+                            to="https://forum.linode.com/"
               >
-                Community Forum
+                            Community Forum
               </ExternalLink>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://linode.com/docs"
+                            to="https://linode.com/docs"
               >
-                User Documentation
+                            User Documentation
               </ExternalLink>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://developers.linode.com"
+                            to="https://developers.linode.com"
               >
-                Developer Documentation
+                            Developer Documentation
               </ExternalLink>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/logout"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/logout"
               >
-                Log out
+                            Log out
               </Link>
-            </li>,
+</li>,
           ],
           "className": "SessionMenu-body",
         },
@@ -803,9 +803,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/profile"
-              >
+>
                 My Profile
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -832,9 +832,9 @@ ShallowWrapper {
             "props": Object {
               "children": <a
                 href="mailto:feedback@linode.com"
-              >
+>
                 Submit Feedback
-              </a>,
+</a>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -882,9 +882,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/settings"
-              >
+>
                 Account Settings
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -913,9 +913,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/billing"
-              >
+>
                 Billing
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -944,9 +944,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/users"
-              >
+>
                 Users
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -994,9 +994,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://forum.linode.com/"
-              >
+>
                 Community Forum
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -1021,9 +1021,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://linode.com/docs"
-              >
+>
                 User Documentation
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -1048,9 +1048,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://developers.linode.com"
-              >
+>
                 Developer Documentation
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -1086,9 +1086,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/logout"
-              >
+>
                 Log out
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -1130,7 +1130,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <SessionMenu
     open={true}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -1145,112 +1145,112 @@ ShallowWrapper {
     "props": Object {
       "children": <ul
         className="SessionMenu-body"
-      >
+>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/profile"
-          >
-            My Profile
-          </Link>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/profile"
+                >
+                        My Profile
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <a
-            href="mailto:feedback@linode.com"
-          >
-            Submit Feedback
-          </a>
-        </li>
-        <hr />
-        <li
-          className="SessionMenu-header"
-        >
-          Account
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/settings"
-          >
-            Account Settings
-          </Link>
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/billing"
-          >
-            Billing
-          </Link>
-        </li>
-        <li
-          className="SessionMenu-item"
-        >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/users"
-          >
-            Users
-          </Link>
+                <a
+                        href="mailto:feedback@linode.com"
+                >
+                        Submit Feedback
+                </a>
         </li>
         <hr />
         <li
-          className="SessionMenu-header"
+                className="SessionMenu-header"
         >
-          Resources
+                Account
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://forum.linode.com/"
-          >
-            Community Forum
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/settings"
+                >
+                        Account Settings
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://linode.com/docs"
-          >
-            User Documentation
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/billing"
+                >
+                        Billing
+                </Link>
         </li>
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-item"
         >
-          <ExternalLink
-            to="https://developers.linode.com"
-          >
-            Developer Documentation
-          </ExternalLink>
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/users"
+                >
+                        Users
+                </Link>
         </li>
         <hr />
         <li
-          className="SessionMenu-item"
+                className="SessionMenu-header"
         >
-          <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
-            to="/logout"
-          >
-            Log out
-          </Link>
+                Resources
         </li>
-      </ul>,
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://forum.linode.com/"
+                >
+                        Community Forum
+                </ExternalLink>
+        </li>
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://linode.com/docs"
+                >
+                        User Documentation
+                </ExternalLink>
+        </li>
+        <li
+                className="SessionMenu-item"
+        >
+                <ExternalLink
+                        to="https://developers.linode.com"
+                >
+                        Developer Documentation
+                </ExternalLink>
+        </li>
+        <hr />
+        <li
+                className="SessionMenu-item"
+        >
+                <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/logout"
+                >
+                        Log out
+                </Link>
+        </li>
+</ul>,
       "className": "SessionMenu SessionMenu--open",
     },
     "ref": null,
@@ -1262,108 +1262,108 @@ ShallowWrapper {
         "children": Array [
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/profile"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/profile"
             >
-              My Profile
+                        My Profile
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <a
-              href="mailto:feedback@linode.com"
+                        href="mailto:feedback@linode.com"
             >
-              Submit Feedback
+                        Submit Feedback
             </a>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-header"
-          >
+>
             Account
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/settings"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/settings"
             >
-              Account Settings
+                        Account Settings
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/billing"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/billing"
             >
-              Billing
+                        Billing
             </Link>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/users"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/users"
             >
-              Users
+                        Users
             </Link>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-header"
-          >
+>
             Resources
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://forum.linode.com/"
+                        to="https://forum.linode.com/"
             >
-              Community Forum
+                        Community Forum
             </ExternalLink>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://linode.com/docs"
+                        to="https://linode.com/docs"
             >
-              User Documentation
+                        User Documentation
             </ExternalLink>
-          </li>,
+</li>,
           <li
             className="SessionMenu-item"
-          >
+>
             <ExternalLink
-              to="https://developers.linode.com"
+                        to="https://developers.linode.com"
             >
-              Developer Documentation
+                        Developer Documentation
             </ExternalLink>
-          </li>,
+</li>,
           <hr />,
           <li
             className="SessionMenu-item"
-          >
+>
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/logout"
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/logout"
             >
-              Log out
+                        Log out
             </Link>
-          </li>,
+</li>,
         ],
         "className": "SessionMenu-body",
       },
@@ -1378,9 +1378,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/profile"
-            >
+>
               My Profile
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1407,9 +1407,9 @@ ShallowWrapper {
           "props": Object {
             "children": <a
               href="mailto:feedback@linode.com"
-            >
+>
               Submit Feedback
-            </a>,
+</a>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1457,9 +1457,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/settings"
-            >
+>
               Account Settings
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1488,9 +1488,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/billing"
-            >
+>
               Billing
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1519,9 +1519,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/users"
-            >
+>
               Users
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1569,9 +1569,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://forum.linode.com/"
-            >
+>
               Community Forum
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1596,9 +1596,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://linode.com/docs"
-            >
+>
               User Documentation
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1623,9 +1623,9 @@ ShallowWrapper {
           "props": Object {
             "children": <ExternalLink
               to="https://developers.linode.com"
-            >
+>
               Developer Documentation
-            </ExternalLink>,
+</ExternalLink>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1661,9 +1661,9 @@ ShallowWrapper {
               onlyActiveOnIndex={false}
               style={Object {}}
               to="/logout"
-            >
+>
               Log out
-            </Link>,
+</Link>,
             "className": "SessionMenu-item",
           },
           "ref": null,
@@ -1696,112 +1696,112 @@ ShallowWrapper {
       "props": Object {
         "children": <ul
           className="SessionMenu-body"
-        >
+>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/profile"
-            >
-              My Profile
-            </Link>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/profile"
+                    >
+                              My Profile
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <a
-              href="mailto:feedback@linode.com"
-            >
-              Submit Feedback
-            </a>
-          </li>
-          <hr />
-          <li
-            className="SessionMenu-header"
-          >
-            Account
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/settings"
-            >
-              Account Settings
-            </Link>
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/billing"
-            >
-              Billing
-            </Link>
-          </li>
-          <li
-            className="SessionMenu-item"
-          >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/users"
-            >
-              Users
-            </Link>
+                    <a
+                              href="mailto:feedback@linode.com"
+                    >
+                              Submit Feedback
+                    </a>
           </li>
           <hr />
           <li
-            className="SessionMenu-header"
+                    className="SessionMenu-header"
           >
-            Resources
+                    Account
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://forum.linode.com/"
-            >
-              Community Forum
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/settings"
+                    >
+                              Account Settings
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://linode.com/docs"
-            >
-              User Documentation
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/billing"
+                    >
+                              Billing
+                    </Link>
           </li>
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-item"
           >
-            <ExternalLink
-              to="https://developers.linode.com"
-            >
-              Developer Documentation
-            </ExternalLink>
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/users"
+                    >
+                              Users
+                    </Link>
           </li>
           <hr />
           <li
-            className="SessionMenu-item"
+                    className="SessionMenu-header"
           >
-            <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
-              to="/logout"
-            >
-              Log out
-            </Link>
+                    Resources
           </li>
-        </ul>,
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://forum.linode.com/"
+                    >
+                              Community Forum
+                    </ExternalLink>
+          </li>
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://linode.com/docs"
+                    >
+                              User Documentation
+                    </ExternalLink>
+          </li>
+          <li
+                    className="SessionMenu-item"
+          >
+                    <ExternalLink
+                              to="https://developers.linode.com"
+                    >
+                              Developer Documentation
+                    </ExternalLink>
+          </li>
+          <hr />
+          <li
+                    className="SessionMenu-item"
+          >
+                    <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/logout"
+                    >
+                              Log out
+                    </Link>
+          </li>
+</ul>,
         "className": "SessionMenu SessionMenu--open",
       },
       "ref": null,
@@ -1813,108 +1813,108 @@ ShallowWrapper {
           "children": Array [
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/profile"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/profile"
               >
-                My Profile
+                            My Profile
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <a
-                href="mailto:feedback@linode.com"
+                            href="mailto:feedback@linode.com"
               >
-                Submit Feedback
+                            Submit Feedback
               </a>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-header"
-            >
+>
               Account
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/settings"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/settings"
               >
-                Account Settings
+                            Account Settings
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/billing"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/billing"
               >
-                Billing
+                            Billing
               </Link>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/users"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/users"
               >
-                Users
+                            Users
               </Link>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-header"
-            >
+>
               Resources
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://forum.linode.com/"
+                            to="https://forum.linode.com/"
               >
-                Community Forum
+                            Community Forum
               </ExternalLink>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://linode.com/docs"
+                            to="https://linode.com/docs"
               >
-                User Documentation
+                            User Documentation
               </ExternalLink>
-            </li>,
+</li>,
             <li
               className="SessionMenu-item"
-            >
+>
               <ExternalLink
-                to="https://developers.linode.com"
+                            to="https://developers.linode.com"
               >
-                Developer Documentation
+                            Developer Documentation
               </ExternalLink>
-            </li>,
+</li>,
             <hr />,
             <li
               className="SessionMenu-item"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/logout"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/logout"
               >
-                Log out
+                            Log out
               </Link>
-            </li>,
+</li>,
           ],
           "className": "SessionMenu-body",
         },
@@ -1929,9 +1929,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/profile"
-              >
+>
                 My Profile
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -1958,9 +1958,9 @@ ShallowWrapper {
             "props": Object {
               "children": <a
                 href="mailto:feedback@linode.com"
-              >
+>
                 Submit Feedback
-              </a>,
+</a>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2008,9 +2008,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/settings"
-              >
+>
                 Account Settings
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2039,9 +2039,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/billing"
-              >
+>
                 Billing
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2070,9 +2070,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/users"
-              >
+>
                 Users
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2120,9 +2120,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://forum.linode.com/"
-              >
+>
                 Community Forum
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2147,9 +2147,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://linode.com/docs"
-              >
+>
                 User Documentation
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2174,9 +2174,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://developers.linode.com"
-              >
+>
                 Developer Documentation
-              </ExternalLink>,
+</ExternalLink>,
               "className": "SessionMenu-item",
             },
             "ref": null,
@@ -2212,9 +2212,9 @@ ShallowWrapper {
                 onlyActiveOnIndex={false}
                 style={Object {}}
                 to="/logout"
-              >
+>
                 Log out
-              </Link>,
+</Link>,
               "className": "SessionMenu-item",
             },
             "ref": null,

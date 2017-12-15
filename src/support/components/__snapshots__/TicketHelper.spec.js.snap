@@ -21,154 +21,154 @@ ShallowWrapper {
         null,
         <h3
           className="sub-header"
-        >
+>
           Frequently Asked Questions
-        </h3>,
+</h3>,
         <ul
           className="list-unstyled"
-        >
+>
           <li>
-            <LinkButton
-              id="availibility-button"
-              onClick={[Function]}
-            >
-              When will there be availibility in Tokyo, Singapore, or Frankfurt?
-            </LinkButton>
-            <p
-              className="hidden"
-              id="availibility"
-            >
-              <small>
-                Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                <ExternalLink
-                  to="https://blog.linode.com"
-                >
-                  our blog
-                </ExternalLink>
-                .
-              </small>
-            </p>
+                    <LinkButton
+                              id="availibility-button"
+                              onClick={[Function]}
+                    >
+                              When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                              id="availibility"
+                    >
+                              <small>
+                                        Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                        <ExternalLink
+                                                  to="https://blog.linode.com"
+                                        >
+                                                  our blog
+                                        </ExternalLink>
+                                        .
+                              </small>
+                    </p>
           </li>
           <li>
-            <LinkButton
-              onClick={[Function]}
-            >
-              What do I do if my IP address is blocked by the GFW?
-            </LinkButton>
-            <p
-              className="hidden"
-            >
-              <small>
-                Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-              </small>
-            </p>
+                    <LinkButton
+                              onClick={[Function]}
+                    >
+                              What do I do if my IP address is blocked by the GFW?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                    >
+                              <small>
+                                        Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                              </small>
+                    </p>
           </li>
           <li>
-            <LinkButton
-              onClick={[Function]}
-            >
-              How do I transfer a Linode from one account to another?
-            </LinkButton>
-            <p
-              className="hidden"
-            >
-              <small>
-                To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-              </small>
-            </p>
+                    <LinkButton
+                              onClick={[Function]}
+                    >
+                              How do I transfer a Linode from one account to another?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                    >
+                              <small>
+                                        To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                              </small>
+                    </p>
           </li>
           <li>
-            <LinkButton
-              onClick={[Function]}
-            >
-              Am I charged for powered-off Linodes?
-            </LinkButton>
-            <p
-              className="hidden"
-            >
-              <small>
-                Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                <ExternalLink
-                  to="https://www.linode.com/docs/platform/billing-and-payments"
-                >
-                  billing
-                </ExternalLink>
-                 guide.
-              </small>
-            </p>
+                    <LinkButton
+                              onClick={[Function]}
+                    >
+                              Am I charged for powered-off Linodes?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                    >
+                              <small>
+                                        Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                        <ExternalLink
+                                                  to="https://www.linode.com/docs/platform/billing-and-payments"
+                                        >
+                                                  billing
+                                        </ExternalLink>
+                                         guide.
+                              </small>
+                    </p>
           </li>
           <li>
-            <LinkButton
-              onClick={[Function]}
-            >
-              Why is my network transfer pool lower than expected?
-            </LinkButton>
-            <p
-              className="hidden"
-            >
-              <small>
-                Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-              </small>
-            </p>
+                    <LinkButton
+                              onClick={[Function]}
+                    >
+                              Why is my network transfer pool lower than expected?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                    >
+                              <small>
+                                        Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                              </small>
+                    </p>
           </li>
           <li>
-            <LinkButton
-              onClick={[Function]}
-            >
-              Why does it say I'm using 100% of my disk?
-            </LinkButton>
-            <p
-              className="hidden"
-            >
-              <small>
-                With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                <ExternalLink
-                  to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                >
-                  disk images
-                </ExternalLink>
-                 guide for more information.
-              </small>
-            </p>
+                    <LinkButton
+                              onClick={[Function]}
+                    >
+                              Why does it say I'm using 100% of my disk?
+                    </LinkButton>
+                    <p
+                              className="hidden"
+                    >
+                              <small>
+                                        With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                        <ExternalLink
+                                                  to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                        >
+                                                  disk images
+                                        </ExternalLink>
+                                         guide for more information.
+                              </small>
+                    </p>
           </li>
-        </ul>,
+</ul>,
         <h3
           className="sub-header"
-        >
+>
           Resources
-        </h3>,
+</h3>,
         <ul
           className="list-unstyled"
-        >
+>
           <li>
-            <ExternalLink
-              to="https://forum.linode.com/"
-            >
-              Community forum
-            </ExternalLink>
+                    <ExternalLink
+                              to="https://forum.linode.com/"
+                    >
+                              Community forum
+                    </ExternalLink>
           </li>
           <li>
-            <ExternalLink
-              to="https://www.linode.com/docs/"
-            >
-              User documentation and guides
-            </ExternalLink>
+                    <ExternalLink
+                              to="https://www.linode.com/docs/"
+                    >
+                              User documentation and guides
+                    </ExternalLink>
           </li>
           <li>
-            <ExternalLink
-              to="https://developers.linode.com/"
-            >
-              Developer documentation and guides
-            </ExternalLink>
+                    <ExternalLink
+                              to="https://developers.linode.com/"
+                    >
+                              Developer documentation and guides
+                    </ExternalLink>
           </li>
           <li>
-            <ExternalLink
-              to="https://status.linode.com/"
-            >
-              Overall system status
-            </ExternalLink>
+                    <ExternalLink
+                              to="https://status.linode.com/"
+                    >
+                              Overall system status
+                    </ExternalLink>
           </li>
-        </ul>,
+</ul>,
       ],
       "className": "TicketHelper",
       "header": null,
@@ -196,108 +196,108 @@ ShallowWrapper {
           "children": Array [
             <li>
               <LinkButton
-                id="availibility-button"
-                onClick={[Function]}
+                            id="availibility-button"
+                            onClick={[Function]}
               >
-                When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                            When will there be availibility in Tokyo, Singapore, or Frankfurt?
               </LinkButton>
               <p
-                className="hidden"
-                id="availibility"
+                            className="hidden"
+                            id="availibility"
               >
-                <small>
-                  Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                  <ExternalLink
-                    to="https://blog.linode.com"
-                  >
-                    our blog
-                  </ExternalLink>
-                  .
-                </small>
+                            <small>
+                                          Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                          <ExternalLink
+                                                        to="https://blog.linode.com"
+                                          >
+                                                        our blog
+                                          </ExternalLink>
+                                          .
+                            </small>
               </p>
-            </li>,
+</li>,
             <li>
               <LinkButton
-                onClick={[Function]}
+                            onClick={[Function]}
               >
-                What do I do if my IP address is blocked by the GFW?
+                            What do I do if my IP address is blocked by the GFW?
               </LinkButton>
               <p
-                className="hidden"
+                            className="hidden"
               >
-                <small>
-                  Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-                </small>
+                            <small>
+                                          Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                            </small>
               </p>
-            </li>,
+</li>,
             <li>
               <LinkButton
-                onClick={[Function]}
+                            onClick={[Function]}
               >
-                How do I transfer a Linode from one account to another?
+                            How do I transfer a Linode from one account to another?
               </LinkButton>
               <p
-                className="hidden"
+                            className="hidden"
               >
-                <small>
-                  To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-                </small>
+                            <small>
+                                          To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                            </small>
               </p>
-            </li>,
+</li>,
             <li>
               <LinkButton
-                onClick={[Function]}
+                            onClick={[Function]}
               >
-                Am I charged for powered-off Linodes?
+                            Am I charged for powered-off Linodes?
               </LinkButton>
               <p
-                className="hidden"
+                            className="hidden"
               >
-                <small>
-                  Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                  <ExternalLink
-                    to="https://www.linode.com/docs/platform/billing-and-payments"
-                  >
-                    billing
-                  </ExternalLink>
-                   guide.
-                </small>
+                            <small>
+                                          Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                          <ExternalLink
+                                                        to="https://www.linode.com/docs/platform/billing-and-payments"
+                                          >
+                                                        billing
+                                          </ExternalLink>
+                                           guide.
+                            </small>
               </p>
-            </li>,
+</li>,
             <li>
               <LinkButton
-                onClick={[Function]}
+                            onClick={[Function]}
               >
-                Why is my network transfer pool lower than expected?
+                            Why is my network transfer pool lower than expected?
               </LinkButton>
               <p
-                className="hidden"
+                            className="hidden"
               >
-                <small>
-                  Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-                </small>
+                            <small>
+                                          Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                            </small>
               </p>
-            </li>,
+</li>,
             <li>
               <LinkButton
-                onClick={[Function]}
+                            onClick={[Function]}
               >
-                Why does it say I'm using 100% of my disk?
+                            Why does it say I'm using 100% of my disk?
               </LinkButton>
               <p
-                className="hidden"
+                            className="hidden"
               >
-                <small>
-                  With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                  <ExternalLink
-                    to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                  >
-                    disk images
-                  </ExternalLink>
-                   guide for more information.
-                </small>
+                            <small>
+                                          With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                          <ExternalLink
+                                                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                          >
+                                                        disk images
+                                          </ExternalLink>
+                                           guide for more information.
+                            </small>
               </p>
-            </li>,
+</li>,
           ],
           "className": "list-unstyled",
         },
@@ -312,23 +312,23 @@ ShallowWrapper {
                 <LinkButton
                   id="availibility-button"
                   onClick={[Function]}
-                >
+>
                   When will there be availibility in Tokyo, Singapore, or Frankfurt?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
                   id="availibility"
-                >
+>
                   <small>
-                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                    <ExternalLink
-                      to="https://blog.linode.com"
-                    >
-                      our blog
-                    </ExternalLink>
-                    .
+                                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                    <ExternalLink
+                                                      to="https://blog.linode.com"
+                                    >
+                                                      our blog
+                                    </ExternalLink>
+                                    .
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -354,12 +354,12 @@ ShallowWrapper {
                   "children": <small>
                     Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
                     <ExternalLink
-                      to="https://blog.linode.com"
+                                        to="https://blog.linode.com"
                     >
-                      our blog
+                                        our blog
                     </ExternalLink>
                     .
-                  </small>,
+</small>,
                   "className": "hidden",
                   "id": "availibility",
                 },
@@ -373,9 +373,9 @@ ShallowWrapper {
                       "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
                       <ExternalLink
                         to="https://blog.linode.com"
-                      >
+>
                         our blog
-                      </ExternalLink>,
+</ExternalLink>,
                       ".",
                     ],
                   },
@@ -411,16 +411,16 @@ ShallowWrapper {
               "children": Array [
                 <LinkButton
                   onClick={[Function]}
-                >
+>
                   What do I do if my IP address is blocked by the GFW?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
-                >
+>
                   <small>
-                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -444,7 +444,7 @@ ShallowWrapper {
                 "props": Object {
                   "children": <small>
                     Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-                  </small>,
+</small>,
                   "className": "hidden",
                 },
                 "ref": null,
@@ -472,16 +472,16 @@ ShallowWrapper {
               "children": Array [
                 <LinkButton
                   onClick={[Function]}
-                >
+>
                   How do I transfer a Linode from one account to another?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
-                >
+>
                   <small>
-                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -505,7 +505,7 @@ ShallowWrapper {
                 "props": Object {
                   "children": <small>
                     To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-                  </small>,
+</small>,
                   "className": "hidden",
                 },
                 "ref": null,
@@ -533,22 +533,22 @@ ShallowWrapper {
               "children": Array [
                 <LinkButton
                   onClick={[Function]}
-                >
+>
                   Am I charged for powered-off Linodes?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
-                >
+>
                   <small>
-                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                    <ExternalLink
-                      to="https://www.linode.com/docs/platform/billing-and-payments"
-                    >
-                      billing
-                    </ExternalLink>
-                     guide.
+                                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                    <ExternalLink
+                                                      to="https://www.linode.com/docs/platform/billing-and-payments"
+                                    >
+                                                      billing
+                                    </ExternalLink>
+                                     guide.
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -573,12 +573,12 @@ ShallowWrapper {
                   "children": <small>
                     Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
                     <ExternalLink
-                      to="https://www.linode.com/docs/platform/billing-and-payments"
+                                        to="https://www.linode.com/docs/platform/billing-and-payments"
                     >
-                      billing
+                                        billing
                     </ExternalLink>
                      guide.
-                  </small>,
+</small>,
                   "className": "hidden",
                 },
                 "ref": null,
@@ -591,9 +591,9 @@ ShallowWrapper {
                       "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
                       <ExternalLink
                         to="https://www.linode.com/docs/platform/billing-and-payments"
-                      >
+>
                         billing
-                      </ExternalLink>,
+</ExternalLink>,
                       " guide.",
                     ],
                   },
@@ -629,16 +629,16 @@ ShallowWrapper {
               "children": Array [
                 <LinkButton
                   onClick={[Function]}
-                >
+>
                   Why is my network transfer pool lower than expected?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
-                >
+>
                   <small>
-                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -662,7 +662,7 @@ ShallowWrapper {
                 "props": Object {
                   "children": <small>
                     Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-                  </small>,
+</small>,
                   "className": "hidden",
                 },
                 "ref": null,
@@ -690,22 +690,22 @@ ShallowWrapper {
               "children": Array [
                 <LinkButton
                   onClick={[Function]}
-                >
+>
                   Why does it say I'm using 100% of my disk?
-                </LinkButton>,
+</LinkButton>,
                 <p
                   className="hidden"
-                >
+>
                   <small>
-                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                    <ExternalLink
-                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                    >
-                      disk images
-                    </ExternalLink>
-                     guide for more information.
+                                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                    <ExternalLink
+                                                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                    >
+                                                      disk images
+                                    </ExternalLink>
+                                     guide for more information.
                   </small>
-                </p>,
+</p>,
               ],
             },
             "ref": null,
@@ -730,12 +730,12 @@ ShallowWrapper {
                   "children": <small>
                     With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
                     <ExternalLink
-                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
                     >
-                      disk images
+                                        disk images
                     </ExternalLink>
                      guide for more information.
-                  </small>,
+</small>,
                   "className": "hidden",
                 },
                 "ref": null,
@@ -748,9 +748,9 @@ ShallowWrapper {
                       "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
                       <ExternalLink
                         to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                      >
+>
                         disk images
-                      </ExternalLink>,
+</ExternalLink>,
                       " guide for more information.",
                     ],
                   },
@@ -801,32 +801,32 @@ ShallowWrapper {
           "children": Array [
             <li>
               <ExternalLink
-                to="https://forum.linode.com/"
+                            to="https://forum.linode.com/"
               >
-                Community forum
+                            Community forum
               </ExternalLink>
-            </li>,
+</li>,
             <li>
               <ExternalLink
-                to="https://www.linode.com/docs/"
+                            to="https://www.linode.com/docs/"
               >
-                User documentation and guides
+                            User documentation and guides
               </ExternalLink>
-            </li>,
+</li>,
             <li>
               <ExternalLink
-                to="https://developers.linode.com/"
+                            to="https://developers.linode.com/"
               >
-                Developer documentation and guides
+                            Developer documentation and guides
               </ExternalLink>
-            </li>,
+</li>,
             <li>
               <ExternalLink
-                to="https://status.linode.com/"
+                            to="https://status.linode.com/"
               >
-                Overall system status
+                            Overall system status
               </ExternalLink>
-            </li>,
+</li>,
           ],
           "className": "list-unstyled",
         },
@@ -839,9 +839,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://forum.linode.com/"
-              >
+>
                 Community forum
-              </ExternalLink>,
+</ExternalLink>,
             },
             "ref": null,
             "rendered": Object {
@@ -865,9 +865,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://www.linode.com/docs/"
-              >
+>
                 User documentation and guides
-              </ExternalLink>,
+</ExternalLink>,
             },
             "ref": null,
             "rendered": Object {
@@ -891,9 +891,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://developers.linode.com/"
-              >
+>
                 Developer documentation and guides
-              </ExternalLink>,
+</ExternalLink>,
             },
             "ref": null,
             "rendered": Object {
@@ -917,9 +917,9 @@ ShallowWrapper {
             "props": Object {
               "children": <ExternalLink
                 to="https://status.linode.com/"
-              >
+>
                 Overall system status
-              </ExternalLink>,
+</ExternalLink>,
             },
             "ref": null,
             "rendered": Object {
@@ -952,154 +952,154 @@ ShallowWrapper {
           null,
           <h3
             className="sub-header"
-          >
+>
             Frequently Asked Questions
-          </h3>,
+</h3>,
           <ul
             className="list-unstyled"
-          >
+>
             <li>
-              <LinkButton
-                id="availibility-button"
-                onClick={[Function]}
-              >
-                When will there be availibility in Tokyo, Singapore, or Frankfurt?
-              </LinkButton>
-              <p
-                className="hidden"
-                id="availibility"
-              >
-                <small>
-                  Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                  <ExternalLink
-                    to="https://blog.linode.com"
-                  >
-                    our blog
-                  </ExternalLink>
-                  .
-                </small>
-              </p>
+                        <LinkButton
+                                    id="availibility-button"
+                                    onClick={[Function]}
+                        >
+                                    When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                                    id="availibility"
+                        >
+                                    <small>
+                                                Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                                <ExternalLink
+                                                            to="https://blog.linode.com"
+                                                >
+                                                            our blog
+                                                </ExternalLink>
+                                                .
+                                    </small>
+                        </p>
             </li>
             <li>
-              <LinkButton
-                onClick={[Function]}
-              >
-                What do I do if my IP address is blocked by the GFW?
-              </LinkButton>
-              <p
-                className="hidden"
-              >
-                <small>
-                  Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-                </small>
-              </p>
+                        <LinkButton
+                                    onClick={[Function]}
+                        >
+                                    What do I do if my IP address is blocked by the GFW?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                        >
+                                    <small>
+                                                Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                                    </small>
+                        </p>
             </li>
             <li>
-              <LinkButton
-                onClick={[Function]}
-              >
-                How do I transfer a Linode from one account to another?
-              </LinkButton>
-              <p
-                className="hidden"
-              >
-                <small>
-                  To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-                </small>
-              </p>
+                        <LinkButton
+                                    onClick={[Function]}
+                        >
+                                    How do I transfer a Linode from one account to another?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                        >
+                                    <small>
+                                                To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                                    </small>
+                        </p>
             </li>
             <li>
-              <LinkButton
-                onClick={[Function]}
-              >
-                Am I charged for powered-off Linodes?
-              </LinkButton>
-              <p
-                className="hidden"
-              >
-                <small>
-                  Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                  <ExternalLink
-                    to="https://www.linode.com/docs/platform/billing-and-payments"
-                  >
-                    billing
-                  </ExternalLink>
-                   guide.
-                </small>
-              </p>
+                        <LinkButton
+                                    onClick={[Function]}
+                        >
+                                    Am I charged for powered-off Linodes?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                        >
+                                    <small>
+                                                Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                                <ExternalLink
+                                                            to="https://www.linode.com/docs/platform/billing-and-payments"
+                                                >
+                                                            billing
+                                                </ExternalLink>
+                                                 guide.
+                                    </small>
+                        </p>
             </li>
             <li>
-              <LinkButton
-                onClick={[Function]}
-              >
-                Why is my network transfer pool lower than expected?
-              </LinkButton>
-              <p
-                className="hidden"
-              >
-                <small>
-                  Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-                </small>
-              </p>
+                        <LinkButton
+                                    onClick={[Function]}
+                        >
+                                    Why is my network transfer pool lower than expected?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                        >
+                                    <small>
+                                                Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                                    </small>
+                        </p>
             </li>
             <li>
-              <LinkButton
-                onClick={[Function]}
-              >
-                Why does it say I'm using 100% of my disk?
-              </LinkButton>
-              <p
-                className="hidden"
-              >
-                <small>
-                  With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                  <ExternalLink
-                    to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                  >
-                    disk images
-                  </ExternalLink>
-                   guide for more information.
-                </small>
-              </p>
+                        <LinkButton
+                                    onClick={[Function]}
+                        >
+                                    Why does it say I'm using 100% of my disk?
+                        </LinkButton>
+                        <p
+                                    className="hidden"
+                        >
+                                    <small>
+                                                With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                                <ExternalLink
+                                                            to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                                >
+                                                            disk images
+                                                </ExternalLink>
+                                                 guide for more information.
+                                    </small>
+                        </p>
             </li>
-          </ul>,
+</ul>,
           <h3
             className="sub-header"
-          >
+>
             Resources
-          </h3>,
+</h3>,
           <ul
             className="list-unstyled"
-          >
+>
             <li>
-              <ExternalLink
-                to="https://forum.linode.com/"
-              >
-                Community forum
-              </ExternalLink>
+                        <ExternalLink
+                                    to="https://forum.linode.com/"
+                        >
+                                    Community forum
+                        </ExternalLink>
             </li>
             <li>
-              <ExternalLink
-                to="https://www.linode.com/docs/"
-              >
-                User documentation and guides
-              </ExternalLink>
+                        <ExternalLink
+                                    to="https://www.linode.com/docs/"
+                        >
+                                    User documentation and guides
+                        </ExternalLink>
             </li>
             <li>
-              <ExternalLink
-                to="https://developers.linode.com/"
-              >
-                Developer documentation and guides
-              </ExternalLink>
+                        <ExternalLink
+                                    to="https://developers.linode.com/"
+                        >
+                                    Developer documentation and guides
+                        </ExternalLink>
             </li>
             <li>
-              <ExternalLink
-                to="https://status.linode.com/"
-              >
-                Overall system status
-              </ExternalLink>
+                        <ExternalLink
+                                    to="https://status.linode.com/"
+                        >
+                                    Overall system status
+                        </ExternalLink>
             </li>
-          </ul>,
+</ul>,
         ],
         "className": "TicketHelper",
         "header": null,
@@ -1127,108 +1127,108 @@ ShallowWrapper {
             "children": Array [
               <li>
                 <LinkButton
-                  id="availibility-button"
-                  onClick={[Function]}
+                                id="availibility-button"
+                                onClick={[Function]}
                 >
-                  When will there be availibility in Tokyo, Singapore, or Frankfurt?
+                                When will there be availibility in Tokyo, Singapore, or Frankfurt?
                 </LinkButton>
                 <p
-                  className="hidden"
-                  id="availibility"
+                                className="hidden"
+                                id="availibility"
                 >
-                  <small>
-                    Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                    <ExternalLink
-                      to="https://blog.linode.com"
-                    >
-                      our blog
-                    </ExternalLink>
-                    .
-                  </small>
+                                <small>
+                                                Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                                <ExternalLink
+                                                                to="https://blog.linode.com"
+                                                >
+                                                                our blog
+                                                </ExternalLink>
+                                                .
+                                </small>
                 </p>
-              </li>,
+</li>,
               <li>
                 <LinkButton
-                  onClick={[Function]}
+                                onClick={[Function]}
                 >
-                  What do I do if my IP address is blocked by the GFW?
+                                What do I do if my IP address is blocked by the GFW?
                 </LinkButton>
                 <p
-                  className="hidden"
+                                className="hidden"
                 >
-                  <small>
-                    Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-                  </small>
+                                <small>
+                                                Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                                </small>
                 </p>
-              </li>,
+</li>,
               <li>
                 <LinkButton
-                  onClick={[Function]}
+                                onClick={[Function]}
                 >
-                  How do I transfer a Linode from one account to another?
+                                How do I transfer a Linode from one account to another?
                 </LinkButton>
                 <p
-                  className="hidden"
+                                className="hidden"
                 >
-                  <small>
-                    To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-                  </small>
+                                <small>
+                                                To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                                </small>
                 </p>
-              </li>,
+</li>,
               <li>
                 <LinkButton
-                  onClick={[Function]}
+                                onClick={[Function]}
                 >
-                  Am I charged for powered-off Linodes?
+                                Am I charged for powered-off Linodes?
                 </LinkButton>
                 <p
-                  className="hidden"
+                                className="hidden"
                 >
-                  <small>
-                    Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                    <ExternalLink
-                      to="https://www.linode.com/docs/platform/billing-and-payments"
-                    >
-                      billing
-                    </ExternalLink>
-                     guide.
-                  </small>
+                                <small>
+                                                Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                                <ExternalLink
+                                                                to="https://www.linode.com/docs/platform/billing-and-payments"
+                                                >
+                                                                billing
+                                                </ExternalLink>
+                                                 guide.
+                                </small>
                 </p>
-              </li>,
+</li>,
               <li>
                 <LinkButton
-                  onClick={[Function]}
+                                onClick={[Function]}
                 >
-                  Why is my network transfer pool lower than expected?
+                                Why is my network transfer pool lower than expected?
                 </LinkButton>
                 <p
-                  className="hidden"
+                                className="hidden"
                 >
-                  <small>
-                    Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-                  </small>
+                                <small>
+                                                Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                                </small>
                 </p>
-              </li>,
+</li>,
               <li>
                 <LinkButton
-                  onClick={[Function]}
+                                onClick={[Function]}
                 >
-                  Why does it say I'm using 100% of my disk?
+                                Why does it say I'm using 100% of my disk?
                 </LinkButton>
                 <p
-                  className="hidden"
+                                className="hidden"
                 >
-                  <small>
-                    With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                    <ExternalLink
-                      to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                    >
-                      disk images
-                    </ExternalLink>
-                     guide for more information.
-                  </small>
+                                <small>
+                                                With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                                <ExternalLink
+                                                                to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                                >
+                                                                disk images
+                                                </ExternalLink>
+                                                 guide for more information.
+                                </small>
                 </p>
-              </li>,
+</li>,
             ],
             "className": "list-unstyled",
           },
@@ -1243,23 +1243,23 @@ ShallowWrapper {
                   <LinkButton
                     id="availibility-button"
                     onClick={[Function]}
-                  >
+>
                     When will there be availibility in Tokyo, Singapore, or Frankfurt?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
                     id="availibility"
-                  >
+>
                     <small>
-                      Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
-                      <ExternalLink
-                        to="https://blog.linode.com"
-                      >
-                        our blog
-                      </ExternalLink>
-                      .
+                                        Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
+                                        <ExternalLink
+                                                            to="https://blog.linode.com"
+                                        >
+                                                            our blog
+                                        </ExternalLink>
+                                        .
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1285,12 +1285,12 @@ ShallowWrapper {
                     "children": <small>
                       Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on 
                       <ExternalLink
-                        to="https://blog.linode.com"
+                                            to="https://blog.linode.com"
                       >
-                        our blog
+                                            our blog
                       </ExternalLink>
                       .
-                    </small>,
+</small>,
                     "className": "hidden",
                     "id": "availibility",
                   },
@@ -1304,9 +1304,9 @@ ShallowWrapper {
                         "Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on ",
                         <ExternalLink
                           to="https://blog.linode.com"
-                        >
+>
                           our blog
-                        </ExternalLink>,
+</ExternalLink>,
                         ".",
                       ],
                     },
@@ -1342,16 +1342,16 @@ ShallowWrapper {
                 "children": Array [
                   <LinkButton
                     onClick={[Function]}
-                  >
+>
                     What do I do if my IP address is blocked by the GFW?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
-                  >
+>
                     <small>
-                      Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
+                                        Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1375,7 +1375,7 @@ ShallowWrapper {
                   "props": Object {
                     "children": <small>
                       Great Firewall (GFW) - The Chinese government has been actively blocking IP addresses. If your IP address has been blocked by the GFW, please run an MTR report to your Linode from your location as well as the reverse and create a support ticket requesting a new IP address. We will make every effort to accomodate you as best we can.
-                    </small>,
+</small>,
                     "className": "hidden",
                   },
                   "ref": null,
@@ -1403,16 +1403,16 @@ ShallowWrapper {
                 "children": Array [
                   <LinkButton
                     onClick={[Function]}
-                  >
+>
                     How do I transfer a Linode from one account to another?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
-                  >
+>
                     <small>
-                      To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
+                                        To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1436,7 +1436,7 @@ ShallowWrapper {
                   "props": Object {
                     "children": <small>
                       To transfer your Linode from one account to the other, we need you to open tickets from both accounts indicating the name of the Linode(s) you want to transfer as well as the name of the accounts you want to transfer them to and from.
-                    </small>,
+</small>,
                     "className": "hidden",
                   },
                   "ref": null,
@@ -1464,22 +1464,22 @@ ShallowWrapper {
                 "children": Array [
                   <LinkButton
                     onClick={[Function]}
-                  >
+>
                     Am I charged for powered-off Linodes?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
-                  >
+>
                     <small>
-                      Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
-                      <ExternalLink
-                        to="https://www.linode.com/docs/platform/billing-and-payments"
-                      >
-                        billing
-                      </ExternalLink>
-                       guide.
+                                        Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
+                                        <ExternalLink
+                                                            to="https://www.linode.com/docs/platform/billing-and-payments"
+                                        >
+                                                            billing
+                                        </ExternalLink>
+                                         guide.
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1504,12 +1504,12 @@ ShallowWrapper {
                     "children": <small>
                       Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the 
                       <ExternalLink
-                        to="https://www.linode.com/docs/platform/billing-and-payments"
+                                            to="https://www.linode.com/docs/platform/billing-and-payments"
                       >
-                        billing
+                                            billing
                       </ExternalLink>
                        guide.
-                    </small>,
+</small>,
                     "className": "hidden",
                   },
                   "ref": null,
@@ -1522,9 +1522,9 @@ ShallowWrapper {
                         "Yes, your Linode will be charged regardless of whether it is powered on. For more information about our billing system, see the ",
                         <ExternalLink
                           to="https://www.linode.com/docs/platform/billing-and-payments"
-                        >
+>
                           billing
-                        </ExternalLink>,
+</ExternalLink>,
                         " guide.",
                       ],
                     },
@@ -1560,16 +1560,16 @@ ShallowWrapper {
                 "children": Array [
                   <LinkButton
                     onClick={[Function]}
-                  >
+>
                     Why is my network transfer pool lower than expected?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
-                  >
+>
                     <small>
-                      Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
+                                        Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1593,7 +1593,7 @@ ShallowWrapper {
                   "props": Object {
                     "children": <small>
                       Linode services are prorated, so you received the prorated amount of transfer from the day you added your Linode until the end of the month. Your transfer quota will reset on the first of next month.
-                    </small>,
+</small>,
                     "className": "hidden",
                   },
                   "ref": null,
@@ -1621,22 +1621,22 @@ ShallowWrapper {
                 "children": Array [
                   <LinkButton
                     onClick={[Function]}
-                  >
+>
                     Why does it say I'm using 100% of my disk?
-                  </LinkButton>,
+</LinkButton>,
                   <p
                     className="hidden"
-                  >
+>
                     <small>
-                      With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
-                      <ExternalLink
-                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                      >
-                        disk images
-                      </ExternalLink>
-                       guide for more information.
+                                        With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
+                                        <ExternalLink
+                                                            to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                        >
+                                                            disk images
+                                        </ExternalLink>
+                                         guide for more information.
                     </small>
-                  </p>,
+</p>,
                 ],
               },
               "ref": null,
@@ -1661,12 +1661,12 @@ ShallowWrapper {
                     "children": <small>
                       With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our 
                       <ExternalLink
-                        to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
+                                            to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
                       >
-                        disk images
+                                            disk images
                       </ExternalLink>
                        guide for more information.
-                    </small>,
+</small>,
                     "className": "hidden",
                   },
                   "ref": null,
@@ -1679,9 +1679,9 @@ ShallowWrapper {
                         "With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our ",
                         <ExternalLink
                           to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles"
-                        >
+>
                           disk images
-                        </ExternalLink>,
+</ExternalLink>,
                         " guide for more information.",
                       ],
                     },
@@ -1732,32 +1732,32 @@ ShallowWrapper {
             "children": Array [
               <li>
                 <ExternalLink
-                  to="https://forum.linode.com/"
+                                to="https://forum.linode.com/"
                 >
-                  Community forum
+                                Community forum
                 </ExternalLink>
-              </li>,
+</li>,
               <li>
                 <ExternalLink
-                  to="https://www.linode.com/docs/"
+                                to="https://www.linode.com/docs/"
                 >
-                  User documentation and guides
+                                User documentation and guides
                 </ExternalLink>
-              </li>,
+</li>,
               <li>
                 <ExternalLink
-                  to="https://developers.linode.com/"
+                                to="https://developers.linode.com/"
                 >
-                  Developer documentation and guides
+                                Developer documentation and guides
                 </ExternalLink>
-              </li>,
+</li>,
               <li>
                 <ExternalLink
-                  to="https://status.linode.com/"
+                                to="https://status.linode.com/"
                 >
-                  Overall system status
+                                Overall system status
                 </ExternalLink>
-              </li>,
+</li>,
             ],
             "className": "list-unstyled",
           },
@@ -1770,9 +1770,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <ExternalLink
                   to="https://forum.linode.com/"
-                >
+>
                   Community forum
-                </ExternalLink>,
+</ExternalLink>,
               },
               "ref": null,
               "rendered": Object {
@@ -1796,9 +1796,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <ExternalLink
                   to="https://www.linode.com/docs/"
-                >
+>
                   User documentation and guides
-                </ExternalLink>,
+</ExternalLink>,
               },
               "ref": null,
               "rendered": Object {
@@ -1822,9 +1822,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <ExternalLink
                   to="https://developers.linode.com/"
-                >
+>
                   Developer documentation and guides
-                </ExternalLink>,
+</ExternalLink>,
               },
               "ref": null,
               "rendered": Object {
@@ -1848,9 +1848,9 @@ ShallowWrapper {
               "props": Object {
                 "children": <ExternalLink
                   to="https://status.linode.com/"
-                >
+>
                   Overall system status
-                </ExternalLink>,
+</ExternalLink>,
               },
               "ref": null,
               "rendered": Object {

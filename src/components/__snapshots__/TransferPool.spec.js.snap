@@ -6,7 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TransferPool
     transfer={Object {}}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -22,32 +22,32 @@ ShallowWrapper {
       "children": Array [
         <div
           className="TransferPool-gauge"
-        >
+>
           <div
-            className="TransferPool-bar"
-            style={
-              Object {
-                "width": "NaN%",
-              }
-            }
+                    className="TransferPool-bar"
+                    style={
+                              Object {
+                                        "width": "NaN%",
+                                      }
+                    }
           />
-        </div>,
+</div>,
         <div>
           GB Used, 
           NaN
           GB Remaining, 
           GB Quota
-        </div>,
+</div>,
         <small
           className="text-muted"
-        >
+>
           Your transfer is prorated and will reset next month
-        </small>,
+</small>,
       ],
       "className": "TransferPool offset-md-3 col-md-6 text-center",
       "header": <CardHeader
         title="This Month's Network Transfer Pool"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Array [
@@ -59,11 +59,11 @@ ShallowWrapper {
           "children": <div
             className="TransferPool-bar"
             style={
-              Object {
-                "width": "NaN%",
-              }
+                        Object {
+                                    "width": "NaN%",
+                                  }
             }
-          />,
+/>,
           "className": "TransferPool-gauge",
         },
         "ref": null,
@@ -132,32 +132,32 @@ ShallowWrapper {
         "children": Array [
           <div
             className="TransferPool-gauge"
-          >
+>
             <div
-              className="TransferPool-bar"
-              style={
-                Object {
-                  "width": "NaN%",
-                }
-              }
+                        className="TransferPool-bar"
+                        style={
+                                    Object {
+                                                "width": "NaN%",
+                                              }
+                        }
             />
-          </div>,
+</div>,
           <div>
             GB Used, 
             NaN
             GB Remaining, 
             GB Quota
-          </div>,
+</div>,
           <small
             className="text-muted"
-          >
+>
             Your transfer is prorated and will reset next month
-          </small>,
+</small>,
         ],
         "className": "TransferPool offset-md-3 col-md-6 text-center",
         "header": <CardHeader
           title="This Month's Network Transfer Pool"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Array [
@@ -169,11 +169,11 @@ ShallowWrapper {
             "children": <div
               className="TransferPool-bar"
               style={
-                Object {
-                  "width": "NaN%",
-                }
+                            Object {
+                                          "width": "NaN%",
+                                        }
               }
-            />,
+/>,
             "className": "TransferPool-gauge",
           },
           "ref": null,

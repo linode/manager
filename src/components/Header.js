@@ -7,7 +7,7 @@ import { Header as HeaderWrapper } from 'linode-components';
 import { hideNotifications, showNotifications } from '~/actions/notifications';
 import { hideSession, showSession } from '~/actions/session';
 import { eventSeen } from '~/api/ad-hoc/events';
-import { LinodeLogoImgSrc } from '~/assets';
+import LinodeLogoImgSrc from '~/assets/logo/logo.svg';
 import { getEmailHash } from '~/cache';
 
 

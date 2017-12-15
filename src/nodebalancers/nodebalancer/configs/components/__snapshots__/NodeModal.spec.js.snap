@@ -9,20 +9,20 @@ ShallowWrapper {
     confirmTest="Edit"
     dispatch={[Function]}
     node={
-      Object {
-        "address": "192.168.4.5:80",
-        "config_id": 0,
-        "id": 1,
-        "label": "greatest_node_ever",
-        "mode": "accept",
-        "nodebalancer_id": 23,
-        "status": "online",
-        "weight": 40,
-      }
+        Object {
+            "address": "192.168.4.5:80",
+            "config_id": 0,
+            "id": 1,
+            "label": "greatest_node_ever",
+            "mode": "accept",
+            "nodebalancer_id": 23,
+            "status": "online",
+            "weight": 40,
+          }
     }
     nodebalancerId="23"
     title="NodeModal"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -43,87 +43,87 @@ ShallowWrapper {
       "buttonText": "Save",
       "children": <div>
         <ModalFormGroup
-          apiKey="label"
-          errors={Object {}}
-          id="label"
-          label="Label"
+                apiKey="label"
+                errors={Object {}}
+                id="label"
+                label="Label"
         >
-          <Input
-            className=""
-            id="label"
-            name="label"
-            onChange={[Function]}
-            value="greatest_node_ever"
-          />
+                <Input
+                        className=""
+                        id="label"
+                        name="label"
+                        onChange={[Function]}
+                        value="greatest_node_ever"
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="address"
-          errors={Object {}}
-          id="address"
-          label="Address"
+                apiKey="address"
+                errors={Object {}}
+                id="address"
+                label="Address"
         >
-          <Input
-            className=""
-            id="address"
-            name="address"
-            onChange={[Function]}
-            placeholder="192.168.1.10:80"
-            value="192.168.4.5:80"
-          />
+                <Input
+                        className=""
+                        id="address"
+                        name="address"
+                        onChange={[Function]}
+                        placeholder="192.168.1.10:80"
+                        value="192.168.4.5:80"
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="weight"
-          description="Define a weight to be used in determining how connections are balanced to this node."
-          errors={Object {}}
-          id="weight"
-          label="Weight"
+                apiKey="weight"
+                description="Define a weight to be used in determining how connections are balanced to this node."
+                errors={Object {}}
+                id="weight"
+                label="Weight"
         >
-          <Input
-            className=""
-            id="weight"
-            name="weight"
-            onChange={[Function]}
-            type="number"
-            value={40}
-          />
+                <Input
+                        className=""
+                        id="weight"
+                        name="weight"
+                        onChange={[Function]}
+                        type="number"
+                        value={40}
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="mode"
-          description="Configure how this node handles incoming connections based on it's health."
-          errors={Object {}}
-          id="mode"
-          label="Mode"
+                apiKey="mode"
+                description="Configure how this node handles incoming connections based on it's health."
+                errors={Object {}}
+                id="mode"
+                label="Mode"
         >
-          <Select
-            analytics={
-              Object {
-                "noTrack": false,
-              }
-            }
-            className=""
-            id="mode"
-            name="mode"
-            onChange={[Function]}
-            options={
-              Array [
-                Object {
-                  "label": "Accept",
-                  "value": "accept",
-                },
-                Object {
-                  "label": "Reject",
-                  "value": "reject",
-                },
-                Object {
-                  "label": "Drain",
-                  "value": "drain",
-                },
-              ]
-            }
-            value="accept"
-          />
+                <Select
+                        analytics={
+                                Object {
+                                        "noTrack": false,
+                                      }
+                        }
+                        className=""
+                        id="mode"
+                        name="mode"
+                        onChange={[Function]}
+                        options={
+                                Array [
+                                        Object {
+                                          "label": "Accept",
+                                          "value": "accept",
+                                        },
+                                        Object {
+                                          "label": "Reject",
+                                          "value": "reject",
+                                        },
+                                        Object {
+                                          "label": "Drain",
+                                          "value": "drain",
+                                        },
+                                      ]
+                        }
+                        value="accept"
+                />
         </ModalFormGroup>
-      </div>,
+</div>,
       "errors": Object {},
       "noCancel": false,
       "noCancelEvent": false,
@@ -143,82 +143,82 @@ ShallowWrapper {
             errors={Object {}}
             id="label"
             label="Label"
-          >
+>
             <Input
-              className=""
-              id="label"
-              name="label"
-              onChange={[Function]}
-              value="greatest_node_ever"
+                        className=""
+                        id="label"
+                        name="label"
+                        onChange={[Function]}
+                        value="greatest_node_ever"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="address"
             errors={Object {}}
             id="address"
             label="Address"
-          >
+>
             <Input
-              className=""
-              id="address"
-              name="address"
-              onChange={[Function]}
-              placeholder="192.168.1.10:80"
-              value="192.168.4.5:80"
+                        className=""
+                        id="address"
+                        name="address"
+                        onChange={[Function]}
+                        placeholder="192.168.1.10:80"
+                        value="192.168.4.5:80"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="weight"
             description="Define a weight to be used in determining how connections are balanced to this node."
             errors={Object {}}
             id="weight"
             label="Weight"
-          >
+>
             <Input
-              className=""
-              id="weight"
-              name="weight"
-              onChange={[Function]}
-              type="number"
-              value={40}
+                        className=""
+                        id="weight"
+                        name="weight"
+                        onChange={[Function]}
+                        type="number"
+                        value={40}
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="mode"
             description="Configure how this node handles incoming connections based on it's health."
             errors={Object {}}
             id="mode"
             label="Mode"
-          >
+>
             <Select
-              analytics={
-                Object {
-                  "noTrack": false,
-                }
-              }
-              className=""
-              id="mode"
-              name="mode"
-              onChange={[Function]}
-              options={
-                Array [
-                  Object {
-                    "label": "Accept",
-                    "value": "accept",
-                  },
-                  Object {
-                    "label": "Reject",
-                    "value": "reject",
-                  },
-                  Object {
-                    "label": "Drain",
-                    "value": "drain",
-                  },
-                ]
-              }
-              value="accept"
+                        analytics={
+                                    Object {
+                                                "noTrack": false,
+                                              }
+                        }
+                        className=""
+                        id="mode"
+                        name="mode"
+                        onChange={[Function]}
+                        options={
+                                    Array [
+                                                Object {
+                                                  "label": "Accept",
+                                                  "value": "accept",
+                                                },
+                                                Object {
+                                                  "label": "Reject",
+                                                  "value": "reject",
+                                                },
+                                                Object {
+                                                  "label": "Drain",
+                                                  "value": "drain",
+                                                },
+                                              ]
+                        }
+                        value="accept"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
         ],
       },
       "ref": null,
@@ -235,7 +235,7 @@ ShallowWrapper {
               name="label"
               onChange={[Function]}
               value="greatest_node_ever"
-            />,
+/>,
             "errors": Object {},
             "id": "label",
             "label": "Label",
@@ -271,7 +271,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="192.168.1.10:80"
               value="192.168.4.5:80"
-            />,
+/>,
             "errors": Object {},
             "id": "address",
             "label": "Address",
@@ -308,7 +308,7 @@ ShallowWrapper {
               onChange={[Function]}
               type="number"
               value={40}
-            />,
+/>,
             "description": "Define a weight to be used in determining how connections are balanced to this node.",
             "errors": Object {},
             "id": "weight",
@@ -341,32 +341,32 @@ ShallowWrapper {
             "apiKey": "mode",
             "children": <Select
               analytics={
-                Object {
-                  "noTrack": false,
-                }
+                            Object {
+                                          "noTrack": false,
+                                        }
               }
               className=""
               id="mode"
               name="mode"
               onChange={[Function]}
               options={
-                Array [
-                  Object {
-                    "label": "Accept",
-                    "value": "accept",
-                  },
-                  Object {
-                    "label": "Reject",
-                    "value": "reject",
-                  },
-                  Object {
-                    "label": "Drain",
-                    "value": "drain",
-                  },
-                ]
+                            Array [
+                                          Object {
+                                            "label": "Accept",
+                                            "value": "accept",
+                                          },
+                                          Object {
+                                            "label": "Reject",
+                                            "value": "reject",
+                                          },
+                                          Object {
+                                            "label": "Drain",
+                                            "value": "drain",
+                                          },
+                                        ]
               }
               value="accept"
-            />,
+/>,
             "description": "Configure how this node handles incoming connections based on it's health.",
             "errors": Object {},
             "id": "mode",
@@ -426,87 +426,87 @@ ShallowWrapper {
         "buttonText": "Save",
         "children": <div>
           <ModalFormGroup
-            apiKey="label"
-            errors={Object {}}
-            id="label"
-            label="Label"
+                    apiKey="label"
+                    errors={Object {}}
+                    id="label"
+                    label="Label"
           >
-            <Input
-              className=""
-              id="label"
-              name="label"
-              onChange={[Function]}
-              value="greatest_node_ever"
-            />
+                    <Input
+                              className=""
+                              id="label"
+                              name="label"
+                              onChange={[Function]}
+                              value="greatest_node_ever"
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="address"
-            errors={Object {}}
-            id="address"
-            label="Address"
+                    apiKey="address"
+                    errors={Object {}}
+                    id="address"
+                    label="Address"
           >
-            <Input
-              className=""
-              id="address"
-              name="address"
-              onChange={[Function]}
-              placeholder="192.168.1.10:80"
-              value="192.168.4.5:80"
-            />
+                    <Input
+                              className=""
+                              id="address"
+                              name="address"
+                              onChange={[Function]}
+                              placeholder="192.168.1.10:80"
+                              value="192.168.4.5:80"
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="weight"
-            description="Define a weight to be used in determining how connections are balanced to this node."
-            errors={Object {}}
-            id="weight"
-            label="Weight"
+                    apiKey="weight"
+                    description="Define a weight to be used in determining how connections are balanced to this node."
+                    errors={Object {}}
+                    id="weight"
+                    label="Weight"
           >
-            <Input
-              className=""
-              id="weight"
-              name="weight"
-              onChange={[Function]}
-              type="number"
-              value={40}
-            />
+                    <Input
+                              className=""
+                              id="weight"
+                              name="weight"
+                              onChange={[Function]}
+                              type="number"
+                              value={40}
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="mode"
-            description="Configure how this node handles incoming connections based on it's health."
-            errors={Object {}}
-            id="mode"
-            label="Mode"
+                    apiKey="mode"
+                    description="Configure how this node handles incoming connections based on it's health."
+                    errors={Object {}}
+                    id="mode"
+                    label="Mode"
           >
-            <Select
-              analytics={
-                Object {
-                  "noTrack": false,
-                }
-              }
-              className=""
-              id="mode"
-              name="mode"
-              onChange={[Function]}
-              options={
-                Array [
-                  Object {
-                    "label": "Accept",
-                    "value": "accept",
-                  },
-                  Object {
-                    "label": "Reject",
-                    "value": "reject",
-                  },
-                  Object {
-                    "label": "Drain",
-                    "value": "drain",
-                  },
-                ]
-              }
-              value="accept"
-            />
+                    <Select
+                              analytics={
+                                        Object {
+                                                  "noTrack": false,
+                                                }
+                              }
+                              className=""
+                              id="mode"
+                              name="mode"
+                              onChange={[Function]}
+                              options={
+                                        Array [
+                                                  Object {
+                                                    "label": "Accept",
+                                                    "value": "accept",
+                                                  },
+                                                  Object {
+                                                    "label": "Reject",
+                                                    "value": "reject",
+                                                  },
+                                                  Object {
+                                                    "label": "Drain",
+                                                    "value": "drain",
+                                                  },
+                                                ]
+                              }
+                              value="accept"
+                    />
           </ModalFormGroup>
-        </div>,
+</div>,
         "errors": Object {},
         "noCancel": false,
         "noCancelEvent": false,
@@ -526,82 +526,82 @@ ShallowWrapper {
               errors={Object {}}
               id="label"
               label="Label"
-            >
+>
               <Input
-                className=""
-                id="label"
-                name="label"
-                onChange={[Function]}
-                value="greatest_node_ever"
+                            className=""
+                            id="label"
+                            name="label"
+                            onChange={[Function]}
+                            value="greatest_node_ever"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="address"
               errors={Object {}}
               id="address"
               label="Address"
-            >
+>
               <Input
-                className=""
-                id="address"
-                name="address"
-                onChange={[Function]}
-                placeholder="192.168.1.10:80"
-                value="192.168.4.5:80"
+                            className=""
+                            id="address"
+                            name="address"
+                            onChange={[Function]}
+                            placeholder="192.168.1.10:80"
+                            value="192.168.4.5:80"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="weight"
               description="Define a weight to be used in determining how connections are balanced to this node."
               errors={Object {}}
               id="weight"
               label="Weight"
-            >
+>
               <Input
-                className=""
-                id="weight"
-                name="weight"
-                onChange={[Function]}
-                type="number"
-                value={40}
+                            className=""
+                            id="weight"
+                            name="weight"
+                            onChange={[Function]}
+                            type="number"
+                            value={40}
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="mode"
               description="Configure how this node handles incoming connections based on it's health."
               errors={Object {}}
               id="mode"
               label="Mode"
-            >
+>
               <Select
-                analytics={
-                  Object {
-                    "noTrack": false,
-                  }
-                }
-                className=""
-                id="mode"
-                name="mode"
-                onChange={[Function]}
-                options={
-                  Array [
-                    Object {
-                      "label": "Accept",
-                      "value": "accept",
-                    },
-                    Object {
-                      "label": "Reject",
-                      "value": "reject",
-                    },
-                    Object {
-                      "label": "Drain",
-                      "value": "drain",
-                    },
-                  ]
-                }
-                value="accept"
+                            analytics={
+                                          Object {
+                                                        "noTrack": false,
+                                                      }
+                            }
+                            className=""
+                            id="mode"
+                            name="mode"
+                            onChange={[Function]}
+                            options={
+                                          Array [
+                                                        Object {
+                                                          "label": "Accept",
+                                                          "value": "accept",
+                                                        },
+                                                        Object {
+                                                          "label": "Reject",
+                                                          "value": "reject",
+                                                        },
+                                                        Object {
+                                                          "label": "Drain",
+                                                          "value": "drain",
+                                                        },
+                                                      ]
+                            }
+                            value="accept"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
           ],
         },
         "ref": null,
@@ -618,7 +618,7 @@ ShallowWrapper {
                 name="label"
                 onChange={[Function]}
                 value="greatest_node_ever"
-              />,
+/>,
               "errors": Object {},
               "id": "label",
               "label": "Label",
@@ -654,7 +654,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="192.168.1.10:80"
                 value="192.168.4.5:80"
-              />,
+/>,
               "errors": Object {},
               "id": "address",
               "label": "Address",
@@ -691,7 +691,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 type="number"
                 value={40}
-              />,
+/>,
               "description": "Define a weight to be used in determining how connections are balanced to this node.",
               "errors": Object {},
               "id": "weight",
@@ -724,32 +724,32 @@ ShallowWrapper {
               "apiKey": "mode",
               "children": <Select
                 analytics={
-                  Object {
-                    "noTrack": false,
-                  }
+                                Object {
+                                                "noTrack": false,
+                                              }
                 }
                 className=""
                 id="mode"
                 name="mode"
                 onChange={[Function]}
                 options={
-                  Array [
-                    Object {
-                      "label": "Accept",
-                      "value": "accept",
-                    },
-                    Object {
-                      "label": "Reject",
-                      "value": "reject",
-                    },
-                    Object {
-                      "label": "Drain",
-                      "value": "drain",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "label": "Accept",
+                                                  "value": "accept",
+                                                },
+                                                Object {
+                                                  "label": "Reject",
+                                                  "value": "reject",
+                                                },
+                                                Object {
+                                                  "label": "Drain",
+                                                  "value": "drain",
+                                                },
+                                              ]
                 }
                 value="accept"
-              />,
+/>,
               "description": "Configure how this node handles incoming connections based on it's health.",
               "errors": Object {},
               "id": "mode",

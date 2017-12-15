@@ -6,113 +6,113 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <DashboardPage
     config={
-      Object {
-        "_nodes": Object {
-          "nodes": Object {
-            "1": Object {
-              "address": "192.168.4.5:80",
-              "config_id": 0,
-              "id": 1,
-              "label": "greatest_node_ever",
-              "mode": "accept",
-              "nodebalancer_id": 23,
-              "status": "online",
-              "weight": 40,
-            },
-          },
-        },
-        "algorithm": "roundrobin",
-        "check": "none",
-        "check_attempts": 3,
-        "check_body": "",
-        "check_interval": 0,
-        "check_passive": true,
-        "check_path": "",
-        "check_timeout": 30,
-        "cipher_suite": "recommended",
-        "id": 1,
-        "nodebalancer_id": 23,
-        "nodes_status": Object {
-          "down": 0,
-          "up": 1,
-        },
-        "port": 80,
-        "protocol": "http",
-        "stickiness": "none",
-      }
-    }
-    nodebalancer={
-      Object {
-        "_configs": Object {
-          "configs": Object {
-            "1": Object {
-              "_nodes": Object {
-                "nodes": Object {
-                  "1": Object {
-                    "address": "192.168.4.5:80",
-                    "config_id": 0,
-                    "id": 1,
-                    "label": "greatest_node_ever",
-                    "mode": "accept",
-                    "nodebalancer_id": 23,
-                    "status": "online",
-                    "weight": 40,
-                  },
+        Object {
+            "_nodes": Object {
+              "nodes": Object {
+                "1": Object {
+                  "address": "192.168.4.5:80",
+                  "config_id": 0,
+                  "id": 1,
+                  "label": "greatest_node_ever",
+                  "mode": "accept",
+                  "nodebalancer_id": 23,
+                  "status": "online",
+                  "weight": 40,
                 },
               },
-              "algorithm": "roundrobin",
-              "check": "none",
-              "check_attempts": 3,
-              "check_body": "",
-              "check_interval": 0,
-              "check_passive": true,
-              "check_path": "",
-              "check_timeout": 30,
-              "cipher_suite": "recommended",
-              "id": 1,
-              "nodebalancer_id": 23,
-              "nodes_status": Object {
-                "down": 0,
-                "up": 1,
-              },
-              "port": 80,
-              "protocol": "http",
-              "stickiness": "none",
             },
-            "2": Object {
-              "algorithm": "roundrobin",
-              "check": "none",
-              "check_attempts": 3,
-              "check_body": "",
-              "check_interval": 0,
-              "check_passive": true,
-              "check_path": "",
-              "check_timeout": 30,
-              "cipher_suite": "recommended",
-              "id": 2,
-              "nodebalancer_id": 23,
-              "nodes_status": Object {
-                "down": 0,
-                "up": 0,
-              },
-              "port": 81,
-              "protocol": "http",
-              "stickiness": "none",
+            "algorithm": "roundrobin",
+            "check": "none",
+            "check_attempts": 3,
+            "check_body": "",
+            "check_interval": 0,
+            "check_passive": true,
+            "check_path": "",
+            "check_timeout": 30,
+            "cipher_suite": "recommended",
+            "id": 1,
+            "nodebalancer_id": 23,
+            "nodes_status": Object {
+              "down": 0,
+              "up": 1,
             },
-          },
-        },
-        "client_conn_throttle": 0,
-        "created": "2017-03-03T18:08:44",
-        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
-        "id": 23,
-        "ipv4": "1.1.1.1",
-        "label": "nodebalancer-1",
-        "region": "us-east-1a",
-        "status": "new_active",
-        "updated": "2017-03-06T22:00:48",
-      }
+            "port": 80,
+            "protocol": "http",
+            "stickiness": "none",
+          }
     }
-  />,
+    nodebalancer={
+        Object {
+            "_configs": Object {
+              "configs": Object {
+                "1": Object {
+                  "_nodes": Object {
+                    "nodes": Object {
+                      "1": Object {
+                        "address": "192.168.4.5:80",
+                        "config_id": 0,
+                        "id": 1,
+                        "label": "greatest_node_ever",
+                        "mode": "accept",
+                        "nodebalancer_id": 23,
+                        "status": "online",
+                        "weight": 40,
+                      },
+                    },
+                  },
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 1,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 1,
+                  },
+                  "port": 80,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+                "2": Object {
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 2,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 0,
+                  },
+                  "port": 81,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+              },
+            },
+            "client_conn_throttle": 0,
+            "created": "2017-03-03T18:08:44",
+            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+            "id": 23,
+            "ipv4": "1.1.1.1",
+            "label": "nodebalancer-1",
+            "region": "us-east-1a",
+            "status": "new_active",
+            "updated": "2017-03-06T22:00:48",
+          }
+    }
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -128,162 +128,162 @@ ShallowWrapper {
       "children": Array [
         <section>
           <Card
-            className=""
-            header={
-              <CardHeader
-                title="Summary"
-              />
-            }
+                    className=""
+                    header={
+                              <CardHeader
+                                        title="Summary"
+                              />
+                    }
           >
-            <div
-              className="row"
-            >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Port
-              </div>
-              <div
-                className="col-sm-9"
-                id="port"
-              >
-                80
-              </div>
-            </div>
-            <div
-              className="row"
-            >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Protocol
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                HTTP
-              </div>
-            </div>
-            <div
-              className="row"
-            >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Algorithm
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                Round Robin
-              </div>
-            </div>
-            <div
-              className="row"
-            >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Session Stickiness
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                -- None --
-              </div>
-            </div>
+                    <div
+                              className="row"
+                    >
+                              <div
+                                        className="col-sm-3 row-label"
+                              >
+                                        Port
+                              </div>
+                              <div
+                                        className="col-sm-9"
+                                        id="port"
+                              >
+                                        80
+                              </div>
+                    </div>
+                    <div
+                              className="row"
+                    >
+                              <div
+                                        className="col-sm-3 row-label"
+                              >
+                                        Protocol
+                              </div>
+                              <div
+                                        className="col-sm-9"
+                              >
+                                        HTTP
+                              </div>
+                    </div>
+                    <div
+                              className="row"
+                    >
+                              <div
+                                        className="col-sm-3 row-label"
+                              >
+                                        Algorithm
+                              </div>
+                              <div
+                                        className="col-sm-9"
+                              >
+                                        Round Robin
+                              </div>
+                    </div>
+                    <div
+                              className="row"
+                    >
+                              <div
+                                        className="col-sm-3 row-label"
+                              >
+                                        Session Stickiness
+                              </div>
+                              <div
+                                        className="col-sm-9"
+                              >
+                                        -- None --
+                              </div>
+                    </div>
           </Card>
-        </section>,
+</section>,
         <Card
           className=""
           header={
-            <CardHeader
-              nav={
-                <PrimaryButton
-                  buttonClass="btn-default"
-                  className="float-sm-right"
-                  onClick={[Function]}
-                  options={Array []}
-                >
-                  Add a Node
-                </PrimaryButton>
-              }
-              title="Nodes"
-            />
+                    <CardHeader
+                              nav={
+                                        <PrimaryButton
+                                                  buttonClass="btn-default"
+                                                  className="float-sm-right"
+                                                  onClick={[Function]}
+                                                  options={Array []}
+                                        >
+                                                  Add a Node
+                                        </PrimaryButton>
+                              }
+                              title="Nodes"
+                    />
           }
-        >
+>
           <List
-            className=""
+                    className=""
           >
-            <ListBody>
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "label",
-                      "headerClassName": "NodeBalancerLabelColumn",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "AddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "dataKey": "weight",
-                      "headerClassName": "WeightColumn",
-                      "label": "Weight",
-                    },
-                    Object {
-                      "dataKey": "mode",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Mode",
-                    },
-                    Object {
-                      "dataKey": "status",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Status",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Edit",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Delete",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "192.168.4.5:80",
-                      "config_id": 0,
-                      "id": 1,
-                      "label": "greatest_node_ever",
-                      "mode": "accept",
-                      "nodebalancer_id": 23,
-                      "status": "online",
-                      "weight": 40,
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no nodes."
-                selectedMap={Object {}}
-              />
-            </ListBody>
+                    <ListBody>
+                              <Table
+                                        className="Table--secondary"
+                                        columns={
+                                                  Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "dataKey": "label",
+                                                              "headerClassName": "NodeBalancerLabelColumn",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataKey": "address",
+                                                              "headerClassName": "AddressColumn",
+                                                              "label": "Address",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "weight",
+                                                              "headerClassName": "WeightColumn",
+                                                              "label": "Weight",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "mode",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "ModeColumn",
+                                                              "label": "Mode",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "status",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "ModeColumn",
+                                                              "label": "Status",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "ButtonColumn",
+                                                              "onClick": [Function],
+                                                              "text": "Edit",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "ButtonColumn",
+                                                              "onClick": [Function],
+                                                              "text": "Delete",
+                                                            },
+                                                          ]
+                                        }
+                                        data={
+                                                  Array [
+                                                            Object {
+                                                              "address": "192.168.4.5:80",
+                                                              "config_id": 0,
+                                                              "id": 1,
+                                                              "label": "greatest_node_ever",
+                                                              "mode": "accept",
+                                                              "nodebalancer_id": 23,
+                                                              "status": "online",
+                                                              "weight": 40,
+                                                            },
+                                                          ]
+                                        }
+                                        disableHeader={false}
+                                        noDataMessage="You have no nodes."
+                                        selectedMap={Object {}}
+                              />
+                    </ListBody>
           </List>
-        </Card>,
+</Card>,
       ],
     },
     "ref": null,
@@ -296,69 +296,69 @@ ShallowWrapper {
           "children": <Card
             className=""
             header={
-              <CardHeader
-                title="Summary"
-              />
+                        <CardHeader
+                                    title="Summary"
+                        />
             }
-          >
+>
             <div
-              className="row"
+                        className="row"
             >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Port
-              </div>
-              <div
-                className="col-sm-9"
-                id="port"
-              >
-                80
-              </div>
+                        <div
+                                    className="col-sm-3 row-label"
+                        >
+                                    Port
+                        </div>
+                        <div
+                                    className="col-sm-9"
+                                    id="port"
+                        >
+                                    80
+                        </div>
             </div>
             <div
-              className="row"
+                        className="row"
             >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Protocol
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                HTTP
-              </div>
+                        <div
+                                    className="col-sm-3 row-label"
+                        >
+                                    Protocol
+                        </div>
+                        <div
+                                    className="col-sm-9"
+                        >
+                                    HTTP
+                        </div>
             </div>
             <div
-              className="row"
+                        className="row"
             >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Algorithm
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                Round Robin
-              </div>
+                        <div
+                                    className="col-sm-3 row-label"
+                        >
+                                    Algorithm
+                        </div>
+                        <div
+                                    className="col-sm-9"
+                        >
+                                    Round Robin
+                        </div>
             </div>
             <div
-              className="row"
+                        className="row"
             >
-              <div
-                className="col-sm-3 row-label"
-              >
-                Session Stickiness
-              </div>
-              <div
-                className="col-sm-9"
-              >
-                -- None --
-              </div>
+                        <div
+                                    className="col-sm-3 row-label"
+                        >
+                                    Session Stickiness
+                        </div>
+                        <div
+                                    className="col-sm-9"
+                        >
+                                    -- None --
+                        </div>
             </div>
-          </Card>,
+</Card>,
         },
         "ref": null,
         "rendered": Object {
@@ -369,66 +369,66 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="row"
-              >
+>
                 <div
-                  className="col-sm-3 row-label"
+                                className="col-sm-3 row-label"
                 >
-                  Port
+                                Port
                 </div>
                 <div
-                  className="col-sm-9"
-                  id="port"
+                                className="col-sm-9"
+                                id="port"
                 >
-                  80
+                                80
                 </div>
-              </div>,
+</div>,
               <div
                 className="row"
-              >
+>
                 <div
-                  className="col-sm-3 row-label"
+                                className="col-sm-3 row-label"
                 >
-                  Protocol
+                                Protocol
                 </div>
                 <div
-                  className="col-sm-9"
+                                className="col-sm-9"
                 >
-                  HTTP
+                                HTTP
                 </div>
-              </div>,
+</div>,
               <div
                 className="row"
-              >
+>
                 <div
-                  className="col-sm-3 row-label"
+                                className="col-sm-3 row-label"
                 >
-                  Algorithm
+                                Algorithm
                 </div>
                 <div
-                  className="col-sm-9"
+                                className="col-sm-9"
                 >
-                  Round Robin
+                                Round Robin
                 </div>
-              </div>,
+</div>,
               <div
                 className="row"
-              >
+>
                 <div
-                  className="col-sm-3 row-label"
+                                className="col-sm-3 row-label"
                 >
-                  Session Stickiness
+                                Session Stickiness
                 </div>
                 <div
-                  className="col-sm-9"
+                                className="col-sm-9"
                 >
-                  -- None --
+                                -- None --
                 </div>
-              </div>,
+</div>,
             ],
             "className": "",
             "header": <CardHeader
               title="Summary"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Array [
@@ -440,15 +440,15 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="col-sm-3 row-label"
-                  >
+>
                     Port
-                  </div>,
+</div>,
                   <div
                     className="col-sm-9"
                     id="port"
-                  >
+>
                     80
-                  </div>,
+</div>,
                 ],
                 "className": "row",
               },
@@ -490,14 +490,14 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="col-sm-3 row-label"
-                  >
+>
                     Protocol
-                  </div>,
+</div>,
                   <div
                     className="col-sm-9"
-                  >
+>
                     HTTP
-                  </div>,
+</div>,
                 ],
                 "className": "row",
               },
@@ -538,14 +538,14 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="col-sm-3 row-label"
-                  >
+>
                     Algorithm
-                  </div>,
+</div>,
                   <div
                     className="col-sm-9"
-                  >
+>
                     Round Robin
-                  </div>,
+</div>,
                 ],
                 "className": "row",
               },
@@ -586,14 +586,14 @@ ShallowWrapper {
                 "children": Array [
                   <div
                     className="col-sm-3 row-label"
-                  >
+>
                     Session Stickiness
-                  </div>,
+</div>,
                   <div
                     className="col-sm-9"
-                  >
+>
                     -- None --
-                  </div>,
+</div>,
                 ],
                 "className": "row",
               },
@@ -638,89 +638,89 @@ ShallowWrapper {
         "props": Object {
           "children": <List
             className=""
-          >
+>
             <ListBody>
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "label",
-                      "headerClassName": "NodeBalancerLabelColumn",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "AddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "dataKey": "weight",
-                      "headerClassName": "WeightColumn",
-                      "label": "Weight",
-                    },
-                    Object {
-                      "dataKey": "mode",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Mode",
-                    },
-                    Object {
-                      "dataKey": "status",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Status",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Edit",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Delete",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "192.168.4.5:80",
-                      "config_id": 0,
-                      "id": 1,
-                      "label": "greatest_node_ever",
-                      "mode": "accept",
-                      "nodebalancer_id": 23,
-                      "status": "online",
-                      "weight": 40,
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no nodes."
-                selectedMap={Object {}}
-              />
+                        <Table
+                                    className="Table--secondary"
+                                    columns={
+                                                Array [
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "dataKey": "label",
+                                                              "headerClassName": "NodeBalancerLabelColumn",
+                                                              "label": "Label",
+                                                              "tooltipEnabled": true,
+                                                            },
+                                                            Object {
+                                                              "dataKey": "address",
+                                                              "headerClassName": "AddressColumn",
+                                                              "label": "Address",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "weight",
+                                                              "headerClassName": "WeightColumn",
+                                                              "label": "Weight",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "mode",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "ModeColumn",
+                                                              "label": "Mode",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "status",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "ModeColumn",
+                                                              "label": "Status",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "ButtonColumn",
+                                                              "onClick": [Function],
+                                                              "text": "Edit",
+                                                            },
+                                                            Object {
+                                                              "cellComponent": [Function],
+                                                              "headerClassName": "ButtonColumn",
+                                                              "onClick": [Function],
+                                                              "text": "Delete",
+                                                            },
+                                                          ]
+                                    }
+                                    data={
+                                                Array [
+                                                            Object {
+                                                              "address": "192.168.4.5:80",
+                                                              "config_id": 0,
+                                                              "id": 1,
+                                                              "label": "greatest_node_ever",
+                                                              "mode": "accept",
+                                                              "nodebalancer_id": 23,
+                                                              "status": "online",
+                                                              "weight": 40,
+                                                            },
+                                                          ]
+                                    }
+                                    disableHeader={false}
+                                    noDataMessage="You have no nodes."
+                                    selectedMap={Object {}}
+                        />
             </ListBody>
-          </List>,
+</List>,
           "className": "",
           "header": <CardHeader
             nav={
-              <PrimaryButton
-                buttonClass="btn-default"
-                className="float-sm-right"
-                onClick={[Function]}
-                options={Array []}
-              >
-                Add a Node
-              </PrimaryButton>
+                        <PrimaryButton
+                                    buttonClass="btn-default"
+                                    className="float-sm-right"
+                                    onClick={[Function]}
+                                    options={Array []}
+                        >
+                                    Add a Node
+                        </PrimaryButton>
             }
             title="Nodes"
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -730,71 +730,71 @@ ShallowWrapper {
           "props": Object {
             "children": <ListBody>
               <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "label",
-                      "headerClassName": "NodeBalancerLabelColumn",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "AddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "dataKey": "weight",
-                      "headerClassName": "WeightColumn",
-                      "label": "Weight",
-                    },
-                    Object {
-                      "dataKey": "mode",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Mode",
-                    },
-                    Object {
-                      "dataKey": "status",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Status",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Edit",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Delete",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "192.168.4.5:80",
-                      "config_id": 0,
-                      "id": 1,
-                      "label": "greatest_node_ever",
-                      "mode": "accept",
-                      "nodebalancer_id": 23,
-                      "status": "online",
-                      "weight": 40,
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no nodes."
-                selectedMap={Object {}}
+                            className="Table--secondary"
+                            columns={
+                                          Array [
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "dataKey": "label",
+                                                          "headerClassName": "NodeBalancerLabelColumn",
+                                                          "label": "Label",
+                                                          "tooltipEnabled": true,
+                                                        },
+                                                        Object {
+                                                          "dataKey": "address",
+                                                          "headerClassName": "AddressColumn",
+                                                          "label": "Address",
+                                                        },
+                                                        Object {
+                                                          "dataKey": "weight",
+                                                          "headerClassName": "WeightColumn",
+                                                          "label": "Weight",
+                                                        },
+                                                        Object {
+                                                          "dataKey": "mode",
+                                                          "formatFn": [Function],
+                                                          "headerClassName": "ModeColumn",
+                                                          "label": "Mode",
+                                                        },
+                                                        Object {
+                                                          "dataKey": "status",
+                                                          "formatFn": [Function],
+                                                          "headerClassName": "ModeColumn",
+                                                          "label": "Status",
+                                                        },
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "headerClassName": "ButtonColumn",
+                                                          "onClick": [Function],
+                                                          "text": "Edit",
+                                                        },
+                                                        Object {
+                                                          "cellComponent": [Function],
+                                                          "headerClassName": "ButtonColumn",
+                                                          "onClick": [Function],
+                                                          "text": "Delete",
+                                                        },
+                                                      ]
+                            }
+                            data={
+                                          Array [
+                                                        Object {
+                                                          "address": "192.168.4.5:80",
+                                                          "config_id": 0,
+                                                          "id": 1,
+                                                          "label": "greatest_node_ever",
+                                                          "mode": "accept",
+                                                          "nodebalancer_id": 23,
+                                                          "status": "online",
+                                                          "weight": 40,
+                                                        },
+                                                      ]
+                            }
+                            disableHeader={false}
+                            noDataMessage="You have no nodes."
+                            selectedMap={Object {}}
               />
-            </ListBody>,
+</ListBody>,
             "className": "",
           },
           "ref": null,
@@ -806,68 +806,68 @@ ShallowWrapper {
               "children": <Table
                 className="Table--secondary"
                 columns={
-                  Array [
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "label",
-                      "headerClassName": "NodeBalancerLabelColumn",
-                      "label": "Label",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "AddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "dataKey": "weight",
-                      "headerClassName": "WeightColumn",
-                      "label": "Weight",
-                    },
-                    Object {
-                      "dataKey": "mode",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Mode",
-                    },
-                    Object {
-                      "dataKey": "status",
-                      "formatFn": [Function],
-                      "headerClassName": "ModeColumn",
-                      "label": "Status",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Edit",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "ButtonColumn",
-                      "onClick": [Function],
-                      "text": "Delete",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "dataKey": "label",
+                                                  "headerClassName": "NodeBalancerLabelColumn",
+                                                  "label": "Label",
+                                                  "tooltipEnabled": true,
+                                                },
+                                                Object {
+                                                  "dataKey": "address",
+                                                  "headerClassName": "AddressColumn",
+                                                  "label": "Address",
+                                                },
+                                                Object {
+                                                  "dataKey": "weight",
+                                                  "headerClassName": "WeightColumn",
+                                                  "label": "Weight",
+                                                },
+                                                Object {
+                                                  "dataKey": "mode",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "ModeColumn",
+                                                  "label": "Mode",
+                                                },
+                                                Object {
+                                                  "dataKey": "status",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "ModeColumn",
+                                                  "label": "Status",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "ButtonColumn",
+                                                  "onClick": [Function],
+                                                  "text": "Edit",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "ButtonColumn",
+                                                  "onClick": [Function],
+                                                  "text": "Delete",
+                                                },
+                                              ]
                 }
                 data={
-                  Array [
-                    Object {
-                      "address": "192.168.4.5:80",
-                      "config_id": 0,
-                      "id": 1,
-                      "label": "greatest_node_ever",
-                      "mode": "accept",
-                      "nodebalancer_id": 23,
-                      "status": "online",
-                      "weight": 40,
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "address": "192.168.4.5:80",
+                                                  "config_id": 0,
+                                                  "id": 1,
+                                                  "label": "greatest_node_ever",
+                                                  "mode": "accept",
+                                                  "nodebalancer_id": 23,
+                                                  "status": "online",
+                                                  "weight": 40,
+                                                },
+                                              ]
                 }
                 disableHeader={false}
                 noDataMessage="You have no nodes."
                 selectedMap={Object {}}
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -957,162 +957,162 @@ ShallowWrapper {
         "children": Array [
           <section>
             <Card
-              className=""
-              header={
-                <CardHeader
-                  title="Summary"
-                />
-              }
+                        className=""
+                        header={
+                                    <CardHeader
+                                                title="Summary"
+                                    />
+                        }
             >
-              <div
-                className="row"
-              >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Port
-                </div>
-                <div
-                  className="col-sm-9"
-                  id="port"
-                >
-                  80
-                </div>
-              </div>
-              <div
-                className="row"
-              >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Protocol
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  HTTP
-                </div>
-              </div>
-              <div
-                className="row"
-              >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Algorithm
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  Round Robin
-                </div>
-              </div>
-              <div
-                className="row"
-              >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Session Stickiness
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  -- None --
-                </div>
-              </div>
+                        <div
+                                    className="row"
+                        >
+                                    <div
+                                                className="col-sm-3 row-label"
+                                    >
+                                                Port
+                                    </div>
+                                    <div
+                                                className="col-sm-9"
+                                                id="port"
+                                    >
+                                                80
+                                    </div>
+                        </div>
+                        <div
+                                    className="row"
+                        >
+                                    <div
+                                                className="col-sm-3 row-label"
+                                    >
+                                                Protocol
+                                    </div>
+                                    <div
+                                                className="col-sm-9"
+                                    >
+                                                HTTP
+                                    </div>
+                        </div>
+                        <div
+                                    className="row"
+                        >
+                                    <div
+                                                className="col-sm-3 row-label"
+                                    >
+                                                Algorithm
+                                    </div>
+                                    <div
+                                                className="col-sm-9"
+                                    >
+                                                Round Robin
+                                    </div>
+                        </div>
+                        <div
+                                    className="row"
+                        >
+                                    <div
+                                                className="col-sm-3 row-label"
+                                    >
+                                                Session Stickiness
+                                    </div>
+                                    <div
+                                                className="col-sm-9"
+                                    >
+                                                -- None --
+                                    </div>
+                        </div>
             </Card>
-          </section>,
+</section>,
           <Card
             className=""
             header={
-              <CardHeader
-                nav={
-                  <PrimaryButton
-                    buttonClass="btn-default"
-                    className="float-sm-right"
-                    onClick={[Function]}
-                    options={Array []}
-                  >
-                    Add a Node
-                  </PrimaryButton>
-                }
-                title="Nodes"
-              />
+                        <CardHeader
+                                    nav={
+                                                <PrimaryButton
+                                                            buttonClass="btn-default"
+                                                            className="float-sm-right"
+                                                            onClick={[Function]}
+                                                            options={Array []}
+                                                >
+                                                            Add a Node
+                                                </PrimaryButton>
+                                    }
+                                    title="Nodes"
+                        />
             }
-          >
+>
             <List
-              className=""
+                        className=""
             >
-              <ListBody>
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "label",
-                        "headerClassName": "NodeBalancerLabelColumn",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "AddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "dataKey": "weight",
-                        "headerClassName": "WeightColumn",
-                        "label": "Weight",
-                      },
-                      Object {
-                        "dataKey": "mode",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Mode",
-                      },
-                      Object {
-                        "dataKey": "status",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Status",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Edit",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Delete",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "192.168.4.5:80",
-                        "config_id": 0,
-                        "id": 1,
-                        "label": "greatest_node_ever",
-                        "mode": "accept",
-                        "nodebalancer_id": 23,
-                        "status": "online",
-                        "weight": 40,
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no nodes."
-                  selectedMap={Object {}}
-                />
-              </ListBody>
+                        <ListBody>
+                                    <Table
+                                                className="Table--secondary"
+                                                columns={
+                                                            Array [
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "dataKey": "label",
+                                                                          "headerClassName": "NodeBalancerLabelColumn",
+                                                                          "label": "Label",
+                                                                          "tooltipEnabled": true,
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "address",
+                                                                          "headerClassName": "AddressColumn",
+                                                                          "label": "Address",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "weight",
+                                                                          "headerClassName": "WeightColumn",
+                                                                          "label": "Weight",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "mode",
+                                                                          "formatFn": [Function],
+                                                                          "headerClassName": "ModeColumn",
+                                                                          "label": "Mode",
+                                                                        },
+                                                                        Object {
+                                                                          "dataKey": "status",
+                                                                          "formatFn": [Function],
+                                                                          "headerClassName": "ModeColumn",
+                                                                          "label": "Status",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "ButtonColumn",
+                                                                          "onClick": [Function],
+                                                                          "text": "Edit",
+                                                                        },
+                                                                        Object {
+                                                                          "cellComponent": [Function],
+                                                                          "headerClassName": "ButtonColumn",
+                                                                          "onClick": [Function],
+                                                                          "text": "Delete",
+                                                                        },
+                                                                      ]
+                                                }
+                                                data={
+                                                            Array [
+                                                                        Object {
+                                                                          "address": "192.168.4.5:80",
+                                                                          "config_id": 0,
+                                                                          "id": 1,
+                                                                          "label": "greatest_node_ever",
+                                                                          "mode": "accept",
+                                                                          "nodebalancer_id": 23,
+                                                                          "status": "online",
+                                                                          "weight": 40,
+                                                                        },
+                                                                      ]
+                                                }
+                                                disableHeader={false}
+                                                noDataMessage="You have no nodes."
+                                                selectedMap={Object {}}
+                                    />
+                        </ListBody>
             </List>
-          </Card>,
+</Card>,
         ],
       },
       "ref": null,
@@ -1125,69 +1125,69 @@ ShallowWrapper {
             "children": <Card
               className=""
               header={
-                <CardHeader
-                  title="Summary"
-                />
+                            <CardHeader
+                                          title="Summary"
+                            />
               }
-            >
+>
               <div
-                className="row"
+                            className="row"
               >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Port
-                </div>
-                <div
-                  className="col-sm-9"
-                  id="port"
-                >
-                  80
-                </div>
+                            <div
+                                          className="col-sm-3 row-label"
+                            >
+                                          Port
+                            </div>
+                            <div
+                                          className="col-sm-9"
+                                          id="port"
+                            >
+                                          80
+                            </div>
               </div>
               <div
-                className="row"
+                            className="row"
               >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Protocol
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  HTTP
-                </div>
+                            <div
+                                          className="col-sm-3 row-label"
+                            >
+                                          Protocol
+                            </div>
+                            <div
+                                          className="col-sm-9"
+                            >
+                                          HTTP
+                            </div>
               </div>
               <div
-                className="row"
+                            className="row"
               >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Algorithm
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  Round Robin
-                </div>
+                            <div
+                                          className="col-sm-3 row-label"
+                            >
+                                          Algorithm
+                            </div>
+                            <div
+                                          className="col-sm-9"
+                            >
+                                          Round Robin
+                            </div>
               </div>
               <div
-                className="row"
+                            className="row"
               >
-                <div
-                  className="col-sm-3 row-label"
-                >
-                  Session Stickiness
-                </div>
-                <div
-                  className="col-sm-9"
-                >
-                  -- None --
-                </div>
+                            <div
+                                          className="col-sm-3 row-label"
+                            >
+                                          Session Stickiness
+                            </div>
+                            <div
+                                          className="col-sm-9"
+                            >
+                                          -- None --
+                            </div>
               </div>
-            </Card>,
+</Card>,
           },
           "ref": null,
           "rendered": Object {
@@ -1198,66 +1198,66 @@ ShallowWrapper {
               "children": Array [
                 <div
                   className="row"
-                >
+>
                   <div
-                    className="col-sm-3 row-label"
+                                    className="col-sm-3 row-label"
                   >
-                    Port
+                                    Port
                   </div>
                   <div
-                    className="col-sm-9"
-                    id="port"
+                                    className="col-sm-9"
+                                    id="port"
                   >
-                    80
+                                    80
                   </div>
-                </div>,
+</div>,
                 <div
                   className="row"
-                >
+>
                   <div
-                    className="col-sm-3 row-label"
+                                    className="col-sm-3 row-label"
                   >
-                    Protocol
+                                    Protocol
                   </div>
                   <div
-                    className="col-sm-9"
+                                    className="col-sm-9"
                   >
-                    HTTP
+                                    HTTP
                   </div>
-                </div>,
+</div>,
                 <div
                   className="row"
-                >
+>
                   <div
-                    className="col-sm-3 row-label"
+                                    className="col-sm-3 row-label"
                   >
-                    Algorithm
+                                    Algorithm
                   </div>
                   <div
-                    className="col-sm-9"
+                                    className="col-sm-9"
                   >
-                    Round Robin
+                                    Round Robin
                   </div>
-                </div>,
+</div>,
                 <div
                   className="row"
-                >
+>
                   <div
-                    className="col-sm-3 row-label"
+                                    className="col-sm-3 row-label"
                   >
-                    Session Stickiness
+                                    Session Stickiness
                   </div>
                   <div
-                    className="col-sm-9"
+                                    className="col-sm-9"
                   >
-                    -- None --
+                                    -- None --
                   </div>
-                </div>,
+</div>,
               ],
               "className": "",
               "header": <CardHeader
                 title="Summary"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Array [
@@ -1269,15 +1269,15 @@ ShallowWrapper {
                   "children": Array [
                     <div
                       className="col-sm-3 row-label"
-                    >
+>
                       Port
-                    </div>,
+</div>,
                     <div
                       className="col-sm-9"
                       id="port"
-                    >
+>
                       80
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                 },
@@ -1319,14 +1319,14 @@ ShallowWrapper {
                   "children": Array [
                     <div
                       className="col-sm-3 row-label"
-                    >
+>
                       Protocol
-                    </div>,
+</div>,
                     <div
                       className="col-sm-9"
-                    >
+>
                       HTTP
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                 },
@@ -1367,14 +1367,14 @@ ShallowWrapper {
                   "children": Array [
                     <div
                       className="col-sm-3 row-label"
-                    >
+>
                       Algorithm
-                    </div>,
+</div>,
                     <div
                       className="col-sm-9"
-                    >
+>
                       Round Robin
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                 },
@@ -1415,14 +1415,14 @@ ShallowWrapper {
                   "children": Array [
                     <div
                       className="col-sm-3 row-label"
-                    >
+>
                       Session Stickiness
-                    </div>,
+</div>,
                     <div
                       className="col-sm-9"
-                    >
+>
                       -- None --
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                 },
@@ -1467,89 +1467,89 @@ ShallowWrapper {
           "props": Object {
             "children": <List
               className=""
-            >
+>
               <ListBody>
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "label",
-                        "headerClassName": "NodeBalancerLabelColumn",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "AddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "dataKey": "weight",
-                        "headerClassName": "WeightColumn",
-                        "label": "Weight",
-                      },
-                      Object {
-                        "dataKey": "mode",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Mode",
-                      },
-                      Object {
-                        "dataKey": "status",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Status",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Edit",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Delete",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "192.168.4.5:80",
-                        "config_id": 0,
-                        "id": 1,
-                        "label": "greatest_node_ever",
-                        "mode": "accept",
-                        "nodebalancer_id": 23,
-                        "status": "online",
-                        "weight": 40,
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no nodes."
-                  selectedMap={Object {}}
-                />
+                            <Table
+                                          className="Table--secondary"
+                                          columns={
+                                                        Array [
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "dataKey": "label",
+                                                                        "headerClassName": "NodeBalancerLabelColumn",
+                                                                        "label": "Label",
+                                                                        "tooltipEnabled": true,
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "address",
+                                                                        "headerClassName": "AddressColumn",
+                                                                        "label": "Address",
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "weight",
+                                                                        "headerClassName": "WeightColumn",
+                                                                        "label": "Weight",
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "mode",
+                                                                        "formatFn": [Function],
+                                                                        "headerClassName": "ModeColumn",
+                                                                        "label": "Mode",
+                                                                      },
+                                                                      Object {
+                                                                        "dataKey": "status",
+                                                                        "formatFn": [Function],
+                                                                        "headerClassName": "ModeColumn",
+                                                                        "label": "Status",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "headerClassName": "ButtonColumn",
+                                                                        "onClick": [Function],
+                                                                        "text": "Edit",
+                                                                      },
+                                                                      Object {
+                                                                        "cellComponent": [Function],
+                                                                        "headerClassName": "ButtonColumn",
+                                                                        "onClick": [Function],
+                                                                        "text": "Delete",
+                                                                      },
+                                                                    ]
+                                          }
+                                          data={
+                                                        Array [
+                                                                      Object {
+                                                                        "address": "192.168.4.5:80",
+                                                                        "config_id": 0,
+                                                                        "id": 1,
+                                                                        "label": "greatest_node_ever",
+                                                                        "mode": "accept",
+                                                                        "nodebalancer_id": 23,
+                                                                        "status": "online",
+                                                                        "weight": 40,
+                                                                      },
+                                                                    ]
+                                          }
+                                          disableHeader={false}
+                                          noDataMessage="You have no nodes."
+                                          selectedMap={Object {}}
+                            />
               </ListBody>
-            </List>,
+</List>,
             "className": "",
             "header": <CardHeader
               nav={
-                <PrimaryButton
-                  buttonClass="btn-default"
-                  className="float-sm-right"
-                  onClick={[Function]}
-                  options={Array []}
-                >
-                  Add a Node
-                </PrimaryButton>
+                            <PrimaryButton
+                                          buttonClass="btn-default"
+                                          className="float-sm-right"
+                                          onClick={[Function]}
+                                          options={Array []}
+                            >
+                                          Add a Node
+                            </PrimaryButton>
               }
               title="Nodes"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {
@@ -1559,71 +1559,71 @@ ShallowWrapper {
             "props": Object {
               "children": <ListBody>
                 <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "label",
-                        "headerClassName": "NodeBalancerLabelColumn",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "AddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "dataKey": "weight",
-                        "headerClassName": "WeightColumn",
-                        "label": "Weight",
-                      },
-                      Object {
-                        "dataKey": "mode",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Mode",
-                      },
-                      Object {
-                        "dataKey": "status",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Status",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Edit",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Delete",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "192.168.4.5:80",
-                        "config_id": 0,
-                        "id": 1,
-                        "label": "greatest_node_ever",
-                        "mode": "accept",
-                        "nodebalancer_id": 23,
-                        "status": "online",
-                        "weight": 40,
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no nodes."
-                  selectedMap={Object {}}
+                                className="Table--secondary"
+                                columns={
+                                                Array [
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "dataKey": "label",
+                                                                  "headerClassName": "NodeBalancerLabelColumn",
+                                                                  "label": "Label",
+                                                                  "tooltipEnabled": true,
+                                                                },
+                                                                Object {
+                                                                  "dataKey": "address",
+                                                                  "headerClassName": "AddressColumn",
+                                                                  "label": "Address",
+                                                                },
+                                                                Object {
+                                                                  "dataKey": "weight",
+                                                                  "headerClassName": "WeightColumn",
+                                                                  "label": "Weight",
+                                                                },
+                                                                Object {
+                                                                  "dataKey": "mode",
+                                                                  "formatFn": [Function],
+                                                                  "headerClassName": "ModeColumn",
+                                                                  "label": "Mode",
+                                                                },
+                                                                Object {
+                                                                  "dataKey": "status",
+                                                                  "formatFn": [Function],
+                                                                  "headerClassName": "ModeColumn",
+                                                                  "label": "Status",
+                                                                },
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "headerClassName": "ButtonColumn",
+                                                                  "onClick": [Function],
+                                                                  "text": "Edit",
+                                                                },
+                                                                Object {
+                                                                  "cellComponent": [Function],
+                                                                  "headerClassName": "ButtonColumn",
+                                                                  "onClick": [Function],
+                                                                  "text": "Delete",
+                                                                },
+                                                              ]
+                                }
+                                data={
+                                                Array [
+                                                                Object {
+                                                                  "address": "192.168.4.5:80",
+                                                                  "config_id": 0,
+                                                                  "id": 1,
+                                                                  "label": "greatest_node_ever",
+                                                                  "mode": "accept",
+                                                                  "nodebalancer_id": 23,
+                                                                  "status": "online",
+                                                                  "weight": 40,
+                                                                },
+                                                              ]
+                                }
+                                disableHeader={false}
+                                noDataMessage="You have no nodes."
+                                selectedMap={Object {}}
                 />
-              </ListBody>,
+</ListBody>,
               "className": "",
             },
             "ref": null,
@@ -1635,68 +1635,68 @@ ShallowWrapper {
                 "children": <Table
                   className="Table--secondary"
                   columns={
-                    Array [
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "label",
-                        "headerClassName": "NodeBalancerLabelColumn",
-                        "label": "Label",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "AddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "dataKey": "weight",
-                        "headerClassName": "WeightColumn",
-                        "label": "Weight",
-                      },
-                      Object {
-                        "dataKey": "mode",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Mode",
-                      },
-                      Object {
-                        "dataKey": "status",
-                        "formatFn": [Function],
-                        "headerClassName": "ModeColumn",
-                        "label": "Status",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Edit",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "ButtonColumn",
-                        "onClick": [Function],
-                        "text": "Delete",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "dataKey": "label",
+                                                        "headerClassName": "NodeBalancerLabelColumn",
+                                                        "label": "Label",
+                                                        "tooltipEnabled": true,
+                                                      },
+                                                      Object {
+                                                        "dataKey": "address",
+                                                        "headerClassName": "AddressColumn",
+                                                        "label": "Address",
+                                                      },
+                                                      Object {
+                                                        "dataKey": "weight",
+                                                        "headerClassName": "WeightColumn",
+                                                        "label": "Weight",
+                                                      },
+                                                      Object {
+                                                        "dataKey": "mode",
+                                                        "formatFn": [Function],
+                                                        "headerClassName": "ModeColumn",
+                                                        "label": "Mode",
+                                                      },
+                                                      Object {
+                                                        "dataKey": "status",
+                                                        "formatFn": [Function],
+                                                        "headerClassName": "ModeColumn",
+                                                        "label": "Status",
+                                                      },
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "headerClassName": "ButtonColumn",
+                                                        "onClick": [Function],
+                                                        "text": "Edit",
+                                                      },
+                                                      Object {
+                                                        "cellComponent": [Function],
+                                                        "headerClassName": "ButtonColumn",
+                                                        "onClick": [Function],
+                                                        "text": "Delete",
+                                                      },
+                                                    ]
                   }
                   data={
-                    Array [
-                      Object {
-                        "address": "192.168.4.5:80",
-                        "config_id": 0,
-                        "id": 1,
-                        "label": "greatest_node_ever",
-                        "mode": "accept",
-                        "nodebalancer_id": 23,
-                        "status": "online",
-                        "weight": 40,
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "address": "192.168.4.5:80",
+                                                        "config_id": 0,
+                                                        "id": 1,
+                                                        "label": "greatest_node_ever",
+                                                        "mode": "accept",
+                                                        "nodebalancer_id": 23,
+                                                        "status": "online",
+                                                        "weight": 40,
+                                                      },
+                                                    ]
                   }
                   disableHeader={false}
                   noDataMessage="You have no nodes."
                   selectedMap={Object {}}
-                />,
+/>,
               },
               "ref": null,
               "rendered": Object {

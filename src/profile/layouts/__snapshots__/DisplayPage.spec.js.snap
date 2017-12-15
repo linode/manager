@@ -7,12 +7,12 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <DisplayPage
     dispatch={[Function]}
     profile={
-      Object {
-        "email": "user@address.com",
-        "timezone": "US/Eastern",
-      }
+        Object {
+            "email": "user@address.com",
+            "timezone": "US/Eastern",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -28,14 +28,14 @@ ShallowWrapper {
       "children": Array [
         <section>
           <ChangeTimezone
-            dispatch={[Function]}
-            timezone="US/Eastern"
+                    dispatch={[Function]}
+                    timezone="US/Eastern"
           />
-        </section>,
+</section>,
         <ChangeEmail
           dispatch={[Function]}
           email="user@address.com"
-        />,
+/>,
       ],
     },
     "ref": null,
@@ -48,7 +48,7 @@ ShallowWrapper {
           "children": <ChangeTimezone
             dispatch={[Function]}
             timezone="US/Eastern"
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -89,14 +89,14 @@ ShallowWrapper {
         "children": Array [
           <section>
             <ChangeTimezone
-              dispatch={[Function]}
-              timezone="US/Eastern"
+                        dispatch={[Function]}
+                        timezone="US/Eastern"
             />
-          </section>,
+</section>,
           <ChangeEmail
             dispatch={[Function]}
             email="user@address.com"
-          />,
+/>,
         ],
       },
       "ref": null,
@@ -109,7 +109,7 @@ ShallowWrapper {
             "children": <ChangeTimezone
               dispatch={[Function]}
               timezone="US/Eastern"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {

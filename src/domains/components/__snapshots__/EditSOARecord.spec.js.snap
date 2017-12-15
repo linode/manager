@@ -8,114 +8,114 @@ ShallowWrapper {
     close={[Function]}
     dispatch={[Function]}
     domains={
-      Object {
-        "_polling": false,
-        "_records": Object {
-          "records": Object {
-            "1": Object {
-              "id": 1,
-              "name": "sub1",
-              "port": 80,
-              "priority": 10,
-              "protocol": null,
-              "service": null,
-              "target": "4.4.4.4",
-              "ttl_sec": 0,
-              "type": "A",
-              "weight": 5,
+        Object {
+            "_polling": false,
+            "_records": Object {
+              "records": Object {
+                "1": Object {
+                  "id": 1,
+                  "name": "sub1",
+                  "port": 80,
+                  "priority": 10,
+                  "protocol": null,
+                  "service": null,
+                  "target": "4.4.4.4",
+                  "ttl_sec": 0,
+                  "type": "A",
+                  "weight": 5,
+                },
+                "2": Object {
+                  "id": 2,
+                  "name": "sub2",
+                  "port": 80,
+                  "priority": 10,
+                  "protocol": null,
+                  "service": null,
+                  "target": "sub1.example.com",
+                  "ttl_sec": 0,
+                  "type": "CNAME",
+                  "weight": 5,
+                },
+                "3": Object {
+                  "id": 3,
+                  "name": "",
+                  "port": 0,
+                  "priority": 10,
+                  "protocol": null,
+                  "service": null,
+                  "target": "mail1.example.com",
+                  "ttl_sec": 0,
+                  "type": "MX",
+                  "weight": 0,
+                },
+                "4": Object {
+                  "id": 4,
+                  "name": "",
+                  "port": 0,
+                  "priority": 0,
+                  "protocol": null,
+                  "service": null,
+                  "target": "ns5.linode.com",
+                  "ttl_sec": 0,
+                  "type": "NS",
+                  "weight": 0,
+                },
+                "5": Object {
+                  "id": 5,
+                  "name": "key",
+                  "port": 80,
+                  "priority": 10,
+                  "protocol": null,
+                  "service": null,
+                  "target": "value",
+                  "ttl_sec": 0,
+                  "type": "TXT",
+                  "weight": 5,
+                },
+                "6": Object {
+                  "id": 6,
+                  "name": "_sip",
+                  "port": 80,
+                  "priority": 10,
+                  "protocol": "_tcp",
+                  "service": "_sip",
+                  "target": "ns1.service.com",
+                  "ttl_sec": 0,
+                  "type": "SRV",
+                  "weight": 5,
+                },
+                "7": Object {
+                  "id": 7,
+                  "name": "www.mywebsite.com",
+                  "tag": "issue",
+                  "target": "certsign.ro",
+                  "ttl_sec": 0,
+                  "type": "CAA",
+                },
+              },
             },
-            "2": Object {
-              "id": 2,
-              "name": "sub2",
-              "port": 80,
-              "priority": 10,
-              "protocol": null,
-              "service": null,
-              "target": "sub1.example.com",
-              "ttl_sec": 0,
-              "type": "CNAME",
-              "weight": 5,
-            },
-            "3": Object {
-              "id": 3,
-              "name": "",
-              "port": 0,
-              "priority": 10,
-              "protocol": null,
-              "service": null,
-              "target": "mail1.example.com",
-              "ttl_sec": 0,
-              "type": "MX",
-              "weight": 0,
-            },
-            "4": Object {
-              "id": 4,
-              "name": "",
-              "port": 0,
-              "priority": 0,
-              "protocol": null,
-              "service": null,
-              "target": "ns5.linode.com",
-              "ttl_sec": 0,
-              "type": "NS",
-              "weight": 0,
-            },
-            "5": Object {
-              "id": 5,
-              "name": "key",
-              "port": 80,
-              "priority": 10,
-              "protocol": null,
-              "service": null,
-              "target": "value",
-              "ttl_sec": 0,
-              "type": "TXT",
-              "weight": 5,
-            },
-            "6": Object {
-              "id": 6,
-              "name": "_sip",
-              "port": 80,
-              "priority": 10,
-              "protocol": "_tcp",
-              "service": "_sip",
-              "target": "ns1.service.com",
-              "ttl_sec": 0,
-              "type": "SRV",
-              "weight": 5,
-            },
-            "7": Object {
-              "id": 7,
-              "name": "www.mywebsite.com",
-              "tag": "issue",
-              "target": "certsign.ro",
-              "ttl_sec": 0,
-              "type": "CAA",
-            },
-          },
-        },
-        "axfr_ips": Array [
-          "44.55.66.77",
-        ],
-        "description": "Example Description",
-        "domain": "example.com",
-        "expire_sec": 604800,
-        "group": "Example Display Group",
-        "id": 1,
-        "master_ips": Array [
-          "127.0.0.1",
-          "255.255.255.1",
-          "123.123.123.7",
-        ],
-        "refresh_sec": 14400,
-        "retry_sec": 3600,
-        "soa_email": "admin@example.com",
-        "status": "active",
-        "ttl_sec": 3600,
-        "type": "master",
-      }
+            "axfr_ips": Array [
+              "44.55.66.77",
+            ],
+            "description": "Example Description",
+            "domain": "example.com",
+            "expire_sec": 604800,
+            "group": "Example Display Group",
+            "id": 1,
+            "master_ips": Array [
+              "127.0.0.1",
+              "255.255.255.1",
+              "123.123.123.7",
+            ],
+            "refresh_sec": 14400,
+            "retry_sec": 3600,
+            "soa_email": "admin@example.com",
+            "status": "active",
+            "ttl_sec": 3600,
+            "type": "master",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -135,191 +135,191 @@ ShallowWrapper {
       "buttonText": "Save",
       "children": <div>
         <ModalFormGroup
-          apiKey="domain"
-          errors={Object {}}
-          id="domain"
-          label="Primary Domain"
+                apiKey="domain"
+                errors={Object {}}
+                id="domain"
+                label="Primary Domain"
         >
-          <Input
-            className=""
-            id="domain"
-            name="domain"
-            onChange={[Function]}
-            placeholder="domain.com"
-            value="example.com"
-          />
+                <Input
+                        className=""
+                        id="domain"
+                        name="domain"
+                        onChange={[Function]}
+                        placeholder="domain.com"
+                        value="example.com"
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="group"
-          description="Domains are grouped together on the Domain list page"
-          errors={Object {}}
-          id="group"
-          label="Group"
+                apiKey="group"
+                description="Domains are grouped together on the Domain list page"
+                errors={Object {}}
+                id="group"
+                label="Group"
         >
-          <Input
-            className=""
-            id="group"
-            name="group"
-            onChange={[Function]}
-            placeholder=""
-            value="Example Display Group"
-          />
+                <Input
+                        className=""
+                        id="group"
+                        name="group"
+                        onChange={[Function]}
+                        placeholder=""
+                        value="Example Display Group"
+                />
         </ModalFormGroup>
         <ModalFormGroup
-          apiKey="axfr_ips"
-          description="The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)"
-          errors={Object {}}
-          id="axfrIps"
-          label="Domain Transfers"
-          name="axfr_ips"
+                apiKey="axfr_ips"
+                description="The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)"
+                errors={Object {}}
+                id="axfrIps"
+                label="Domain Transfers"
+                name="axfr_ips"
         >
-          <Textarea
-            className=""
-            id="axfrIps"
-            name="axfrIps"
-            onChange={[Function]}
-            placeholder="172.92.1.4;209.124.103.15"
-            value="44.55.66.77"
-          />
+                <Textarea
+                        className=""
+                        id="axfrIps"
+                        name="axfrIps"
+                        onChange={[Function]}
+                        placeholder="172.92.1.4;209.124.103.15"
+                        value="44.55.66.77"
+                />
         </ModalFormGroup>
         <span>
-          <ModalFormGroup
-            apiKey="soa_email"
-            description="Email address of the Domain administrator"
-            errors={Object {}}
-            id="email"
-            label="Email"
-          >
-            <Input
-              className=""
-              id="email"
-              name="email"
-              onChange={[Function]}
-              placeholder="admin@domain.com"
-              type="email"
-              value="admin@example.com"
-            />
-          </ModalFormGroup>
-          <ModalFormGroup
-            apiKey="status"
-            errors={Object {}}
-            id="status"
-            label="Status"
-          >
-            <Select
-              analytics={
-                Object {
-                  "noTrack": false,
-                }
-              }
-              className=""
-              id="status"
-              name="status"
-              onChange={[Function]}
-              options={
-                Array [
-                  Object {
-                    "label": "Active (turn on serving of this domain)",
-                    "value": "active",
-                  },
-                  Object {
-                    "label": "Disabled (turn off serving of this domain)",
-                    "value": "disabled",
-                  },
-                  Object {
-                    "label": "Edit Mode (use while making edits)",
-                    "value": "edit_mode",
-                  },
-                ]
-              }
-              value="active"
-            />
-          </ModalFormGroup>
-          <h3
-            className="sub-header"
-          >
-            Advanced
-          </h3>
-          <ModalFormGroup
-            apiKey="ttl_sec"
-            description="The default Time To Live for all entries in the Domain"
-            errors={Object {}}
-            id="defaultTTL"
-            label="Default TTL"
-          >
-            <SelectDNSSeconds
-              id="defaultTTL"
-              name="defaultTTL"
-              onChange={[Function]}
-              value={3600}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup
-            apiKey="refresh_sec"
-            description="How often secondary (slave) nameservers check with the master for updates"
-            errors={Object {}}
-            id="refreshRate"
-            label="Refresh Rate"
-          >
-            <SelectDNSSeconds
-              id="refreshRate"
-              name="refreshRate"
-              onChange={[Function]}
-              value={14400}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup
-            apiKey="retry_sec"
-            description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
-            errors={Object {}}
-            id="retryRate"
-            label="Retry Rate"
-          >
-            <SelectDNSSeconds
-              id="retryRate"
-              name="retryRate"
-              onChange={[Function]}
-              value={3600}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup
-            apiKey="expire_sec"
-            description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
-            errors={Object {}}
-            id="expireTime"
-            label="Expire Time"
-          >
-            <Select
-              analytics={
-                Object {
-                  "noTrack": false,
-                }
-              }
-              className=""
-              id="expireTime"
-              name="expireTime"
-              onChange={[Function]}
-              options={
-                Array [
-                  Object {
-                    "label": "Default (1 week)",
-                    "value": 604800,
-                  },
-                  Object {
-                    "label": "1209600 (2 weeks)",
-                    "value": 1209600,
-                  },
-                  Object {
-                    "label": "2419200 (4 weeks)",
-                    "value": 2419200,
-                  },
-                ]
-              }
-              value={604800}
-            />
-          </ModalFormGroup>
+                <ModalFormGroup
+                        apiKey="soa_email"
+                        description="Email address of the Domain administrator"
+                        errors={Object {}}
+                        id="email"
+                        label="Email"
+                >
+                        <Input
+                                className=""
+                                id="email"
+                                name="email"
+                                onChange={[Function]}
+                                placeholder="admin@domain.com"
+                                type="email"
+                                value="admin@example.com"
+                        />
+                </ModalFormGroup>
+                <ModalFormGroup
+                        apiKey="status"
+                        errors={Object {}}
+                        id="status"
+                        label="Status"
+                >
+                        <Select
+                                analytics={
+                                        Object {
+                                                "noTrack": false,
+                                              }
+                                }
+                                className=""
+                                id="status"
+                                name="status"
+                                onChange={[Function]}
+                                options={
+                                        Array [
+                                                Object {
+                                                  "label": "Active (turn on serving of this domain)",
+                                                  "value": "active",
+                                                },
+                                                Object {
+                                                  "label": "Disabled (turn off serving of this domain)",
+                                                  "value": "disabled",
+                                                },
+                                                Object {
+                                                  "label": "Edit Mode (use while making edits)",
+                                                  "value": "edit_mode",
+                                                },
+                                              ]
+                                }
+                                value="active"
+                        />
+                </ModalFormGroup>
+                <h3
+                        className="sub-header"
+                >
+                        Advanced
+                </h3>
+                <ModalFormGroup
+                        apiKey="ttl_sec"
+                        description="The default Time To Live for all entries in the Domain"
+                        errors={Object {}}
+                        id="defaultTTL"
+                        label="Default TTL"
+                >
+                        <SelectDNSSeconds
+                                id="defaultTTL"
+                                name="defaultTTL"
+                                onChange={[Function]}
+                                value={3600}
+                        />
+                </ModalFormGroup>
+                <ModalFormGroup
+                        apiKey="refresh_sec"
+                        description="How often secondary (slave) nameservers check with the master for updates"
+                        errors={Object {}}
+                        id="refreshRate"
+                        label="Refresh Rate"
+                >
+                        <SelectDNSSeconds
+                                id="refreshRate"
+                                name="refreshRate"
+                                onChange={[Function]}
+                                value={14400}
+                        />
+                </ModalFormGroup>
+                <ModalFormGroup
+                        apiKey="retry_sec"
+                        description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
+                        errors={Object {}}
+                        id="retryRate"
+                        label="Retry Rate"
+                >
+                        <SelectDNSSeconds
+                                id="retryRate"
+                                name="retryRate"
+                                onChange={[Function]}
+                                value={3600}
+                        />
+                </ModalFormGroup>
+                <ModalFormGroup
+                        apiKey="expire_sec"
+                        description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
+                        errors={Object {}}
+                        id="expireTime"
+                        label="Expire Time"
+                >
+                        <Select
+                                analytics={
+                                        Object {
+                                                "noTrack": false,
+                                              }
+                                }
+                                className=""
+                                id="expireTime"
+                                name="expireTime"
+                                onChange={[Function]}
+                                options={
+                                        Array [
+                                                Object {
+                                                  "label": "Default (1 week)",
+                                                  "value": 604800,
+                                                },
+                                                Object {
+                                                  "label": "1209600 (2 weeks)",
+                                                  "value": 1209600,
+                                                },
+                                                Object {
+                                                  "label": "2419200 (4 weeks)",
+                                                  "value": 2419200,
+                                                },
+                                              ]
+                                }
+                                value={604800}
+                        />
+                </ModalFormGroup>
         </span>
-      </div>,
+</div>,
       "errors": Object {},
       "noCancel": false,
       "noCancelEvent": false,
@@ -339,32 +339,32 @@ ShallowWrapper {
             errors={Object {}}
             id="domain"
             label="Primary Domain"
-          >
+>
             <Input
-              className=""
-              id="domain"
-              name="domain"
-              onChange={[Function]}
-              placeholder="domain.com"
-              value="example.com"
+                        className=""
+                        id="domain"
+                        name="domain"
+                        onChange={[Function]}
+                        placeholder="domain.com"
+                        value="example.com"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="group"
             description="Domains are grouped together on the Domain list page"
             errors={Object {}}
             id="group"
             label="Group"
-          >
+>
             <Input
-              className=""
-              id="group"
-              name="group"
-              onChange={[Function]}
-              placeholder=""
-              value="Example Display Group"
+                        className=""
+                        id="group"
+                        name="group"
+                        onChange={[Function]}
+                        placeholder=""
+                        value="Example Display Group"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           null,
           <ModalFormGroup
             apiKey="axfr_ips"
@@ -373,153 +373,153 @@ ShallowWrapper {
             id="axfrIps"
             label="Domain Transfers"
             name="axfr_ips"
-          >
+>
             <Textarea
-              className=""
-              id="axfrIps"
-              name="axfrIps"
-              onChange={[Function]}
-              placeholder="172.92.1.4;209.124.103.15"
-              value="44.55.66.77"
+                        className=""
+                        id="axfrIps"
+                        name="axfrIps"
+                        onChange={[Function]}
+                        placeholder="172.92.1.4;209.124.103.15"
+                        value="44.55.66.77"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <span>
             <ModalFormGroup
-              apiKey="soa_email"
-              description="Email address of the Domain administrator"
-              errors={Object {}}
-              id="email"
-              label="Email"
+                        apiKey="soa_email"
+                        description="Email address of the Domain administrator"
+                        errors={Object {}}
+                        id="email"
+                        label="Email"
             >
-              <Input
-                className=""
-                id="email"
-                name="email"
-                onChange={[Function]}
-                placeholder="admin@domain.com"
-                type="email"
-                value="admin@example.com"
-              />
+                        <Input
+                                    className=""
+                                    id="email"
+                                    name="email"
+                                    onChange={[Function]}
+                                    placeholder="admin@domain.com"
+                                    type="email"
+                                    value="admin@example.com"
+                        />
             </ModalFormGroup>
             <ModalFormGroup
-              apiKey="status"
-              errors={Object {}}
-              id="status"
-              label="Status"
+                        apiKey="status"
+                        errors={Object {}}
+                        id="status"
+                        label="Status"
             >
-              <Select
-                analytics={
-                  Object {
-                    "noTrack": false,
-                  }
-                }
-                className=""
-                id="status"
-                name="status"
-                onChange={[Function]}
-                options={
-                  Array [
-                    Object {
-                      "label": "Active (turn on serving of this domain)",
-                      "value": "active",
-                    },
-                    Object {
-                      "label": "Disabled (turn off serving of this domain)",
-                      "value": "disabled",
-                    },
-                    Object {
-                      "label": "Edit Mode (use while making edits)",
-                      "value": "edit_mode",
-                    },
-                  ]
-                }
-                value="active"
-              />
+                        <Select
+                                    analytics={
+                                                Object {
+                                                            "noTrack": false,
+                                                          }
+                                    }
+                                    className=""
+                                    id="status"
+                                    name="status"
+                                    onChange={[Function]}
+                                    options={
+                                                Array [
+                                                            Object {
+                                                              "label": "Active (turn on serving of this domain)",
+                                                              "value": "active",
+                                                            },
+                                                            Object {
+                                                              "label": "Disabled (turn off serving of this domain)",
+                                                              "value": "disabled",
+                                                            },
+                                                            Object {
+                                                              "label": "Edit Mode (use while making edits)",
+                                                              "value": "edit_mode",
+                                                            },
+                                                          ]
+                                    }
+                                    value="active"
+                        />
             </ModalFormGroup>
             <h3
-              className="sub-header"
+                        className="sub-header"
             >
-              Advanced
+                        Advanced
             </h3>
             <ModalFormGroup
-              apiKey="ttl_sec"
-              description="The default Time To Live for all entries in the Domain"
-              errors={Object {}}
-              id="defaultTTL"
-              label="Default TTL"
+                        apiKey="ttl_sec"
+                        description="The default Time To Live for all entries in the Domain"
+                        errors={Object {}}
+                        id="defaultTTL"
+                        label="Default TTL"
             >
-              <SelectDNSSeconds
-                id="defaultTTL"
-                name="defaultTTL"
-                onChange={[Function]}
-                value={3600}
-              />
+                        <SelectDNSSeconds
+                                    id="defaultTTL"
+                                    name="defaultTTL"
+                                    onChange={[Function]}
+                                    value={3600}
+                        />
             </ModalFormGroup>
             <ModalFormGroup
-              apiKey="refresh_sec"
-              description="How often secondary (slave) nameservers check with the master for updates"
-              errors={Object {}}
-              id="refreshRate"
-              label="Refresh Rate"
+                        apiKey="refresh_sec"
+                        description="How often secondary (slave) nameservers check with the master for updates"
+                        errors={Object {}}
+                        id="refreshRate"
+                        label="Refresh Rate"
             >
-              <SelectDNSSeconds
-                id="refreshRate"
-                name="refreshRate"
-                onChange={[Function]}
-                value={14400}
-              />
+                        <SelectDNSSeconds
+                                    id="refreshRate"
+                                    name="refreshRate"
+                                    onChange={[Function]}
+                                    value={14400}
+                        />
             </ModalFormGroup>
             <ModalFormGroup
-              apiKey="retry_sec"
-              description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
-              errors={Object {}}
-              id="retryRate"
-              label="Retry Rate"
+                        apiKey="retry_sec"
+                        description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
+                        errors={Object {}}
+                        id="retryRate"
+                        label="Retry Rate"
             >
-              <SelectDNSSeconds
-                id="retryRate"
-                name="retryRate"
-                onChange={[Function]}
-                value={3600}
-              />
+                        <SelectDNSSeconds
+                                    id="retryRate"
+                                    name="retryRate"
+                                    onChange={[Function]}
+                                    value={3600}
+                        />
             </ModalFormGroup>
             <ModalFormGroup
-              apiKey="expire_sec"
-              description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
-              errors={Object {}}
-              id="expireTime"
-              label="Expire Time"
+                        apiKey="expire_sec"
+                        description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
+                        errors={Object {}}
+                        id="expireTime"
+                        label="Expire Time"
             >
-              <Select
-                analytics={
-                  Object {
-                    "noTrack": false,
-                  }
-                }
-                className=""
-                id="expireTime"
-                name="expireTime"
-                onChange={[Function]}
-                options={
-                  Array [
-                    Object {
-                      "label": "Default (1 week)",
-                      "value": 604800,
-                    },
-                    Object {
-                      "label": "1209600 (2 weeks)",
-                      "value": 1209600,
-                    },
-                    Object {
-                      "label": "2419200 (4 weeks)",
-                      "value": 2419200,
-                    },
-                  ]
-                }
-                value={604800}
-              />
+                        <Select
+                                    analytics={
+                                                Object {
+                                                            "noTrack": false,
+                                                          }
+                                    }
+                                    className=""
+                                    id="expireTime"
+                                    name="expireTime"
+                                    onChange={[Function]}
+                                    options={
+                                                Array [
+                                                            Object {
+                                                              "label": "Default (1 week)",
+                                                              "value": 604800,
+                                                            },
+                                                            Object {
+                                                              "label": "1209600 (2 weeks)",
+                                                              "value": 1209600,
+                                                            },
+                                                            Object {
+                                                              "label": "2419200 (4 weeks)",
+                                                              "value": 2419200,
+                                                            },
+                                                          ]
+                                    }
+                                    value={604800}
+                        />
             </ModalFormGroup>
-          </span>,
+</span>,
         ],
       },
       "ref": null,
@@ -537,7 +537,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="domain.com"
               value="example.com"
-            />,
+/>,
             "errors": Object {},
             "id": "domain",
             "label": "Primary Domain",
@@ -574,7 +574,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder=""
               value="Example Display Group"
-            />,
+/>,
             "description": "Domains are grouped together on the Domain list page",
             "errors": Object {},
             "id": "group",
@@ -613,7 +613,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="172.92.1.4;209.124.103.15"
               value="44.55.66.77"
-            />,
+/>,
             "description": "The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)",
             "errors": Object {},
             "id": "axfrIps",
@@ -651,135 +651,135 @@ ShallowWrapper {
                 errors={Object {}}
                 id="email"
                 label="Email"
-              >
+>
                 <Input
-                  className=""
-                  id="email"
-                  name="email"
-                  onChange={[Function]}
-                  placeholder="admin@domain.com"
-                  type="email"
-                  value="admin@example.com"
+                                className=""
+                                id="email"
+                                name="email"
+                                onChange={[Function]}
+                                placeholder="admin@domain.com"
+                                type="email"
+                                value="admin@example.com"
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
               <ModalFormGroup
                 apiKey="status"
                 errors={Object {}}
                 id="status"
                 label="Status"
-              >
+>
                 <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
-                    }
-                  }
-                  className=""
-                  id="status"
-                  name="status"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Active (turn on serving of this domain)",
-                        "value": "active",
-                      },
-                      Object {
-                        "label": "Disabled (turn off serving of this domain)",
-                        "value": "disabled",
-                      },
-                      Object {
-                        "label": "Edit Mode (use while making edits)",
-                        "value": "edit_mode",
-                      },
-                    ]
-                  }
-                  value="active"
+                                analytics={
+                                                Object {
+                                                                "noTrack": false,
+                                                              }
+                                }
+                                className=""
+                                id="status"
+                                name="status"
+                                onChange={[Function]}
+                                options={
+                                                Array [
+                                                                Object {
+                                                                  "label": "Active (turn on serving of this domain)",
+                                                                  "value": "active",
+                                                                },
+                                                                Object {
+                                                                  "label": "Disabled (turn off serving of this domain)",
+                                                                  "value": "disabled",
+                                                                },
+                                                                Object {
+                                                                  "label": "Edit Mode (use while making edits)",
+                                                                  "value": "edit_mode",
+                                                                },
+                                                              ]
+                                }
+                                value="active"
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
               <h3
                 className="sub-header"
-              >
+>
                 Advanced
-              </h3>,
+</h3>,
               <ModalFormGroup
                 apiKey="ttl_sec"
                 description="The default Time To Live for all entries in the Domain"
                 errors={Object {}}
                 id="defaultTTL"
                 label="Default TTL"
-              >
+>
                 <SelectDNSSeconds
-                  id="defaultTTL"
-                  name="defaultTTL"
-                  onChange={[Function]}
-                  value={3600}
+                                id="defaultTTL"
+                                name="defaultTTL"
+                                onChange={[Function]}
+                                value={3600}
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
               <ModalFormGroup
                 apiKey="refresh_sec"
                 description="How often secondary (slave) nameservers check with the master for updates"
                 errors={Object {}}
                 id="refreshRate"
                 label="Refresh Rate"
-              >
+>
                 <SelectDNSSeconds
-                  id="refreshRate"
-                  name="refreshRate"
-                  onChange={[Function]}
-                  value={14400}
+                                id="refreshRate"
+                                name="refreshRate"
+                                onChange={[Function]}
+                                value={14400}
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
               <ModalFormGroup
                 apiKey="retry_sec"
                 description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
                 errors={Object {}}
                 id="retryRate"
                 label="Retry Rate"
-              >
+>
                 <SelectDNSSeconds
-                  id="retryRate"
-                  name="retryRate"
-                  onChange={[Function]}
-                  value={3600}
+                                id="retryRate"
+                                name="retryRate"
+                                onChange={[Function]}
+                                value={3600}
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
               <ModalFormGroup
                 apiKey="expire_sec"
                 description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
                 errors={Object {}}
                 id="expireTime"
                 label="Expire Time"
-              >
+>
                 <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
-                    }
-                  }
-                  className=""
-                  id="expireTime"
-                  name="expireTime"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Default (1 week)",
-                        "value": 604800,
-                      },
-                      Object {
-                        "label": "1209600 (2 weeks)",
-                        "value": 1209600,
-                      },
-                      Object {
-                        "label": "2419200 (4 weeks)",
-                        "value": 2419200,
-                      },
-                    ]
-                  }
-                  value={604800}
+                                analytics={
+                                                Object {
+                                                                "noTrack": false,
+                                                              }
+                                }
+                                className=""
+                                id="expireTime"
+                                name="expireTime"
+                                onChange={[Function]}
+                                options={
+                                                Array [
+                                                                Object {
+                                                                  "label": "Default (1 week)",
+                                                                  "value": 604800,
+                                                                },
+                                                                Object {
+                                                                  "label": "1209600 (2 weeks)",
+                                                                  "value": 1209600,
+                                                                },
+                                                                Object {
+                                                                  "label": "2419200 (4 weeks)",
+                                                                  "value": 2419200,
+                                                                },
+                                                              ]
+                                }
+                                value={604800}
                 />
-              </ModalFormGroup>,
+</ModalFormGroup>,
             ],
           },
           "ref": null,
@@ -798,7 +798,7 @@ ShallowWrapper {
                   placeholder="admin@domain.com"
                   type="email"
                   value="admin@example.com"
-                />,
+/>,
                 "description": "Email address of the Domain administrator",
                 "errors": Object {},
                 "id": "email",
@@ -832,32 +832,32 @@ ShallowWrapper {
                 "apiKey": "status",
                 "children": <Select
                   analytics={
-                    Object {
-                      "noTrack": false,
-                    }
+                                    Object {
+                                                      "noTrack": false,
+                                                    }
                   }
                   className=""
                   id="status"
                   name="status"
                   onChange={[Function]}
                   options={
-                    Array [
-                      Object {
-                        "label": "Active (turn on serving of this domain)",
-                        "value": "active",
-                      },
-                      Object {
-                        "label": "Disabled (turn off serving of this domain)",
-                        "value": "disabled",
-                      },
-                      Object {
-                        "label": "Edit Mode (use while making edits)",
-                        "value": "edit_mode",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "label": "Active (turn on serving of this domain)",
+                                                        "value": "active",
+                                                      },
+                                                      Object {
+                                                        "label": "Disabled (turn off serving of this domain)",
+                                                        "value": "disabled",
+                                                      },
+                                                      Object {
+                                                        "label": "Edit Mode (use while making edits)",
+                                                        "value": "edit_mode",
+                                                      },
+                                                    ]
                   }
                   value="active"
-                />,
+/>,
                 "errors": Object {},
                 "id": "status",
                 "label": "Status",
@@ -920,7 +920,7 @@ ShallowWrapper {
                   name="defaultTTL"
                   onChange={[Function]}
                   value={3600}
-                />,
+/>,
                 "description": "The default Time To Live for all entries in the Domain",
                 "errors": Object {},
                 "id": "defaultTTL",
@@ -954,7 +954,7 @@ ShallowWrapper {
                   name="refreshRate"
                   onChange={[Function]}
                   value={14400}
-                />,
+/>,
                 "description": "How often secondary (slave) nameservers check with the master for updates",
                 "errors": Object {},
                 "id": "refreshRate",
@@ -988,7 +988,7 @@ ShallowWrapper {
                   name="retryRate"
                   onChange={[Function]}
                   value={3600}
-                />,
+/>,
                 "description": "How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed",
                 "errors": Object {},
                 "id": "retryRate",
@@ -1019,32 +1019,32 @@ ShallowWrapper {
                 "apiKey": "expire_sec",
                 "children": <Select
                   analytics={
-                    Object {
-                      "noTrack": false,
-                    }
+                                    Object {
+                                                      "noTrack": false,
+                                                    }
                   }
                   className=""
                   id="expireTime"
                   name="expireTime"
                   onChange={[Function]}
                   options={
-                    Array [
-                      Object {
-                        "label": "Default (1 week)",
-                        "value": 604800,
-                      },
-                      Object {
-                        "label": "1209600 (2 weeks)",
-                        "value": 1209600,
-                      },
-                      Object {
-                        "label": "2419200 (4 weeks)",
-                        "value": 2419200,
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "label": "Default (1 week)",
+                                                        "value": 604800,
+                                                      },
+                                                      Object {
+                                                        "label": "1209600 (2 weeks)",
+                                                        "value": 1209600,
+                                                      },
+                                                      Object {
+                                                        "label": "2419200 (4 weeks)",
+                                                        "value": 2419200,
+                                                      },
+                                                    ]
                   }
                   value={604800}
-                />,
+/>,
                 "description": "How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver",
                 "errors": Object {},
                 "id": "expireTime",
@@ -1106,191 +1106,191 @@ ShallowWrapper {
         "buttonText": "Save",
         "children": <div>
           <ModalFormGroup
-            apiKey="domain"
-            errors={Object {}}
-            id="domain"
-            label="Primary Domain"
+                    apiKey="domain"
+                    errors={Object {}}
+                    id="domain"
+                    label="Primary Domain"
           >
-            <Input
-              className=""
-              id="domain"
-              name="domain"
-              onChange={[Function]}
-              placeholder="domain.com"
-              value="example.com"
-            />
+                    <Input
+                              className=""
+                              id="domain"
+                              name="domain"
+                              onChange={[Function]}
+                              placeholder="domain.com"
+                              value="example.com"
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="group"
-            description="Domains are grouped together on the Domain list page"
-            errors={Object {}}
-            id="group"
-            label="Group"
+                    apiKey="group"
+                    description="Domains are grouped together on the Domain list page"
+                    errors={Object {}}
+                    id="group"
+                    label="Group"
           >
-            <Input
-              className=""
-              id="group"
-              name="group"
-              onChange={[Function]}
-              placeholder=""
-              value="Example Display Group"
-            />
+                    <Input
+                              className=""
+                              id="group"
+                              name="group"
+                              onChange={[Function]}
+                              placeholder=""
+                              value="Example Display Group"
+                    />
           </ModalFormGroup>
           <ModalFormGroup
-            apiKey="axfr_ips"
-            description="The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)"
-            errors={Object {}}
-            id="axfrIps"
-            label="Domain Transfers"
-            name="axfr_ips"
+                    apiKey="axfr_ips"
+                    description="The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)"
+                    errors={Object {}}
+                    id="axfrIps"
+                    label="Domain Transfers"
+                    name="axfr_ips"
           >
-            <Textarea
-              className=""
-              id="axfrIps"
-              name="axfrIps"
-              onChange={[Function]}
-              placeholder="172.92.1.4;209.124.103.15"
-              value="44.55.66.77"
-            />
+                    <Textarea
+                              className=""
+                              id="axfrIps"
+                              name="axfrIps"
+                              onChange={[Function]}
+                              placeholder="172.92.1.4;209.124.103.15"
+                              value="44.55.66.77"
+                    />
           </ModalFormGroup>
           <span>
-            <ModalFormGroup
-              apiKey="soa_email"
-              description="Email address of the Domain administrator"
-              errors={Object {}}
-              id="email"
-              label="Email"
-            >
-              <Input
-                className=""
-                id="email"
-                name="email"
-                onChange={[Function]}
-                placeholder="admin@domain.com"
-                type="email"
-                value="admin@example.com"
-              />
-            </ModalFormGroup>
-            <ModalFormGroup
-              apiKey="status"
-              errors={Object {}}
-              id="status"
-              label="Status"
-            >
-              <Select
-                analytics={
-                  Object {
-                    "noTrack": false,
-                  }
-                }
-                className=""
-                id="status"
-                name="status"
-                onChange={[Function]}
-                options={
-                  Array [
-                    Object {
-                      "label": "Active (turn on serving of this domain)",
-                      "value": "active",
-                    },
-                    Object {
-                      "label": "Disabled (turn off serving of this domain)",
-                      "value": "disabled",
-                    },
-                    Object {
-                      "label": "Edit Mode (use while making edits)",
-                      "value": "edit_mode",
-                    },
-                  ]
-                }
-                value="active"
-              />
-            </ModalFormGroup>
-            <h3
-              className="sub-header"
-            >
-              Advanced
-            </h3>
-            <ModalFormGroup
-              apiKey="ttl_sec"
-              description="The default Time To Live for all entries in the Domain"
-              errors={Object {}}
-              id="defaultTTL"
-              label="Default TTL"
-            >
-              <SelectDNSSeconds
-                id="defaultTTL"
-                name="defaultTTL"
-                onChange={[Function]}
-                value={3600}
-              />
-            </ModalFormGroup>
-            <ModalFormGroup
-              apiKey="refresh_sec"
-              description="How often secondary (slave) nameservers check with the master for updates"
-              errors={Object {}}
-              id="refreshRate"
-              label="Refresh Rate"
-            >
-              <SelectDNSSeconds
-                id="refreshRate"
-                name="refreshRate"
-                onChange={[Function]}
-                value={14400}
-              />
-            </ModalFormGroup>
-            <ModalFormGroup
-              apiKey="retry_sec"
-              description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
-              errors={Object {}}
-              id="retryRate"
-              label="Retry Rate"
-            >
-              <SelectDNSSeconds
-                id="retryRate"
-                name="retryRate"
-                onChange={[Function]}
-                value={3600}
-              />
-            </ModalFormGroup>
-            <ModalFormGroup
-              apiKey="expire_sec"
-              description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
-              errors={Object {}}
-              id="expireTime"
-              label="Expire Time"
-            >
-              <Select
-                analytics={
-                  Object {
-                    "noTrack": false,
-                  }
-                }
-                className=""
-                id="expireTime"
-                name="expireTime"
-                onChange={[Function]}
-                options={
-                  Array [
-                    Object {
-                      "label": "Default (1 week)",
-                      "value": 604800,
-                    },
-                    Object {
-                      "label": "1209600 (2 weeks)",
-                      "value": 1209600,
-                    },
-                    Object {
-                      "label": "2419200 (4 weeks)",
-                      "value": 2419200,
-                    },
-                  ]
-                }
-                value={604800}
-              />
-            </ModalFormGroup>
+                    <ModalFormGroup
+                              apiKey="soa_email"
+                              description="Email address of the Domain administrator"
+                              errors={Object {}}
+                              id="email"
+                              label="Email"
+                    >
+                              <Input
+                                        className=""
+                                        id="email"
+                                        name="email"
+                                        onChange={[Function]}
+                                        placeholder="admin@domain.com"
+                                        type="email"
+                                        value="admin@example.com"
+                              />
+                    </ModalFormGroup>
+                    <ModalFormGroup
+                              apiKey="status"
+                              errors={Object {}}
+                              id="status"
+                              label="Status"
+                    >
+                              <Select
+                                        analytics={
+                                                  Object {
+                                                            "noTrack": false,
+                                                          }
+                                        }
+                                        className=""
+                                        id="status"
+                                        name="status"
+                                        onChange={[Function]}
+                                        options={
+                                                  Array [
+                                                            Object {
+                                                              "label": "Active (turn on serving of this domain)",
+                                                              "value": "active",
+                                                            },
+                                                            Object {
+                                                              "label": "Disabled (turn off serving of this domain)",
+                                                              "value": "disabled",
+                                                            },
+                                                            Object {
+                                                              "label": "Edit Mode (use while making edits)",
+                                                              "value": "edit_mode",
+                                                            },
+                                                          ]
+                                        }
+                                        value="active"
+                              />
+                    </ModalFormGroup>
+                    <h3
+                              className="sub-header"
+                    >
+                              Advanced
+                    </h3>
+                    <ModalFormGroup
+                              apiKey="ttl_sec"
+                              description="The default Time To Live for all entries in the Domain"
+                              errors={Object {}}
+                              id="defaultTTL"
+                              label="Default TTL"
+                    >
+                              <SelectDNSSeconds
+                                        id="defaultTTL"
+                                        name="defaultTTL"
+                                        onChange={[Function]}
+                                        value={3600}
+                              />
+                    </ModalFormGroup>
+                    <ModalFormGroup
+                              apiKey="refresh_sec"
+                              description="How often secondary (slave) nameservers check with the master for updates"
+                              errors={Object {}}
+                              id="refreshRate"
+                              label="Refresh Rate"
+                    >
+                              <SelectDNSSeconds
+                                        id="refreshRate"
+                                        name="refreshRate"
+                                        onChange={[Function]}
+                                        value={14400}
+                              />
+                    </ModalFormGroup>
+                    <ModalFormGroup
+                              apiKey="retry_sec"
+                              description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
+                              errors={Object {}}
+                              id="retryRate"
+                              label="Retry Rate"
+                    >
+                              <SelectDNSSeconds
+                                        id="retryRate"
+                                        name="retryRate"
+                                        onChange={[Function]}
+                                        value={3600}
+                              />
+                    </ModalFormGroup>
+                    <ModalFormGroup
+                              apiKey="expire_sec"
+                              description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
+                              errors={Object {}}
+                              id="expireTime"
+                              label="Expire Time"
+                    >
+                              <Select
+                                        analytics={
+                                                  Object {
+                                                            "noTrack": false,
+                                                          }
+                                        }
+                                        className=""
+                                        id="expireTime"
+                                        name="expireTime"
+                                        onChange={[Function]}
+                                        options={
+                                                  Array [
+                                                            Object {
+                                                              "label": "Default (1 week)",
+                                                              "value": 604800,
+                                                            },
+                                                            Object {
+                                                              "label": "1209600 (2 weeks)",
+                                                              "value": 1209600,
+                                                            },
+                                                            Object {
+                                                              "label": "2419200 (4 weeks)",
+                                                              "value": 2419200,
+                                                            },
+                                                          ]
+                                        }
+                                        value={604800}
+                              />
+                    </ModalFormGroup>
           </span>
-        </div>,
+</div>,
         "errors": Object {},
         "noCancel": false,
         "noCancelEvent": false,
@@ -1310,32 +1310,32 @@ ShallowWrapper {
               errors={Object {}}
               id="domain"
               label="Primary Domain"
-            >
+>
               <Input
-                className=""
-                id="domain"
-                name="domain"
-                onChange={[Function]}
-                placeholder="domain.com"
-                value="example.com"
+                            className=""
+                            id="domain"
+                            name="domain"
+                            onChange={[Function]}
+                            placeholder="domain.com"
+                            value="example.com"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <ModalFormGroup
               apiKey="group"
               description="Domains are grouped together on the Domain list page"
               errors={Object {}}
               id="group"
               label="Group"
-            >
+>
               <Input
-                className=""
-                id="group"
-                name="group"
-                onChange={[Function]}
-                placeholder=""
-                value="Example Display Group"
+                            className=""
+                            id="group"
+                            name="group"
+                            onChange={[Function]}
+                            placeholder=""
+                            value="Example Display Group"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             null,
             <ModalFormGroup
               apiKey="axfr_ips"
@@ -1344,153 +1344,153 @@ ShallowWrapper {
               id="axfrIps"
               label="Domain Transfers"
               name="axfr_ips"
-            >
+>
               <Textarea
-                className=""
-                id="axfrIps"
-                name="axfrIps"
-                onChange={[Function]}
-                placeholder="172.92.1.4;209.124.103.15"
-                value="44.55.66.77"
+                            className=""
+                            id="axfrIps"
+                            name="axfrIps"
+                            onChange={[Function]}
+                            placeholder="172.92.1.4;209.124.103.15"
+                            value="44.55.66.77"
               />
-            </ModalFormGroup>,
+</ModalFormGroup>,
             <span>
               <ModalFormGroup
-                apiKey="soa_email"
-                description="Email address of the Domain administrator"
-                errors={Object {}}
-                id="email"
-                label="Email"
+                            apiKey="soa_email"
+                            description="Email address of the Domain administrator"
+                            errors={Object {}}
+                            id="email"
+                            label="Email"
               >
-                <Input
-                  className=""
-                  id="email"
-                  name="email"
-                  onChange={[Function]}
-                  placeholder="admin@domain.com"
-                  type="email"
-                  value="admin@example.com"
-                />
+                            <Input
+                                          className=""
+                                          id="email"
+                                          name="email"
+                                          onChange={[Function]}
+                                          placeholder="admin@domain.com"
+                                          type="email"
+                                          value="admin@example.com"
+                            />
               </ModalFormGroup>
               <ModalFormGroup
-                apiKey="status"
-                errors={Object {}}
-                id="status"
-                label="Status"
+                            apiKey="status"
+                            errors={Object {}}
+                            id="status"
+                            label="Status"
               >
-                <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
-                    }
-                  }
-                  className=""
-                  id="status"
-                  name="status"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Active (turn on serving of this domain)",
-                        "value": "active",
-                      },
-                      Object {
-                        "label": "Disabled (turn off serving of this domain)",
-                        "value": "disabled",
-                      },
-                      Object {
-                        "label": "Edit Mode (use while making edits)",
-                        "value": "edit_mode",
-                      },
-                    ]
-                  }
-                  value="active"
-                />
+                            <Select
+                                          analytics={
+                                                        Object {
+                                                                      "noTrack": false,
+                                                                    }
+                                          }
+                                          className=""
+                                          id="status"
+                                          name="status"
+                                          onChange={[Function]}
+                                          options={
+                                                        Array [
+                                                                      Object {
+                                                                        "label": "Active (turn on serving of this domain)",
+                                                                        "value": "active",
+                                                                      },
+                                                                      Object {
+                                                                        "label": "Disabled (turn off serving of this domain)",
+                                                                        "value": "disabled",
+                                                                      },
+                                                                      Object {
+                                                                        "label": "Edit Mode (use while making edits)",
+                                                                        "value": "edit_mode",
+                                                                      },
+                                                                    ]
+                                          }
+                                          value="active"
+                            />
               </ModalFormGroup>
               <h3
-                className="sub-header"
+                            className="sub-header"
               >
-                Advanced
+                            Advanced
               </h3>
               <ModalFormGroup
-                apiKey="ttl_sec"
-                description="The default Time To Live for all entries in the Domain"
-                errors={Object {}}
-                id="defaultTTL"
-                label="Default TTL"
+                            apiKey="ttl_sec"
+                            description="The default Time To Live for all entries in the Domain"
+                            errors={Object {}}
+                            id="defaultTTL"
+                            label="Default TTL"
               >
-                <SelectDNSSeconds
-                  id="defaultTTL"
-                  name="defaultTTL"
-                  onChange={[Function]}
-                  value={3600}
-                />
+                            <SelectDNSSeconds
+                                          id="defaultTTL"
+                                          name="defaultTTL"
+                                          onChange={[Function]}
+                                          value={3600}
+                            />
               </ModalFormGroup>
               <ModalFormGroup
-                apiKey="refresh_sec"
-                description="How often secondary (slave) nameservers check with the master for updates"
-                errors={Object {}}
-                id="refreshRate"
-                label="Refresh Rate"
+                            apiKey="refresh_sec"
+                            description="How often secondary (slave) nameservers check with the master for updates"
+                            errors={Object {}}
+                            id="refreshRate"
+                            label="Refresh Rate"
               >
-                <SelectDNSSeconds
-                  id="refreshRate"
-                  name="refreshRate"
-                  onChange={[Function]}
-                  value={14400}
-                />
+                            <SelectDNSSeconds
+                                          id="refreshRate"
+                                          name="refreshRate"
+                                          onChange={[Function]}
+                                          value={14400}
+                            />
               </ModalFormGroup>
               <ModalFormGroup
-                apiKey="retry_sec"
-                description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
-                errors={Object {}}
-                id="retryRate"
-                label="Retry Rate"
+                            apiKey="retry_sec"
+                            description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
+                            errors={Object {}}
+                            id="retryRate"
+                            label="Retry Rate"
               >
-                <SelectDNSSeconds
-                  id="retryRate"
-                  name="retryRate"
-                  onChange={[Function]}
-                  value={3600}
-                />
+                            <SelectDNSSeconds
+                                          id="retryRate"
+                                          name="retryRate"
+                                          onChange={[Function]}
+                                          value={3600}
+                            />
               </ModalFormGroup>
               <ModalFormGroup
-                apiKey="expire_sec"
-                description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
-                errors={Object {}}
-                id="expireTime"
-                label="Expire Time"
+                            apiKey="expire_sec"
+                            description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
+                            errors={Object {}}
+                            id="expireTime"
+                            label="Expire Time"
               >
-                <Select
-                  analytics={
-                    Object {
-                      "noTrack": false,
-                    }
-                  }
-                  className=""
-                  id="expireTime"
-                  name="expireTime"
-                  onChange={[Function]}
-                  options={
-                    Array [
-                      Object {
-                        "label": "Default (1 week)",
-                        "value": 604800,
-                      },
-                      Object {
-                        "label": "1209600 (2 weeks)",
-                        "value": 1209600,
-                      },
-                      Object {
-                        "label": "2419200 (4 weeks)",
-                        "value": 2419200,
-                      },
-                    ]
-                  }
-                  value={604800}
-                />
+                            <Select
+                                          analytics={
+                                                        Object {
+                                                                      "noTrack": false,
+                                                                    }
+                                          }
+                                          className=""
+                                          id="expireTime"
+                                          name="expireTime"
+                                          onChange={[Function]}
+                                          options={
+                                                        Array [
+                                                                      Object {
+                                                                        "label": "Default (1 week)",
+                                                                        "value": 604800,
+                                                                      },
+                                                                      Object {
+                                                                        "label": "1209600 (2 weeks)",
+                                                                        "value": 1209600,
+                                                                      },
+                                                                      Object {
+                                                                        "label": "2419200 (4 weeks)",
+                                                                        "value": 2419200,
+                                                                      },
+                                                                    ]
+                                          }
+                                          value={604800}
+                            />
               </ModalFormGroup>
-            </span>,
+</span>,
           ],
         },
         "ref": null,
@@ -1508,7 +1508,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="domain.com"
                 value="example.com"
-              />,
+/>,
               "errors": Object {},
               "id": "domain",
               "label": "Primary Domain",
@@ -1545,7 +1545,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder=""
                 value="Example Display Group"
-              />,
+/>,
               "description": "Domains are grouped together on the Domain list page",
               "errors": Object {},
               "id": "group",
@@ -1584,7 +1584,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="172.92.1.4;209.124.103.15"
                 value="44.55.66.77"
-              />,
+/>,
               "description": "The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)",
               "errors": Object {},
               "id": "axfrIps",
@@ -1622,135 +1622,135 @@ ShallowWrapper {
                   errors={Object {}}
                   id="email"
                   label="Email"
-                >
+>
                   <Input
-                    className=""
-                    id="email"
-                    name="email"
-                    onChange={[Function]}
-                    placeholder="admin@domain.com"
-                    type="email"
-                    value="admin@example.com"
+                                    className=""
+                                    id="email"
+                                    name="email"
+                                    onChange={[Function]}
+                                    placeholder="admin@domain.com"
+                                    type="email"
+                                    value="admin@example.com"
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
                 <ModalFormGroup
                   apiKey="status"
                   errors={Object {}}
                   id="status"
                   label="Status"
-                >
+>
                   <Select
-                    analytics={
-                      Object {
-                        "noTrack": false,
-                      }
-                    }
-                    className=""
-                    id="status"
-                    name="status"
-                    onChange={[Function]}
-                    options={
-                      Array [
-                        Object {
-                          "label": "Active (turn on serving of this domain)",
-                          "value": "active",
-                        },
-                        Object {
-                          "label": "Disabled (turn off serving of this domain)",
-                          "value": "disabled",
-                        },
-                        Object {
-                          "label": "Edit Mode (use while making edits)",
-                          "value": "edit_mode",
-                        },
-                      ]
-                    }
-                    value="active"
+                                    analytics={
+                                                      Object {
+                                                                        "noTrack": false,
+                                                                      }
+                                    }
+                                    className=""
+                                    id="status"
+                                    name="status"
+                                    onChange={[Function]}
+                                    options={
+                                                      Array [
+                                                                        Object {
+                                                                          "label": "Active (turn on serving of this domain)",
+                                                                          "value": "active",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Disabled (turn off serving of this domain)",
+                                                                          "value": "disabled",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "Edit Mode (use while making edits)",
+                                                                          "value": "edit_mode",
+                                                                        },
+                                                                      ]
+                                    }
+                                    value="active"
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
                 <h3
                   className="sub-header"
-                >
+>
                   Advanced
-                </h3>,
+</h3>,
                 <ModalFormGroup
                   apiKey="ttl_sec"
                   description="The default Time To Live for all entries in the Domain"
                   errors={Object {}}
                   id="defaultTTL"
                   label="Default TTL"
-                >
+>
                   <SelectDNSSeconds
-                    id="defaultTTL"
-                    name="defaultTTL"
-                    onChange={[Function]}
-                    value={3600}
+                                    id="defaultTTL"
+                                    name="defaultTTL"
+                                    onChange={[Function]}
+                                    value={3600}
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
                 <ModalFormGroup
                   apiKey="refresh_sec"
                   description="How often secondary (slave) nameservers check with the master for updates"
                   errors={Object {}}
                   id="refreshRate"
                   label="Refresh Rate"
-                >
+>
                   <SelectDNSSeconds
-                    id="refreshRate"
-                    name="refreshRate"
-                    onChange={[Function]}
-                    value={14400}
+                                    id="refreshRate"
+                                    name="refreshRate"
+                                    onChange={[Function]}
+                                    value={14400}
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
                 <ModalFormGroup
                   apiKey="retry_sec"
                   description="How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed"
                   errors={Object {}}
                   id="retryRate"
                   label="Retry Rate"
-                >
+>
                   <SelectDNSSeconds
-                    id="retryRate"
-                    name="retryRate"
-                    onChange={[Function]}
-                    value={3600}
+                                    id="retryRate"
+                                    name="retryRate"
+                                    onChange={[Function]}
+                                    value={3600}
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
                 <ModalFormGroup
                   apiKey="expire_sec"
                   description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
                   errors={Object {}}
                   id="expireTime"
                   label="Expire Time"
-                >
+>
                   <Select
-                    analytics={
-                      Object {
-                        "noTrack": false,
-                      }
-                    }
-                    className=""
-                    id="expireTime"
-                    name="expireTime"
-                    onChange={[Function]}
-                    options={
-                      Array [
-                        Object {
-                          "label": "Default (1 week)",
-                          "value": 604800,
-                        },
-                        Object {
-                          "label": "1209600 (2 weeks)",
-                          "value": 1209600,
-                        },
-                        Object {
-                          "label": "2419200 (4 weeks)",
-                          "value": 2419200,
-                        },
-                      ]
-                    }
-                    value={604800}
+                                    analytics={
+                                                      Object {
+                                                                        "noTrack": false,
+                                                                      }
+                                    }
+                                    className=""
+                                    id="expireTime"
+                                    name="expireTime"
+                                    onChange={[Function]}
+                                    options={
+                                                      Array [
+                                                                        Object {
+                                                                          "label": "Default (1 week)",
+                                                                          "value": 604800,
+                                                                        },
+                                                                        Object {
+                                                                          "label": "1209600 (2 weeks)",
+                                                                          "value": 1209600,
+                                                                        },
+                                                                        Object {
+                                                                          "label": "2419200 (4 weeks)",
+                                                                          "value": 2419200,
+                                                                        },
+                                                                      ]
+                                    }
+                                    value={604800}
                   />
-                </ModalFormGroup>,
+</ModalFormGroup>,
               ],
             },
             "ref": null,
@@ -1769,7 +1769,7 @@ ShallowWrapper {
                     placeholder="admin@domain.com"
                     type="email"
                     value="admin@example.com"
-                  />,
+/>,
                   "description": "Email address of the Domain administrator",
                   "errors": Object {},
                   "id": "email",
@@ -1803,32 +1803,32 @@ ShallowWrapper {
                   "apiKey": "status",
                   "children": <Select
                     analytics={
-                      Object {
-                        "noTrack": false,
-                      }
+                                        Object {
+                                                            "noTrack": false,
+                                                          }
                     }
                     className=""
                     id="status"
                     name="status"
                     onChange={[Function]}
                     options={
-                      Array [
-                        Object {
-                          "label": "Active (turn on serving of this domain)",
-                          "value": "active",
-                        },
-                        Object {
-                          "label": "Disabled (turn off serving of this domain)",
-                          "value": "disabled",
-                        },
-                        Object {
-                          "label": "Edit Mode (use while making edits)",
-                          "value": "edit_mode",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "label": "Active (turn on serving of this domain)",
+                                                              "value": "active",
+                                                            },
+                                                            Object {
+                                                              "label": "Disabled (turn off serving of this domain)",
+                                                              "value": "disabled",
+                                                            },
+                                                            Object {
+                                                              "label": "Edit Mode (use while making edits)",
+                                                              "value": "edit_mode",
+                                                            },
+                                                          ]
                     }
                     value="active"
-                  />,
+/>,
                   "errors": Object {},
                   "id": "status",
                   "label": "Status",
@@ -1891,7 +1891,7 @@ ShallowWrapper {
                     name="defaultTTL"
                     onChange={[Function]}
                     value={3600}
-                  />,
+/>,
                   "description": "The default Time To Live for all entries in the Domain",
                   "errors": Object {},
                   "id": "defaultTTL",
@@ -1925,7 +1925,7 @@ ShallowWrapper {
                     name="refreshRate"
                     onChange={[Function]}
                     value={14400}
-                  />,
+/>,
                   "description": "How often secondary (slave) nameservers check with the master for updates",
                   "errors": Object {},
                   "id": "refreshRate",
@@ -1959,7 +1959,7 @@ ShallowWrapper {
                     name="retryRate"
                     onChange={[Function]}
                     value={3600}
-                  />,
+/>,
                   "description": "How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed",
                   "errors": Object {},
                   "id": "retryRate",
@@ -1990,32 +1990,32 @@ ShallowWrapper {
                   "apiKey": "expire_sec",
                   "children": <Select
                     analytics={
-                      Object {
-                        "noTrack": false,
-                      }
+                                        Object {
+                                                            "noTrack": false,
+                                                          }
                     }
                     className=""
                     id="expireTime"
                     name="expireTime"
                     onChange={[Function]}
                     options={
-                      Array [
-                        Object {
-                          "label": "Default (1 week)",
-                          "value": 604800,
-                        },
-                        Object {
-                          "label": "1209600 (2 weeks)",
-                          "value": 1209600,
-                        },
-                        Object {
-                          "label": "2419200 (4 weeks)",
-                          "value": 2419200,
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "label": "Default (1 week)",
+                                                              "value": 604800,
+                                                            },
+                                                            Object {
+                                                              "label": "1209600 (2 weeks)",
+                                                              "value": 1209600,
+                                                            },
+                                                            Object {
+                                                              "label": "2419200 (4 weeks)",
+                                                              "value": 2419200,
+                                                            },
+                                                          ]
                     }
                     value={604800}
-                  />,
+/>,
                   "description": "How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver",
                   "errors": Object {},
                   "id": "expireTime",

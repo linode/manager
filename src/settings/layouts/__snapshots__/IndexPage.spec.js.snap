@@ -6,24 +6,24 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <IndexPage
     account={
-      Object {
-        "address_1": "123 Main St.",
-        "address_2": "Suite 101",
-        "balance": 10,
-        "city": "Philadelphia",
-        "company": "My Company LLC",
-        "country": "US",
-        "email": "jsmith@mycompany.com",
-        "first_name": "John",
-        "last_name": "Smith",
-        "network_helper": false,
-        "phone": "555-555-1212",
-        "state": "PA",
-        "zip": 19102,
-      }
+        Object {
+            "address_1": "123 Main St.",
+            "address_2": "Suite 101",
+            "balance": 10,
+            "city": "Philadelphia",
+            "company": "My Company LLC",
+            "country": "US",
+            "email": "jsmith@mycompany.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "network_helper": false,
+            "phone": "555-555-1212",
+            "state": "PA",
+            "zip": 19102,
+          }
     }
     dispatch={[Function]}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -39,102 +39,102 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Account Settings"
-        />,
+/>,
         <header
           className="main-header main-header--border"
-        >
+>
           <div
-            className="container"
+                    className="container"
           >
-            <h1>
-              Account Settings
-            </h1>
+                    <h1>
+                              Account Settings
+                    </h1>
           </div>
-        </header>,
+</header>,
         <div
           className="container"
-        >
+>
           <Card
-            className=""
-            header={
-              <CardHeader
-                title="Network Helper"
-              />
-            }
-          >
-            <Form
-              analytics={
-                Object {
-                  "title": "Account Settings",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
-            >
-              <FormGroup
-                className="row"
-                name="default"
-              >
-                <label
-                  className="col-form-label col-sm-2"
-                >
-                  Default Behavior
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Checkboxes>
-                    <Radio
-                      checked={true}
-                      className=""
-                      label="OFF - This is the legacy / old account behavior"
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="OFF"
-                    />
-                    <Radio
-                      checked={false}
-                      className=""
-                      label="ON  - This is new account behavior. You probably want this."
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="ON"
-                    />
-                  </Checkboxes>
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                    </small>
-                  </div>
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                name="submit"
-              >
-                <div
-                  className="offset-sm-2 col-sm-10"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
                     className=""
-                    errors={Object {}}
-                    success="Account saved."
-                  />
-                </div>
-              </FormGroup>
-            </Form>
+                    header={
+                              <CardHeader
+                                        title="Network Helper"
+                              />
+                    }
+          >
+                    <Form
+                              analytics={
+                                        Object {
+                                                  "title": "Account Settings",
+                                                }
+                              }
+                              className=""
+                              noSubmitEvent={false}
+                              onSubmit={[Function]}
+                    >
+                              <FormGroup
+                                        className="row"
+                                        name="default"
+                              >
+                                        <label
+                                                  className="col-form-label col-sm-2"
+                                        >
+                                                  Default Behavior
+                                        </label>
+                                        <div
+                                                  className="col-sm-10"
+                                        >
+                                                  <Checkboxes>
+                                                            <Radio
+                                                                      checked={true}
+                                                                      className=""
+                                                                      label="OFF - This is the legacy / old account behavior"
+                                                                      name="networkHelper"
+                                                                      onChange={[Function]}
+                                                                      value="OFF"
+                                                            />
+                                                            <Radio
+                                                                      checked={false}
+                                                                      className=""
+                                                                      label="ON  - This is new account behavior. You probably want this."
+                                                                      name="networkHelper"
+                                                                      onChange={[Function]}
+                                                                      value="ON"
+                                                            />
+                                                  </Checkboxes>
+                                                  <div>
+                                                            <small
+                                                                      className="text-muted"
+                                                            >
+                                                                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                            </small>
+                                                  </div>
+                                        </div>
+                              </FormGroup>
+                              <FormGroup
+                                        className="row"
+                                        name="submit"
+                              >
+                                        <div
+                                                  className="offset-sm-2 col-sm-10"
+                                        >
+                                                  <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                                  >
+                                                            Save
+                                                  </SubmitButton>
+                                                  <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Account saved."
+                                                  />
+                                        </div>
+                              </FormGroup>
+                    </Form>
           </Card>
-        </div>,
+</div>,
       ],
     },
     "ref": null,
@@ -157,11 +157,11 @@ ShallowWrapper {
         "props": Object {
           "children": <div
             className="container"
-          >
+>
             <h1>
-              Account Settings
+                        Account Settings
             </h1>
-          </div>,
+</div>,
           "className": "main-header main-header--border",
         },
         "ref": null,
@@ -172,7 +172,7 @@ ShallowWrapper {
           "props": Object {
             "children": <h1>
               Account Settings
-            </h1>,
+</h1>,
             "className": "container",
           },
           "ref": null,
@@ -199,83 +199,83 @@ ShallowWrapper {
           "children": <Card
             className=""
             header={
-              <CardHeader
-                title="Network Helper"
-              />
+                        <CardHeader
+                                    title="Network Helper"
+                        />
             }
-          >
+>
             <Form
-              analytics={
-                Object {
-                  "title": "Account Settings",
-                }
-              }
-              className=""
-              noSubmitEvent={false}
-              onSubmit={[Function]}
+                        analytics={
+                                    Object {
+                                                "title": "Account Settings",
+                                              }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
             >
-              <FormGroup
-                className="row"
-                name="default"
-              >
-                <label
-                  className="col-form-label col-sm-2"
-                >
-                  Default Behavior
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Checkboxes>
-                    <Radio
-                      checked={true}
-                      className=""
-                      label="OFF - This is the legacy / old account behavior"
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="OFF"
-                    />
-                    <Radio
-                      checked={false}
-                      className=""
-                      label="ON  - This is new account behavior. You probably want this."
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="ON"
-                    />
-                  </Checkboxes>
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                    </small>
-                  </div>
-                </div>
-              </FormGroup>
-              <FormGroup
-                className="row"
-                name="submit"
-              >
-                <div
-                  className="offset-sm-2 col-sm-10"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Account saved."
-                  />
-                </div>
-              </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    name="default"
+                        >
+                                    <label
+                                                className="col-form-label col-sm-2"
+                                    >
+                                                Default Behavior
+                                    </label>
+                                    <div
+                                                className="col-sm-10"
+                                    >
+                                                <Checkboxes>
+                                                            <Radio
+                                                                        checked={true}
+                                                                        className=""
+                                                                        label="OFF - This is the legacy / old account behavior"
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="OFF"
+                                                            />
+                                                            <Radio
+                                                                        checked={false}
+                                                                        className=""
+                                                                        label="ON  - This is new account behavior. You probably want this."
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="ON"
+                                                            />
+                                                </Checkboxes>
+                                                <div>
+                                                            <small
+                                                                        className="text-muted"
+                                                            >
+                                                                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                            </small>
+                                                </div>
+                                    </div>
+                        </FormGroup>
+                        <FormGroup
+                                    className="row"
+                                    name="submit"
+                        >
+                                    <div
+                                                className="offset-sm-2 col-sm-10"
+                                    >
+                                                <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                                >
+                                                            Save
+                                                </SubmitButton>
+                                                <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Account saved."
+                                                />
+                                    </div>
+                        </FormGroup>
             </Form>
-          </Card>,
+</Card>,
           "className": "container",
         },
         "ref": null,
@@ -286,79 +286,79 @@ ShallowWrapper {
           "props": Object {
             "children": <Form
               analytics={
-                Object {
-                  "title": "Account Settings",
-                }
+                            Object {
+                                          "title": "Account Settings",
+                                        }
               }
               className=""
               noSubmitEvent={false}
               onSubmit={[Function]}
-            >
+>
               <FormGroup
-                className="row"
-                name="default"
+                            className="row"
+                            name="default"
               >
-                <label
-                  className="col-form-label col-sm-2"
-                >
-                  Default Behavior
-                </label>
-                <div
-                  className="col-sm-10"
-                >
-                  <Checkboxes>
-                    <Radio
-                      checked={true}
-                      className=""
-                      label="OFF - This is the legacy / old account behavior"
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="OFF"
-                    />
-                    <Radio
-                      checked={false}
-                      className=""
-                      label="ON  - This is new account behavior. You probably want this."
-                      name="networkHelper"
-                      onChange={[Function]}
-                      value="ON"
-                    />
-                  </Checkboxes>
-                  <div>
-                    <small
-                      className="text-muted"
-                    >
-                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                    </small>
-                  </div>
-                </div>
+                            <label
+                                          className="col-form-label col-sm-2"
+                            >
+                                          Default Behavior
+                            </label>
+                            <div
+                                          className="col-sm-10"
+                            >
+                                          <Checkboxes>
+                                                        <Radio
+                                                                      checked={true}
+                                                                      className=""
+                                                                      label="OFF - This is the legacy / old account behavior"
+                                                                      name="networkHelper"
+                                                                      onChange={[Function]}
+                                                                      value="OFF"
+                                                        />
+                                                        <Radio
+                                                                      checked={false}
+                                                                      className=""
+                                                                      label="ON  - This is new account behavior. You probably want this."
+                                                                      name="networkHelper"
+                                                                      onChange={[Function]}
+                                                                      value="ON"
+                                                        />
+                                          </Checkboxes>
+                                          <div>
+                                                        <small
+                                                                      className="text-muted"
+                                                        >
+                                                                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                        </small>
+                                          </div>
+                            </div>
               </FormGroup>
               <FormGroup
-                className="row"
-                name="submit"
+                            className="row"
+                            name="submit"
               >
-                <div
-                  className="offset-sm-2 col-sm-10"
-                >
-                  <SubmitButton
-                    className="btn-default"
-                    disabled={false}
-                    disabledChildren="Saving"
-                  >
-                    Save
-                  </SubmitButton>
-                  <FormSummary
-                    className=""
-                    errors={Object {}}
-                    success="Account saved."
-                  />
-                </div>
+                            <div
+                                          className="offset-sm-2 col-sm-10"
+                            >
+                                          <SubmitButton
+                                                        className="btn-default"
+                                                        disabled={false}
+                                                        disabledChildren="Saving"
+                                          >
+                                                        Save
+                                          </SubmitButton>
+                                          <FormSummary
+                                                        className=""
+                                                        errors={Object {}}
+                                                        success="Account saved."
+                                          />
+                            </div>
               </FormGroup>
-            </Form>,
+</Form>,
             "className": "",
             "header": <CardHeader
               title="Network Helper"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {
@@ -373,63 +373,63 @@ ShallowWrapper {
                 <FormGroup
                   className="row"
                   name="default"
-                >
+>
                   <label
-                    className="col-form-label col-sm-2"
+                                    className="col-form-label col-sm-2"
                   >
-                    Default Behavior
+                                    Default Behavior
                   </label>
                   <div
-                    className="col-sm-10"
+                                    className="col-sm-10"
                   >
-                    <Checkboxes>
-                      <Radio
-                        checked={true}
-                        className=""
-                        label="OFF - This is the legacy / old account behavior"
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="OFF"
-                      />
-                      <Radio
-                        checked={false}
-                        className=""
-                        label="ON  - This is new account behavior. You probably want this."
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="ON"
-                      />
-                    </Checkboxes>
-                    <div>
-                      <small
-                        className="text-muted"
-                      >
-                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                      </small>
-                    </div>
+                                    <Checkboxes>
+                                                      <Radio
+                                                                        checked={true}
+                                                                        className=""
+                                                                        label="OFF - This is the legacy / old account behavior"
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="OFF"
+                                                      />
+                                                      <Radio
+                                                                        checked={false}
+                                                                        className=""
+                                                                        label="ON  - This is new account behavior. You probably want this."
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="ON"
+                                                      />
+                                    </Checkboxes>
+                                    <div>
+                                                      <small
+                                                                        className="text-muted"
+                                                      >
+                                                                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                      </small>
+                                    </div>
                   </div>
-                </FormGroup>,
+</FormGroup>,
                 <FormGroup
                   className="row"
                   name="submit"
-                >
+>
                   <div
-                    className="offset-sm-2 col-sm-10"
+                                    className="offset-sm-2 col-sm-10"
                   >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Save
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Account saved."
-                    />
+                                    <SubmitButton
+                                                      className="btn-default"
+                                                      disabled={false}
+                                                      disabledChildren="Saving"
+                                    >
+                                                      Save
+                                    </SubmitButton>
+                                    <FormSummary
+                                                      className=""
+                                                      errors={Object {}}
+                                                      success="Account saved."
+                                    />
                   </div>
-                </FormGroup>,
+</FormGroup>,
               ],
               "className": "",
               "noSubmitEvent": false,
@@ -445,38 +445,38 @@ ShallowWrapper {
                   "children": Array [
                     <label
                       className="col-form-label col-sm-2"
-                    >
+>
                       Default Behavior
-                    </label>,
+</label>,
                     <div
                       className="col-sm-10"
-                    >
+>
                       <Checkboxes>
-                        <Radio
-                          checked={true}
-                          className=""
-                          label="OFF - This is the legacy / old account behavior"
-                          name="networkHelper"
-                          onChange={[Function]}
-                          value="OFF"
-                        />
-                        <Radio
-                          checked={false}
-                          className=""
-                          label="ON  - This is new account behavior. You probably want this."
-                          name="networkHelper"
-                          onChange={[Function]}
-                          value="ON"
-                        />
+                                            <Radio
+                                                                  checked={true}
+                                                                  className=""
+                                                                  label="OFF - This is the legacy / old account behavior"
+                                                                  name="networkHelper"
+                                                                  onChange={[Function]}
+                                                                  value="OFF"
+                                            />
+                                            <Radio
+                                                                  checked={false}
+                                                                  className=""
+                                                                  label="ON  - This is new account behavior. You probably want this."
+                                                                  name="networkHelper"
+                                                                  onChange={[Function]}
+                                                                  value="ON"
+                                            />
                       </Checkboxes>
                       <div>
-                        <small
-                          className="text-muted"
-                        >
-                          This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                        </small>
+                                            <small
+                                                                  className="text-muted"
+                                            >
+                                                                  This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                            </small>
                       </div>
-                    </div>,
+</div>,
                   ],
                   "className": "row",
                   "name": "default",
@@ -503,29 +503,29 @@ ShallowWrapper {
                       "children": Array [
                         <Checkboxes>
                           <Radio
-                            checked={true}
-                            className=""
-                            label="OFF - This is the legacy / old account behavior"
-                            name="networkHelper"
-                            onChange={[Function]}
-                            value="OFF"
+                                                    checked={true}
+                                                    className=""
+                                                    label="OFF - This is the legacy / old account behavior"
+                                                    name="networkHelper"
+                                                    onChange={[Function]}
+                                                    value="OFF"
                           />
                           <Radio
-                            checked={false}
-                            className=""
-                            label="ON  - This is new account behavior. You probably want this."
-                            name="networkHelper"
-                            onChange={[Function]}
-                            value="ON"
+                                                    checked={false}
+                                                    className=""
+                                                    label="ON  - This is new account behavior. You probably want this."
+                                                    name="networkHelper"
+                                                    onChange={[Function]}
+                                                    value="ON"
                           />
-                        </Checkboxes>,
+</Checkboxes>,
                         <div>
                           <small
-                            className="text-muted"
+                                                    className="text-muted"
                           >
-                            This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                    This controls the default setting for the Network Helper on newly created Configuration Profiles.
                           </small>
-                        </div>,
+</div>,
                       ],
                       "className": "col-sm-10",
                     },
@@ -544,7 +544,7 @@ ShallowWrapper {
                               name="networkHelper"
                               onChange={[Function]}
                               value="OFF"
-                            />,
+/>,
                             <Radio
                               checked={false}
                               className=""
@@ -552,7 +552,7 @@ ShallowWrapper {
                               name="networkHelper"
                               onChange={[Function]}
                               value="ON"
-                            />,
+/>,
                           ],
                         },
                         "ref": null,
@@ -599,9 +599,9 @@ ShallowWrapper {
                         "props": Object {
                           "children": <small
                             className="text-muted"
-                          >
+>
                             This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                          </small>,
+</small>,
                         },
                         "ref": null,
                         "rendered": Object {
@@ -631,20 +631,20 @@ ShallowWrapper {
                 "props": Object {
                   "children": <div
                     className="offset-sm-2 col-sm-10"
-                  >
+>
                     <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
+                                        className="btn-default"
+                                        disabled={false}
+                                        disabledChildren="Saving"
                     >
-                      Save
+                                        Save
                     </SubmitButton>
                     <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Account saved."
+                                        className=""
+                                        errors={Object {}}
+                                        success="Account saved."
                     />
-                  </div>,
+</div>,
                   "className": "row",
                   "name": "submit",
                 },
@@ -659,14 +659,14 @@ ShallowWrapper {
                         className="btn-default"
                         disabled={false}
                         disabledChildren="Saving"
-                      >
+>
                         Save
-                      </SubmitButton>,
+</SubmitButton>,
                       <FormSummary
                         className=""
                         errors={Object {}}
                         success="Account saved."
-                      />,
+/>,
                     ],
                     "className": "offset-sm-2 col-sm-10",
                   },
@@ -723,102 +723,102 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Account Settings"
-          />,
+/>,
           <header
             className="main-header main-header--border"
-          >
+>
             <div
-              className="container"
+                        className="container"
             >
-              <h1>
-                Account Settings
-              </h1>
+                        <h1>
+                                    Account Settings
+                        </h1>
             </div>
-          </header>,
+</header>,
           <div
             className="container"
-          >
+>
             <Card
-              className=""
-              header={
-                <CardHeader
-                  title="Network Helper"
-                />
-              }
+                        className=""
+                        header={
+                                    <CardHeader
+                                                title="Network Helper"
+                                    />
+                        }
             >
-              <Form
-                analytics={
-                  Object {
-                    "title": "Account Settings",
-                  }
-                }
-                className=""
-                noSubmitEvent={false}
-                onSubmit={[Function]}
-              >
-                <FormGroup
-                  className="row"
-                  name="default"
-                >
-                  <label
-                    className="col-form-label col-sm-2"
-                  >
-                    Default Behavior
-                  </label>
-                  <div
-                    className="col-sm-10"
-                  >
-                    <Checkboxes>
-                      <Radio
-                        checked={true}
-                        className=""
-                        label="OFF - This is the legacy / old account behavior"
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="OFF"
-                      />
-                      <Radio
-                        checked={false}
-                        className=""
-                        label="ON  - This is new account behavior. You probably want this."
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="ON"
-                      />
-                    </Checkboxes>
-                    <div>
-                      <small
-                        className="text-muted"
-                      >
-                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                      </small>
-                    </div>
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  name="submit"
-                >
-                  <div
-                    className="offset-sm-2 col-sm-10"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Save
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Account saved."
-                    />
-                  </div>
-                </FormGroup>
-              </Form>
+                        <Form
+                                    analytics={
+                                                Object {
+                                                            "title": "Account Settings",
+                                                          }
+                                    }
+                                    className=""
+                                    noSubmitEvent={false}
+                                    onSubmit={[Function]}
+                        >
+                                    <FormGroup
+                                                className="row"
+                                                name="default"
+                                    >
+                                                <label
+                                                            className="col-form-label col-sm-2"
+                                                >
+                                                            Default Behavior
+                                                </label>
+                                                <div
+                                                            className="col-sm-10"
+                                                >
+                                                            <Checkboxes>
+                                                                        <Radio
+                                                                                    checked={true}
+                                                                                    className=""
+                                                                                    label="OFF - This is the legacy / old account behavior"
+                                                                                    name="networkHelper"
+                                                                                    onChange={[Function]}
+                                                                                    value="OFF"
+                                                                        />
+                                                                        <Radio
+                                                                                    checked={false}
+                                                                                    className=""
+                                                                                    label="ON  - This is new account behavior. You probably want this."
+                                                                                    name="networkHelper"
+                                                                                    onChange={[Function]}
+                                                                                    value="ON"
+                                                                        />
+                                                            </Checkboxes>
+                                                            <div>
+                                                                        <small
+                                                                                    className="text-muted"
+                                                                        >
+                                                                                    This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                                        </small>
+                                                            </div>
+                                                </div>
+                                    </FormGroup>
+                                    <FormGroup
+                                                className="row"
+                                                name="submit"
+                                    >
+                                                <div
+                                                            className="offset-sm-2 col-sm-10"
+                                                >
+                                                            <SubmitButton
+                                                                        className="btn-default"
+                                                                        disabled={false}
+                                                                        disabledChildren="Saving"
+                                                            >
+                                                                        Save
+                                                            </SubmitButton>
+                                                            <FormSummary
+                                                                        className=""
+                                                                        errors={Object {}}
+                                                                        success="Account saved."
+                                                            />
+                                                </div>
+                                    </FormGroup>
+                        </Form>
             </Card>
-          </div>,
+</div>,
         ],
       },
       "ref": null,
@@ -841,11 +841,11 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="container"
-            >
+>
               <h1>
-                Account Settings
+                            Account Settings
               </h1>
-            </div>,
+</div>,
             "className": "main-header main-header--border",
           },
           "ref": null,
@@ -856,7 +856,7 @@ ShallowWrapper {
             "props": Object {
               "children": <h1>
                 Account Settings
-              </h1>,
+</h1>,
               "className": "container",
             },
             "ref": null,
@@ -883,83 +883,83 @@ ShallowWrapper {
             "children": <Card
               className=""
               header={
-                <CardHeader
-                  title="Network Helper"
-                />
+                            <CardHeader
+                                          title="Network Helper"
+                            />
               }
-            >
+>
               <Form
-                analytics={
-                  Object {
-                    "title": "Account Settings",
-                  }
-                }
-                className=""
-                noSubmitEvent={false}
-                onSubmit={[Function]}
+                            analytics={
+                                          Object {
+                                                        "title": "Account Settings",
+                                                      }
+                            }
+                            className=""
+                            noSubmitEvent={false}
+                            onSubmit={[Function]}
               >
-                <FormGroup
-                  className="row"
-                  name="default"
-                >
-                  <label
-                    className="col-form-label col-sm-2"
-                  >
-                    Default Behavior
-                  </label>
-                  <div
-                    className="col-sm-10"
-                  >
-                    <Checkboxes>
-                      <Radio
-                        checked={true}
-                        className=""
-                        label="OFF - This is the legacy / old account behavior"
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="OFF"
-                      />
-                      <Radio
-                        checked={false}
-                        className=""
-                        label="ON  - This is new account behavior. You probably want this."
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="ON"
-                      />
-                    </Checkboxes>
-                    <div>
-                      <small
-                        className="text-muted"
-                      >
-                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                      </small>
-                    </div>
-                  </div>
-                </FormGroup>
-                <FormGroup
-                  className="row"
-                  name="submit"
-                >
-                  <div
-                    className="offset-sm-2 col-sm-10"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Save
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Account saved."
-                    />
-                  </div>
-                </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          name="default"
+                            >
+                                          <label
+                                                        className="col-form-label col-sm-2"
+                                          >
+                                                        Default Behavior
+                                          </label>
+                                          <div
+                                                        className="col-sm-10"
+                                          >
+                                                        <Checkboxes>
+                                                                      <Radio
+                                                                                    checked={true}
+                                                                                    className=""
+                                                                                    label="OFF - This is the legacy / old account behavior"
+                                                                                    name="networkHelper"
+                                                                                    onChange={[Function]}
+                                                                                    value="OFF"
+                                                                      />
+                                                                      <Radio
+                                                                                    checked={false}
+                                                                                    className=""
+                                                                                    label="ON  - This is new account behavior. You probably want this."
+                                                                                    name="networkHelper"
+                                                                                    onChange={[Function]}
+                                                                                    value="ON"
+                                                                      />
+                                                        </Checkboxes>
+                                                        <div>
+                                                                      <small
+                                                                                    className="text-muted"
+                                                                      >
+                                                                                    This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                                      </small>
+                                                        </div>
+                                          </div>
+                            </FormGroup>
+                            <FormGroup
+                                          className="row"
+                                          name="submit"
+                            >
+                                          <div
+                                                        className="offset-sm-2 col-sm-10"
+                                          >
+                                                        <SubmitButton
+                                                                      className="btn-default"
+                                                                      disabled={false}
+                                                                      disabledChildren="Saving"
+                                                        >
+                                                                      Save
+                                                        </SubmitButton>
+                                                        <FormSummary
+                                                                      className=""
+                                                                      errors={Object {}}
+                                                                      success="Account saved."
+                                                        />
+                                          </div>
+                            </FormGroup>
               </Form>
-            </Card>,
+</Card>,
             "className": "container",
           },
           "ref": null,
@@ -970,79 +970,79 @@ ShallowWrapper {
             "props": Object {
               "children": <Form
                 analytics={
-                  Object {
-                    "title": "Account Settings",
-                  }
+                                Object {
+                                                "title": "Account Settings",
+                                              }
                 }
                 className=""
                 noSubmitEvent={false}
                 onSubmit={[Function]}
-              >
+>
                 <FormGroup
-                  className="row"
-                  name="default"
+                                className="row"
+                                name="default"
                 >
-                  <label
-                    className="col-form-label col-sm-2"
-                  >
-                    Default Behavior
-                  </label>
-                  <div
-                    className="col-sm-10"
-                  >
-                    <Checkboxes>
-                      <Radio
-                        checked={true}
-                        className=""
-                        label="OFF - This is the legacy / old account behavior"
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="OFF"
-                      />
-                      <Radio
-                        checked={false}
-                        className=""
-                        label="ON  - This is new account behavior. You probably want this."
-                        name="networkHelper"
-                        onChange={[Function]}
-                        value="ON"
-                      />
-                    </Checkboxes>
-                    <div>
-                      <small
-                        className="text-muted"
-                      >
-                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                      </small>
-                    </div>
-                  </div>
+                                <label
+                                                className="col-form-label col-sm-2"
+                                >
+                                                Default Behavior
+                                </label>
+                                <div
+                                                className="col-sm-10"
+                                >
+                                                <Checkboxes>
+                                                                <Radio
+                                                                                checked={true}
+                                                                                className=""
+                                                                                label="OFF - This is the legacy / old account behavior"
+                                                                                name="networkHelper"
+                                                                                onChange={[Function]}
+                                                                                value="OFF"
+                                                                />
+                                                                <Radio
+                                                                                checked={false}
+                                                                                className=""
+                                                                                label="ON  - This is new account behavior. You probably want this."
+                                                                                name="networkHelper"
+                                                                                onChange={[Function]}
+                                                                                value="ON"
+                                                                />
+                                                </Checkboxes>
+                                                <div>
+                                                                <small
+                                                                                className="text-muted"
+                                                                >
+                                                                                This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                                </small>
+                                                </div>
+                                </div>
                 </FormGroup>
                 <FormGroup
-                  className="row"
-                  name="submit"
+                                className="row"
+                                name="submit"
                 >
-                  <div
-                    className="offset-sm-2 col-sm-10"
-                  >
-                    <SubmitButton
-                      className="btn-default"
-                      disabled={false}
-                      disabledChildren="Saving"
-                    >
-                      Save
-                    </SubmitButton>
-                    <FormSummary
-                      className=""
-                      errors={Object {}}
-                      success="Account saved."
-                    />
-                  </div>
+                                <div
+                                                className="offset-sm-2 col-sm-10"
+                                >
+                                                <SubmitButton
+                                                                className="btn-default"
+                                                                disabled={false}
+                                                                disabledChildren="Saving"
+                                                >
+                                                                Save
+                                                </SubmitButton>
+                                                <FormSummary
+                                                                className=""
+                                                                errors={Object {}}
+                                                                success="Account saved."
+                                                />
+                                </div>
                 </FormGroup>
-              </Form>,
+</Form>,
               "className": "",
               "header": <CardHeader
                 title="Network Helper"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Object {
@@ -1057,63 +1057,63 @@ ShallowWrapper {
                   <FormGroup
                     className="row"
                     name="default"
-                  >
+>
                     <label
-                      className="col-form-label col-sm-2"
+                                        className="col-form-label col-sm-2"
                     >
-                      Default Behavior
+                                        Default Behavior
                     </label>
                     <div
-                      className="col-sm-10"
+                                        className="col-sm-10"
                     >
-                      <Checkboxes>
-                        <Radio
-                          checked={true}
-                          className=""
-                          label="OFF - This is the legacy / old account behavior"
-                          name="networkHelper"
-                          onChange={[Function]}
-                          value="OFF"
-                        />
-                        <Radio
-                          checked={false}
-                          className=""
-                          label="ON  - This is new account behavior. You probably want this."
-                          name="networkHelper"
-                          onChange={[Function]}
-                          value="ON"
-                        />
-                      </Checkboxes>
-                      <div>
-                        <small
-                          className="text-muted"
-                        >
-                          This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                        </small>
-                      </div>
+                                        <Checkboxes>
+                                                            <Radio
+                                                                                checked={true}
+                                                                                className=""
+                                                                                label="OFF - This is the legacy / old account behavior"
+                                                                                name="networkHelper"
+                                                                                onChange={[Function]}
+                                                                                value="OFF"
+                                                            />
+                                                            <Radio
+                                                                                checked={false}
+                                                                                className=""
+                                                                                label="ON  - This is new account behavior. You probably want this."
+                                                                                name="networkHelper"
+                                                                                onChange={[Function]}
+                                                                                value="ON"
+                                                            />
+                                        </Checkboxes>
+                                        <div>
+                                                            <small
+                                                                                className="text-muted"
+                                                            >
+                                                                                This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                            </small>
+                                        </div>
                     </div>
-                  </FormGroup>,
+</FormGroup>,
                   <FormGroup
                     className="row"
                     name="submit"
-                  >
+>
                     <div
-                      className="offset-sm-2 col-sm-10"
+                                        className="offset-sm-2 col-sm-10"
                     >
-                      <SubmitButton
-                        className="btn-default"
-                        disabled={false}
-                        disabledChildren="Saving"
-                      >
-                        Save
-                      </SubmitButton>
-                      <FormSummary
-                        className=""
-                        errors={Object {}}
-                        success="Account saved."
-                      />
+                                        <SubmitButton
+                                                            className="btn-default"
+                                                            disabled={false}
+                                                            disabledChildren="Saving"
+                                        >
+                                                            Save
+                                        </SubmitButton>
+                                        <FormSummary
+                                                            className=""
+                                                            errors={Object {}}
+                                                            success="Account saved."
+                                        />
                     </div>
-                  </FormGroup>,
+</FormGroup>,
                 ],
                 "className": "",
                 "noSubmitEvent": false,
@@ -1129,38 +1129,38 @@ ShallowWrapper {
                     "children": Array [
                       <label
                         className="col-form-label col-sm-2"
-                      >
+>
                         Default Behavior
-                      </label>,
+</label>,
                       <div
                         className="col-sm-10"
-                      >
+>
                         <Checkboxes>
-                          <Radio
-                            checked={true}
-                            className=""
-                            label="OFF - This is the legacy / old account behavior"
-                            name="networkHelper"
-                            onChange={[Function]}
-                            value="OFF"
-                          />
-                          <Radio
-                            checked={false}
-                            className=""
-                            label="ON  - This is new account behavior. You probably want this."
-                            name="networkHelper"
-                            onChange={[Function]}
-                            value="ON"
-                          />
+                                                <Radio
+                                                                        checked={true}
+                                                                        className=""
+                                                                        label="OFF - This is the legacy / old account behavior"
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="OFF"
+                                                />
+                                                <Radio
+                                                                        checked={false}
+                                                                        className=""
+                                                                        label="ON  - This is new account behavior. You probably want this."
+                                                                        name="networkHelper"
+                                                                        onChange={[Function]}
+                                                                        value="ON"
+                                                />
                         </Checkboxes>
                         <div>
-                          <small
-                            className="text-muted"
-                          >
-                            This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                          </small>
+                                                <small
+                                                                        className="text-muted"
+                                                >
+                                                                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                </small>
                         </div>
-                      </div>,
+</div>,
                     ],
                     "className": "row",
                     "name": "default",
@@ -1187,29 +1187,29 @@ ShallowWrapper {
                         "children": Array [
                           <Checkboxes>
                             <Radio
-                              checked={true}
-                              className=""
-                              label="OFF - This is the legacy / old account behavior"
-                              name="networkHelper"
-                              onChange={[Function]}
-                              value="OFF"
+                                                        checked={true}
+                                                        className=""
+                                                        label="OFF - This is the legacy / old account behavior"
+                                                        name="networkHelper"
+                                                        onChange={[Function]}
+                                                        value="OFF"
                             />
                             <Radio
-                              checked={false}
-                              className=""
-                              label="ON  - This is new account behavior. You probably want this."
-                              name="networkHelper"
-                              onChange={[Function]}
-                              value="ON"
+                                                        checked={false}
+                                                        className=""
+                                                        label="ON  - This is new account behavior. You probably want this."
+                                                        name="networkHelper"
+                                                        onChange={[Function]}
+                                                        value="ON"
                             />
-                          </Checkboxes>,
+</Checkboxes>,
                           <div>
                             <small
-                              className="text-muted"
+                                                        className="text-muted"
                             >
-                              This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                                                        This controls the default setting for the Network Helper on newly created Configuration Profiles.
                             </small>
-                          </div>,
+</div>,
                         ],
                         "className": "col-sm-10",
                       },
@@ -1228,7 +1228,7 @@ ShallowWrapper {
                                 name="networkHelper"
                                 onChange={[Function]}
                                 value="OFF"
-                              />,
+/>,
                               <Radio
                                 checked={false}
                                 className=""
@@ -1236,7 +1236,7 @@ ShallowWrapper {
                                 name="networkHelper"
                                 onChange={[Function]}
                                 value="ON"
-                              />,
+/>,
                             ],
                           },
                           "ref": null,
@@ -1283,9 +1283,9 @@ ShallowWrapper {
                           "props": Object {
                             "children": <small
                               className="text-muted"
-                            >
+>
                               This controls the default setting for the Network Helper on newly created Configuration Profiles.
-                            </small>,
+</small>,
                           },
                           "ref": null,
                           "rendered": Object {
@@ -1315,20 +1315,20 @@ ShallowWrapper {
                   "props": Object {
                     "children": <div
                       className="offset-sm-2 col-sm-10"
-                    >
+>
                       <SubmitButton
-                        className="btn-default"
-                        disabled={false}
-                        disabledChildren="Saving"
+                                            className="btn-default"
+                                            disabled={false}
+                                            disabledChildren="Saving"
                       >
-                        Save
+                                            Save
                       </SubmitButton>
                       <FormSummary
-                        className=""
-                        errors={Object {}}
-                        success="Account saved."
+                                            className=""
+                                            errors={Object {}}
+                                            success="Account saved."
                       />
-                    </div>,
+</div>,
                     "className": "row",
                     "name": "submit",
                   },
@@ -1343,14 +1343,14 @@ ShallowWrapper {
                           className="btn-default"
                           disabled={false}
                           disabledChildren="Saving"
-                        >
+>
                           Save
-                        </SubmitButton>,
+</SubmitButton>,
                         <FormSummary
                           className=""
                           errors={Object {}}
                           success="Account saved."
-                        />,
+/>,
                       ],
                       "className": "offset-sm-2 col-sm-10",
                     },

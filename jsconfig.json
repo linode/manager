@@ -1,4 +1,9 @@
 {
+    "compilerOptions": {
+        "paths": {
+            "~": ["src/*"]
+        }
+    },
     "typeAcquisition": {
         "include": [
             "jest"

@@ -6,26 +6,26 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <NotificationListItem
     event={
-      Object {
-        "action": "linode_reboot",
-        "created": "2016-11-21T20:03:40",
-        "entity": Object {
-          "label": "linode-www2",
-        },
-        "finished": null,
-        "id": 386,
-        "label_message": "",
-        "linode_id": 1237,
-        "nodebalancer_id": null,
-        "percent_complete": 100,
-        "read": true,
-        "seen": false,
-        "stackscript_id": null,
-        "status": "finished",
-        "updated": "2016-11-21T20:12:40",
-      }
+        Object {
+            "action": "linode_reboot",
+            "created": "2016-11-21T20:03:40",
+            "entity": Object {
+              "label": "linode-www2",
+            },
+            "finished": null,
+            "id": 386,
+            "label_message": "",
+            "linode_id": 1237,
+            "nodebalancer_id": null,
+            "percent_complete": 100,
+            "read": true,
+            "seen": false,
+            "stackscript_id": null,
+            "status": "finished",
+            "updated": "2016-11-21T20:12:40",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -40,25 +40,25 @@ ShallowWrapper {
     "props": Object {
       "children": <div>
         <div>
-          <strong>
-            linode-www2
-          </strong>
-           rebooted 
+                <strong>
+                        linode-www2
+                </strong>
+                 rebooted 
         </div>
         <div>
-          <small>
-            <span
-              className="text-muted"
-            >
-              <TimeDisplay
-                time="2016-11-21T20:03:40"
-              />
-               by 
-            </span>
-            <strong />
-          </small>
+                <small>
+                        <span
+                                className="text-muted"
+                        >
+                                <TimeDisplay
+                                        time="2016-11-21T20:03:40"
+                                />
+                                 by 
+                        </span>
+                        <strong />
+                </small>
         </div>
-      </div>,
+</div>,
       "className": "NotificationList-listItem NotificationList-listItem--read",
       "onClick": [Function],
       "onlyActiveOnIndex": false,
@@ -74,23 +74,23 @@ ShallowWrapper {
         "children": Array [
           <div>
             <strong>
-              linode-www2
+                        linode-www2
             </strong>
              rebooted 
-          </div>,
+</div>,
           <div>
             <small>
-              <span
-                className="text-muted"
-              >
-                <TimeDisplay
-                  time="2016-11-21T20:03:40"
-                />
-                 by 
-              </span>
-              <strong />
+                        <span
+                                    className="text-muted"
+                        >
+                                    <TimeDisplay
+                                                time="2016-11-21T20:03:40"
+                                    />
+                                     by 
+                        </span>
+                        <strong />
             </small>
-          </div>,
+</div>,
         ],
       },
       "ref": null,
@@ -103,7 +103,7 @@ ShallowWrapper {
             "children": Array [
               <strong>
                 linode-www2
-              </strong>,
+</strong>,
               " rebooted ",
             ],
           },
@@ -131,15 +131,15 @@ ShallowWrapper {
           "props": Object {
             "children": <small>
               <span
-                className="text-muted"
+                            className="text-muted"
               >
-                <TimeDisplay
-                  time="2016-11-21T20:03:40"
-                />
-                 by 
+                            <TimeDisplay
+                                          time="2016-11-21T20:03:40"
+                            />
+                             by 
               </span>
               <strong />
-            </small>,
+</small>,
           },
           "ref": null,
           "rendered": Object {
@@ -150,12 +150,12 @@ ShallowWrapper {
               "children": Array [
                 <span
                   className="text-muted"
-                >
+>
                   <TimeDisplay
-                    time="2016-11-21T20:03:40"
+                                    time="2016-11-21T20:03:40"
                   />
                    by 
-                </span>,
+</span>,
                 <strong />,
               ],
             },
@@ -169,7 +169,7 @@ ShallowWrapper {
                   "children": Array [
                     <TimeDisplay
                       time="2016-11-21T20:03:40"
-                    />,
+/>,
                     " by ",
                   ],
                   "className": "text-muted",
@@ -220,25 +220,25 @@ ShallowWrapper {
       "props": Object {
         "children": <div>
           <div>
-            <strong>
-              linode-www2
-            </strong>
-             rebooted 
+                    <strong>
+                              linode-www2
+                    </strong>
+                     rebooted 
           </div>
           <div>
-            <small>
-              <span
-                className="text-muted"
-              >
-                <TimeDisplay
-                  time="2016-11-21T20:03:40"
-                />
-                 by 
-              </span>
-              <strong />
-            </small>
+                    <small>
+                              <span
+                                        className="text-muted"
+                              >
+                                        <TimeDisplay
+                                                  time="2016-11-21T20:03:40"
+                                        />
+                                         by 
+                              </span>
+                              <strong />
+                    </small>
           </div>
-        </div>,
+</div>,
         "className": "NotificationList-listItem NotificationList-listItem--read",
         "onClick": [Function],
         "onlyActiveOnIndex": false,
@@ -254,23 +254,23 @@ ShallowWrapper {
           "children": Array [
             <div>
               <strong>
-                linode-www2
+                            linode-www2
               </strong>
                rebooted 
-            </div>,
+</div>,
             <div>
               <small>
-                <span
-                  className="text-muted"
-                >
-                  <TimeDisplay
-                    time="2016-11-21T20:03:40"
-                  />
-                   by 
-                </span>
-                <strong />
+                            <span
+                                          className="text-muted"
+                            >
+                                          <TimeDisplay
+                                                        time="2016-11-21T20:03:40"
+                                          />
+                                           by 
+                            </span>
+                            <strong />
               </small>
-            </div>,
+</div>,
           ],
         },
         "ref": null,
@@ -283,7 +283,7 @@ ShallowWrapper {
               "children": Array [
                 <strong>
                   linode-www2
-                </strong>,
+</strong>,
                 " rebooted ",
               ],
             },
@@ -311,15 +311,15 @@ ShallowWrapper {
             "props": Object {
               "children": <small>
                 <span
-                  className="text-muted"
+                                className="text-muted"
                 >
-                  <TimeDisplay
-                    time="2016-11-21T20:03:40"
-                  />
-                   by 
+                                <TimeDisplay
+                                                time="2016-11-21T20:03:40"
+                                />
+                                 by 
                 </span>
                 <strong />
-              </small>,
+</small>,
             },
             "ref": null,
             "rendered": Object {
@@ -330,12 +330,12 @@ ShallowWrapper {
                 "children": Array [
                   <span
                     className="text-muted"
-                  >
+>
                     <TimeDisplay
-                      time="2016-11-21T20:03:40"
+                                        time="2016-11-21T20:03:40"
                     />
                      by 
-                  </span>,
+</span>,
                   <strong />,
                 ],
               },
@@ -349,7 +349,7 @@ ShallowWrapper {
                     "children": Array [
                       <TimeDisplay
                         time="2016-11-21T20:03:40"
-                      />,
+/>,
                       " by ",
                     ],
                     "className": "text-muted",

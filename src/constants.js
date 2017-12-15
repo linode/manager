@@ -1,12 +1,14 @@
 /* eslint-disable no-undef */
-export const API_ROOT = ENV_API_ROOT || 'https://api.linode.com/v4';
-export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.linode.com';
-export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
-export const GA_ID = ENV_GA_ID;
-export const SENTRY_URL = ENV_SENTRY_URL;
-export const ENVIRONMENT = process.env.NODE_ENV || 'development';
-export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || ENVIRONMENT === 'production';
-export const VERSION = ENV_VERSION;
+const env = process.env;
+export const API_ROOT = env.REACT_APP_ENV_API_ROOT || 'https://api.linode.com/v4';
+export const LOGIN_ROOT = env.REACT_APP_ENV_LOGIN_ROOT || 'https://login.linode.com';
+export const APP_ROOT = env.REACT_APP_ENV_APP_ROOT || 'http://localhost:3000';
+export const GA_ID = env.REACT_APP_NV_GA_ID;
+export const SENTRY_URL = env.REACT_APP_ENV_SENTRY_URL;
+export const ENVIRONMENT = env.NODE_ENV || 'development';
+export const DEVTOOLS_DISABLED = env.REACT_APP_ENV_DEVTOOLS_DISABLED || ENVIRONMENT === 'production';
+export const VERSION = env.REACT_APP_ENV_VERSION;
+
 /* eslint-enable no-undef */
 
 export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds

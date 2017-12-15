@@ -1,0 +1,78 @@
+// font size mixin based on 10px
+@mixin font-size($size: 1.5) {
+    font-size: ($size * 10) + px; // px fallback where rem not supported
+    font-size: $size + rem;
+}
+
+@mixin flex($justify-content: space-between) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: $justify-content;
+}
+
+@mixin clearfix() {
+    clear: both;
+}
+
+@mixin pointer() {
+    cursor: pointer;
+    cursor: hand;
+}
+
+@mixin title() {
+    text-align: center;
+    overflow: hidden;
+    line-height: $form-field-height;
+    color: $black;
+}
+
+@mixin placeholder() {
+    color: $lightest-black;
+    opacity: 1;
+}
+
+@mixin placeholder-full() {
+    ::-webkit-input-placeholder {
+        @include placeholder();
+    }
+
+    ::-moz-placeholder {
+        @include placeholder();
+    }
+
+    :-moz-placeholder {
+        @include placeholder();
+    }
+
+    :-ms-input-placeholder {
+        @include placeholder();
+    }
+}
+
+@mixin selected() {
+    background-color: $select-color;
+}
+
+@mixin truncate() {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin checkbox() {
+    @extends .checkbox;
+
+    line-height: $form-field-height;
+
+    &-input {
+        height: $checkbox-height-width;
+        width: $checkbox-height-width;
+        position: relative;
+        top: 3px;
+    }
+
+    &-label {
+        line-height: $form-field-height;
+        padding: 0 10px;
+    }
+}

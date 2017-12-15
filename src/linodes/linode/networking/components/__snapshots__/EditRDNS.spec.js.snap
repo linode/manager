@@ -8,18 +8,18 @@ ShallowWrapper {
     close={[Function]}
     dispatch={[Function]}
     ip={
-      Object {
-        "address": "97.107.143.0",
-        "gateway": "97.107.143.0",
-        "key": "97.107.143.0",
-        "linode_id": 1234,
-        "prefix": 24,
-        "rdns": "li1-1.members.linode.com",
-        "type": "public",
-        "version": "ipv4",
-      }
+        Object {
+            "address": "97.107.143.0",
+            "gateway": "97.107.143.0",
+            "key": "97.107.143.0",
+            "linode_id": 1234,
+            "prefix": 24,
+            "rdns": "li1-1.members.linode.com",
+            "type": "public",
+            "version": "ipv4",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -40,35 +40,35 @@ ShallowWrapper {
       "children": Array [
         <p>
           This request may take a while.
-        </p>,
+</p>,
         <ModalFormGroup
           apiKey=""
           errors={Object {}}
           id="address"
           label="IP Address"
-        >
+>
           <Input
-            className=""
-            disabled={true}
-            id="address"
-            value="97.107.143.0"
+                    className=""
+                    disabled={true}
+                    id="address"
+                    value="97.107.143.0"
           />
-        </ModalFormGroup>,
+</ModalFormGroup>,
         <ModalFormGroup
           apiKey="rdns"
           errors={Object {}}
           id="hostname"
           label="Hostname"
-        >
+>
           <Input
-            className=""
-            id="hostname"
-            name="hostname"
-            onChange={[Function]}
-            placeholder="www.example.com"
-            value="li1-1.members.linode.com"
+                    className=""
+                    id="hostname"
+                    name="hostname"
+                    onChange={[Function]}
+                    placeholder="www.example.com"
+                    value="li1-1.members.linode.com"
           />
-        </ModalFormGroup>,
+</ModalFormGroup>,
       ],
       "errors": Object {},
       "noCancel": false,
@@ -101,7 +101,7 @@ ShallowWrapper {
             disabled={true}
             id="address"
             value="97.107.143.0"
-          />,
+/>,
           "errors": Object {},
           "id": "address",
           "label": "IP Address",
@@ -136,7 +136,7 @@ ShallowWrapper {
             onChange={[Function]}
             placeholder="www.example.com"
             value="li1-1.members.linode.com"
-          />,
+/>,
           "errors": Object {},
           "id": "hostname",
           "label": "Hostname",
@@ -177,35 +177,35 @@ ShallowWrapper {
         "children": Array [
           <p>
             This request may take a while.
-          </p>,
+</p>,
           <ModalFormGroup
             apiKey=""
             errors={Object {}}
             id="address"
             label="IP Address"
-          >
+>
             <Input
-              className=""
-              disabled={true}
-              id="address"
-              value="97.107.143.0"
+                        className=""
+                        disabled={true}
+                        id="address"
+                        value="97.107.143.0"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
           <ModalFormGroup
             apiKey="rdns"
             errors={Object {}}
             id="hostname"
             label="Hostname"
-          >
+>
             <Input
-              className=""
-              id="hostname"
-              name="hostname"
-              onChange={[Function]}
-              placeholder="www.example.com"
-              value="li1-1.members.linode.com"
+                        className=""
+                        id="hostname"
+                        name="hostname"
+                        onChange={[Function]}
+                        placeholder="www.example.com"
+                        value="li1-1.members.linode.com"
             />
-          </ModalFormGroup>,
+</ModalFormGroup>,
         ],
         "errors": Object {},
         "noCancel": false,
@@ -238,7 +238,7 @@ ShallowWrapper {
               disabled={true}
               id="address"
               value="97.107.143.0"
-            />,
+/>,
             "errors": Object {},
             "id": "address",
             "label": "IP Address",
@@ -273,7 +273,7 @@ ShallowWrapper {
               onChange={[Function]}
               placeholder="www.example.com"
               value="li1-1.members.linode.com"
-            />,
+/>,
             "errors": Object {},
             "id": "hostname",
             "label": "Hostname",

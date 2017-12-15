@@ -7,7 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <ChangeEmail
     dispatch={[Function]}
     email="user@example.com"
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -22,70 +22,70 @@ ShallowWrapper {
     "props": Object {
       "children": <Form
         analytics={
-          Object {
-            "title": "Email Settings",
-          }
+                Object {
+                        "title": "Email Settings",
+                      }
         }
         className=""
         noSubmitEvent={false}
         onSubmit={[Function]}
-      >
+>
         <FormGroup
-          className="row"
-          errors={Object {}}
-          name="email"
+                className="row"
+                errors={Object {}}
+                name="email"
         >
-          <label
-            className="col-sm-2 col-form-label"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <div
-            className="col-sm-10"
-          >
-            <Input
-              className=""
-              id="email"
-              name="email"
-              onChange={[Function]}
-              type="email"
-              value="user@example.com"
-            />
-            <FormGroupError
-              className=""
-              errors={Object {}}
-              inline={true}
-              name="email"
-            />
-          </div>
+                <label
+                        className="col-sm-2 col-form-label"
+                        htmlFor="email"
+                >
+                        Email
+                </label>
+                <div
+                        className="col-sm-10"
+                >
+                        <Input
+                                className=""
+                                id="email"
+                                name="email"
+                                onChange={[Function]}
+                                type="email"
+                                value="user@example.com"
+                        />
+                        <FormGroupError
+                                className=""
+                                errors={Object {}}
+                                inline={true}
+                                name="email"
+                        />
+                </div>
         </FormGroup>
         <FormGroup
-          className="row"
-          name="submit"
+                className="row"
+                name="submit"
         >
-          <div
-            className="offset-sm-2 col-sm-10"
-          >
-            <SubmitButton
-              className="btn-default"
-              disabled={false}
-              disabledChildren="Saving"
-            >
-              Save
-            </SubmitButton>
-            <FormSummary
-              className=""
-              errors={Object {}}
-              success="Email saved."
-            />
-          </div>
+                <div
+                        className="offset-sm-2 col-sm-10"
+                >
+                        <SubmitButton
+                                className="btn-default"
+                                disabled={false}
+                                disabledChildren="Saving"
+                        >
+                                Save
+                        </SubmitButton>
+                        <FormSummary
+                                className=""
+                                errors={Object {}}
+                                success="Email saved."
+                        />
+                </div>
         </FormGroup>
-      </Form>,
+</Form>,
       "className": "",
       "header": <CardHeader
         title="Change email"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Object {
@@ -101,53 +101,53 @@ ShallowWrapper {
             className="row"
             errors={Object {}}
             name="email"
-          >
+>
             <label
-              className="col-sm-2 col-form-label"
-              htmlFor="email"
+                        className="col-sm-2 col-form-label"
+                        htmlFor="email"
             >
-              Email
+                        Email
             </label>
             <div
-              className="col-sm-10"
+                        className="col-sm-10"
             >
-              <Input
-                className=""
-                id="email"
-                name="email"
-                onChange={[Function]}
-                type="email"
-                value="user@example.com"
-              />
-              <FormGroupError
-                className=""
-                errors={Object {}}
-                inline={true}
-                name="email"
-              />
+                        <Input
+                                    className=""
+                                    id="email"
+                                    name="email"
+                                    onChange={[Function]}
+                                    type="email"
+                                    value="user@example.com"
+                        />
+                        <FormGroupError
+                                    className=""
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="email"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="submit"
-          >
+>
             <div
-              className="offset-sm-2 col-sm-10"
+                        className="offset-sm-2 col-sm-10"
             >
-              <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Saving"
-              >
-                Save
-              </SubmitButton>
-              <FormSummary
-                className=""
-                errors={Object {}}
-                success="Email saved."
-              />
+                        <SubmitButton
+                                    className="btn-default"
+                                    disabled={false}
+                                    disabledChildren="Saving"
+                        >
+                                    Save
+                        </SubmitButton>
+                        <FormSummary
+                                    className=""
+                                    errors={Object {}}
+                                    success="Email saved."
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
         ],
         "className": "",
         "noSubmitEvent": false,
@@ -164,27 +164,27 @@ ShallowWrapper {
               <label
                 className="col-sm-2 col-form-label"
                 htmlFor="email"
-              >
+>
                 Email
-              </label>,
+</label>,
               <div
                 className="col-sm-10"
-              >
+>
                 <Input
-                  className=""
-                  id="email"
-                  name="email"
-                  onChange={[Function]}
-                  type="email"
-                  value="user@example.com"
+                                className=""
+                                id="email"
+                                name="email"
+                                onChange={[Function]}
+                                type="email"
+                                value="user@example.com"
                 />
                 <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={true}
-                  name="email"
+                                className=""
+                                errors={Object {}}
+                                inline={true}
+                                name="email"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "errors": Object {},
@@ -218,13 +218,13 @@ ShallowWrapper {
                     onChange={[Function]}
                     type="email"
                     value="user@example.com"
-                  />,
+/>,
                   <FormGroupError
                     className=""
                     errors={Object {}}
                     inline={true}
                     name="email"
-                  />,
+/>,
                 ],
                 "className": "col-sm-10",
               },
@@ -273,20 +273,20 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="offset-sm-2 col-sm-10"
-            >
+>
               <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Saving"
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Saving"
               >
-                Save
+                            Save
               </SubmitButton>
               <FormSummary
-                className=""
-                errors={Object {}}
-                success="Email saved."
+                            className=""
+                            errors={Object {}}
+                            success="Email saved."
               />
-            </div>,
+</div>,
             "className": "row",
             "name": "submit",
           },
@@ -301,14 +301,14 @@ ShallowWrapper {
                   className="btn-default"
                   disabled={false}
                   disabledChildren="Saving"
-                >
+>
                   Save
-                </SubmitButton>,
+</SubmitButton>,
                 <FormSummary
                   className=""
                   errors={Object {}}
                   success="Email saved."
-                />,
+/>,
               ],
               "className": "offset-sm-2 col-sm-10",
             },
@@ -359,70 +359,70 @@ ShallowWrapper {
       "props": Object {
         "children": <Form
           analytics={
-            Object {
-              "title": "Email Settings",
-            }
+                    Object {
+                              "title": "Email Settings",
+                            }
           }
           className=""
           noSubmitEvent={false}
           onSubmit={[Function]}
-        >
+>
           <FormGroup
-            className="row"
-            errors={Object {}}
-            name="email"
+                    className="row"
+                    errors={Object {}}
+                    name="email"
           >
-            <label
-              className="col-sm-2 col-form-label"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <div
-              className="col-sm-10"
-            >
-              <Input
-                className=""
-                id="email"
-                name="email"
-                onChange={[Function]}
-                type="email"
-                value="user@example.com"
-              />
-              <FormGroupError
-                className=""
-                errors={Object {}}
-                inline={true}
-                name="email"
-              />
-            </div>
+                    <label
+                              className="col-sm-2 col-form-label"
+                              htmlFor="email"
+                    >
+                              Email
+                    </label>
+                    <div
+                              className="col-sm-10"
+                    >
+                              <Input
+                                        className=""
+                                        id="email"
+                                        name="email"
+                                        onChange={[Function]}
+                                        type="email"
+                                        value="user@example.com"
+                              />
+                              <FormGroupError
+                                        className=""
+                                        errors={Object {}}
+                                        inline={true}
+                                        name="email"
+                              />
+                    </div>
           </FormGroup>
           <FormGroup
-            className="row"
-            name="submit"
+                    className="row"
+                    name="submit"
           >
-            <div
-              className="offset-sm-2 col-sm-10"
-            >
-              <SubmitButton
-                className="btn-default"
-                disabled={false}
-                disabledChildren="Saving"
-              >
-                Save
-              </SubmitButton>
-              <FormSummary
-                className=""
-                errors={Object {}}
-                success="Email saved."
-              />
-            </div>
+                    <div
+                              className="offset-sm-2 col-sm-10"
+                    >
+                              <SubmitButton
+                                        className="btn-default"
+                                        disabled={false}
+                                        disabledChildren="Saving"
+                              >
+                                        Save
+                              </SubmitButton>
+                              <FormSummary
+                                        className=""
+                                        errors={Object {}}
+                                        success="Email saved."
+                              />
+                    </div>
           </FormGroup>
-        </Form>,
+</Form>,
         "className": "",
         "header": <CardHeader
           title="Change email"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Object {
@@ -438,53 +438,53 @@ ShallowWrapper {
               className="row"
               errors={Object {}}
               name="email"
-            >
+>
               <label
-                className="col-sm-2 col-form-label"
-                htmlFor="email"
+                            className="col-sm-2 col-form-label"
+                            htmlFor="email"
               >
-                Email
+                            Email
               </label>
               <div
-                className="col-sm-10"
+                            className="col-sm-10"
               >
-                <Input
-                  className=""
-                  id="email"
-                  name="email"
-                  onChange={[Function]}
-                  type="email"
-                  value="user@example.com"
-                />
-                <FormGroupError
-                  className=""
-                  errors={Object {}}
-                  inline={true}
-                  name="email"
-                />
+                            <Input
+                                          className=""
+                                          id="email"
+                                          name="email"
+                                          onChange={[Function]}
+                                          type="email"
+                                          value="user@example.com"
+                            />
+                            <FormGroupError
+                                          className=""
+                                          errors={Object {}}
+                                          inline={true}
+                                          name="email"
+                            />
               </div>
-            </FormGroup>,
+</FormGroup>,
             <FormGroup
               className="row"
               name="submit"
-            >
+>
               <div
-                className="offset-sm-2 col-sm-10"
+                            className="offset-sm-2 col-sm-10"
               >
-                <SubmitButton
-                  className="btn-default"
-                  disabled={false}
-                  disabledChildren="Saving"
-                >
-                  Save
-                </SubmitButton>
-                <FormSummary
-                  className=""
-                  errors={Object {}}
-                  success="Email saved."
-                />
+                            <SubmitButton
+                                          className="btn-default"
+                                          disabled={false}
+                                          disabledChildren="Saving"
+                            >
+                                          Save
+                            </SubmitButton>
+                            <FormSummary
+                                          className=""
+                                          errors={Object {}}
+                                          success="Email saved."
+                            />
               </div>
-            </FormGroup>,
+</FormGroup>,
           ],
           "className": "",
           "noSubmitEvent": false,
@@ -501,27 +501,27 @@ ShallowWrapper {
                 <label
                   className="col-sm-2 col-form-label"
                   htmlFor="email"
-                >
+>
                   Email
-                </label>,
+</label>,
                 <div
                   className="col-sm-10"
-                >
+>
                   <Input
-                    className=""
-                    id="email"
-                    name="email"
-                    onChange={[Function]}
-                    type="email"
-                    value="user@example.com"
+                                    className=""
+                                    id="email"
+                                    name="email"
+                                    onChange={[Function]}
+                                    type="email"
+                                    value="user@example.com"
                   />
                   <FormGroupError
-                    className=""
-                    errors={Object {}}
-                    inline={true}
-                    name="email"
+                                    className=""
+                                    errors={Object {}}
+                                    inline={true}
+                                    name="email"
                   />
-                </div>,
+</div>,
               ],
               "className": "row",
               "errors": Object {},
@@ -555,13 +555,13 @@ ShallowWrapper {
                       onChange={[Function]}
                       type="email"
                       value="user@example.com"
-                    />,
+/>,
                     <FormGroupError
                       className=""
                       errors={Object {}}
                       inline={true}
                       name="email"
-                    />,
+/>,
                   ],
                   "className": "col-sm-10",
                 },
@@ -610,20 +610,20 @@ ShallowWrapper {
             "props": Object {
               "children": <div
                 className="offset-sm-2 col-sm-10"
-              >
+>
                 <SubmitButton
-                  className="btn-default"
-                  disabled={false}
-                  disabledChildren="Saving"
+                                className="btn-default"
+                                disabled={false}
+                                disabledChildren="Saving"
                 >
-                  Save
+                                Save
                 </SubmitButton>
                 <FormSummary
-                  className=""
-                  errors={Object {}}
-                  success="Email saved."
+                                className=""
+                                errors={Object {}}
+                                success="Email saved."
                 />
-              </div>,
+</div>,
               "className": "row",
               "name": "submit",
             },
@@ -638,14 +638,14 @@ ShallowWrapper {
                     className="btn-default"
                     disabled={false}
                     disabledChildren="Saving"
-                  >
+>
                     Save
-                  </SubmitButton>,
+</SubmitButton>,
                   <FormSummary
                     className=""
                     errors={Object {}}
                     success="Email saved."
-                  />,
+/>,
                 ],
                 "className": "offset-sm-2 col-sm-10",
               },

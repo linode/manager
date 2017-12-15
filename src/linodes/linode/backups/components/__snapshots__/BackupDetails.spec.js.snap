@@ -6,38 +6,7 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <BackupDetails
     backup={
-      Object {
-        "availability": "daily",
-        "configs": Array [
-          "Ubuntu Disk",
-        ],
-        "created": "2017-01-31T07:28:52",
-        "disks": Array [
-          Object {
-            "filesystem": "ext4",
-            "label": "Ubuntu 15.10 Disk",
-            "size": 2330,
-          },
-          Object {
-            "filesystem": "swap",
-            "label": "512 MB Swap Image",
-            "size": 0,
-          },
-        ],
-        "finished": "2017-01-31T07:30:03",
-        "id": 54782214,
-        "label": null,
-        "region": "us-east-1a",
-        "status": "successful",
-        "type": "auto",
-        "updated": "2017-01-31T12:32:01",
-      }
-    }
-    dispatch={[Function]}
-    linode={
-      Object {
-        "_backups": Object {
-          "daily": Object {
+        Object {
             "availability": "daily",
             "configs": Array [
               "Ubuntu Disk",
@@ -62,300 +31,331 @@ ShallowWrapper {
             "status": "successful",
             "type": "auto",
             "updated": "2017-01-31T12:32:01",
-          },
-          "snapshot": Object {
-            "current": Object {
-              "availability": "unavailable",
-              "configs": Array [
-                "Some config",
-              ],
-              "created": "2017-01-31T21:50:42",
-              "disks": Array [
-                Object {
-                  "filesystem": "ext4",
-                  "label": "Ubuntu 15.10 Disk",
-                  "size": 2330,
-                },
-                Object {
-                  "filesystem": "swap",
-                  "label": "512 MB Swap Image",
-                  "size": 0,
-                },
-              ],
-              "finished": "2017-01-31T21:51:51",
-              "id": 54782236,
-              "label": "the label",
-              "region": "us-east-1a",
-              "status": "successful",
-              "type": "snapshot",
-              "updated": "2017-01-31T21:51:51",
-            },
-            "in_progress": null,
-          },
-          "weekly": Array [],
-        },
-        "_configs": Object {
-          "configs": Object {
-            "12345": Object {
-              "comments": "Test comments",
-              "created": "2015-09-29 11:21:38 +0000",
-              "devices": Object {
-                "sda": Object {
-                  "disk_id": 12345,
-                },
-                "sdb": Object {
-                  "disk_id": 12346,
-                },
-                "sdc": null,
-                "sdd": null,
-                "sde": null,
-                "sdf": null,
-                "sdg": null,
-                "sdh": null,
-              },
-              "helpers": Object {
-                "devtmpfs_automount": false,
-                "distro": true,
-                "modules_dep": true,
-                "network": true,
-                "updatedb_disabled": true,
-              },
-              "id": 12345,
-              "initrd": "",
-              "kernel": "linode/latest_64",
-              "label": "Test config",
-              "memory_limit": 1024,
-              "root_device": "/dev/sda",
-              "run_level": "default",
-              "updated": "2015-09-29 11:21:38 +0000",
-              "virt_mode": "paravirt",
-            },
-          },
-          "pagesFetched": Array [
-            0,
-          ],
-          "totalPages": 1,
-          "totalResults": 1,
-        },
-        "_disks": Object {
-          "disks": Object {
-            "12345": Object {
-              "created": "2016-08-09T19:47:11",
-              "filesystem": "ext4",
-              "id": 12345,
-              "label": "Arch Linux 2015.08 Disk",
-              "size": 6144,
-              "updated": "2016-08-09T19:47:11",
-            },
-            "12346": Object {
-              "created": "2016-08-09T19:47:11",
-              "filesystem": "swap",
-              "id": 12346,
-              "label": "Swap Disk",
-              "size": 6144,
-              "updated": "2016-08-09T19:47:11",
-            },
-          },
-          "pagesFetched": Array [
-            0,
-          ],
-          "totalPages": 1,
-          "totalResults": 2,
-        },
-        "_ips": Object {
-          "2600:3c03::f03c:91ff:fe0a:1": Object {
-            "address": "2600:3c03::f03c:91ff:fe0a:1",
-            "gateway": "fe80::1",
-            "key": "2600:3c03::f03c:91ff:fe0a:1",
-            "linode_id": 1234,
-            "prefix": "64",
-            "rdns": "li1-1.members.linode.com",
-            "type": "slaac",
-            "version": "ipv6",
-          },
-          "97.107.143.0": Object {
-            "address": "97.107.143.0",
-            "gateway": "97.107.143.0",
-            "key": "97.107.143.0",
-            "linode_id": 1234,
-            "prefix": 24,
-            "rdns": "li1-1.members.linode.com",
-            "type": "public",
-            "version": "ipv4",
-          },
-          "97.107.143.2": Object {
-            "address": "97.107.143.2",
-            "gateway": "97.107.143.0",
-            "key": "97.107.143.2",
-            "linode_id": 1234,
-            "prefix": 17,
-            "rdns": "li1-1.members.linode.com",
-            "type": "private",
-            "version": "ipv4",
-          },
-          "fe80::f03c:91ff:fe0a:181f": Object {
-            "address": "fe80::f03c:91ff:fe0a:181f",
-            "key": "fe80::f03c:91ff:fe0a:181f",
-            "linode_id": 1234,
-            "type": "link-local",
-            "version": "ipv6",
-          },
-        },
-        "_polling": false,
-        "_shared": Array [],
-        "_stats": Object {
-          "cpu": Array [
-            Array [
-              1490378700000,
-              1.67,
-            ],
-          ],
-          "io": Object {
-            "io": Array [
-              Array [
-                1490379000000,
-                0.91,
-              ],
-            ],
-            "swap": Array [
-              Array [
-                1490378100000,
-                0,
-              ],
-            ],
-          },
-          "netv4": Object {
-            "in": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "out": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "private_in": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "private_out": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-          },
-          "netv6": Object {
-            "in": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "out": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "private_in": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-            "private_out": Array [
-              Array [
-                1490377800000,
-                0,
-              ],
-            ],
-          },
-        },
-        "_volumes": Object {
-          "pagesFetched": Array [
-            0,
-          ],
-          "totalPages": 1,
-          "totalResults": 1,
-          "volumes": Object {
-            "38": Object {
-              "created": "2017-08-08T13:55:16",
-              "id": 38,
-              "label": "test",
-              "linode_id": null,
-              "region": "us-east-1a",
-              "size": 20,
-              "status": "active",
-              "updated": "2017-08-08T04:00:00",
-            },
-          },
-        },
-        "alerts": Object {
-          "cpu": 90,
-          "io": 5000,
-          "network_in": 5,
-          "network_out": 5,
-          "tranfer_quota": 80,
-        },
-        "backups": Object {
-          "enabled": true,
-          "schedule": Object {
-            "day": "Monday",
-            "window": "W10",
-          },
-        },
-        "created": "2016-07-06T16:47:27",
-        "disk": 20480,
-        "group": "Test Group",
-        "hypervisor": "kvm",
-        "id": 1234,
-        "image": Object {
-          "id": "linode/ubuntu15.10",
-          "label": "Ubuntu 15.10",
-          "vendor": "Ubuntu",
-        },
-        "ipv4": Array [
-          "97.107.143.0",
-          "97.107.143.1",
-        ],
-        "ipv6": "2600:3c03::f03c:91ff:fe0a:0",
-        "label": "test-linode",
-        "memory": 2048,
-        "region": "us-east-1a",
-        "status": "running",
-        "type": Object {
-          "_polling": false,
-          "addons": Object {
-            "backups": Object {
-              "price": Object {
-                "monthly": 2.5,
-              },
-            },
-          },
-          "class": "standard",
-          "disk": 24576,
-          "id": "linode2048.5",
-          "label": "Linode 2048",
-          "memory": 2048,
-          "network_out": 125,
-          "price": Object {
-            "hourly": 0.015,
-            "monthly": 10,
-          },
-          "service_type": "linode",
-          "transfer": 2000,
-          "vcpus": 2,
-        },
-        "vcpus": 2,
-      }
+          }
     }
-  />,
+    dispatch={[Function]}
+    linode={
+        Object {
+            "_backups": Object {
+              "daily": Object {
+                "availability": "daily",
+                "configs": Array [
+                  "Ubuntu Disk",
+                ],
+                "created": "2017-01-31T07:28:52",
+                "disks": Array [
+                  Object {
+                    "filesystem": "ext4",
+                    "label": "Ubuntu 15.10 Disk",
+                    "size": 2330,
+                  },
+                  Object {
+                    "filesystem": "swap",
+                    "label": "512 MB Swap Image",
+                    "size": 0,
+                  },
+                ],
+                "finished": "2017-01-31T07:30:03",
+                "id": 54782214,
+                "label": null,
+                "region": "us-east-1a",
+                "status": "successful",
+                "type": "auto",
+                "updated": "2017-01-31T12:32:01",
+              },
+              "snapshot": Object {
+                "current": Object {
+                  "availability": "unavailable",
+                  "configs": Array [
+                    "Some config",
+                  ],
+                  "created": "2017-01-31T21:50:42",
+                  "disks": Array [
+                    Object {
+                      "filesystem": "ext4",
+                      "label": "Ubuntu 15.10 Disk",
+                      "size": 2330,
+                    },
+                    Object {
+                      "filesystem": "swap",
+                      "label": "512 MB Swap Image",
+                      "size": 0,
+                    },
+                  ],
+                  "finished": "2017-01-31T21:51:51",
+                  "id": 54782236,
+                  "label": "the label",
+                  "region": "us-east-1a",
+                  "status": "successful",
+                  "type": "snapshot",
+                  "updated": "2017-01-31T21:51:51",
+                },
+                "in_progress": null,
+              },
+              "weekly": Array [],
+            },
+            "_configs": Object {
+              "configs": Object {
+                "12345": Object {
+                  "comments": "Test comments",
+                  "created": "2015-09-29 11:21:38 +0000",
+                  "devices": Object {
+                    "sda": Object {
+                      "disk_id": 12345,
+                    },
+                    "sdb": Object {
+                      "disk_id": 12346,
+                    },
+                    "sdc": null,
+                    "sdd": null,
+                    "sde": null,
+                    "sdf": null,
+                    "sdg": null,
+                    "sdh": null,
+                  },
+                  "helpers": Object {
+                    "devtmpfs_automount": false,
+                    "distro": true,
+                    "modules_dep": true,
+                    "network": true,
+                    "updatedb_disabled": true,
+                  },
+                  "id": 12345,
+                  "initrd": "",
+                  "kernel": "linode/latest_64",
+                  "label": "Test config",
+                  "memory_limit": 1024,
+                  "root_device": "/dev/sda",
+                  "run_level": "default",
+                  "updated": "2015-09-29 11:21:38 +0000",
+                  "virt_mode": "paravirt",
+                },
+              },
+              "pagesFetched": Array [
+                0,
+              ],
+              "totalPages": 1,
+              "totalResults": 1,
+            },
+            "_disks": Object {
+              "disks": Object {
+                "12345": Object {
+                  "created": "2016-08-09T19:47:11",
+                  "filesystem": "ext4",
+                  "id": 12345,
+                  "label": "Arch Linux 2015.08 Disk",
+                  "size": 6144,
+                  "updated": "2016-08-09T19:47:11",
+                },
+                "12346": Object {
+                  "created": "2016-08-09T19:47:11",
+                  "filesystem": "swap",
+                  "id": 12346,
+                  "label": "Swap Disk",
+                  "size": 6144,
+                  "updated": "2016-08-09T19:47:11",
+                },
+              },
+              "pagesFetched": Array [
+                0,
+              ],
+              "totalPages": 1,
+              "totalResults": 2,
+            },
+            "_ips": Object {
+              "2600:3c03::f03c:91ff:fe0a:1": Object {
+                "address": "2600:3c03::f03c:91ff:fe0a:1",
+                "gateway": "fe80::1",
+                "key": "2600:3c03::f03c:91ff:fe0a:1",
+                "linode_id": 1234,
+                "prefix": "64",
+                "rdns": "li1-1.members.linode.com",
+                "type": "slaac",
+                "version": "ipv6",
+              },
+              "97.107.143.0": Object {
+                "address": "97.107.143.0",
+                "gateway": "97.107.143.0",
+                "key": "97.107.143.0",
+                "linode_id": 1234,
+                "prefix": 24,
+                "rdns": "li1-1.members.linode.com",
+                "type": "public",
+                "version": "ipv4",
+              },
+              "97.107.143.2": Object {
+                "address": "97.107.143.2",
+                "gateway": "97.107.143.0",
+                "key": "97.107.143.2",
+                "linode_id": 1234,
+                "prefix": 17,
+                "rdns": "li1-1.members.linode.com",
+                "type": "private",
+                "version": "ipv4",
+              },
+              "fe80::f03c:91ff:fe0a:181f": Object {
+                "address": "fe80::f03c:91ff:fe0a:181f",
+                "key": "fe80::f03c:91ff:fe0a:181f",
+                "linode_id": 1234,
+                "type": "link-local",
+                "version": "ipv6",
+              },
+            },
+            "_polling": false,
+            "_shared": Array [],
+            "_stats": Object {
+              "cpu": Array [
+                Array [
+                  1490378700000,
+                  1.67,
+                ],
+              ],
+              "io": Object {
+                "io": Array [
+                  Array [
+                    1490379000000,
+                    0.91,
+                  ],
+                ],
+                "swap": Array [
+                  Array [
+                    1490378100000,
+                    0,
+                  ],
+                ],
+              },
+              "netv4": Object {
+                "in": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "out": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "private_in": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "private_out": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+              },
+              "netv6": Object {
+                "in": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "out": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "private_in": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+                "private_out": Array [
+                  Array [
+                    1490377800000,
+                    0,
+                  ],
+                ],
+              },
+            },
+            "_volumes": Object {
+              "pagesFetched": Array [
+                0,
+              ],
+              "totalPages": 1,
+              "totalResults": 1,
+              "volumes": Object {
+                "38": Object {
+                  "created": "2017-08-08T13:55:16",
+                  "id": 38,
+                  "label": "test",
+                  "linode_id": null,
+                  "region": "us-east-1a",
+                  "size": 20,
+                  "status": "active",
+                  "updated": "2017-08-08T04:00:00",
+                },
+              },
+            },
+            "alerts": Object {
+              "cpu": 90,
+              "io": 5000,
+              "network_in": 5,
+              "network_out": 5,
+              "tranfer_quota": 80,
+            },
+            "backups": Object {
+              "enabled": true,
+              "schedule": Object {
+                "day": "Monday",
+                "window": "W10",
+              },
+            },
+            "created": "2016-07-06T16:47:27",
+            "disk": 20480,
+            "group": "Test Group",
+            "hypervisor": "kvm",
+            "id": 1234,
+            "image": Object {
+              "id": "linode/ubuntu15.10",
+              "label": "Ubuntu 15.10",
+              "vendor": "Ubuntu",
+            },
+            "ipv4": Array [
+              "97.107.143.0",
+              "97.107.143.1",
+            ],
+            "ipv6": "2600:3c03::f03c:91ff:fe0a:0",
+            "label": "test-linode",
+            "memory": 2048,
+            "region": "us-east-1a",
+            "status": "running",
+            "type": Object {
+              "_polling": false,
+              "addons": Object {
+                "backups": Object {
+                  "price": Object {
+                    "monthly": 2.5,
+                  },
+                },
+              },
+              "class": "standard",
+              "disk": 24576,
+              "id": "linode2048.5",
+              "label": "Linode 2048",
+              "memory": 2048,
+              "network_out": 125,
+              "price": Object {
+                "hourly": 0.015,
+                "monthly": 10,
+              },
+              "service_type": "linode",
+              "transfer": 2000,
+              "vcpus": 2,
+            },
+            "vcpus": 2,
+          }
+    }
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -373,187 +373,187 @@ ShallowWrapper {
         <FormGroup
           className="row"
           name="type"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Type
+                    Type
           </div>
           <div
-            className="col-sm-9"
-            id="type"
+                    className="col-sm-9"
+                    id="type"
           >
-            Auto
+                    Auto
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="started"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Started
+                    Started
           </div>
           <div
-            className="col-sm-9"
-            id="started"
+                    className="col-sm-9"
+                    id="started"
           >
-            <TimeDisplay
-              time="2017-01-31T07:28:52"
-            />
+                    <TimeDisplay
+                              time="2017-01-31T07:28:52"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="finished"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Finished
+                    Finished
           </div>
           <div
-            className="col-sm-9"
-            id="finished"
+                    className="col-sm-9"
+                    id="finished"
           >
-            <TimeDisplay
-              time="2017-01-31T07:30:03"
-            />
+                    <TimeDisplay
+                              time="2017-01-31T07:30:03"
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="duration"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Duration
+                    Duration
           </div>
           <div
-            className="col-sm-9"
-            id="duration"
+                    className="col-sm-9"
+                    id="duration"
           >
-            (1 minute)
+                    (1 minute)
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="region"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Region
+                    Region
           </div>
           <div
-            className="col-sm-9"
-            id="region"
+                    className="col-sm-9"
+                    id="region"
           >
-            <Region
-              obj={
-                Object {
-                  "availability": "daily",
-                  "configs": Array [
-                    "Ubuntu Disk",
-                  ],
-                  "created": "2017-01-31T07:28:52",
-                  "disks": Array [
-                    Object {
-                      "filesystem": "ext4",
-                      "label": "Ubuntu 15.10 Disk",
-                      "size": 2330,
-                    },
-                    Object {
-                      "filesystem": "swap",
-                      "label": "512 MB Swap Image",
-                      "size": 0,
-                    },
-                  ],
-                  "finished": "2017-01-31T07:30:03",
-                  "id": 54782214,
-                  "label": null,
-                  "region": "us-east-1a",
-                  "status": "successful",
-                  "type": "auto",
-                  "updated": "2017-01-31T12:32:01",
-                }
-              }
-            />
+                    <Region
+                              obj={
+                                        Object {
+                                                  "availability": "daily",
+                                                  "configs": Array [
+                                                    "Ubuntu Disk",
+                                                  ],
+                                                  "created": "2017-01-31T07:28:52",
+                                                  "disks": Array [
+                                                    Object {
+                                                      "filesystem": "ext4",
+                                                      "label": "Ubuntu 15.10 Disk",
+                                                      "size": 2330,
+                                                    },
+                                                    Object {
+                                                      "filesystem": "swap",
+                                                      "label": "512 MB Swap Image",
+                                                      "size": 0,
+                                                    },
+                                                  ],
+                                                  "finished": "2017-01-31T07:30:03",
+                                                  "id": 54782214,
+                                                  "label": null,
+                                                  "region": "us-east-1a",
+                                                  "status": "successful",
+                                                  "type": "auto",
+                                                  "updated": "2017-01-31T12:32:01",
+                                                }
+                              }
+                    />
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="config"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Config Profiles
+                    Config Profiles
           </div>
           <div
-            className="col-sm-9"
-            id="configs"
+                    className="col-sm-9"
+                    id="configs"
           >
-            <div>
-              Ubuntu Disk
-            </div>
+                    <div>
+                              Ubuntu Disk
+                    </div>
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="disks"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Disks
+                    Disks
           </div>
           <div
-            className="col-sm-9"
-            id="disks"
+                    className="col-sm-9"
+                    id="disks"
           >
-            <div>
-              Ubuntu 15.10 Disk
-               (
-              ext4
-              ) - 
-              2330
-              MB
-            </div>
-            <div>
-              512 MB Swap Image
-               (
-              swap
-              ) - 
-              0
-              MB
-            </div>
+                    <div>
+                              Ubuntu 15.10 Disk
+                               (
+                              ext4
+                              ) - 
+                              2330
+                              MB
+                    </div>
+                    <div>
+                              512 MB Swap Image
+                               (
+                              swap
+                              ) - 
+                              0
+                              MB
+                    </div>
           </div>
-        </FormGroup>,
+</FormGroup>,
         <FormGroup
           className="row"
           name="space"
-        >
+>
           <div
-            className="col-sm-3 row-label"
+                    className="col-sm-3 row-label"
           >
-            Space Required
+                    Space Required
           </div>
           <div
-            className="col-sm-9"
-            id="space"
+                    className="col-sm-9"
+                    id="space"
           >
-            2330MB
+                    2330MB
           </div>
-        </FormGroup>,
+</FormGroup>,
         null,
       ],
       "className": "",
       "header": <CardHeader
         title="Backup details"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Array [
@@ -566,15 +566,15 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Type
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="type"
-            >
+>
               Auto
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "type",
@@ -617,17 +617,17 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Started
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="started"
-            >
+>
               <TimeDisplay
-                time="2017-01-31T07:28:52"
+                            time="2017-01-31T07:28:52"
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "started",
@@ -653,7 +653,7 @@ ShallowWrapper {
             "props": Object {
               "children": <TimeDisplay
                 time="2017-01-31T07:28:52"
-              />,
+/>,
               "className": "col-sm-9",
               "id": "started",
             },
@@ -682,17 +682,17 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Finished
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="finished"
-            >
+>
               <TimeDisplay
-                time="2017-01-31T07:30:03"
+                            time="2017-01-31T07:30:03"
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "finished",
@@ -718,7 +718,7 @@ ShallowWrapper {
             "props": Object {
               "children": <TimeDisplay
                 time="2017-01-31T07:30:03"
-              />,
+/>,
               "className": "col-sm-9",
               "id": "finished",
             },
@@ -747,15 +747,15 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Duration
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="duration"
-            >
+>
               (1 minute)
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "duration",
@@ -798,44 +798,44 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Region
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="region"
-            >
+>
               <Region
-                obj={
-                  Object {
-                    "availability": "daily",
-                    "configs": Array [
-                      "Ubuntu Disk",
-                    ],
-                    "created": "2017-01-31T07:28:52",
-                    "disks": Array [
-                      Object {
-                        "filesystem": "ext4",
-                        "label": "Ubuntu 15.10 Disk",
-                        "size": 2330,
-                      },
-                      Object {
-                        "filesystem": "swap",
-                        "label": "512 MB Swap Image",
-                        "size": 0,
-                      },
-                    ],
-                    "finished": "2017-01-31T07:30:03",
-                    "id": 54782214,
-                    "label": null,
-                    "region": "us-east-1a",
-                    "status": "successful",
-                    "type": "auto",
-                    "updated": "2017-01-31T12:32:01",
-                  }
-                }
+                            obj={
+                                          Object {
+                                                        "availability": "daily",
+                                                        "configs": Array [
+                                                          "Ubuntu Disk",
+                                                        ],
+                                                        "created": "2017-01-31T07:28:52",
+                                                        "disks": Array [
+                                                          Object {
+                                                            "filesystem": "ext4",
+                                                            "label": "Ubuntu 15.10 Disk",
+                                                            "size": 2330,
+                                                          },
+                                                          Object {
+                                                            "filesystem": "swap",
+                                                            "label": "512 MB Swap Image",
+                                                            "size": 0,
+                                                          },
+                                                        ],
+                                                        "finished": "2017-01-31T07:30:03",
+                                                        "id": 54782214,
+                                                        "label": null,
+                                                        "region": "us-east-1a",
+                                                        "status": "successful",
+                                                        "type": "auto",
+                                                        "updated": "2017-01-31T12:32:01",
+                                                      }
+                            }
               />
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "region",
@@ -861,34 +861,34 @@ ShallowWrapper {
             "props": Object {
               "children": <Region
                 obj={
-                  Object {
-                    "availability": "daily",
-                    "configs": Array [
-                      "Ubuntu Disk",
-                    ],
-                    "created": "2017-01-31T07:28:52",
-                    "disks": Array [
-                      Object {
-                        "filesystem": "ext4",
-                        "label": "Ubuntu 15.10 Disk",
-                        "size": 2330,
-                      },
-                      Object {
-                        "filesystem": "swap",
-                        "label": "512 MB Swap Image",
-                        "size": 0,
-                      },
-                    ],
-                    "finished": "2017-01-31T07:30:03",
-                    "id": 54782214,
-                    "label": null,
-                    "region": "us-east-1a",
-                    "status": "successful",
-                    "type": "auto",
-                    "updated": "2017-01-31T12:32:01",
-                  }
+                                Object {
+                                                "availability": "daily",
+                                                "configs": Array [
+                                                  "Ubuntu Disk",
+                                                ],
+                                                "created": "2017-01-31T07:28:52",
+                                                "disks": Array [
+                                                  Object {
+                                                    "filesystem": "ext4",
+                                                    "label": "Ubuntu 15.10 Disk",
+                                                    "size": 2330,
+                                                  },
+                                                  Object {
+                                                    "filesystem": "swap",
+                                                    "label": "512 MB Swap Image",
+                                                    "size": 0,
+                                                  },
+                                                ],
+                                                "finished": "2017-01-31T07:30:03",
+                                                "id": 54782214,
+                                                "label": null,
+                                                "region": "us-east-1a",
+                                                "status": "successful",
+                                                "type": "auto",
+                                                "updated": "2017-01-31T12:32:01",
+                                              }
                 }
-              />,
+/>,
               "className": "col-sm-9",
               "id": "region",
             },
@@ -942,17 +942,17 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Config Profiles
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="configs"
-            >
+>
               <div>
-                Ubuntu Disk
+                            Ubuntu Disk
               </div>
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "config",
@@ -979,7 +979,7 @@ ShallowWrapper {
               "children": Array [
                 <div>
                   Ubuntu Disk
-                </div>,
+</div>,
               ],
               "className": "col-sm-9",
               "id": "configs",
@@ -1011,30 +1011,30 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Disks
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="disks"
-            >
+>
               <div>
-                Ubuntu 15.10 Disk
-                 (
-                ext4
-                ) - 
-                2330
-                MB
+                            Ubuntu 15.10 Disk
+                             (
+                            ext4
+                            ) - 
+                            2330
+                            MB
               </div>
               <div>
-                512 MB Swap Image
-                 (
-                swap
-                ) - 
-                0
-                MB
+                            512 MB Swap Image
+                             (
+                            swap
+                            ) - 
+                            0
+                            MB
               </div>
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "disks",
@@ -1066,7 +1066,7 @@ ShallowWrapper {
                   ) - 
                   2330
                   MB
-                </div>,
+</div>,
                 <div>
                   512 MB Swap Image
                    (
@@ -1074,7 +1074,7 @@ ShallowWrapper {
                   ) - 
                   0
                   MB
-                </div>,
+</div>,
               ],
               "className": "col-sm-9",
               "id": "disks",
@@ -1145,15 +1145,15 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-3 row-label"
-            >
+>
               Space Required
-            </div>,
+</div>,
             <div
               className="col-sm-9"
               id="space"
-            >
+>
               2330MB
-            </div>,
+</div>,
           ],
           "className": "row",
           "name": "space",
@@ -1203,187 +1203,187 @@ ShallowWrapper {
           <FormGroup
             className="row"
             name="type"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Type
+                        Type
             </div>
             <div
-              className="col-sm-9"
-              id="type"
+                        className="col-sm-9"
+                        id="type"
             >
-              Auto
+                        Auto
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="started"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Started
+                        Started
             </div>
             <div
-              className="col-sm-9"
-              id="started"
+                        className="col-sm-9"
+                        id="started"
             >
-              <TimeDisplay
-                time="2017-01-31T07:28:52"
-              />
+                        <TimeDisplay
+                                    time="2017-01-31T07:28:52"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="finished"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Finished
+                        Finished
             </div>
             <div
-              className="col-sm-9"
-              id="finished"
+                        className="col-sm-9"
+                        id="finished"
             >
-              <TimeDisplay
-                time="2017-01-31T07:30:03"
-              />
+                        <TimeDisplay
+                                    time="2017-01-31T07:30:03"
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="duration"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Duration
+                        Duration
             </div>
             <div
-              className="col-sm-9"
-              id="duration"
+                        className="col-sm-9"
+                        id="duration"
             >
-              (1 minute)
+                        (1 minute)
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="region"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Region
+                        Region
             </div>
             <div
-              className="col-sm-9"
-              id="region"
+                        className="col-sm-9"
+                        id="region"
             >
-              <Region
-                obj={
-                  Object {
-                    "availability": "daily",
-                    "configs": Array [
-                      "Ubuntu Disk",
-                    ],
-                    "created": "2017-01-31T07:28:52",
-                    "disks": Array [
-                      Object {
-                        "filesystem": "ext4",
-                        "label": "Ubuntu 15.10 Disk",
-                        "size": 2330,
-                      },
-                      Object {
-                        "filesystem": "swap",
-                        "label": "512 MB Swap Image",
-                        "size": 0,
-                      },
-                    ],
-                    "finished": "2017-01-31T07:30:03",
-                    "id": 54782214,
-                    "label": null,
-                    "region": "us-east-1a",
-                    "status": "successful",
-                    "type": "auto",
-                    "updated": "2017-01-31T12:32:01",
-                  }
-                }
-              />
+                        <Region
+                                    obj={
+                                                Object {
+                                                            "availability": "daily",
+                                                            "configs": Array [
+                                                              "Ubuntu Disk",
+                                                            ],
+                                                            "created": "2017-01-31T07:28:52",
+                                                            "disks": Array [
+                                                              Object {
+                                                                "filesystem": "ext4",
+                                                                "label": "Ubuntu 15.10 Disk",
+                                                                "size": 2330,
+                                                              },
+                                                              Object {
+                                                                "filesystem": "swap",
+                                                                "label": "512 MB Swap Image",
+                                                                "size": 0,
+                                                              },
+                                                            ],
+                                                            "finished": "2017-01-31T07:30:03",
+                                                            "id": 54782214,
+                                                            "label": null,
+                                                            "region": "us-east-1a",
+                                                            "status": "successful",
+                                                            "type": "auto",
+                                                            "updated": "2017-01-31T12:32:01",
+                                                          }
+                                    }
+                        />
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="config"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Config Profiles
+                        Config Profiles
             </div>
             <div
-              className="col-sm-9"
-              id="configs"
+                        className="col-sm-9"
+                        id="configs"
             >
-              <div>
-                Ubuntu Disk
-              </div>
+                        <div>
+                                    Ubuntu Disk
+                        </div>
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="disks"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Disks
+                        Disks
             </div>
             <div
-              className="col-sm-9"
-              id="disks"
+                        className="col-sm-9"
+                        id="disks"
             >
-              <div>
-                Ubuntu 15.10 Disk
-                 (
-                ext4
-                ) - 
-                2330
-                MB
-              </div>
-              <div>
-                512 MB Swap Image
-                 (
-                swap
-                ) - 
-                0
-                MB
-              </div>
+                        <div>
+                                    Ubuntu 15.10 Disk
+                                     (
+                                    ext4
+                                    ) - 
+                                    2330
+                                    MB
+                        </div>
+                        <div>
+                                    512 MB Swap Image
+                                     (
+                                    swap
+                                    ) - 
+                                    0
+                                    MB
+                        </div>
             </div>
-          </FormGroup>,
+</FormGroup>,
           <FormGroup
             className="row"
             name="space"
-          >
+>
             <div
-              className="col-sm-3 row-label"
+                        className="col-sm-3 row-label"
             >
-              Space Required
+                        Space Required
             </div>
             <div
-              className="col-sm-9"
-              id="space"
+                        className="col-sm-9"
+                        id="space"
             >
-              2330MB
+                        2330MB
             </div>
-          </FormGroup>,
+</FormGroup>,
           null,
         ],
         "className": "",
         "header": <CardHeader
           title="Backup details"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Array [
@@ -1396,15 +1396,15 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Type
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="type"
-              >
+>
                 Auto
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "type",
@@ -1447,17 +1447,17 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Started
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="started"
-              >
+>
                 <TimeDisplay
-                  time="2017-01-31T07:28:52"
+                                time="2017-01-31T07:28:52"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "started",
@@ -1483,7 +1483,7 @@ ShallowWrapper {
               "props": Object {
                 "children": <TimeDisplay
                   time="2017-01-31T07:28:52"
-                />,
+/>,
                 "className": "col-sm-9",
                 "id": "started",
               },
@@ -1512,17 +1512,17 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Finished
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="finished"
-              >
+>
                 <TimeDisplay
-                  time="2017-01-31T07:30:03"
+                                time="2017-01-31T07:30:03"
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "finished",
@@ -1548,7 +1548,7 @@ ShallowWrapper {
               "props": Object {
                 "children": <TimeDisplay
                   time="2017-01-31T07:30:03"
-                />,
+/>,
                 "className": "col-sm-9",
                 "id": "finished",
               },
@@ -1577,15 +1577,15 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Duration
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="duration"
-              >
+>
                 (1 minute)
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "duration",
@@ -1628,44 +1628,44 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Region
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="region"
-              >
+>
                 <Region
-                  obj={
-                    Object {
-                      "availability": "daily",
-                      "configs": Array [
-                        "Ubuntu Disk",
-                      ],
-                      "created": "2017-01-31T07:28:52",
-                      "disks": Array [
-                        Object {
-                          "filesystem": "ext4",
-                          "label": "Ubuntu 15.10 Disk",
-                          "size": 2330,
-                        },
-                        Object {
-                          "filesystem": "swap",
-                          "label": "512 MB Swap Image",
-                          "size": 0,
-                        },
-                      ],
-                      "finished": "2017-01-31T07:30:03",
-                      "id": 54782214,
-                      "label": null,
-                      "region": "us-east-1a",
-                      "status": "successful",
-                      "type": "auto",
-                      "updated": "2017-01-31T12:32:01",
-                    }
-                  }
+                                obj={
+                                                Object {
+                                                                "availability": "daily",
+                                                                "configs": Array [
+                                                                  "Ubuntu Disk",
+                                                                ],
+                                                                "created": "2017-01-31T07:28:52",
+                                                                "disks": Array [
+                                                                  Object {
+                                                                    "filesystem": "ext4",
+                                                                    "label": "Ubuntu 15.10 Disk",
+                                                                    "size": 2330,
+                                                                  },
+                                                                  Object {
+                                                                    "filesystem": "swap",
+                                                                    "label": "512 MB Swap Image",
+                                                                    "size": 0,
+                                                                  },
+                                                                ],
+                                                                "finished": "2017-01-31T07:30:03",
+                                                                "id": 54782214,
+                                                                "label": null,
+                                                                "region": "us-east-1a",
+                                                                "status": "successful",
+                                                                "type": "auto",
+                                                                "updated": "2017-01-31T12:32:01",
+                                                              }
+                                }
                 />
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "region",
@@ -1691,34 +1691,34 @@ ShallowWrapper {
               "props": Object {
                 "children": <Region
                   obj={
-                    Object {
-                      "availability": "daily",
-                      "configs": Array [
-                        "Ubuntu Disk",
-                      ],
-                      "created": "2017-01-31T07:28:52",
-                      "disks": Array [
-                        Object {
-                          "filesystem": "ext4",
-                          "label": "Ubuntu 15.10 Disk",
-                          "size": 2330,
-                        },
-                        Object {
-                          "filesystem": "swap",
-                          "label": "512 MB Swap Image",
-                          "size": 0,
-                        },
-                      ],
-                      "finished": "2017-01-31T07:30:03",
-                      "id": 54782214,
-                      "label": null,
-                      "region": "us-east-1a",
-                      "status": "successful",
-                      "type": "auto",
-                      "updated": "2017-01-31T12:32:01",
-                    }
+                                    Object {
+                                                      "availability": "daily",
+                                                      "configs": Array [
+                                                        "Ubuntu Disk",
+                                                      ],
+                                                      "created": "2017-01-31T07:28:52",
+                                                      "disks": Array [
+                                                        Object {
+                                                          "filesystem": "ext4",
+                                                          "label": "Ubuntu 15.10 Disk",
+                                                          "size": 2330,
+                                                        },
+                                                        Object {
+                                                          "filesystem": "swap",
+                                                          "label": "512 MB Swap Image",
+                                                          "size": 0,
+                                                        },
+                                                      ],
+                                                      "finished": "2017-01-31T07:30:03",
+                                                      "id": 54782214,
+                                                      "label": null,
+                                                      "region": "us-east-1a",
+                                                      "status": "successful",
+                                                      "type": "auto",
+                                                      "updated": "2017-01-31T12:32:01",
+                                                    }
                   }
-                />,
+/>,
                 "className": "col-sm-9",
                 "id": "region",
               },
@@ -1772,17 +1772,17 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Config Profiles
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="configs"
-              >
+>
                 <div>
-                  Ubuntu Disk
+                                Ubuntu Disk
                 </div>
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "config",
@@ -1809,7 +1809,7 @@ ShallowWrapper {
                 "children": Array [
                   <div>
                     Ubuntu Disk
-                  </div>,
+</div>,
                 ],
                 "className": "col-sm-9",
                 "id": "configs",
@@ -1841,30 +1841,30 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Disks
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="disks"
-              >
+>
                 <div>
-                  Ubuntu 15.10 Disk
-                   (
-                  ext4
-                  ) - 
-                  2330
-                  MB
+                                Ubuntu 15.10 Disk
+                                 (
+                                ext4
+                                ) - 
+                                2330
+                                MB
                 </div>
                 <div>
-                  512 MB Swap Image
-                   (
-                  swap
-                  ) - 
-                  0
-                  MB
+                                512 MB Swap Image
+                                 (
+                                swap
+                                ) - 
+                                0
+                                MB
                 </div>
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "disks",
@@ -1896,7 +1896,7 @@ ShallowWrapper {
                     ) - 
                     2330
                     MB
-                  </div>,
+</div>,
                   <div>
                     512 MB Swap Image
                      (
@@ -1904,7 +1904,7 @@ ShallowWrapper {
                     ) - 
                     0
                     MB
-                  </div>,
+</div>,
                 ],
                 "className": "col-sm-9",
                 "id": "disks",
@@ -1975,15 +1975,15 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-3 row-label"
-              >
+>
                 Space Required
-              </div>,
+</div>,
               <div
                 className="col-sm-9"
                 id="space"
-              >
+>
                 2330MB
-              </div>,
+</div>,
             ],
             "className": "row",
             "name": "space",

@@ -1,9 +1,11 @@
-// TODO: these need to be imported through shared package
-@import '../node_modules/linode-components/scss/linode-components';
+@import '~linode-components/scss/linode-components.scss';
 
 @import 'components/index';
 @import 'layout/index';
 @import 'linodes/index';
 @import 'support/index';
+@import 'components';
+@import 'mixins';
+@import 'utilities';
 @import 'profile/components/TwoFactorModal';
 @import 'profile/integrations/components/OAuthScopes';

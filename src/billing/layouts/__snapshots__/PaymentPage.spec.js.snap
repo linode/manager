@@ -7,7 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <PaymentPage
     dispatch={[Function]}
     payment={Object {}}
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -23,77 +23,77 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Payment #undefined"
-        />,
+/>,
         <Breadcrumbs
           crumbs={
-            Array [
-              Object {
-                "label": "History",
-                "to": "/billing/history",
-              },
-              Object {
-                "label": "Payment #undefined",
-              },
-            ]
+                    Array [
+                              Object {
+                                "label": "History",
+                                "to": "/billing/history",
+                              },
+                              Object {
+                                "label": "Payment #undefined",
+                              },
+                            ]
           }
-        />,
+/>,
         <section>
           <Card
-            className=""
-            header={
-              <CardHeader
-                title="Payment #undefined"
-              />
-            }
+                    className=""
+                    header={
+                              <CardHeader
+                                        title="Payment #undefined"
+                              />
+                    }
           >
-            <Table
-              className=""
-              columns={
-                Array [
-                  Object {
-                    "dataKey": "id",
-                    "formatFn": [Function],
-                    "label": "Description",
-                  },
-                  Object {
-                    "dataKey": "date",
-                    "formatFn": [Function],
-                    "headerClassName": "DateColumn",
-                    "label": "From",
-                  },
-                  Object {
-                    "className": "text-right",
-                    "dataKey": "usd",
-                    "formatFn": [Function],
-                    "headerClassName": "IntegerColumn text-right",
-                    "label": "Amount",
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {},
-                ]
-              }
-              disableHeader={false}
-              noDataMessage="No Payments found."
-            />
-            <div
-              className="row"
-            >
-              <div
-                className="col-sm-12 text-right"
-              >
-                <strong>
-                  Payment Total: 
-                  <Currency
-                    value={NaN}
-                  />
-                </strong>
-              </div>
-            </div>
+                    <Table
+                              className=""
+                              columns={
+                                        Array [
+                                                  Object {
+                                                    "dataKey": "id",
+                                                    "formatFn": [Function],
+                                                    "label": "Description",
+                                                  },
+                                                  Object {
+                                                    "dataKey": "date",
+                                                    "formatFn": [Function],
+                                                    "headerClassName": "DateColumn",
+                                                    "label": "From",
+                                                  },
+                                                  Object {
+                                                    "className": "text-right",
+                                                    "dataKey": "usd",
+                                                    "formatFn": [Function],
+                                                    "headerClassName": "IntegerColumn text-right",
+                                                    "label": "Amount",
+                                                  },
+                                                ]
+                              }
+                              data={
+                                        Array [
+                                                  Object {},
+                                                ]
+                              }
+                              disableHeader={false}
+                              noDataMessage="No Payments found."
+                    />
+                    <div
+                              className="row"
+                    >
+                              <div
+                                        className="col-sm-12 text-right"
+                              >
+                                        <strong>
+                                                  Payment Total: 
+                                                  <Currency
+                                                            value={NaN}
+                                                  />
+                                        </strong>
+                              </div>
+                    </div>
           </Card>
-        </section>,
+</section>,
       ],
     },
     "ref": null,
@@ -136,58 +136,58 @@ ShallowWrapper {
           "children": <Card
             className=""
             header={
-              <CardHeader
-                title="Payment #undefined"
-              />
+                        <CardHeader
+                                    title="Payment #undefined"
+                        />
             }
-          >
+>
             <Table
-              className=""
-              columns={
-                Array [
-                  Object {
-                    "dataKey": "id",
-                    "formatFn": [Function],
-                    "label": "Description",
-                  },
-                  Object {
-                    "dataKey": "date",
-                    "formatFn": [Function],
-                    "headerClassName": "DateColumn",
-                    "label": "From",
-                  },
-                  Object {
-                    "className": "text-right",
-                    "dataKey": "usd",
-                    "formatFn": [Function],
-                    "headerClassName": "IntegerColumn text-right",
-                    "label": "Amount",
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {},
-                ]
-              }
-              disableHeader={false}
-              noDataMessage="No Payments found."
+                        className=""
+                        columns={
+                                    Array [
+                                                Object {
+                                                  "dataKey": "id",
+                                                  "formatFn": [Function],
+                                                  "label": "Description",
+                                                },
+                                                Object {
+                                                  "dataKey": "date",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "DateColumn",
+                                                  "label": "From",
+                                                },
+                                                Object {
+                                                  "className": "text-right",
+                                                  "dataKey": "usd",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "IntegerColumn text-right",
+                                                  "label": "Amount",
+                                                },
+                                              ]
+                        }
+                        data={
+                                    Array [
+                                                Object {},
+                                              ]
+                        }
+                        disableHeader={false}
+                        noDataMessage="No Payments found."
             />
             <div
-              className="row"
+                        className="row"
             >
-              <div
-                className="col-sm-12 text-right"
-              >
-                <strong>
-                  Payment Total: 
-                  <Currency
-                    value={NaN}
-                  />
-                </strong>
-              </div>
+                        <div
+                                    className="col-sm-12 text-right"
+                        >
+                                    <strong>
+                                                Payment Total: 
+                                                <Currency
+                                                            value={NaN}
+                                                />
+                                    </strong>
+                        </div>
             </div>
-          </Card>,
+</Card>,
         },
         "ref": null,
         "rendered": Object {
@@ -199,54 +199,54 @@ ShallowWrapper {
               <Table
                 className=""
                 columns={
-                  Array [
-                    Object {
-                      "dataKey": "id",
-                      "formatFn": [Function],
-                      "label": "Description",
-                    },
-                    Object {
-                      "dataKey": "date",
-                      "formatFn": [Function],
-                      "headerClassName": "DateColumn",
-                      "label": "From",
-                    },
-                    Object {
-                      "className": "text-right",
-                      "dataKey": "usd",
-                      "formatFn": [Function],
-                      "headerClassName": "IntegerColumn text-right",
-                      "label": "Amount",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "dataKey": "id",
+                                                  "formatFn": [Function],
+                                                  "label": "Description",
+                                                },
+                                                Object {
+                                                  "dataKey": "date",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "DateColumn",
+                                                  "label": "From",
+                                                },
+                                                Object {
+                                                  "className": "text-right",
+                                                  "dataKey": "usd",
+                                                  "formatFn": [Function],
+                                                  "headerClassName": "IntegerColumn text-right",
+                                                  "label": "Amount",
+                                                },
+                                              ]
                 }
                 data={
-                  Array [
-                    Object {},
-                  ]
+                                Array [
+                                                Object {},
+                                              ]
                 }
                 disableHeader={false}
                 noDataMessage="No Payments found."
-              />,
+/>,
               <div
                 className="row"
-              >
+>
                 <div
-                  className="col-sm-12 text-right"
+                                className="col-sm-12 text-right"
                 >
-                  <strong>
-                    Payment Total: 
-                    <Currency
-                      value={NaN}
-                    />
-                  </strong>
+                                <strong>
+                                                Payment Total: 
+                                                <Currency
+                                                                value={NaN}
+                                                />
+                                </strong>
                 </div>
-              </div>,
+</div>,
             ],
             "className": "",
             "header": <CardHeader
               title="Payment #undefined"
-            />,
+/>,
           },
           "ref": null,
           "rendered": Array [
@@ -293,14 +293,14 @@ ShallowWrapper {
               "props": Object {
                 "children": <div
                   className="col-sm-12 text-right"
-                >
+>
                   <strong>
-                    Payment Total: 
-                    <Currency
-                      value={NaN}
-                    />
+                                    Payment Total: 
+                                    <Currency
+                                                      value={NaN}
+                                    />
                   </strong>
-                </div>,
+</div>,
                 "className": "row",
               },
               "ref": null,
@@ -312,9 +312,9 @@ ShallowWrapper {
                   "children": <strong>
                     Payment Total: 
                     <Currency
-                      value={NaN}
+                                        value={NaN}
                     />
-                  </strong>,
+</strong>,
                   "className": "col-sm-12 text-right",
                 },
                 "ref": null,
@@ -327,7 +327,7 @@ ShallowWrapper {
                       "Payment Total: ",
                       <Currency
                         value={NaN}
-                      />,
+/>,
                     ],
                   },
                   "ref": null,
@@ -368,77 +368,77 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Payment #undefined"
-          />,
+/>,
           <Breadcrumbs
             crumbs={
-              Array [
-                Object {
-                  "label": "History",
-                  "to": "/billing/history",
-                },
-                Object {
-                  "label": "Payment #undefined",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "label": "History",
+                                      "to": "/billing/history",
+                                    },
+                                    Object {
+                                      "label": "Payment #undefined",
+                                    },
+                                  ]
             }
-          />,
+/>,
           <section>
             <Card
-              className=""
-              header={
-                <CardHeader
-                  title="Payment #undefined"
-                />
-              }
+                        className=""
+                        header={
+                                    <CardHeader
+                                                title="Payment #undefined"
+                                    />
+                        }
             >
-              <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "id",
-                      "formatFn": [Function],
-                      "label": "Description",
-                    },
-                    Object {
-                      "dataKey": "date",
-                      "formatFn": [Function],
-                      "headerClassName": "DateColumn",
-                      "label": "From",
-                    },
-                    Object {
-                      "className": "text-right",
-                      "dataKey": "usd",
-                      "formatFn": [Function],
-                      "headerClassName": "IntegerColumn text-right",
-                      "label": "Amount",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {},
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No Payments found."
-              />
-              <div
-                className="row"
-              >
-                <div
-                  className="col-sm-12 text-right"
-                >
-                  <strong>
-                    Payment Total: 
-                    <Currency
-                      value={NaN}
-                    />
-                  </strong>
-                </div>
-              </div>
+                        <Table
+                                    className=""
+                                    columns={
+                                                Array [
+                                                            Object {
+                                                              "dataKey": "id",
+                                                              "formatFn": [Function],
+                                                              "label": "Description",
+                                                            },
+                                                            Object {
+                                                              "dataKey": "date",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "DateColumn",
+                                                              "label": "From",
+                                                            },
+                                                            Object {
+                                                              "className": "text-right",
+                                                              "dataKey": "usd",
+                                                              "formatFn": [Function],
+                                                              "headerClassName": "IntegerColumn text-right",
+                                                              "label": "Amount",
+                                                            },
+                                                          ]
+                                    }
+                                    data={
+                                                Array [
+                                                            Object {},
+                                                          ]
+                                    }
+                                    disableHeader={false}
+                                    noDataMessage="No Payments found."
+                        />
+                        <div
+                                    className="row"
+                        >
+                                    <div
+                                                className="col-sm-12 text-right"
+                                    >
+                                                <strong>
+                                                            Payment Total: 
+                                                            <Currency
+                                                                        value={NaN}
+                                                            />
+                                                </strong>
+                                    </div>
+                        </div>
             </Card>
-          </section>,
+</section>,
         ],
       },
       "ref": null,
@@ -481,58 +481,58 @@ ShallowWrapper {
             "children": <Card
               className=""
               header={
-                <CardHeader
-                  title="Payment #undefined"
-                />
+                            <CardHeader
+                                          title="Payment #undefined"
+                            />
               }
-            >
+>
               <Table
-                className=""
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "id",
-                      "formatFn": [Function],
-                      "label": "Description",
-                    },
-                    Object {
-                      "dataKey": "date",
-                      "formatFn": [Function],
-                      "headerClassName": "DateColumn",
-                      "label": "From",
-                    },
-                    Object {
-                      "className": "text-right",
-                      "dataKey": "usd",
-                      "formatFn": [Function],
-                      "headerClassName": "IntegerColumn text-right",
-                      "label": "Amount",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {},
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="No Payments found."
+                            className=""
+                            columns={
+                                          Array [
+                                                        Object {
+                                                          "dataKey": "id",
+                                                          "formatFn": [Function],
+                                                          "label": "Description",
+                                                        },
+                                                        Object {
+                                                          "dataKey": "date",
+                                                          "formatFn": [Function],
+                                                          "headerClassName": "DateColumn",
+                                                          "label": "From",
+                                                        },
+                                                        Object {
+                                                          "className": "text-right",
+                                                          "dataKey": "usd",
+                                                          "formatFn": [Function],
+                                                          "headerClassName": "IntegerColumn text-right",
+                                                          "label": "Amount",
+                                                        },
+                                                      ]
+                            }
+                            data={
+                                          Array [
+                                                        Object {},
+                                                      ]
+                            }
+                            disableHeader={false}
+                            noDataMessage="No Payments found."
               />
               <div
-                className="row"
+                            className="row"
               >
-                <div
-                  className="col-sm-12 text-right"
-                >
-                  <strong>
-                    Payment Total: 
-                    <Currency
-                      value={NaN}
-                    />
-                  </strong>
-                </div>
+                            <div
+                                          className="col-sm-12 text-right"
+                            >
+                                          <strong>
+                                                        Payment Total: 
+                                                        <Currency
+                                                                      value={NaN}
+                                                        />
+                                          </strong>
+                            </div>
               </div>
-            </Card>,
+</Card>,
           },
           "ref": null,
           "rendered": Object {
@@ -544,54 +544,54 @@ ShallowWrapper {
                 <Table
                   className=""
                   columns={
-                    Array [
-                      Object {
-                        "dataKey": "id",
-                        "formatFn": [Function],
-                        "label": "Description",
-                      },
-                      Object {
-                        "dataKey": "date",
-                        "formatFn": [Function],
-                        "headerClassName": "DateColumn",
-                        "label": "From",
-                      },
-                      Object {
-                        "className": "text-right",
-                        "dataKey": "usd",
-                        "formatFn": [Function],
-                        "headerClassName": "IntegerColumn text-right",
-                        "label": "Amount",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "dataKey": "id",
+                                                        "formatFn": [Function],
+                                                        "label": "Description",
+                                                      },
+                                                      Object {
+                                                        "dataKey": "date",
+                                                        "formatFn": [Function],
+                                                        "headerClassName": "DateColumn",
+                                                        "label": "From",
+                                                      },
+                                                      Object {
+                                                        "className": "text-right",
+                                                        "dataKey": "usd",
+                                                        "formatFn": [Function],
+                                                        "headerClassName": "IntegerColumn text-right",
+                                                        "label": "Amount",
+                                                      },
+                                                    ]
                   }
                   data={
-                    Array [
-                      Object {},
-                    ]
+                                    Array [
+                                                      Object {},
+                                                    ]
                   }
                   disableHeader={false}
                   noDataMessage="No Payments found."
-                />,
+/>,
                 <div
                   className="row"
-                >
+>
                   <div
-                    className="col-sm-12 text-right"
+                                    className="col-sm-12 text-right"
                   >
-                    <strong>
-                      Payment Total: 
-                      <Currency
-                        value={NaN}
-                      />
-                    </strong>
+                                    <strong>
+                                                      Payment Total: 
+                                                      <Currency
+                                                                        value={NaN}
+                                                      />
+                                    </strong>
                   </div>
-                </div>,
+</div>,
               ],
               "className": "",
               "header": <CardHeader
                 title="Payment #undefined"
-              />,
+/>,
             },
             "ref": null,
             "rendered": Array [
@@ -638,14 +638,14 @@ ShallowWrapper {
                 "props": Object {
                   "children": <div
                     className="col-sm-12 text-right"
-                  >
+>
                     <strong>
-                      Payment Total: 
-                      <Currency
-                        value={NaN}
-                      />
+                                        Payment Total: 
+                                        <Currency
+                                                            value={NaN}
+                                        />
                     </strong>
-                  </div>,
+</div>,
                   "className": "row",
                 },
                 "ref": null,
@@ -657,9 +657,9 @@ ShallowWrapper {
                     "children": <strong>
                       Payment Total: 
                       <Currency
-                        value={NaN}
+                                            value={NaN}
                       />
-                    </strong>,
+</strong>,
                     "className": "col-sm-12 text-right",
                   },
                   "ref": null,
@@ -672,7 +672,7 @@ ShallowWrapper {
                         "Payment Total: ",
                         <Currency
                           value={NaN}
-                        />,
+/>,
                       ],
                     },
                     "ref": null,

@@ -1,23 +1,17 @@
 {
-  "presets": ["stage-0", "react", "es2015"],
-  "compact": true,
-  "plugins": [
-    ["transform-runtime",
-    {
-      "helpers": false,
-      "polyfill": false
-    }],
-    "transform-class-properties",
-    ["babel-root-import", [{
-      "rootPathSuffix": "src"
-    }, {
-      "rootPathSuffix": "test",
-      "rootPathPrefix": "@",
-    }]]
-  ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
+    "presets": [
+        "stage-0",
+        "react-app",
+        "es2015"
+    ],
+    "plugins": [
+        "transform-class-properties",
+        [
+            "babel-root-import",
+            {
+                "rootPathPrefix": "~",
+                "rootPathSuffix": "src"
+            }
+        ]
+    ]
 }

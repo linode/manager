@@ -9,21 +9,21 @@ ShallowWrapper {
     objectType="volumes"
     selectedMap={Object {}}
     volumes={
-      Array [
-        Object {
-          "_polling": false,
-          "created": "2017-08-08T13:55:16",
-          "id": 38,
-          "label": "test",
-          "linode_id": null,
-          "region": "us-east-1a",
-          "size": 20,
-          "status": "active",
-          "updated": "2017-08-08T04:00:00",
-        },
-      ]
+        Array [
+            Object {
+              "_polling": false,
+              "created": "2017-08-08T13:55:16",
+              "id": 38,
+              "label": "test",
+              "linode_id": null,
+              "region": "us-east-1a",
+              "size": 20,
+              "status": "active",
+              "updated": "2017-08-08T04:00:00",
+            },
+          ]
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -39,114 +39,114 @@ ShallowWrapper {
       "children": Array [
         <ListHeader
           className="Menu"
-        >
+>
           <div
-            className="Menu-item"
+                    className="Menu-item"
           >
-            <MassEditControl
-              data={
-                Array [
-                  Object {
-                    "_polling": false,
-                    "created": "2017-08-08T13:55:16",
-                    "id": 38,
-                    "label": "test",
-                    "linode_id": null,
-                    "region": "us-east-1a",
-                    "size": 20,
-                    "status": "active",
-                    "updated": "2017-08-08T04:00:00",
-                  },
-                ]
-              }
-              dispatch={[Function]}
-              massEditGroups={
-                Array [
-                  Object {
-                    "elements": Array [
-                      Object {
-                        "action": [Function],
-                        "name": "Delete",
-                      },
-                    ],
-                  },
-                ]
-              }
-              objectType="volumes"
-              selectedKey="id"
-              selectedMap={Object {}}
-              toggleSelected={[Function]}
-            />
+                    <MassEditControl
+                              data={
+                                        Array [
+                                                  Object {
+                                                    "_polling": false,
+                                                    "created": "2017-08-08T13:55:16",
+                                                    "id": 38,
+                                                    "label": "test",
+                                                    "linode_id": null,
+                                                    "region": "us-east-1a",
+                                                    "size": 20,
+                                                    "status": "active",
+                                                    "updated": "2017-08-08T04:00:00",
+                                                  },
+                                                ]
+                              }
+                              dispatch={[Function]}
+                              massEditGroups={
+                                        Array [
+                                                  Object {
+                                                    "elements": Array [
+                                                      Object {
+                                                        "action": [Function],
+                                                        "name": "Delete",
+                                                      },
+                                                    ],
+                                                  },
+                                                ]
+                              }
+                              objectType="volumes"
+                              selectedKey="id"
+                              selectedMap={Object {}}
+                              toggleSelected={[Function]}
+                    />
           </div>
           <div
-            className="Menu-item"
+                    className="Menu-item"
           >
-            <Input
-              className=""
-              onChange={[Function]}
-              placeholder="Filter..."
-              value=""
-            />
+                    <Input
+                              className=""
+                              onChange={[Function]}
+                              placeholder="Filter..."
+                              value=""
+                    />
           </div>
-        </ListHeader>,
+</ListHeader>,
         <ListBody>
           <Table
-            className=""
-            columns={
-              Array [
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "CheckboxColumn",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "dataKey": "label",
-                  "headerClassName": "LabelColumn",
-                  "label": "Label",
-                  "titleKey": "label",
-                  "tooltipEnabled": true,
-                },
-                Object {
-                  "dataFn": [Function],
-                  "label": "Size",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "RegionColumn",
-                  "label": "Region",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "className": "AttachedCell",
-                  "label": "Attached",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "ActionsColumn",
-                },
-              ]
-            }
-            data={
-              Array [
-                Object {
-                  "_polling": false,
-                  "created": "2017-08-08T13:55:16",
-                  "id": 38,
-                  "label": "test",
-                  "linode_id": null,
-                  "region": "us-east-1a",
-                  "size": 20,
-                  "status": "active",
-                  "updated": "2017-08-08T04:00:00",
-                },
-              ]
-            }
-            disableHeader={true}
-            noDataMessage="No Volumes found."
-            onToggleSelect={[Function]}
-            selectedMap={Object {}}
+                    className=""
+                    columns={
+                              Array [
+                                        Object {
+                                          "cellComponent": [Function],
+                                          "headerClassName": "CheckboxColumn",
+                                        },
+                                        Object {
+                                          "cellComponent": [Function],
+                                          "dataKey": "label",
+                                          "headerClassName": "LabelColumn",
+                                          "label": "Label",
+                                          "titleKey": "label",
+                                          "tooltipEnabled": true,
+                                        },
+                                        Object {
+                                          "dataFn": [Function],
+                                          "label": "Size",
+                                        },
+                                        Object {
+                                          "cellComponent": [Function],
+                                          "headerClassName": "RegionColumn",
+                                          "label": "Region",
+                                        },
+                                        Object {
+                                          "cellComponent": [Function],
+                                          "className": "AttachedCell",
+                                          "label": "Attached",
+                                        },
+                                        Object {
+                                          "cellComponent": [Function],
+                                          "headerClassName": "ActionsColumn",
+                                        },
+                                      ]
+                    }
+                    data={
+                              Array [
+                                        Object {
+                                          "_polling": false,
+                                          "created": "2017-08-08T13:55:16",
+                                          "id": 38,
+                                          "label": "test",
+                                          "linode_id": null,
+                                          "region": "us-east-1a",
+                                          "size": 20,
+                                          "status": "active",
+                                          "updated": "2017-08-08T04:00:00",
+                                        },
+                                      ]
+                    }
+                    disableHeader={true}
+                    noDataMessage="No Volumes found."
+                    onToggleSelect={[Function]}
+                    selectedMap={Object {}}
           />
-        </ListBody>,
+</ListBody>,
       ],
       "className": "",
     },
@@ -160,52 +160,52 @@ ShallowWrapper {
           "children": Array [
             <div
               className="Menu-item"
-            >
+>
               <MassEditControl
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2017-08-08T13:55:16",
-                      "id": 38,
-                      "label": "test",
-                      "linode_id": null,
-                      "region": "us-east-1a",
-                      "size": 20,
-                      "status": "active",
-                      "updated": "2017-08-08T04:00:00",
-                    },
-                  ]
-                }
-                dispatch={[Function]}
-                massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ]
-                }
-                objectType="volumes"
-                selectedKey="id"
-                selectedMap={Object {}}
-                toggleSelected={[Function]}
+                            data={
+                                          Array [
+                                                        Object {
+                                                          "_polling": false,
+                                                          "created": "2017-08-08T13:55:16",
+                                                          "id": 38,
+                                                          "label": "test",
+                                                          "linode_id": null,
+                                                          "region": "us-east-1a",
+                                                          "size": 20,
+                                                          "status": "active",
+                                                          "updated": "2017-08-08T04:00:00",
+                                                        },
+                                                      ]
+                            }
+                            dispatch={[Function]}
+                            massEditGroups={
+                                          Array [
+                                                        Object {
+                                                          "elements": Array [
+                                                            Object {
+                                                              "action": [Function],
+                                                              "name": "Delete",
+                                                            },
+                                                          ],
+                                                        },
+                                                      ]
+                            }
+                            objectType="volumes"
+                            selectedKey="id"
+                            selectedMap={Object {}}
+                            toggleSelected={[Function]}
               />
-            </div>,
+</div>,
             <div
               className="Menu-item"
-            >
+>
               <Input
-                className=""
-                onChange={[Function]}
-                placeholder="Filter..."
-                value=""
+                            className=""
+                            onChange={[Function]}
+                            placeholder="Filter..."
+                            value=""
               />
-            </div>,
+</div>,
           ],
           "className": "Menu",
         },
@@ -218,38 +218,38 @@ ShallowWrapper {
             "props": Object {
               "children": <MassEditControl
                 data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2017-08-08T13:55:16",
-                      "id": 38,
-                      "label": "test",
-                      "linode_id": null,
-                      "region": "us-east-1a",
-                      "size": 20,
-                      "status": "active",
-                      "updated": "2017-08-08T04:00:00",
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "_polling": false,
+                                                  "created": "2017-08-08T13:55:16",
+                                                  "id": 38,
+                                                  "label": "test",
+                                                  "linode_id": null,
+                                                  "region": "us-east-1a",
+                                                  "size": 20,
+                                                  "status": "active",
+                                                  "updated": "2017-08-08T04:00:00",
+                                                },
+                                              ]
                 }
                 dispatch={[Function]}
                 massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ]
+                                Array [
+                                                Object {
+                                                  "elements": Array [
+                                                    Object {
+                                                      "action": [Function],
+                                                      "name": "Delete",
+                                                    },
+                                                  ],
+                                                },
+                                              ]
                 }
                 objectType="volumes"
                 selectedKey="id"
                 selectedMap={Object {}}
                 toggleSelected={[Function]}
-              />,
+/>,
               "className": "Menu-item",
             },
             "ref": null,
@@ -303,7 +303,7 @@ ShallowWrapper {
                 onChange={[Function]}
                 placeholder="Filter..."
                 value=""
-              />,
+/>,
               "className": "Menu-item",
             },
             "ref": null,
@@ -334,59 +334,59 @@ ShallowWrapper {
           "children": <Table
             className=""
             columns={
-              Array [
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "CheckboxColumn",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "dataKey": "label",
-                  "headerClassName": "LabelColumn",
-                  "label": "Label",
-                  "titleKey": "label",
-                  "tooltipEnabled": true,
-                },
-                Object {
-                  "dataFn": [Function],
-                  "label": "Size",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "RegionColumn",
-                  "label": "Region",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "className": "AttachedCell",
-                  "label": "Attached",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "ActionsColumn",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "cellComponent": [Function],
+                                      "headerClassName": "CheckboxColumn",
+                                    },
+                                    Object {
+                                      "cellComponent": [Function],
+                                      "dataKey": "label",
+                                      "headerClassName": "LabelColumn",
+                                      "label": "Label",
+                                      "titleKey": "label",
+                                      "tooltipEnabled": true,
+                                    },
+                                    Object {
+                                      "dataFn": [Function],
+                                      "label": "Size",
+                                    },
+                                    Object {
+                                      "cellComponent": [Function],
+                                      "headerClassName": "RegionColumn",
+                                      "label": "Region",
+                                    },
+                                    Object {
+                                      "cellComponent": [Function],
+                                      "className": "AttachedCell",
+                                      "label": "Attached",
+                                    },
+                                    Object {
+                                      "cellComponent": [Function],
+                                      "headerClassName": "ActionsColumn",
+                                    },
+                                  ]
             }
             data={
-              Array [
-                Object {
-                  "_polling": false,
-                  "created": "2017-08-08T13:55:16",
-                  "id": 38,
-                  "label": "test",
-                  "linode_id": null,
-                  "region": "us-east-1a",
-                  "size": 20,
-                  "status": "active",
-                  "updated": "2017-08-08T04:00:00",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "_polling": false,
+                                      "created": "2017-08-08T13:55:16",
+                                      "id": 38,
+                                      "label": "test",
+                                      "linode_id": null,
+                                      "region": "us-east-1a",
+                                      "size": 20,
+                                      "status": "active",
+                                      "updated": "2017-08-08T04:00:00",
+                                    },
+                                  ]
             }
             disableHeader={true}
             noDataMessage="No Volumes found."
             onToggleSelect={[Function]}
             selectedMap={Object {}}
-          />,
+/>,
         },
         "ref": null,
         "rendered": Object {
@@ -463,114 +463,114 @@ ShallowWrapper {
         "children": Array [
           <ListHeader
             className="Menu"
-          >
+>
             <div
-              className="Menu-item"
+                        className="Menu-item"
             >
-              <MassEditControl
-                data={
-                  Array [
-                    Object {
-                      "_polling": false,
-                      "created": "2017-08-08T13:55:16",
-                      "id": 38,
-                      "label": "test",
-                      "linode_id": null,
-                      "region": "us-east-1a",
-                      "size": 20,
-                      "status": "active",
-                      "updated": "2017-08-08T04:00:00",
-                    },
-                  ]
-                }
-                dispatch={[Function]}
-                massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ]
-                }
-                objectType="volumes"
-                selectedKey="id"
-                selectedMap={Object {}}
-                toggleSelected={[Function]}
-              />
+                        <MassEditControl
+                                    data={
+                                                Array [
+                                                            Object {
+                                                              "_polling": false,
+                                                              "created": "2017-08-08T13:55:16",
+                                                              "id": 38,
+                                                              "label": "test",
+                                                              "linode_id": null,
+                                                              "region": "us-east-1a",
+                                                              "size": 20,
+                                                              "status": "active",
+                                                              "updated": "2017-08-08T04:00:00",
+                                                            },
+                                                          ]
+                                    }
+                                    dispatch={[Function]}
+                                    massEditGroups={
+                                                Array [
+                                                            Object {
+                                                              "elements": Array [
+                                                                Object {
+                                                                  "action": [Function],
+                                                                  "name": "Delete",
+                                                                },
+                                                              ],
+                                                            },
+                                                          ]
+                                    }
+                                    objectType="volumes"
+                                    selectedKey="id"
+                                    selectedMap={Object {}}
+                                    toggleSelected={[Function]}
+                        />
             </div>
             <div
-              className="Menu-item"
+                        className="Menu-item"
             >
-              <Input
-                className=""
-                onChange={[Function]}
-                placeholder="Filter..."
-                value=""
-              />
+                        <Input
+                                    className=""
+                                    onChange={[Function]}
+                                    placeholder="Filter..."
+                                    value=""
+                        />
             </div>
-          </ListHeader>,
+</ListHeader>,
           <ListBody>
             <Table
-              className=""
-              columns={
-                Array [
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "CheckboxColumn",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "dataKey": "label",
-                    "headerClassName": "LabelColumn",
-                    "label": "Label",
-                    "titleKey": "label",
-                    "tooltipEnabled": true,
-                  },
-                  Object {
-                    "dataFn": [Function],
-                    "label": "Size",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "RegionColumn",
-                    "label": "Region",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "className": "AttachedCell",
-                    "label": "Attached",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "ActionsColumn",
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {
-                    "_polling": false,
-                    "created": "2017-08-08T13:55:16",
-                    "id": 38,
-                    "label": "test",
-                    "linode_id": null,
-                    "region": "us-east-1a",
-                    "size": 20,
-                    "status": "active",
-                    "updated": "2017-08-08T04:00:00",
-                  },
-                ]
-              }
-              disableHeader={true}
-              noDataMessage="No Volumes found."
-              onToggleSelect={[Function]}
-              selectedMap={Object {}}
+                        className=""
+                        columns={
+                                    Array [
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "CheckboxColumn",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "dataKey": "label",
+                                                  "headerClassName": "LabelColumn",
+                                                  "label": "Label",
+                                                  "titleKey": "label",
+                                                  "tooltipEnabled": true,
+                                                },
+                                                Object {
+                                                  "dataFn": [Function],
+                                                  "label": "Size",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "RegionColumn",
+                                                  "label": "Region",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "className": "AttachedCell",
+                                                  "label": "Attached",
+                                                },
+                                                Object {
+                                                  "cellComponent": [Function],
+                                                  "headerClassName": "ActionsColumn",
+                                                },
+                                              ]
+                        }
+                        data={
+                                    Array [
+                                                Object {
+                                                  "_polling": false,
+                                                  "created": "2017-08-08T13:55:16",
+                                                  "id": 38,
+                                                  "label": "test",
+                                                  "linode_id": null,
+                                                  "region": "us-east-1a",
+                                                  "size": 20,
+                                                  "status": "active",
+                                                  "updated": "2017-08-08T04:00:00",
+                                                },
+                                              ]
+                        }
+                        disableHeader={true}
+                        noDataMessage="No Volumes found."
+                        onToggleSelect={[Function]}
+                        selectedMap={Object {}}
             />
-          </ListBody>,
+</ListBody>,
         ],
         "className": "",
       },
@@ -584,52 +584,52 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="Menu-item"
-              >
+>
                 <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2017-08-08T13:55:16",
-                        "id": 38,
-                        "label": "test",
-                        "linode_id": null,
-                        "region": "us-east-1a",
-                        "size": 20,
-                        "status": "active",
-                        "updated": "2017-08-08T04:00:00",
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="volumes"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
+                                data={
+                                                Array [
+                                                                Object {
+                                                                  "_polling": false,
+                                                                  "created": "2017-08-08T13:55:16",
+                                                                  "id": 38,
+                                                                  "label": "test",
+                                                                  "linode_id": null,
+                                                                  "region": "us-east-1a",
+                                                                  "size": 20,
+                                                                  "status": "active",
+                                                                  "updated": "2017-08-08T04:00:00",
+                                                                },
+                                                              ]
+                                }
+                                dispatch={[Function]}
+                                massEditGroups={
+                                                Array [
+                                                                Object {
+                                                                  "elements": Array [
+                                                                    Object {
+                                                                      "action": [Function],
+                                                                      "name": "Delete",
+                                                                    },
+                                                                  ],
+                                                                },
+                                                              ]
+                                }
+                                objectType="volumes"
+                                selectedKey="id"
+                                selectedMap={Object {}}
+                                toggleSelected={[Function]}
                 />
-              </div>,
+</div>,
               <div
                 className="Menu-item"
-              >
+>
                 <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
+                                className=""
+                                onChange={[Function]}
+                                placeholder="Filter..."
+                                value=""
                 />
-              </div>,
+</div>,
             ],
             "className": "Menu",
           },
@@ -642,38 +642,38 @@ ShallowWrapper {
               "props": Object {
                 "children": <MassEditControl
                   data={
-                    Array [
-                      Object {
-                        "_polling": false,
-                        "created": "2017-08-08T13:55:16",
-                        "id": 38,
-                        "label": "test",
-                        "linode_id": null,
-                        "region": "us-east-1a",
-                        "size": 20,
-                        "status": "active",
-                        "updated": "2017-08-08T04:00:00",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "_polling": false,
+                                                        "created": "2017-08-08T13:55:16",
+                                                        "id": 38,
+                                                        "label": "test",
+                                                        "linode_id": null,
+                                                        "region": "us-east-1a",
+                                                        "size": 20,
+                                                        "status": "active",
+                                                        "updated": "2017-08-08T04:00:00",
+                                                      },
+                                                    ]
                   }
                   dispatch={[Function]}
                   massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "elements": Array [
+                                                          Object {
+                                                            "action": [Function],
+                                                            "name": "Delete",
+                                                          },
+                                                        ],
+                                                      },
+                                                    ]
                   }
                   objectType="volumes"
                   selectedKey="id"
                   selectedMap={Object {}}
                   toggleSelected={[Function]}
-                />,
+/>,
                 "className": "Menu-item",
               },
               "ref": null,
@@ -727,7 +727,7 @@ ShallowWrapper {
                   onChange={[Function]}
                   placeholder="Filter..."
                   value=""
-                />,
+/>,
                 "className": "Menu-item",
               },
               "ref": null,
@@ -758,59 +758,59 @@ ShallowWrapper {
             "children": <Table
               className=""
               columns={
-                Array [
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "CheckboxColumn",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "dataKey": "label",
-                    "headerClassName": "LabelColumn",
-                    "label": "Label",
-                    "titleKey": "label",
-                    "tooltipEnabled": true,
-                  },
-                  Object {
-                    "dataFn": [Function],
-                    "label": "Size",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "RegionColumn",
-                    "label": "Region",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "className": "AttachedCell",
-                    "label": "Attached",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "ActionsColumn",
-                  },
-                ]
+                            Array [
+                                          Object {
+                                            "cellComponent": [Function],
+                                            "headerClassName": "CheckboxColumn",
+                                          },
+                                          Object {
+                                            "cellComponent": [Function],
+                                            "dataKey": "label",
+                                            "headerClassName": "LabelColumn",
+                                            "label": "Label",
+                                            "titleKey": "label",
+                                            "tooltipEnabled": true,
+                                          },
+                                          Object {
+                                            "dataFn": [Function],
+                                            "label": "Size",
+                                          },
+                                          Object {
+                                            "cellComponent": [Function],
+                                            "headerClassName": "RegionColumn",
+                                            "label": "Region",
+                                          },
+                                          Object {
+                                            "cellComponent": [Function],
+                                            "className": "AttachedCell",
+                                            "label": "Attached",
+                                          },
+                                          Object {
+                                            "cellComponent": [Function],
+                                            "headerClassName": "ActionsColumn",
+                                          },
+                                        ]
               }
               data={
-                Array [
-                  Object {
-                    "_polling": false,
-                    "created": "2017-08-08T13:55:16",
-                    "id": 38,
-                    "label": "test",
-                    "linode_id": null,
-                    "region": "us-east-1a",
-                    "size": 20,
-                    "status": "active",
-                    "updated": "2017-08-08T04:00:00",
-                  },
-                ]
+                            Array [
+                                          Object {
+                                            "_polling": false,
+                                            "created": "2017-08-08T13:55:16",
+                                            "id": 38,
+                                            "label": "test",
+                                            "linode_id": null,
+                                            "region": "us-east-1a",
+                                            "size": 20,
+                                            "status": "active",
+                                            "updated": "2017-08-08T04:00:00",
+                                          },
+                                        ]
               }
               disableHeader={true}
               noDataMessage="No Volumes found."
               onToggleSelect={[Function]}
               selectedMap={Object {}}
-            />,
+/>,
           },
           "ref": null,
           "rendered": Object {

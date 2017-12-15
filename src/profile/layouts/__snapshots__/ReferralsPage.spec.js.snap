@@ -6,16 +6,16 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <ReferralsPage
     referrals={
-      Object {
-        "code": "ABC123",
-        "completed": Array [],
-        "credit": 999.99,
-        "pending": Array [],
-        "total": 0,
-        "url": "http://somesite.com/?referral=ABC123",
-      }
+        Object {
+            "code": "ABC123",
+            "completed": Array [],
+            "credit": 999.99,
+            "pending": Array [],
+            "total": 0,
+            "url": "http://somesite.com/?referral=ABC123",
+          }
     }
-  />,
+/>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -31,45 +31,45 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Referrals"
-        />,
+/>,
         <p>
           Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.
-        </p>,
+</p>,
         <div
           className="row"
-        >
+>
           <div
-            className="col-sm-2 row-label"
+                    className="col-sm-2 row-label"
           >
-            Referral Code
+                    Referral Code
           </div>
           <div
-            className="col-sm-10"
+                    className="col-sm-10"
           >
-            ABC123
+                    ABC123
           </div>
-        </div>,
+</div>,
         <div
           className="row"
-        >
+>
           <div
-            className="col-sm-2 row-label"
+                    className="col-sm-2 row-label"
           >
-            Referral URL
+                    Referral URL
           </div>
           <div
-            className="col-sm-10"
+                    className="col-sm-10"
           >
-            http://somesite.com/?referral=ABC123
+                    http://somesite.com/?referral=ABC123
           </div>
-        </div>,
+</div>,
       ],
       "className": "",
       "header": <CardHeader
         nav="You have 0 total referrals:  completed
     ($999.99) and  pending"
         title="Referrals"
-      />,
+/>,
     },
     "ref": null,
     "rendered": Array [
@@ -103,14 +103,14 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-2 row-label"
-            >
+>
               Referral Code
-            </div>,
+</div>,
             <div
               className="col-sm-10"
-            >
+>
               ABC123
-            </div>,
+</div>,
           ],
           "className": "row",
         },
@@ -151,14 +151,14 @@ ShallowWrapper {
           "children": Array [
             <div
               className="col-sm-2 row-label"
-            >
+>
               Referral URL
-            </div>,
+</div>,
             <div
               className="col-sm-10"
-            >
+>
               http://somesite.com/?referral=ABC123
-            </div>,
+</div>,
           ],
           "className": "row",
         },
@@ -203,45 +203,45 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Referrals"
-          />,
+/>,
           <p>
             Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.
-          </p>,
+</p>,
           <div
             className="row"
-          >
+>
             <div
-              className="col-sm-2 row-label"
+                        className="col-sm-2 row-label"
             >
-              Referral Code
+                        Referral Code
             </div>
             <div
-              className="col-sm-10"
+                        className="col-sm-10"
             >
-              ABC123
+                        ABC123
             </div>
-          </div>,
+</div>,
           <div
             className="row"
-          >
+>
             <div
-              className="col-sm-2 row-label"
+                        className="col-sm-2 row-label"
             >
-              Referral URL
+                        Referral URL
             </div>
             <div
-              className="col-sm-10"
+                        className="col-sm-10"
             >
-              http://somesite.com/?referral=ABC123
+                        http://somesite.com/?referral=ABC123
             </div>
-          </div>,
+</div>,
         ],
         "className": "",
         "header": <CardHeader
           nav="You have 0 total referrals:  completed
     ($999.99) and  pending"
           title="Referrals"
-        />,
+/>,
       },
       "ref": null,
       "rendered": Array [
@@ -275,14 +275,14 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-2 row-label"
-              >
+>
                 Referral Code
-              </div>,
+</div>,
               <div
                 className="col-sm-10"
-              >
+>
                 ABC123
-              </div>,
+</div>,
             ],
             "className": "row",
           },
@@ -323,14 +323,14 @@ ShallowWrapper {
             "children": Array [
               <div
                 className="col-sm-2 row-label"
-              >
+>
                 Referral URL
-              </div>,
+</div>,
               <div
                 className="col-sm-10"
-              >
+>
                 http://somesite.com/?referral=ABC123
-              </div>,
+</div>,
             ],
             "className": "row",
           },

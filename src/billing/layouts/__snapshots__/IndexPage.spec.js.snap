@@ -6,9 +6,9 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <IndexPage
     dispatch={[Function]}
-  >
+>
     <div />
-  </IndexPage>,
+</IndexPage>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -24,55 +24,55 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Billing"
-        />,
+/>,
         <header
           className="main-header"
-        >
+>
           <div
-            className="container"
+                    className="container"
           >
-            <h1
-              className="float-sm-left"
-            >
-              Billing
-            </h1>
+                    <h1
+                              className="float-sm-left"
+                    >
+                              Billing
+                    </h1>
           </div>
-        </header>,
+</header>,
         <div
           className="main-header-fix"
-        />,
+/>,
         <Tabs
           className=""
           isSubTabs={false}
           onClick={[Function]}
-          pathname="blank"
+          pathname="/"
           tabs={
-            Array [
-              Object {
-                "link": "/billing/",
-                "name": "Dashboard",
-              },
-              Object {
-                "link": "/billing/contact",
-                "name": "Contact Info",
-              },
-              Object {
-                "link": "/billing/creditcard",
-                "name": "Update Credit Card",
-              },
-              Object {
-                "link": "/billing/payment",
-                "name": "Make A Payment",
-              },
-              Object {
-                "link": "/billing/history",
-                "name": "History",
-              },
-            ]
+                    Array [
+                              Object {
+                                "link": "/billing/",
+                                "name": "Dashboard",
+                              },
+                              Object {
+                                "link": "/billing/contact",
+                                "name": "Contact Info",
+                              },
+                              Object {
+                                "link": "/billing/creditcard",
+                                "name": "Update Credit Card",
+                              },
+                              Object {
+                                "link": "/billing/payment",
+                                "name": "Make A Payment",
+                              },
+                              Object {
+                                "link": "/billing/history",
+                                "name": "History",
+                              },
+                            ]
           }
-        >
+>
           <div />
-        </Tabs>,
+</Tabs>,
       ],
     },
     "ref": null,
@@ -95,13 +95,13 @@ ShallowWrapper {
         "props": Object {
           "children": <div
             className="container"
-          >
+>
             <h1
-              className="float-sm-left"
+                        className="float-sm-left"
             >
-              Billing
+                        Billing
             </h1>
-          </div>,
+</div>,
           "className": "main-header",
         },
         "ref": null,
@@ -112,9 +112,9 @@ ShallowWrapper {
           "props": Object {
             "children": <h1
               className="float-sm-left"
-            >
+>
               Billing
-            </h1>,
+</h1>,
             "className": "container",
           },
           "ref": null,
@@ -154,7 +154,7 @@ ShallowWrapper {
           "className": "",
           "isSubTabs": false,
           "onClick": [Function],
-          "pathname": "blank",
+          "pathname": "/",
           "tabs": Array [
             Object {
               "link": "/billing/",
@@ -202,55 +202,55 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Billing"
-          />,
+/>,
           <header
             className="main-header"
-          >
+>
             <div
-              className="container"
+                        className="container"
             >
-              <h1
-                className="float-sm-left"
-              >
-                Billing
-              </h1>
+                        <h1
+                                    className="float-sm-left"
+                        >
+                                    Billing
+                        </h1>
             </div>
-          </header>,
+</header>,
           <div
             className="main-header-fix"
-          />,
+/>,
           <Tabs
             className=""
             isSubTabs={false}
             onClick={[Function]}
-            pathname="blank"
+            pathname="/"
             tabs={
-              Array [
-                Object {
-                  "link": "/billing/",
-                  "name": "Dashboard",
-                },
-                Object {
-                  "link": "/billing/contact",
-                  "name": "Contact Info",
-                },
-                Object {
-                  "link": "/billing/creditcard",
-                  "name": "Update Credit Card",
-                },
-                Object {
-                  "link": "/billing/payment",
-                  "name": "Make A Payment",
-                },
-                Object {
-                  "link": "/billing/history",
-                  "name": "History",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "link": "/billing/",
+                                      "name": "Dashboard",
+                                    },
+                                    Object {
+                                      "link": "/billing/contact",
+                                      "name": "Contact Info",
+                                    },
+                                    Object {
+                                      "link": "/billing/creditcard",
+                                      "name": "Update Credit Card",
+                                    },
+                                    Object {
+                                      "link": "/billing/payment",
+                                      "name": "Make A Payment",
+                                    },
+                                    Object {
+                                      "link": "/billing/history",
+                                      "name": "History",
+                                    },
+                                  ]
             }
-          >
+>
             <div />
-          </Tabs>,
+</Tabs>,
         ],
       },
       "ref": null,
@@ -273,13 +273,13 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="container"
-            >
+>
               <h1
-                className="float-sm-left"
+                            className="float-sm-left"
               >
-                Billing
+                            Billing
               </h1>
-            </div>,
+</div>,
             "className": "main-header",
           },
           "ref": null,
@@ -290,9 +290,9 @@ ShallowWrapper {
             "props": Object {
               "children": <h1
                 className="float-sm-left"
-              >
+>
                 Billing
-              </h1>,
+</h1>,
               "className": "container",
             },
             "ref": null,
@@ -332,7 +332,7 @@ ShallowWrapper {
             "className": "",
             "isSubTabs": false,
             "onClick": [Function],
-            "pathname": "blank",
+            "pathname": "/",
             "tabs": Array [
               Object {
                 "link": "/billing/",

@@ -7,17 +7,17 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <IndexPage
     dispatch={[Function]}
     user={
-      Object {
-        "_polling": false,
-        "email": "example1@domain.com",
-        "password": "crisprcas9",
-        "restricted": false,
-        "username": "testuser1",
-      }
+        Object {
+            "_polling": false,
+            "email": "example1@domain.com",
+            "password": "crisprcas9",
+            "restricted": false,
+            "username": "testuser1",
+          }
     }
-  >
+>
     <div />
-  </IndexPage>,
+</IndexPage>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -33,56 +33,56 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="testuser1"
-        />,
+/>,
         <header
           className="main-header"
-        >
+>
           <div
-            className="container"
+                    className="container"
           >
-            <div
-              className="float-sm-left"
-            >
-              <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/users"
-              >
-                Users
-              </Link>
-              <h1
-                title="testuser1"
-              >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users/testuser1"
-                >
-                  testuser1
-                </Link>
-              </h1>
-            </div>
+                    <div
+                              className="float-sm-left"
+                    >
+                              <Link
+                                        onlyActiveOnIndex={false}
+                                        style={Object {}}
+                                        to="/users"
+                              >
+                                        Users
+                              </Link>
+                              <h1
+                                        title="testuser1"
+                              >
+                                        <Link
+                                                  onlyActiveOnIndex={false}
+                                                  style={Object {}}
+                                                  to="/users/testuser1"
+                                        >
+                                                  testuser1
+                                        </Link>
+                              </h1>
+                    </div>
           </div>
-        </header>,
+</header>,
         <div
           className="main-header-fix"
-        />,
+/>,
         <Tabs
           className=""
           isSubTabs={false}
           onClick={[Function]}
-          pathname="blank"
+          pathname="/"
           tabs={
-            Array [
-              Object {
-                "link": "/users/testuser1",
-                "name": "Dashboard",
-              },
-            ]
+                    Array [
+                              Object {
+                                "link": "/users/testuser1",
+                                "name": "Dashboard",
+                              },
+                            ]
           }
-        >
+>
           <div />
-        </Tabs>,
+</Tabs>,
       ],
     },
     "ref": null,
@@ -105,30 +105,30 @@ ShallowWrapper {
         "props": Object {
           "children": <div
             className="container"
-          >
+>
             <div
-              className="float-sm-left"
+                        className="float-sm-left"
             >
-              <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/users"
-              >
-                Users
-              </Link>
-              <h1
-                title="testuser1"
-              >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users/testuser1"
-                >
-                  testuser1
-                </Link>
-              </h1>
+                        <Link
+                                    onlyActiveOnIndex={false}
+                                    style={Object {}}
+                                    to="/users"
+                        >
+                                    Users
+                        </Link>
+                        <h1
+                                    title="testuser1"
+                        >
+                                    <Link
+                                                onlyActiveOnIndex={false}
+                                                style={Object {}}
+                                                to="/users/testuser1"
+                                    >
+                                                testuser1
+                                    </Link>
+                        </h1>
             </div>
-          </div>,
+</div>,
           "className": "main-header",
         },
         "ref": null,
@@ -139,26 +139,26 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="float-sm-left"
-            >
+>
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
-                to="/users"
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/users"
               >
-                Users
+                            Users
               </Link>
               <h1
-                title="testuser1"
+                            title="testuser1"
               >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users/testuser1"
-                >
-                  testuser1
-                </Link>
+                            <Link
+                                          onlyActiveOnIndex={false}
+                                          style={Object {}}
+                                          to="/users/testuser1"
+                            >
+                                          testuser1
+                            </Link>
               </h1>
-            </div>,
+</div>,
             "className": "container",
           },
           "ref": null,
@@ -172,20 +172,20 @@ ShallowWrapper {
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/users"
-                >
+>
                   Users
-                </Link>,
+</Link>,
                 <h1
                   title="testuser1"
-                >
+>
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/users/testuser1"
+                                    onlyActiveOnIndex={false}
+                                    style={Object {}}
+                                    to="/users/testuser1"
                   >
-                    testuser1
+                                    testuser1
                   </Link>
-                </h1>,
+</h1>,
               ],
               "className": "float-sm-left",
             },
@@ -214,9 +214,9 @@ ShallowWrapper {
                     onlyActiveOnIndex={false}
                     style={Object {}}
                     to="/users/testuser1"
-                  >
+>
                     testuser1
-                  </Link>,
+</Link>,
                   "title": "testuser1",
                 },
                 "ref": null,
@@ -263,7 +263,7 @@ ShallowWrapper {
           "className": "",
           "isSubTabs": false,
           "onClick": [Function],
-          "pathname": "blank",
+          "pathname": "/",
           "tabs": Array [
             Object {
               "link": "/users/testuser1",
@@ -295,56 +295,56 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="testuser1"
-          />,
+/>,
           <header
             className="main-header"
-          >
+>
             <div
-              className="container"
+                        className="container"
             >
-              <div
-                className="float-sm-left"
-              >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users"
-                >
-                  Users
-                </Link>
-                <h1
-                  title="testuser1"
-                >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/users/testuser1"
-                  >
-                    testuser1
-                  </Link>
-                </h1>
-              </div>
+                        <div
+                                    className="float-sm-left"
+                        >
+                                    <Link
+                                                onlyActiveOnIndex={false}
+                                                style={Object {}}
+                                                to="/users"
+                                    >
+                                                Users
+                                    </Link>
+                                    <h1
+                                                title="testuser1"
+                                    >
+                                                <Link
+                                                            onlyActiveOnIndex={false}
+                                                            style={Object {}}
+                                                            to="/users/testuser1"
+                                                >
+                                                            testuser1
+                                                </Link>
+                                    </h1>
+                        </div>
             </div>
-          </header>,
+</header>,
           <div
             className="main-header-fix"
-          />,
+/>,
           <Tabs
             className=""
             isSubTabs={false}
             onClick={[Function]}
-            pathname="blank"
+            pathname="/"
             tabs={
-              Array [
-                Object {
-                  "link": "/users/testuser1",
-                  "name": "Dashboard",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "link": "/users/testuser1",
+                                      "name": "Dashboard",
+                                    },
+                                  ]
             }
-          >
+>
             <div />
-          </Tabs>,
+</Tabs>,
         ],
       },
       "ref": null,
@@ -367,30 +367,30 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="container"
-            >
+>
               <div
-                className="float-sm-left"
+                            className="float-sm-left"
               >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users"
-                >
-                  Users
-                </Link>
-                <h1
-                  title="testuser1"
-                >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/users/testuser1"
-                  >
-                    testuser1
-                  </Link>
-                </h1>
+                            <Link
+                                          onlyActiveOnIndex={false}
+                                          style={Object {}}
+                                          to="/users"
+                            >
+                                          Users
+                            </Link>
+                            <h1
+                                          title="testuser1"
+                            >
+                                          <Link
+                                                        onlyActiveOnIndex={false}
+                                                        style={Object {}}
+                                                        to="/users/testuser1"
+                                          >
+                                                        testuser1
+                                          </Link>
+                            </h1>
               </div>
-            </div>,
+</div>,
             "className": "main-header",
           },
           "ref": null,
@@ -401,26 +401,26 @@ ShallowWrapper {
             "props": Object {
               "children": <div
                 className="float-sm-left"
-              >
+>
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/users"
+                                onlyActiveOnIndex={false}
+                                style={Object {}}
+                                to="/users"
                 >
-                  Users
+                                Users
                 </Link>
                 <h1
-                  title="testuser1"
+                                title="testuser1"
                 >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/users/testuser1"
-                  >
-                    testuser1
-                  </Link>
+                                <Link
+                                                onlyActiveOnIndex={false}
+                                                style={Object {}}
+                                                to="/users/testuser1"
+                                >
+                                                testuser1
+                                </Link>
                 </h1>
-              </div>,
+</div>,
               "className": "container",
             },
             "ref": null,
@@ -434,20 +434,20 @@ ShallowWrapper {
                     onlyActiveOnIndex={false}
                     style={Object {}}
                     to="/users"
-                  >
+>
                     Users
-                  </Link>,
+</Link>,
                   <h1
                     title="testuser1"
-                  >
+>
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
-                      to="/users/testuser1"
+                                        onlyActiveOnIndex={false}
+                                        style={Object {}}
+                                        to="/users/testuser1"
                     >
-                      testuser1
+                                        testuser1
                     </Link>
-                  </h1>,
+</h1>,
                 ],
                 "className": "float-sm-left",
               },
@@ -476,9 +476,9 @@ ShallowWrapper {
                       onlyActiveOnIndex={false}
                       style={Object {}}
                       to="/users/testuser1"
-                    >
+>
                       testuser1
-                    </Link>,
+</Link>,
                     "title": "testuser1",
                   },
                   "ref": null,
@@ -525,7 +525,7 @@ ShallowWrapper {
             "className": "",
             "isSubTabs": false,
             "onClick": [Function],
-            "pathname": "blank",
+            "pathname": "/",
             "tabs": Array [
               Object {
                 "link": "/users/testuser1",

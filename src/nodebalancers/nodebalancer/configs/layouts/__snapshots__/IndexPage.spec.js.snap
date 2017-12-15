@@ -6,116 +6,116 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <IndexPage
     config={
-      Object {
-        "_nodes": Object {
-          "nodes": Object {
-            "1": Object {
-              "address": "192.168.4.5:80",
-              "config_id": 0,
-              "id": 1,
-              "label": "greatest_node_ever",
-              "mode": "accept",
-              "nodebalancer_id": 23,
-              "status": "online",
-              "weight": 40,
+        Object {
+            "_nodes": Object {
+              "nodes": Object {
+                "1": Object {
+                  "address": "192.168.4.5:80",
+                  "config_id": 0,
+                  "id": 1,
+                  "label": "greatest_node_ever",
+                  "mode": "accept",
+                  "nodebalancer_id": 23,
+                  "status": "online",
+                  "weight": 40,
+                },
+              },
             },
-          },
-        },
-        "algorithm": "roundrobin",
-        "check": "none",
-        "check_attempts": 3,
-        "check_body": "",
-        "check_interval": 0,
-        "check_passive": true,
-        "check_path": "",
-        "check_timeout": 30,
-        "cipher_suite": "recommended",
-        "id": 1,
-        "nodebalancer_id": 23,
-        "nodes_status": Object {
-          "down": 0,
-          "up": 1,
-        },
-        "port": 80,
-        "protocol": "http",
-        "stickiness": "none",
-      }
+            "algorithm": "roundrobin",
+            "check": "none",
+            "check_attempts": 3,
+            "check_body": "",
+            "check_interval": 0,
+            "check_passive": true,
+            "check_path": "",
+            "check_timeout": 30,
+            "cipher_suite": "recommended",
+            "id": 1,
+            "nodebalancer_id": 23,
+            "nodes_status": Object {
+              "down": 0,
+              "up": 1,
+            },
+            "port": 80,
+            "protocol": "http",
+            "stickiness": "none",
+          }
     }
     dispatch={[Function]}
     nodebalancer={
-      Object {
-        "_configs": Object {
-          "configs": Object {
-            "1": Object {
-              "_nodes": Object {
-                "nodes": Object {
-                  "1": Object {
-                    "address": "192.168.4.5:80",
-                    "config_id": 0,
-                    "id": 1,
-                    "label": "greatest_node_ever",
-                    "mode": "accept",
-                    "nodebalancer_id": 23,
-                    "status": "online",
-                    "weight": 40,
+        Object {
+            "_configs": Object {
+              "configs": Object {
+                "1": Object {
+                  "_nodes": Object {
+                    "nodes": Object {
+                      "1": Object {
+                        "address": "192.168.4.5:80",
+                        "config_id": 0,
+                        "id": 1,
+                        "label": "greatest_node_ever",
+                        "mode": "accept",
+                        "nodebalancer_id": 23,
+                        "status": "online",
+                        "weight": 40,
+                      },
+                    },
                   },
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 1,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 1,
+                  },
+                  "port": 80,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+                "2": Object {
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 2,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 0,
+                  },
+                  "port": 81,
+                  "protocol": "http",
+                  "stickiness": "none",
                 },
               },
-              "algorithm": "roundrobin",
-              "check": "none",
-              "check_attempts": 3,
-              "check_body": "",
-              "check_interval": 0,
-              "check_passive": true,
-              "check_path": "",
-              "check_timeout": 30,
-              "cipher_suite": "recommended",
-              "id": 1,
-              "nodebalancer_id": 23,
-              "nodes_status": Object {
-                "down": 0,
-                "up": 1,
-              },
-              "port": 80,
-              "protocol": "http",
-              "stickiness": "none",
             },
-            "2": Object {
-              "algorithm": "roundrobin",
-              "check": "none",
-              "check_attempts": 3,
-              "check_body": "",
-              "check_interval": 0,
-              "check_passive": true,
-              "check_path": "",
-              "check_timeout": 30,
-              "cipher_suite": "recommended",
-              "id": 2,
-              "nodebalancer_id": 23,
-              "nodes_status": Object {
-                "down": 0,
-                "up": 0,
-              },
-              "port": 81,
-              "protocol": "http",
-              "stickiness": "none",
-            },
-          },
-        },
-        "client_conn_throttle": 0,
-        "created": "2017-03-03T18:08:44",
-        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
-        "id": 23,
-        "ipv4": "1.1.1.1",
-        "label": "nodebalancer-1",
-        "region": "us-east-1a",
-        "status": "new_active",
-        "updated": "2017-03-06T22:00:48",
-      }
+            "client_conn_throttle": 0,
+            "created": "2017-03-03T18:08:44",
+            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+            "id": 23,
+            "ipv4": "1.1.1.1",
+            "label": "nodebalancer-1",
+            "region": "us-east-1a",
+            "status": "new_active",
+            "updated": "2017-03-06T22:00:48",
+          }
     }
-  >
+>
     <div />
-  </IndexPage>,
+</IndexPage>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
     "getNode": [Function],
@@ -131,68 +131,68 @@ ShallowWrapper {
       "children": Array [
         <SideEffect(ChainedDocumentTitle)
           title="Port 80 - nodebalancer-1"
-        />,
+/>,
         <header
           className="main-header"
-        >
+>
           <div
-            className="container clearfix"
+                    className="container clearfix"
           >
-            <div
-              className="float-sm-left"
-            >
-              <Breadcrumbs
-                crumbs={
-                  Array [
-                    Object {
-                      "label": "NodeBalancers",
-                      "to": "/nodebalancers",
-                    },
-                    Object {
-                      "label": "nodebalancer-1",
-                      "to": "/nodebalancers/nodebalancer-1",
-                    },
-                  ]
-                }
-              />
-              <h1
-                title={23}
-              >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/nodebalancers/nodebalancer-1/configs/1"
-                >
-                  Port 
-                  80
-                </Link>
-              </h1>
-            </div>
+                    <div
+                              className="float-sm-left"
+                    >
+                              <Breadcrumbs
+                                        crumbs={
+                                                  Array [
+                                                            Object {
+                                                              "label": "NodeBalancers",
+                                                              "to": "/nodebalancers",
+                                                            },
+                                                            Object {
+                                                              "label": "nodebalancer-1",
+                                                              "to": "/nodebalancers/nodebalancer-1",
+                                                            },
+                                                          ]
+                                        }
+                              />
+                              <h1
+                                        title={23}
+                              >
+                                        <Link
+                                                  onlyActiveOnIndex={false}
+                                                  style={Object {}}
+                                                  to="/nodebalancers/nodebalancer-1/configs/1"
+                                        >
+                                                  Port 
+                                                  80
+                                        </Link>
+                              </h1>
+                    </div>
           </div>
-        </header>,
+</header>,
         <div
           className="main-header-fix"
-        />,
+/>,
         <Tabs
           className=""
           isSubTabs={false}
           onClick={[Function]}
-          pathname="blank"
+          pathname="/"
           tabs={
-            Array [
-              Object {
-                "link": "/nodebalancers/nodebalancer-1/configs/1",
-                "name": "Dashboard",
-              },
-              Object {
-                "link": "/nodebalancers/nodebalancer-1/configs/1/settings",
-                "name": "Settings",
-              },
-            ]
+                    Array [
+                              Object {
+                                "link": "/nodebalancers/nodebalancer-1/configs/1",
+                                "name": "Dashboard",
+                              },
+                              Object {
+                                "link": "/nodebalancers/nodebalancer-1/configs/1/settings",
+                                "name": "Settings",
+                              },
+                            ]
           }
-        >
+>
           <div />
-        </Tabs>,
+</Tabs>,
       ],
     },
     "ref": null,
@@ -215,38 +215,38 @@ ShallowWrapper {
         "props": Object {
           "children": <div
             className="container clearfix"
-          >
+>
             <div
-              className="float-sm-left"
+                        className="float-sm-left"
             >
-              <Breadcrumbs
-                crumbs={
-                  Array [
-                    Object {
-                      "label": "NodeBalancers",
-                      "to": "/nodebalancers",
-                    },
-                    Object {
-                      "label": "nodebalancer-1",
-                      "to": "/nodebalancers/nodebalancer-1",
-                    },
-                  ]
-                }
-              />
-              <h1
-                title={23}
-              >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/nodebalancers/nodebalancer-1/configs/1"
-                >
-                  Port 
-                  80
-                </Link>
-              </h1>
+                        <Breadcrumbs
+                                    crumbs={
+                                                Array [
+                                                            Object {
+                                                              "label": "NodeBalancers",
+                                                              "to": "/nodebalancers",
+                                                            },
+                                                            Object {
+                                                              "label": "nodebalancer-1",
+                                                              "to": "/nodebalancers/nodebalancer-1",
+                                                            },
+                                                          ]
+                                    }
+                        />
+                        <h1
+                                    title={23}
+                        >
+                                    <Link
+                                                onlyActiveOnIndex={false}
+                                                style={Object {}}
+                                                to="/nodebalancers/nodebalancer-1/configs/1"
+                                    >
+                                                Port 
+                                                80
+                                    </Link>
+                        </h1>
             </div>
-          </div>,
+</div>,
           "className": "main-header",
         },
         "ref": null,
@@ -257,34 +257,34 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="float-sm-left"
-            >
+>
               <Breadcrumbs
-                crumbs={
-                  Array [
-                    Object {
-                      "label": "NodeBalancers",
-                      "to": "/nodebalancers",
-                    },
-                    Object {
-                      "label": "nodebalancer-1",
-                      "to": "/nodebalancers/nodebalancer-1",
-                    },
-                  ]
-                }
+                            crumbs={
+                                          Array [
+                                                        Object {
+                                                          "label": "NodeBalancers",
+                                                          "to": "/nodebalancers",
+                                                        },
+                                                        Object {
+                                                          "label": "nodebalancer-1",
+                                                          "to": "/nodebalancers/nodebalancer-1",
+                                                        },
+                                                      ]
+                            }
               />
               <h1
-                title={23}
+                            title={23}
               >
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/nodebalancers/nodebalancer-1/configs/1"
-                >
-                  Port 
-                  80
-                </Link>
+                            <Link
+                                          onlyActiveOnIndex={false}
+                                          style={Object {}}
+                                          to="/nodebalancers/nodebalancer-1/configs/1"
+                            >
+                                          Port 
+                                          80
+                            </Link>
               </h1>
-            </div>,
+</div>,
             "className": "container clearfix",
           },
           "ref": null,
@@ -296,30 +296,30 @@ ShallowWrapper {
               "children": Array [
                 <Breadcrumbs
                   crumbs={
-                    Array [
-                      Object {
-                        "label": "NodeBalancers",
-                        "to": "/nodebalancers",
-                      },
-                      Object {
-                        "label": "nodebalancer-1",
-                        "to": "/nodebalancers/nodebalancer-1",
-                      },
-                    ]
+                                    Array [
+                                                      Object {
+                                                        "label": "NodeBalancers",
+                                                        "to": "/nodebalancers",
+                                                      },
+                                                      Object {
+                                                        "label": "nodebalancer-1",
+                                                        "to": "/nodebalancers/nodebalancer-1",
+                                                      },
+                                                    ]
                   }
-                />,
+/>,
                 <h1
                   title={23}
-                >
+>
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/nodebalancers/nodebalancer-1/configs/1"
+                                    onlyActiveOnIndex={false}
+                                    style={Object {}}
+                                    to="/nodebalancers/nodebalancer-1/configs/1"
                   >
-                    Port 
-                    80
+                                    Port 
+                                    80
                   </Link>
-                </h1>,
+</h1>,
               ],
               "className": "float-sm-left",
             },
@@ -354,10 +354,10 @@ ShallowWrapper {
                     onlyActiveOnIndex={false}
                     style={Object {}}
                     to="/nodebalancers/nodebalancer-1/configs/1"
-                  >
+>
                     Port 
                     80
-                  </Link>,
+</Link>,
                   "title": 23,
                 },
                 "ref": null,
@@ -410,7 +410,7 @@ ShallowWrapper {
           "className": "",
           "isSubTabs": false,
           "onClick": [Function],
-          "pathname": "blank",
+          "pathname": "/",
           "tabs": Array [
             Object {
               "link": "/nodebalancers/nodebalancer-1/configs/1",
@@ -446,68 +446,68 @@ ShallowWrapper {
         "children": Array [
           <SideEffect(ChainedDocumentTitle)
             title="Port 80 - nodebalancer-1"
-          />,
+/>,
           <header
             className="main-header"
-          >
+>
             <div
-              className="container clearfix"
+                        className="container clearfix"
             >
-              <div
-                className="float-sm-left"
-              >
-                <Breadcrumbs
-                  crumbs={
-                    Array [
-                      Object {
-                        "label": "NodeBalancers",
-                        "to": "/nodebalancers",
-                      },
-                      Object {
-                        "label": "nodebalancer-1",
-                        "to": "/nodebalancers/nodebalancer-1",
-                      },
-                    ]
-                  }
-                />
-                <h1
-                  title={23}
-                >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/nodebalancers/nodebalancer-1/configs/1"
-                  >
-                    Port 
-                    80
-                  </Link>
-                </h1>
-              </div>
+                        <div
+                                    className="float-sm-left"
+                        >
+                                    <Breadcrumbs
+                                                crumbs={
+                                                            Array [
+                                                                        Object {
+                                                                          "label": "NodeBalancers",
+                                                                          "to": "/nodebalancers",
+                                                                        },
+                                                                        Object {
+                                                                          "label": "nodebalancer-1",
+                                                                          "to": "/nodebalancers/nodebalancer-1",
+                                                                        },
+                                                                      ]
+                                                }
+                                    />
+                                    <h1
+                                                title={23}
+                                    >
+                                                <Link
+                                                            onlyActiveOnIndex={false}
+                                                            style={Object {}}
+                                                            to="/nodebalancers/nodebalancer-1/configs/1"
+                                                >
+                                                            Port 
+                                                            80
+                                                </Link>
+                                    </h1>
+                        </div>
             </div>
-          </header>,
+</header>,
           <div
             className="main-header-fix"
-          />,
+/>,
           <Tabs
             className=""
             isSubTabs={false}
             onClick={[Function]}
-            pathname="blank"
+            pathname="/"
             tabs={
-              Array [
-                Object {
-                  "link": "/nodebalancers/nodebalancer-1/configs/1",
-                  "name": "Dashboard",
-                },
-                Object {
-                  "link": "/nodebalancers/nodebalancer-1/configs/1/settings",
-                  "name": "Settings",
-                },
-              ]
+                        Array [
+                                    Object {
+                                      "link": "/nodebalancers/nodebalancer-1/configs/1",
+                                      "name": "Dashboard",
+                                    },
+                                    Object {
+                                      "link": "/nodebalancers/nodebalancer-1/configs/1/settings",
+                                      "name": "Settings",
+                                    },
+                                  ]
             }
-          >
+>
             <div />
-          </Tabs>,
+</Tabs>,
         ],
       },
       "ref": null,
@@ -530,38 +530,38 @@ ShallowWrapper {
           "props": Object {
             "children": <div
               className="container clearfix"
-            >
+>
               <div
-                className="float-sm-left"
+                            className="float-sm-left"
               >
-                <Breadcrumbs
-                  crumbs={
-                    Array [
-                      Object {
-                        "label": "NodeBalancers",
-                        "to": "/nodebalancers",
-                      },
-                      Object {
-                        "label": "nodebalancer-1",
-                        "to": "/nodebalancers/nodebalancer-1",
-                      },
-                    ]
-                  }
-                />
-                <h1
-                  title={23}
-                >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/nodebalancers/nodebalancer-1/configs/1"
-                  >
-                    Port 
-                    80
-                  </Link>
-                </h1>
+                            <Breadcrumbs
+                                          crumbs={
+                                                        Array [
+                                                                      Object {
+                                                                        "label": "NodeBalancers",
+                                                                        "to": "/nodebalancers",
+                                                                      },
+                                                                      Object {
+                                                                        "label": "nodebalancer-1",
+                                                                        "to": "/nodebalancers/nodebalancer-1",
+                                                                      },
+                                                                    ]
+                                          }
+                            />
+                            <h1
+                                          title={23}
+                            >
+                                          <Link
+                                                        onlyActiveOnIndex={false}
+                                                        style={Object {}}
+                                                        to="/nodebalancers/nodebalancer-1/configs/1"
+                                          >
+                                                        Port 
+                                                        80
+                                          </Link>
+                            </h1>
               </div>
-            </div>,
+</div>,
             "className": "main-header",
           },
           "ref": null,
@@ -572,34 +572,34 @@ ShallowWrapper {
             "props": Object {
               "children": <div
                 className="float-sm-left"
-              >
+>
                 <Breadcrumbs
-                  crumbs={
-                    Array [
-                      Object {
-                        "label": "NodeBalancers",
-                        "to": "/nodebalancers",
-                      },
-                      Object {
-                        "label": "nodebalancer-1",
-                        "to": "/nodebalancers/nodebalancer-1",
-                      },
-                    ]
-                  }
+                                crumbs={
+                                                Array [
+                                                                Object {
+                                                                  "label": "NodeBalancers",
+                                                                  "to": "/nodebalancers",
+                                                                },
+                                                                Object {
+                                                                  "label": "nodebalancer-1",
+                                                                  "to": "/nodebalancers/nodebalancer-1",
+                                                                },
+                                                              ]
+                                }
                 />
                 <h1
-                  title={23}
+                                title={23}
                 >
-                  <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
-                    to="/nodebalancers/nodebalancer-1/configs/1"
-                  >
-                    Port 
-                    80
-                  </Link>
+                                <Link
+                                                onlyActiveOnIndex={false}
+                                                style={Object {}}
+                                                to="/nodebalancers/nodebalancer-1/configs/1"
+                                >
+                                                Port 
+                                                80
+                                </Link>
                 </h1>
-              </div>,
+</div>,
               "className": "container clearfix",
             },
             "ref": null,
@@ -611,30 +611,30 @@ ShallowWrapper {
                 "children": Array [
                   <Breadcrumbs
                     crumbs={
-                      Array [
-                        Object {
-                          "label": "NodeBalancers",
-                          "to": "/nodebalancers",
-                        },
-                        Object {
-                          "label": "nodebalancer-1",
-                          "to": "/nodebalancers/nodebalancer-1",
-                        },
-                      ]
+                                        Array [
+                                                            Object {
+                                                              "label": "NodeBalancers",
+                                                              "to": "/nodebalancers",
+                                                            },
+                                                            Object {
+                                                              "label": "nodebalancer-1",
+                                                              "to": "/nodebalancers/nodebalancer-1",
+                                                            },
+                                                          ]
                     }
-                  />,
+/>,
                   <h1
                     title={23}
-                  >
+>
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
-                      to="/nodebalancers/nodebalancer-1/configs/1"
+                                        onlyActiveOnIndex={false}
+                                        style={Object {}}
+                                        to="/nodebalancers/nodebalancer-1/configs/1"
                     >
-                      Port 
-                      80
+                                        Port 
+                                        80
                     </Link>
-                  </h1>,
+</h1>,
                 ],
                 "className": "float-sm-left",
               },
@@ -669,10 +669,10 @@ ShallowWrapper {
                       onlyActiveOnIndex={false}
                       style={Object {}}
                       to="/nodebalancers/nodebalancer-1/configs/1"
-                    >
+>
                       Port 
                       80
-                    </Link>,
+</Link>,
                     "title": 23,
                   },
                   "ref": null,
@@ -725,7 +725,7 @@ ShallowWrapper {
             "className": "",
             "isSubTabs": false,
             "onClick": [Function],
-            "pathname": "blank",
+            "pathname": "/",
             "tabs": Array [
               Object {
                 "link": "/nodebalancers/nodebalancer-1/configs/1",

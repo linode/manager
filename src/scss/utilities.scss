@@ -1,0 +1,24 @@
+.hidden {
+    display: none;
+}
+
+.selected {
+  @include selected;
+}
+
+// TODO: prettify
+.alert {
+    overflow-x: auto;
+    border-radius: 0;
+    min-height: $form-field-height;  // for now, match input height
+    padding: 4px 8px;
+}
+
+.row-label {
+    @extend .text-sm-right;
+
+    padding: $form-field-padding;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: $light-black;
+}

@@ -1,8 +1,8 @@
 import { setToken } from '~/actions/authentication';
 import { APP_ROOT, LOGIN_ROOT } from '~/constants';
-import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
+const { REACT_APP_CLIENT_ID: clientId } = process.env;
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRES = 'authentication/expires';
