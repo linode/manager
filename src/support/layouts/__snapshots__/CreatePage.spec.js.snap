@@ -5006,6 +5006,613 @@ ShallowWrapper {
           },
           "vcpus": 2,
         },
+        "1249": Object {
+          "_backups": Object {
+            "daily": Object {
+              "availability": "daily",
+              "configs": Array [
+                "Ubuntu Disk",
+              ],
+              "created": "2017-01-31T07:28:52",
+              "disks": Array [
+                Object {
+                  "filesystem": "ext4",
+                  "label": "Ubuntu 15.10 Disk",
+                  "size": 2330,
+                },
+                Object {
+                  "filesystem": "swap",
+                  "label": "512 MB Swap Image",
+                  "size": 0,
+                },
+              ],
+              "finished": "2017-01-31T07:30:03",
+              "id": 54782214,
+              "label": null,
+              "region": "us-east-1a",
+              "status": "successful",
+              "type": "auto",
+              "updated": "2017-01-31T12:32:01",
+            },
+            "snapshot": Object {
+              "current": Object {
+                "availability": "unavailable",
+                "configs": Array [
+                  "Some config",
+                ],
+                "created": "2017-01-31T21:50:42",
+                "disks": Array [
+                  Object {
+                    "filesystem": "ext4",
+                    "label": "Ubuntu 15.10 Disk",
+                    "size": 2330,
+                  },
+                  Object {
+                    "filesystem": "swap",
+                    "label": "512 MB Swap Image",
+                    "size": 0,
+                  },
+                ],
+                "finished": "2017-01-31T21:51:51",
+                "id": 54782236,
+                "label": "the label",
+                "region": "us-east-1a",
+                "status": "successful",
+                "type": "snapshot",
+                "updated": "2017-01-31T21:51:51",
+              },
+              "in_progress": null,
+            },
+            "weekly": Array [],
+          },
+          "_configs": Object {
+            "configs": Object {
+              "12345": Object {
+                "comments": "Test comments",
+                "created": "2015-09-29 11:21:38 +0000",
+                "devices": Object {
+                  "sda": Object {
+                    "disk_id": 12345,
+                  },
+                  "sdb": Object {
+                    "disk_id": 12346,
+                  },
+                  "sdc": null,
+                  "sdd": null,
+                  "sde": null,
+                  "sdf": null,
+                  "sdg": null,
+                  "sdh": null,
+                },
+                "helpers": Object {
+                  "devtmpfs_automount": false,
+                  "distro": true,
+                  "modules_dep": true,
+                  "network": true,
+                  "updatedb_disabled": true,
+                },
+                "id": 12345,
+                "initrd": "",
+                "kernel": "linode/latest_64",
+                "label": "Test config",
+                "memory_limit": 1024,
+                "root_device": "/dev/sda",
+                "run_level": "default",
+                "updated": "2015-09-29 11:21:38 +0000",
+                "virt_mode": "paravirt",
+              },
+            },
+            "pagesFetched": Array [
+              0,
+            ],
+            "totalPages": 1,
+            "totalResults": 1,
+          },
+          "_disks": Object {
+            "disks": Object {
+              "12345": Object {
+                "created": "2016-08-09T19:47:11",
+                "filesystem": "raw",
+                "id": 12345,
+                "label": "Raw Disk",
+                "size": 6144,
+                "updated": "2016-08-09T19:47:11",
+              },
+            },
+            "totalPages": 1,
+            "totalResults": 1,
+          },
+          "_ips": Object {
+            "2600:3c03::f03c:91ff:fe0a:31": Object {
+              "address": "2600:3c03::f03c:91ff:fe0a:31",
+              "gateway": "fe80::1",
+              "key": "2600:3c03::f03c:91ff:fe0a:31",
+              "linode_id": 1249,
+              "prefix": "64",
+              "rdns": "li1-1.members.linode.com",
+              "type": "slaac",
+              "version": "ipv6",
+            },
+            "97.107.143.47": Object {
+              "address": "97.107.143.47",
+              "gateway": "97.107.143.0",
+              "key": "97.107.143.47",
+              "linode_id": 1249,
+              "prefix": 24,
+              "rdns": "li1-1.members.linode.com",
+              "type": "public",
+              "version": "ipv4",
+            },
+            "97.107.143.49": Object {
+              "address": "97.107.143.49",
+              "gateway": "97.107.143.0",
+              "key": "97.107.143.49",
+              "linode_id": 1249,
+              "prefix": 17,
+              "rdns": "li1-1.members.linode.com",
+              "type": "private",
+              "version": "ipv4",
+            },
+            "fe80::f03c:91ff:fe0a:181f": Object {
+              "address": "fe80::f03c:91ff:fe0a:181f",
+              "key": "fe80::f03c:91ff:fe0a:181f",
+              "linode_id": 1249,
+              "type": "link-local",
+              "version": "ipv6",
+            },
+          },
+          "_polling": false,
+          "_shared": Array [],
+          "_stats": Object {
+            "cpu": Array [
+              Array [
+                1490378700000,
+                1.67,
+              ],
+            ],
+            "io": Object {
+              "io": Array [
+                Array [
+                  1490379000000,
+                  0.91,
+                ],
+              ],
+              "swap": Array [
+                Array [
+                  1490378100000,
+                  0,
+                ],
+              ],
+            },
+            "netv4": Object {
+              "in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+            },
+            "netv6": Object {
+              "in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+            },
+          },
+          "_volumes": Object {
+            "pagesFetched": Array [
+              0,
+            ],
+            "totalPages": 1,
+            "totalResults": 1,
+            "volumes": Object {
+              "38": Object {
+                "created": "2017-08-08T13:55:16",
+                "id": 38,
+                "label": "test",
+                "linode_id": null,
+                "region": "us-east-1a",
+                "size": 20,
+                "status": "active",
+                "updated": "2017-08-08T04:00:00",
+              },
+            },
+          },
+          "alerts": Object {
+            "cpu": 90,
+            "io": 5000,
+            "network_in": 5,
+            "network_out": 5,
+            "tranfer_quota": 80,
+          },
+          "backups": Object {
+            "enabled": true,
+            "schedule": Object {
+              "day": "Monday",
+              "window": "W10",
+            },
+          },
+          "created": "2016-07-06T16:47:27",
+          "disk": 20480,
+          "group": "Test Group",
+          "hypervisor": "kvm",
+          "id": 1249,
+          "image": Object {
+            "id": "linode/ubuntu15.10",
+            "label": "Ubuntu 15.10",
+            "vendor": "Ubuntu",
+          },
+          "ipv4": Array [
+            "97.107.143.47",
+            "97.107.143.48",
+          ],
+          "ipv6": "2600:3c03::f03c:91ff:fe0a:30",
+          "label": "test-linode-raw",
+          "memory": 2048,
+          "region": "us-east-1a",
+          "status": "running",
+          "type": Object {
+            "_polling": false,
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2.5,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode2048.5",
+            "label": "Linode 2048",
+            "memory": 2048,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.015,
+              "monthly": 10,
+            },
+            "service_type": "linode",
+            "transfer": 2000,
+            "vcpus": 2,
+          },
+          "vcpus": 2,
+        },
+        "1250": Object {
+          "_backups": Object {
+            "daily": Object {
+              "availability": "daily",
+              "configs": Array [
+                "Ubuntu Disk",
+              ],
+              "created": "2017-01-31T07:28:52",
+              "disks": Array [
+                Object {
+                  "filesystem": "ext4",
+                  "label": "Ubuntu 15.10 Disk",
+                  "size": 2330,
+                },
+                Object {
+                  "filesystem": "swap",
+                  "label": "512 MB Swap Image",
+                  "size": 0,
+                },
+              ],
+              "finished": "2017-01-31T07:30:03",
+              "id": 54782214,
+              "label": null,
+              "region": "us-east-1a",
+              "status": "successful",
+              "type": "auto",
+              "updated": "2017-01-31T12:32:01",
+            },
+            "snapshot": Object {
+              "current": Object {
+                "availability": "unavailable",
+                "configs": Array [
+                  "Some config",
+                ],
+                "created": "2017-01-31T21:50:42",
+                "disks": Array [
+                  Object {
+                    "filesystem": "ext4",
+                    "label": "Ubuntu 15.10 Disk",
+                    "size": 2330,
+                  },
+                  Object {
+                    "filesystem": "swap",
+                    "label": "512 MB Swap Image",
+                    "size": 0,
+                  },
+                ],
+                "finished": "2017-01-31T21:51:51",
+                "id": 54782236,
+                "label": "the label",
+                "region": "us-east-1a",
+                "status": "successful",
+                "type": "snapshot",
+                "updated": "2017-01-31T21:51:51",
+              },
+              "in_progress": null,
+            },
+            "weekly": Array [],
+          },
+          "_configs": Object {
+            "configs": Object {
+              "12345": Object {
+                "comments": "Test comments",
+                "created": "2015-09-29 11:21:38 +0000",
+                "devices": Object {
+                  "sda": Object {
+                    "disk_id": 12345,
+                  },
+                  "sdb": Object {
+                    "disk_id": 12346,
+                  },
+                  "sdc": null,
+                  "sdd": null,
+                  "sde": null,
+                  "sdf": null,
+                  "sdg": null,
+                  "sdh": null,
+                },
+                "helpers": Object {
+                  "devtmpfs_automount": false,
+                  "distro": true,
+                  "modules_dep": true,
+                  "network": true,
+                  "updatedb_disabled": true,
+                },
+                "id": 12345,
+                "initrd": "",
+                "kernel": "linode/latest_64",
+                "label": "Test config",
+                "memory_limit": 1024,
+                "root_device": "/dev/sda",
+                "run_level": "default",
+                "updated": "2015-09-29 11:21:38 +0000",
+                "virt_mode": "paravirt",
+              },
+            },
+            "pagesFetched": Array [
+              0,
+            ],
+            "totalPages": 1,
+            "totalResults": 1,
+          },
+          "_disks": Object {
+            "disks": Object {},
+            "totalPages": 1,
+            "totalResults": 0,
+          },
+          "_ips": Object {
+            "2600:3c03::f03c:91ff:fe0a:33": Object {
+              "address": "2600:3c03::f03c:91ff:fe0a:33",
+              "gateway": "fe80::1",
+              "key": "2600:3c03::f03c:91ff:fe0a:33",
+              "linode_id": 1250,
+              "prefix": "64",
+              "rdns": "li1-1.members.linode.com",
+              "type": "slaac",
+              "version": "ipv6",
+            },
+            "97.107.143.50": Object {
+              "address": "97.107.143.50",
+              "gateway": "97.107.143.0",
+              "key": "97.107.143.50",
+              "linode_id": 1250,
+              "prefix": 24,
+              "rdns": "li1-1.members.linode.com",
+              "type": "public",
+              "version": "ipv4",
+            },
+            "97.107.143.52": Object {
+              "address": "97.107.143.52",
+              "gateway": "97.107.143.0",
+              "key": "97.107.143.52",
+              "linode_id": 1250,
+              "prefix": 17,
+              "rdns": "li1-1.members.linode.com",
+              "type": "private",
+              "version": "ipv4",
+            },
+            "fe80::f03c:91ff:fe0a:181f": Object {
+              "address": "fe80::f03c:91ff:fe0a:181f",
+              "key": "fe80::f03c:91ff:fe0a:181f",
+              "linode_id": 1250,
+              "type": "link-local",
+              "version": "ipv6",
+            },
+          },
+          "_polling": false,
+          "_shared": Array [],
+          "_stats": Object {
+            "cpu": Array [
+              Array [
+                1490378700000,
+                1.67,
+              ],
+            ],
+            "io": Object {
+              "io": Array [
+                Array [
+                  1490379000000,
+                  0.91,
+                ],
+              ],
+              "swap": Array [
+                Array [
+                  1490378100000,
+                  0,
+                ],
+              ],
+            },
+            "netv4": Object {
+              "in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+            },
+            "netv6": Object {
+              "in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_in": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+              "private_out": Array [
+                Array [
+                  1490377800000,
+                  0,
+                ],
+              ],
+            },
+          },
+          "_volumes": Object {
+            "pagesFetched": Array [
+              0,
+            ],
+            "totalPages": 1,
+            "totalResults": 1,
+            "volumes": Object {
+              "38": Object {
+                "created": "2017-08-08T13:55:16",
+                "id": 38,
+                "label": "test",
+                "linode_id": null,
+                "region": "us-east-1a",
+                "size": 20,
+                "status": "active",
+                "updated": "2017-08-08T04:00:00",
+              },
+            },
+          },
+          "alerts": Object {
+            "cpu": 90,
+            "io": 5000,
+            "network_in": 5,
+            "network_out": 5,
+            "tranfer_quota": 80,
+          },
+          "backups": Object {
+            "enabled": true,
+            "schedule": Object {
+              "day": "Monday",
+              "window": "W10",
+            },
+          },
+          "created": "2016-07-06T16:47:27",
+          "disk": 20480,
+          "group": "Test Group",
+          "hypervisor": "kvm",
+          "id": 1250,
+          "image": Object {
+            "id": "linode/ubuntu15.10",
+            "label": "Ubuntu 15.10",
+            "vendor": "Ubuntu",
+          },
+          "ipv4": Array [
+            "97.107.143.50",
+            "97.107.143.51",
+          ],
+          "ipv6": "2600:3c03::f03c:91ff:fe0a:32",
+          "label": "test-linode-no-disks",
+          "memory": 2048,
+          "region": "us-east-1a",
+          "status": "running",
+          "type": Object {
+            "_polling": false,
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2.5,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode2048.5",
+            "label": "Linode 2048",
+            "memory": 2048,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.015,
+              "monthly": 10,
+            },
+            "service_type": "linode",
+            "transfer": 2000,
+            "vcpus": 2,
+          },
+          "vcpus": 2,
+        },
       }
     }
     nodebalancers={
@@ -5264,6 +5871,14 @@ ShallowWrapper {
                           Object {
                             "label": "test-linode-1248",
                             "value": "linode_id:1248",
+                          },
+                          Object {
+                            "label": "test-linode-raw",
+                            "value": "linode_id:1249",
+                          },
+                          Object {
+                            "label": "test-linode-no-disks",
+                            "value": "linode_id:1250",
                           },
                         ],
                       },
@@ -5596,6 +6211,14 @@ ShallowWrapper {
                             "label": "test-linode-1248",
                             "value": "linode_id:1248",
                           },
+                          Object {
+                            "label": "test-linode-raw",
+                            "value": "linode_id:1249",
+                          },
+                          Object {
+                            "label": "test-linode-no-disks",
+                            "value": "linode_id:1250",
+                          },
                         ],
                       },
                       Object {
@@ -5834,6 +6457,14 @@ ShallowWrapper {
                             Object {
                               "label": "test-linode-1248",
                               "value": "linode_id:1248",
+                            },
+                            Object {
+                              "label": "test-linode-raw",
+                              "value": "linode_id:1249",
+                            },
+                            Object {
+                              "label": "test-linode-no-disks",
+                              "value": "linode_id:1250",
                             },
                           ],
                         },
@@ -6147,6 +6778,14 @@ ShallowWrapper {
                                 "label": "test-linode-1248",
                                 "value": "linode_id:1248",
                               },
+                              Object {
+                                "label": "test-linode-raw",
+                                "value": "linode_id:1249",
+                              },
+                              Object {
+                                "label": "test-linode-no-disks",
+                                "value": "linode_id:1250",
+                              },
                             ],
                           },
                           Object {
@@ -6305,6 +6944,14 @@ ShallowWrapper {
                                   "label": "test-linode-1248",
                                   "value": "linode_id:1248",
                                 },
+                                Object {
+                                  "label": "test-linode-raw",
+                                  "value": "linode_id:1249",
+                                },
+                                Object {
+                                  "label": "test-linode-no-disks",
+                                  "value": "linode_id:1250",
+                                },
                               ],
                             },
                             Object {
@@ -6441,6 +7088,14 @@ ShallowWrapper {
                               Object {
                                 "label": "test-linode-1248",
                                 "value": "linode_id:1248",
+                              },
+                              Object {
+                                "label": "test-linode-raw",
+                                "value": "linode_id:1249",
+                              },
+                              Object {
+                                "label": "test-linode-no-disks",
+                                "value": "linode_id:1250",
                               },
                             ],
                           },
@@ -6869,6 +7524,14 @@ ShallowWrapper {
                               "label": "test-linode-1248",
                               "value": "linode_id:1248",
                             },
+                            Object {
+                              "label": "test-linode-raw",
+                              "value": "linode_id:1249",
+                            },
+                            Object {
+                              "label": "test-linode-no-disks",
+                              "value": "linode_id:1250",
+                            },
                           ],
                         },
                         Object {
@@ -7200,6 +7863,14 @@ ShallowWrapper {
                               "label": "test-linode-1248",
                               "value": "linode_id:1248",
                             },
+                            Object {
+                              "label": "test-linode-raw",
+                              "value": "linode_id:1249",
+                            },
+                            Object {
+                              "label": "test-linode-no-disks",
+                              "value": "linode_id:1250",
+                            },
                           ],
                         },
                         Object {
@@ -7438,6 +8109,14 @@ ShallowWrapper {
                               Object {
                                 "label": "test-linode-1248",
                                 "value": "linode_id:1248",
+                              },
+                              Object {
+                                "label": "test-linode-raw",
+                                "value": "linode_id:1249",
+                              },
+                              Object {
+                                "label": "test-linode-no-disks",
+                                "value": "linode_id:1250",
                               },
                             ],
                           },
@@ -7751,6 +8430,14 @@ ShallowWrapper {
                                   "label": "test-linode-1248",
                                   "value": "linode_id:1248",
                                 },
+                                Object {
+                                  "label": "test-linode-raw",
+                                  "value": "linode_id:1249",
+                                },
+                                Object {
+                                  "label": "test-linode-no-disks",
+                                  "value": "linode_id:1250",
+                                },
                               ],
                             },
                             Object {
@@ -7909,6 +8596,14 @@ ShallowWrapper {
                                     "label": "test-linode-1248",
                                     "value": "linode_id:1248",
                                   },
+                                  Object {
+                                    "label": "test-linode-raw",
+                                    "value": "linode_id:1249",
+                                  },
+                                  Object {
+                                    "label": "test-linode-no-disks",
+                                    "value": "linode_id:1250",
+                                  },
                                 ],
                               },
                               Object {
@@ -8045,6 +8740,14 @@ ShallowWrapper {
                                 Object {
                                   "label": "test-linode-1248",
                                   "value": "linode_id:1248",
+                                },
+                                Object {
+                                  "label": "test-linode-raw",
+                                  "value": "linode_id:1249",
+                                },
+                                Object {
+                                  "label": "test-linode-no-disks",
+                                  "value": "linode_id:1250",
                                 },
                               ],
                             },
