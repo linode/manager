@@ -98,7 +98,7 @@ When creating a new feature:
 2. `git checkout -b my-feature-name`
 3. stage and commit changes to your feature branch
 4. `yarn lint` # to lint your code
-5. `yarn test` # to test your code, see 
+5. `yarn test` # to test your code
 6. `git push -u your-remote my-feature-name` # push to your remote and --set-upstream-to
 7. `git checkout develop` and `git pull origin develop` # make sure you're up to date
 8. `git rebase develop` or `git rebase -i develop` # rebase and cleanup your changes if desired
@@ -147,25 +147,31 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ## Testing
+This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking.
 
+### Naming
+Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`).
+
+### Commands
 To run tests:
 
     yarn test
-
-To automatically re-run tests when you make changes:
-
     yarn test:watch
-    
-To automatically re-run tests on a single test file:
 
-    yarn test:watch --single_file=**/name.spec.js
+To test a specific file or files found in a  folder:
 
-Our tests live in test/**.spec.js. They're based on
-[Mocha](https://mochajs.org/) and do assertions with
-[Chai](http://chaijs.com/) plus DOM/React testing with
-[enzyme](http://airbnb.io/enzyme/). We run them with
-[Karma](https://karma-runner.github.io/1.0/index.html).
-We're aiming for 95%+ test coverage.
+    yarn test MyFile.spec.js 
+    yarn test src/some-folder
+
+### Coverage Reporting
+We haven't assigned an artibrary coverage requirement. Coverage and testing are tools. Make good decisions.
+
+To generate a coverage report:
+
+    yarn test --coverage
+
+### Snapshot Testing
+[Snapshots](https://facebook.github.io/jest/docs/en/snapshot-testing.html) are generated and compared by Jest during testing. Any new or updated React component should include a new or updated snapshot of any important states. (ie A dropdown component may include a snapshot test of both open and closed states).
 
 ## Coding Style
 
