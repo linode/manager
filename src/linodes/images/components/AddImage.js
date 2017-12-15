@@ -85,11 +85,14 @@ export default class AddImage extends Component {
     const { description, label, linode, disk } = this.state;
     const { dispatch } = this.props;
 
-    const requests = [hideModal];
-    requests.unshift(() => imagizeLinodeDisk(linode.id || linode, disk.id || disk, {
-      label,
-      description,
-    }));
+    const requests = [
+      () => imagizeLinodeDisk(
+        linode.id || linode,
+        disk.id || disk,
+        { label, description },
+      ),
+      hideModal,
+    ];
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }

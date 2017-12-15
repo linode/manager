@@ -1,4 +1,5 @@
 import { actions } from '../generic/linodes';
+import { actions as imageActions } from '../generic/images';
 import { fetch } from '../fetch';
 
 
@@ -77,8 +78,10 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
 
 export function imagizeLinodeDisk(linodeId, diskId, data) {
   return async (dispatch) => {
-    await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/imagize`, data));
-    // TODO: fetch until complete
+    const imagizeUrl = `/linode/instances/${linodeId}/disks/${diskId}/imagize`;
+    const image = await dispatch(fetch.post(imagizeUrl, data));
+    dispatch(imageActions.one(image));
+    return image;
   };
 }
 
