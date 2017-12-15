@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 import { Button } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
-import { FormGroup, Input } from 'linode-components';
+import { FormGroup, Input, Select } from 'linode-components';
 import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
