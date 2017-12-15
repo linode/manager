@@ -96,7 +96,7 @@ function renderBanners(banners, linodeId) {
 export default function Banners(props) {
   const { banners, params, linodes } = props;
   if (!banners.length) {
-    return;
+    return null;
   }
   const linodeId = getLinodeId(linodes, params);
 
