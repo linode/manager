@@ -132,9 +132,9 @@ export default class AddImage extends Component {
         input field. This indicates to the customer that they could choose
         disks if they modify their Linode's config.
       */
-      : <Input value="" disabled />;
+      : <Input name="disk" value="None" disabled />;
     const helpText = (diskOptions.length === 0 && (rawDisks.length > 0 || swapDisks.length > 0)) ?
-      <small className="text-muted">
+      <small id="help-raw" className="text-muted">
         Cannot create images from raw disks or swap volumes.
       </small>
       : null;

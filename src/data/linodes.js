@@ -504,6 +504,35 @@ export const testLinode1248 = {
   status: 'provisioning',
 };
 
+export const testLinodeWithRawDisk = {
+  ...createTestLinode(1249),
+  label: 'test-linode-raw',
+  _disks: {
+    totalResults: 1,
+    totalPages: 1,
+    disks: {
+      12345: {
+        id: 12345,
+        size: 6144,
+        created: '2016-08-09T19:47:11',
+        updated: '2016-08-09T19:47:11',
+        filesystem: 'raw',
+        label: 'Raw Disk',
+      },
+    },
+  },
+};
+
+export const testLinodeWithNoDisks = {
+  ...createTestLinode(1250),
+  label: 'test-linode-no-disks',
+  _disks: {
+    totalResults: 0,
+    totalPages: 1,
+    disks: {},
+  },
+};
+
 export const linodes = [
   testLinode,
   testLinode1233,
@@ -520,4 +549,6 @@ export const linodes = [
   testLinode1246,
   testLinode1247,
   testLinode1248,
+  testLinodeWithRawDisk,
+  testLinodeWithNoDisks,
 ].reduce((object, linode) => ({ ...object, [linode.id]: linode }), {});
