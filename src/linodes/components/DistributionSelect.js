@@ -11,8 +11,9 @@ import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 export default function DistributionSelect(props) {
   const vendorsOrdered = [...DISTRIBUTION_DISPLAY_ORDER];
 
+  const imageFilter = im => im.status === 'available';
   const imageOptions = props.images !== undefined ?
-    _.map(Object.values(props.images), im => {
+    _.map(Object.values(props.images).filter(imageFilter), im => {
       const image = { ...im };
       // ensure that each image has a vendor
       if (!image.vendor) {
