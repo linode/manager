@@ -8,5 +8,11 @@
         "coverage",
         "node_modules",
         "exclude"
-    ]
+    ],
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "~/*": ["*"]
+        }
+    }
 }
