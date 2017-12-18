@@ -10,6 +10,7 @@ import { kernels } from './kernels';
 import { domains } from './domains';
 import { nodebalancers } from './nodebalancers';
 import { events } from './events';
+import { banners } from './banners';
 import { clients } from './clients';
 import { tokens } from './tokens';
 import { apps } from './apps';
@@ -65,6 +66,7 @@ export const api = fakeAPI([
   [domains, 'domain', 'domains'],
   [nodebalancers, 'nodebalancer', 'nodebalancers'],
   [events, 'event', 'events'],
+  [banners, 'banner', 'banners'],
   [clients, 'client', 'clients'],
   [tokens, 'token', 'tokens'],
   [apps, 'apps', 'apps'],

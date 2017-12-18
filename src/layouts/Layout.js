@@ -12,6 +12,7 @@ import { hideSession } from '~/actions/session';
 import api from '~/api';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
+import Banners from '~/components/Banners';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import SessionMenu from '~/components/SessionMenu';
 import { VERSION } from '~/constants';
@@ -25,6 +26,7 @@ export class Layout extends Component {
   static async preload({ dispatch, getState }) {
     if (!Object.keys(getState().api.profile).length) {
       await dispatch(api.profile.one());
+      await dispatch(api.banners.one());
       // Needed for time display component that is not attached to Redux.
       const { timezone } = getState().api.profile;
       setStorage('profile/timezone', timezone);
@@ -43,6 +45,7 @@ export class Layout extends Component {
       email,
       errors,
       notifications,
+      banners,
       session,
       events,
       source,
@@ -51,6 +54,8 @@ export class Layout extends Component {
     const { title, link } = this.state;
     const version = VERSION ? `v${VERSION}` : 'master';
     const githubRoot = `https://github.com/linode/manager/blob/${version}/`;
+    const params = this.props.params;
+    const linodes = this.props.linodes;
 
     return (
       <div
@@ -89,6 +94,11 @@ export class Layout extends Component {
             events={events}
           />
           <div className="Main">
+            <Banners
+              params={params}
+              linodes={linodes}
+              banners={banners}
+            />
             {errors.status ?
               <Error status={errors.status} /> :
               this.props.children}
@@ -113,12 +123,14 @@ Layout.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
   children: PropTypes.node.isRequired,
+  params: PropTypes.object,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   source: PropTypes.object,
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
+  banners: PropTypes.array,
   session: PropTypes.object,
   events: PropTypes.object,
 };
@@ -132,6 +144,7 @@ function select(state) {
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
+    banners: state.api.banners.data,
     session: state.session,
     events: state.api.events,
   };
