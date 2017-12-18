@@ -122,7 +122,7 @@ export default class StatusDropdown extends Component {
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
         onSubmit={() => {
-          dispatch(onConfirm());
+          onConfirm();
           dispatch(hideModal());
         }}
         analytics={{ title }}
@@ -152,14 +152,21 @@ export default class StatusDropdown extends Component {
     this.setState({ open: !this.state.open });
   };
 
-  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
-  powerOnLinode = () => this.selectConfig(powerOnLinode)
+  powerOffLinode = () => this.confirmAction('Power Off',
+    () => this.props.dispatch(powerOffLinode(this.props.linode.id)));
+  powerOnLinode = () => this.selectConfig(powerOnLinode);
+  rebootLinode = () => this.confirmAction('Reboot',
+    () => this.selectConfig(rebootLinode));
 
-  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-
-  selectConfig = (callback) => {
+  selectConfig = async (callback) => {
     const { linode, dispatch } = this.props;
-    const configs = linode._configs.configs;
+
+    let configs = linode._configs.configs;
+    if (_.isEmpty(configs)) {
+      const res = await dispatch(api.linodes.configs.all([linode.id]));
+      linode._configs = res;
+      configs = res.configs;
+    }
     const configCount = Object.keys(configs).length;
 
     if (configCount === 1) {
@@ -170,7 +177,6 @@ export default class StatusDropdown extends Component {
     }
 
     const title = 'Select Configuration Profile';
-
     return dispatch(showModal(title, (
       <ConfigSelectModalBody
         linode={linode}
