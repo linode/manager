@@ -85,7 +85,7 @@ export default class StatusDropdown extends Component {
   }
 
   componentWillReceiveProps() {
-    if ((Date.now() - this.state.lastErrorTime) > 2000) {
+    if ((Date.now() - this.state.lastErrorTime) > 3000) {
       this.setState({ errors: { _: {} } });
     }
   }
