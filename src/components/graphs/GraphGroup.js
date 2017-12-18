@@ -124,7 +124,7 @@ export class GraphGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { displayMode: 'small' };
+    this.state = {};
 
     this.onChange = onChange.bind(this);
   }
@@ -145,15 +145,12 @@ export class GraphGroup extends Component {
 
   render() {
     const { timezone, allGraphData } = this.props;
-    const { displayMode } = this.state;
 
     const graphs = allGraphData.map((data) => {
       const currentUnit = this.state[data.title] || 0;
 
-      const className = displayMode === 'big' ? 'col-sm-12' : 'col-sm-6';
-
       return (
-        <div key={data.title} className={`GraphGroup-graph ${className}`}>
+        <div key={data.title} className="GraphGroup-graph col-sm-12">
           <div className="Menu">
             <div className="Menu-item"><h4>{data.title}</h4></div>
             {!data.units ? null : (
@@ -169,18 +166,6 @@ export class GraphGroup extends Component {
 
     return (
       <div className="GraphGroup">
-        <div className="Menu">
-          <div className="Menu-item Menu-item--right">Last 24 Hours</div>
-          <div className="Menu-item Menu-item--right">
-            <label className="Menu-itemLabel">Display:</label>
-            <Select
-              value={displayMode}
-              name="displayMode"
-              onChange={this.onChange}
-              options={[{ label: '2 x 2', value: 'small' }, { label: '1 x 4', value: 'big' }]}
-            />
-          </div>
-        </div>
         <div className="row">{graphs}</div>
       </div>
     );
