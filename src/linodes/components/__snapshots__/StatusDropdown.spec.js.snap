@@ -291,175 +291,9 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
-        <Dropdown
-          analytics={
-            Object {
-              "title": "Linode actions",
-            }
-          }
-          dropdownIcon="fa-caret-down"
-          duplicateFirst={false}
-          groups={
-            Array [
-              Object {
-                "elements": Array [
-                  Object {
-                    "name": "Offline",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Power On",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Launch Console",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Delete",
-                  },
-                ],
-              },
-            ]
-          }
-        />,
         <div
-          className="StatusDropdown-container"
+          className="StatusDropdown StatusDropdown--dropdown"
         >
-          <div
-            className="StatusDropdown-progress "
-            style={
-              Object {
-                "width": "calc(undefined% + 1px)",
-              }
-            }
-          />
-        </div>,
-        <FormGroup
-          className=""
-          errors={undefined}
-          name="config_id"
-        />,
-      ],
-      "className": "StatusDropdown StatusDropdown--dropdown",
-    },
-    "ref": null,
-    "rendered": Array [
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "class",
-        "props": Object {
-          "analytics": Object {
-            "title": "Linode actions",
-          },
-          "dropdownIcon": "fa-caret-down",
-          "duplicateFirst": false,
-          "groups": Array [
-            Object {
-              "elements": Array [
-                Object {
-                  "name": "Offline",
-                },
-              ],
-            },
-            Object {
-              "elements": Array [
-                Object {
-                  "action": [Function],
-                  "name": "Power On",
-                },
-              ],
-            },
-            Object {
-              "elements": Array [
-                Object {
-                  "action": [Function],
-                  "name": "Launch Console",
-                },
-              ],
-            },
-            Object {
-              "elements": Array [
-                Object {
-                  "action": [Function],
-                  "name": "Delete",
-                },
-              ],
-            },
-          ],
-        },
-        "ref": null,
-        "rendered": null,
-        "type": [Function],
-      },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {
-          "children": <div
-            className="StatusDropdown-progress "
-            style={
-              Object {
-                "width": "calc(undefined% + 1px)",
-              }
-            }
-          />,
-          "className": "StatusDropdown-container",
-        },
-        "ref": null,
-        "rendered": Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "className": "StatusDropdown-progress ",
-            "style": Object {
-              "width": "calc(undefined% + 1px)",
-            },
-          },
-          "ref": null,
-          "rendered": null,
-          "type": "div",
-        },
-        "type": "div",
-      },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "className": "",
-          "errors": undefined,
-          "name": "config_id",
-        },
-        "ref": null,
-        "rendered": null,
-        "type": [Function],
-      },
-    ],
-    "type": "div",
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": Array [
           <Dropdown
             analytics={
               Object {
@@ -489,6 +323,14 @@ ShallowWrapper {
                   "elements": Array [
                     Object {
                       "action": [Function],
+                      "name": "Power On",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
                       "name": "Launch Console",
                     },
                   ],
@@ -503,7 +345,7 @@ ShallowWrapper {
                 },
               ]
             }
-          />,
+          />
           <div
             className="StatusDropdown-container"
           >
@@ -515,110 +357,430 @@ ShallowWrapper {
                 }
               }
             />
-          </div>,
-          <FormGroup
-            className=""
-            errors={undefined}
-            name="config_id"
-          />,
+          </div>
+        </div>,
+        false,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <Dropdown
+              analytics={
+                Object {
+                  "title": "Linode actions",
+                }
+              }
+              dropdownIcon="fa-caret-down"
+              duplicateFirst={false}
+              groups={
+                Array [
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "name": "Offline",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Launch Console",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Delete",
+                      },
+                    ],
+                  },
+                ]
+              }
+            />,
+            <div
+              className="StatusDropdown-container"
+            >
+              <div
+                className="StatusDropdown-progress "
+                style={
+                  Object {
+                    "width": "calc(undefined% + 1px)",
+                  }
+                }
+              />
+            </div>,
+          ],
+          "className": "StatusDropdown StatusDropdown--dropdown",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "class",
+            "props": Object {
+              "analytics": Object {
+                "title": "Linode actions",
+              },
+              "dropdownIcon": "fa-caret-down",
+              "duplicateFirst": false,
+              "groups": Array [
+                Object {
+                  "elements": Array [
+                    Object {
+                      "name": "Offline",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
+                      "name": "Power On",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
+                      "name": "Power On",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
+                      "name": "Launch Console",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
+                      "name": "Delete",
+                    },
+                  ],
+                },
+              ],
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <div
+                className="StatusDropdown-progress "
+                style={
+                  Object {
+                    "width": "calc(undefined% + 1px)",
+                  }
+                }
+              />,
+              "className": "StatusDropdown-container",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "className": "StatusDropdown-progress ",
+                "style": Object {
+                  "width": "calc(undefined% + 1px)",
+                },
+              },
+              "ref": null,
+              "rendered": null,
+              "type": "div",
+            },
+            "type": "div",
+          },
         ],
-        "className": "StatusDropdown StatusDropdown--dropdown",
+        "type": "div",
+      },
+      false,
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <div
+            className="StatusDropdown StatusDropdown--dropdown"
+          >
+            <Dropdown
+              analytics={
+                Object {
+                  "title": "Linode actions",
+                }
+              }
+              dropdownIcon="fa-caret-down"
+              duplicateFirst={false}
+              groups={
+                Array [
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "name": "Offline",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Launch Console",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Delete",
+                      },
+                    ],
+                  },
+                ]
+              }
+            />
+            <div
+              className="StatusDropdown-container"
+            >
+              <div
+                className="StatusDropdown-progress "
+                style={
+                  Object {
+                    "width": "calc(undefined% + 1px)",
+                  }
+                }
+              />
+            </div>
+          </div>,
+          false,
+        ],
       },
       "ref": null,
       "rendered": Array [
         Object {
           "instance": null,
           "key": undefined,
-          "nodeType": "class",
-          "props": Object {
-            "analytics": Object {
-              "title": "Linode actions",
-            },
-            "dropdownIcon": "fa-caret-down",
-            "duplicateFirst": false,
-            "groups": Array [
-              Object {
-                "elements": Array [
-                  Object {
-                    "name": "Offline",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Power On",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Launch Console",
-                  },
-                ],
-              },
-              Object {
-                "elements": Array [
-                  Object {
-                    "action": [Function],
-                    "name": "Delete",
-                  },
-                ],
-              },
-            ],
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
           "nodeType": "host",
           "props": Object {
-            "children": <div
-              className="StatusDropdown-progress "
-              style={
-                Object {
-                  "width": "calc(undefined% + 1px)",
+            "children": Array [
+              <Dropdown
+                analytics={
+                  Object {
+                    "title": "Linode actions",
+                  }
                 }
-              }
-            />,
-            "className": "StatusDropdown-container",
+                dropdownIcon="fa-caret-down"
+                duplicateFirst={false}
+                groups={
+                  Array [
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "name": "Offline",
+                        },
+                      ],
+                    },
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "action": [Function],
+                          "name": "Power On",
+                        },
+                      ],
+                    },
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "action": [Function],
+                          "name": "Power On",
+                        },
+                      ],
+                    },
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "action": [Function],
+                          "name": "Launch Console",
+                        },
+                      ],
+                    },
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "action": [Function],
+                          "name": "Delete",
+                        },
+                      ],
+                    },
+                  ]
+                }
+              />,
+              <div
+                className="StatusDropdown-container"
+              >
+                <div
+                  className="StatusDropdown-progress "
+                  style={
+                    Object {
+                      "width": "calc(undefined% + 1px)",
+                    }
+                  }
+                />
+              </div>,
+            ],
+            "className": "StatusDropdown StatusDropdown--dropdown",
           },
           "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "className": "StatusDropdown-progress ",
-              "style": Object {
-                "width": "calc(undefined% + 1px)",
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "class",
+              "props": Object {
+                "analytics": Object {
+                  "title": "Linode actions",
+                },
+                "dropdownIcon": "fa-caret-down",
+                "duplicateFirst": false,
+                "groups": Array [
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "name": "Offline",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Launch Console",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Delete",
+                      },
+                    ],
+                  },
+                ],
               },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
             },
-            "ref": null,
-            "rendered": null,
-            "type": "div",
-          },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <div
+                  className="StatusDropdown-progress "
+                  style={
+                    Object {
+                      "width": "calc(undefined% + 1px)",
+                    }
+                  }
+                />,
+                "className": "StatusDropdown-container",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "className": "StatusDropdown-progress ",
+                  "style": Object {
+                    "width": "calc(undefined% + 1px)",
+                  },
+                },
+                "ref": null,
+                "rendered": null,
+                "type": "div",
+              },
+              "type": "div",
+            },
+          ],
           "type": "div",
         },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "className": "",
-            "errors": undefined,
-            "name": "config_id",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
+        false,
       ],
       "type": "div",
     },

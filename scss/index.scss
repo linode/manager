@@ -1,0 +1,46 @@
+@mixin keyframes( $animation-name )
+{
+    @-webkit-keyframes #{$animation-name} {
+        @content;
+    }
+    @-moz-keyframes #{$animation-name} {
+        @content;
+    }
+    @-o-keyframes #{$animation-name} {
+        @content;
+    }
+    @keyframes #{$animation-name} {
+        @content;
+    }
+}
+
+@mixin animation($str) {
+    -webkit-animation: #{$str};
+    -moz-animation: #{$str};
+    -ms-animation: #{$str};
+    -o-animation: #{$str};
+    animation: #{$str};      
+  }
+
+@include keyframes(height-pulse) {
+    0% {
+        overflow: hidden;
+        opacity: 0;
+        height: 0;
+    }
+    68% {
+        overflow: hidden;
+        height: 100%;
+        opacity: 1;
+       
+    }
+    100% {
+        overflow: hidden;
+        height: 0;
+        opacity: 0;
+    }
+}
+
+.height-pulse {
+    @include animation('height-pulse 3s 1 forwards');
+}
