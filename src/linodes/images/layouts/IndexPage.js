@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+import filter from 'lodash/filter';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import { List } from 'linode-components';
@@ -149,7 +150,7 @@ export class IndexPage extends Component {
                 headerClassName: 'StatusColumn',
                 titleKey: 'status',
                 label: 'Status',
-                dataFn: (image) => _.capitalize(image.status),
+                dataFn: (image) => capitalize(image.status),
               },
               { cellComponent: this.renderImageActions },
             ]}
@@ -183,7 +184,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(images.images).length ?
-            this.renderImages(_.filter(images.images, i => !i.is_public)) :
+            this.renderImages(filter(images.images, i => !i.is_public)) :
             <CreateHelper
               label="Images"
               onClick={() => AddImage.trigger(dispatch, linodes)}

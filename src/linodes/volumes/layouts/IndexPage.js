@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import omitBy from 'lodash/omitBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -32,7 +32,7 @@ export class IndexPage extends Component {
     const { dispatch, linodes, volumes: allVolumes, selectedMap } = this.props;
 
     // Hack because the API is currently returning deleted volumes.
-    const volumes = _.omitBy(allVolumes.volumes, v => v.status === 'deleted');
+    const volumes = omitBy(allVolumes.volumes, v => v.status === 'deleted');
 
     return (
       <div className="PrimaryPage container">

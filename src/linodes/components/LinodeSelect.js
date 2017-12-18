@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -33,7 +33,7 @@ export default function LinodeSelect(props) {
 LinodeSelect.EMPTY = '-- None --';
 
 LinodeSelect.propTypes = {
-  ..._.omit(Select.propTypes, 'options'),
+  ...omit(Select.propTypes, 'options'),
   linodes: PropTypes.object.isRequired,
   thisLinode: PropTypes.object,
   allowNone: PropTypes.bool,

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router';
@@ -132,7 +132,7 @@ export default class AddEditVolume extends Component {
     const existingVolume = !!volume;
     const showLinodeConfigs = !existingVolume && (configs.length !== 1);
 
-    const filteredLinodes = _.pickBy(linodes,
+    const filteredLinodes = pickBy(linodes,
       linode => linode.region === region
     );
 

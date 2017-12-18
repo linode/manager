@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -79,13 +79,13 @@ export class DashboardPage extends Component {
                 {
                   dataKey: 'mode',
                   label: 'Mode',
-                  formatFn: _.capitalize,
+                  formatFn: capitalize,
                   headerClassName: 'ModeColumn',
                 },
                 {
                   dataKey: 'status',
                   label: 'Status',
-                  formatFn: _.capitalize,
+                  formatFn: capitalize,
                   headerClassName: 'ModeColumn',
                 },
                 {

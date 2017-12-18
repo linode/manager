@@ -1,4 +1,7 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -72,9 +75,9 @@ export class IndexPage extends Component {
       closed: 'Closed',
     };
 
-    const groups = _.map(
-      _.groupBy(
-        _.sortBy(Object.values(tickets), ticket => new Date(ticket.created)).reverse(),
+    const groups = map(
+      groupBy(
+        sortBy(Object.values(tickets), ticket => new Date(ticket.created)).reverse(),
         ({ status }) => statusFormat[status]),
       (_tickets, _group) => ({
         name: _group,

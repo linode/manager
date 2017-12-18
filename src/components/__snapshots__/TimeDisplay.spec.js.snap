@@ -19,11 +19,11 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "host",
     "props": Object {
-      "children": "8 months ago",
+      "children": "9 months ago",
       "title": "Mar 30 2017 4:48 PM UTC",
     },
     "ref": null,
-    "rendered": "8 months ago",
+    "rendered": "9 months ago",
     "type": "span",
   },
   Symbol(enzyme.__nodes__): Array [
@@ -32,11 +32,11 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "host",
       "props": Object {
-        "children": "8 months ago",
+        "children": "9 months ago",
         "title": "Mar 30 2017 4:48 PM UTC",
       },
       "ref": null,
-      "rendered": "8 months ago",
+      "rendered": "9 months ago",
       "type": "span",
     },
   ],

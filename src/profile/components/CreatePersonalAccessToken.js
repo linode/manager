@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -16,7 +16,7 @@ import { formatScope } from '../utilities';
 
 
 export function renderSecret(label, verb, secret, close) {
-  const title = [...label.split(' '), verb].map(_.capitalize).join(' ');
+  const title = [...label.split(' '), verb].map(capitalize).join(' ');
   return showModal(title,
     <FormModalBody
       onSubmit={close}
@@ -98,7 +98,7 @@ export default class CreatePersonalAccessToken extends Component {
           onChange={this.onChange}
           options={['No Access', ...OAUTH_SUBSCOPES].map(value => ({
             value,
-            label: `${_.capitalize(value)}${value === 'delete' ? ' (All Access)' : ''}`,
+            label: `${capitalize(value)}${value === 'delete' ? ' (All Access)' : ''}`,
           }))}
         />
       </ModalFormGroup>

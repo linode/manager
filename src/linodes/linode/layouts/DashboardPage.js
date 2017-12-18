@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import range from 'lodash/range';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -220,7 +220,7 @@ export class DashboardPage extends Component {
     const { year, month } = this.state;
     const { timezone, linode: { _stats: stats }, linode } = this.props;
     const created = new Date(linode.created).getFullYear();
-    const years = _.range(created, new Date().getFullYear() + 1).map(
+    const years = range(created, new Date().getFullYear() + 1).map(
       (year) => ({ value: year, label: year })
     );
     const months = ['Last 24', 'Jan', 'Feb', 'Mar', 'Apr', 'May',

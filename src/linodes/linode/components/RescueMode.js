@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -30,7 +30,7 @@ export default class RescueMode extends Component {
   componentWillMount() {
     // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
     const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
-    const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
+    const sortedDisks = sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
     const someDisks = sortedDisks.slice(0, slots.length - 0);
     const devices = someDisks.reduce(function (devices, disk, index) {
       return { ...devices, [slots[index]]: JSON.stringify({ disk_id: disk.id }) };

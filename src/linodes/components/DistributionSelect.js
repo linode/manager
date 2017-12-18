@@ -1,4 +1,9 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import map from 'lodash/map';
+import lowerCase from 'lodash/lowerCase';
+import orderBy from 'lodash/orderBy';
+import groupBy from 'lodash/groupBy';
+
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -13,13 +18,13 @@ export default function DistributionSelect(props) {
 
   const imageFilter = im => im.status === 'available';
   const imageOptions = props.images !== undefined ?
-    _.map(Object.values(props.images).filter(imageFilter), im => {
+    map(Object.values(props.images).filter(imageFilter), im => {
       const image = { ...im };
       // ensure that each image has a vendor
       if (!image.vendor) {
         image.vendor = 'Images';
       }
-      image.vendorLower = _.lowerCase(image.vendor);
+      image.vendorLower = lowerCase(image.vendor);
       // add the value prop for the sake of the Select
       image.value = image.id;
       // add the image's vendor to the order array if it's not already there
@@ -32,11 +37,11 @@ export default function DistributionSelect(props) {
   // user created images are always displayed last
   vendorsOrdered.push('images');
 
-  const vendoredOptions = _.map(
-    _.groupBy(imageOptions, 'vendorLower'),
+  const vendoredOptions = map(
+    groupBy(imageOptions, 'vendorLower'),
     (vendorOptions) => ({
       label: vendorOptions[0].vendor,
-      options: _.orderBy(vendorOptions, ['recommended', 'created'], ['desc', 'desc']),
+      options: orderBy(vendorOptions, ['recommended', 'created'], ['desc', 'desc']),
     })
   );
 
@@ -47,7 +52,7 @@ export default function DistributionSelect(props) {
   }
 
   for (const vendorName of vendorsOrdered) {
-    const byName = vendoredOptions.find(v => _.lowerCase(v.label) === vendorName);
+    const byName = vendoredOptions.find(v => lowerCase(v.label) === vendorName);
 
     if (byName) {
       options.push(byName);
@@ -70,7 +75,7 @@ export default function DistributionSelect(props) {
 }
 
 DistributionSelect.propTypes = {
-  ..._.omit(Select.propTypes, 'options'),
+  ...omit(Select.propTypes, 'options'),
   images: PropTypes.object.isRequired,
   allowNone: PropTypes.bool,
   options: PropTypes.array,

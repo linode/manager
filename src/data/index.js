@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import range from 'lodash/range';
 import reducer from '~/reducers';
 import deepFreeze from 'deep-freeze';
 
@@ -37,7 +37,7 @@ export function fakeAPIStore(data, singular, plural, totalResults = 0, totalPage
   return {
     totalPages: calculatedTotalPages,
     totalResults: calculatedTotalResults,
-    pagesFetched: _.range(1, totalPages),
+    pagesFetched: range(1, totalPages),
     singular,
     plural,
     ids,

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -58,7 +58,7 @@ export class IndexPage extends Component {
       return 'Has Errors';
     }
 
-    return _.capitalize(s);
+    return capitalize(s);
   }
 
   /**
@@ -113,7 +113,7 @@ export class IndexPage extends Component {
                       hrefFn: (zone) => `/domains/${zone.domain}`, textKey: 'domain',
                       tooltipEnabled: true,
                     },
-                    { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'type', formatFn: capitalize },
                     { dataKey: 'status', formatFn: this.formatStatus },
                     {
                       cellComponent: ButtonCell,
