@@ -1,4 +1,12 @@
-import _ from 'lodash';
+import isFunction from 'lodash/isFunction';
+import map from 'lodash/map';
+import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
+import flatten from 'lodash/flatten';
+import pickBy from 'lodash/pickBy';
+
 import moment from 'moment';
 
 import api from './';
@@ -157,12 +165,12 @@ export function valueify(object, keys = []) {
     return [];
   }
 
-  if (_.isArray(object)) {
-    return _.flatten(object.map((o, i) => valueify(o, [...keys, i])));
+  if (isArray(object)) {
+    return flatten(object.map((o, i) => valueify(o, [...keys, i])));
   }
 
-  if (_.isObject(object)) {
-    return _.flatten(Object.keys(object).map(key =>
+  if (isObject(object)) {
+    return flatten(Object.keys(object).map(key =>
       valueify(object[key], [...keys, key])));
   }
 
@@ -173,27 +181,27 @@ export function transform(objects, options = {}) {
   const {
     filterBy = '',
     filterOn = 'label',
-    sortBy = o => o[filterOn].toLowerCase(),
+    sortByFn = o => o[filterOn].toLowerCase(),
     groupOn = 'group',
     smartFilter = true,
   } = options;
 
   let filterOnFn = (o) => valueify(o).join('*');
   if (!smartFilter) {
-    if (_.isFunction(filterOn)) {
+    if (isFunction(filterOn)) {
       filterOnFn = filterOn;
     } else {
       filterOnFn = o => o[filterOn];
     }
   }
 
-  const filtered = filterBy.length ? _.pickBy(objects, o =>
+  const filtered = filterBy.length ? pickBy(objects, o =>
     filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
-  const sorted = _.sortBy(Object.values(filtered), sortBy);
+  const sorted = sortBy(Object.values(filtered), sortByFn);
 
-  const groupOnFn = _.isFunction(groupOn) ? groupOn : o => o[groupOn];
-  let groups = _.sortBy(
-    _.map(_.groupBy(sorted, groupOnFn), (objectsInGroup, groupName) => ({
+  const groupOnFn = isFunction(groupOn) ? groupOn : o => o[groupOn];
+  let groups = sortBy(
+    map(groupBy(sorted, groupOnFn), (objectsInGroup, groupName) => ({
       name: groupName,
       data: objectsInGroup,
     })), group => group.name);

@@ -1,4 +1,7 @@
-import _ from 'lodash';
+import isArray from 'lodash/isArray';
+import reduce from 'lodash/reduce';
+import isNaN from 'lodash/isNaN';
+import omit from 'lodash/omit';
 
 export const ONE = 'ONE';
 export const PUT = 'PUT';
@@ -31,7 +34,7 @@ function fullyQualified(resource) {
 }
 
 function parseIntIfActualInt(string) {
-  if (_.isArray(string)) {
+  if (isArray(string)) {
     // eslint-disable-next-line no-console
     console.error('You sent a list of lists rather than a list of ids.');
   }
@@ -107,7 +110,7 @@ export function generateDefaultStateFull(config) {
 }
 
 export function generateDefaultStateOne(config, one) {
-  const subresources = _.reduce(
+  const subresources = reduce(
     config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
       ...accumulated,
       [subresourceName]: { ...generateDefaultStateFull(subresourceConfig) },
@@ -121,7 +124,7 @@ export class ReducerGenerator {
       return { ...oldStateMany, ...action.resource };
     }
 
-    const nonNanActionIds = (action.ids || []).filter(i => !_.isNaN(i));
+    const nonNanActionIds = (action.ids || []).filter(i => !isNaN(i));
     const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
       action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
@@ -184,7 +187,7 @@ export class ReducerGenerator {
 
   static del(config, state, action) {
     const id = action.ids[action.ids.length - 1];
-    const newMany = _.omit(state[config.plural], id);
+    const newMany = omit(state[config.plural], id);
     return {
       ...state,
       ids: Object.values(newMany).map(({ id }) => id),

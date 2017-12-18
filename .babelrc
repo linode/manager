@@ -19,5 +19,8 @@
     "development": {
       "presets": ["react-hmre"]
     }
-  }
+  },
+  "ignore": [
+    "**/node_modules/**"
+  ]
 }

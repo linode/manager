@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import find from 'lodash/find';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
@@ -162,7 +164,7 @@ export default class StatusDropdown extends Component {
     const { linode, dispatch } = this.props;
 
     let configs = linode._configs.configs;
-    if (_.isEmpty(configs)) {
+    if (isEmpty(configs)) {
       const res = await dispatch(api.linodes.configs.all([linode.id]));
       linode._configs = res;
       configs = res.configs;
@@ -203,7 +205,7 @@ export default class StatusDropdown extends Component {
     const status = linode.status;
     // we always show the current status
     const finalGroups = [{ elements: [
-      { name: LinodeStatesReadable[status] || _.capitalize(status) },
+      { name: LinodeStatesReadable[status] || capitalize(status) },
     ] }];
     const transitionStates = [
       'shutting_down',
@@ -215,7 +217,7 @@ export default class StatusDropdown extends Component {
       'migrating',
     ];
     // don't allow power actions in a transition state
-    if (!(_.find(transitionStates, el => el === status))) {
+    if (!(find(transitionStates, el => el === status))) {
       if (status !== 'offline') {
         finalGroups.push({ elements: [
           { name: 'Reboot', action: this.rebootLinode },

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -95,7 +95,7 @@ export default class AttachVolume extends Component {
       this.setState({ config });
     }
 
-    const filteredLinodes = _.pickBy(linodes, linode => linode.region === volume.region);
+    const filteredLinodes = pickBy(linodes, linode => linode.region === volume.region);
 
     return (
       <FormModalBody

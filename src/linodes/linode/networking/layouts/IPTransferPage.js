@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -90,7 +90,7 @@ export class IPTransferPage extends Component {
 
   otherLinodes() {
     const { linodes, linode } = this.props;
-    return Object.values(_.pickBy(linodes, l => l.region === linode.region))
+    return Object.values(pickBy(linodes, l => l.region === linode.region))
       .filter(l => l.id !== linode.id);
   }
 

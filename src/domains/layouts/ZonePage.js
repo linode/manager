@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import groupBy from 'lodash/groupBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -65,7 +65,7 @@ function select(state, ownProps) {
   if (domain) {
     domain = {
       ...domain,
-      _groupedRecords: _.groupBy(domain._records.records, 'type'),
+      _groupedRecords: groupBy(domain._records.records, 'type'),
     };
   }
   return { domain };

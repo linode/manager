@@ -12,7 +12,8 @@ import {
   SubmitButton,
 } from 'linode-components';
 import { onChange } from 'linode-components';
-import { sortBy, find } from 'lodash';
+import sortBy from 'lodash/sortBy';
+import find from 'lodash/find';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 

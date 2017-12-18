@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -240,7 +240,7 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
-  const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
+  const linodes = pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const images = state.api.images.images;
   const types = state.api.types.types;
   const transfer = state.api.account._transferpool;
