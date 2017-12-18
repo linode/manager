@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -5,7 +6,8 @@ import { Link } from 'react-router';
 
 import { Button } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
-import { FormGroup, Input } from 'linode-components';
+import { FormGroup, Input, Select } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
@@ -41,9 +43,52 @@ export class DashboardPage extends Component {
     }
   }
 
+  constructor() {
+    super();
+
+    this.state = {
+      year: new Date().getFullYear().toString(),
+      month: '0',
+    };
+
+    this.onChange = onChange.bind(this);
+  }
+
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
+  }
+
+  async updateStats(year, month) {
+    const { dispatch, linode } = this.props;
+    if (month !== '0') {
+      await dispatch(linodeStats(linode.id, year, month));
+    } else {
+      await dispatch(linodeStats(linode.id));
+    }
+  }
+
+  monthOnChange = async (event) => {
+    const { target: { value } } = event;
+    if (value === '0') {
+      this.setState({ year: new Date().getFullYear().toString() });
+    }
+
+    const { year } = this.state;
+    await this.updateStats(year, value);
+    this.setState({ month: value });
+  }
+
+  yearOnChange = async (event) => {
+    const { target: { value } } = event;
+    let { month } = this.state;
+
+    if (value !== new Date().getFullYear().toString() && month === '0') {
+      month = 1;
+    }
+
+    await this.updateStats(value, month);
+    this.setState({ month: month, year: value });
   }
 
   renderDetails() {
@@ -172,7 +217,16 @@ export class DashboardPage extends Component {
   }
 
   renderGraphs() {
-    const { timezone, linode: { _stats: stats } } = this.props;
+    const { year, month } = this.state;
+    const { timezone, linode: { _stats: stats }, linode } = this.props;
+    const created = new Date(linode.created).getFullYear();
+    const years = _.range(created, new Date().getFullYear() + 1).map(
+      (year) => ({ value: year, label: year })
+    );
+    const months = ['Last 24', 'Jan', 'Feb', 'Mar', 'Apr', 'May',
+      'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(
+      (month, i) => ({ value: i, label: month })
+    );
 
     let body = <p>No graphs are available.</p>;
     if (stats) {
@@ -185,8 +239,27 @@ export class DashboardPage extends Component {
       body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
     }
 
+    const nav = (
+      <div className="GraphGroup-graph">
+        <Select
+          className="Select Select--native form-control"
+          name="year"
+          value={year}
+          options={years}
+          onChange={this.yearOnChange}
+        />
+        <Select
+          className="Select Select--native form-control"
+          name="month"
+          value={month}
+          options={months}
+          onChange={this.monthOnChange}
+        />
+      </div>
+    );
+
     return (
-      <Card header={<CardHeader title="Graphs" />} className="graphs">
+      <Card header={<CardHeader title="Graphs" nav={nav} />} className="graphs">
         {body}
       </Card>
     );

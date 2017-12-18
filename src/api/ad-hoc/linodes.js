@@ -97,9 +97,11 @@ export function linodeBackups(linodeId) {
   };
 }
 
-export function linodeStats(linodeId) {
+export function linodeStats(linodeId, year, month) {
   return async (dispatch) => {
-    const { data: _stats } = await dispatch(fetch.get(`/linode/instances/${linodeId}/stats`));
+    const path = year && month ? `/linode/instances/${linodeId}/stats/${year}/${month}` :
+      `/linode/instances/${linodeId}/stats`;
+    const { data: _stats } = await dispatch(fetch.get(path));
     dispatch(actions.one({ _stats }, linodeId));
   };
 }
