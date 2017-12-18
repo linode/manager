@@ -323,6 +323,14 @@ ShallowWrapper {
                   "elements": Array [
                     Object {
                       "action": [Function],
+                      "name": "Power On",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
                       "name": "Launch Console",
                     },
                   ],
@@ -351,26 +359,7 @@ ShallowWrapper {
             />
           </div>
         </div>,
-        <FormGroup
-          className="m-0 p-0 d-none"
-          errors={
-            Object {
-              "_": Object {},
-            }
-          }
-          name="_"
-        >
-          <FormGroupError
-            className="m-0 p-0"
-            errors={
-              Object {
-                "_": Object {},
-              }
-            }
-            inline={true}
-            name="_"
-          />
-        </FormGroup>,
+        false,
       ],
     },
     "ref": null,
@@ -395,6 +384,14 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "name": "Offline",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
                       },
                     ],
                   },
@@ -472,6 +469,14 @@ ShallowWrapper {
                   "elements": Array [
                     Object {
                       "action": [Function],
+                      "name": "Power On",
+                    },
+                  ],
+                },
+                Object {
+                  "elements": Array [
+                    Object {
+                      "action": [Function],
                       "name": "Launch Console",
                     },
                   ],
@@ -525,46 +530,7 @@ ShallowWrapper {
         ],
         "type": "div",
       },
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "children": <FormGroupError
-            className="m-0 p-0"
-            errors={
-              Object {
-                "_": Object {},
-              }
-            }
-            inline={true}
-            name="_"
-          />,
-          "className": "m-0 p-0 d-none",
-          "errors": Object {
-            "_": Object {},
-          },
-          "name": "_",
-        },
-        "ref": null,
-        "rendered": Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "className": "m-0 p-0",
-            "errors": Object {
-              "_": Object {},
-            },
-            "inline": true,
-            "name": "_",
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-        "type": [Function],
-      },
+      false,
     ],
     "type": "div",
   },
@@ -592,6 +558,14 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "name": "Offline",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
+                        "name": "Power On",
                       },
                     ],
                   },
@@ -635,26 +609,7 @@ ShallowWrapper {
               />
             </div>
           </div>,
-          <FormGroup
-            className="m-0 p-0 d-none"
-            errors={
-              Object {
-                "_": Object {},
-              }
-            }
-            name="_"
-          >
-            <FormGroupError
-              className="m-0 p-0"
-              errors={
-                Object {
-                  "_": Object {},
-                }
-              }
-              inline={true}
-              name="_"
-            />
-          </FormGroup>,
+          false,
         ],
       },
       "ref": null,
@@ -679,6 +634,14 @@ ShallowWrapper {
                       "elements": Array [
                         Object {
                           "name": "Offline",
+                        },
+                      ],
+                    },
+                    Object {
+                      "elements": Array [
+                        Object {
+                          "action": [Function],
+                          "name": "Power On",
                         },
                       ],
                     },
@@ -756,6 +719,14 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "action": [Function],
+                        "name": "Power On",
+                      },
+                    ],
+                  },
+                  Object {
+                    "elements": Array [
+                      Object {
+                        "action": [Function],
                         "name": "Launch Console",
                       },
                     ],
@@ -809,46 +780,7 @@ ShallowWrapper {
           ],
           "type": "div",
         },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "children": <FormGroupError
-              className="m-0 p-0"
-              errors={
-                Object {
-                  "_": Object {},
-                }
-              }
-              inline={true}
-              name="_"
-            />,
-            "className": "m-0 p-0 d-none",
-            "errors": Object {
-              "_": Object {},
-            },
-            "name": "_",
-          },
-          "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "className": "m-0 p-0",
-              "errors": Object {
-                "_": Object {},
-              },
-              "inline": true,
-              "name": "_",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
-          },
-          "type": [Function],
-        },
+        false,
       ],
       "type": "div",
     },

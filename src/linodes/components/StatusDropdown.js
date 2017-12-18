@@ -185,7 +185,7 @@ export default class StatusDropdown extends Component {
 
     if (configCount === 1) {
       callback(linode.id, parseInt(Object.keys(configs)[0]) || null);
-      hideModal();
+      dispatch(hideModal());
       return;
     }
 
@@ -241,6 +241,9 @@ export default class StatusDropdown extends Component {
         ] });
       }
     }
+    finalGroups.push({ elements: [
+      { name: 'Power On', action: this.powerOnLinode },
+    ] });
     // we always allow Lish
     finalGroups.push({ elements: [
       { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
@@ -276,17 +279,15 @@ export default class StatusDropdown extends Component {
             />
           </div>
         </div>
-        <FormGroup
-          className={`m-0 p-0 ${!_.isEmpty(errors._) ? 'height-pulse' : 'd-none'}`}
-          errors={errors}
-          name="_"
-        >
-          <FormGroupError
-            className="m-0 p-0"
+        {!_.isEmpty(errors._) &&
+          <FormGroup
+            className={`m-0 p-0 ${!_.isEmpty(errors._) ? 'height-pulse' : 'd-none'}`}
             errors={errors}
             name="_"
-          />
-        </FormGroup>
+          >
+            <FormGroupError className="m-0 p-0" errors={errors} name="_" />
+          </FormGroup>
+        }
       </div>
     );
   }
