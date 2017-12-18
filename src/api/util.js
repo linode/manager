@@ -63,7 +63,12 @@ export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
 
           return [...flattenedErrors, error];
         }, [])).filter(Boolean);
-        this.setState({ errors, loading: false });
+
+        this.setState({
+          errors,
+          lastErrorTime: Date.now(),
+          loading: false,
+        });
         return null;
       }
     }
