@@ -1579,6 +1579,102 @@ ShallowWrapper {
               className="graphs"
               header={
                 <CardHeader
+                  nav={
+                    <div
+                      className="GraphGroup-graph"
+                    >
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="year"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": 2016,
+                              "value": 2016,
+                            },
+                            Object {
+                              "label": 2017,
+                              "value": 2017,
+                            },
+                          ]
+                        }
+                        value="2017"
+                      />
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="month"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": "Last 24",
+                              "value": 0,
+                            },
+                            Object {
+                              "label": "Jan",
+                              "value": 1,
+                            },
+                            Object {
+                              "label": "Feb",
+                              "value": 2,
+                            },
+                            Object {
+                              "label": "Mar",
+                              "value": 3,
+                            },
+                            Object {
+                              "label": "Apr",
+                              "value": 4,
+                            },
+                            Object {
+                              "label": "May",
+                              "value": 5,
+                            },
+                            Object {
+                              "label": "Jun",
+                              "value": 6,
+                            },
+                            Object {
+                              "label": "Jul",
+                              "value": 7,
+                            },
+                            Object {
+                              "label": "Aug",
+                              "value": 8,
+                            },
+                            Object {
+                              "label": "Sep",
+                              "value": 9,
+                            },
+                            Object {
+                              "label": "Oct",
+                              "value": 10,
+                            },
+                            Object {
+                              "label": "Nov",
+                              "value": 11,
+                            },
+                            Object {
+                              "label": "Dec",
+                              "value": 12,
+                            },
+                          ]
+                        }
+                        value="0"
+                      />
+                    </div>
+                  }
                   title="Graphs"
                 />
               }
@@ -10051,6 +10147,102 @@ ShallowWrapper {
               className="graphs"
               header={
                 <CardHeader
+                  nav={
+                    <div
+                      className="GraphGroup-graph"
+                    >
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="year"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": 2016,
+                              "value": 2016,
+                            },
+                            Object {
+                              "label": 2017,
+                              "value": 2017,
+                            },
+                          ]
+                        }
+                        value="2017"
+                      />
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="month"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": "Last 24",
+                              "value": 0,
+                            },
+                            Object {
+                              "label": "Jan",
+                              "value": 1,
+                            },
+                            Object {
+                              "label": "Feb",
+                              "value": 2,
+                            },
+                            Object {
+                              "label": "Mar",
+                              "value": 3,
+                            },
+                            Object {
+                              "label": "Apr",
+                              "value": 4,
+                            },
+                            Object {
+                              "label": "May",
+                              "value": 5,
+                            },
+                            Object {
+                              "label": "Jun",
+                              "value": 6,
+                            },
+                            Object {
+                              "label": "Jul",
+                              "value": 7,
+                            },
+                            Object {
+                              "label": "Aug",
+                              "value": 8,
+                            },
+                            Object {
+                              "label": "Sep",
+                              "value": 9,
+                            },
+                            Object {
+                              "label": "Oct",
+                              "value": 10,
+                            },
+                            Object {
+                              "label": "Nov",
+                              "value": 11,
+                            },
+                            Object {
+                              "label": "Dec",
+                              "value": 12,
+                            },
+                          ]
+                        }
+                        value="0"
+                      />
+                    </div>
+                  }
                   title="Graphs"
                 />
               }
@@ -10261,6 +10453,102 @@ ShallowWrapper {
               className="graphs"
               header={
                 <CardHeader
+                  nav={
+                    <div
+                      className="GraphGroup-graph"
+                    >
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="year"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": 2016,
+                              "value": 2016,
+                            },
+                            Object {
+                              "label": 2017,
+                              "value": 2017,
+                            },
+                          ]
+                        }
+                        value="2017"
+                      />
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="month"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": "Last 24",
+                              "value": 0,
+                            },
+                            Object {
+                              "label": "Jan",
+                              "value": 1,
+                            },
+                            Object {
+                              "label": "Feb",
+                              "value": 2,
+                            },
+                            Object {
+                              "label": "Mar",
+                              "value": 3,
+                            },
+                            Object {
+                              "label": "Apr",
+                              "value": 4,
+                            },
+                            Object {
+                              "label": "May",
+                              "value": 5,
+                            },
+                            Object {
+                              "label": "Jun",
+                              "value": 6,
+                            },
+                            Object {
+                              "label": "Jul",
+                              "value": 7,
+                            },
+                            Object {
+                              "label": "Aug",
+                              "value": 8,
+                            },
+                            Object {
+                              "label": "Sep",
+                              "value": 9,
+                            },
+                            Object {
+                              "label": "Oct",
+                              "value": 10,
+                            },
+                            Object {
+                              "label": "Nov",
+                              "value": 11,
+                            },
+                            Object {
+                              "label": "Dec",
+                              "value": 12,
+                            },
+                          ]
+                        }
+                        value="0"
+                      />
+                    </div>
+                  }
                   title="Graphs"
                 />
               }
@@ -10660,6 +10948,102 @@ ShallowWrapper {
               />,
               "className": "graphs",
               "header": <CardHeader
+                nav={
+                  <div
+                    className="GraphGroup-graph"
+                  >
+                    <Select
+                      analytics={
+                        Object {
+                          "noTrack": false,
+                        }
+                      }
+                      className="Select Select--native form-control"
+                      name="year"
+                      onChange={[Function]}
+                      options={
+                        Array [
+                          Object {
+                            "label": 2016,
+                            "value": 2016,
+                          },
+                          Object {
+                            "label": 2017,
+                            "value": 2017,
+                          },
+                        ]
+                      }
+                      value="2017"
+                    />
+                    <Select
+                      analytics={
+                        Object {
+                          "noTrack": false,
+                        }
+                      }
+                      className="Select Select--native form-control"
+                      name="month"
+                      onChange={[Function]}
+                      options={
+                        Array [
+                          Object {
+                            "label": "Last 24",
+                            "value": 0,
+                          },
+                          Object {
+                            "label": "Jan",
+                            "value": 1,
+                          },
+                          Object {
+                            "label": "Feb",
+                            "value": 2,
+                          },
+                          Object {
+                            "label": "Mar",
+                            "value": 3,
+                          },
+                          Object {
+                            "label": "Apr",
+                            "value": 4,
+                          },
+                          Object {
+                            "label": "May",
+                            "value": 5,
+                          },
+                          Object {
+                            "label": "Jun",
+                            "value": 6,
+                          },
+                          Object {
+                            "label": "Jul",
+                            "value": 7,
+                          },
+                          Object {
+                            "label": "Aug",
+                            "value": 8,
+                          },
+                          Object {
+                            "label": "Sep",
+                            "value": 9,
+                          },
+                          Object {
+                            "label": "Oct",
+                            "value": 10,
+                          },
+                          Object {
+                            "label": "Nov",
+                            "value": 11,
+                          },
+                          Object {
+                            "label": "Dec",
+                            "value": 12,
+                          },
+                        ]
+                      }
+                      value="0"
+                    />
+                  </div>
+                }
                 title="Graphs"
               />,
             },
@@ -12121,6 +12505,102 @@ ShallowWrapper {
                 className="graphs"
                 header={
                   <CardHeader
+                    nav={
+                      <div
+                        className="GraphGroup-graph"
+                      >
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="year"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": 2016,
+                                "value": 2016,
+                              },
+                              Object {
+                                "label": 2017,
+                                "value": 2017,
+                              },
+                            ]
+                          }
+                          value="2017"
+                        />
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="month"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": "Last 24",
+                                "value": 0,
+                              },
+                              Object {
+                                "label": "Jan",
+                                "value": 1,
+                              },
+                              Object {
+                                "label": "Feb",
+                                "value": 2,
+                              },
+                              Object {
+                                "label": "Mar",
+                                "value": 3,
+                              },
+                              Object {
+                                "label": "Apr",
+                                "value": 4,
+                              },
+                              Object {
+                                "label": "May",
+                                "value": 5,
+                              },
+                              Object {
+                                "label": "Jun",
+                                "value": 6,
+                              },
+                              Object {
+                                "label": "Jul",
+                                "value": 7,
+                              },
+                              Object {
+                                "label": "Aug",
+                                "value": 8,
+                              },
+                              Object {
+                                "label": "Sep",
+                                "value": 9,
+                              },
+                              Object {
+                                "label": "Oct",
+                                "value": 10,
+                              },
+                              Object {
+                                "label": "Nov",
+                                "value": 11,
+                              },
+                              Object {
+                                "label": "Dec",
+                                "value": 12,
+                              },
+                            ]
+                          }
+                          value="0"
+                        />
+                      </div>
+                    }
                     title="Graphs"
                   />
                 }
@@ -20593,6 +21073,102 @@ ShallowWrapper {
                 className="graphs"
                 header={
                   <CardHeader
+                    nav={
+                      <div
+                        className="GraphGroup-graph"
+                      >
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="year"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": 2016,
+                                "value": 2016,
+                              },
+                              Object {
+                                "label": 2017,
+                                "value": 2017,
+                              },
+                            ]
+                          }
+                          value="2017"
+                        />
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="month"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": "Last 24",
+                                "value": 0,
+                              },
+                              Object {
+                                "label": "Jan",
+                                "value": 1,
+                              },
+                              Object {
+                                "label": "Feb",
+                                "value": 2,
+                              },
+                              Object {
+                                "label": "Mar",
+                                "value": 3,
+                              },
+                              Object {
+                                "label": "Apr",
+                                "value": 4,
+                              },
+                              Object {
+                                "label": "May",
+                                "value": 5,
+                              },
+                              Object {
+                                "label": "Jun",
+                                "value": 6,
+                              },
+                              Object {
+                                "label": "Jul",
+                                "value": 7,
+                              },
+                              Object {
+                                "label": "Aug",
+                                "value": 8,
+                              },
+                              Object {
+                                "label": "Sep",
+                                "value": 9,
+                              },
+                              Object {
+                                "label": "Oct",
+                                "value": 10,
+                              },
+                              Object {
+                                "label": "Nov",
+                                "value": 11,
+                              },
+                              Object {
+                                "label": "Dec",
+                                "value": 12,
+                              },
+                            ]
+                          }
+                          value="0"
+                        />
+                      </div>
+                    }
                     title="Graphs"
                   />
                 }
@@ -20803,6 +21379,102 @@ ShallowWrapper {
                 className="graphs"
                 header={
                   <CardHeader
+                    nav={
+                      <div
+                        className="GraphGroup-graph"
+                      >
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="year"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": 2016,
+                                "value": 2016,
+                              },
+                              Object {
+                                "label": 2017,
+                                "value": 2017,
+                              },
+                            ]
+                          }
+                          value="2017"
+                        />
+                        <Select
+                          analytics={
+                            Object {
+                              "noTrack": false,
+                            }
+                          }
+                          className="Select Select--native form-control"
+                          name="month"
+                          onChange={[Function]}
+                          options={
+                            Array [
+                              Object {
+                                "label": "Last 24",
+                                "value": 0,
+                              },
+                              Object {
+                                "label": "Jan",
+                                "value": 1,
+                              },
+                              Object {
+                                "label": "Feb",
+                                "value": 2,
+                              },
+                              Object {
+                                "label": "Mar",
+                                "value": 3,
+                              },
+                              Object {
+                                "label": "Apr",
+                                "value": 4,
+                              },
+                              Object {
+                                "label": "May",
+                                "value": 5,
+                              },
+                              Object {
+                                "label": "Jun",
+                                "value": 6,
+                              },
+                              Object {
+                                "label": "Jul",
+                                "value": 7,
+                              },
+                              Object {
+                                "label": "Aug",
+                                "value": 8,
+                              },
+                              Object {
+                                "label": "Sep",
+                                "value": 9,
+                              },
+                              Object {
+                                "label": "Oct",
+                                "value": 10,
+                              },
+                              Object {
+                                "label": "Nov",
+                                "value": 11,
+                              },
+                              Object {
+                                "label": "Dec",
+                                "value": 12,
+                              },
+                            ]
+                          }
+                          value="0"
+                        />
+                      </div>
+                    }
                     title="Graphs"
                   />
                 }
@@ -21202,6 +21874,102 @@ ShallowWrapper {
                 />,
                 "className": "graphs",
                 "header": <CardHeader
+                  nav={
+                    <div
+                      className="GraphGroup-graph"
+                    >
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="year"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": 2016,
+                              "value": 2016,
+                            },
+                            Object {
+                              "label": 2017,
+                              "value": 2017,
+                            },
+                          ]
+                        }
+                        value="2017"
+                      />
+                      <Select
+                        analytics={
+                          Object {
+                            "noTrack": false,
+                          }
+                        }
+                        className="Select Select--native form-control"
+                        name="month"
+                        onChange={[Function]}
+                        options={
+                          Array [
+                            Object {
+                              "label": "Last 24",
+                              "value": 0,
+                            },
+                            Object {
+                              "label": "Jan",
+                              "value": 1,
+                            },
+                            Object {
+                              "label": "Feb",
+                              "value": 2,
+                            },
+                            Object {
+                              "label": "Mar",
+                              "value": 3,
+                            },
+                            Object {
+                              "label": "Apr",
+                              "value": 4,
+                            },
+                            Object {
+                              "label": "May",
+                              "value": 5,
+                            },
+                            Object {
+                              "label": "Jun",
+                              "value": 6,
+                            },
+                            Object {
+                              "label": "Jul",
+                              "value": 7,
+                            },
+                            Object {
+                              "label": "Aug",
+                              "value": 8,
+                            },
+                            Object {
+                              "label": "Sep",
+                              "value": 9,
+                            },
+                            Object {
+                              "label": "Oct",
+                              "value": 10,
+                            },
+                            Object {
+                              "label": "Nov",
+                              "value": 11,
+                            },
+                            Object {
+                              "label": "Dec",
+                              "value": 12,
+                            },
+                          ]
+                        }
+                        value="0"
+                      />
+                    </div>
+                  }
                   title="Graphs"
                 />,
               },
