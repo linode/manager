@@ -395,7 +395,7 @@ ShallowWrapper {
             label="Test config"
             name="config"
             onChange={[Function]}
-            value={12345}
+            value="12345"
           />
           <Radio
             checked={false}
@@ -403,7 +403,7 @@ ShallowWrapper {
             label="Test config 2"
             name="config"
             onChange={[Function]}
-            value={12346}
+            value="12346"
           />
         </ModalFormGroup>
       </div>,
@@ -436,7 +436,7 @@ ShallowWrapper {
               label="Test config"
               name="config"
               onChange={[Function]}
-              value={12345}
+              value="12345"
             />
             <Radio
               checked={false}
@@ -444,7 +444,7 @@ ShallowWrapper {
               label="Test config 2"
               name="config"
               onChange={[Function]}
-              value={12346}
+              value="12346"
             />
           </ModalFormGroup>,
         ],
@@ -475,7 +475,7 @@ ShallowWrapper {
                 label="Test config"
                 name="config"
                 onChange={[Function]}
-                value={12345}
+                value="12345"
               />,
               <Radio
                 checked={false}
@@ -483,7 +483,7 @@ ShallowWrapper {
                 label="Test config 2"
                 name="config"
                 onChange={[Function]}
-                value={12346}
+                value="12346"
               />,
             ],
             "errors": Object {},
@@ -494,7 +494,7 @@ ShallowWrapper {
           "rendered": Array [
             Object {
               "instance": null,
-              "key": undefined,
+              "key": "Test config",
               "nodeType": "function",
               "props": Object {
                 "checked": true,
@@ -502,7 +502,7 @@ ShallowWrapper {
                 "label": "Test config",
                 "name": "config",
                 "onChange": [Function],
-                "value": 12345,
+                "value": "12345",
               },
               "ref": null,
               "rendered": null,
@@ -510,7 +510,7 @@ ShallowWrapper {
             },
             Object {
               "instance": null,
-              "key": undefined,
+              "key": "Test config 2",
               "nodeType": "function",
               "props": Object {
                 "checked": false,
@@ -518,7 +518,7 @@ ShallowWrapper {
                 "label": "Test config 2",
                 "name": "config",
                 "onChange": [Function],
-                "value": 12346,
+                "value": "12346",
               },
               "ref": null,
               "rendered": null,
@@ -559,7 +559,7 @@ ShallowWrapper {
               label="Test config"
               name="config"
               onChange={[Function]}
-              value={12345}
+              value="12345"
             />
             <Radio
               checked={false}
@@ -567,7 +567,7 @@ ShallowWrapper {
               label="Test config 2"
               name="config"
               onChange={[Function]}
-              value={12346}
+              value="12346"
             />
           </ModalFormGroup>
         </div>,
@@ -600,7 +600,7 @@ ShallowWrapper {
                 label="Test config"
                 name="config"
                 onChange={[Function]}
-                value={12345}
+                value="12345"
               />
               <Radio
                 checked={false}
@@ -608,7 +608,7 @@ ShallowWrapper {
                 label="Test config 2"
                 name="config"
                 onChange={[Function]}
-                value={12346}
+                value="12346"
               />
             </ModalFormGroup>,
           ],
@@ -639,7 +639,7 @@ ShallowWrapper {
                   label="Test config"
                   name="config"
                   onChange={[Function]}
-                  value={12345}
+                  value="12345"
                 />,
                 <Radio
                   checked={false}
@@ -647,7 +647,7 @@ ShallowWrapper {
                   label="Test config 2"
                   name="config"
                   onChange={[Function]}
-                  value={12346}
+                  value="12346"
                 />,
               ],
               "errors": Object {},
@@ -658,7 +658,7 @@ ShallowWrapper {
             "rendered": Array [
               Object {
                 "instance": null,
-                "key": undefined,
+                "key": "Test config",
                 "nodeType": "function",
                 "props": Object {
                   "checked": true,
@@ -666,7 +666,7 @@ ShallowWrapper {
                   "label": "Test config",
                   "name": "config",
                   "onChange": [Function],
-                  "value": 12345,
+                  "value": "12345",
                 },
                 "ref": null,
                 "rendered": null,
@@ -674,7 +674,7 @@ ShallowWrapper {
               },
               Object {
                 "instance": null,
-                "key": undefined,
+                "key": "Test config 2",
                 "nodeType": "function",
                 "props": Object {
                   "checked": false,
@@ -682,7 +682,7 @@ ShallowWrapper {
                   "label": "Test config 2",
                   "name": "config",
                   "onChange": [Function],
-                  "value": 12346,
+                  "value": "12346",
                 },
                 "ref": null,
                 "rendered": null,

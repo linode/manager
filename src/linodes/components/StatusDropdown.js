@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { FormGroup } from 'linode-components';
+import { FormGroup, FormGroupError } from 'linode-components';
 import { Dropdown } from 'linode-components';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components';
 
@@ -71,6 +71,7 @@ export default class StatusDropdown extends Component {
     this.state = {
       open: false,
       hiddenClass: '',
+      errors: { _: {} },
     };
   }
 
@@ -82,6 +83,12 @@ export default class StatusDropdown extends Component {
 
     if (isPending && !isPolling) {
       this.startLinodePolling();
+    }
+  }
+
+  componentWillReceiveProps() {
+    if ((Date.now() - this.state.lastErrorTime) > 3000) {
+      this.setState({ errors: { _: {} } });
     }
   }
 
@@ -155,10 +162,17 @@ export default class StatusDropdown extends Component {
   };
 
   powerOffLinode = () => this.confirmAction('Power Off',
-    () => this.props.dispatch(powerOffLinode(this.props.linode.id)));
-  powerOnLinode = () => this.selectConfig(powerOnLinode);
-  rebootLinode = () => this.confirmAction('Reboot',
-    () => this.selectConfig(rebootLinode));
+    () => this.props.dispatch(dispatchOrStoreErrors.call(this, [
+      () => powerOffLinode(this.props.linode.id),
+    ])));
+  powerOnLinode = () => this.selectConfig(
+    (linode, config) => this.props.dispatch(dispatchOrStoreErrors.call(this, [
+      () => powerOnLinode(linode, config),
+    ])));
+  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(
+    (linode, config) => this.props.dispatch(dispatchOrStoreErrors.call(this, [
+      () => rebootLinode(linode, config),
+    ]))));
 
   selectConfig = async (callback) => {
     const { linode, dispatch } = this.props;
@@ -172,10 +186,9 @@ export default class StatusDropdown extends Component {
     const configCount = Object.keys(configs).length;
 
     if (configCount === 1) {
-      return dispatch(dispatchOrStoreErrors.call(this, [
-        () => callback(linode.id, parseInt(Object.keys(configs)[0]) || null),
-        () => hideModal(),
-      ]));
+      callback(linode.id, parseInt(Object.keys(configs)[0]) || null);
+      dispatch(hideModal());
+      return;
     }
 
     const title = 'Select Configuration Profile';
@@ -216,6 +229,7 @@ export default class StatusDropdown extends Component {
       'restoring',
       'migrating',
     ];
+
     // don't allow power actions in a transition state
     if (!(find(transitionStates, el => el === status))) {
       if (status !== 'offline') {
@@ -229,6 +243,9 @@ export default class StatusDropdown extends Component {
         ] });
       }
     }
+    finalGroups.push({ elements: [
+      { name: 'Power On', action: this.powerOnLinode },
+    ] });
     // we always allow Lish
     finalGroups.push({ elements: [
       { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
@@ -244,21 +261,35 @@ export default class StatusDropdown extends Component {
     const { linode } = this.props;
     const { errors } = this.state;
 
-    const groups = this.linodeToGroups(linode);
+    const groups = this.linodeToGroups(linode, errors);
 
     // The calc(x + 1px) is needed because we have left: -1px on this element.
     const progressWidth = `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})`;
 
     return (
-      <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown groups={groups} duplicateFirst={false} analytics={{ title: 'Linode actions' }} />
-        <div className="StatusDropdown-container">
-          <div
-            style={{ width: progressWidth }}
-            className={`StatusDropdown-progress ${this.state.hiddenClass}`}
+      <div>
+        <div className="StatusDropdown StatusDropdown--dropdown">
+          <Dropdown
+            groups={groups}
+            duplicateFirst={false}
+            analytics={{ title: 'Linode actions' }}
           />
+          <div className="StatusDropdown-container">
+            <div
+              style={{ width: progressWidth }}
+              className={`StatusDropdown-progress ${this.state.hiddenClass}`}
+            />
+          </div>
         </div>
-        <FormGroup errors={errors} name="config_id" />
+        {!isEmpty(errors._) &&
+          <FormGroup
+            className={`m-0 p-0 ${isEmpty(errors._) ? 'height-pulse' : 'd-none'}`}
+            errors={errors}
+            name="_"
+          >
+            <FormGroupError className="m-0 p-0" errors={errors} name="_" />
+          </FormGroup>
+        }
       </div>
     );
   }

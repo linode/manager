@@ -7,7 +7,6 @@ import { FormModalBody } from 'linode-components';
 
 import { hideModal } from '~/actions/modal';
 import { rebootLinode } from '~/api/ad-hoc/linodes';
-import { dispatchOrStoreErrors } from '~/api/util';
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -25,10 +24,8 @@ export default class ConfigSelectModalBody extends Component {
     const { dispatch, linode, action } = this.props;
     const { configId } = parseInt(this.state.configId);
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => action(linode.id, configId),
-      hideModal,
-    ]));
+    action(linode.id, configId);
+    dispatch(hideModal());
   }
 
   onCreateConfig = () => {
@@ -75,9 +72,10 @@ export default class ConfigSelectModalBody extends Component {
             {Object.values(linode._configs.configs).map(config => (
               <Radio
                 checked={config.id.toString() === configId}
-                value={config.id}
+                value={config.id.toString()}
                 name="config"
                 onChange={e => this.setState({ configId: e.target.value })}
+                key={config.label}
                 label={config.label}
               />
             ))}
