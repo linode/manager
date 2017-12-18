@@ -93,14 +93,27 @@ function xenSecurityAdvisory(banners) {
 
 function outstandingBalance(banners) {
   return (
-    /* eslint-disable max-len */
     banners.map((banner, key) =>
       <div className="critical" key={key}>
-        You have an outstanding balance. Please <Link to="/billing/payment">make a payment</Link> to avoid service interruption.
+        You have an outstanding balance.
+        &nbsp;Please <Link to="/billing/payment">make a payment</Link>
+        &nbsp;to avoid service interruption.
       </div>
-      /* eslint-enable max-len */
     )
   );
+}
+
+function outage(banners) {
+  const datacenterNames = banners.map(banner => banner.entity.id);
+
+  if (datacenterNames.length) {
+    return (
+      <div className="outage">
+        We are aware of issues affecting service in the following facilities:
+        &nbsp;{datacenterNames.join(', ')}
+      </div>
+    );
+  }
 }
 
 function renderBanners(banners, linode = {}) {
@@ -140,9 +153,14 @@ function renderBanners(banners, linode = {}) {
     banners
   );
 
+  const outageBanners = filterBy(
+    [(banner) => banner.type === 'outage'],
+    banners
+  );
+
   return (
     <div className="Banner">
-      {abuseBanners.length ?
+      {!isEmpty(abuseBanners) ?
         abuseTicket(abuseBanners) :
         importantTicket(importantTicketBanners)
       }
@@ -150,6 +168,7 @@ function renderBanners(banners, linode = {}) {
       {!isEmpty(migrationBanners) && migrations(migrationBanners)}
       {!isEmpty(scheduledRebootBanners) && scheduledReboot(scheduledRebootBanners)}
       {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(xenSecurityAdvisoryBanners)}
+      {!isEmpty(outageBanners) && outage(outageBanners)}
     </div>
   );
 }
