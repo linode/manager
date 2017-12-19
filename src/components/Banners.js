@@ -7,25 +7,6 @@ function filterBanners(banners, filter) {
   return banners.filter(banner => filter.indexOf(banner.type) >= 0);
 }
 
-function getLinodeId(linodes, params) {
-  let linodeId = null;
-  if (params !== {} && linodes !== {}) {
-    let linodeObj = null;
-    if (linodes.linodes !== {}) {
-      linodeObj = Object.values(linodes.linodes).find(linode => {
-        if (linode.label === params.linodeLabel) {
-          return linode;
-        }
-      });
-    }
-    if (linodeObj) {
-      linodeId = linodeObj.id;
-    }
-  }
-
-  return linodeId;
-}
-
 function importantTicket(banners) {
   if (banners.length > 1) {
     return (
@@ -53,33 +34,27 @@ function abuseTicket(banners) {
     const ticket = banners[0].entity;
     return (
       <div className="abuseTicket">
-        You have an abuse ticket open! <Link
-          to={
-            `/support/${ticket.id}`
-          }
-        >[Ticket #{ticket.id}]</Link> {
-          banners[0].entity.label
-        }
+        You have an abuse ticket open!
+        &nbsp;<Link to={`/support/${ticket.id}`}>[Ticket #{ticket.id}]</Link>
+        &nbsp;banners[0].entity.label
       </div>
     );
   }
 }
 
-function migrations(banners, linodeId) {
-  const banner = banners.find(banner => {
-    return banner.entity.id === linodeId ? banner : null;
-  });
+function migrations(banners, linode) {
+  const banner = banners.find(banner => banner.entity.id === linode.id);
 
   if (banner) {
     return (
       <div className="migration">
-        You have a migration {banner.type.split('_')[0]}!
+        You have a host migration {banner.type.split('_')[0]} for this linode!
       </div>
     );
   }
 }
 
-function renderBanners(banners, linodeId) {
+function renderBanners(banners, linode) {
   const abuseItems = filterBanners(banners, ['abuse_ticket']);
 
   return (
@@ -88,23 +63,17 @@ function renderBanners(banners, linodeId) {
         abuseTicket(abuseItems) :
         importantTicket(filterBanners(banners, ['important_ticket']))
       }
-      {migrations(filterBanners(banners, ['pending_migration', 'scheduled_migration']), linodeId)}
+      {migrations(filterBanners(banners, ['pending_migration', 'scheduled_migration']), linode)}
     </div>
   );
 }
 
 export default function Banners(props) {
-  const { banners, params, linodes } = props;
-  if (!banners.length) {
-    return null;
-  }
-  const linodeId = getLinodeId(linodes, params);
-
-  return renderBanners(banners, linodeId);
+  const { banners, linode } = props;
+  return banners.length ? renderBanners(banners, linode) : null;
 }
 
 Banners.propTypes = {
-  params: PropTypes.object,
-  linodes: PropTypes.object,
+  linode: PropTypes.object,
   banners: PropTypes.array,
 };
