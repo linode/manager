@@ -8,6 +8,7 @@ import {
   importantBanners,
   abuseBanner,
   abuseBanners,
+  outageBanners,
 } from '~/data/banners';
 
 
@@ -64,5 +65,18 @@ describe('components/Banners', () => {
     );
 
     expect(banner.find('.Banner Link').props().to).toBe('/support');
+  });
+
+  it('renders an outage banner for multiple datacenters', () => {
+    const banner = shallow(
+      <Banners
+        banners={outageBanners}
+        params={{}}
+        linodes={{ linodes: {} }}
+      />
+    );
+
+    expect(banner.find('.Banner > div').text().indexOf(
+      'us-east-1a, us-south-1a')).toBeGreaterThan(-1);
   });
 });
