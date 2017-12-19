@@ -56,14 +56,19 @@ function abuseTicket(banners) {
   }
 }
 
-function migrations(banners) {
-  banners.map((banner, key) => {
+function migrations(banners, linode) {
+  if (!linode) {
+    return null;
+  }
+
+  const banner = banners.find(banner => banner.entity.id === linode.id);
+  if (banner) {
     return (
       <div className="notice" key={key}>
         You have a host migration {banner.type.split('_')[0]} for this linode!
       </div>
     );
-  });
+  }
 }
 
 function scheduledReboot(banners) {
