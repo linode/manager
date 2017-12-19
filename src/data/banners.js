@@ -85,6 +85,12 @@ const testOutageBanner2 = {
   },
 };
 
+export const testGlobalBanner = {
+  entity: null,
+  type: 'The new linode cloud manager is in the works!',
+  when: '2017-12-22T05:00:00',
+};
+
 export const importantBanner = [
   testApiBanner,
 ];
@@ -108,8 +114,13 @@ export const outageBanners = [
   testOutageBanner2,
 ];
 
+export const globalBanner = [
+  testGlobalBanner,
+];
+
 export const banners = [
   testApiBanner,
   testBillingBanner,
   testAbuseBanner,
+  testGlobalBanner,
 ];

@@ -21,6 +21,23 @@ export function filterBy(pred, data) {
       result ? fn(value) : result, true));
 }
 
+function globalNoticeFilter(banner) {
+  const standardBannerTypes = [
+    'outage',
+    'scheduled_migration',
+    'pending_migration',
+    'scheduled_reboot',
+    'xsa',
+    'outstanding_balance',
+    'important_ticket',
+    'abuse_ticket',
+  ];
+  /* A global banner has a dynamic type.
+     There is only ever one global banner. */
+  /* TODO: Request that the API return type "global" with an "entity" containing the message */
+  return standardBannerTypes.indexOf(banner.type) === -1;
+}
+
 function importantTicket(banners) {
   if (banners.length > 1) {
     return (
@@ -111,6 +128,16 @@ function outage(banners) {
   }
 }
 
+function globalNotice(banner) {
+  if (banner) {
+    return (
+      <div className="info">
+        {banner.type}
+      </div>
+    );
+  }
+}
+
 function renderBanners(banners, linode = {}) {
   const abuseBanners = filterBy(
     [banner => banner.type === 'abuse_ticket'],
@@ -156,6 +183,11 @@ function renderBanners(banners, linode = {}) {
     banners
   );
 
+  const globalBanner = filterBy(
+    globalNoticeFilter,
+    banners
+  );
+
   return (
     <div className="Banner">
       {!isEmpty(abuseBanners) ?
@@ -167,6 +199,7 @@ function renderBanners(banners, linode = {}) {
       {!isEmpty(scheduledRebootBanners) && scheduledReboot(scheduledRebootBanners)}
       {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(xenSecurityAdvisoryBanners)}
       {!isEmpty(outageBanners) && outage(outageBanners)}
+      {!isEmpty(globalBanner) && globalNotice(globalBanner)}
     </div>
   );
 }

@@ -1,8 +1,11 @@
 .Banner {
     text-align: center;
 
+    div {
+        padding: 5px
+    }
+
     .critical {
-        padding: 5px;
         background-color: $red;
         color: $medium-gray;
         a {
@@ -11,14 +14,12 @@
     }
 
     .warning {
-        padding: 5px;
         background-color: $dark-yellow;
     }
 
     .info {
         color: $medium-gray;
         background-color: $light-black;
-        padding: 5px;
     }
 }
  
