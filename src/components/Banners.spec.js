@@ -10,6 +10,7 @@ import {
   outstandingBalanceBanner,
   scheduledRebootBanner,
   xsaBanner,
+  outageBanners,
 } from '~/data/banners';
 
 describe('components/Banners filterBy', () => {
@@ -54,6 +55,7 @@ describe('components/Banners filterBy', () => {
     ).toEqual([andrew, rob]);
   });
 });
+
 describe('components/Banners', () => {
   const linode = {
     id: 1234,
@@ -136,5 +138,18 @@ describe('components/Banners', () => {
     expect(wrapper.find('div.critical').length).toBe(1);
     expect(wrapper.find('Link').length).toBe(1);
     expect(wrapper.find('Link').prop('to')).toBe('/billing/payment');
+  });
+
+  it('renders an outage banner for multiple datacenters', () => {
+    const banner = shallow(
+      <Banners
+        banners={outageBanners}
+        params={{}}
+        linodes={{ linodes: {} }}
+      />
+    );
+
+    expect(banner.find('.Banner > div').text().indexOf(
+      'us-east-1a, us-south-1a')).toBeGreaterThan(-1);
   });
 });

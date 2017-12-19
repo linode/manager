@@ -65,6 +65,26 @@ export const testAbuseBanner2 = {
   },
 };
 
+const testOutageBanner1 = {
+  when: null,
+  entity: {
+    label: null,
+    id: 'us-east-1a',
+    type: 'region',
+    url: '/regions/us-east-1a',
+  },
+  type: 'outage',
+};
+
+const testOutageBanner2 = {
+  ...testOutageBanner1,
+  entity: {
+    ...testOutageBanner1.entity,
+    id: 'us-south-1a',
+    url: '/regions/us-south-1a',
+  },
+};
+
 export const importantBanner = [
   testApiBanner,
 ];
@@ -81,6 +101,11 @@ export const abuseBanner = [
 export const abuseBanners = [
   testAbuseBanner,
   testAbuseBanner2,
+];
+
+export const outageBanners = [
+  testOutageBanner1,
+  testOutageBanner2,
 ];
 
 export const banners = [
