@@ -11,6 +11,7 @@ import {
   scheduledRebootBanner,
   xsaBanner,
   outageBanners,
+  globalBanner,
 } from '~/data/banners';
 
 describe('components/Banners filterBy', () => {
@@ -164,5 +165,18 @@ describe('components/Banners', () => {
     expect(banner.find('.Banner')).toHaveLength(1);
     const expected = expect.stringMatching('us-east-1a, us-south-1a');
     expect(banner.find('.Banner > div').text()).toEqual(expected);
+  });
+
+  it('renders a global notice banner', () => {
+    const banner = shallow(
+      <Banners
+        banners={globalBanner}
+        params={{}}
+        linodes={{ linodes: {} }}
+      />
+    );
+
+    expect(banner.find('.Banner > div').text()).toBe(
+      'The new linode cloud manager is in the works!');
   });
 });
