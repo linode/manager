@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import isEmpty from 'lodash/isEmpty';
 
 import { ExternalLink } from 'linode-components';
 import { Error } from 'linode-components';
@@ -39,6 +40,13 @@ export class Layout extends Component {
     this.state = { title: '', link: '' };
   }
 
+  getPageLinode = (linodes, params) => {
+    if (isEmpty(params) || isEmpty(linodes) || isEmpty(linodes.linodes)) {
+      return;
+    }
+    return Object.values(linodes.linodes).find(linode => linode.label === params.linodeLabel);
+  }
+
   render() {
     const {
       username,
@@ -56,6 +64,7 @@ export class Layout extends Component {
     const githubRoot = `https://github.com/linode/manager/blob/${version}/`;
     const params = this.props.params;
     const linodes = this.props.linodes;
+    const pageLinode = this.getPageLinode(linodes, params);
 
     return (
       <div
@@ -95,8 +104,7 @@ export class Layout extends Component {
           />
           <div className="Main">
             <Banners
-              params={params}
-              linodes={linodes}
+              linode={pageLinode}
               banners={banners}
             />
             {errors.status ?
