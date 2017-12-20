@@ -323,14 +323,6 @@ ShallowWrapper {
                   "elements": Array [
                     Object {
                       "action": [Function],
-                      "name": "Power On",
-                    },
-                  ],
-                },
-                Object {
-                  "elements": Array [
-                    Object {
-                      "action": [Function],
                       "name": "Launch Console",
                     },
                   ],
@@ -399,14 +391,6 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "action": [Function],
-                        "name": "Power On",
-                      },
-                    ],
-                  },
-                  Object {
-                    "elements": Array [
-                      Object {
-                        "action": [Function],
                         "name": "Launch Console",
                       },
                     ],
@@ -454,14 +438,6 @@ ShallowWrapper {
                   "elements": Array [
                     Object {
                       "name": "Offline",
-                    },
-                  ],
-                },
-                Object {
-                  "elements": Array [
-                    Object {
-                      "action": [Function],
-                      "name": "Power On",
                     },
                   ],
                 },
@@ -573,14 +549,6 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "action": [Function],
-                        "name": "Power On",
-                      },
-                    ],
-                  },
-                  Object {
-                    "elements": Array [
-                      Object {
-                        "action": [Function],
                         "name": "Launch Console",
                       },
                     ],
@@ -649,14 +617,6 @@ ShallowWrapper {
                       "elements": Array [
                         Object {
                           "action": [Function],
-                          "name": "Power On",
-                        },
-                      ],
-                    },
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
                           "name": "Launch Console",
                         },
                       ],
@@ -704,14 +664,6 @@ ShallowWrapper {
                     "elements": Array [
                       Object {
                         "name": "Offline",
-                      },
-                    ],
-                  },
-                  Object {
-                    "elements": Array [
-                      Object {
-                        "action": [Function],
-                        "name": "Power On",
                       },
                     ],
                   },

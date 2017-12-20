@@ -26,19 +26,19 @@ describe('linodes/components/StatusDropdown', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it.skip('renders correct options for offline Linodes', () => {
+  it('renders correct options for offline Linodes', () => {
     const dropdown = mount(
       <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
     );
 
-    expect(dropdown.find('.Dropdown-first').text().trim()).toBe('Offline');
+    expect(dropdown.find('button.Dropdown-first').text().trim()).toBe('Offline');
 
-    dropdown.find('.Dropdown-toggle').simulate('click');
+    dropdown.find('button.Dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.Dropdown-item').length).toBe(3);
-    expect(dropdown.find('.Dropdown-item').at(0).text()).toBe('Power On');
-    expect(dropdown.find('.Dropdown-item').at(1).text()).toBe('Launch Console');
-    expect(dropdown.find('.Dropdown-item').at(2).text()).toBe('Delete');
+    expect(dropdown.find('button.Dropdown-item').length).toBe(3);
+    expect(dropdown.find('button.Dropdown-item').at(0).text()).toBe('Power On');
+    expect(dropdown.find('button.Dropdown-item').at(1).text()).toBe('Launch Console');
+    expect(dropdown.find('button.Dropdown-item').at(2).text()).toBe('Delete');
   });
 
   it.skip('renders correct options for online Linodes', () => {
