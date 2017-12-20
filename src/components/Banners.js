@@ -94,13 +94,14 @@ function scheduledReboot(banners) {
 }
 
 function xenSecurityAdvisory(banners) {
-  return (
-    banners.map((banner, key) =>
+  return banners.map((banner, key) => {
+    const timestamp = banner.when.replace('T', ' ');
+    return (
       <div className="critical" key={key} >
-        {banner.entity.label} is scheduled for an XSA restart {banner.when}.
+        {banner.entity.label} is scheduled for an XSA restart at {timestamp}.
       </div>
-    )
-  );
+    );
+  });
 }
 
 function outstandingBalance(banners) {
