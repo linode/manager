@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,9 +20,9 @@ function makeOptions(additionalFilter) {
     return filteredZones;
   }
 
-  return _.map(REGION_MAP, (zones, region) => ({
+  return map(REGION_MAP, (zones, region) => ({
     label: region,
-    options: _.sortBy(filterZones(zones).map(zone => ({ value: zone, label: zone })), 'label'),
+    options: sortBy(filterZones(zones).map(zone => ({ value: zone, label: zone })), 'label'),
   }));
 }
 
@@ -46,6 +48,6 @@ export default function RegionSelect(props) {
 }
 
 RegionSelect.propTypes = {
-  ..._.omit(Select.propTypes, 'options'),
+  ...omit(Select.propTypes, 'options'),
   filter: PropTypes.array,
 };

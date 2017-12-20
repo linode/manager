@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -46,7 +46,7 @@ export default function BackupDetails(props) {
       {label}
       <FormGroup className="row" name="type">
         <div className="col-sm-3 row-label">Type</div>
-        <div className="col-sm-9" id="type">{_.capitalize(backup.type)}</div>
+        <div className="col-sm-9" id="type">{capitalize(backup.type)}</div>
       </FormGroup>
       <FormGroup className="row" name="started">
         <div className="col-sm-3 row-label">Started</div>

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import filter from 'lodash/filter';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -61,7 +61,7 @@ export default class VolumesList extends Component {
 
         if (!volumeOnLinode) {
           Object.values(getState().api.linodes.linodes).forEach(l => {
-            const [volume] = _.filter(Object.values(l._volumes.volumes), v => v.id === id);
+            const [volume] = filter(Object.values(l._volumes.volumes), v => v.id === id);
             if (volume) {
               volumeOnLinode = volume;
               linodeId = volume.linode_id;

@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import clone from 'lodash/clone';
+import omitBy from 'lodash/omitBy';
 
 import { actions } from '../generic/linodes';
 import { fetch } from '../fetch';
@@ -59,7 +60,7 @@ export function assignIPs(region, assignments) {
     const _ipsByLinode = {};
     function copyIPsInitially(id) {
       if (!_ipsByLinode[id]) {
-        _ipsByLinode[id] = _.clone(linodes[id]._ips);
+        _ipsByLinode[id] = clone(linodes[id]._ips);
       }
     }
 
@@ -205,7 +206,7 @@ export function deleteIP(ip) {
     await dispatch(fetch.delete(`/networking/ipv4/${ip.address}`));
 
     const linode = getState().api.linodes.linodes[ip.linode_id];
-    const _ips = _.omitBy(linode._ips, (_, key) => key === ip.address);
+    const _ips = omitBy(linode._ips, (_, key) => key === ip.address);
     dispatch(actions.one({ _ips }, linode.id));
   };
 }
