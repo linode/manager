@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import zipObject from 'lodash/zipObject';
+import fill from 'lodash/fill';
+import omitBy from 'lodash/omitBy';
 
 import {
   TOGGLE_SELECTED,
@@ -40,7 +42,7 @@ export default function select(_state = null, action) {
     case TOGGLE_SELECTED: {
       const { selectedIds = [], objectType } = action;
       const selectedMap = { ...state.selected[objectType] };
-      const toggledMap = _.zipObject(selectedIds, _.fill(Array(selectedIds.length), true));
+      const toggledMap = zipObject(selectedIds, fill(Array(selectedIds.length), true));
 
       // merge toggled state
       Object.keys(toggledMap).map(function (id) {
@@ -67,7 +69,7 @@ export default function select(_state = null, action) {
       return {
         ...state,
         selected: {
-          [objectType]: _.omitBy(state.selected[objectType],
+          [objectType]: omitBy(state.selected[objectType],
             (_, key) => selectedIds.indexOf(+key) >= 0),
         },
       };

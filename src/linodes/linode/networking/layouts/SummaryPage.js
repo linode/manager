@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -165,11 +165,11 @@ export class SummaryPage extends Component {
 
     const ipv4s = Object.values(linode._ips).filter(ip => ip.version === 'ipv4').map(ip => ({
       ...ip,
-      type: _.capitalize(ip.type),
+      type: capitalize(ip.type),
     }));
 
     const ipv6s = Object.values(linode._ips).filter(ip => ip.version === 'ipv6').map(ip => {
-      let type = _.capitalize(ip.type);
+      let type = capitalize(ip.type);
       let address = `${ip.address} / ${ip.prefix}`;
       if (ip.type === 'slaac') {
         type = 'SLAAC';

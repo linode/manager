@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Chart from 'chart.js';
-import _ from 'lodash';
+import merge from 'lodash/merge';
+import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 import moment from 'moment-timezone';
 
 
@@ -45,7 +47,7 @@ export default class LineGraph extends Component {
 
   shouldComponentUpdate(newProps, newState) {
     // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
+    return !isEqual(this.props, newProps) || !isEqual(this.state, newState);
   }
 
   componentWillUnmount() {
@@ -68,7 +70,7 @@ export default class LineGraph extends Component {
     const ctx = thisDOMNode.getContext('2d');
     const config = {
       // The data will be mutated! We need to preserve the original data.
-      data: _.cloneDeep(data),
+      data: cloneDeep(data),
       type: 'line',
       options: {
         // Allows the graph to grow / shrink with the window.
@@ -153,7 +155,7 @@ export default class LineGraph extends Component {
     if (this._chart) {
       this._chart.data.labels = data.labels;
       this._chart.data.datasets = data.datasets;
-      _.merge(this._chart.config.options, config.options);
+      merge(this._chart.config.options, config.options);
       this._chart.update();
       this._chart.render();
     } else {

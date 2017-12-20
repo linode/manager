@@ -1,4 +1,7 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+import mapValues from 'lodash/mapValues';
+import isEmpty from 'lodash/isEmpty';
+
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,7 +21,7 @@ export default function DeviceSelect(props) {
 
   for (const [type, objects] of categories) {
     if (Object.values(objects).length) {
-      options.push({ label: _.capitalize(type), options: [] });
+      options.push({ label: capitalize(type), options: [] });
 
       Object.values(objects).forEach(function (o) {
         if (!o) {
@@ -63,12 +66,12 @@ DeviceSelect.EMPTY = '-- None --';
 DeviceSelect.format = function (devices) {
   let formatted = devices;
   try {
-    formatted = _.mapValues(devices, d => d === DeviceSelect.EMPTY ? '' : JSON.parse(d));
+    formatted = mapValues(devices, d => d === DeviceSelect.EMPTY ? '' : JSON.parse(d));
   } catch (e) {
     // Pass
   }
 
-  return _.mapValues(formatted, d => _.isEmpty(d) ? null : d);
+  return mapValues(formatted, d => isEmpty(d) ? null : d);
 };
 
 DeviceSelect.propTypes = {

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
@@ -72,7 +72,7 @@ export default class BackupRestore extends Component {
       return null;
     }
 
-    const linodesInRegion = _.pickBy(linodes.linodes, l =>
+    const linodesInRegion = pickBy(linodes.linodes, l =>
       l.id !== linode.id && l.region === linode.region);
 
     const targetLabel = !target || target === linode.id ?

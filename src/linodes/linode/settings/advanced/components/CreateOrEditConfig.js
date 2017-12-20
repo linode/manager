@@ -1,4 +1,8 @@
-import _ from 'lodash';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
+import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
@@ -49,7 +53,7 @@ export default class CreateOrEditConfig extends Component {
       kernel: config.kernel,
       initrd: config.initrd || '',
       rootDevice: config.root_device || `/dev/${slots[0]}`,
-      devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
+      devices: mapValues(config.devices, d => JSON.stringify(pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.memory_limit,
@@ -99,7 +103,7 @@ export default class CreateOrEditConfig extends Component {
   kernelOptions() {
     const { kernels } = this.props;
 
-    return _.sortBy(_.map(kernels.kernels, kernel => ({
+    return sortBy(map(kernels.kernels, kernel => ({
       ...kernel,
       value: kernel.id,
     })), 'version').reverse();

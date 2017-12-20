@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
@@ -80,7 +80,7 @@ export default class RestoreLinode extends Component {
       errors, label, linode, plan, backup, backups, allBackups, fetchingBackups,
     } = this.state;
 
-    const linodesWithBackups = _.pickBy(linodes, (l) => l.backups.enabled);
+    const linodesWithBackups = pickBy(linodes, (l) => l.backups.enabled);
     const linodeBackups = allBackups[linode];
 
     return (
