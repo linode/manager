@@ -24,13 +24,13 @@ export function filterBy(pred, data) {
 function importantTicket(banners) {
   if (banners.length > 1) {
     return (
-      <div className="notice">
+      <div className="warning">
         You have <Link to="/support">important tickets</Link> open!
       </div>
     );
   } else if (banners.length === 1) {
     return (
-      <div className="notice">
+      <div className="warning">
         You have an <Link to={`/support/${banners[0].entity.id}`}>important ticket</Link> open!
       </div>
     );
@@ -56,25 +56,20 @@ function abuseTicket(banners) {
   }
 }
 
-function migrations(banners, linode) {
-  if (!linode) {
-    return null;
-  }
-
-  const banner = banners.find(banner => banner.entity.id === linode.id);
-  if (banner) {
-    return (
-      <div className="notice" key={key}>
+function migrations(banners) {
+  return (
+    banners.map((banner, key) =>
+      <div className="warning" key={key}>
         You have a host migration {banner.type.split('_')[0]} for this linode!
       </div>
-    );
-  }
+    )
+  );
 }
 
 function scheduledReboot(banners) {
   return (
     banners.map((banner, key) =>
-      <div className="notice" key={key}>
+      <div className="warning" key={key}>
         {banner.entity.label} is scheduled to reboot.
       </div>
     )
@@ -108,7 +103,7 @@ function outage(banners) {
 
   if (datacenterNames.length) {
     return (
-      <div className="outage">
+      <div className="info">
         We are aware of issues affecting service in the following facilities:
         &nbsp;{datacenterNames.join(', ')}
       </div>

@@ -3,23 +3,21 @@
 
     .critical {
         padding: 5px;
-        margin-top: 1px;
-        background-color: rgb(248, 80, 80);
-        color: #f4f4f4;
+        background-color: $red;
+        color: $medium-gray;
         a {
-            color: rgb(197, 197, 240);
+            color: $dark-gray;
         }
     }
 
-    .notice {
+    .warning {
         padding: 5px;
-        margin-top: 1px;
-        background-color: #FFDE4C;
+        background-color: $dark-yellow;
     }
 
-    .outage {
-        color: #f4f4f4;
-        background-color: #555;
+    .info {
+        color: $medium-gray;
+        background-color: $light-black;
         padding: 5px;
     }
 }
