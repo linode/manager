@@ -62,6 +62,18 @@ describe('components/Banners', () => {
     label: 'my-linode',
   };
 
+  it('renders no banners when no notices are present', () => {
+    const banner = shallow(
+      <Banners
+        banners={[]}
+        params={{}}
+        linodes={{ linodes: {} }}
+      />
+    );
+
+    expect(banner.find('.Banner')).toHaveLength(0);
+  });
+
   it('renders an important ticket banner', () => {
     const banner = shallow(
       <Banners
@@ -149,7 +161,8 @@ describe('components/Banners', () => {
       />
     );
 
-    expect(banner.find('.Banner > div').text().indexOf(
-      'us-east-1a, us-south-1a')).toBeGreaterThan(-1);
+    expect(banner.find('.Banner')).toHaveLength(1);
+    const expected = expect.stringMatching('us-east-1a, us-south-1a');
+    expect(banner.find('.Banner > div').text()).toEqual(expected);
   });
 });
