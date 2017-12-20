@@ -35,6 +35,7 @@ describe('layouts/Layout', () => {
         linodes={linodes}
         events={events}
         modal={{ open: false }}
+        params={{ linodeLabel: 'test-linode' }}
       >{children}</Layout>
     );
   }
@@ -76,5 +77,11 @@ describe('layouts/Layout', () => {
     const component = shallow(makeLayout(
       dispatch, { ...errorsPopulated, status: 404 }));
     expect(component.find('Error').length).toBe(1);
+  });
+
+  it('passes the current linode to Banners', () => {
+    const component = shallow(makeLayout());
+    const banners = component.find('Banners');
+    expect(banners.props().linode.label).toBe('test-linode');
   });
 });

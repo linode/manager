@@ -1,13 +1,25 @@
 .Banner {
     text-align: center;
 
-    .importantTicket, .migration {
-        background-color: #FFDE4C;
-        padding: 5px;
+    div {
+        padding: 5px
     }
 
-    .abuseTicket {
-        background-color: #FF3333;
-        padding: 5px;
+    .critical {
+        background-color: $red;
+        color: $medium-gray;
+        a {
+            color: $dark-gray;
+        }
+    }
+
+    .warning {
+        background-color: $yellow;
+    }
+
+    .info {
+        color: $medium-gray;
+        background-color: $light-black;
     }
 }
+ 
