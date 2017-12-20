@@ -241,9 +241,6 @@ export default class StatusDropdown extends Component {
         ] });
       }
     }
-    finalGroups.push({ elements: [
-      { name: 'Power On', action: this.powerOnLinode },
-    ] });
     // we always allow Lish
     finalGroups.push({ elements: [
       { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
