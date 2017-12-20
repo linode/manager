@@ -129,10 +129,10 @@ function outage(banners) {
 }
 
 function globalNotice(banner) {
-  if (banner) {
+  if (banner.length) {
     return (
       <div className="info">
-        {banner.type}
+        {banner[0].type}
       </div>
     );
   }
@@ -183,8 +183,8 @@ function renderBanners(banners, linode = {}) {
     banners
   );
 
-  const globalBanner = filterBy(
-    globalNoticeFilter,
+  const globalBanners = filterBy(
+    [globalNoticeFilter],
     banners
   );
 
@@ -199,7 +199,7 @@ function renderBanners(banners, linode = {}) {
       {!isEmpty(scheduledRebootBanners) && scheduledReboot(scheduledRebootBanners)}
       {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(xenSecurityAdvisoryBanners)}
       {!isEmpty(outageBanners) && outage(outageBanners)}
-      {!isEmpty(globalBanner) && globalNotice(globalBanner)}
+      {!isEmpty(globalBanners) && globalNotice(globalBanners)}
     </div>
   );
 }
