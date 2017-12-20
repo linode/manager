@@ -80,12 +80,9 @@ function migrations(banners, linodeId) {
 }
 
 function outage(banners) {
-  const datacenterNames = banners.reduce((names, banner) => {
-    names.push(banner.entity.id);
-    return names;
-  }, []);
+  const datacenterNames = banners.map(banner => banner.entity.id);
 
-  if (datacenterNames) {
+  if (datacenterNames.length) {
     return (
       <div className="outage">
         We are aware of issues affecting service in the following facilities:
