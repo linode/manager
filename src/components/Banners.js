@@ -64,10 +64,10 @@ function abuseTicket(banners) {
   } else if (banners.length === 1) {
     const ticket = banners[0].entity;
     return (
-      <div className="abuseTicket">
+      <div className="critical">
         You have an abuse ticket open!
         &nbsp;<Link to={`/support/${ticket.id}`}>[Ticket #{ticket.id}]</Link>
-        &nbsp;banners[0].entity.label
+        &nbsp;{banners[0].entity.label}
       </div>
     );
   }
