@@ -79,8 +79,22 @@ function migrations(banners, linodeId) {
   }
 }
 
+function outage(banners) {
+  const datacenterNames = banners.map(banner => banner.entity.id);
+
+  if (datacenterNames.length) {
+    return (
+      <div className="outage">
+        We are aware of issues affecting service in the following facilities:
+        &nbsp;{datacenterNames.join(', ')}
+      </div>
+    );
+  }
+}
+
 function renderBanners(banners, linodeId) {
   const abuseItems = filterBanners(banners, ['abuse_ticket']);
+  const outageItems = filterBanners(banners, ['outage']);
 
   return (
     <div className="Banner">
@@ -89,6 +103,7 @@ function renderBanners(banners, linodeId) {
         importantTicket(filterBanners(banners, ['important_ticket']))
       }
       {migrations(filterBanners(banners, ['pending_migration', 'scheduled_migration']), linodeId)}
+      {outage(outageItems)}
     </div>
   );
 }
