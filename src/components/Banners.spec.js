@@ -118,7 +118,7 @@ describe('components/Banners', () => {
     expect(banner.find('.Banner Link').props().to).toBe('/support');
   });
 
-  it('should render a notice for scheduled reboot banner', () => {
+  it('should render a warning for scheduled reboot banner', () => {
     const wrapper = shallow(
       <Banners
         banners={[scheduledRebootBanner]}
@@ -126,7 +126,7 @@ describe('components/Banners', () => {
       />
     );
 
-    expect(wrapper.find('div.notice').length).toBe(1);
+    expect(wrapper.find('div.warning').length).toBe(1);
   });
 
   it('should render a critical for xsa banner', () => {
