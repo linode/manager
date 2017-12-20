@@ -118,43 +118,46 @@ function outage(banners) {
 
 function renderBanners(banners, linode = {}) {
   const abuseBanners = filterBy(
-    [(banner) => banner.type === 'abuse_ticket'],
+    [banner => banner.type === 'abuse_ticket'],
     banners
   );
 
   const importantTicketBanners = filterBy(
-    [(banner) => banner.type === 'important_ticket'],
+    [banner => banner.type === 'important_ticket'],
     banners
   );
 
   const outstandingBalanceBanners = filterBy(
-    [(banner) => banner.type === 'outstanding_balance'],
+    [banner => banner.type === 'outstanding_balance'],
     banners
   );
 
   const migrationBanners = filterBy(
-    [banner => ['pending_migration', 'scheduled_migration'].indexOf(banner.type) >= 0],
+    [
+      banner => ['pending_migration', 'scheduled_migration'].indexOf(banner.type) >= 0,
+      banner => banner.entity.id === linode.id,
+    ],
     banners
   );
 
   const scheduledRebootBanners = filterBy(
     [
-      (banner) => banner.type === 'scheduled_reboot',
-      (banner) => banner.entity.id === linode.id,
+      banner => banner.type === 'scheduled_reboot',
+      banner => banner.entity.id === linode.id,
     ],
     banners
   );
 
   const xenSecurityAdvisoryBanners = filterBy(
     [
-      (banner) => banner.type === 'xsa',
-      (banner) => banner.entity.id === linode.id,
+      banner => banner.type === 'xsa',
+      banner => banner.entity.id === linode.id,
     ],
     banners
   );
 
   const outageBanners = filterBy(
-    [(banner) => banner.type === 'outage'],
+    [banner => banner.type === 'outage'],
     banners
   );
 
