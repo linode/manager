@@ -5,22 +5,29 @@ import { withRouter } from 'react-router';
 import { VncDisplay } from 'react-vnc-display';
 
 import { ZONES } from '~/constants';
-import { lishToken } from '~/api/generic/linodes';
+import { lishToken } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-
-import { addJSScript } from './Weblish';
-
 
 export class Glish extends Component {
   constructor(props) {
     super(props);
-    this.state = { state: 'warn', message: 'Connecting' };
+    this.state = {
+      linode: null,
+      session: null,
+      state: 'warn',
+      message: 'Connecting',
+    };
     this.session = '';
     this.host = '';
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { dispatch, params: { linodeLabel } } = this.props;
     this.refresh_timer = setInterval(this.renew, 1000 * 60);
+    const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    this.setState({ linode: linode });
+    const session = await dispatch(lishToken(linode.id));
+    this.setState({ session: session.lish_token });
   }
 
   componentWillUnmount() {
@@ -29,7 +36,6 @@ export class Glish extends Component {
 
   onload = async () => {
     const { dispatch, params: { linodeLabel } } = this.props;
-    const { id, region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const { lish_token: session } = await dispatch(lishToken(id));
 
     this.session = session;
@@ -95,20 +101,15 @@ export class Glish extends Component {
   }
 
   render() {
-    console.log('Render', this.state.state, this.state.message);
+    const { session, linode } = this.state;
+    const region = linode && ZONES[linode.region];
     return (
       <div>
-        <GlishStatus
-          {...this.state.state}
-          {...this.state.message}
-          {...this.host}
-          {...this.session}
-          reload={this.connect.bind(this)}
-        />
-        <VncDisplay url="wss://some-remote-display:5991/path" />
-          <canvas ref="canvas" style={{ width: '1024px', height: '655px' }}>
-            Canvas not supported.
-          </canvas>
+        {session && region &&
+          <VncDisplay
+            url={`wss://${region}.webconsole.linode.com:8080/${session}`}
+          />
+        }
       </div>
     );
   }
@@ -116,7 +117,6 @@ export class Glish extends Component {
 
 Glish.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
@@ -140,8 +140,4 @@ GlishStatus.propTypes = {
   session: PropTypes.string.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default withRouter(connect(select)(Glish));
+export default withRouter(connect()(Glish));
