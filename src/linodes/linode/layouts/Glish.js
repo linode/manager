@@ -17,60 +17,30 @@ export class Glish extends Component {
       state: 'warn',
       message: 'Connecting',
     };
-    this.session = '';
-    this.host = '';
   }
 
   async componentDidMount() {
     const { dispatch, params: { linodeLabel } } = this.props;
-    this.refresh_timer = setInterval(this.renew, 1000 * 60);
+
     const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     this.setState({ linode: linode });
+
     const session = await dispatch(lishToken(linode.id));
     this.setState({ session: session.lish_token });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.refresh_timer);
-  }
-
-  onload = async () => {
-    const { dispatch, params: { linodeLabel } } = this.props;
-    const { lish_token: session } = await dispatch(lishToken(id));
-
-    this.session = session;
-    this.host = `${ZONES[region.id]}.webconsole.linode.com`;
-
-    this.rfb = new RFB({
-      target: this.refs.canvas,
-      encrypt: true,
-      repeaterID: '',
-      true_color: true,
-      local_cursor: true,
-      shared: true,
-      view_only: false,
-      onUpdateState: this.onUpdateState,
-    });
 
     this.monitor_url = `wss://${this.host}:8080/${this.session}/monitor`;
     this.monitor = new WebSocket(this.monitor_url);
-
     this.monitor.addEventListener('message', (e) => {
       const data = JSON.parse(e.data);
-      console.log('message received', data);
-      if (data.poweredStatus === 'Running') {
-        this.connect();
-      }
+      console.log(data);
     });
-
-
-    this.connect();
   }
 
   onUpdateState = (rfb, newState, oldState, message) => {
-    // const valid = ["normal", "loaded"];
+    console.log('onUpdateState', newState, oldState, message);
+
     const valid = ['failed', 'fatal', 'normal', 'disconnected', 'loaded'];
-    // "connect",
+
     if (valid.indexOf(newState) !== -1) {
       this.setState({ state: newState });
     } else {
@@ -82,34 +52,22 @@ export class Glish extends Component {
     } else if (message) {
       this.setState({ message });
     }
-
-    console.log('onUpdateStatus', newState, oldState, message);
-    /* switch (newState) {
-     *   case 'ProtocolVersion':
-     *     setTimeout(this.connect, 3000);
-     * }*/
-  }
-
-  renew = () => {
-    if (this.monitor.readyState === 1) {
-      this.monitor.send(JSON.stringify({ action: 'renew' }));
-    }
-  }
-
-  connect = () => {
-    this.rfb.connect(this.host, 8080, '', this.session);
   }
 
   render() {
-    const { session, linode } = this.state;
+    const { state, message, session, linode } = this.state;
     const region = linode && ZONES[linode.region];
     return (
       <div>
-        {session && region &&
-          <VncDisplay
-            url={`wss://${region}.webconsole.linode.com:8080/${session}`}
-          />
-        }
+        <GlishStatus state={state} message={message} />
+        <div className="text-center">
+          {session && region &&
+            <VncDisplay
+              url={`wss://${region}.webconsole.linode.com:8080/${session}`}
+              onUpdateState={this.onUpdateState}
+            />
+          }
+        </div>
       </div>
     );
   }
@@ -122,12 +80,13 @@ Glish.propTypes = {
   }).isRequired,
 };
 
+export default withRouter(connect()(Glish));
+
 export function GlishStatus(props) {
   return (
-    <div id="glish-warning" style={{ color: 'black', background: 'red' }}>
-      State is {props.state}; Message is {props.message}<br/>
-      Host is {props.host}; Session is {props.session}<br/>
-      <button onClick={this.props.reload}>Reconnect &#x27f3;</button>
+    <div id="glish-warning">
+      State is {props.state}; Message is {props.message}<br />
+      <button onClick={props.reload}>Reconnect &#x27f3;</button>
     </div>
   );
 }
@@ -139,5 +98,3 @@ GlishStatus.propTypes = {
   host: PropTypes.string.isRequired,
   session: PropTypes.string.isRequired,
 };
-
-export default withRouter(connect()(Glish));
