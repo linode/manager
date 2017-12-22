@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VncDisplay } from 'react-vnc-display';
 
-import { ZONES } from '~/constants';
+import { ZONES, LISH_ROOT } from '~/constants';
 import { lishToken } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 
@@ -13,9 +13,11 @@ export class Glish extends Component {
     super(props);
     this.state = {
       linode: null,
-      session: null,
-      state: 'warn',
-      message: 'Connecting',
+      token: null,
+      powered: false,
+      vncState: 'warn',
+      vncMessage: 'Connecting',
+      linodeMessage: undefined,
     };
   }
 
@@ -23,48 +25,68 @@ export class Glish extends Component {
     const { dispatch, params: { linodeLabel } } = this.props;
 
     const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    const region = linode && ZONES[linode.region];
     this.setState({ linode: linode });
 
-    const session = await dispatch(lishToken(linode.id));
-    this.setState({ session: session.lish_token });
+    const { lish_token: token } = await dispatch(lishToken(linode.id));
+    this.setState({ token: token });
 
-    this.monitor_url = `wss://${this.host}:8080/${this.session}/monitor`;
+    this.monitor_url = `wss://${region}.${LISH_ROOT}:8080/${token}/monitor`;
     this.monitor = new WebSocket(this.monitor_url);
-    this.monitor.addEventListener('message', (e) => {
-      const data = JSON.parse(e.data);
-      console.log(data);
-    });
+    this.monitor.addEventListener('message', this.onUpdateLinodeMessage);
   }
 
-  onUpdateState = (rfb, newState, oldState, message) => {
-    console.log('onUpdateState', newState, oldState, message);
+  onUpdateLinodeMessage = (e) => {
+    const data = JSON.parse(e.data);
+    console.log('monitor: ', data);
+    switch (data.type) {
+      case 'status':
+        if (data.poweredStatus === 'Running') {
+          this.setState({ powered: true });
+          this.setState({ linodeMessage: 'Your Linode is powered on' });
+        } else {
+          this.setState({ powered: false });
+          this.setState({ linodeMessage: 'Your Linode is powered off' });
+        }
+        break;
+      case 'error':
+        this.setState({ powered: false });
+        this.setState({ linodeMessage: data.reason });
+        break;
+      default:
+        break;
+    }
+  }
 
+  onUpdateVNCState = (rfb, newState, oldState, vncMessage) => {
     const valid = ['failed', 'fatal', 'normal', 'disconnected', 'loaded'];
 
     if (valid.indexOf(newState) !== -1) {
-      this.setState({ state: newState });
+      this.setState({ vncState: newState });
     } else {
-      this.setState({ state: 'warn' });
+      this.setState({ vncState: 'warn' });
     }
 
     if (newState === 'disconnected') {
-      this.setState({ message: 'Disconnected' });
-    } else if (message) {
-      this.setState({ message });
+      this.setState({ vncMessage: 'Disconnected' });
+    } else if (vncMessage) {
+      this.setState({ vncMessage });
     }
+
+    console.log('onUpdateVNCState', newState, oldState, vncMessage);
   }
 
   render() {
-    const { state, message, session, linode } = this.state;
+    const { vncState, vncMessage, linodeMessage, powered, token, linode } = this.state;
     const region = linode && ZONES[linode.region];
     return (
       <div>
-        <GlishStatus state={state} message={message} />
+        <GlishStatus vncState={vncState} vncMessage={vncMessage} linodeMessage={linodeMessage} />
         <div className="text-center">
-          {session && region &&
+          {powered && token && region &&
             <VncDisplay
-              url={`wss://${region}.webconsole.linode.com:8080/${session}`}
-              onUpdateState={this.onUpdateState}
+              url={`wss://${region}.${LISH_ROOT}:8080/${token}`}
+              onUpdateState={this.onUpdateVNCState}
             />
           }
         </div>
@@ -85,7 +107,9 @@ export default withRouter(connect()(Glish));
 export function GlishStatus(props) {
   return (
     <div id="glish-warning">
-      State is {props.state}; Message is {props.message}<br />
+      VNC State: {props.vncState}<br />
+      VNC Message: {props.vncMessage}<br />
+      Linode Message: {props.linodeMessage}<br />
       <button onClick={props.reload}>Reconnect &#x27f3;</button>
     </div>
   );
@@ -93,8 +117,7 @@ export function GlishStatus(props) {
 
 GlishStatus.propTypes = {
   reload: PropTypes.func.isRequired,
-  state: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  host: PropTypes.string.isRequired,
-  session: PropTypes.string.isRequired,
+  vncState: PropTypes.string.isRequired,
+  vncMessage: PropTypes.string.isRequired,
+  linodeMessage: PropTypes.string.isRequired,
 };
