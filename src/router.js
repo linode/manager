@@ -131,12 +131,18 @@ export class LoadingRouterContext extends RouterContext {
     return this.preloadCounter === 0;
   }
 
+  ignorePath = (pathname) => {
+    return (
+      pathname.includes('/logout')
+      || pathname.includes('/weblish')
+      || pathname.includes('/glish')
+    );
+  }
+
   render() {
     const { pathname } = this.props.location;
 
-    if (this.state.initialLoad &&
-        pathname !== '/logout' &&
-        !pathname.endsWith('/weblish')) {
+    if (this.state.initialLoad && !this.ignorePath(pathname)) {
       // If the user is about to be redirected somewhere, don't show them the loading screen.
       if (!this.state.checkLoginDone) {
         return null;
