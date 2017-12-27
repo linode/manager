@@ -59,7 +59,7 @@ export function rebuildLinode(id, config = null) {
 }
 
 export function lishToken(linodeId) {
-  return (dispatch) => dispatch(fetch.post(`/linode/instances/${linodeId}/lish_token`));
+  return fetch.post(`/linode/instances/${linodeId}/lish_token`);
 }
 
 export function resetPassword(linodeId, diskId, password) {

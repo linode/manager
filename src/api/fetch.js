@@ -2,6 +2,7 @@ import { resetEventsPoll } from '~/actions/events';
 import { API_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import * as session from '~/session';
+import store from '~/store';
 
 
 function gatherOptions(token, method, body, headers) {
@@ -36,34 +37,30 @@ function gatherOptions(token, method, body, headers) {
 
 function partialFetch(method = 'GET') {
   return function (url, body, headers = {}) {
-    return async function (dispatch, getState) {
-      const state = getState();
-      const { token } = state.authentication;
+    const state = store.getState();
+    const { token } = state.authentication;
 
-      const options = gatherOptions(token, method, body, headers);
-      const path = API_ROOT + url;
+    const options = gatherOptions(token, method, body, headers);
+    const path = API_ROOT + url;
 
-      if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
-        dispatch(resetEventsPoll());
-      }
+    if (['put', 'post', 'delete'].indexOf(method.toLowerCase()) !== -1) {
+      store.dispatch(resetEventsPoll());
+    }
 
-      return new Promise((accept, reject) => {
-        rawFetch(path, options).then(async (response) => {
-          const { status, headers } = response;
-          const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
-          if (status >= 400 || inMaintenanceMode) {
-            if (status === 401 || inMaintenanceMode) {
-              dispatch(session.expireAndReAuth);
-            }
-
-            reject(response);
-          } else {
-            const json = await response.json();
-            accept(json);
+    return rawFetch(path, options)
+      .then((response) => {
+        const { status, headers } = response;
+        const inMaintenanceMode = !!headers['X-MAINTENANCE-MODE'];
+        if (status >= 400 || inMaintenanceMode) {
+          if (status === 401 || inMaintenanceMode) {
+            store.dispatch(session.expireAndReAuth);
           }
-        }, reject);
+
+          Promise.reject(response);
+        } else {
+          return response.json();
+        }
       });
-    };
   };
 }
 
