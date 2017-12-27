@@ -97,7 +97,7 @@ export function filterResources(config, resources, resourceFilter) {
 function genThunkOne(config, actions) {
   return (ids = [], headers = {}) => async (dispatch) => {
     const endpoint = config.endpoint(...ids);
-    const resource = await dispatch(fetch.get(endpoint, undefined, headers));
+    const resource = await fetch.get(endpoint, undefined, headers);
     dispatch(actions.one(resource, ...ids));
     return resource;
   };
@@ -114,7 +114,7 @@ function genThunkPage(config, actions) {
     return async (dispatch, getState) => {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
-      const resources = await dispatch(fetch.get(endpoint, undefined, headers));
+      const resources = await fetch.get(endpoint, undefined, headers);
       resources[config.plural] = resources.data || [];
 
       const now = fetchBeganAt || new Date();
@@ -232,7 +232,7 @@ function genThunkAll(config, actions, fetchPage) {
 function genThunkDelete(config, actions) {
   return (...ids) => async (dispatch) => {
     const endpoint = config.endpoint(...ids);
-    const json = await dispatch(fetch.delete(endpoint));
+    const json = await fetch.delete(endpoint);
     dispatch(actions.delete(...ids));
     return json;
   };
@@ -241,7 +241,7 @@ function genThunkDelete(config, actions) {
 function genThunkPut(config, actions) {
   return (resource, ...ids) => async (dispatch) => {
     const endpoint = config.endpoint(...ids);
-    const json = await dispatch(fetch.put(endpoint, resource));
+    const json = await fetch.put(endpoint, resource);
     dispatch(actions.one(json, ...ids));
     return json;
   };
@@ -251,7 +251,7 @@ function genThunkPost(config, actions) {
   return (resource, ...ids) => {
     return async (dispatch) => {
       const endpoint = config.endpoint(...ids, '');
-      const json = await dispatch(fetch.post(endpoint, resource));
+      const json = await fetch.post(endpoint, resource);
       dispatch(actions.one(json, ...ids));
       return json;
     };
