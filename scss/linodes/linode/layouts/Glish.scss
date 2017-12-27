@@ -4,4 +4,8 @@
         linear-gradient(45deg, #CACACC 25%, transparent 25%, transparent 75%, #CACACC 75%, #CACACC);
     background-size: 10px 10px;
     background-position: 0 0, 5px 5px;
+
+    .power-btn {
+        border-radius: 5px !important;
+    }
 }

@@ -18,7 +18,7 @@ export class Glish extends Component {
       token: null,
       powered: true,
       vncState: 'warn',
-      monitor: undefined,
+      message: '',
     };
     this.lastDisconnect = Date.now();
   }
