@@ -20,7 +20,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch }, { linodeLabel }) {
     const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const requests = [
-      api.types.one([type.id]),
+      api.linodeTypes.getOne(type.id),
       api.linodes.configs.all([id]),
     ];
 

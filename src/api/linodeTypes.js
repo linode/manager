@@ -34,16 +34,16 @@ export default function reducer(state = {}, action = {}) {
   }
 }
 
-export function getOne(id, headers) {
+export function getOne(id) {
   return async (dispatch) => {
-    const linodeType = await dispatch(fetch.get(`/linode/types/${id}`, undefined, headers));
+    const linodeType = await dispatch(fetch.get(`/linode/types/${id}`));
     dispatch(updateOne(linodeType));
   };
 }
 
-export function getAll(id, headers) {
+export function getAll() {
   return async (dispatch) => {
-    const linodeType = await dispatch(fetch.get(`/linode/types/${id}`, undefined, headers));
-    dispatch(updateOne(linodeType));
+    const linodeTypes = await dispatch(fetch.get('/linode/types'));
+    dispatch(updateAll(linodeTypes));
   };
 }

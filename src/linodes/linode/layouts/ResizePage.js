@@ -27,7 +27,7 @@ import { selectLinode } from '../utilities';
 export class ResizePage extends Component {
   static async preload({ dispatch, getState }) {
     if (!getState().api.types.ids.length) {
-      await dispatch(api.types.all());
+      await dispatch(api.linodeTypes.all());
     }
   }
 
