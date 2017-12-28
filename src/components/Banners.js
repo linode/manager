@@ -211,3 +211,7 @@ Banners.propTypes = {
   linode: PropTypes.object,
   banners: PropTypes.array,
 };
+
+Banners.defaultProps = {
+  banners: [],
+};

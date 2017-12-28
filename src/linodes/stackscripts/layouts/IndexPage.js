@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import { List } from 'linode-components';
@@ -25,15 +25,12 @@ import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 
 import AddStackScript from '../components/AddStackScript';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'stackscripts';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
-  }
-
   constructor(props) {
     super(props);
 
@@ -189,11 +186,18 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     stackscripts: state.api.stackscripts,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
+    }
+  )
+)(IndexPage);

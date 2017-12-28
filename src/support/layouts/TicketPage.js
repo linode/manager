@@ -13,7 +13,11 @@ import {
   Textarea,
   Input,
 } from 'linode-components';
+
 import { onChange } from 'linode-components';
+import { compose } from 'redux';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
+
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
@@ -37,11 +41,6 @@ export function AttachmentTooBigError() {
 AttachmentTooBigError.prototype = new Error();
 
 export class TicketPage extends Component {
-  static async preload({ dispatch }, { ticketId }) {
-    await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-    await dispatch(api.tickets.replies.all([ticketId]));
-  }
-
   constructor() {
     super();
 
@@ -189,7 +188,7 @@ TicketPage.propTypes = {
   replies: PropTypes.array.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { ticketId } = props.params;
   const ticket = state.api.tickets.tickets[ticketId];
   return {
@@ -198,4 +197,13 @@ function select(state, props) {
   };
 }
 
-export default connect(select)(TicketPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      const { routeParams: { ticketId } } = props;
+      await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
+      await dispatch(api.tickets.replies.all([ticketId]));
+    }
+  )
+)(TicketPage);

@@ -3,7 +3,7 @@ import filter from 'lodash/filter';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-
+import { compose } from 'redux';
 import { ExternalLink } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
 
@@ -12,19 +12,10 @@ import api from '~/api';
 import { ChainedDocumentTitle } from '~/components';
 
 import { Editor, Settings } from '../components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class StackScriptPage extends Component {
-  static async preload({ dispatch, getState }, { stackscriptId }) {
-    const requests = [api.stackscripts.one([stackscriptId])];
-
-    if (!getState().api.images.ids.length) {
-      requests.push(api.images.all());
-    }
-
-    return Promise.all(requests.map(dispatch));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -96,11 +87,26 @@ StackScriptPage.propTypes = {
   images: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   return {
     stackscript: state.api.stackscripts.stackscripts[props.params.stackscriptId],
     images: state.api.images.images,
+    ids: state.api.images.ids,
   };
 }
 
-export default connect(select)(StackScriptPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      const { ids, params: { stackscriptId } } = props;
+      const requests = [api.stackscripts.one([stackscriptId])];
+
+      if (!ids.length) {
+        requests.push(api.images.all());
+      }
+
+      return Promise.all(requests.map(dispatch));
+    }
+  )
+)(StackScriptPage);

@@ -7,7 +7,6 @@ import errors from './errors';
 import events from './events';
 import modal from './modal';
 import notifications from './notifications';
-import preloadIndicator from './preloadIndicator';
 import select from './select';
 import session from './session';
 import source from './source';
@@ -25,7 +24,6 @@ const appReducer = combineReducers({
   source,
   api,
   errors,
-  preloadIndicator,
 });
 
 export default function rootReducer(state, action) {

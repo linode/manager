@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import CreateHelper from '~/components/CreateHelper';
@@ -30,16 +30,12 @@ import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
 import { TransferPool } from '../../components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'nodebalancers';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.nodebalancers.all());
-    await dispatch(transferPool());
-  }
-
   constructor(props) {
     super(props);
 
@@ -157,7 +153,7 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   const transfer = state.api.account._transferpool;
 
   return {
@@ -167,4 +163,14 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all([
+        api.nodebalancers.all(),
+        transferPool(),
+      ].map(dispatch));
+    }
+  )
+)(IndexPage);

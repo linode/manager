@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
-
+import { compose } from 'redux';
 import { Card } from 'linode-components';
 import {
   Input,
@@ -21,17 +21,12 @@ import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import TicketHelper from '../components/TicketHelper';
 
 
 export class CreatePage extends Component {
-  static async preload({ dispatch }) {
-    await Promise.all([
-      api.linodes, api.domains, api.nodebalancers, api.volumes,
-    ].map(o => dispatch(o.all())));
-  }
-
   constructor(props) {
     super(props);
 
@@ -180,4 +175,13 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(CreatePage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all([
+        api.linodes, api.domains, api.nodebalancers, api.volumes,
+      ].map(o => dispatch(o.all())));
+    }
+  )
+)(CreatePage);

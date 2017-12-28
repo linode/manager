@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { compose } from 'redux';
 
 import { PrimaryButton } from 'linode-components';
 import { ListBody, ListGroup } from 'linode-components';
@@ -21,6 +22,7 @@ import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,
 } from '~/components/notifications/EventTypes';
 import TimeDisplay from '~/components/TimeDisplay';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const TICKET_LINK_MAP = {
@@ -29,7 +31,6 @@ const TICKET_LINK_MAP = {
   domain: getDomainRedirectUrl,
   volume: getVolumeRedirectUrl,
 };
-
 export function renderTicketCreationInfo(ticket) {
   const entity = ticket.entity || {};
   const to = TICKET_LINK_MAP[entity.type];
@@ -58,10 +59,6 @@ export function renderTicketCreationInfo(ticket) {
 }
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.tickets.all());
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -177,10 +174,17 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     tickets: state.api.tickets,
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await dispatch(api.tickets.all());
+    }
+  )
+)(IndexPage);

@@ -102,7 +102,7 @@ DashboardPage.propTypes = {
   invoices: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     account: state.api.account,
     invoices: state.api.invoices.invoices,
@@ -110,4 +110,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(DashboardPage);
+export default connect(mapStateToProps)(DashboardPage);

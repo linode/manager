@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card } from 'linode-components';
 import {
   Checkbox,
@@ -15,18 +15,11 @@ import {
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import { selectUser } from './IndexPage';
 
 export class PermissionsPage extends Component {
-  static async preload({ dispatch }, { username }) {
-    const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
-
-    if (user.restricted) {
-      await dispatch(api.users.permissions.one([username]));
-    }
-  }
-
   constructor(props) {
     super(props);
 
@@ -303,4 +296,15 @@ PermissionsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(selectUser)(PermissionsPage);
+export default compose(
+  connect(selectUser),
+  Preload(
+    async function (dispatch, { params: { username } }) {
+      const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
+
+      if (user.restricted) {
+        await dispatch(api.users.permissions.one([username]));
+      }
+    }
+  )
+)(PermissionsPage);

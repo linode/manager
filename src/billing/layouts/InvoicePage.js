@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
-
+import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
 import { Breadcrumbs } from 'linode-components';
 import { Table } from 'linode-components';
@@ -12,13 +12,10 @@ import { setSource } from '~/actions/source';
 
 import { ChainedDocumentTitle } from '~/components';
 import { getStorage } from '~/storage';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class InvoicePage extends Component {
-  static async preload({ dispatch }, { invoiceId }) {
-    await dispatch(api.invoices.items.all([invoiceId]));
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -116,7 +113,7 @@ InvoicePage.propTypes = {
   items: PropTypes.array,
 };
 
-function select(state, ownProps) {
+function mapStateToProps(state, ownProps) {
   const params = ownProps.params;
   const invoiceId = params.invoiceId;
   const invoice = state.api.invoices.invoices[invoiceId];
@@ -128,4 +125,11 @@ function select(state, ownProps) {
   };
 }
 
-export default connect(select)(InvoicePage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { invoiceId } }) {
+      await dispatch(api.invoices.items.all([invoiceId]));
+    }
+  )
+)(InvoicePage);

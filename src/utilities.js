@@ -41,3 +41,12 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
     )));
   };
 }
+
+
+/**
+ * @todo EXTRACT
+ */
+export const getLinodeByLabel = (linodes, label) => {
+  return Object.values(linodes)
+    .find((linode) => linode.label === label);
+};

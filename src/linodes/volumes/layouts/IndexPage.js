@@ -2,7 +2,7 @@ import omitBy from 'lodash/omitBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { PrimaryButton } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
@@ -11,17 +11,12 @@ import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 
 import { AddEditVolume, VolumesList } from '../components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'volumes';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await Promise.all([
-      api.linodes, api.volumes,
-    ].map(o => dispatch(o.all())));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -78,7 +73,7 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     volumes: state.api.volumes,
     linodes: state.api.linodes.linodes,
@@ -86,4 +81,13 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all([
+        api.linodes, api.volumes,
+      ].map(o => dispatch(o.all())));
+    }
+  )
+)(IndexPage);

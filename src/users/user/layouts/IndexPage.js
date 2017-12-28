@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
@@ -9,13 +10,10 @@ import { Tabs } from 'linode-components';
 import { setAnalytics } from '~/actions';
 import { getObjectByLabelLazily } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }, { username }) {
-    await dispatch(getObjectByLabelLazily('users', username, 'username'));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setAnalytics(['users', 'user']));
@@ -77,4 +75,11 @@ export function selectUser(state, props) {
   return { user };
 }
 
-export default connect(selectUser)(IndexPage);
+export default compose(
+  connect(selectUser),
+  Preload(
+    async function (dispatch, { username }) {
+      await dispatch(getObjectByLabelLazily('users', username, 'username'));
+    }
+  ),
+)(IndexPage);

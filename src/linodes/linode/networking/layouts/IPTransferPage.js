@@ -2,7 +2,7 @@ import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
 import {
   Form,
@@ -23,18 +23,10 @@ import {
 
 import { IPList } from '../components';
 import { selectLinode } from '../../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IPTransferPage extends Component {
-  static async preload({ dispatch }, { linodeLabel }) {
-    const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-    await Promise.all([
-      ipv4s(region),
-      api.linodes.all([], undefined, createHeaderFilter({ region })),
-    ].map(dispatch));
-  }
-
   constructor() {
     super();
 
@@ -185,10 +177,22 @@ IPTransferPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api.linodes;
   return { linode, linodes };
 }
 
-export default connect(select)(IPTransferPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { linodeLabel } }) {
+      const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+      await Promise.all([
+        ipv4s(region),
+        api.linodes.all([], undefined, createHeaderFilter({ region })),
+      ].map(dispatch));
+    }
+  )
+)(IPTransferPage);

@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
 import {
   Form,
@@ -17,19 +17,22 @@ import {
   CheckboxCell,
   LinkCell,
 } from 'linode-components';
-
+import api from '~/api';
+import { ipv4s } from '~/api/ad-hoc/networking';
+import {
+  createHeaderFilter,
+  dispatchOrStoreErrors,
+  getObjectByLabelLazily,
+} from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/ad-hoc/networking';
-import { dispatchOrStoreErrors } from '~/api/util';
 import { IPRdnsCell } from '~/components/tables/cells';
 
-import { IPTransferPage } from './IPTransferPage';
 import { selectLinode } from '../../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IPSharingPage extends Component {
-  static preload = IPTransferPage.preload;
-
   constructor(props) {
     super(props);
 
@@ -156,7 +159,7 @@ export class IPSharingPage extends Component {
                 onToggleSelect={this.onChange}
               />
             </FormGroup>
-            <FormGroup>
+            <FormGroup name="submit">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Shared IPs saved." />
             </FormGroup>
@@ -178,10 +181,22 @@ IPSharingPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api.linodes;
   return { linode, linodes };
 }
 
-export default connect(select)(IPSharingPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { linodeLabel } }) {
+      const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+      await Promise.all([
+        ipv4s(region),
+        api.linodes.all([], undefined, createHeaderFilter({ region })),
+      ].map(dispatch));
+    }
+  )
+)(IPSharingPage);

@@ -1602,9 +1602,13 @@ ShallowWrapper {
                               "label": 2017,
                               "value": 2017,
                             },
+                            Object {
+                              "label": 2018,
+                              "value": 2018,
+                            },
                           ]
                         }
-                        value="2017"
+                        value="2018"
                       />
                       <Select
                         analytics={
@@ -10170,9 +10174,13 @@ ShallowWrapper {
                               "label": 2017,
                               "value": 2017,
                             },
+                            Object {
+                              "label": 2018,
+                              "value": 2018,
+                            },
                           ]
                         }
-                        value="2017"
+                        value="2018"
                       />
                       <Select
                         analytics={
@@ -10476,9 +10484,13 @@ ShallowWrapper {
                               "label": 2017,
                               "value": 2017,
                             },
+                            Object {
+                              "label": 2018,
+                              "value": 2018,
+                            },
                           ]
                         }
-                        value="2017"
+                        value="2018"
                       />
                       <Select
                         analytics={
@@ -10971,9 +10983,13 @@ ShallowWrapper {
                             "label": 2017,
                             "value": 2017,
                           },
+                          Object {
+                            "label": 2018,
+                            "value": 2018,
+                          },
                         ]
                       }
-                      value="2017"
+                      value="2018"
                     />
                     <Select
                       analytics={
@@ -12528,9 +12544,13 @@ ShallowWrapper {
                                 "label": 2017,
                                 "value": 2017,
                               },
+                              Object {
+                                "label": 2018,
+                                "value": 2018,
+                              },
                             ]
                           }
-                          value="2017"
+                          value="2018"
                         />
                         <Select
                           analytics={
@@ -21096,9 +21116,13 @@ ShallowWrapper {
                                 "label": 2017,
                                 "value": 2017,
                               },
+                              Object {
+                                "label": 2018,
+                                "value": 2018,
+                              },
                             ]
                           }
-                          value="2017"
+                          value="2018"
                         />
                         <Select
                           analytics={
@@ -21402,9 +21426,13 @@ ShallowWrapper {
                                 "label": 2017,
                                 "value": 2017,
                               },
+                              Object {
+                                "label": 2018,
+                                "value": 2018,
+                              },
                             ]
                           }
-                          value="2017"
+                          value="2018"
                         />
                         <Select
                           analytics={
@@ -21897,9 +21925,13 @@ ShallowWrapper {
                               "label": 2017,
                               "value": 2017,
                             },
+                            Object {
+                              "label": 2018,
+                              "value": 2018,
+                            },
                           ]
                         }
-                        value="2017"
+                        value="2018"
                       />
                       <Select
                         analytics={

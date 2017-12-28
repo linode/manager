@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import { ExternalLink } from 'linode-components';
 import { Error } from 'linode-components';
 import { ModalShell } from 'linode-components';
-
+import { compose } from 'redux';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
@@ -14,30 +14,21 @@ import api from '~/api';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
 import Banners from '~/components/Banners';
-import PreloadIndicator from '~/components/PreloadIndicator.js';
 import SessionMenu from '~/components/SessionMenu';
 import { VERSION } from '~/constants';
 import { setStorage } from '~/storage';
+import { PagePreload as Preload } from '~/decorators/Preload';
 
 
 export class Layout extends Component {
-  // This is a special preload that is only called once on page load because
-  // all pages are rendered through here and preloads don't get called again
-  // if they were just called.
-  static async preload({ dispatch, getState }) {
-    if (!Object.keys(getState().api.profile).length) {
-      await dispatch(api.profile.one());
-      await dispatch(api.banners.one());
-      // Needed for time display component that is not attached to Redux.
-      const { timezone } = getState().api.profile;
-      setStorage('profile/timezone', timezone);
-    }
-  }
-
   constructor() {
     super();
 
     this.state = { title: '', link: '' };
+  }
+  componentDidMount() {
+    const { timezone } = this.props;
+    setStorage('profile/timezone', timezone);
   }
 
   getPageLinode = (linodes, params) => {
@@ -82,7 +73,6 @@ export class Layout extends Component {
         }}
       >
         <div className="Layout-inner">
-          <PreloadIndicator />
           <Notifications />
           <SessionMenu open={session.open} />
           <ModalShell
@@ -130,6 +120,7 @@ export class Layout extends Component {
 Layout.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
+  timezone: PropTypes.string,
   children: PropTypes.node.isRequired,
   params: PropTypes.object,
   errors: PropTypes.object.isRequired,
@@ -143,9 +134,14 @@ Layout.propTypes = {
   events: PropTypes.object,
 };
 
-function select(state) {
+Layout.defaultProps = {
+  timezone: 'US/Eastern',
+};
+
+function mapStateToProps(state) {
   return {
     username: state.api.profile.username,
+    timezone: state.api.profile.timezone,
     email: state.api.profile.email,
     errors: state.errors,
     source: state.source,
@@ -158,4 +154,18 @@ function select(state) {
   };
 }
 
-export default connect(select)(Layout);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    // This is a special preload that is only called once on page load because
+    // all pages are rendered through here and preloads don't get called again
+    // if they were just called.
+    async function (dispatch, props) {
+      if (isEmpty(props.username)) {
+        await dispatch(api.profile.one());
+        await dispatch(api.banners.one());
+        // Needed for time display component that is not attached to Redux.
+      }
+    }
+  )
+)(Layout);

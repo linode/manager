@@ -16,6 +16,9 @@ import {
   LinkCell,
   ThumbnailCell,
 } from 'linode-components';
+import { compose } from 'redux';
+
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import { setAnalytics, setSource } from '~/actions';
 import toggleSelected from '~/actions/select';
@@ -38,13 +41,6 @@ function getGravatarURL(user) {
 }
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    // Restricted users will get a 403 on /v4/profile/users
-    const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
-
-    await dispatch(api.users.all()).catch(onReject);
-  }
-
   constructor(props) {
     super(props);
 
@@ -176,7 +172,7 @@ IndexPage.propTypes = {
   selectedMap: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     users: state.api.users,
     profile: state.api.profile,
@@ -184,4 +180,14 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      // Restricted users will get a 403 on /v4/profile/users
+      const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
+
+      await dispatch(api.users.all()).catch(onReject);
+    }
+  )
+)(IndexPage);
