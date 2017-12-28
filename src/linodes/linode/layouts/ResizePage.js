@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup,
@@ -20,17 +20,12 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import { selectLinode } from '../utilities';
 
 
 export class ResizePage extends Component {
-  static async preload({ dispatch, getState }) {
-    if (!getState().api.types.ids.length) {
-      await dispatch(api.types.all());
-    }
-  }
-
   constructor(props) {
     super(props);
 
@@ -108,10 +103,19 @@ ResizePage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { types } = state.api;
   return { linode, types };
 }
 
-export default connect(select)(ResizePage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      if (!props.types.ids.length) {
+        await dispatch(api.types.all());
+      }
+    }
+  )
+)(ResizePage);

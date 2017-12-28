@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
 import {
   Radio,
@@ -17,15 +17,10 @@ import { setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }) {
-    if (!Object.keys(getState().api.account).length) {
-      await dispatch(api.account.one());
-    }
-  }
-
   constructor(props) {
     super(props);
 
@@ -114,10 +109,19 @@ IndexPage.propTypes = {
   account: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     account: state.api.account,
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      if (!Object.keys(props.account).length) {
+        await dispatch(api.account.one());
+      }
+    }
+  )
+)(IndexPage);

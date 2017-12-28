@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { PrimaryButton } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
@@ -9,7 +10,6 @@ import { List } from 'linode-components';
 import { ListBody } from 'linode-components';
 import { LinkCell, ButtonCell } from 'linode-components';
 import { DeleteModalBody } from 'linode-components';
-
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
@@ -27,20 +27,10 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch }, { nbLabel }) {
-    await dispatch(transferPool());
-    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-
-    try {
-      await dispatch(nodebalancerStats(id));
-    } catch (e) {
-      // Stats aren't available.
-    }
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -195,7 +185,7 @@ DashboardPage.propTypes = {
   transfer: PropTypes.object.isRequired,
 };
 
-function select(state, ownProps) {
+function mapStateToProps(state, ownProps) {
   const params = ownProps.params;
   const nbLabel = params.nbLabel;
   const { timezone } = state.api.profile;
@@ -205,4 +195,19 @@ function select(state, ownProps) {
   return { nodebalancer, timezone, transfer };
 }
 
-export default connect(select)(DashboardPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      const { params: { nbLabel } } = props;
+      await dispatch(transferPool());
+      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+
+      try {
+        await dispatch(nodebalancerStats(id));
+      } catch (e) {
+        // Stats aren't available.
+      }
+    }
+  )
+)(DashboardPage);

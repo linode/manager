@@ -8,7 +8,7 @@ import { Button } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
 import { FormGroup, Input, Select } from 'linode-components';
 import { onChange } from 'linode-components';
-
+import { compose } from 'redux';
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
 import { linodeStats } from '~/api/ad-hoc/linodes';
@@ -29,20 +29,10 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
 import { UpgradeToKVM } from '../components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch }, { linodeLabel }) {
-    await dispatch(transferPool());
-    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-    try {
-      await dispatch(linodeStats(id));
-    } catch (e) {
-      // Stats aren't available.
-    }
-  }
-
   constructor() {
     super();
 
@@ -289,7 +279,7 @@ DashboardPage.propTypes = {
   transfer: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
@@ -297,4 +287,18 @@ function select(state, props) {
   return { linode, username, timezone, transfer, images };
 }
 
-export default connect(select)(DashboardPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { linodeLabel } }) {
+      await dispatch(transferPool());
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+      try {
+        await dispatch(linodeStats(id));
+      } catch (e) {
+        // Stats aren't available.
+      }
+    }
+  )
+)(DashboardPage);

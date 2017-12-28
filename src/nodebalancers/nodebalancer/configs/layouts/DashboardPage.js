@@ -2,7 +2,7 @@ import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { ListBody } from 'linode-components';
 import { PrimaryButton } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
@@ -17,15 +17,10 @@ import { dispatchOrStoreErrors, getObjectByLabelLazily, objectFromMapByLabel } f
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
 
 import NodeModal from '../components/NodeModal';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch }, { nbLabel, configId }) {
-    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-    await dispatch(api.nodebalancers.configs.one([id, configId]));
-    await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));
-  }
-
   deleteNBConfigNode(nodebalancer, config, node) {
     const { dispatch } = this.props;
     const title = 'Delete Node';
@@ -150,11 +145,20 @@ DashboardPage.propTypes = {
   nodebalancer: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
   return { config, nodebalancer };
 }
 
-export default connect(select)(DashboardPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { nbLabel, configId } }) {
+      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+      await dispatch(api.nodebalancers.configs.one([id, configId]));
+      await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));
+    }
+  )
+)(DashboardPage);

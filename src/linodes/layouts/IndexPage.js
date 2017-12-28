@@ -1,8 +1,10 @@
 import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import { List, ScrollingList } from 'linode-components';
@@ -34,12 +36,6 @@ import { TransferPool } from '../../components';
 const OBJECT_TYPE = 'linodes';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.linodes.all());
-    await dispatch(api.images.all());
-    await dispatch(transferPool());
-  }
-
   constructor(props) {
     super(props);
 
@@ -239,7 +235,7 @@ IndexPage.propTypes = {
   selectedMap: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   const linodes = pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const images = state.api.images.images;
   const types = state.api.types.types;
@@ -254,4 +250,13 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all(
+        [api.linodes.all(), api.images.all(), transferPool()].map(dispatch)
+      );
+    }
+  ),
+)(IndexPage);

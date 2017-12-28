@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
 import { Tabs } from 'linode-components';
-
+import { compose } from 'redux';
 import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -14,19 +14,10 @@ import { planStyle } from '~/linodes/components/PlanStyle';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }, { linodeLabel }) {
-    const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-    const requests = [
-      api.types.one([type.id]),
-      api.linodes.configs.all([id]),
-    ];
-
-    await Promise.all(requests.map(dispatch));
-  }
-
   constructor(props) {
     super(props);
 
@@ -101,4 +92,17 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default connect(selectLinode)(IndexPage);
+export default compose(
+  connect(selectLinode),
+  Preload(
+    async function (dispatch, { params: { linodeLabel } }) {
+      const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      const requests = [
+        api.types.one([type.id]),
+        api.linodes.configs.all([id]),
+      ];
+
+      await Promise.all(requests.map(dispatch));
+    }
+  )
+)(IndexPage);

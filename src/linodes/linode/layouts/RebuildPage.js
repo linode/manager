@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
+import isEmpty from 'lodash/isEmpty';
 import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup, FormGroupError, Form, FormSummary, Input, SubmitButton, PasswordInput,
@@ -16,17 +17,12 @@ import { rebuildLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
 import { DistributionSelect } from '~/linodes/components';
+import { getLinodeByLabel } from '~/utilities';
 
-import { selectLinode } from '../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class RebuildPage extends Component {
-  static async preload({ dispatch, getState }) {
-    if (!getState().api.images.ids.length) {
-      await dispatch(api.images.all());
-    }
-  }
-
   constructor(props) {
     super(props);
 
@@ -150,10 +146,20 @@ RebuildPage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
-  const { linode } = selectLinode(state, props);
-  const { images } = state.api.images;
-  return { linode, images };
+function mapStateToProps({ api }, props) {
+  return {
+    linode: getLinodeByLabel(api.linodes.linodes, props.params.linodeLabel),
+    images: api.images.images,
+  };
 }
 
-export default connect(select)(RebuildPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, props) {
+      if (isEmpty(props.images) || isEmpty(props.images.ids)) {
+        await dispatch(api.images.all());
+      }
+    }
+  )
+)(RebuildPage);

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
-
+import { compose } from 'redux';
 import { Tabs } from 'linode-components';
 
 import { setAnalytics } from '~/actions';
@@ -11,14 +11,10 @@ import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
 import Breadcrumbs from '~/components/Breadcrumbs';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }, { nbLabel }) {
-    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-    await dispatch(api.nodebalancers.configs.all([id]));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
@@ -79,7 +75,7 @@ IndexPage.propTypes = {
   children: PropTypes.node,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { nodebalancers } = state.api.nodebalancers;
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(Object.values(nodebalancers), nbLabel);
@@ -87,4 +83,12 @@ function select(state, props) {
   return { nodebalancer, config };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { nbLabel } }) {
+      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+      await dispatch(api.nodebalancers.configs.all([id]));
+    }
+  )
+)(IndexPage);

@@ -2,7 +2,7 @@ import groupBy from 'lodash/groupBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -10,14 +10,10 @@ import { ChainedDocumentTitle } from '~/components';
 
 import MasterZone from '../components/MasterZone';
 import SlaveZone from '../components/SlaveZone';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class ZonePage extends Component {
-  static async preload({ dispatch }, { domainLabel }) {
-    const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
-    await dispatch(api.domains.records.all([id]));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -56,7 +52,7 @@ ZonePage.propTypes = {
   domain: PropTypes.object.isRequired,
 };
 
-function select(state, ownProps) {
+function mapStateToProps(state, ownProps) {
   const { domains } = state.api;
   const { params } = ownProps;
   let domain = Object.values(domains.domains).filter(
@@ -71,4 +67,12 @@ function select(state, ownProps) {
   return { domain };
 }
 
-export default connect(select)(ZonePage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch, { params: { domainLabel } }) {
+      const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
+      await dispatch(api.domains.records.all([id]));
+    }
+  )
+)(ZonePage);

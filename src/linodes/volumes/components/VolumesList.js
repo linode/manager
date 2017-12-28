@@ -230,7 +230,7 @@ VolumesList.propTypes = {
   dispatch: PropTypes.func.isRequired,
   objectType: PropTypes.string.isRequired,
   selectedMap: PropTypes.object.isRequired,
-  volumes: PropTypes.array.isRequired,
+  volumes: PropTypes.object.isRequired,
   className: PropTypes.string,
   linodes: PropTypes.object,
 };

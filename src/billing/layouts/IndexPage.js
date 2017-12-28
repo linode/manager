@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { compose } from 'redux';
+
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -8,17 +10,9 @@ import { Tabs } from 'linode-components';
 import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { ChainedDocumentTitle } from '~/components';
-
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await Promise.all([
-      api.account.one(),
-      api.invoices.all(),
-      api.payments.all(),
-    ].map(r => dispatch(r)));
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setAnalytics(['billing']));
@@ -62,4 +56,13 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default connect()(IndexPage);
+export default compose(
+  connect(),
+  Preload(
+    async function (dispatch) {
+      await dispatch(api.account.one());
+      await dispatch(api.invoices.all());
+      await dispatch(api.payments.all());
+    }
+  )
+)(IndexPage);

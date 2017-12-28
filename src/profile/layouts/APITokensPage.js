@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
@@ -10,7 +11,6 @@ import { MassEditControl } from 'linode-components';
 import { ListHeader } from 'linode-components';
 import { Table } from 'linode-components';
 import { DropdownCell, CheckboxCell } from 'linode-components';
-
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
@@ -21,15 +21,12 @@ import { confirmThenDelete } from '~/utilities';
 import TokenMoreInfo from '../components/TokenMoreInfo';
 import EditPersonalAccessToken from '../components/EditPersonalAccessToken';
 import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'tokens';
 
 export class APITokensPage extends Component {
-  static async preload({ dispatch }) {
-    await Promise.all([api.tokens, api.apps].map(c => dispatch(c.all())));
-  }
-
   constructor(props) {
     super(props);
 
@@ -177,7 +174,7 @@ APITokensPage.propTypes = {
   selectedMap: PropTypes.object.isRequired,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   const tokens = {
     ...state.api.tokens.tokens,
     ...state.api.apps.apps,
@@ -189,4 +186,11 @@ function select(state) {
   };
 }
 
-export default connect(select)(APITokensPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all([api.tokens, api.apps].map(c => dispatch(c.all())));
+    }
+  )
+)(APITokensPage);

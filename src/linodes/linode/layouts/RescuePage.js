@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -9,17 +9,10 @@ import { ChainedDocumentTitle } from '~/components';
 
 import { RescueMode, ResetRootPassword } from '../components';
 import { selectLinode } from '../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class RescuePage extends Component {
-  static async preload({ dispatch }, { linodeLabel }) {
-    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-    await Promise.all([
-      api.linodes.disks,
-      api.linodes.volumes,
-    ].map(o => dispatch(o.all([id]))));
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -47,4 +40,15 @@ RescuePage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
-export default connect(selectLinode)(RescuePage);
+export default compose(
+  connect(selectLinode),
+  Preload(
+    async function (dispatch, { params: { linodeLabel } }) {
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      await Promise.all([
+        api.linodes.disks,
+        api.linodes.volumes,
+      ].map(o => dispatch(o.all([id]))));
+    }
+  )
+)(RescuePage);

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import capitalize from 'lodash/capitalize';
 import filter from 'lodash/filter';
 import { PrimaryButton } from 'linode-components';
@@ -29,16 +29,12 @@ import CreateHelper from '~/components/CreateHelper';
 import { TimeCell } from '~/components/tables/cells';
 
 import { AddImage, EditImage } from '../components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'images';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.images.all());
-    await dispatch(api.linodes.all());
-  }
-
   constructor(props) {
     super(props);
 
@@ -167,6 +163,7 @@ export class IndexPage extends Component {
 
   render() {
     const { dispatch, images, linodes } = this.props;
+    const privateImages = filter(images.images, i => !i.is_public);
 
     return (
       <div className="PrimaryPage container">
@@ -183,8 +180,8 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(images.images).length ?
-            this.renderImages(filter(images.images, i => !i.is_public)) :
+          {Object.keys(privateImages).length ?
+            this.renderImages(privateImages) :
             <CreateHelper
               label="Images"
               onClick={() => AddImage.trigger(dispatch, linodes)}
@@ -205,7 +202,7 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     images: state.api.images,
     linodes: state.api.linodes,
@@ -213,4 +210,14 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default compose(
+  connect(mapStateToProps),
+  Preload(
+    async function (dispatch) {
+      await Promise.all([
+        api.images.all(),
+        api.linodes.all(),
+      ].map(dispatch));
+    }
+  )
+)(IndexPage);
