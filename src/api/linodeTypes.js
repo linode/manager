@@ -26,7 +26,7 @@ export default function reducer(state = pluralDefaultState('types'), action = {}
     case UPDATE_ONE:
       return {
         ...state,
-        types: {
+        linodeTypes: {
           ...state.linodeTypes,
           [action.response.id]: action.response,
         },
@@ -45,14 +45,14 @@ export default function reducer(state = pluralDefaultState('types'), action = {}
 
 export function getOne(id) {
   return async (dispatch) => {
-    const linodeType = await dispatch(fetch.get(`/linode/types/${id}`));
-    dispatch(updateOne(linodeType));
+    const response = await dispatch(fetch.get(`/linode/types/${id}`));
+    dispatch(updateOne(response));
   };
 }
 
 export function getAll() {
   return async (dispatch) => {
-    const resp = await dispatch(fetch.get('/linode/types'));
-    dispatch(updateAll(resp));
+    const response = await dispatch(fetch.get('/linode/types'));
+    dispatch(updateAll(response));
   };
 }

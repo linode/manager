@@ -244,7 +244,7 @@ IndexPage.propTypes = {
 function select(state) {
   const linodes = pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const images = state.api.images.images;
-  const types = state.api.linodeTypes;
+  const types = state.api.linodeTypes.linodeTypes;
   const transfer = state.api.account._transferpool;
 
   return {

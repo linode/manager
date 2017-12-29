@@ -14,7 +14,7 @@ import {
 import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
-import * as linodeTypes from '~/api/linodeTypes'
+import * as linodeTypes from '~/api/linodeTypes';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
@@ -108,7 +108,7 @@ ResizePage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { linodeTypes } = state.api.linodeTypes.types;
+  const linodeTypes = state.api.linodeTypes.linodeTypes;
   return { linode, linodeTypes };
 }
 
