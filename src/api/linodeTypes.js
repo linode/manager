@@ -1,4 +1,6 @@
-import { fetch } from '~/fetch';
+import keyBy from 'lodash/keyBy';
+
+import { fetch } from './fetch';
 
 
 const UPDATE_ONE = 'linode/linodeTypes/UPDATE_ONE';
@@ -43,7 +45,8 @@ export function getOne(id) {
 
 export function getAll() {
   return async (dispatch) => {
-    const linodeTypes = await dispatch(fetch.get('/linode/types'));
+    const resp = await dispatch(fetch.get('/linode/types'));
+    const linodeTypes = keyBy(resp.data, linodeType => linodeType.id);
     dispatch(updateAll(linodeTypes));
   };
 }
