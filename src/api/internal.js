@@ -96,17 +96,17 @@ export function genActions(config) {
   return actions;
 }
 
-export function generateDefaultStateFull(config) {
-  if (config.plural) {
-    return {
-      totalPages: -1,
-      totalResults: -1,
-      ids: [],
-      [config.plural]: {},
-    };
-  }
+export function pluralDefaultState(name) {
+  return {
+    totalPages: -1,
+    totalResults: -1,
+    ids: [],
+    [name]: {},
+  };
+}
 
-  return {};
+export function generateDefaultStateFull(config) {
+  return config.plural ? pluralDefaultState(config.plural) : {};
 }
 
 export function generateDefaultStateOne(config, one) {

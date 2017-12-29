@@ -108,7 +108,7 @@ ResizePage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { linodeTypes } = state.api;
+  const { linodeTypes } = state.api.linodeTypes.types;
   return { linode, linodeTypes };
 }
 

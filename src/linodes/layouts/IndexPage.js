@@ -17,6 +17,7 @@ import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
+import * as linodeTypes from '~/api/linodeTypes';
 import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
@@ -51,7 +52,8 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     dispatch(setAnalytics(['linodes']));
 
-    ['images', 'types'].map(f => dispatch(api[f].all()));
+    dispatch(api.images.all());
+    dispatch(linodeTypes.getAll());
   }
 
   deleteLinodes = confirmThenDelete(
