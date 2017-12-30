@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 import * as generic from './generic';
-import linodeTypes from './linodeTypes';
+import linodeTypes from './reducers/linodeTypes';
 
 
 function reducerExporter(module) {
