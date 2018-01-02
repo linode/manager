@@ -31,17 +31,19 @@ export class Glish extends Component {
 
     const { lish_token: token } = await dispatch(lishToken(linode.id));
     this.setState({ token: token });
-    this.refreshVNCSession(linode.id);
 
     const region = linode && ZONES[linode.region];
-    this.connectMonitor(region, token);
+    this.refreshMonitor(region, token);
+    this.renewVncToken();
   }
 
   componentWillUnmount() {
-    clearTimeout(this.refreshTimeout);
-    this.monitor.close();
+    clearInterval(this.monitorInterval);
+    clearInterval(this.renewInterval);
+    if (this.monitor) {
+      this.monitor.close();
+    }
   }
-
 
   onUpdateVNCState = (rfb, newState) => {
     switch (newState) {
@@ -60,12 +62,28 @@ export class Glish extends Component {
     }
   }
 
-  refreshVNCSession = (linodeId) => {
-    this.refreshTimeout = setTimeout(async () => {
-      const { lish_token: token } = await this.props.dispatch(lishToken(linodeId));
-      this.setState({ token: token });
-      this.refreshVNCSession(linodeId); // refresh our VNC session every 5 minutes
+  renewVncToken = () => {
+    // renew our VNC session every 5 minutes
+    clearInterval(this.renewInterval);
+    this.renewInterval = setInterval(async () => {
+      if (this.monitor) {
+        this.monitor.send(JSON.stringify({ action: 'renew' }));
+      }
     }, 5 * 60 * 1000);
+  }
+
+  refreshMonitor = (region, token) => {
+    this.connectMonitor(region, token);
+    /* Renew our monitor connection every 5 seconds.
+       We do this because the monitor only sends us power info once, and we need
+       to detect when a linode shuts down if it was powered-on to begin-with */
+    clearInterval(this.monitorInterval);
+    this.monitorInterval = setInterval(async () => {
+      if (this.monitor) {
+        this.monitor.close();
+      }
+      this.connectMonitor(region, token);
+    }, 5 * 1000);
   }
 
   connectMonitor = (region, token) => {
