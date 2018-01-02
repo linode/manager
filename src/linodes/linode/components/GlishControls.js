@@ -4,8 +4,16 @@ import React from 'react';
 import { Button } from 'linode-components';
 
 export default function GlishControls(props) {
+  let bgColor = 'bg-warning';
+  if (!props.powered) {
+    bgColor = 'bg-danger';
+  }
+  if (props.connected) {
+    bgColor = 'bg-success';
+  }
+
   return (
-    <div id="glish-controls" className="p-2 text-center clearfix bg-success text-white">
+    <div id="glish-controls" className={`p-2 text-center clearfix text-white ${bgColor}`}>
       <Button className="float-left mr-2 fa fa-power-off power-btn" />
       <Button className="float-left">Reboot</Button>
       <span className="align-middle">{props.message}</span>
@@ -15,6 +23,7 @@ export default function GlishControls(props) {
 }
 
 GlishControls.propTypes = {
-  vncState: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
+  powered: PropTypes.bool.isRequired,
+  connected: PropTypes.bool.isRequired,
 };
