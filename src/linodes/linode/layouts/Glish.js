@@ -100,13 +100,7 @@ export class Glish extends Component {
   }
 
   render() {
-    const {
-      linode,
-      token,
-      activeVnc,
-      connected,
-      powered,
-    } = this.state;
+    const { linode, token, activeVnc, connected, powered } = this.state;
 
     const region = linode && ZONES[linode.region];
 
@@ -120,7 +114,12 @@ export class Glish extends Component {
 
     return (
       <div id="Glish" className="h-100">
-        <GlishControls powered={powered} connected={connected} message={message} />
+        <GlishControls
+          powered={powered}
+          connected={connected}
+          message={message}
+          linodeId={linode && linode.id}
+        />
         <div className="text-center">
           {activeVnc && token && region &&
             <VncDisplay
