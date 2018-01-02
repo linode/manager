@@ -9,4 +9,4 @@ coverage
 restart-manager.sh
 secrets*.js
 .vscode
-assets/glish
+
