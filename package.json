@@ -129,7 +129,8 @@
       "ENV_GA_ID": null,
       "ENV_SENTRY_URL": null,
       "ENV_DEVTOOLS_DISABLED": null,
-      "ENV_VERSION": null
+      "ENV_VERSION": null,
+      "ENV_LISH_ROOT": null
     }
   }
 }
