@@ -17,17 +17,10 @@ export function addCSSLink(url) {
   head.appendChild(link);
 }
 
-export function addJSScript(url, callback) {
+export function addJSScript(url) {
   const head = window.document.querySelector('head');
   const script = document.createElement('script');
   script.src = url;
-  let called = false;
-  script.onload = () => {
-    if (!called) {
-      callback();
-      called = true;
-    }
-  };
   head.appendChild(script);
 }
 
