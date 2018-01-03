@@ -63,7 +63,7 @@ export default class AddDisk extends Component {
 
     let minimumStorageSize = 8;
     if (images[image]) {
-      minimumStorageSize = images[image].min_deploy_size;
+      minimumStorageSize = images[image].size;
     }
 
     const filesystemOptions = [

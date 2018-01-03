@@ -137,7 +137,7 @@ export class IndexPage extends Component {
               {
                 label: 'Size',
                 dataFn: (image) => {
-                  const size = image.min_deploy_size;
+                  const size = image.size;
                   return `${size} MB`;
                 },
               },
