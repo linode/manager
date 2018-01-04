@@ -3,7 +3,6 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { AddSlave } from '~/domains/components';
-import { Textarea, Input } from 'linode-components';
 
 import {
   expectDispatchOrStoreErrors, expectRequest, createSimulatedEvent,
@@ -22,22 +21,18 @@ describe('domains/components/AddSlave', () => {
   it('submits form and redirects to domain', async () => {
     AddSlave.trigger(dispatch);
 
-    const component = shallow(dispatch.firstCall.args[0].body);
+    const wrapper = shallow(dispatch.firstCall.args[0].body);
 
-    const ipInput = component.findWhere((n) => {
-      return n.prop('name') === 'ips' && n.type() === Textarea;
-    });
+    const ipInput = wrapper.find('Textarea[name="ips"]');
 
-    const domainInput = component.findWhere((n) => {
-      return n.prop('name') === 'domain' && n.type() === Input;
-    });
+    const domainInput = wrapper.find('Input[name="domain"]');
 
     ipInput.simulate('change', createSimulatedEvent('ips', '1;2;3;4'));
 
     domainInput.simulate('change', createSimulatedEvent('domain', 'test.com'));
 
     dispatch.reset();
-    await component.props().onSubmit();
+    await wrapper.props().onSubmit();
 
     expect(dispatch.callCount).toEqual(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

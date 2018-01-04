@@ -6,8 +6,6 @@ import EditCNAMERecord from '~/domains/components/EditCNAMERecord';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
-import { Input } from 'linode-components';
-import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 describe('domains/components/EditCNAMERecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -45,14 +43,11 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    const hostname = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'hostname');
+    const hostname = wrapper.find('Input#hostname');
 
-    const alias = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'alias');
+    const alias = wrapper.find('Input#alias');
 
-    const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds
-      && a.prop('id') === 'ttl');
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     expect(hostname.props().value).toBe(currentRecord.name);
     expect(alias.props().value).toBe(currentRecord.target);
@@ -75,14 +70,11 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    const hostname = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'hostname');
+    const hostname = wrapper.find('Input#hostname');
 
-    const alias = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'alias');
+    const alias = wrapper.find('Input#alias');
 
-    const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds
-      && a.prop('id') === 'ttl');
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     hostname.simulate('change', createSimulatedEvent('hostname', 'www.tester1234.com'));
     alias.simulate('change', createSimulatedEvent('alias', 'www.othertester1234.com'));
@@ -119,14 +111,11 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    const hostname = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'hostname');
+    const hostname = wrapper.find('Input#hostname');
 
-    const alias = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'alias');
+    const alias = wrapper.find('Input#alias');
 
-    const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds
-      && a.prop('id') === 'ttl');
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     hostname.simulate('change', createSimulatedEvent('hostname', 'www.tester1234.com'));
     alias.simulate('change', createSimulatedEvent('alias', 'www.othertester1234.com'));
