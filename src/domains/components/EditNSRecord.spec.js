@@ -7,7 +7,6 @@ import EditNSRecord from '~/domains/components/EditNSRecord';
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 
-import { Input } from 'linode-components';
 import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 
@@ -46,9 +45,8 @@ describe('domains/components/EditNSRecord', () => {
       />
     );
 
-    const nameserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'nameserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
+    const nameserver = wrapper.find('Input#nameserver');
+    const subdomain = wrapper.find('Input#subdomain');
     const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds && a.prop('id') === 'ttl');
 
     expect(nameserver.props().value).toBe(currentRecord.target);
@@ -71,9 +69,8 @@ describe('domains/components/EditNSRecord', () => {
         close={close}
       />
     );
-    const nameserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'nameserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
+    const nameserver = wrapper.find('Input#nameserver');
+    const subdomain = wrapper.find('Input#subdomain');
     const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds && a.prop('id') === 'ttl');
 
     nameserver.simulate('change', createSimulatedEvent('nameserver', 'ns1.tester1234.com'));
@@ -109,9 +106,8 @@ describe('domains/components/EditNSRecord', () => {
       />
     );
 
-    const nameserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'nameserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
+    const nameserver = wrapper.find('Input#nameserver');
+    const subdomain = wrapper.find('Input#subdomain');
     const ttl = wrapper.findWhere((a) => a.type() === SelectDNSSeconds && a.prop('id') === 'ttl');
 
     nameserver.simulate('change', createSimulatedEvent('nameserver', 'ns1.tester1234.com'));
