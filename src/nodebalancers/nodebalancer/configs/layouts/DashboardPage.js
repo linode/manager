@@ -157,8 +157,10 @@ export default compose(
   Preload(
     async function (dispatch, { params: { nbLabel, configId } }) {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(api.nodebalancers.configs.one([id, configId]));
-      await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));
+      await Promise.all([
+        api.nodebalancers.configs.one([id, configId]),
+        api.nodebalancers.configs.nodes.all([id, configId]),
+      ].map(dispatch));
     }
   )
 )(DashboardPage);
