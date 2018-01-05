@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 
 export const FIVE_MINUTES = 300;
@@ -35,7 +35,7 @@ const DNS_SECONDS_PRETTY = {
 export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY, withTitle = false) {
   const actualDefaultSeconds = defaultSeconds || ONE_DAY; // Takes care of if defaultSeconds is 0.
   const actual = !dnsSeconds || +dnsSeconds === +actualDefaultSeconds ?
-                 actualDefaultSeconds : dnsSeconds;
+    actualDefaultSeconds : dnsSeconds;
   const pretty = DNS_SECONDS_PRETTY[actual];
   const actualOrDefault = actual === actualDefaultSeconds ? 'Default' : actual;
 

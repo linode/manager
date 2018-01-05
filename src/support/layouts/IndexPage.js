@@ -1,14 +1,17 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { TableCell, LinkCell } from 'linode-components/tables/cells';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
+import { PrimaryButton } from 'linode-components';
+import { ListBody, ListGroup } from 'linode-components';
+import { TableCell, LinkCell } from 'linode-components';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
@@ -72,9 +75,9 @@ export class IndexPage extends Component {
       closed: 'Closed',
     };
 
-    const groups = _.map(
-      _.groupBy(
-        _.sortBy(Object.values(tickets), ticket => new Date(ticket.created)).reverse(),
+    const groups = map(
+      groupBy(
+        sortBy(Object.values(tickets), ticket => new Date(ticket.created)).reverse(),
         ({ status }) => statusFormat[status]),
       (_tickets, _group) => ({
         name: _group,

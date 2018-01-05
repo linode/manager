@@ -1,0 +1,3324 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`support/layouts/TicketPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <TicketPage
+    dispatch={[Function]}
+    replies={
+      Array [
+        Object {
+          "created": "2017-03-30T16:48:10",
+          "created_by": "support",
+          "description": "This is the first response.",
+          "id": 1,
+        },
+      ]
+    }
+    ticket={
+      Object {
+        "_replies": Object {
+          "replies": Array [
+            Object {
+              "created": "2017-03-30T16:48:10",
+              "created_by": "support",
+              "description": "This is the first response.",
+              "id": 1,
+            },
+          ],
+        },
+        "closed": null,
+        "description": "Hullo!",
+        "entity": Object {
+          "label": "awkward-aimless-alpha-22",
+          "type": "linode",
+        },
+        "id": 1,
+        "opened": "2017-03-03T01:22:32",
+        "opened_by": "tdude",
+        "status": "new",
+        "summary": "This is my ticket!",
+        "updated": "2017-03-03T01:22:32",
+        "updated_by": "tdude",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="This is my ticket!"
+        />,
+        <header
+          className="main-header main-header--border"
+        >
+          <div
+            className="container clearfix"
+          >
+            <div
+              className="float-sm-left"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/support"
+              >
+                Support
+              </Link>
+              <h1
+                title={1}
+              >
+                This is my ticket!
+              </h1>
+              <div>
+                Opened
+                <span>
+                   by 
+                  <strong
+                    id="opened-by-1"
+                  >
+                    tdude
+                  </strong>
+                </span>
+                 
+                <span
+                  id="opened-1"
+                >
+                  <TimeDisplay
+                    time="2017-03-03T01:22:32"
+                  />
+                </span>
+                <span>
+                   regarding 
+                  <span
+                    id="regarding-1"
+                  >
+                    <Link
+                      onlyActiveOnIndex={false}
+                      style={Object {}}
+                      to="/linodes/awkward-aimless-alpha-22"
+                    >
+                      awkward-aimless-alpha-22
+                    </Link>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>,
+        <div
+          className="container"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="col-lg-7 col-md-12"
+            >
+              <section>
+                <TicketReply
+                  createdField="opened"
+                  reply={
+                    Object {
+                      "_replies": Object {
+                        "replies": Array [
+                          Object {
+                            "created": "2017-03-30T16:48:10",
+                            "created_by": "support",
+                            "description": "This is the first response.",
+                            "id": 1,
+                          },
+                        ],
+                      },
+                      "closed": null,
+                      "description": "Hullo!",
+                      "entity": Object {
+                        "label": "awkward-aimless-alpha-22",
+                        "type": "linode",
+                      },
+                      "id": 1,
+                      "opened": "2017-03-03T01:22:32",
+                      "opened_by": "tdude",
+                      "status": "new",
+                      "summary": "This is my ticket!",
+                      "updated": "2017-03-03T01:22:32",
+                      "updated_by": "tdude",
+                    }
+                  }
+                />
+              </section>
+              <section>
+                <TicketReply
+                  createdField="created"
+                  reply={
+                    Object {
+                      "created": "2017-03-30T16:48:10",
+                      "created_by": "support",
+                      "description": "This is the first response.",
+                      "id": 1,
+                    }
+                  }
+                />
+              </section>
+              <Card
+                className=""
+              >
+                <Form
+                  analytics={
+                    Object {
+                      "action": "add",
+                      "title": "Ticket Response",
+                    }
+                  }
+                  className=""
+                  noSubmitEvent={false}
+                  onSubmit={[Function]}
+                >
+                  <FormGroup
+                    className=""
+                    name="ticket-reply"
+                  >
+                    <label
+                      className="row-label"
+                      htmlFor="reply"
+                    >
+                      Write a reply:
+                    </label>
+                    <Textarea
+                      className="textarea-lg"
+                      id="reply"
+                      name="reply"
+                      onChange={[Function]}
+                      value=""
+                    />
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="description"
+                    />
+                  </FormGroup>
+                  <FormGroup
+                    className=""
+                    errors={Object {}}
+                    name="ticket-attachements"
+                  >
+                    <div>
+                      <label
+                        className="row-label"
+                        htmlFor="attachments"
+                      >
+                        Add attachments:
+                      </label>
+                    </div>
+                    <Input
+                      className=""
+                      id="attachments"
+                      multiple={true}
+                      name="attachments"
+                      onChange={[Function]}
+                      type="file"
+                    />
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="attachments"
+                    />
+                  </FormGroup>
+                  <div
+                    className="clearfix"
+                  >
+                    <div
+                      className="text- sm-right"
+                    >
+                      <SubmitButton
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Submitting"
+                      >
+                        Submit
+                      </SubmitButton>
+                      <FormSummary
+                        className=""
+                        errors={Object {}}
+                        success="Response submitted."
+                      />
+                    </div>
+                  </div>
+                </Form>
+              </Card>
+            </div>
+            <div
+              className="col-lg-5 col-md-12"
+            >
+              <TicketHelper />
+            </div>
+          </div>
+        </div>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "This is my ticket!",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="container clearfix"
+          >
+            <div
+              className="float-sm-left"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/support"
+              >
+                Support
+              </Link>
+              <h1
+                title={1}
+              >
+                This is my ticket!
+              </h1>
+              <div>
+                Opened
+                <span>
+                   by 
+                  <strong
+                    id="opened-by-1"
+                  >
+                    tdude
+                  </strong>
+                </span>
+                 
+                <span
+                  id="opened-1"
+                >
+                  <TimeDisplay
+                    time="2017-03-03T01:22:32"
+                  />
+                </span>
+                <span>
+                   regarding 
+                  <span
+                    id="regarding-1"
+                  >
+                    <Link
+                      onlyActiveOnIndex={false}
+                      style={Object {}}
+                      to="/linodes/awkward-aimless-alpha-22"
+                    >
+                      awkward-aimless-alpha-22
+                    </Link>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>,
+          "className": "main-header main-header--border",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="float-sm-left"
+            >
+              <Link
+                onlyActiveOnIndex={false}
+                style={Object {}}
+                to="/support"
+              >
+                Support
+              </Link>
+              <h1
+                title={1}
+              >
+                This is my ticket!
+              </h1>
+              <div>
+                Opened
+                <span>
+                   by 
+                  <strong
+                    id="opened-by-1"
+                  >
+                    tdude
+                  </strong>
+                </span>
+                 
+                <span
+                  id="opened-1"
+                >
+                  <TimeDisplay
+                    time="2017-03-03T01:22:32"
+                  />
+                </span>
+                <span>
+                   regarding 
+                  <span
+                    id="regarding-1"
+                  >
+                    <Link
+                      onlyActiveOnIndex={false}
+                      style={Object {}}
+                      to="/linodes/awkward-aimless-alpha-22"
+                    >
+                      awkward-aimless-alpha-22
+                    </Link>
+                  </span>
+                </span>
+              </div>
+            </div>,
+            "className": "container clearfix",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/support"
+                >
+                  Support
+                </Link>,
+                <h1
+                  title={1}
+                >
+                  This is my ticket!
+                </h1>,
+                <div>
+                  Opened
+                  <span>
+                     by 
+                    <strong
+                      id="opened-by-1"
+                    >
+                      tdude
+                    </strong>
+                  </span>
+                   
+                  <span
+                    id="opened-1"
+                  >
+                    <TimeDisplay
+                      time="2017-03-03T01:22:32"
+                    />
+                  </span>
+                  <span>
+                     regarding 
+                    <span
+                      id="regarding-1"
+                    >
+                      <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/linodes/awkward-aimless-alpha-22"
+                      >
+                        awkward-aimless-alpha-22
+                      </Link>
+                    </span>
+                  </span>
+                </div>,
+              ],
+              "className": "float-sm-left",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "children": "Support",
+                  "onlyActiveOnIndex": false,
+                  "style": Object {},
+                  "to": "/support",
+                },
+                "ref": null,
+                "rendered": "Support",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": "This is my ticket!",
+                  "title": 1,
+                },
+                "ref": null,
+                "rendered": "This is my ticket!",
+                "type": "h1",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    "Opened",
+                    <span>
+                       by 
+                      <strong
+                        id="opened-by-1"
+                      >
+                        tdude
+                      </strong>
+                    </span>,
+                    " ",
+                    <span
+                      id="opened-1"
+                    >
+                      <TimeDisplay
+                        time="2017-03-03T01:22:32"
+                      />
+                    </span>,
+                    <span>
+                       regarding 
+                      <span
+                        id="regarding-1"
+                      >
+                        <Link
+                          onlyActiveOnIndex={false}
+                          style={Object {}}
+                          to="/linodes/awkward-aimless-alpha-22"
+                        >
+                          awkward-aimless-alpha-22
+                        </Link>
+                      </span>
+                    </span>,
+                  ],
+                },
+                "ref": null,
+                "rendered": Array [
+                  "Opened",
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        " by ",
+                        <strong
+                          id="opened-by-1"
+                        >
+                          tdude
+                        </strong>,
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      " by ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "children": "tdude",
+                          "id": "opened-by-1",
+                        },
+                        "ref": null,
+                        "rendered": "tdude",
+                        "type": "strong",
+                      },
+                    ],
+                    "type": "span",
+                  },
+                  " ",
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <TimeDisplay
+                        time="2017-03-03T01:22:32"
+                      />,
+                      "id": "opened-1",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "time": "2017-03-03T01:22:32",
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "span",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        " regarding ",
+                        <span
+                          id="regarding-1"
+                        >
+                          <Link
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/linodes/awkward-aimless-alpha-22"
+                          >
+                            awkward-aimless-alpha-22
+                          </Link>
+                        </span>,
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      " regarding ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "children": <Link
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/linodes/awkward-aimless-alpha-22"
+                          >
+                            awkward-aimless-alpha-22
+                          </Link>,
+                          "id": "regarding-1",
+                        },
+                        "ref": null,
+                        "rendered": Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "class",
+                          "props": Object {
+                            "children": "awkward-aimless-alpha-22",
+                            "onlyActiveOnIndex": false,
+                            "style": Object {},
+                            "to": "/linodes/awkward-aimless-alpha-22",
+                          },
+                          "ref": null,
+                          "rendered": "awkward-aimless-alpha-22",
+                          "type": [Function],
+                        },
+                        "type": "span",
+                      },
+                    ],
+                    "type": "span",
+                  },
+                ],
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+          "type": "div",
+        },
+        "type": "header",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div
+            className="row"
+          >
+            <div
+              className="col-lg-7 col-md-12"
+            >
+              <section>
+                <TicketReply
+                  createdField="opened"
+                  reply={
+                    Object {
+                      "_replies": Object {
+                        "replies": Array [
+                          Object {
+                            "created": "2017-03-30T16:48:10",
+                            "created_by": "support",
+                            "description": "This is the first response.",
+                            "id": 1,
+                          },
+                        ],
+                      },
+                      "closed": null,
+                      "description": "Hullo!",
+                      "entity": Object {
+                        "label": "awkward-aimless-alpha-22",
+                        "type": "linode",
+                      },
+                      "id": 1,
+                      "opened": "2017-03-03T01:22:32",
+                      "opened_by": "tdude",
+                      "status": "new",
+                      "summary": "This is my ticket!",
+                      "updated": "2017-03-03T01:22:32",
+                      "updated_by": "tdude",
+                    }
+                  }
+                />
+              </section>
+              <section>
+                <TicketReply
+                  createdField="created"
+                  reply={
+                    Object {
+                      "created": "2017-03-30T16:48:10",
+                      "created_by": "support",
+                      "description": "This is the first response.",
+                      "id": 1,
+                    }
+                  }
+                />
+              </section>
+              <Card
+                className=""
+              >
+                <Form
+                  analytics={
+                    Object {
+                      "action": "add",
+                      "title": "Ticket Response",
+                    }
+                  }
+                  className=""
+                  noSubmitEvent={false}
+                  onSubmit={[Function]}
+                >
+                  <FormGroup
+                    className=""
+                    name="ticket-reply"
+                  >
+                    <label
+                      className="row-label"
+                      htmlFor="reply"
+                    >
+                      Write a reply:
+                    </label>
+                    <Textarea
+                      className="textarea-lg"
+                      id="reply"
+                      name="reply"
+                      onChange={[Function]}
+                      value=""
+                    />
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="description"
+                    />
+                  </FormGroup>
+                  <FormGroup
+                    className=""
+                    errors={Object {}}
+                    name="ticket-attachements"
+                  >
+                    <div>
+                      <label
+                        className="row-label"
+                        htmlFor="attachments"
+                      >
+                        Add attachments:
+                      </label>
+                    </div>
+                    <Input
+                      className=""
+                      id="attachments"
+                      multiple={true}
+                      name="attachments"
+                      onChange={[Function]}
+                      type="file"
+                    />
+                    <FormGroupError
+                      className=""
+                      errors={Object {}}
+                      inline={false}
+                      name="attachments"
+                    />
+                  </FormGroup>
+                  <div
+                    className="clearfix"
+                  >
+                    <div
+                      className="text- sm-right"
+                    >
+                      <SubmitButton
+                        className="btn-default"
+                        disabled={false}
+                        disabledChildren="Submitting"
+                      >
+                        Submit
+                      </SubmitButton>
+                      <FormSummary
+                        className=""
+                        errors={Object {}}
+                        success="Response submitted."
+                      />
+                    </div>
+                  </div>
+                </Form>
+              </Card>
+            </div>
+            <div
+              className="col-lg-5 col-md-12"
+            >
+              <TicketHelper />
+            </div>
+          </div>,
+          "className": "container",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <div
+                className="col-lg-7 col-md-12"
+              >
+                <section>
+                  <TicketReply
+                    createdField="opened"
+                    reply={
+                      Object {
+                        "_replies": Object {
+                          "replies": Array [
+                            Object {
+                              "created": "2017-03-30T16:48:10",
+                              "created_by": "support",
+                              "description": "This is the first response.",
+                              "id": 1,
+                            },
+                          ],
+                        },
+                        "closed": null,
+                        "description": "Hullo!",
+                        "entity": Object {
+                          "label": "awkward-aimless-alpha-22",
+                          "type": "linode",
+                        },
+                        "id": 1,
+                        "opened": "2017-03-03T01:22:32",
+                        "opened_by": "tdude",
+                        "status": "new",
+                        "summary": "This is my ticket!",
+                        "updated": "2017-03-03T01:22:32",
+                        "updated_by": "tdude",
+                      }
+                    }
+                  />
+                </section>
+                <section>
+                  <TicketReply
+                    createdField="created"
+                    reply={
+                      Object {
+                        "created": "2017-03-30T16:48:10",
+                        "created_by": "support",
+                        "description": "This is the first response.",
+                        "id": 1,
+                      }
+                    }
+                  />
+                </section>
+                <Card
+                  className=""
+                >
+                  <Form
+                    analytics={
+                      Object {
+                        "action": "add",
+                        "title": "Ticket Response",
+                      }
+                    }
+                    className=""
+                    noSubmitEvent={false}
+                    onSubmit={[Function]}
+                  >
+                    <FormGroup
+                      className=""
+                      name="ticket-reply"
+                    >
+                      <label
+                        className="row-label"
+                        htmlFor="reply"
+                      >
+                        Write a reply:
+                      </label>
+                      <Textarea
+                        className="textarea-lg"
+                        id="reply"
+                        name="reply"
+                        onChange={[Function]}
+                        value=""
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="description"
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      className=""
+                      errors={Object {}}
+                      name="ticket-attachements"
+                    >
+                      <div>
+                        <label
+                          className="row-label"
+                          htmlFor="attachments"
+                        >
+                          Add attachments:
+                        </label>
+                      </div>
+                      <Input
+                        className=""
+                        id="attachments"
+                        multiple={true}
+                        name="attachments"
+                        onChange={[Function]}
+                        type="file"
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="attachments"
+                      />
+                    </FormGroup>
+                    <div
+                      className="clearfix"
+                    >
+                      <div
+                        className="text- sm-right"
+                      >
+                        <SubmitButton
+                          className="btn-default"
+                          disabled={false}
+                          disabledChildren="Submitting"
+                        >
+                          Submit
+                        </SubmitButton>
+                        <FormSummary
+                          className=""
+                          errors={Object {}}
+                          success="Response submitted."
+                        />
+                      </div>
+                    </div>
+                  </Form>
+                </Card>
+              </div>,
+              <div
+                className="col-lg-5 col-md-12"
+              >
+                <TicketHelper />
+              </div>,
+            ],
+            "className": "row",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <section>
+                    <TicketReply
+                      createdField="opened"
+                      reply={
+                        Object {
+                          "_replies": Object {
+                            "replies": Array [
+                              Object {
+                                "created": "2017-03-30T16:48:10",
+                                "created_by": "support",
+                                "description": "This is the first response.",
+                                "id": 1,
+                              },
+                            ],
+                          },
+                          "closed": null,
+                          "description": "Hullo!",
+                          "entity": Object {
+                            "label": "awkward-aimless-alpha-22",
+                            "type": "linode",
+                          },
+                          "id": 1,
+                          "opened": "2017-03-03T01:22:32",
+                          "opened_by": "tdude",
+                          "status": "new",
+                          "summary": "This is my ticket!",
+                          "updated": "2017-03-03T01:22:32",
+                          "updated_by": "tdude",
+                        }
+                      }
+                    />
+                  </section>,
+                  Array [
+                    <section>
+                      <TicketReply
+                        createdField="created"
+                        reply={
+                          Object {
+                            "created": "2017-03-30T16:48:10",
+                            "created_by": "support",
+                            "description": "This is the first response.",
+                            "id": 1,
+                          }
+                        }
+                      />
+                    </section>,
+                  ],
+                  <Card
+                    className=""
+                  >
+                    <Form
+                      analytics={
+                        Object {
+                          "action": "add",
+                          "title": "Ticket Response",
+                        }
+                      }
+                      className=""
+                      noSubmitEvent={false}
+                      onSubmit={[Function]}
+                    >
+                      <FormGroup
+                        className=""
+                        name="ticket-reply"
+                      >
+                        <label
+                          className="row-label"
+                          htmlFor="reply"
+                        >
+                          Write a reply:
+                        </label>
+                        <Textarea
+                          className="textarea-lg"
+                          id="reply"
+                          name="reply"
+                          onChange={[Function]}
+                          value=""
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="description"
+                        />
+                      </FormGroup>
+                      <FormGroup
+                        className=""
+                        errors={Object {}}
+                        name="ticket-attachements"
+                      >
+                        <div>
+                          <label
+                            className="row-label"
+                            htmlFor="attachments"
+                          >
+                            Add attachments:
+                          </label>
+                        </div>
+                        <Input
+                          className=""
+                          id="attachments"
+                          multiple={true}
+                          name="attachments"
+                          onChange={[Function]}
+                          type="file"
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="attachments"
+                        />
+                      </FormGroup>
+                      <div
+                        className="clearfix"
+                      >
+                        <div
+                          className="text- sm-right"
+                        >
+                          <SubmitButton
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Submitting"
+                          >
+                            Submit
+                          </SubmitButton>
+                          <FormSummary
+                            className=""
+                            errors={Object {}}
+                            success="Response submitted."
+                          />
+                        </div>
+                      </div>
+                    </Form>
+                  </Card>,
+                ],
+                "className": "col-lg-7 col-md-12",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <TicketReply
+                      createdField="opened"
+                      reply={
+                        Object {
+                          "_replies": Object {
+                            "replies": Array [
+                              Object {
+                                "created": "2017-03-30T16:48:10",
+                                "created_by": "support",
+                                "description": "This is the first response.",
+                                "id": 1,
+                              },
+                            ],
+                          },
+                          "closed": null,
+                          "description": "Hullo!",
+                          "entity": Object {
+                            "label": "awkward-aimless-alpha-22",
+                            "type": "linode",
+                          },
+                          "id": 1,
+                          "opened": "2017-03-03T01:22:32",
+                          "opened_by": "tdude",
+                          "status": "new",
+                          "summary": "This is my ticket!",
+                          "updated": "2017-03-03T01:22:32",
+                          "updated_by": "tdude",
+                        }
+                      }
+                    />,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "createdField": "opened",
+                      "reply": Object {
+                        "_replies": Object {
+                          "replies": Array [
+                            Object {
+                              "created": "2017-03-30T16:48:10",
+                              "created_by": "support",
+                              "description": "This is the first response.",
+                              "id": 1,
+                            },
+                          ],
+                        },
+                        "closed": null,
+                        "description": "Hullo!",
+                        "entity": Object {
+                          "label": "awkward-aimless-alpha-22",
+                          "type": "linode",
+                        },
+                        "id": 1,
+                        "opened": "2017-03-03T01:22:32",
+                        "opened_by": "tdude",
+                        "status": "new",
+                        "summary": "This is my ticket!",
+                        "updated": "2017-03-03T01:22:32",
+                        "updated_by": "tdude",
+                      },
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "section",
+                },
+                Object {
+                  "instance": null,
+                  "key": "1",
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <TicketReply
+                      createdField="created"
+                      reply={
+                        Object {
+                          "created": "2017-03-30T16:48:10",
+                          "created_by": "support",
+                          "description": "This is the first response.",
+                          "id": 1,
+                        }
+                      }
+                    />,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "createdField": "created",
+                      "reply": Object {
+                        "created": "2017-03-30T16:48:10",
+                        "created_by": "support",
+                        "description": "This is the first response.",
+                        "id": 1,
+                      },
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "section",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <Form
+                      analytics={
+                        Object {
+                          "action": "add",
+                          "title": "Ticket Response",
+                        }
+                      }
+                      className=""
+                      noSubmitEvent={false}
+                      onSubmit={[Function]}
+                    >
+                      <FormGroup
+                        className=""
+                        name="ticket-reply"
+                      >
+                        <label
+                          className="row-label"
+                          htmlFor="reply"
+                        >
+                          Write a reply:
+                        </label>
+                        <Textarea
+                          className="textarea-lg"
+                          id="reply"
+                          name="reply"
+                          onChange={[Function]}
+                          value=""
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="description"
+                        />
+                      </FormGroup>
+                      <FormGroup
+                        className=""
+                        errors={Object {}}
+                        name="ticket-attachements"
+                      >
+                        <div>
+                          <label
+                            className="row-label"
+                            htmlFor="attachments"
+                          >
+                            Add attachments:
+                          </label>
+                        </div>
+                        <Input
+                          className=""
+                          id="attachments"
+                          multiple={true}
+                          name="attachments"
+                          onChange={[Function]}
+                          type="file"
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="attachments"
+                        />
+                      </FormGroup>
+                      <div
+                        className="clearfix"
+                      >
+                        <div
+                          className="text- sm-right"
+                        >
+                          <SubmitButton
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Submitting"
+                          >
+                            Submit
+                          </SubmitButton>
+                          <FormSummary
+                            className=""
+                            errors={Object {}}
+                            success="Response submitted."
+                          />
+                        </div>
+                      </div>
+                    </Form>,
+                    "className": "",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "analytics": Object {
+                        "action": "add",
+                        "title": "Ticket Response",
+                      },
+                      "children": Array [
+                        <FormGroup
+                          className=""
+                          name="ticket-reply"
+                        >
+                          <label
+                            className="row-label"
+                            htmlFor="reply"
+                          >
+                            Write a reply:
+                          </label>
+                          <Textarea
+                            className="textarea-lg"
+                            id="reply"
+                            name="reply"
+                            onChange={[Function]}
+                            value=""
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="description"
+                          />
+                        </FormGroup>,
+                        <FormGroup
+                          className=""
+                          errors={Object {}}
+                          name="ticket-attachements"
+                        >
+                          <div>
+                            <label
+                              className="row-label"
+                              htmlFor="attachments"
+                            >
+                              Add attachments:
+                            </label>
+                          </div>
+                          <Input
+                            className=""
+                            id="attachments"
+                            multiple={true}
+                            name="attachments"
+                            onChange={[Function]}
+                            type="file"
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="attachments"
+                          />
+                        </FormGroup>,
+                        <div
+                          className="clearfix"
+                        >
+                          <div
+                            className="text- sm-right"
+                          >
+                            <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Submitting"
+                            >
+                              Submit
+                            </SubmitButton>
+                            <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="Response submitted."
+                            />
+                          </div>
+                        </div>,
+                      ],
+                      "className": "",
+                      "noSubmitEvent": false,
+                      "onSubmit": [Function],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": Array [
+                            <label
+                              className="row-label"
+                              htmlFor="reply"
+                            >
+                              Write a reply:
+                            </label>,
+                            <Textarea
+                              className="textarea-lg"
+                              id="reply"
+                              name="reply"
+                              onChange={[Function]}
+                              value=""
+                            />,
+                            <FormGroupError
+                              className=""
+                              errors={Object {}}
+                              inline={false}
+                              name="description"
+                            />,
+                          ],
+                          "className": "",
+                          "name": "ticket-reply",
+                        },
+                        "ref": null,
+                        "rendered": Array [
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "host",
+                            "props": Object {
+                              "children": "Write a reply:",
+                              "className": "row-label",
+                              "htmlFor": "reply",
+                            },
+                            "ref": null,
+                            "rendered": "Write a reply:",
+                            "type": "label",
+                          },
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "className": "textarea-lg",
+                              "id": "reply",
+                              "name": "reply",
+                              "onChange": [Function],
+                              "value": "",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "className": "",
+                              "errors": Object {},
+                              "inline": false,
+                              "name": "description",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                        ],
+                        "type": [Function],
+                      },
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "children": Array [
+                            <div>
+                              <label
+                                className="row-label"
+                                htmlFor="attachments"
+                              >
+                                Add attachments:
+                              </label>
+                            </div>,
+                            <Input
+                              className=""
+                              id="attachments"
+                              multiple={true}
+                              name="attachments"
+                              onChange={[Function]}
+                              type="file"
+                            />,
+                            <FormGroupError
+                              className=""
+                              errors={Object {}}
+                              inline={false}
+                              name="attachments"
+                            />,
+                          ],
+                          "className": "",
+                          "errors": Object {},
+                          "name": "ticket-attachements",
+                        },
+                        "ref": null,
+                        "rendered": Array [
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "host",
+                            "props": Object {
+                              "children": <label
+                                className="row-label"
+                                htmlFor="attachments"
+                              >
+                                Add attachments:
+                              </label>,
+                            },
+                            "ref": null,
+                            "rendered": Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "host",
+                              "props": Object {
+                                "children": "Add attachments:",
+                                "className": "row-label",
+                                "htmlFor": "attachments",
+                              },
+                              "ref": null,
+                              "rendered": "Add attachments:",
+                              "type": "label",
+                            },
+                            "type": "div",
+                          },
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "className": "",
+                              "id": "attachments",
+                              "multiple": true,
+                              "name": "attachments",
+                              "onChange": [Function],
+                              "type": "file",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                          Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "function",
+                            "props": Object {
+                              "className": "",
+                              "errors": Object {},
+                              "inline": false,
+                              "name": "attachments",
+                            },
+                            "ref": null,
+                            "rendered": null,
+                            "type": [Function],
+                          },
+                        ],
+                        "type": [Function],
+                      },
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "host",
+                        "props": Object {
+                          "children": <div
+                            className="text- sm-right"
+                          >
+                            <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Submitting"
+                            >
+                              Submit
+                            </SubmitButton>
+                            <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="Response submitted."
+                            />
+                          </div>,
+                          "className": "clearfix",
+                        },
+                        "ref": null,
+                        "rendered": Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": Array [
+                              <SubmitButton
+                                className="btn-default"
+                                disabled={false}
+                                disabledChildren="Submitting"
+                              >
+                                Submit
+                              </SubmitButton>,
+                              <FormSummary
+                                className=""
+                                errors={Object {}}
+                                success="Response submitted."
+                              />,
+                            ],
+                            "className": "text- sm-right",
+                          },
+                          "ref": null,
+                          "rendered": Array [
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "children": "Submit",
+                                "className": "btn-default",
+                                "disabled": false,
+                                "disabledChildren": "Submitting",
+                              },
+                              "ref": null,
+                              "rendered": "Submit",
+                              "type": [Function],
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "className": "",
+                                "errors": Object {},
+                                "success": "Response submitted.",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                          ],
+                          "type": "div",
+                        },
+                        "type": "div",
+                      },
+                    ],
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <TicketHelper />,
+                "className": "col-lg-5 col-md-12",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {},
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+        "type": "div",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="This is my ticket!"
+          />,
+          <header
+            className="main-header main-header--border"
+          >
+            <div
+              className="container clearfix"
+            >
+              <div
+                className="float-sm-left"
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/support"
+                >
+                  Support
+                </Link>
+                <h1
+                  title={1}
+                >
+                  This is my ticket!
+                </h1>
+                <div>
+                  Opened
+                  <span>
+                     by 
+                    <strong
+                      id="opened-by-1"
+                    >
+                      tdude
+                    </strong>
+                  </span>
+                   
+                  <span
+                    id="opened-1"
+                  >
+                    <TimeDisplay
+                      time="2017-03-03T01:22:32"
+                    />
+                  </span>
+                  <span>
+                     regarding 
+                    <span
+                      id="regarding-1"
+                    >
+                      <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/linodes/awkward-aimless-alpha-22"
+                      >
+                        awkward-aimless-alpha-22
+                      </Link>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </header>,
+          <div
+            className="container"
+          >
+            <div
+              className="row"
+            >
+              <div
+                className="col-lg-7 col-md-12"
+              >
+                <section>
+                  <TicketReply
+                    createdField="opened"
+                    reply={
+                      Object {
+                        "_replies": Object {
+                          "replies": Array [
+                            Object {
+                              "created": "2017-03-30T16:48:10",
+                              "created_by": "support",
+                              "description": "This is the first response.",
+                              "id": 1,
+                            },
+                          ],
+                        },
+                        "closed": null,
+                        "description": "Hullo!",
+                        "entity": Object {
+                          "label": "awkward-aimless-alpha-22",
+                          "type": "linode",
+                        },
+                        "id": 1,
+                        "opened": "2017-03-03T01:22:32",
+                        "opened_by": "tdude",
+                        "status": "new",
+                        "summary": "This is my ticket!",
+                        "updated": "2017-03-03T01:22:32",
+                        "updated_by": "tdude",
+                      }
+                    }
+                  />
+                </section>
+                <section>
+                  <TicketReply
+                    createdField="created"
+                    reply={
+                      Object {
+                        "created": "2017-03-30T16:48:10",
+                        "created_by": "support",
+                        "description": "This is the first response.",
+                        "id": 1,
+                      }
+                    }
+                  />
+                </section>
+                <Card
+                  className=""
+                >
+                  <Form
+                    analytics={
+                      Object {
+                        "action": "add",
+                        "title": "Ticket Response",
+                      }
+                    }
+                    className=""
+                    noSubmitEvent={false}
+                    onSubmit={[Function]}
+                  >
+                    <FormGroup
+                      className=""
+                      name="ticket-reply"
+                    >
+                      <label
+                        className="row-label"
+                        htmlFor="reply"
+                      >
+                        Write a reply:
+                      </label>
+                      <Textarea
+                        className="textarea-lg"
+                        id="reply"
+                        name="reply"
+                        onChange={[Function]}
+                        value=""
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="description"
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      className=""
+                      errors={Object {}}
+                      name="ticket-attachements"
+                    >
+                      <div>
+                        <label
+                          className="row-label"
+                          htmlFor="attachments"
+                        >
+                          Add attachments:
+                        </label>
+                      </div>
+                      <Input
+                        className=""
+                        id="attachments"
+                        multiple={true}
+                        name="attachments"
+                        onChange={[Function]}
+                        type="file"
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="attachments"
+                      />
+                    </FormGroup>
+                    <div
+                      className="clearfix"
+                    >
+                      <div
+                        className="text- sm-right"
+                      >
+                        <SubmitButton
+                          className="btn-default"
+                          disabled={false}
+                          disabledChildren="Submitting"
+                        >
+                          Submit
+                        </SubmitButton>
+                        <FormSummary
+                          className=""
+                          errors={Object {}}
+                          success="Response submitted."
+                        />
+                      </div>
+                    </div>
+                  </Form>
+                </Card>
+              </div>
+              <div
+                className="col-lg-5 col-md-12"
+              >
+                <TicketHelper />
+              </div>
+            </div>
+          </div>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "This is my ticket!",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="container clearfix"
+            >
+              <div
+                className="float-sm-left"
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/support"
+                >
+                  Support
+                </Link>
+                <h1
+                  title={1}
+                >
+                  This is my ticket!
+                </h1>
+                <div>
+                  Opened
+                  <span>
+                     by 
+                    <strong
+                      id="opened-by-1"
+                    >
+                      tdude
+                    </strong>
+                  </span>
+                   
+                  <span
+                    id="opened-1"
+                  >
+                    <TimeDisplay
+                      time="2017-03-03T01:22:32"
+                    />
+                  </span>
+                  <span>
+                     regarding 
+                    <span
+                      id="regarding-1"
+                    >
+                      <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/linodes/awkward-aimless-alpha-22"
+                      >
+                        awkward-aimless-alpha-22
+                      </Link>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>,
+            "className": "main-header main-header--border",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": <div
+                className="float-sm-left"
+              >
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/support"
+                >
+                  Support
+                </Link>
+                <h1
+                  title={1}
+                >
+                  This is my ticket!
+                </h1>
+                <div>
+                  Opened
+                  <span>
+                     by 
+                    <strong
+                      id="opened-by-1"
+                    >
+                      tdude
+                    </strong>
+                  </span>
+                   
+                  <span
+                    id="opened-1"
+                  >
+                    <TimeDisplay
+                      time="2017-03-03T01:22:32"
+                    />
+                  </span>
+                  <span>
+                     regarding 
+                    <span
+                      id="regarding-1"
+                    >
+                      <Link
+                        onlyActiveOnIndex={false}
+                        style={Object {}}
+                        to="/linodes/awkward-aimless-alpha-22"
+                      >
+                        awkward-aimless-alpha-22
+                      </Link>
+                    </span>
+                  </span>
+                </div>
+              </div>,
+              "className": "container clearfix",
+            },
+            "ref": null,
+            "rendered": Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Link
+                    onlyActiveOnIndex={false}
+                    style={Object {}}
+                    to="/support"
+                  >
+                    Support
+                  </Link>,
+                  <h1
+                    title={1}
+                  >
+                    This is my ticket!
+                  </h1>,
+                  <div>
+                    Opened
+                    <span>
+                       by 
+                      <strong
+                        id="opened-by-1"
+                      >
+                        tdude
+                      </strong>
+                    </span>
+                     
+                    <span
+                      id="opened-1"
+                    >
+                      <TimeDisplay
+                        time="2017-03-03T01:22:32"
+                      />
+                    </span>
+                    <span>
+                       regarding 
+                      <span
+                        id="regarding-1"
+                      >
+                        <Link
+                          onlyActiveOnIndex={false}
+                          style={Object {}}
+                          to="/linodes/awkward-aimless-alpha-22"
+                        >
+                          awkward-aimless-alpha-22
+                        </Link>
+                      </span>
+                    </span>
+                  </div>,
+                ],
+                "className": "float-sm-left",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "children": "Support",
+                    "onlyActiveOnIndex": false,
+                    "style": Object {},
+                    "to": "/support",
+                  },
+                  "ref": null,
+                  "rendered": "Support",
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "This is my ticket!",
+                    "title": 1,
+                  },
+                  "ref": null,
+                  "rendered": "This is my ticket!",
+                  "type": "h1",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      "Opened",
+                      <span>
+                         by 
+                        <strong
+                          id="opened-by-1"
+                        >
+                          tdude
+                        </strong>
+                      </span>,
+                      " ",
+                      <span
+                        id="opened-1"
+                      >
+                        <TimeDisplay
+                          time="2017-03-03T01:22:32"
+                        />
+                      </span>,
+                      <span>
+                         regarding 
+                        <span
+                          id="regarding-1"
+                        >
+                          <Link
+                            onlyActiveOnIndex={false}
+                            style={Object {}}
+                            to="/linodes/awkward-aimless-alpha-22"
+                          >
+                            awkward-aimless-alpha-22
+                          </Link>
+                        </span>
+                      </span>,
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    "Opened",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": Array [
+                          " by ",
+                          <strong
+                            id="opened-by-1"
+                          >
+                            tdude
+                          </strong>,
+                        ],
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        " by ",
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": "tdude",
+                            "id": "opened-by-1",
+                          },
+                          "ref": null,
+                          "rendered": "tdude",
+                          "type": "strong",
+                        },
+                      ],
+                      "type": "span",
+                    },
+                    " ",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": <TimeDisplay
+                          time="2017-03-03T01:22:32"
+                        />,
+                        "id": "opened-1",
+                      },
+                      "ref": null,
+                      "rendered": Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "time": "2017-03-03T01:22:32",
+                        },
+                        "ref": null,
+                        "rendered": null,
+                        "type": [Function],
+                      },
+                      "type": "span",
+                    },
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "host",
+                      "props": Object {
+                        "children": Array [
+                          " regarding ",
+                          <span
+                            id="regarding-1"
+                          >
+                            <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/linodes/awkward-aimless-alpha-22"
+                            >
+                              awkward-aimless-alpha-22
+                            </Link>
+                          </span>,
+                        ],
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        " regarding ",
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": <Link
+                              onlyActiveOnIndex={false}
+                              style={Object {}}
+                              to="/linodes/awkward-aimless-alpha-22"
+                            >
+                              awkward-aimless-alpha-22
+                            </Link>,
+                            "id": "regarding-1",
+                          },
+                          "ref": null,
+                          "rendered": Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "class",
+                            "props": Object {
+                              "children": "awkward-aimless-alpha-22",
+                              "onlyActiveOnIndex": false,
+                              "style": Object {},
+                              "to": "/linodes/awkward-aimless-alpha-22",
+                            },
+                            "ref": null,
+                            "rendered": "awkward-aimless-alpha-22",
+                            "type": [Function],
+                          },
+                          "type": "span",
+                        },
+                      ],
+                      "type": "span",
+                    },
+                  ],
+                  "type": "div",
+                },
+              ],
+              "type": "div",
+            },
+            "type": "div",
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <div
+              className="row"
+            >
+              <div
+                className="col-lg-7 col-md-12"
+              >
+                <section>
+                  <TicketReply
+                    createdField="opened"
+                    reply={
+                      Object {
+                        "_replies": Object {
+                          "replies": Array [
+                            Object {
+                              "created": "2017-03-30T16:48:10",
+                              "created_by": "support",
+                              "description": "This is the first response.",
+                              "id": 1,
+                            },
+                          ],
+                        },
+                        "closed": null,
+                        "description": "Hullo!",
+                        "entity": Object {
+                          "label": "awkward-aimless-alpha-22",
+                          "type": "linode",
+                        },
+                        "id": 1,
+                        "opened": "2017-03-03T01:22:32",
+                        "opened_by": "tdude",
+                        "status": "new",
+                        "summary": "This is my ticket!",
+                        "updated": "2017-03-03T01:22:32",
+                        "updated_by": "tdude",
+                      }
+                    }
+                  />
+                </section>
+                <section>
+                  <TicketReply
+                    createdField="created"
+                    reply={
+                      Object {
+                        "created": "2017-03-30T16:48:10",
+                        "created_by": "support",
+                        "description": "This is the first response.",
+                        "id": 1,
+                      }
+                    }
+                  />
+                </section>
+                <Card
+                  className=""
+                >
+                  <Form
+                    analytics={
+                      Object {
+                        "action": "add",
+                        "title": "Ticket Response",
+                      }
+                    }
+                    className=""
+                    noSubmitEvent={false}
+                    onSubmit={[Function]}
+                  >
+                    <FormGroup
+                      className=""
+                      name="ticket-reply"
+                    >
+                      <label
+                        className="row-label"
+                        htmlFor="reply"
+                      >
+                        Write a reply:
+                      </label>
+                      <Textarea
+                        className="textarea-lg"
+                        id="reply"
+                        name="reply"
+                        onChange={[Function]}
+                        value=""
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="description"
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      className=""
+                      errors={Object {}}
+                      name="ticket-attachements"
+                    >
+                      <div>
+                        <label
+                          className="row-label"
+                          htmlFor="attachments"
+                        >
+                          Add attachments:
+                        </label>
+                      </div>
+                      <Input
+                        className=""
+                        id="attachments"
+                        multiple={true}
+                        name="attachments"
+                        onChange={[Function]}
+                        type="file"
+                      />
+                      <FormGroupError
+                        className=""
+                        errors={Object {}}
+                        inline={false}
+                        name="attachments"
+                      />
+                    </FormGroup>
+                    <div
+                      className="clearfix"
+                    >
+                      <div
+                        className="text- sm-right"
+                      >
+                        <SubmitButton
+                          className="btn-default"
+                          disabled={false}
+                          disabledChildren="Submitting"
+                        >
+                          Submit
+                        </SubmitButton>
+                        <FormSummary
+                          className=""
+                          errors={Object {}}
+                          success="Response submitted."
+                        />
+                      </div>
+                    </div>
+                  </Form>
+                </Card>
+              </div>
+              <div
+                className="col-lg-5 col-md-12"
+              >
+                <TicketHelper />
+              </div>
+            </div>,
+            "className": "container",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <div
+                  className="col-lg-7 col-md-12"
+                >
+                  <section>
+                    <TicketReply
+                      createdField="opened"
+                      reply={
+                        Object {
+                          "_replies": Object {
+                            "replies": Array [
+                              Object {
+                                "created": "2017-03-30T16:48:10",
+                                "created_by": "support",
+                                "description": "This is the first response.",
+                                "id": 1,
+                              },
+                            ],
+                          },
+                          "closed": null,
+                          "description": "Hullo!",
+                          "entity": Object {
+                            "label": "awkward-aimless-alpha-22",
+                            "type": "linode",
+                          },
+                          "id": 1,
+                          "opened": "2017-03-03T01:22:32",
+                          "opened_by": "tdude",
+                          "status": "new",
+                          "summary": "This is my ticket!",
+                          "updated": "2017-03-03T01:22:32",
+                          "updated_by": "tdude",
+                        }
+                      }
+                    />
+                  </section>
+                  <section>
+                    <TicketReply
+                      createdField="created"
+                      reply={
+                        Object {
+                          "created": "2017-03-30T16:48:10",
+                          "created_by": "support",
+                          "description": "This is the first response.",
+                          "id": 1,
+                        }
+                      }
+                    />
+                  </section>
+                  <Card
+                    className=""
+                  >
+                    <Form
+                      analytics={
+                        Object {
+                          "action": "add",
+                          "title": "Ticket Response",
+                        }
+                      }
+                      className=""
+                      noSubmitEvent={false}
+                      onSubmit={[Function]}
+                    >
+                      <FormGroup
+                        className=""
+                        name="ticket-reply"
+                      >
+                        <label
+                          className="row-label"
+                          htmlFor="reply"
+                        >
+                          Write a reply:
+                        </label>
+                        <Textarea
+                          className="textarea-lg"
+                          id="reply"
+                          name="reply"
+                          onChange={[Function]}
+                          value=""
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="description"
+                        />
+                      </FormGroup>
+                      <FormGroup
+                        className=""
+                        errors={Object {}}
+                        name="ticket-attachements"
+                      >
+                        <div>
+                          <label
+                            className="row-label"
+                            htmlFor="attachments"
+                          >
+                            Add attachments:
+                          </label>
+                        </div>
+                        <Input
+                          className=""
+                          id="attachments"
+                          multiple={true}
+                          name="attachments"
+                          onChange={[Function]}
+                          type="file"
+                        />
+                        <FormGroupError
+                          className=""
+                          errors={Object {}}
+                          inline={false}
+                          name="attachments"
+                        />
+                      </FormGroup>
+                      <div
+                        className="clearfix"
+                      >
+                        <div
+                          className="text- sm-right"
+                        >
+                          <SubmitButton
+                            className="btn-default"
+                            disabled={false}
+                            disabledChildren="Submitting"
+                          >
+                            Submit
+                          </SubmitButton>
+                          <FormSummary
+                            className=""
+                            errors={Object {}}
+                            success="Response submitted."
+                          />
+                        </div>
+                      </div>
+                    </Form>
+                  </Card>
+                </div>,
+                <div
+                  className="col-lg-5 col-md-12"
+                >
+                  <TicketHelper />
+                </div>,
+              ],
+              "className": "row",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": Array [
+                    <section>
+                      <TicketReply
+                        createdField="opened"
+                        reply={
+                          Object {
+                            "_replies": Object {
+                              "replies": Array [
+                                Object {
+                                  "created": "2017-03-30T16:48:10",
+                                  "created_by": "support",
+                                  "description": "This is the first response.",
+                                  "id": 1,
+                                },
+                              ],
+                            },
+                            "closed": null,
+                            "description": "Hullo!",
+                            "entity": Object {
+                              "label": "awkward-aimless-alpha-22",
+                              "type": "linode",
+                            },
+                            "id": 1,
+                            "opened": "2017-03-03T01:22:32",
+                            "opened_by": "tdude",
+                            "status": "new",
+                            "summary": "This is my ticket!",
+                            "updated": "2017-03-03T01:22:32",
+                            "updated_by": "tdude",
+                          }
+                        }
+                      />
+                    </section>,
+                    Array [
+                      <section>
+                        <TicketReply
+                          createdField="created"
+                          reply={
+                            Object {
+                              "created": "2017-03-30T16:48:10",
+                              "created_by": "support",
+                              "description": "This is the first response.",
+                              "id": 1,
+                            }
+                          }
+                        />
+                      </section>,
+                    ],
+                    <Card
+                      className=""
+                    >
+                      <Form
+                        analytics={
+                          Object {
+                            "action": "add",
+                            "title": "Ticket Response",
+                          }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
+                      >
+                        <FormGroup
+                          className=""
+                          name="ticket-reply"
+                        >
+                          <label
+                            className="row-label"
+                            htmlFor="reply"
+                          >
+                            Write a reply:
+                          </label>
+                          <Textarea
+                            className="textarea-lg"
+                            id="reply"
+                            name="reply"
+                            onChange={[Function]}
+                            value=""
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="description"
+                          />
+                        </FormGroup>
+                        <FormGroup
+                          className=""
+                          errors={Object {}}
+                          name="ticket-attachements"
+                        >
+                          <div>
+                            <label
+                              className="row-label"
+                              htmlFor="attachments"
+                            >
+                              Add attachments:
+                            </label>
+                          </div>
+                          <Input
+                            className=""
+                            id="attachments"
+                            multiple={true}
+                            name="attachments"
+                            onChange={[Function]}
+                            type="file"
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="attachments"
+                          />
+                        </FormGroup>
+                        <div
+                          className="clearfix"
+                        >
+                          <div
+                            className="text- sm-right"
+                          >
+                            <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Submitting"
+                            >
+                              Submit
+                            </SubmitButton>
+                            <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="Response submitted."
+                            />
+                          </div>
+                        </div>
+                      </Form>
+                    </Card>,
+                  ],
+                  "className": "col-lg-7 col-md-12",
+                },
+                "ref": null,
+                "rendered": Array [
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <TicketReply
+                        createdField="opened"
+                        reply={
+                          Object {
+                            "_replies": Object {
+                              "replies": Array [
+                                Object {
+                                  "created": "2017-03-30T16:48:10",
+                                  "created_by": "support",
+                                  "description": "This is the first response.",
+                                  "id": 1,
+                                },
+                              ],
+                            },
+                            "closed": null,
+                            "description": "Hullo!",
+                            "entity": Object {
+                              "label": "awkward-aimless-alpha-22",
+                              "type": "linode",
+                            },
+                            "id": 1,
+                            "opened": "2017-03-03T01:22:32",
+                            "opened_by": "tdude",
+                            "status": "new",
+                            "summary": "This is my ticket!",
+                            "updated": "2017-03-03T01:22:32",
+                            "updated_by": "tdude",
+                          }
+                        }
+                      />,
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "createdField": "opened",
+                        "reply": Object {
+                          "_replies": Object {
+                            "replies": Array [
+                              Object {
+                                "created": "2017-03-30T16:48:10",
+                                "created_by": "support",
+                                "description": "This is the first response.",
+                                "id": 1,
+                              },
+                            ],
+                          },
+                          "closed": null,
+                          "description": "Hullo!",
+                          "entity": Object {
+                            "label": "awkward-aimless-alpha-22",
+                            "type": "linode",
+                          },
+                          "id": 1,
+                          "opened": "2017-03-03T01:22:32",
+                          "opened_by": "tdude",
+                          "status": "new",
+                          "summary": "This is my ticket!",
+                          "updated": "2017-03-03T01:22:32",
+                          "updated_by": "tdude",
+                        },
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "section",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": "1",
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": <TicketReply
+                        createdField="created"
+                        reply={
+                          Object {
+                            "created": "2017-03-30T16:48:10",
+                            "created_by": "support",
+                            "description": "This is the first response.",
+                            "id": 1,
+                          }
+                        }
+                      />,
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "createdField": "created",
+                        "reply": Object {
+                          "created": "2017-03-30T16:48:10",
+                          "created_by": "support",
+                          "description": "This is the first response.",
+                          "id": 1,
+                        },
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                    "type": "section",
+                  },
+                  Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "children": <Form
+                        analytics={
+                          Object {
+                            "action": "add",
+                            "title": "Ticket Response",
+                          }
+                        }
+                        className=""
+                        noSubmitEvent={false}
+                        onSubmit={[Function]}
+                      >
+                        <FormGroup
+                          className=""
+                          name="ticket-reply"
+                        >
+                          <label
+                            className="row-label"
+                            htmlFor="reply"
+                          >
+                            Write a reply:
+                          </label>
+                          <Textarea
+                            className="textarea-lg"
+                            id="reply"
+                            name="reply"
+                            onChange={[Function]}
+                            value=""
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="description"
+                          />
+                        </FormGroup>
+                        <FormGroup
+                          className=""
+                          errors={Object {}}
+                          name="ticket-attachements"
+                        >
+                          <div>
+                            <label
+                              className="row-label"
+                              htmlFor="attachments"
+                            >
+                              Add attachments:
+                            </label>
+                          </div>
+                          <Input
+                            className=""
+                            id="attachments"
+                            multiple={true}
+                            name="attachments"
+                            onChange={[Function]}
+                            type="file"
+                          />
+                          <FormGroupError
+                            className=""
+                            errors={Object {}}
+                            inline={false}
+                            name="attachments"
+                          />
+                        </FormGroup>
+                        <div
+                          className="clearfix"
+                        >
+                          <div
+                            className="text- sm-right"
+                          >
+                            <SubmitButton
+                              className="btn-default"
+                              disabled={false}
+                              disabledChildren="Submitting"
+                            >
+                              Submit
+                            </SubmitButton>
+                            <FormSummary
+                              className=""
+                              errors={Object {}}
+                              success="Response submitted."
+                            />
+                          </div>
+                        </div>
+                      </Form>,
+                      "className": "",
+                    },
+                    "ref": null,
+                    "rendered": Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "analytics": Object {
+                          "action": "add",
+                          "title": "Ticket Response",
+                        },
+                        "children": Array [
+                          <FormGroup
+                            className=""
+                            name="ticket-reply"
+                          >
+                            <label
+                              className="row-label"
+                              htmlFor="reply"
+                            >
+                              Write a reply:
+                            </label>
+                            <Textarea
+                              className="textarea-lg"
+                              id="reply"
+                              name="reply"
+                              onChange={[Function]}
+                              value=""
+                            />
+                            <FormGroupError
+                              className=""
+                              errors={Object {}}
+                              inline={false}
+                              name="description"
+                            />
+                          </FormGroup>,
+                          <FormGroup
+                            className=""
+                            errors={Object {}}
+                            name="ticket-attachements"
+                          >
+                            <div>
+                              <label
+                                className="row-label"
+                                htmlFor="attachments"
+                              >
+                                Add attachments:
+                              </label>
+                            </div>
+                            <Input
+                              className=""
+                              id="attachments"
+                              multiple={true}
+                              name="attachments"
+                              onChange={[Function]}
+                              type="file"
+                            />
+                            <FormGroupError
+                              className=""
+                              errors={Object {}}
+                              inline={false}
+                              name="attachments"
+                            />
+                          </FormGroup>,
+                          <div
+                            className="clearfix"
+                          >
+                            <div
+                              className="text- sm-right"
+                            >
+                              <SubmitButton
+                                className="btn-default"
+                                disabled={false}
+                                disabledChildren="Submitting"
+                              >
+                                Submit
+                              </SubmitButton>
+                              <FormSummary
+                                className=""
+                                errors={Object {}}
+                                success="Response submitted."
+                              />
+                            </div>
+                          </div>,
+                        ],
+                        "className": "",
+                        "noSubmitEvent": false,
+                        "onSubmit": [Function],
+                      },
+                      "ref": null,
+                      "rendered": Array [
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "function",
+                          "props": Object {
+                            "children": Array [
+                              <label
+                                className="row-label"
+                                htmlFor="reply"
+                              >
+                                Write a reply:
+                              </label>,
+                              <Textarea
+                                className="textarea-lg"
+                                id="reply"
+                                name="reply"
+                                onChange={[Function]}
+                                value=""
+                              />,
+                              <FormGroupError
+                                className=""
+                                errors={Object {}}
+                                inline={false}
+                                name="description"
+                              />,
+                            ],
+                            "className": "",
+                            "name": "ticket-reply",
+                          },
+                          "ref": null,
+                          "rendered": Array [
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "host",
+                              "props": Object {
+                                "children": "Write a reply:",
+                                "className": "row-label",
+                                "htmlFor": "reply",
+                              },
+                              "ref": null,
+                              "rendered": "Write a reply:",
+                              "type": "label",
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "className": "textarea-lg",
+                                "id": "reply",
+                                "name": "reply",
+                                "onChange": [Function],
+                                "value": "",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "className": "",
+                                "errors": Object {},
+                                "inline": false,
+                                "name": "description",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                          ],
+                          "type": [Function],
+                        },
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "function",
+                          "props": Object {
+                            "children": Array [
+                              <div>
+                                <label
+                                  className="row-label"
+                                  htmlFor="attachments"
+                                >
+                                  Add attachments:
+                                </label>
+                              </div>,
+                              <Input
+                                className=""
+                                id="attachments"
+                                multiple={true}
+                                name="attachments"
+                                onChange={[Function]}
+                                type="file"
+                              />,
+                              <FormGroupError
+                                className=""
+                                errors={Object {}}
+                                inline={false}
+                                name="attachments"
+                              />,
+                            ],
+                            "className": "",
+                            "errors": Object {},
+                            "name": "ticket-attachements",
+                          },
+                          "ref": null,
+                          "rendered": Array [
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "host",
+                              "props": Object {
+                                "children": <label
+                                  className="row-label"
+                                  htmlFor="attachments"
+                                >
+                                  Add attachments:
+                                </label>,
+                              },
+                              "ref": null,
+                              "rendered": Object {
+                                "instance": null,
+                                "key": undefined,
+                                "nodeType": "host",
+                                "props": Object {
+                                  "children": "Add attachments:",
+                                  "className": "row-label",
+                                  "htmlFor": "attachments",
+                                },
+                                "ref": null,
+                                "rendered": "Add attachments:",
+                                "type": "label",
+                              },
+                              "type": "div",
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "className": "",
+                                "id": "attachments",
+                                "multiple": true,
+                                "name": "attachments",
+                                "onChange": [Function],
+                                "type": "file",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                            Object {
+                              "instance": null,
+                              "key": undefined,
+                              "nodeType": "function",
+                              "props": Object {
+                                "className": "",
+                                "errors": Object {},
+                                "inline": false,
+                                "name": "attachments",
+                              },
+                              "ref": null,
+                              "rendered": null,
+                              "type": [Function],
+                            },
+                          ],
+                          "type": [Function],
+                        },
+                        Object {
+                          "instance": null,
+                          "key": undefined,
+                          "nodeType": "host",
+                          "props": Object {
+                            "children": <div
+                              className="text- sm-right"
+                            >
+                              <SubmitButton
+                                className="btn-default"
+                                disabled={false}
+                                disabledChildren="Submitting"
+                              >
+                                Submit
+                              </SubmitButton>
+                              <FormSummary
+                                className=""
+                                errors={Object {}}
+                                success="Response submitted."
+                              />
+                            </div>,
+                            "className": "clearfix",
+                          },
+                          "ref": null,
+                          "rendered": Object {
+                            "instance": null,
+                            "key": undefined,
+                            "nodeType": "host",
+                            "props": Object {
+                              "children": Array [
+                                <SubmitButton
+                                  className="btn-default"
+                                  disabled={false}
+                                  disabledChildren="Submitting"
+                                >
+                                  Submit
+                                </SubmitButton>,
+                                <FormSummary
+                                  className=""
+                                  errors={Object {}}
+                                  success="Response submitted."
+                                />,
+                              ],
+                              "className": "text- sm-right",
+                            },
+                            "ref": null,
+                            "rendered": Array [
+                              Object {
+                                "instance": null,
+                                "key": undefined,
+                                "nodeType": "function",
+                                "props": Object {
+                                  "children": "Submit",
+                                  "className": "btn-default",
+                                  "disabled": false,
+                                  "disabledChildren": "Submitting",
+                                },
+                                "ref": null,
+                                "rendered": "Submit",
+                                "type": [Function],
+                              },
+                              Object {
+                                "instance": null,
+                                "key": undefined,
+                                "nodeType": "function",
+                                "props": Object {
+                                  "className": "",
+                                  "errors": Object {},
+                                  "success": "Response submitted.",
+                                },
+                                "ref": null,
+                                "rendered": null,
+                                "type": [Function],
+                              },
+                            ],
+                            "type": "div",
+                          },
+                          "type": "div",
+                        },
+                      ],
+                      "type": [Function],
+                    },
+                    "type": [Function],
+                  },
+                ],
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <TicketHelper />,
+                  "className": "col-lg-5 col-md-12",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {},
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+          "type": "div",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

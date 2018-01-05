@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { ExternalLink, LinkButton } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components';
+import { ExternalLink, LinkButton } from 'linode-components';
 
 export default class TicketHelper extends Component {
   constructor() {

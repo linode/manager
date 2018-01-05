@@ -1,20 +1,22 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
+import flatten from 'lodash/flatten';
+import merge from 'lodash/merge';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
-import { Table } from 'linode-components/tables';
+} from 'linode-components';
+import { Table } from 'linode-components';
 import {
   CheckboxCell,
   LinkCell,
-} from 'linode-components/tables/cells';
+} from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/ad-hoc/networking';
@@ -58,7 +60,7 @@ export class IPSharingPage extends Component {
       });
 
       this.setState({
-        checked: _.merge({}, checked, this.state ? this.state.checked : {}),
+        checked: merge({}, checked, this.state ? this.state.checked : {}),
       });
     });
   }
@@ -69,7 +71,7 @@ export class IPSharingPage extends Component {
   }
 
   onChange = (record, checked) => {
-    this.setState(_.merge({}, this.state, {
+    this.setState(merge({}, this.state, {
       checked: {
         [record.ip.address]: checked,
       },
@@ -80,7 +82,7 @@ export class IPSharingPage extends Component {
     const { dispatch, linode } = this.props;
     const { checked } = this.state;
 
-    const sharedIPsKeys = _.pickBy(checked, checked => checked);
+    const sharedIPsKeys = pickBy(checked, checked => checked);
     const sharedIPs = this.validIPs().map(({ ip }) => ip).filter(
       ({ address }) => address in sharedIPsKeys);
 
@@ -93,7 +95,7 @@ export class IPSharingPage extends Component {
     const { linode: thisLinode } = this.props;
     const { linodesInRegion } = this.state;
 
-    const data = _.flatten(linodesInRegion
+    const data = flatten(linodesInRegion
       .filter((linode) => linode.id !== thisLinode.id)
       .map(function (linode) {
         const shareableIps = Object.values(linode._ips).filter(
@@ -132,7 +134,7 @@ export class IPSharingPage extends Component {
             onSubmit={this.onSubmit}
             analytics={{ title: 'IP sharing settings' }}
           >
-            <FormGroup>
+            <FormGroup name="ip-sharing">
               <Table
                 className="Table--secondary"
                 columns={[

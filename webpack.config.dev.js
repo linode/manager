@@ -13,12 +13,12 @@ module.exports = {
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client',
-    './src/index'
+    './src/index',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -43,6 +43,22 @@ module.exports = {
         use: ['json-loader'],
       },
       {
+        test: /\.s?css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [
+                path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+                path.resolve(__dirname, './node_modules/linode-components/scss/')
+              ]
+            }
+          }
+        ],
+      },
+      {
         test: /\.jsx?/,
         use: ['babel-loader'],
         include: [
@@ -51,21 +67,6 @@ module.exports = {
           path.resolve(__dirname, './components'),
           path.resolve(__dirname, './node_modules/linode-styleguide')
         ]
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: [
-                path.resolve(__dirname, './node_modules/bootstrap/scss/')
-              ]
-            }
-          }
-        ],
       },
       {
         test: /\.svg$/,

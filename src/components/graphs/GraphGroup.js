@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Select } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+import { Select } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import LineGraph from './LineGraph';
 
@@ -43,8 +43,8 @@ export function makeIOGraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     },
     data: formatData(['FFD04B', 'FA373E'],
-                     [graphData.io, graphData.swap],
-                     ['Disk', 'Swap']),
+      [graphData.io, graphData.swap],
+      ['Disk', 'Swap']),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     units: UNITS,
   };
@@ -60,10 +60,10 @@ export function makeNetv4GraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-                     [graphData.in, graphData.private_in,
-                      graphData.out, graphData.private_out],
-                     ['Public IPv4 Inbound', 'Private IPv4 Inbound',
-                      'Public IPv4 Outbound', 'Private IPv4 Outbound']),
+      [graphData.in, graphData.private_in,
+        graphData.out, graphData.private_out],
+      ['Public IPv4 Inbound', 'Private IPv4 Inbound',
+        'Public IPv4 Outbound', 'Private IPv4 Outbound']),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     units: UNITS,
   };
@@ -79,10 +79,10 @@ export function makeNetv6GraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-                     [graphData.in, graphData.private_in,
-                      graphData.out, graphData.private_out],
-                     ['Public IPv6 Inbound', 'Private IPv6 Inbound',
-                      'Public IPv6 Outbound', 'Private IPv6 Outbound']),
+      [graphData.in, graphData.private_in,
+        graphData.out, graphData.private_out],
+      ['Public IPv6 Inbound', 'Private IPv6 Inbound',
+        'Public IPv6 Outbound', 'Private IPv6 Outbound']),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     units: UNITS,
   };
@@ -113,8 +113,8 @@ export function makeTrafficGraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     },
     data: formatData(['0033CC', '32CD32'],
-                     [graphData.in, graphData.out],
-                     ['In', 'Out']),
+      [graphData.in, graphData.out],
+      ['In', 'Out']),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS, 1),
     units: UNITS,
   };
@@ -124,7 +124,7 @@ export class GraphGroup extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { displayMode: 'small' };
+    this.state = {};
 
     this.onChange = onChange.bind(this);
   }
@@ -145,15 +145,12 @@ export class GraphGroup extends Component {
 
   render() {
     const { timezone, allGraphData } = this.props;
-    const { displayMode } = this.state;
 
     const graphs = allGraphData.map((data) => {
       const currentUnit = this.state[data.title] || 0;
 
-      const className = displayMode === 'big' ? 'col-sm-12' : 'col-sm-6';
-
       return (
-        <div key={data.title} className={`GraphGroup-graph ${className}`}>
+        <div key={data.title} className="GraphGroup-graph col-sm-12">
           <div className="Menu">
             <div className="Menu-item"><h4>{data.title}</h4></div>
             {!data.units ? null : (
@@ -169,18 +166,6 @@ export class GraphGroup extends Component {
 
     return (
       <div className="GraphGroup">
-        <div className="Menu">
-          <div className="Menu-item Menu-item--right">Last 24 Hours</div>
-          <div className="Menu-item Menu-item--right">
-            <label className="Menu-itemLabel">Display:</label>
-            <Select
-              value={displayMode}
-              name="displayMode"
-              onChange={this.onChange}
-              options={[{ label: '2 x 2', value: 'small' }, { label: '1 x 4', value: 'big' }]}
-            />
-          </div>
-        </div>
         <div className="row">{graphs}</div>
       </div>
     );

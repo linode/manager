@@ -1,20 +1,20 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { PrimaryButton } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { ListBody, ListGroup } from 'linode-components';
 import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
-} from 'linode-components/tables/cells';
+} from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
@@ -58,9 +58,13 @@ export class IndexPage extends Component {
       return 'Has Errors';
     }
 
-    return _.capitalize(s);
+    return capitalize(s);
   }
 
+  /**
+   * @todo For testing purposes, and due to the complexity,
+   * this should probably be it's own component.
+   */
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
@@ -109,7 +113,7 @@ export class IndexPage extends Component {
                       hrefFn: (zone) => `/domains/${zone.domain}`, textKey: 'domain',
                       tooltipEnabled: true,
                     },
-                    { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'type', formatFn: capitalize },
                     { dataKey: 'status', formatFn: this.formatStatus },
                     {
                       cellComponent: ButtonCell,

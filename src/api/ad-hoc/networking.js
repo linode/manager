@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import clone from 'lodash/clone';
+import omitBy from 'lodash/omitBy';
 
 import { actions } from '../generic/linodes';
 import { fetch } from '../fetch';
@@ -50,7 +51,7 @@ export function ipv4s(region) {
 }
 
 export function assignIPs(region, assignments) {
-  return async function(dispatch, getState) {
+  return async function (dispatch, getState) {
     const { linodes } = getState().api.linodes;
     const data = { region, assignments: [] };
 
@@ -59,7 +60,7 @@ export function assignIPs(region, assignments) {
     const _ipsByLinode = {};
     function copyIPsInitially(id) {
       if (!_ipsByLinode[id]) {
-        _ipsByLinode[id] = _.clone(linodes[id]._ips);
+        _ipsByLinode[id] = clone(linodes[id]._ips);
       }
     }
 
@@ -100,21 +101,22 @@ export function assignIPs(region, assignments) {
 
 export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
-    const { linode_id: linodeId, address } = ip;
+    const { linode_id: linodeId, address, version } = ip;
     const rawAddress = address.split('/')[0].trim();
-    await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
-                                  { rdns }));
+    let _ip = await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
+      { rdns }));
+
+    // for ipv4 the response is an object
+    // for ipv6 the response is an array
+    _ip = Array.isArray(_ip) ? _ip.find(x => x.address === rawAddress) : _ip;
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
-
-    // This call above is likely to fail, so wait till now to update state.
     return dispatch(actions.one({
       _ips: {
         ..._ips,
-        [rawAddress]: {
-          ...ip,
-          address: rawAddress,
-          rdns: _ips[address].rdns,
+        [_ip.address]: {
+          ..._ip,
+          version: version,
         },
       },
     }, linodeId));
@@ -204,7 +206,7 @@ export function deleteIP(ip) {
     await dispatch(fetch.delete(`/networking/ipv4/${ip.address}`));
 
     const linode = getState().api.linodes.linodes[ip.linode_id];
-    const _ips = _.omitBy(linode._ips, (_, key) => key === ip.address);
+    const _ips = omitBy(linode._ips, (_, key) => key === ip.address);
     dispatch(actions.one({ _ips }, linode.id));
   };
 }

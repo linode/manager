@@ -12,7 +12,7 @@ import { selectLinode } from '../utilities';
 
 
 export class RescuePage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await Promise.all([
       api.linodes.disks,

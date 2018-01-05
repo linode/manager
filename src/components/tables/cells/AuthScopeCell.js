@@ -1,21 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import { OAUTH_SUBSCOPES } from '~/constants';
-import { TableCell } from 'linode-components/tables/cells';
+import { TableCell } from 'linode-components';
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {
   const subscopeAllowed = (
     <small>
       <i className="fa fa-check" />
-      {_.capitalize(currentSubscope)}
+      {capitalize(currentSubscope)}
     </small>
   );
   const subscopeNotAllowed = (
     <small>
       <i className="fa fa-times" />
-      {_.capitalize(currentSubscope)}
+      {capitalize(currentSubscope)}
     </small>
   );
 

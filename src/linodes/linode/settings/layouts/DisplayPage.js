@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -11,7 +11,7 @@ import {
   FormSummary,
   Input,
   SubmitButton,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -81,7 +81,7 @@ export class DisplayPage extends Component {
               <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-1 col-sm-11">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Display settings saved." />

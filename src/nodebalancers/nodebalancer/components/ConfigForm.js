@@ -12,8 +12,8 @@ import {
   Checkbox,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';
@@ -212,7 +212,7 @@ export default class ConfigForm extends Component {
               </div>
             </FormGroup>
           </span>
-        : null}
+          : null}
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
           <label className="col-sm-2 col-form-label">Type</label>
@@ -335,7 +335,7 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="check_passive" />
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
               disabled={loading}

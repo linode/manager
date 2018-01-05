@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'linode-components/cards';
+import { Card } from 'linode-components';
 import {
   Checkbox,
   Checkboxes,
@@ -11,7 +11,7 @@ import {
   FormSummary,
   Radio,
   SubmitButton,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
@@ -19,7 +19,7 @@ import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { selectUser } from './IndexPage';
 
 export class PermissionsPage extends Component {
-  static async preload({ dispatch, getState }, { username }) {
+  static async preload({ dispatch }, { username }) {
     const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
 
     if (user.restricted) {
@@ -178,8 +178,7 @@ export class PermissionsPage extends Component {
                   account_access: 'read_only',
                 },
               })}
-              label="Read-Only (Can view invoices, view billing info, and
-                will receive copies of all invoices and payment emails)"
+              label="Read-Only (Can view invoices, view billing info, and will receive copies of all invoices and payment emails)" // eslint-disable-line max-len
             />
             <Radio
               id="permission-customer-access-readwrite"
@@ -245,8 +244,8 @@ export class PermissionsPage extends Component {
                   <thead>
                     <tr>
                       <th className="LabelColumn">{section.title}</th>
-                      {headerColumns.map(column => (
-                        <th className="PermissionsCheckboxColumn">{column.label}</th>
+                      {headerColumns.map((column, index) => (
+                        <th className="PermissionsCheckboxColumn" key={index}>{column.label}</th>
                       ))}
                     </tr>
                   </thead>
@@ -279,7 +278,8 @@ export class PermissionsPage extends Component {
                                   </label>
                                 </div>
                               </td>
-                        ); })}
+                            );
+                          })}
                       </tr>
                     ))}
                   </tbody>
@@ -288,7 +288,7 @@ export class PermissionsPage extends Component {
             </div>
           ))}
 
-          <FormGroup>
+          <FormGroup name="submit">
             <SubmitButton disabled={loading}>Save</SubmitButton>
             <FormSummary errors={errors} success="Permissions saved." />
           </FormGroup>

@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { CodeEditor } from 'linode-components/editors';
+import { CodeEditor } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   Input,
   SubmitButton,
-} from 'linode-components/forms';
-import * as utilities from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -26,7 +26,7 @@ export default class Editor extends Component {
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
-    this.onChange = utilities.onChange.bind(this);
+    this.onChange = onChange.bind(this);
   }
 
   componentWillMount(nextProps) {
@@ -59,13 +59,13 @@ export default class Editor extends Component {
             name="script"
           />
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="last-revision">
           <label htmlFor="revision" className="col-sm-3 col-form-label">
             Last Revision Note
           </label>
           <div className="col-sm-9"><Input value={lastRevision} disabled /></div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="next-revision">
           <label htmlFor="revision" className="col-sm-3 col-form-label">Next Revision Note</label>
           <div className="col-sm-9">
             <Input
@@ -76,7 +76,7 @@ export default class Editor extends Component {
             />
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-3 col-sm-9">
             <SubmitButton disabled={loading} />
             <FormSummary errors={errors} success="Revision saved." />

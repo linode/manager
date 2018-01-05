@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
-import { Input } from 'linode-components/forms';
-import { List } from 'linode-components/lists';
-import { ListBody } from 'linode-components/lists/bodies';
-import { MassEditControl } from 'linode-components/lists/controls';
-import { ListHeader } from 'linode-components/lists/headers';
-import { ConfirmModalBody } from 'linode-components/modals';
-import { Table } from 'linode-components/tables';
-import { DropdownCell, CheckboxCell, ThumbnailCell } from 'linode-components/tables/cells';
-import { EmitEvent } from 'linode-components/utils';
+import { PrimaryButton } from 'linode-components';
+import { Input } from 'linode-components';
+import { List } from 'linode-components';
+import { ListBody } from 'linode-components';
+import { MassEditControl } from 'linode-components';
+import { ListHeader } from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
+import { Table } from 'linode-components';
+import { DropdownCell, CheckboxCell, ThumbnailCell } from 'linode-components';
+import { EmitEvent } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
@@ -25,7 +25,6 @@ import { confirmThenDelete } from '~/utilities';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
 import CreateOrEditApplication from '../components/CreateOrEditApplication';
-
 
 const OBJECT_TYPE = 'clients';
 
@@ -138,8 +137,9 @@ export class MyAPIClientsPage extends Component {
                 tooltipEnabled: true,
                 label: 'Label',
               },
+              { label: 'Access', dataFn: (client) => client.public ? 'Public' : 'Private' },
               { dataKey: 'id', label: 'ID' },
-              { dataKey: 'redirect_uri', label: 'Redirect URI' },
+              { dataKey: 'redirect_uri', label: 'Redirect URI', className: 'u-hscroll-overflow' },
               {
                 cellComponent: DropdownCell,
                 headerClassName: 'DropdownColumn',

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Input, ModalFormGroup } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, ModalFormGroup } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -89,8 +89,8 @@ export default class EditARecord extends Component {
               name="ip"
               value={ip}
               placeholder={type === 'A' ?
-                           '172.16.254.1' :
-                           '2001:0db8:85a3:0000:0000:8a2e:0370:7334'}
+                '172.16.254.1' :
+                '2001:0db8:85a3:0000:0000:8a2e:0370:7334'}
               onChange={this.onIPChange}
             />
           </ModalFormGroup>

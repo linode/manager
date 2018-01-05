@@ -1,9 +1,9 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import moment from 'moment-timezone';
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 
 export default function BackupSelect(props) {
@@ -54,7 +54,7 @@ export default function BackupSelect(props) {
 }
 
 BackupSelect.propTypes = {
-  ..._.omit(Select.propTypes, 'options'),
+  ...omit(Select.propTypes, 'options'),
   backups: PropTypes.object,
 };
 

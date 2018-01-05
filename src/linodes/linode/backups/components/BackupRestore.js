@@ -1,18 +1,18 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Checkbox,
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { ConfirmModalBody } from 'linode-components/modals';
+} from 'linode-components';
+import { onChange } from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/ad-hoc/backups';
@@ -72,12 +72,12 @@ export default class BackupRestore extends Component {
       return null;
     }
 
-    const linodesInRegion = _.pickBy(linodes.linodes, l =>
+    const linodesInRegion = pickBy(linodes.linodes, l =>
       l.id !== linode.id && l.region === linode.region);
 
     const targetLabel = !target || target === linode.id ?
-                        'This Linode' :
-                        linodes.linodes[target].label;
+      'This Linode' :
+      linodes.linodes[target].label;
 
     return (
       <Card header={<CardHeader title="Restore" />}>
@@ -85,7 +85,7 @@ export default class BackupRestore extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Restore Backup', action: 'restore' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="restore-form">
             <div className="col-sm-3 col-form-label">
               Restore to
             </div>
@@ -105,7 +105,7 @@ export default class BackupRestore extends Component {
               </div>
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="overrite">
             <div className="offset-sm-3 col-sm-9">
               <Checkbox
                 id="overwrite"
@@ -117,7 +117,7 @@ export default class BackupRestore extends Component {
               />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="restore">
             <div className="offset-sm-3 col-sm-9">
               <SubmitButton disabled={loading} disabledChildren="Restoring">
                 Restore

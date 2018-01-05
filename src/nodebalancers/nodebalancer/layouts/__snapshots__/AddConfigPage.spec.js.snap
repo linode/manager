@@ -1,0 +1,568 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nodebalancers/nodebalancer/layouts/AddConfigPage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <AddConfigPage
+    dispatch={[Function]}
+    nodebalancer={
+      Object {
+        "_configs": Object {
+          "configs": Object {
+            "1": Object {
+              "_nodes": Object {
+                "nodes": Object {
+                  "1": Object {
+                    "address": "192.168.4.5:80",
+                    "config_id": 0,
+                    "id": 1,
+                    "label": "greatest_node_ever",
+                    "mode": "accept",
+                    "nodebalancer_id": 23,
+                    "status": "online",
+                    "weight": 40,
+                  },
+                },
+              },
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 1,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 1,
+              },
+              "port": 80,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+            "2": Object {
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 2,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 0,
+              },
+              "port": 81,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+          },
+        },
+        "client_conn_throttle": 0,
+        "created": "2017-03-03T18:08:44",
+        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+        "id": 23,
+        "ipv4": "1.1.1.1",
+        "label": "nodebalancer-1",
+        "region": "us-east-1a",
+        "status": "new_active",
+        "updated": "2017-03-06T22:00:48",
+      }
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "children": Array [
+        <p>
+          Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. 
+          <ExternalLink
+            to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer"
+          >
+            Learn more.
+          </ExternalLink>
+        </p>,
+        <ConfigForm
+          config={
+            Object {
+              "algorithm": "roundrobin",
+              "check": "connection",
+              "check_body": "",
+              "check_passive": true,
+              "check_path": "",
+              "protocol": "http",
+              "stickiness": "table",
+            }
+          }
+          dispatch={[Function]}
+          nodebalancer={
+            Object {
+              "_configs": Object {
+                "configs": Object {
+                  "1": Object {
+                    "_nodes": Object {
+                      "nodes": Object {
+                        "1": Object {
+                          "address": "192.168.4.5:80",
+                          "config_id": 0,
+                          "id": 1,
+                          "label": "greatest_node_ever",
+                          "mode": "accept",
+                          "nodebalancer_id": 23,
+                          "status": "online",
+                          "weight": 40,
+                        },
+                      },
+                    },
+                    "algorithm": "roundrobin",
+                    "check": "none",
+                    "check_attempts": 3,
+                    "check_body": "",
+                    "check_interval": 0,
+                    "check_passive": true,
+                    "check_path": "",
+                    "check_timeout": 30,
+                    "cipher_suite": "recommended",
+                    "id": 1,
+                    "nodebalancer_id": 23,
+                    "nodes_status": Object {
+                      "down": 0,
+                      "up": 1,
+                    },
+                    "port": 80,
+                    "protocol": "http",
+                    "stickiness": "none",
+                  },
+                  "2": Object {
+                    "algorithm": "roundrobin",
+                    "check": "none",
+                    "check_attempts": 3,
+                    "check_body": "",
+                    "check_interval": 0,
+                    "check_passive": true,
+                    "check_path": "",
+                    "check_timeout": 30,
+                    "cipher_suite": "recommended",
+                    "id": 2,
+                    "nodebalancer_id": 23,
+                    "nodes_status": Object {
+                      "down": 0,
+                      "up": 0,
+                    },
+                    "port": 81,
+                    "protocol": "http",
+                    "stickiness": "none",
+                  },
+                },
+              },
+              "client_conn_throttle": 0,
+              "created": "2017-03-03T18:08:44",
+              "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+              "id": 23,
+              "ipv4": "1.1.1.1",
+              "label": "nodebalancer-1",
+              "region": "us-east-1a",
+              "status": "new_active",
+              "updated": "2017-03-06T22:00:48",
+            }
+          }
+          submitDisabledText="Adding Config"
+          submitText="Add Config"
+        />,
+      ],
+      "className": "",
+      "header": <CardHeader
+        title="Add Config"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            "Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. ",
+            <ExternalLink
+              to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer"
+            >
+              Learn more.
+            </ExternalLink>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          "Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. ",
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": "Learn more.",
+              "to": "https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer",
+            },
+            "ref": null,
+            "rendered": "Learn more.",
+            "type": [Function],
+          },
+        ],
+        "type": "p",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "config": Object {
+            "algorithm": "roundrobin",
+            "check": "connection",
+            "check_body": "",
+            "check_passive": true,
+            "check_path": "",
+            "protocol": "http",
+            "stickiness": "table",
+          },
+          "dispatch": [Function],
+          "nodebalancer": Object {
+            "_configs": Object {
+              "configs": Object {
+                "1": Object {
+                  "_nodes": Object {
+                    "nodes": Object {
+                      "1": Object {
+                        "address": "192.168.4.5:80",
+                        "config_id": 0,
+                        "id": 1,
+                        "label": "greatest_node_ever",
+                        "mode": "accept",
+                        "nodebalancer_id": 23,
+                        "status": "online",
+                        "weight": 40,
+                      },
+                    },
+                  },
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 1,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 1,
+                  },
+                  "port": 80,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+                "2": Object {
+                  "algorithm": "roundrobin",
+                  "check": "none",
+                  "check_attempts": 3,
+                  "check_body": "",
+                  "check_interval": 0,
+                  "check_passive": true,
+                  "check_path": "",
+                  "check_timeout": 30,
+                  "cipher_suite": "recommended",
+                  "id": 2,
+                  "nodebalancer_id": 23,
+                  "nodes_status": Object {
+                    "down": 0,
+                    "up": 0,
+                  },
+                  "port": 81,
+                  "protocol": "http",
+                  "stickiness": "none",
+                },
+              },
+            },
+            "client_conn_throttle": 0,
+            "created": "2017-03-03T18:08:44",
+            "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+            "id": 23,
+            "ipv4": "1.1.1.1",
+            "label": "nodebalancer-1",
+            "region": "us-east-1a",
+            "status": "new_active",
+            "updated": "2017-03-06T22:00:48",
+          },
+          "submitDisabledText": "Adding Config",
+          "submitText": "Add Config",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          <p>
+            Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. 
+            <ExternalLink
+              to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer"
+            >
+              Learn more.
+            </ExternalLink>
+          </p>,
+          <ConfigForm
+            config={
+              Object {
+                "algorithm": "roundrobin",
+                "check": "connection",
+                "check_body": "",
+                "check_passive": true,
+                "check_path": "",
+                "protocol": "http",
+                "stickiness": "table",
+              }
+            }
+            dispatch={[Function]}
+            nodebalancer={
+              Object {
+                "_configs": Object {
+                  "configs": Object {
+                    "1": Object {
+                      "_nodes": Object {
+                        "nodes": Object {
+                          "1": Object {
+                            "address": "192.168.4.5:80",
+                            "config_id": 0,
+                            "id": 1,
+                            "label": "greatest_node_ever",
+                            "mode": "accept",
+                            "nodebalancer_id": 23,
+                            "status": "online",
+                            "weight": 40,
+                          },
+                        },
+                      },
+                      "algorithm": "roundrobin",
+                      "check": "none",
+                      "check_attempts": 3,
+                      "check_body": "",
+                      "check_interval": 0,
+                      "check_passive": true,
+                      "check_path": "",
+                      "check_timeout": 30,
+                      "cipher_suite": "recommended",
+                      "id": 1,
+                      "nodebalancer_id": 23,
+                      "nodes_status": Object {
+                        "down": 0,
+                        "up": 1,
+                      },
+                      "port": 80,
+                      "protocol": "http",
+                      "stickiness": "none",
+                    },
+                    "2": Object {
+                      "algorithm": "roundrobin",
+                      "check": "none",
+                      "check_attempts": 3,
+                      "check_body": "",
+                      "check_interval": 0,
+                      "check_passive": true,
+                      "check_path": "",
+                      "check_timeout": 30,
+                      "cipher_suite": "recommended",
+                      "id": 2,
+                      "nodebalancer_id": 23,
+                      "nodes_status": Object {
+                        "down": 0,
+                        "up": 0,
+                      },
+                      "port": 81,
+                      "protocol": "http",
+                      "stickiness": "none",
+                    },
+                  },
+                },
+                "client_conn_throttle": 0,
+                "created": "2017-03-03T18:08:44",
+                "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+                "id": 23,
+                "ipv4": "1.1.1.1",
+                "label": "nodebalancer-1",
+                "region": "us-east-1a",
+                "status": "new_active",
+                "updated": "2017-03-06T22:00:48",
+              }
+            }
+            submitDisabledText="Adding Config"
+            submitText="Add Config"
+          />,
+        ],
+        "className": "",
+        "header": <CardHeader
+          title="Add Config"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              "Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. ",
+              <ExternalLink
+                to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer"
+              >
+                Learn more.
+              </ExternalLink>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            "Configure how your NodeBalancer listens for incoming traffic and connects to backend nodes. ",
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Learn more.",
+                "to": "https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer",
+              },
+              "ref": null,
+              "rendered": "Learn more.",
+              "type": [Function],
+            },
+          ],
+          "type": "p",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "config": Object {
+              "algorithm": "roundrobin",
+              "check": "connection",
+              "check_body": "",
+              "check_passive": true,
+              "check_path": "",
+              "protocol": "http",
+              "stickiness": "table",
+            },
+            "dispatch": [Function],
+            "nodebalancer": Object {
+              "_configs": Object {
+                "configs": Object {
+                  "1": Object {
+                    "_nodes": Object {
+                      "nodes": Object {
+                        "1": Object {
+                          "address": "192.168.4.5:80",
+                          "config_id": 0,
+                          "id": 1,
+                          "label": "greatest_node_ever",
+                          "mode": "accept",
+                          "nodebalancer_id": 23,
+                          "status": "online",
+                          "weight": 40,
+                        },
+                      },
+                    },
+                    "algorithm": "roundrobin",
+                    "check": "none",
+                    "check_attempts": 3,
+                    "check_body": "",
+                    "check_interval": 0,
+                    "check_passive": true,
+                    "check_path": "",
+                    "check_timeout": 30,
+                    "cipher_suite": "recommended",
+                    "id": 1,
+                    "nodebalancer_id": 23,
+                    "nodes_status": Object {
+                      "down": 0,
+                      "up": 1,
+                    },
+                    "port": 80,
+                    "protocol": "http",
+                    "stickiness": "none",
+                  },
+                  "2": Object {
+                    "algorithm": "roundrobin",
+                    "check": "none",
+                    "check_attempts": 3,
+                    "check_body": "",
+                    "check_interval": 0,
+                    "check_passive": true,
+                    "check_path": "",
+                    "check_timeout": 30,
+                    "cipher_suite": "recommended",
+                    "id": 2,
+                    "nodebalancer_id": 23,
+                    "nodes_status": Object {
+                      "down": 0,
+                      "up": 0,
+                    },
+                    "port": 81,
+                    "protocol": "http",
+                    "stickiness": "none",
+                  },
+                },
+              },
+              "client_conn_throttle": 0,
+              "created": "2017-03-03T18:08:44",
+              "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+              "id": 23,
+              "ipv4": "1.1.1.1",
+              "label": "nodebalancer-1",
+              "region": "us-east-1a",
+              "status": "new_active",
+              "updated": "2017-03-06T22:00:48",
+            },
+            "submitDisabledText": "Adding Config",
+            "submitText": "Add Config",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

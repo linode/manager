@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup, FormGroupError, Form, FormSummary, Input, SubmitButton, PasswordInput,
-} from 'linode-components/forms';
-import { ConfirmModalBody } from 'linode-components/modals';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { ConfirmModalBody } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
@@ -94,7 +94,7 @@ export class RebuildPage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Rebuild Linode' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="image">
             <label className="col-sm-3 col-form-label">Current Image</label>
             <div className="col-sm-9">
               <Input
@@ -129,7 +129,7 @@ export class RebuildPage extends Component {
               <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={loading}

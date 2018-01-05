@@ -1,0 +1,1498 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`billing/layouts/InvoicePage should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <InvoicePage
+    dispatch={[Function]}
+    invoice={
+      Object {
+        "_items": Object {
+          "data": Array [
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Linode Managed - ln (1234)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Linode 1024 - ln (1234)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Storage Volume - sv (123)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Backup Service - Linode 1024 - ln (1234)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Nodebalancer - nb (432)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Linode 1024 - ln (1235)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+            Object {
+              "amount": 7.2,
+              "from": "2017-09-01T04:00:00",
+              "label": "Linode 1024 - ln (1236)",
+              "quantity": 720,
+              "to": "2017-10-01T03:59:59",
+              "type": "hourly",
+              "unit_price": 0.01,
+            },
+          ],
+        },
+        "_polling": false,
+        "date": "2016-12-12T15:07:47",
+        "id": 1234,
+        "label": "Invoice #1234",
+        "total": 10,
+      }
+    }
+    items={
+      Array [
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Linode Managed - ln (1234)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Linode 1024 - ln (1234)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Storage Volume - sv (123)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Backup Service - Linode 1024 - ln (1234)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Nodebalancer - nb (432)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Linode 1024 - ln (1235)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+        Object {
+          "amount": 7.2,
+          "from": "2017-09-01T04:00:00",
+          "label": "Linode 1024 - ln (1236)",
+          "quantity": 720,
+          "to": "2017-10-01T03:59:59",
+          "type": "hourly",
+          "unit_price": 0.01,
+        },
+      ]
+    }
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": Array [
+        <SideEffect(ChainedDocumentTitle)
+          title="Invoice #1234"
+        />,
+        <Breadcrumbs
+          crumbs={
+            Array [
+              Object {
+                "label": "History",
+                "to": "/billing/history",
+              },
+              Object {
+                "label": "Invoice #1234",
+              },
+            ]
+          }
+        />,
+        <section>
+          <Card
+            className=""
+            header={
+              <CardHeader
+                title="Invoice #1234"
+              />
+            }
+          >
+            <Table
+              className=""
+              columns={
+                Array [
+                  Object {
+                    "dataKey": "label",
+                    "label": "Description",
+                  },
+                  Object {
+                    "dataKey": "from",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "From",
+                  },
+                  Object {
+                    "dataKey": "to",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "To",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "quantity",
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Quantity",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "unit_price",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Unit Price",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "amount",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Amount",
+                  },
+                ]
+              }
+              data={
+                Array [
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode Managed - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Storage Volume - sv (123)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Backup Service - Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Nodebalancer - nb (432)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1235)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1236)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                ]
+              }
+              disableHeader={false}
+              noDataMessage="No items found."
+            />
+            <div
+              className="row"
+            >
+              <div
+                className="col-sm-12 text-right"
+              >
+                <strong>
+                  Invoice Total: 
+                  <Currency
+                    value={10}
+                  />
+                </strong>
+              </div>
+            </div>
+          </Card>
+        </section>,
+      ],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "title": "Invoice #1234",
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "crumbs": Array [
+            Object {
+              "label": "History",
+              "to": "/billing/history",
+            },
+            Object {
+              "label": "Invoice #1234",
+            },
+          ],
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <Card
+            className=""
+            header={
+              <CardHeader
+                title="Invoice #1234"
+              />
+            }
+          >
+            <Table
+              className=""
+              columns={
+                Array [
+                  Object {
+                    "dataKey": "label",
+                    "label": "Description",
+                  },
+                  Object {
+                    "dataKey": "from",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "From",
+                  },
+                  Object {
+                    "dataKey": "to",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "To",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "quantity",
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Quantity",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "unit_price",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Unit Price",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "amount",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Amount",
+                  },
+                ]
+              }
+              data={
+                Array [
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode Managed - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Storage Volume - sv (123)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Backup Service - Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Nodebalancer - nb (432)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1235)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1236)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                ]
+              }
+              disableHeader={false}
+              noDataMessage="No items found."
+            />
+            <div
+              className="row"
+            >
+              <div
+                className="col-sm-12 text-right"
+              >
+                <strong>
+                  Invoice Total: 
+                  <Currency
+                    value={10}
+                  />
+                </strong>
+              </div>
+            </div>
+          </Card>,
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "dataKey": "label",
+                      "label": "Description",
+                    },
+                    Object {
+                      "dataKey": "from",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "From",
+                    },
+                    Object {
+                      "dataKey": "to",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "To",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "quantity",
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Quantity",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "unit_price",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Unit Price",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "amount",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Amount",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode Managed - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Storage Volume - sv (123)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Backup Service - Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Nodebalancer - nb (432)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1235)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1236)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                  ]
+                }
+                disableHeader={false}
+                noDataMessage="No items found."
+              />,
+              <div
+                className="row"
+              >
+                <div
+                  className="col-sm-12 text-right"
+                >
+                  <strong>
+                    Invoice Total: 
+                    <Currency
+                      value={10}
+                    />
+                  </strong>
+                </div>
+              </div>,
+            ],
+            "className": "",
+            "header": <CardHeader
+              title="Invoice #1234"
+            />,
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "columns": Array [
+                  Object {
+                    "dataKey": "label",
+                    "label": "Description",
+                  },
+                  Object {
+                    "dataKey": "from",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "From",
+                  },
+                  Object {
+                    "dataKey": "to",
+                    "formatFn": [Function],
+                    "headerClassName": "DateColumn",
+                    "label": "To",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "quantity",
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Quantity",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "unit_price",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Unit Price",
+                  },
+                  Object {
+                    "className": "text-right",
+                    "dataKey": "amount",
+                    "formatFn": [Function],
+                    "headerClassName": "IntegerColumn text-right",
+                    "label": "Amount",
+                  },
+                ],
+                "data": Array [
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode Managed - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Storage Volume - sv (123)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Backup Service - Linode 1024 - ln (1234)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Nodebalancer - nb (432)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1235)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                  Object {
+                    "amount": 7.2,
+                    "from": "2017-09-01T04:00:00",
+                    "label": "Linode 1024 - ln (1236)",
+                    "quantity": 720,
+                    "to": "2017-10-01T03:59:59",
+                    "type": "hourly",
+                    "unit_price": 0.01,
+                  },
+                ],
+                "disableHeader": false,
+                "noDataMessage": "No items found.",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <div
+                  className="col-sm-12 text-right"
+                >
+                  <strong>
+                    Invoice Total: 
+                    <Currency
+                      value={10}
+                    />
+                  </strong>
+                </div>,
+                "className": "row",
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <strong>
+                    Invoice Total: 
+                    <Currency
+                      value={10}
+                    />
+                  </strong>,
+                  "className": "col-sm-12 text-right",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": Array [
+                      "Invoice Total: ",
+                      <Currency
+                        value={10}
+                      />,
+                    ],
+                  },
+                  "ref": null,
+                  "rendered": Array [
+                    "Invoice Total: ",
+                    Object {
+                      "instance": null,
+                      "key": undefined,
+                      "nodeType": "function",
+                      "props": Object {
+                        "value": 10,
+                      },
+                      "ref": null,
+                      "rendered": null,
+                      "type": [Function],
+                    },
+                  ],
+                  "type": "strong",
+                },
+                "type": "div",
+              },
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        "type": "section",
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <SideEffect(ChainedDocumentTitle)
+            title="Invoice #1234"
+          />,
+          <Breadcrumbs
+            crumbs={
+              Array [
+                Object {
+                  "label": "History",
+                  "to": "/billing/history",
+                },
+                Object {
+                  "label": "Invoice #1234",
+                },
+              ]
+            }
+          />,
+          <section>
+            <Card
+              className=""
+              header={
+                <CardHeader
+                  title="Invoice #1234"
+                />
+              }
+            >
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "dataKey": "label",
+                      "label": "Description",
+                    },
+                    Object {
+                      "dataKey": "from",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "From",
+                    },
+                    Object {
+                      "dataKey": "to",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "To",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "quantity",
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Quantity",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "unit_price",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Unit Price",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "amount",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Amount",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode Managed - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Storage Volume - sv (123)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Backup Service - Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Nodebalancer - nb (432)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1235)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1236)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                  ]
+                }
+                disableHeader={false}
+                noDataMessage="No items found."
+              />
+              <div
+                className="row"
+              >
+                <div
+                  className="col-sm-12 text-right"
+                >
+                  <strong>
+                    Invoice Total: 
+                    <Currency
+                      value={10}
+                    />
+                  </strong>
+                </div>
+              </div>
+            </Card>
+          </section>,
+        ],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "title": "Invoice #1234",
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "crumbs": Array [
+              Object {
+                "label": "History",
+                "to": "/billing/history",
+              },
+              Object {
+                "label": "Invoice #1234",
+              },
+            ],
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <Card
+              className=""
+              header={
+                <CardHeader
+                  title="Invoice #1234"
+                />
+              }
+            >
+              <Table
+                className=""
+                columns={
+                  Array [
+                    Object {
+                      "dataKey": "label",
+                      "label": "Description",
+                    },
+                    Object {
+                      "dataKey": "from",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "From",
+                    },
+                    Object {
+                      "dataKey": "to",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "To",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "quantity",
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Quantity",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "unit_price",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Unit Price",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "amount",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Amount",
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode Managed - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Storage Volume - sv (123)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Backup Service - Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Nodebalancer - nb (432)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1235)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1236)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                  ]
+                }
+                disableHeader={false}
+                noDataMessage="No items found."
+              />
+              <div
+                className="row"
+              >
+                <div
+                  className="col-sm-12 text-right"
+                >
+                  <strong>
+                    Invoice Total: 
+                    <Currency
+                      value={10}
+                    />
+                  </strong>
+                </div>
+              </div>
+            </Card>,
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <Table
+                  className=""
+                  columns={
+                    Array [
+                      Object {
+                        "dataKey": "label",
+                        "label": "Description",
+                      },
+                      Object {
+                        "dataKey": "from",
+                        "formatFn": [Function],
+                        "headerClassName": "DateColumn",
+                        "label": "From",
+                      },
+                      Object {
+                        "dataKey": "to",
+                        "formatFn": [Function],
+                        "headerClassName": "DateColumn",
+                        "label": "To",
+                      },
+                      Object {
+                        "className": "text-right",
+                        "dataKey": "quantity",
+                        "headerClassName": "IntegerColumn text-right",
+                        "label": "Quantity",
+                      },
+                      Object {
+                        "className": "text-right",
+                        "dataKey": "unit_price",
+                        "formatFn": [Function],
+                        "headerClassName": "IntegerColumn text-right",
+                        "label": "Unit Price",
+                      },
+                      Object {
+                        "className": "text-right",
+                        "dataKey": "amount",
+                        "formatFn": [Function],
+                        "headerClassName": "IntegerColumn text-right",
+                        "label": "Amount",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Linode Managed - ln (1234)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Linode 1024 - ln (1234)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Storage Volume - sv (123)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Backup Service - Linode 1024 - ln (1234)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Nodebalancer - nb (432)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Linode 1024 - ln (1235)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                      Object {
+                        "amount": 7.2,
+                        "from": "2017-09-01T04:00:00",
+                        "label": "Linode 1024 - ln (1236)",
+                        "quantity": 720,
+                        "to": "2017-10-01T03:59:59",
+                        "type": "hourly",
+                        "unit_price": 0.01,
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="No items found."
+                />,
+                <div
+                  className="row"
+                >
+                  <div
+                    className="col-sm-12 text-right"
+                  >
+                    <strong>
+                      Invoice Total: 
+                      <Currency
+                        value={10}
+                      />
+                    </strong>
+                  </div>
+                </div>,
+              ],
+              "className": "",
+              "header": <CardHeader
+                title="Invoice #1234"
+              />,
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "columns": Array [
+                    Object {
+                      "dataKey": "label",
+                      "label": "Description",
+                    },
+                    Object {
+                      "dataKey": "from",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "From",
+                    },
+                    Object {
+                      "dataKey": "to",
+                      "formatFn": [Function],
+                      "headerClassName": "DateColumn",
+                      "label": "To",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "quantity",
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Quantity",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "unit_price",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Unit Price",
+                    },
+                    Object {
+                      "className": "text-right",
+                      "dataKey": "amount",
+                      "formatFn": [Function],
+                      "headerClassName": "IntegerColumn text-right",
+                      "label": "Amount",
+                    },
+                  ],
+                  "data": Array [
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode Managed - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Storage Volume - sv (123)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Backup Service - Linode 1024 - ln (1234)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Nodebalancer - nb (432)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1235)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                    Object {
+                      "amount": 7.2,
+                      "from": "2017-09-01T04:00:00",
+                      "label": "Linode 1024 - ln (1236)",
+                      "quantity": 720,
+                      "to": "2017-10-01T03:59:59",
+                      "type": "hourly",
+                      "unit_price": 0.01,
+                    },
+                  ],
+                  "disableHeader": false,
+                  "noDataMessage": "No items found.",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <div
+                    className="col-sm-12 text-right"
+                  >
+                    <strong>
+                      Invoice Total: 
+                      <Currency
+                        value={10}
+                      />
+                    </strong>
+                  </div>,
+                  "className": "row",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <strong>
+                      Invoice Total: 
+                      <Currency
+                        value={10}
+                      />
+                    </strong>,
+                    "className": "col-sm-12 text-right",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": Array [
+                        "Invoice Total: ",
+                        <Currency
+                          value={10}
+                        />,
+                      ],
+                    },
+                    "ref": null,
+                    "rendered": Array [
+                      "Invoice Total: ",
+                      Object {
+                        "instance": null,
+                        "key": undefined,
+                        "nodeType": "function",
+                        "props": Object {
+                          "value": 10,
+                        },
+                        "ref": null,
+                        "rendered": null,
+                        "type": [Function],
+                      },
+                    ],
+                    "type": "strong",
+                  },
+                  "type": "div",
+                },
+                "type": "div",
+              },
+            ],
+            "type": [Function],
+          },
+          "type": "section",
+        },
+      ],
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

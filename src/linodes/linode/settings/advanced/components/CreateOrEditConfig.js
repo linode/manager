@@ -1,9 +1,13 @@
-import _ from 'lodash';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
+import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { CancelButton, ExternalLink } from 'linode-components/buttons';
+import { CancelButton, ExternalLink } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -18,8 +22,8 @@ import {
   Checkboxes,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -49,7 +53,7 @@ export default class CreateOrEditConfig extends Component {
       kernel: config.kernel,
       initrd: config.initrd || '',
       rootDevice: config.root_device || `/dev/${slots[0]}`,
-      devices: _.mapValues(config.devices, d => JSON.stringify(_.pickBy(d, Boolean))),
+      devices: mapValues(config.devices, d => JSON.stringify(pickBy(d, Boolean))),
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.memory_limit,
@@ -99,7 +103,7 @@ export default class CreateOrEditConfig extends Component {
   kernelOptions() {
     const { kernels } = this.props;
 
-    return _.sortBy(_.map(kernels.kernels, kernel => ({
+    return sortBy(map(kernels.kernels, kernel => ({
       ...kernel,
       value: kernel.id,
     })), 'version').reverse();
@@ -149,20 +153,33 @@ export default class CreateOrEditConfig extends Component {
           <label className="col-form-label col-sm-2">Virtualization mode</label>
           <div className="col-sm-10">
             <Checkboxes>
-              <Radio
-                name="virtMode"
-                checked={virtMode === 'paravirt'}
-                value="paravirt"
-                label="Paravirtualization"
-                onChange={this.onChange}
-              />
-              <Radio
-                name="virtMode"
-                checked={virtMode === 'fullvirt'}
-                value="fullvirt"
-                onChange={this.onChange}
-                label="Full virtualization"
-              />
+              <div className="row">
+                <div className="col-md-3">
+                  <Radio
+                    name="virtMode"
+                    checked={virtMode === 'paravirt'}
+                    value="paravirt"
+                    label="Paravirtualization"
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className="col-md-9 Radio-label">
+                  Controls if devices inside your virtual machine are paravirtualized
+                  or fully virtualized.
+                </div>
+                <div className="col-md-3">
+                  <Radio
+                    name="virtMode"
+                    checked={virtMode === 'fullvirt'}
+                    value="fullvirt"
+                    onChange={this.onChange}
+                    label="Full virtualization"
+                  />
+                </div>
+                <div className="col-md-9 Radio-label">
+                  Paravirt is what you want, unless you're doing weird things.
+                </div>
+              </div>
             </Checkboxes>
           </div>
         </FormGroup>
@@ -250,7 +267,7 @@ export default class CreateOrEditConfig extends Component {
               this.setState({ devices: { ...this.state.devices, [name]: value } })}
           />
         ))}
-        <FormGroup className="row">
+        <FormGroup className="row" name="initrd">
           <label htmlFor="initrd" className="col-sm-2 col-form-label">initrd</label>
           <div className="col-sm-10">
             <Select
@@ -307,7 +324,7 @@ export default class CreateOrEditConfig extends Component {
           </div>
         </FormGroup>
         <h3 className="sub-header">Filesystem/Boot Helpers</h3>
-        <FormGroup className="row">
+        <FormGroup className="row" name="helpers">
           <label className="col-sm-2 col-form-label">Boot helpers</label>
           <div className="col-md-8">
             <Checkboxes>
@@ -363,7 +380,7 @@ export default class CreateOrEditConfig extends Component {
             </Checkboxes>
           </div>
         </FormGroup>
-        <FormGroup className="row">
+        <FormGroup className="row" name="submit">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton
               disabled={loading}

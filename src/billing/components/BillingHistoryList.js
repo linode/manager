@@ -1,18 +1,18 @@
-import _ from 'lodash';
+import map from 'lodash/map';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
-import { Table } from 'linode-components/tables';
-import { LinkCell } from 'linode-components/tables/cells';
+import { Table } from 'linode-components';
+import { LinkCell } from 'linode-components';
 import Currency from '~/components/Currency';
 
 export const BillingHistoryList = props => {
   const {
-      invoices,
-      payments,
+    invoices,
+    payments,
   } = props;
 
   const dateSort = (a, b) => new Date(a.date) - new Date(b.date);
@@ -20,8 +20,8 @@ export const BillingHistoryList = props => {
 
   const timezone = getStorage('profile/timezone') || 'UTC';
   let history = [
-    ..._.map(invoices, invoice => ({ ...invoice, type: 'invoice' })),
-    ..._.map(payments, payment => ({
+    ...map(invoices, invoice => ({ ...invoice, type: 'invoice' })),
+    ...map(payments, payment => ({
       ...payment,
       type: 'payment',
       total: -payment.usd,

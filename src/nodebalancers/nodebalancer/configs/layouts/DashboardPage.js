@@ -1,15 +1,15 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { ListBody } from 'linode-components/lists/bodies';
-import { PrimaryButton } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
-import { DeleteModalBody } from 'linode-components/modals';
+import { ListBody } from 'linode-components';
+import { PrimaryButton } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { List } from 'linode-components';
+import { Table } from 'linode-components';
+import { ButtonCell, LabelCell } from 'linode-components';
+import { DeleteModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
@@ -20,7 +20,7 @@ import NodeModal from '../components/NodeModal';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel, configId }) {
+  static async preload({ dispatch }, { nbLabel, configId }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
     await dispatch(api.nodebalancers.configs.one([id, configId]));
     await dispatch(api.nodebalancers.configs.nodes.all([id, configId]));
@@ -79,13 +79,13 @@ export class DashboardPage extends Component {
                 {
                   dataKey: 'mode',
                   label: 'Mode',
-                  formatFn: _.capitalize,
+                  formatFn: capitalize,
                   headerClassName: 'ModeColumn',
                 },
                 {
                   dataKey: 'status',
                   label: 'Status',
-                  formatFn: _.capitalize,
+                  formatFn: capitalize,
                   headerClassName: 'ModeColumn',
                 },
                 {

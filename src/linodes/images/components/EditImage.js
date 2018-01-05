@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Input, Textarea } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 import TimeDisplay from '~/components/TimeDisplay';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -73,7 +73,7 @@ export default class EditImage extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup label="Size">
-            {image.min_deploy_size} MB
+            {image.size} MB
           </ModalFormGroup>
           <ModalFormGroup errors={errors} id="description" label="Description" apiKey="description">
             <div>

@@ -3,13 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import { setAnalytics, setSource } from '~/actions';
 import { ChainedDocumentTitle } from '~/components';
 
 export class IndexPage extends Component {
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));

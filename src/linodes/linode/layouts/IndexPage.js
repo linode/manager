@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import { setAnalytics } from '~/actions';
 import api from '~/api';
@@ -17,7 +17,7 @@ import { selectLinode } from '../utilities';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const requests = [
       api.types.one([type.id]),

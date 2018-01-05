@@ -1,11 +1,13 @@
+import range from 'lodash/range';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input } from 'linode-components/forms';
+import { Button } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
+import { FormGroup, Input, Select } from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
@@ -30,7 +32,7 @@ import { UpgradeToKVM } from '../components';
 
 
 export class DashboardPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     await dispatch(transferPool());
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
@@ -41,9 +43,52 @@ export class DashboardPage extends Component {
     }
   }
 
+  constructor() {
+    super();
+
+    this.state = {
+      year: new Date().getFullYear().toString(),
+      month: '0',
+    };
+
+    this.onChange = onChange.bind(this);
+  }
+
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
+  }
+
+  async updateStats(year, month) {
+    const { dispatch, linode } = this.props;
+    if (month !== '0') {
+      await dispatch(linodeStats(linode.id, year, month));
+    } else {
+      await dispatch(linodeStats(linode.id));
+    }
+  }
+
+  monthOnChange = async (event) => {
+    const { target: { value } } = event;
+    if (value === '0') {
+      this.setState({ year: new Date().getFullYear().toString() });
+    }
+
+    const { year } = this.state;
+    await this.updateStats(year, value);
+    this.setState({ month: value });
+  }
+
+  yearOnChange = async (event) => {
+    const { target: { value } } = event;
+    let { month } = this.state;
+
+    if (value !== new Date().getFullYear().toString() && month === '0') {
+      month = 1;
+    }
+
+    await this.updateStats(value, month);
+    this.setState({ month: month, year: value });
   }
 
   renderDetails() {
@@ -127,7 +172,7 @@ export class DashboardPage extends Component {
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />} className="full-height">
-            <FormGroup className="row">
+            <FormGroup name="ip-list-details" className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
@@ -142,7 +187,7 @@ export class DashboardPage extends Component {
                 </div>
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="list-form">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Console
               </label>
@@ -172,7 +217,16 @@ export class DashboardPage extends Component {
   }
 
   renderGraphs() {
-    const { timezone, linode: { _stats: stats } } = this.props;
+    const { year, month } = this.state;
+    const { timezone, linode: { _stats: stats }, linode } = this.props;
+    const created = new Date(linode.created).getFullYear();
+    const years = range(created, new Date().getFullYear() + 1).map(
+      (year) => ({ value: year, label: year })
+    );
+    const months = ['Last 24', 'Jan', 'Feb', 'Mar', 'Apr', 'May',
+      'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(
+      (month, i) => ({ value: i, label: month })
+    );
 
     let body = <p>No graphs are available.</p>;
     if (stats) {
@@ -185,8 +239,27 @@ export class DashboardPage extends Component {
       body = <GraphGroup timezone={timezone} allGraphData={allGraphData} />;
     }
 
+    const nav = (
+      <div className="GraphGroup-graph">
+        <Select
+          className="Select Select--native form-control"
+          name="year"
+          value={year}
+          options={years}
+          onChange={this.yearOnChange}
+        />
+        <Select
+          className="Select Select--native form-control"
+          name="month"
+          value={month}
+          options={months}
+          onChange={this.monthOnChange}
+        />
+      </div>
+    );
+
     return (
-      <Card header={<CardHeader title="Graphs" />} className="graphs">
+      <Card header={<CardHeader title="Graphs" nav={nav} />} className="graphs">
         {body}
       </Card>
     );

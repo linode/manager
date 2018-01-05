@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import moment from 'moment';
 
-import { Select } from 'linode-components/forms';
+import { Select } from 'linode-components';
 
 
 export default function SelectExpiration(props) {
@@ -33,7 +33,7 @@ SelectExpiration.map = function (value) {
 };
 
 SelectExpiration.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   id: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,

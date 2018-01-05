@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Input, Select, ModalFormGroup } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, Select, ModalFormGroup } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -10,9 +10,9 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import SelectDNSSeconds from './SelectDNSSeconds';
 
 const tagOptions = [
-    { value: 'issue', label: 'issue' },
-    { value: 'issuewild', label: 'issueWild' },
-    { value: 'iodef', label: 'iodef' },
+  { value: 'issue', label: 'issue' },
+  { value: 'issuewild', label: 'issueWild' },
+  { value: 'iodef', label: 'iodef' },
 ];
 
 export default class EditCAARecord extends Component {

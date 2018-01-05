@@ -2,15 +2,15 @@ import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   Select,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -51,7 +51,7 @@ export default class ChangeTimezone extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Timezone Settings' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="timezone-form">
             <label htmlFor="timezone" className="col-sm-2 col-form-label">Timezone</label>
             <div className="col-sm-10">
               <Select
@@ -69,7 +69,7 @@ export default class ChangeTimezone extends Component {
               </div>
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Timezone saved." />

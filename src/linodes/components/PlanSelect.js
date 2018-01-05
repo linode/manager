@@ -1,17 +1,20 @@
-import _ from 'lodash';
+import omit from 'lodash/omit';
+import map from 'lodash/map';
+import groupBy from 'lodash/groupBy';
+import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Select } from 'linode-components/forms';
+import { ExternalLink } from 'linode-components';
+import { Select } from 'linode-components';
 
 import { planStyle } from './PlanStyle';
 
 
 export default function PlanSelect(props) {
-  const sortedPlans = _.map(_.sortBy(props.plans, 'memory'), (plan) =>
+  const sortedPlans = map(sortBy(props.plans, 'memory'), (plan) =>
     ({ label: planStyle(plan, true), value: plan.id, class: plan.class }));
-  const groupedPlans = _.groupBy(sortedPlans, 'class');
+  const groupedPlans = groupBy(sortedPlans, 'class');
 
   const options = [
     { label: 'Standard', options: [...groupedPlans.nanode, ...groupedPlans.standard] },
@@ -34,6 +37,6 @@ export default function PlanSelect(props) {
 }
 
 PlanSelect.propTypes = {
-  ..._.omit(Select.propTypes, 'options'),
+  ...omit(Select.propTypes, 'options'),
   plans: PropTypes.object.isRequired,
 };

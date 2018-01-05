@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { push } from 'react-router-redux';
 
-import { ModalFormGroup, Radio } from 'linode-components/forms';
-import { FormModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Radio } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal } from '~/actions/modal';
 import { rebootLinode } from '~/api/ad-hoc/linodes';
-import { dispatchOrStoreErrors } from '~/api/util';
-
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -25,10 +24,14 @@ export default class ConfigSelectModalBody extends Component {
     const { dispatch, linode, action } = this.props;
     const { configId } = parseInt(this.state.configId);
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => action(linode.id, configId),
-      hideModal,
-    ]));
+    action(linode.id, configId);
+    dispatch(hideModal());
+  }
+
+  onCreateConfig = () => {
+    const { dispatch, linode } = this.props;
+
+    return dispatch(push(`/linodes/${linode.label}/settings/advanced/configs/create`));
   }
 
   render() {
@@ -37,6 +40,20 @@ export default class ConfigSelectModalBody extends Component {
 
     const buttonText = action === rebootLinode ? 'Reboot' : 'Power On';
     const buttonDisabledText = action === rebootLinode ? 'Rebooting' : 'Powering On';
+
+    if (Object.values(linode._configs.configs).length === 0) {
+      return (
+        <FormModalBody
+          onCancel={() => dispatch(hideModal())}
+          onSubmit={this.onCreateConfig}
+          buttonText="Create A Config"
+          buttonDisabledText={buttonDisabledText}
+        >
+          This Linode has no configuration profiles associated with it.
+          You must create one to boot this Linode.
+        </FormModalBody>
+      );
+    }
 
     return (
       <FormModalBody
@@ -55,9 +72,10 @@ export default class ConfigSelectModalBody extends Component {
             {Object.values(linode._configs.configs).map(config => (
               <Radio
                 checked={config.id.toString() === configId}
-                value={config.id}
+                value={config.id.toString()}
                 name="config"
                 onChange={e => this.setState({ configId: e.target.value })}
+                key={config.label}
                 label={config.label}
               />
             ))}

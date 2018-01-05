@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import { setAnalytics } from '~/actions';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -12,7 +12,7 @@ import { ChainedDocumentTitle } from '~/components';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { username }) {
+  static async preload({ dispatch }, { username }) {
     await dispatch(getObjectByLabelLazily('users', username, 'username'));
   }
 

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -10,8 +10,8 @@ import {
   FormSummary,
   Input,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { makePayment } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -101,7 +101,7 @@ export class MakeAPaymentPage extends Component {
                 </div>
                 <FormGroupError errors={errors} className="offset-sm-3 col-sm-6" name="cvv" />
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="col-sm-9 offset-sm-3">
                   <SubmitButton
                     disabled={loading}

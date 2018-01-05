@@ -1,0 +1,4284 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/ConfigForm should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <ConfigForm
+    config={
+      Object {
+        "_nodes": Object {
+          "nodes": Object {
+            "1": Object {
+              "address": "192.168.4.5:80",
+              "config_id": 0,
+              "id": 1,
+              "label": "greatest_node_ever",
+              "mode": "accept",
+              "nodebalancer_id": 23,
+              "status": "online",
+              "weight": 40,
+            },
+          },
+        },
+        "algorithm": "roundrobin",
+        "check": "none",
+        "check_attempts": 3,
+        "check_body": "",
+        "check_interval": 0,
+        "check_passive": true,
+        "check_path": "",
+        "check_timeout": 30,
+        "cipher_suite": "recommended",
+        "id": 1,
+        "nodebalancer_id": 23,
+        "nodes_status": Object {
+          "down": 0,
+          "up": 1,
+        },
+        "port": 80,
+        "protocol": "http",
+        "stickiness": "none",
+      }
+    }
+    dispatch={[Function]}
+    nodebalancer={
+      Object {
+        "_configs": Object {
+          "configs": Object {
+            "1": Object {
+              "_nodes": Object {
+                "nodes": Object {
+                  "1": Object {
+                    "address": "192.168.4.5:80",
+                    "config_id": 0,
+                    "id": 1,
+                    "label": "greatest_node_ever",
+                    "mode": "accept",
+                    "nodebalancer_id": 23,
+                    "status": "online",
+                    "weight": 40,
+                  },
+                },
+              },
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 1,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 1,
+              },
+              "port": 80,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+            "2": Object {
+              "algorithm": "roundrobin",
+              "check": "none",
+              "check_attempts": 3,
+              "check_body": "",
+              "check_interval": 0,
+              "check_passive": true,
+              "check_path": "",
+              "check_timeout": 30,
+              "cipher_suite": "recommended",
+              "id": 2,
+              "nodebalancer_id": 23,
+              "nodes_status": Object {
+                "down": 0,
+                "up": 0,
+              },
+              "port": 81,
+              "protocol": "http",
+              "stickiness": "none",
+            },
+          },
+        },
+        "client_conn_throttle": 0,
+        "created": "2017-03-03T18:08:44",
+        "hostname": "nb-1-1-1-1.newark.nodebalancer.linode.com",
+        "id": 23,
+        "ipv4": "1.1.1.1",
+        "label": "nodebalancer-1",
+        "region": "us-east-1a",
+        "status": "new_active",
+        "updated": "2017-03-06T22:00:48",
+      }
+    }
+    submitDisabledText="Disabled"
+    submitText="Submit"
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "function",
+    "props": Object {
+      "analytics": Object {
+        "action": "edit",
+        "title": "NodeBalancer Config Settings",
+      },
+      "children": Array [
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="port"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Port
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Input
+              className=""
+              id="port"
+              min={0}
+              name="port"
+              onChange={[Function]}
+              placeholder="80"
+              type="number"
+              value={80}
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="port"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="protocol"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Protocol
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="protocol"
+              name="protocol"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "TCP",
+                    "value": "tcp",
+                  },
+                  Object {
+                    "label": "HTTP",
+                    "value": "http",
+                  },
+                  Object {
+                    "label": "HTTPS",
+                    "value": "https",
+                  },
+                ]
+              }
+              value="http"
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="protocol"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="algorithm"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Algorithm
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="algorithm"
+              name="algorithm"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "Round Robin",
+                    "value": "roundrobin",
+                  },
+                  Object {
+                    "label": "Least Connections",
+                    "value": "leastconn",
+                  },
+                  Object {
+                    "label": "Source IP",
+                    "value": "source",
+                  },
+                ]
+              }
+              value="roundrobin"
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Configure how initial client connections are allocated across backend nodes.
+              </small>
+            </div>
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="algorithm"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="stickiness"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Session Stickiness
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="stickiness"
+              name="stickiness"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "-- None --",
+                    "value": "none",
+                  },
+                  Object {
+                    "label": "Table",
+                    "value": "table",
+                  },
+                  Object {
+                    "label": "HTTP Cookie",
+                    "value": "http_cookie",
+                  },
+                ]
+              }
+              value="none"
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Enable subsequent requests from the same client to be routed to the same backend node.
+              </small>
+            </div>
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="stickiness"
+            />
+          </div>
+        </FormGroup>,
+        null,
+        <h3
+          className="sub-header"
+        >
+          Active Health Check
+        </h3>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Type
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Select
+              analytics={
+                Object {
+                  "noTrack": false,
+                }
+              }
+              className=""
+              id="check"
+              name="check"
+              onChange={[Function]}
+              options={
+                Array [
+                  Object {
+                    "label": "TCP Connection",
+                    "value": "connection",
+                  },
+                  Object {
+                    "label": "HTTP Valid Status",
+                    "value": "http",
+                  },
+                  Object {
+                    "label": "HTTP Body Regex",
+                    "value": "http_body",
+                  },
+                ]
+              }
+              value="none"
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Active health checks proactively check the health of back-end nodes.
+              </small>
+            </div>
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check_path"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+            htmlFor="checkPath"
+          >
+            HTTP Path to Check
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Input
+              className=""
+              id="checkPath"
+              name="checkPath"
+              onChange={[Function]}
+              value=""
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check_path"
+            />
+          </div>
+        </FormGroup>,
+        null,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check_interval"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Interval
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Input
+              className=""
+              id="checkInterval"
+              label="seconds"
+              min={0}
+              name="checkInterval"
+              onChange={[Function]}
+              placeholder="0"
+              type="number"
+              value={0}
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check_interval"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check_timeout"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Timeout
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Input
+              className=""
+              id="checkTimeout"
+              label="seconds"
+              min={0}
+              name="checkTimeout"
+              onChange={[Function]}
+              placeholder="0"
+              type="number"
+              value={30}
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check_timeout"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check_attempts"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Attempts
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Input
+              className=""
+              id="checkAttempts"
+              min={0}
+              name="checkAttempts"
+              onChange={[Function]}
+              placeholder="0"
+              type="number"
+              value={3}
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check_attempts"
+            />
+            <div>
+              <small
+                className="text-muted"
+              >
+                Take the node out of rotation after this number of failed health checks.
+              </small>
+            </div>
+          </div>
+        </FormGroup>,
+        <h3
+          className="sub-header"
+        >
+          Passive Checks
+        </h3>,
+        <FormGroup
+          className="row"
+          errors={Object {}}
+          name="check_passive"
+        >
+          <label
+            className="col-sm-2 col-form-label"
+          >
+            Enabled
+          </label>
+          <div
+            className="col-sm-10"
+          >
+            <Checkbox
+              checked={true}
+              className=""
+              id="checkPassive"
+              label="Enable passive checks based on observed communication with backend nodes."
+              name="checkPassive"
+              onChange={[Function]}
+              value={true}
+            />
+            <FormGroupError
+              className=""
+              errors={Object {}}
+              inline={true}
+              name="check_passive"
+            />
+          </div>
+        </FormGroup>,
+        <FormGroup
+          className="row"
+          name="submit"
+        >
+          <div
+            className="offset-sm-2 col-sm-10"
+          >
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Disabled"
+            >
+              Submit
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Config settings saved."
+            />
+          </div>
+        </FormGroup>,
+      ],
+      "className": "",
+      "noSubmitEvent": false,
+      "onSubmit": [Function],
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Port
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="port"
+                min={0}
+                name="port"
+                onChange={[Function]}
+                placeholder="80"
+                type="number"
+                value={80}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="port"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "port",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Port",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Port",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className=""
+                  id="port"
+                  min={0}
+                  name="port"
+                  onChange={[Function]}
+                  placeholder="80"
+                  type="number"
+                  value={80}
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="port"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "port",
+                  "min": 0,
+                  "name": "port",
+                  "onChange": [Function],
+                  "placeholder": "80",
+                  "type": "number",
+                  "value": 80,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "port",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Protocol
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="protocol"
+                name="protocol"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "TCP",
+                      "value": "tcp",
+                    },
+                    Object {
+                      "label": "HTTP",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTPS",
+                      "value": "https",
+                    },
+                  ]
+                }
+                value="http"
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="protocol"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "protocol",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Protocol",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Protocol",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="protocol"
+                  name="protocol"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "TCP",
+                        "value": "tcp",
+                      },
+                      Object {
+                        "label": "HTTP",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTPS",
+                        "value": "https",
+                      },
+                    ]
+                  }
+                  value="http"
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="protocol"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "analytics": Object {
+                    "noTrack": false,
+                  },
+                  "className": "",
+                  "id": "protocol",
+                  "name": "protocol",
+                  "onChange": [Function],
+                  "options": Array [
+                    Object {
+                      "label": "TCP",
+                      "value": "tcp",
+                    },
+                    Object {
+                      "label": "HTTP",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTPS",
+                      "value": "https",
+                    },
+                  ],
+                  "value": "http",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "protocol",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Algorithm
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="algorithm"
+                name="algorithm"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "Round Robin",
+                      "value": "roundrobin",
+                    },
+                    Object {
+                      "label": "Least Connections",
+                      "value": "leastconn",
+                    },
+                    Object {
+                      "label": "Source IP",
+                      "value": "source",
+                    },
+                  ]
+                }
+                value="roundrobin"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Configure how initial client connections are allocated across backend nodes.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="algorithm"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "algorithm",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Algorithm",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Algorithm",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="algorithm"
+                  name="algorithm"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "Round Robin",
+                        "value": "roundrobin",
+                      },
+                      Object {
+                        "label": "Least Connections",
+                        "value": "leastconn",
+                      },
+                      Object {
+                        "label": "Source IP",
+                        "value": "source",
+                      },
+                    ]
+                  }
+                  value="roundrobin"
+                />,
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Configure how initial client connections are allocated across backend nodes.
+                  </small>
+                </div>,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="algorithm"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "analytics": Object {
+                    "noTrack": false,
+                  },
+                  "className": "",
+                  "id": "algorithm",
+                  "name": "algorithm",
+                  "onChange": [Function],
+                  "options": Array [
+                    Object {
+                      "label": "Round Robin",
+                      "value": "roundrobin",
+                    },
+                    Object {
+                      "label": "Least Connections",
+                      "value": "leastconn",
+                    },
+                    Object {
+                      "label": "Source IP",
+                      "value": "source",
+                    },
+                  ],
+                  "value": "roundrobin",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small
+                    className="text-muted"
+                  >
+                    Configure how initial client connections are allocated across backend nodes.
+                  </small>,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Configure how initial client connections are allocated across backend nodes.",
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": "Configure how initial client connections are allocated across backend nodes.",
+                  "type": "small",
+                },
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "algorithm",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Session Stickiness
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="stickiness"
+                name="stickiness"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "-- None --",
+                      "value": "none",
+                    },
+                    Object {
+                      "label": "Table",
+                      "value": "table",
+                    },
+                    Object {
+                      "label": "HTTP Cookie",
+                      "value": "http_cookie",
+                    },
+                  ]
+                }
+                value="none"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Enable subsequent requests from the same client to be routed to the same backend node.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="stickiness"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "stickiness",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Session Stickiness",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Session Stickiness",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="stickiness"
+                  name="stickiness"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "-- None --",
+                        "value": "none",
+                      },
+                      Object {
+                        "label": "Table",
+                        "value": "table",
+                      },
+                      Object {
+                        "label": "HTTP Cookie",
+                        "value": "http_cookie",
+                      },
+                    ]
+                  }
+                  value="none"
+                />,
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Enable subsequent requests from the same client to be routed to the same backend node.
+                  </small>
+                </div>,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="stickiness"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "analytics": Object {
+                    "noTrack": false,
+                  },
+                  "className": "",
+                  "id": "stickiness",
+                  "name": "stickiness",
+                  "onChange": [Function],
+                  "options": Array [
+                    Object {
+                      "label": "-- None --",
+                      "value": "none",
+                    },
+                    Object {
+                      "label": "Table",
+                      "value": "table",
+                    },
+                    Object {
+                      "label": "HTTP Cookie",
+                      "value": "http_cookie",
+                    },
+                  ],
+                  "value": "none",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small
+                    className="text-muted"
+                  >
+                    Enable subsequent requests from the same client to be routed to the same backend node.
+                  </small>,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Enable subsequent requests from the same client to be routed to the same backend node.",
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": "Enable subsequent requests from the same client to be routed to the same backend node.",
+                  "type": "small",
+                },
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "stickiness",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      null,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Active Health Check",
+          "className": "sub-header",
+        },
+        "ref": null,
+        "rendered": "Active Health Check",
+        "type": "h3",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Type
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="check"
+                name="check"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "TCP Connection",
+                      "value": "connection",
+                    },
+                    Object {
+                      "label": "HTTP Valid Status",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTP Body Regex",
+                      "value": "http_body",
+                    },
+                  ]
+                }
+                value="none"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Active health checks proactively check the health of back-end nodes.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Type",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Type",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="check"
+                  name="check"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "TCP Connection",
+                        "value": "connection",
+                      },
+                      Object {
+                        "label": "HTTP Valid Status",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTP Body Regex",
+                        "value": "http_body",
+                      },
+                    ]
+                  }
+                  value="none"
+                />,
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Active health checks proactively check the health of back-end nodes.
+                  </small>
+                </div>,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "class",
+                "props": Object {
+                  "analytics": Object {
+                    "noTrack": false,
+                  },
+                  "className": "",
+                  "id": "check",
+                  "name": "check",
+                  "onChange": [Function],
+                  "options": Array [
+                    Object {
+                      "label": "TCP Connection",
+                      "value": "connection",
+                    },
+                    Object {
+                      "label": "HTTP Valid Status",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTP Body Regex",
+                      "value": "http_body",
+                    },
+                  ],
+                  "value": "none",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small
+                    className="text-muted"
+                  >
+                    Active health checks proactively check the health of back-end nodes.
+                  </small>,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Active health checks proactively check the health of back-end nodes.",
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": "Active health checks proactively check the health of back-end nodes.",
+                  "type": "small",
+                },
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="checkPath"
+            >
+              HTTP Path to Check
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkPath"
+                name="checkPath"
+                onChange={[Function]}
+                value=""
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_path"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check_path",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "HTTP Path to Check",
+              "className": "col-sm-2 col-form-label",
+              "htmlFor": "checkPath",
+            },
+            "ref": null,
+            "rendered": "HTTP Path to Check",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className=""
+                  id="checkPath"
+                  name="checkPath"
+                  onChange={[Function]}
+                  value=""
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_path"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "checkPath",
+                  "name": "checkPath",
+                  "onChange": [Function],
+                  "value": "",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check_path",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      null,
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Interval
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkInterval"
+                label="seconds"
+                min={0}
+                name="checkInterval"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={0}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_interval"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check_interval",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Interval",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Interval",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className=""
+                  id="checkInterval"
+                  label="seconds"
+                  min={0}
+                  name="checkInterval"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={0}
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_interval"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "checkInterval",
+                  "label": "seconds",
+                  "min": 0,
+                  "name": "checkInterval",
+                  "onChange": [Function],
+                  "placeholder": "0",
+                  "type": "number",
+                  "value": 0,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check_interval",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Timeout
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkTimeout"
+                label="seconds"
+                min={0}
+                name="checkTimeout"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={30}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_timeout"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check_timeout",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Timeout",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Timeout",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className=""
+                  id="checkTimeout"
+                  label="seconds"
+                  min={0}
+                  name="checkTimeout"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={30}
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_timeout"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "checkTimeout",
+                  "label": "seconds",
+                  "min": 0,
+                  "name": "checkTimeout",
+                  "onChange": [Function],
+                  "placeholder": "0",
+                  "type": "number",
+                  "value": 30,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check_timeout",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Attempts
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkAttempts"
+                min={0}
+                name="checkAttempts"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={3}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_attempts"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Take the node out of rotation after this number of failed health checks.
+                </small>
+              </div>
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check_attempts",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Attempts",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Attempts",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Input
+                  className=""
+                  id="checkAttempts"
+                  min={0}
+                  name="checkAttempts"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={3}
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_attempts"
+                />,
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Take the node out of rotation after this number of failed health checks.
+                  </small>
+                </div>,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "id": "checkAttempts",
+                  "min": 0,
+                  "name": "checkAttempts",
+                  "onChange": [Function],
+                  "placeholder": "0",
+                  "type": "number",
+                  "value": 3,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check_attempts",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <small
+                    className="text-muted"
+                  >
+                    Take the node out of rotation after this number of failed health checks.
+                  </small>,
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "Take the node out of rotation after this number of failed health checks.",
+                    "className": "text-muted",
+                  },
+                  "ref": null,
+                  "rendered": "Take the node out of rotation after this number of failed health checks.",
+                  "type": "small",
+                },
+                "type": "div",
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Passive Checks",
+          "className": "sub-header",
+        },
+        "ref": null,
+        "rendered": "Passive Checks",
+        "type": "h3",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": Array [
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Enabled
+            </label>,
+            <div
+              className="col-sm-10"
+            >
+              <Checkbox
+                checked={true}
+                className=""
+                id="checkPassive"
+                label="Enable passive checks based on observed communication with backend nodes."
+                name="checkPassive"
+                onChange={[Function]}
+                value={true}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_passive"
+              />
+            </div>,
+          ],
+          "className": "row",
+          "errors": Object {},
+          "name": "check_passive",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "Enabled",
+              "className": "col-sm-2 col-form-label",
+            },
+            "ref": null,
+            "rendered": "Enabled",
+            "type": "label",
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <Checkbox
+                  checked={true}
+                  className=""
+                  id="checkPassive"
+                  label="Enable passive checks based on observed communication with backend nodes."
+                  name="checkPassive"
+                  onChange={[Function]}
+                  value={true}
+                />,
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_passive"
+                />,
+              ],
+              "className": "col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "checked": true,
+                  "className": "",
+                  "id": "checkPassive",
+                  "label": "Enable passive checks based on observed communication with backend nodes.",
+                  "name": "checkPassive",
+                  "onChange": [Function],
+                  "value": true,
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "inline": true,
+                  "name": "check_passive",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+        ],
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "function",
+        "props": Object {
+          "children": <div
+            className="offset-sm-2 col-sm-10"
+          >
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Disabled"
+            >
+              Submit
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+              success="Config settings saved."
+            />
+          </div>,
+          "className": "row",
+          "name": "submit",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabled"
+              >
+                Submit
+              </SubmitButton>,
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Config settings saved."
+              />,
+            ],
+            "className": "offset-sm-2 col-sm-10",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Submit",
+                "className": "btn-default",
+                "disabled": false,
+                "disabledChildren": "Disabled",
+              },
+              "ref": null,
+              "rendered": "Submit",
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "errors": Object {},
+                "success": "Config settings saved.",
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": "div",
+        },
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "analytics": Object {
+          "action": "edit",
+          "title": "NodeBalancer Config Settings",
+        },
+        "children": Array [
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="port"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Port
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="port"
+                min={0}
+                name="port"
+                onChange={[Function]}
+                placeholder="80"
+                type="number"
+                value={80}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="port"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="protocol"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Protocol
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="protocol"
+                name="protocol"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "TCP",
+                      "value": "tcp",
+                    },
+                    Object {
+                      "label": "HTTP",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTPS",
+                      "value": "https",
+                    },
+                  ]
+                }
+                value="http"
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="protocol"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="algorithm"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Algorithm
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="algorithm"
+                name="algorithm"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "Round Robin",
+                      "value": "roundrobin",
+                    },
+                    Object {
+                      "label": "Least Connections",
+                      "value": "leastconn",
+                    },
+                    Object {
+                      "label": "Source IP",
+                      "value": "source",
+                    },
+                  ]
+                }
+                value="roundrobin"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Configure how initial client connections are allocated across backend nodes.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="algorithm"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="stickiness"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Session Stickiness
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="stickiness"
+                name="stickiness"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "-- None --",
+                      "value": "none",
+                    },
+                    Object {
+                      "label": "Table",
+                      "value": "table",
+                    },
+                    Object {
+                      "label": "HTTP Cookie",
+                      "value": "http_cookie",
+                    },
+                  ]
+                }
+                value="none"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Enable subsequent requests from the same client to be routed to the same backend node.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="stickiness"
+              />
+            </div>
+          </FormGroup>,
+          null,
+          <h3
+            className="sub-header"
+          >
+            Active Health Check
+          </h3>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Type
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Select
+                analytics={
+                  Object {
+                    "noTrack": false,
+                  }
+                }
+                className=""
+                id="check"
+                name="check"
+                onChange={[Function]}
+                options={
+                  Array [
+                    Object {
+                      "label": "TCP Connection",
+                      "value": "connection",
+                    },
+                    Object {
+                      "label": "HTTP Valid Status",
+                      "value": "http",
+                    },
+                    Object {
+                      "label": "HTTP Body Regex",
+                      "value": "http_body",
+                    },
+                  ]
+                }
+                value="none"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Active health checks proactively check the health of back-end nodes.
+                </small>
+              </div>
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check_path"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+              htmlFor="checkPath"
+            >
+              HTTP Path to Check
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkPath"
+                name="checkPath"
+                onChange={[Function]}
+                value=""
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_path"
+              />
+            </div>
+          </FormGroup>,
+          null,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check_interval"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Interval
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkInterval"
+                label="seconds"
+                min={0}
+                name="checkInterval"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={0}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_interval"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check_timeout"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Timeout
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkTimeout"
+                label="seconds"
+                min={0}
+                name="checkTimeout"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={30}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_timeout"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check_attempts"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Attempts
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Input
+                className=""
+                id="checkAttempts"
+                min={0}
+                name="checkAttempts"
+                onChange={[Function]}
+                placeholder="0"
+                type="number"
+                value={3}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_attempts"
+              />
+              <div>
+                <small
+                  className="text-muted"
+                >
+                  Take the node out of rotation after this number of failed health checks.
+                </small>
+              </div>
+            </div>
+          </FormGroup>,
+          <h3
+            className="sub-header"
+          >
+            Passive Checks
+          </h3>,
+          <FormGroup
+            className="row"
+            errors={Object {}}
+            name="check_passive"
+          >
+            <label
+              className="col-sm-2 col-form-label"
+            >
+              Enabled
+            </label>
+            <div
+              className="col-sm-10"
+            >
+              <Checkbox
+                checked={true}
+                className=""
+                id="checkPassive"
+                label="Enable passive checks based on observed communication with backend nodes."
+                name="checkPassive"
+                onChange={[Function]}
+                value={true}
+              />
+              <FormGroupError
+                className=""
+                errors={Object {}}
+                inline={true}
+                name="check_passive"
+              />
+            </div>
+          </FormGroup>,
+          <FormGroup
+            className="row"
+            name="submit"
+          >
+            <div
+              className="offset-sm-2 col-sm-10"
+            >
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabled"
+              >
+                Submit
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Config settings saved."
+              />
+            </div>
+          </FormGroup>,
+        ],
+        "className": "",
+        "noSubmitEvent": false,
+        "onSubmit": [Function],
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Port
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Input
+                  className=""
+                  id="port"
+                  min={0}
+                  name="port"
+                  onChange={[Function]}
+                  placeholder="80"
+                  type="number"
+                  value={80}
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="port"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "port",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Port",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Port",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className=""
+                    id="port"
+                    min={0}
+                    name="port"
+                    onChange={[Function]}
+                    placeholder="80"
+                    type="number"
+                    value={80}
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="port"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "id": "port",
+                    "min": 0,
+                    "name": "port",
+                    "onChange": [Function],
+                    "placeholder": "80",
+                    "type": "number",
+                    "value": 80,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "port",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Protocol
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="protocol"
+                  name="protocol"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "TCP",
+                        "value": "tcp",
+                      },
+                      Object {
+                        "label": "HTTP",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTPS",
+                        "value": "https",
+                      },
+                    ]
+                  }
+                  value="http"
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="protocol"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "protocol",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Protocol",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Protocol",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Select
+                    analytics={
+                      Object {
+                        "noTrack": false,
+                      }
+                    }
+                    className=""
+                    id="protocol"
+                    name="protocol"
+                    onChange={[Function]}
+                    options={
+                      Array [
+                        Object {
+                          "label": "TCP",
+                          "value": "tcp",
+                        },
+                        Object {
+                          "label": "HTTP",
+                          "value": "http",
+                        },
+                        Object {
+                          "label": "HTTPS",
+                          "value": "https",
+                        },
+                      ]
+                    }
+                    value="http"
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="protocol"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "analytics": Object {
+                      "noTrack": false,
+                    },
+                    "className": "",
+                    "id": "protocol",
+                    "name": "protocol",
+                    "onChange": [Function],
+                    "options": Array [
+                      Object {
+                        "label": "TCP",
+                        "value": "tcp",
+                      },
+                      Object {
+                        "label": "HTTP",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTPS",
+                        "value": "https",
+                      },
+                    ],
+                    "value": "http",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "protocol",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Algorithm
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="algorithm"
+                  name="algorithm"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "Round Robin",
+                        "value": "roundrobin",
+                      },
+                      Object {
+                        "label": "Least Connections",
+                        "value": "leastconn",
+                      },
+                      Object {
+                        "label": "Source IP",
+                        "value": "source",
+                      },
+                    ]
+                  }
+                  value="roundrobin"
+                />
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Configure how initial client connections are allocated across backend nodes.
+                  </small>
+                </div>
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="algorithm"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "algorithm",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Algorithm",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Algorithm",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Select
+                    analytics={
+                      Object {
+                        "noTrack": false,
+                      }
+                    }
+                    className=""
+                    id="algorithm"
+                    name="algorithm"
+                    onChange={[Function]}
+                    options={
+                      Array [
+                        Object {
+                          "label": "Round Robin",
+                          "value": "roundrobin",
+                        },
+                        Object {
+                          "label": "Least Connections",
+                          "value": "leastconn",
+                        },
+                        Object {
+                          "label": "Source IP",
+                          "value": "source",
+                        },
+                      ]
+                    }
+                    value="roundrobin"
+                  />,
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      Configure how initial client connections are allocated across backend nodes.
+                    </small>
+                  </div>,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="algorithm"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "analytics": Object {
+                      "noTrack": false,
+                    },
+                    "className": "",
+                    "id": "algorithm",
+                    "name": "algorithm",
+                    "onChange": [Function],
+                    "options": Array [
+                      Object {
+                        "label": "Round Robin",
+                        "value": "roundrobin",
+                      },
+                      Object {
+                        "label": "Least Connections",
+                        "value": "leastconn",
+                      },
+                      Object {
+                        "label": "Source IP",
+                        "value": "source",
+                      },
+                    ],
+                    "value": "roundrobin",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small
+                      className="text-muted"
+                    >
+                      Configure how initial client connections are allocated across backend nodes.
+                    </small>,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Configure how initial client connections are allocated across backend nodes.",
+                      "className": "text-muted",
+                    },
+                    "ref": null,
+                    "rendered": "Configure how initial client connections are allocated across backend nodes.",
+                    "type": "small",
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "algorithm",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Session Stickiness
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="stickiness"
+                  name="stickiness"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "-- None --",
+                        "value": "none",
+                      },
+                      Object {
+                        "label": "Table",
+                        "value": "table",
+                      },
+                      Object {
+                        "label": "HTTP Cookie",
+                        "value": "http_cookie",
+                      },
+                    ]
+                  }
+                  value="none"
+                />
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Enable subsequent requests from the same client to be routed to the same backend node.
+                  </small>
+                </div>
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="stickiness"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "stickiness",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Session Stickiness",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Session Stickiness",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Select
+                    analytics={
+                      Object {
+                        "noTrack": false,
+                      }
+                    }
+                    className=""
+                    id="stickiness"
+                    name="stickiness"
+                    onChange={[Function]}
+                    options={
+                      Array [
+                        Object {
+                          "label": "-- None --",
+                          "value": "none",
+                        },
+                        Object {
+                          "label": "Table",
+                          "value": "table",
+                        },
+                        Object {
+                          "label": "HTTP Cookie",
+                          "value": "http_cookie",
+                        },
+                      ]
+                    }
+                    value="none"
+                  />,
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      Enable subsequent requests from the same client to be routed to the same backend node.
+                    </small>
+                  </div>,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="stickiness"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "analytics": Object {
+                      "noTrack": false,
+                    },
+                    "className": "",
+                    "id": "stickiness",
+                    "name": "stickiness",
+                    "onChange": [Function],
+                    "options": Array [
+                      Object {
+                        "label": "-- None --",
+                        "value": "none",
+                      },
+                      Object {
+                        "label": "Table",
+                        "value": "table",
+                      },
+                      Object {
+                        "label": "HTTP Cookie",
+                        "value": "http_cookie",
+                      },
+                    ],
+                    "value": "none",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small
+                      className="text-muted"
+                    >
+                      Enable subsequent requests from the same client to be routed to the same backend node.
+                    </small>,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Enable subsequent requests from the same client to be routed to the same backend node.",
+                      "className": "text-muted",
+                    },
+                    "ref": null,
+                    "rendered": "Enable subsequent requests from the same client to be routed to the same backend node.",
+                    "type": "small",
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "stickiness",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Active Health Check",
+            "className": "sub-header",
+          },
+          "ref": null,
+          "rendered": "Active Health Check",
+          "type": "h3",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Type
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Select
+                  analytics={
+                    Object {
+                      "noTrack": false,
+                    }
+                  }
+                  className=""
+                  id="check"
+                  name="check"
+                  onChange={[Function]}
+                  options={
+                    Array [
+                      Object {
+                        "label": "TCP Connection",
+                        "value": "connection",
+                      },
+                      Object {
+                        "label": "HTTP Valid Status",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTP Body Regex",
+                        "value": "http_body",
+                      },
+                    ]
+                  }
+                  value="none"
+                />
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Active health checks proactively check the health of back-end nodes.
+                  </small>
+                </div>
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Type",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Type",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Select
+                    analytics={
+                      Object {
+                        "noTrack": false,
+                      }
+                    }
+                    className=""
+                    id="check"
+                    name="check"
+                    onChange={[Function]}
+                    options={
+                      Array [
+                        Object {
+                          "label": "TCP Connection",
+                          "value": "connection",
+                        },
+                        Object {
+                          "label": "HTTP Valid Status",
+                          "value": "http",
+                        },
+                        Object {
+                          "label": "HTTP Body Regex",
+                          "value": "http_body",
+                        },
+                      ]
+                    }
+                    value="none"
+                  />,
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      Active health checks proactively check the health of back-end nodes.
+                    </small>
+                  </div>,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "class",
+                  "props": Object {
+                    "analytics": Object {
+                      "noTrack": false,
+                    },
+                    "className": "",
+                    "id": "check",
+                    "name": "check",
+                    "onChange": [Function],
+                    "options": Array [
+                      Object {
+                        "label": "TCP Connection",
+                        "value": "connection",
+                      },
+                      Object {
+                        "label": "HTTP Valid Status",
+                        "value": "http",
+                      },
+                      Object {
+                        "label": "HTTP Body Regex",
+                        "value": "http_body",
+                      },
+                    ],
+                    "value": "none",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small
+                      className="text-muted"
+                    >
+                      Active health checks proactively check the health of back-end nodes.
+                    </small>,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Active health checks proactively check the health of back-end nodes.",
+                      "className": "text-muted",
+                    },
+                    "ref": null,
+                    "rendered": "Active health checks proactively check the health of back-end nodes.",
+                    "type": "small",
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+                htmlFor="checkPath"
+              >
+                HTTP Path to Check
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Input
+                  className=""
+                  id="checkPath"
+                  name="checkPath"
+                  onChange={[Function]}
+                  value=""
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_path"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check_path",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "HTTP Path to Check",
+                "className": "col-sm-2 col-form-label",
+                "htmlFor": "checkPath",
+              },
+              "ref": null,
+              "rendered": "HTTP Path to Check",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className=""
+                    id="checkPath"
+                    name="checkPath"
+                    onChange={[Function]}
+                    value=""
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check_path"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "id": "checkPath",
+                    "name": "checkPath",
+                    "onChange": [Function],
+                    "value": "",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check_path",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Interval
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Input
+                  className=""
+                  id="checkInterval"
+                  label="seconds"
+                  min={0}
+                  name="checkInterval"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={0}
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_interval"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check_interval",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Interval",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Interval",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className=""
+                    id="checkInterval"
+                    label="seconds"
+                    min={0}
+                    name="checkInterval"
+                    onChange={[Function]}
+                    placeholder="0"
+                    type="number"
+                    value={0}
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check_interval"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "id": "checkInterval",
+                    "label": "seconds",
+                    "min": 0,
+                    "name": "checkInterval",
+                    "onChange": [Function],
+                    "placeholder": "0",
+                    "type": "number",
+                    "value": 0,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check_interval",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Timeout
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Input
+                  className=""
+                  id="checkTimeout"
+                  label="seconds"
+                  min={0}
+                  name="checkTimeout"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={30}
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_timeout"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check_timeout",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Timeout",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Timeout",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className=""
+                    id="checkTimeout"
+                    label="seconds"
+                    min={0}
+                    name="checkTimeout"
+                    onChange={[Function]}
+                    placeholder="0"
+                    type="number"
+                    value={30}
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check_timeout"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "id": "checkTimeout",
+                    "label": "seconds",
+                    "min": 0,
+                    "name": "checkTimeout",
+                    "onChange": [Function],
+                    "placeholder": "0",
+                    "type": "number",
+                    "value": 30,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check_timeout",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Attempts
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Input
+                  className=""
+                  id="checkAttempts"
+                  min={0}
+                  name="checkAttempts"
+                  onChange={[Function]}
+                  placeholder="0"
+                  type="number"
+                  value={3}
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_attempts"
+                />
+                <div>
+                  <small
+                    className="text-muted"
+                  >
+                    Take the node out of rotation after this number of failed health checks.
+                  </small>
+                </div>
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check_attempts",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Attempts",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Attempts",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Input
+                    className=""
+                    id="checkAttempts"
+                    min={0}
+                    name="checkAttempts"
+                    onChange={[Function]}
+                    placeholder="0"
+                    type="number"
+                    value={3}
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check_attempts"
+                  />,
+                  <div>
+                    <small
+                      className="text-muted"
+                    >
+                      Take the node out of rotation after this number of failed health checks.
+                    </small>
+                  </div>,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "id": "checkAttempts",
+                    "min": 0,
+                    "name": "checkAttempts",
+                    "onChange": [Function],
+                    "placeholder": "0",
+                    "type": "number",
+                    "value": 3,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check_attempts",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <small
+                      className="text-muted"
+                    >
+                      Take the node out of rotation after this number of failed health checks.
+                    </small>,
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "host",
+                    "props": Object {
+                      "children": "Take the node out of rotation after this number of failed health checks.",
+                      "className": "text-muted",
+                    },
+                    "ref": null,
+                    "rendered": "Take the node out of rotation after this number of failed health checks.",
+                    "type": "small",
+                  },
+                  "type": "div",
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": "Passive Checks",
+            "className": "sub-header",
+          },
+          "ref": null,
+          "rendered": "Passive Checks",
+          "type": "h3",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <label
+                className="col-sm-2 col-form-label"
+              >
+                Enabled
+              </label>,
+              <div
+                className="col-sm-10"
+              >
+                <Checkbox
+                  checked={true}
+                  className=""
+                  id="checkPassive"
+                  label="Enable passive checks based on observed communication with backend nodes."
+                  name="checkPassive"
+                  onChange={[Function]}
+                  value={true}
+                />
+                <FormGroupError
+                  className=""
+                  errors={Object {}}
+                  inline={true}
+                  name="check_passive"
+                />
+              </div>,
+            ],
+            "className": "row",
+            "errors": Object {},
+            "name": "check_passive",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "Enabled",
+                "className": "col-sm-2 col-form-label",
+              },
+              "ref": null,
+              "rendered": "Enabled",
+              "type": "label",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  <Checkbox
+                    checked={true}
+                    className=""
+                    id="checkPassive"
+                    label="Enable passive checks based on observed communication with backend nodes."
+                    name="checkPassive"
+                    onChange={[Function]}
+                    value={true}
+                  />,
+                  <FormGroupError
+                    className=""
+                    errors={Object {}}
+                    inline={true}
+                    name="check_passive"
+                  />,
+                ],
+                "className": "col-sm-10",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "checked": true,
+                    "className": "",
+                    "id": "checkPassive",
+                    "label": "Enable passive checks based on observed communication with backend nodes.",
+                    "name": "checkPassive",
+                    "onChange": [Function],
+                    "value": true,
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "function",
+                  "props": Object {
+                    "className": "",
+                    "errors": Object {},
+                    "inline": true,
+                    "name": "check_passive",
+                  },
+                  "ref": null,
+                  "rendered": null,
+                  "type": [Function],
+                },
+              ],
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <div
+              className="offset-sm-2 col-sm-10"
+            >
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabled"
+              >
+                Submit
+              </SubmitButton>
+              <FormSummary
+                className=""
+                errors={Object {}}
+                success="Config settings saved."
+              />
+            </div>,
+            "className": "row",
+            "name": "submit",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": Array [
+                <SubmitButton
+                  className="btn-default"
+                  disabled={false}
+                  disabledChildren="Disabled"
+                >
+                  Submit
+                </SubmitButton>,
+                <FormSummary
+                  className=""
+                  errors={Object {}}
+                  success="Config settings saved."
+                />,
+              ],
+              "className": "offset-sm-2 col-sm-10",
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "children": "Submit",
+                  "className": "btn-default",
+                  "disabled": false,
+                  "disabledChildren": "Disabled",
+                },
+                "ref": null,
+                "rendered": "Submit",
+                "type": [Function],
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "",
+                  "errors": Object {},
+                  "success": "Config settings saved.",
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+            ],
+            "type": "div",
+          },
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;
