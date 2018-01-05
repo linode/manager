@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { VncDisplay } from 'react-vnc-display';
+import { compose } from 'redux';
 
 import { ZONES, LISH_ROOT } from '~/constants';
 import { lishToken } from '~/api/ad-hoc/linodes';
@@ -24,12 +25,12 @@ export class Glish extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, params: { linodeLabel } } = this.props;
+    const { getCurrentLinode, getLishToken } = this.props;
 
-    const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    const linode = await getCurrentLinode();
     this.setState({ linode: linode });
 
-    const { lish_token: token } = await dispatch(lishToken(linode.id));
+    const { lish_token: token } = await getLishToken(linode.id);
     this.setState({ token: token });
 
     const region = linode && ZONES[linode.region];
@@ -65,7 +66,7 @@ export class Glish extends Component {
   renewVncToken = () => {
     // renew our VNC session every 5 minutes
     clearInterval(this.renewInterval);
-    this.renewInterval = setInterval(async () => {
+    this.renewInterval = setInterval(() => {
       if (this.monitor) {
         this.monitor.send(JSON.stringify({ action: 'renew' }));
       }
@@ -78,7 +79,7 @@ export class Glish extends Component {
        We do this because the monitor only sends us power info once, and we need
        to detect when a linode shuts down if it was powered-on to begin-with */
     clearInterval(this.monitorInterval);
-    this.monitorInterval = setInterval(async () => {
+    this.monitorInterval = setInterval(() => {
       if (this.monitor) {
         this.monitor.close();
       }
@@ -134,10 +135,22 @@ export class Glish extends Component {
 }
 
 Glish.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  getCurrentLinode: PropTypes.func.isRequired,
+  getLishToken: PropTypes.func.isRequired,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default withRouter(connect()(Glish));
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { params: { linodeLabel } } = ownProps;
+  return {
+    getCurrentLinode: () => dispatch(getObjectByLabelLazily('linodes', linodeLabel)),
+    getLishToken: (linodeId) => dispatch(lishToken(linodeId)),
+  };
+};
+
+export default compose(
+  connect(null, mapDispatchToProps),
+  withRouter
+)(Glish);
