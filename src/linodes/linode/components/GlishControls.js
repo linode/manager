@@ -23,14 +23,14 @@ export class GlishControls extends Component {
 
   powerOff = () => {
     if (this.props.linodeId) {
-      this.props.dispatch(powerOffLinode(this.props.linodeId));
+      this.props.powerOffLinode();
       this.setState({ overrideMessage: 'Linode is powering down' });
     }
   }
 
   powerOn = () => {
     if (this.props.linodeId) {
-      this.props.dispatch(powerOnLinode(this.props.linodeId));
+      this.props.powerOnLinode();
       this.setState({ overrideMessage: 'Linode is booting up' });
     }
   }
@@ -41,7 +41,7 @@ export class GlishControls extends Component {
 
   reboot() {
     if (this.props.linodeId) {
-      this.props.dispatch(rebootLinode(this.props.linodeId));
+      this.props.rebootLinode();
       this.setState({ overrideMessage: 'Linode is rebooting' });
     }
   }
@@ -65,12 +65,12 @@ export class GlishControls extends Component {
         <Button
           onClick={this.powerAction}
           className="float-left mr-2 fa fa-power-off power-btn"
-          disabled={overrideMessage}
+          disabled={!!overrideMessage}
         />
         <Button
           onClick={this.reboot}
           className="float-left"
-          disabled={overrideMessage}
+          disabled={!!overrideMessage}
         >
           Reboot
         </Button>
@@ -82,11 +82,22 @@ export class GlishControls extends Component {
 }
 
 GlishControls.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired,
-  powered: PropTypes.bool.isRequired,
   connected: PropTypes.bool.isRequired,
   linodeId: PropTypes.number,
+  message: PropTypes.string.isRequired,
+  powered: PropTypes.bool.isRequired,
+  powerOffLinode: PropTypes.func.isRequired,
+  powerOnLinode: PropTypes.func.isRequired,
+  rebootLinode: PropTypes.func.isRequired,
 };
 
-export default connect()(GlishControls);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { linodeId } = ownProps;
+  return {
+    powerOffLinode: () => dispatch(powerOffLinode(linodeId)),
+    powerOnLinode: () => dispatch(powerOnLinode(linodeId)),
+    rebootLinode: () => dispatch(rebootLinode(linodeId)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(GlishControls);
