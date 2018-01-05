@@ -162,8 +162,10 @@ export default compose(
     // if they were just called.
     async function (dispatch, props) {
       if (isEmpty(props.username)) {
-        await dispatch(api.profile.one());
-        await dispatch(api.banners.one());
+        await Promise.all([
+          api.profile.one(),
+          api.banners.one(),
+        ].map(dispatch));
         // Needed for time display component that is not attached to Redux.
       }
     }
