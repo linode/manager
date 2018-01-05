@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Tabs } from 'linode-components/tabs';
-import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
+import { Card, CardHeader } from 'linode-components';
+import { Tabs } from 'linode-components';
+import { Form, FormSummary, SubmitButton } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import { enableBackup } from '~/api/ad-hoc/backups';
@@ -19,7 +19,7 @@ import { selectLinode } from '../../utilities';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     if (backups.enabled) {
       await dispatch(linodeBackups(id));

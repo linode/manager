@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import { ChainedDocumentTitle } from '~/components';
 

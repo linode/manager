@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ModalFormGroup, Input, Select } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Input, Select } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -157,7 +157,7 @@ export default class NodeModal extends Component {
 NodeModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  configId: PropTypes.number.isRequired,
+  configId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   nodebalancerId: PropTypes.number.isRequired,
   node: PropTypes.object,
 };

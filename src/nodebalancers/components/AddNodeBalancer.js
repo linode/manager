@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, ModalFormGroup } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -62,7 +62,7 @@ export default class AddNodeBalancer extends Component {
         errors={errors}
       >
         <div>
-          <ModalFormGroup label="Label" id="label" apiKey="label" errors={errors}>
+          <ModalFormGroup label="Label" id="label-group" apiKey="label" errors={errors}>
             <Input
               placeholder="my-nodebalancer"
               value={label}
@@ -71,7 +71,7 @@ export default class AddNodeBalancer extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Region" id="region" apiKey="region" errors={errors}>
+          <ModalFormGroup label="Region" id="region-group" apiKey="region" errors={errors}>
             <RegionSelect
               value={region}
               name="region"
@@ -79,7 +79,7 @@ export default class AddNodeBalancer extends Component {
               onChange={this.onChange}
             />
           </ModalFormGroup>
-          <ModalFormGroup label="Plan">
+          <ModalFormGroup label="Plan" id="node-balancer">
             <Input disabled value="NodeBalancer ($20.00/mo)" />
           </ModalFormGroup>
         </div>

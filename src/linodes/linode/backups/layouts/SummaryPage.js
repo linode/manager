@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Form, SubmitButton, FormSummary } from 'linode-components/forms';
-import { Card, CardHeader } from 'linode-components/cards';
+import { Form, SubmitButton, FormSummary } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
 
 import { TimeDisplay } from '~/components';
 
@@ -98,8 +98,8 @@ export class SummaryPage extends Component {
     const daily = backups.daily;
     const snapshot = backups.snapshot &&
                      (backups.snapshot.in_progress ?
-                      backups.snapshot.in_progress :
-                      backups.snapshot.current) ||
+                       backups.snapshot.in_progress :
+                       backups.snapshot.current) ||
                      undefined;
     const weekly = backups.weekly && backups.weekly.length ? backups.weekly[0] : undefined;
     const biweekly = backups.weekly && backups.weekly.length === 2 ? backups.weekly[1] : undefined;

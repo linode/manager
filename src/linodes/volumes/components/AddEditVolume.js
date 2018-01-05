@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import { Input, ModalFormGroup, Select } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { Input, ModalFormGroup, Select } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -132,7 +132,7 @@ export default class AddEditVolume extends Component {
     const existingVolume = !!volume;
     const showLinodeConfigs = !existingVolume && (configs.length !== 1);
 
-    const filteredLinodes = _.pickBy(linodes,
+    const filteredLinodes = pickBy(linodes,
       linode => linode.region === region
     );
 

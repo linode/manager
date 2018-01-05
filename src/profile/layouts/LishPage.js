@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
@@ -11,8 +11,8 @@ import {
   Select,
   SubmitButton,
   Textarea,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -109,7 +109,7 @@ export class LishPage extends Component {
                 <FormGroupError errors={errors} name="authorized_keys" inline={false} />
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="submit">
               <div className="offset-sm-2 col-sm-10">
                 <SubmitButton disabled={loading} />
                 <FormSummary errors={errors} success="Lish settings saved." />

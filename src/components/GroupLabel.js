@@ -5,7 +5,7 @@ export default function GroupLabel(props) {
   if (props.object.group) {
     return (
       <span>
-        <span className="text-muted">{props.object.group}{" / "}</span>
+        <span className="text-muted">{props.object.group}{' / '}</span>
         <strong>{props.object.label}</strong>
       </span>
     );

@@ -1,4 +1,5 @@
 import { actions } from '../generic/linodes';
+import { actions as imageActions } from '../generic/images';
 import { fetch } from '../fetch';
 
 
@@ -70,15 +71,17 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   return async (dispatch) => {
     dispatch(actions.disks.one({ id: diskId, size }, linodeId, diskId));
     await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
-                              { size }));
+      { size }));
     // TODO: fetch until complete
   };
 }
 
 export function imagizeLinodeDisk(linodeId, diskId, data) {
   return async (dispatch) => {
-    await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/imagize`, data));
-    // TODO: fetch until complete
+    const imagizeUrl = `/linode/instances/${linodeId}/disks/${diskId}/imagize`;
+    const image = await dispatch(fetch.post(imagizeUrl, data));
+    dispatch(imageActions.one(image));
+    return image;
   };
 }
 
@@ -94,15 +97,17 @@ export function linodeBackups(linodeId) {
   };
 }
 
-export function linodeStats(linodeId) {
+export function linodeStats(linodeId, year, month) {
   return async (dispatch) => {
-    const { data: _stats } = await dispatch(fetch.get(`/linode/instances/${linodeId}/stats`));
+    const path = year && month ? `/linode/instances/${linodeId}/stats/${year}/${month}` :
+      `/linode/instances/${linodeId}/stats`;
+    const { data: _stats } = await dispatch(fetch.get(path));
     dispatch(actions.one({ _stats }, linodeId));
   };
 }
 
 export function cloneLinode(linodeId, regionId, planId, backups, label,
-                            targetId = undefined, configs = [], disks = []) {
+  targetId = undefined, configs = [], disks = []) {
   return async function (dispatch) {
     const clonedLinode = await dispatch(fetch.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,

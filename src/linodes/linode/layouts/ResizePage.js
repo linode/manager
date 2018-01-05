@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   FormGroup,
   FormGroupError,
@@ -10,8 +10,8 @@ import {
   FormSummary,
   SubmitButton,
   Input,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
@@ -68,7 +68,7 @@ export class ResizePage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Resize Linode' }}
         >
-          <FormGroup className="row">
+          <FormGroup className="row" name="current">
             <label className="col-sm-3 col-form-label">Current Plan</label>
             <div className="col-sm-9">
               <Input disabled value={planStyle(types.types[currentType])} />
@@ -87,7 +87,7 @@ export class ResizePage extends Component {
               <FormGroupError errors={errors} name="type" inline={false} />
             </div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={loading}

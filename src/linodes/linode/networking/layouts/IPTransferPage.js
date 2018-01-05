@@ -1,16 +1,16 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
   Select,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
@@ -26,7 +26,7 @@ import { selectLinode } from '../../utilities';
 
 
 export class IPTransferPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }, { linodeLabel }) {
     const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     await Promise.all([
@@ -90,7 +90,7 @@ export class IPTransferPage extends Component {
 
   otherLinodes() {
     const { linodes, linode } = this.props;
-    return Object.values(_.pickBy(linodes, l => l.region === linode.region))
+    return Object.values(pickBy(linodes, l => l.region === linode.region))
       .filter(l => l.id !== linode.id);
   }
 
@@ -122,7 +122,7 @@ export class IPTransferPage extends Component {
             onSubmit={this.onSubmit}
             analytics={{ title: 'IP Transfer Settings' }}
           >
-            <FormGroup className="row">
+            <FormGroup className="row" name="transfer">
               <div className="col-lg-6 col-md-12 col-sm-12">
                 <label className="col-form-label">Linode A:</label>
                 <span>{linode.label}</span>
@@ -138,7 +138,7 @@ export class IPTransferPage extends Component {
                 />
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup className="row" name="IPs">
               <div className="col-lg-6 col-md-12 col-sm-12" id="sectionA">
                 <IPList
                   linode={linode}

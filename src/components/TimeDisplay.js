@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+
 import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -15,7 +16,7 @@ export default function TimeDisplay(props) {
   return (
     <span
       title={utcTime.format('MMM D YYYY h:mm A z')}
-    >{props.capitalize ? _.capitalize(label) : label}</span>
+    >{props.capitalize ? capitalize(label) : label}</span>
   );
 }
 

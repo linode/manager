@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.17.0] 2017-01-08
+### Added
+- Pre-commit hook to run "yarn test && yarn lint"
+- Paravirt and Fullvirt appear with a description
+- Notification Banners for various account and Linode states
+- User feedback when there is an error performing a power action
+### Fixed
+- Allow users to reboot into something other than Finnix after using Finnix
+- Backups window descriptions can cross midnight
+- OAuth Redirect UI doesn't overflow its container
+- Updates to and removals of IP RDNS appear without refresh
+- Clean up a variety of required-prop warnings
+- Updates for changes to the /images field names
+### Changed
+- The Add Image form now shows disk selection only for complex Linodes
+- Upgraded to React 15.6 from React 15.1
+- Tests now run using Jest instead of Karma
+- Manager, Docs, and Components now in separate repos
+- Backup window selection is a multi-step process
+- Reduced payload size via specific lodash imports
+
 ## [0.16.4] 2017-12-12
 ### Fixed
 - 0.16.3 changes were lost in a squash

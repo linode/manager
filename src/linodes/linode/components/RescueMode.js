@@ -1,14 +1,14 @@
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Form,
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
+} from 'linode-components';
 
 import { rescueLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -30,7 +30,7 @@ export default class RescueMode extends Component {
   componentWillMount() {
     // sort by filesystem to put rescue disks in "ext*", "raw", "swap" order naturally
     const slots = AVAILABLE_DISK_SLOTS[this.props.linode.hypervisor];
-    const sortedDisks = _.sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
+    const sortedDisks = sortBy(this.props.linode._disks.disks, ['filesystem', 'id']);
     const someDisks = sortedDisks.slice(0, slots.length - 0);
     const devices = someDisks.reduce(function (devices, disk, index) {
       return { ...devices, [slots[index]]: JSON.stringify({ disk_id: disk.id }) };
@@ -73,11 +73,11 @@ export default class RescueMode extends Component {
               errors={errors}
             />
           ))}
-          <FormGroup className="row">
+          <FormGroup className="row" name="finnix">
             <label className="col-sm-3 row-label">/dev/{slots[slots.length - 1]}</label>
             <div className="col-sm-9">Finnix Media</div>
           </FormGroup>
-          <FormGroup className="row">
+          <FormGroup className="row" name="submit">
             <div className="offset-sm-3 col-sm-9">
               <SubmitButton
                 disabled={loading}

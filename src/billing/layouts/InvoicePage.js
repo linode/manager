@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
-import { Table } from 'linode-components/tables';
+import { Card, CardHeader } from 'linode-components';
+import { Breadcrumbs } from 'linode-components';
+import { Table } from 'linode-components';
 import Currency from '~/components/Currency';
 import api from '~/api';
 import { setSource } from '~/actions/source';
@@ -15,7 +15,7 @@ import { getStorage } from '~/storage';
 
 
 export class InvoicePage extends Component {
-  static async preload({ dispatch, getState }, { invoiceId }) {
+  static async preload({ dispatch }, { invoiceId }) {
     await dispatch(api.invoices.items.all([invoiceId]));
   }
 
@@ -113,7 +113,7 @@ export class InvoicePage extends Component {
 InvoicePage.propTypes = {
   dispatch: PropTypes.func,
   invoice: PropTypes.object.isRequired,
-  items: PropTypes.object,
+  items: PropTypes.array,
 };
 
 function select(state, ownProps) {

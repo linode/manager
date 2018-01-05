@@ -1,7 +1,8 @@
-import _ from 'lodash';
 import React from 'react';
+import isFunction from 'lodash/isFunction';
+import capitalize from 'lodash/capitalize';
 
-import { DeleteModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { removeSelected } from '~/actions/select';
@@ -9,13 +10,13 @@ import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectType,
-                                  labelKey = 'label', deleteAction = 'delete',
-                                  deleteActionPending = 'deleting', idKey = 'id') {
+  labelKey = 'label', deleteAction = 'delete',
+  deleteActionPending = 'deleting', idKey = 'id') {
   return function (_toDelete) {
-    const labelFn = _.isFunction(labelKey) ? labelKey : (o) => o[labelKey];
+    const labelFn = isFunction(labelKey) ? labelKey : (o) => o[labelKey];
     const toDelete = Array.isArray(_toDelete) ? _toDelete : [_toDelete];
 
-    let title = `Delete ${_.capitalize(objectLabel)}`;
+    let title = `Delete ${capitalize(objectLabel)}`;
     if (toDelete.length > 1) {
       title += 's';
     }

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import filter from 'lodash/filter';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { ExternalLink } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
+import { ExternalLink } from 'linode-components';
+import { Card, CardHeader } from 'linode-components';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
@@ -54,7 +54,7 @@ export class StackScriptPage extends Component {
                   <Settings
                     dispatch={dispatch}
                     stackscript={stackscript}
-                    images={_.filter(images, i => i.is_public)}
+                    images={filter(images, i => i.is_public)}
                   />
                 </Card>
               </section>

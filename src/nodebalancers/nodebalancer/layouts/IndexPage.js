@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
-import { Tabs } from 'linode-components/tabs';
+import { Tabs } from 'linode-components';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
 
@@ -14,7 +14,7 @@ import { ChainedDocumentTitle, GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel }) {
+  static async preload({ dispatch }, { nbLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
     await dispatch(api.nodebalancers.configs.all([id]));
   }

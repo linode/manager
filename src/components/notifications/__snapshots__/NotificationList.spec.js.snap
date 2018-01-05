@@ -1,0 +1,1050 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/notifications/NotificationList should render without error 1`] = `
+ShallowWrapper {
+  "length": 1,
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <NotificationList
+    events={
+      Object {
+        "events": Object {
+          "385": Object {
+            "action": "linode_reboot",
+            "created": "2016-11-21T20:03:40",
+            "entity": Object {
+              "label": "linode-www2",
+            },
+            "finished": null,
+            "id": 385,
+            "label_message": "",
+            "linode_id": 1237,
+            "nodebalancer_id": null,
+            "percent_complete": 100,
+            "read": false,
+            "seen": false,
+            "stackscript_id": null,
+            "status": "finished",
+            "updated": "2016-11-21T20:03:40",
+          },
+          "386": Object {
+            "action": "linode_reboot",
+            "created": "2016-11-21T20:03:40",
+            "entity": Object {
+              "label": "linode-www2",
+            },
+            "finished": null,
+            "id": 386,
+            "label_message": "",
+            "linode_id": 1237,
+            "nodebalancer_id": null,
+            "percent_complete": 100,
+            "read": true,
+            "seen": false,
+            "stackscript_id": null,
+            "status": "finished",
+            "updated": "2016-11-21T20:12:40",
+          },
+          "387": Object {
+            "action": "linode_shutdown",
+            "created": "2016-11-21T20:03:40",
+            "entity": Object {
+              "label": "linode-www2",
+            },
+            "finished": null,
+            "id": 385,
+            "label_message": "",
+            "linode_id": 1237,
+            "nodebalancer_id": null,
+            "percent_complete": 100,
+            "read": false,
+            "seen": false,
+            "stackscript_id": null,
+            "status": "finished",
+            "updated": "2016-11-21T20:03:40",
+          },
+          "388": Object {
+            "action": "linode_boot",
+            "created": "2016-11-21T20:03:40",
+            "entity": Object {
+              "label": "linode-www2",
+            },
+            "finished": null,
+            "id": 385,
+            "label_message": "",
+            "linode_id": 1237,
+            "nodebalancer_id": null,
+            "percent_complete": 100,
+            "read": false,
+            "seen": false,
+            "stackscript_id": null,
+            "status": "finished",
+            "updated": "2016-11-21T20:03:40",
+          },
+        },
+        "ids": Array [
+          385,
+          386,
+          385,
+          385,
+        ],
+        "pagesFetched": Array [
+          1,
+        ],
+        "plural": "events",
+        "singular": "event",
+        "totalPages": 1,
+        "totalResults": 4,
+      }
+    }
+    open={false}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "host",
+    "props": Object {
+      "children": <div
+        className="NotificationList-body"
+      >
+        <div>
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 386,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": true,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:12:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <div
+            className="NotificationList-listItem NotificationList-end text-sm-center"
+            onClick={null}
+          >
+            No more notifications.
+          </div>
+        </div>
+      </div>,
+      "className": "NotificationList ",
+    },
+    "ref": null,
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <div>
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 386,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": true,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:12:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <NotificationListItem
+            event={
+              Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              }
+            }
+            onClick={undefined}
+          />
+          <div
+            className="NotificationList-listItem NotificationList-end text-sm-center"
+            onClick={null}
+          >
+            No more notifications.
+          </div>
+        </div>,
+        "className": "NotificationList-body",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            Array [
+              <NotificationListItem
+                event={
+                  Object {
+                    "action": "linode_reboot",
+                    "created": "2016-11-21T20:03:40",
+                    "entity": Object {
+                      "label": "linode-www2",
+                    },
+                    "finished": null,
+                    "id": 385,
+                    "label_message": "",
+                    "linode_id": 1237,
+                    "nodebalancer_id": null,
+                    "percent_complete": 100,
+                    "read": false,
+                    "seen": false,
+                    "stackscript_id": null,
+                    "status": "finished",
+                    "updated": "2016-11-21T20:03:40",
+                  }
+                }
+                onClick={undefined}
+              />,
+              <NotificationListItem
+                event={
+                  Object {
+                    "action": "linode_reboot",
+                    "created": "2016-11-21T20:03:40",
+                    "entity": Object {
+                      "label": "linode-www2",
+                    },
+                    "finished": null,
+                    "id": 386,
+                    "label_message": "",
+                    "linode_id": 1237,
+                    "nodebalancer_id": null,
+                    "percent_complete": 100,
+                    "read": true,
+                    "seen": false,
+                    "stackscript_id": null,
+                    "status": "finished",
+                    "updated": "2016-11-21T20:12:40",
+                  }
+                }
+                onClick={undefined}
+              />,
+              <NotificationListItem
+                event={
+                  Object {
+                    "action": "linode_reboot",
+                    "created": "2016-11-21T20:03:40",
+                    "entity": Object {
+                      "label": "linode-www2",
+                    },
+                    "finished": null,
+                    "id": 385,
+                    "label_message": "",
+                    "linode_id": 1237,
+                    "nodebalancer_id": null,
+                    "percent_complete": 100,
+                    "read": false,
+                    "seen": false,
+                    "stackscript_id": null,
+                    "status": "finished",
+                    "updated": "2016-11-21T20:03:40",
+                  }
+                }
+                onClick={undefined}
+              />,
+              <NotificationListItem
+                event={
+                  Object {
+                    "action": "linode_reboot",
+                    "created": "2016-11-21T20:03:40",
+                    "entity": Object {
+                      "label": "linode-www2",
+                    },
+                    "finished": null,
+                    "id": 385,
+                    "label_message": "",
+                    "linode_id": 1237,
+                    "nodebalancer_id": null,
+                    "percent_complete": 100,
+                    "read": false,
+                    "seen": false,
+                    "stackscript_id": null,
+                    "status": "finished",
+                    "updated": "2016-11-21T20:03:40",
+                  }
+                }
+                onClick={undefined}
+              />,
+            ],
+            <div
+              className="NotificationList-listItem NotificationList-end text-sm-center"
+              onClick={null}
+            >
+              No more notifications.
+            </div>,
+          ],
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": "0",
+            "nodeType": "function",
+            "props": Object {
+              "event": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
+              "onClick": undefined,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": "1",
+            "nodeType": "function",
+            "props": Object {
+              "event": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 386,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": true,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:12:40",
+              },
+              "onClick": undefined,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": "2",
+            "nodeType": "function",
+            "props": Object {
+              "event": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
+              "onClick": undefined,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": "3",
+            "nodeType": "function",
+            "props": Object {
+              "event": Object {
+                "action": "linode_reboot",
+                "created": "2016-11-21T20:03:40",
+                "entity": Object {
+                  "label": "linode-www2",
+                },
+                "finished": null,
+                "id": 385,
+                "label_message": "",
+                "linode_id": 1237,
+                "nodebalancer_id": null,
+                "percent_complete": 100,
+                "read": false,
+                "seen": false,
+                "stackscript_id": null,
+                "status": "finished",
+                "updated": "2016-11-21T20:03:40",
+              },
+              "onClick": undefined,
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "host",
+            "props": Object {
+              "children": "No more notifications.",
+              "className": "NotificationList-listItem NotificationList-end text-sm-center",
+              "onClick": null,
+            },
+            "ref": null,
+            "rendered": "No more notifications.",
+            "type": "div",
+          },
+        ],
+        "type": "div",
+      },
+      "type": "div",
+    },
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": <div
+          className="NotificationList-body"
+        >
+          <div>
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 386,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": true,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:12:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <div
+              className="NotificationList-listItem NotificationList-end text-sm-center"
+              onClick={null}
+            >
+              No more notifications.
+            </div>
+          </div>
+        </div>,
+        "className": "NotificationList ",
+      },
+      "ref": null,
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": <div>
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 386,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": true,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:12:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <NotificationListItem
+              event={
+                Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                }
+              }
+              onClick={undefined}
+            />
+            <div
+              className="NotificationList-listItem NotificationList-end text-sm-center"
+              onClick={null}
+            >
+              No more notifications.
+            </div>
+          </div>,
+          "className": "NotificationList-body",
+        },
+        "ref": null,
+        "rendered": Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": Array [
+              Array [
+                <NotificationListItem
+                  event={
+                    Object {
+                      "action": "linode_reboot",
+                      "created": "2016-11-21T20:03:40",
+                      "entity": Object {
+                        "label": "linode-www2",
+                      },
+                      "finished": null,
+                      "id": 385,
+                      "label_message": "",
+                      "linode_id": 1237,
+                      "nodebalancer_id": null,
+                      "percent_complete": 100,
+                      "read": false,
+                      "seen": false,
+                      "stackscript_id": null,
+                      "status": "finished",
+                      "updated": "2016-11-21T20:03:40",
+                    }
+                  }
+                  onClick={undefined}
+                />,
+                <NotificationListItem
+                  event={
+                    Object {
+                      "action": "linode_reboot",
+                      "created": "2016-11-21T20:03:40",
+                      "entity": Object {
+                        "label": "linode-www2",
+                      },
+                      "finished": null,
+                      "id": 386,
+                      "label_message": "",
+                      "linode_id": 1237,
+                      "nodebalancer_id": null,
+                      "percent_complete": 100,
+                      "read": true,
+                      "seen": false,
+                      "stackscript_id": null,
+                      "status": "finished",
+                      "updated": "2016-11-21T20:12:40",
+                    }
+                  }
+                  onClick={undefined}
+                />,
+                <NotificationListItem
+                  event={
+                    Object {
+                      "action": "linode_reboot",
+                      "created": "2016-11-21T20:03:40",
+                      "entity": Object {
+                        "label": "linode-www2",
+                      },
+                      "finished": null,
+                      "id": 385,
+                      "label_message": "",
+                      "linode_id": 1237,
+                      "nodebalancer_id": null,
+                      "percent_complete": 100,
+                      "read": false,
+                      "seen": false,
+                      "stackscript_id": null,
+                      "status": "finished",
+                      "updated": "2016-11-21T20:03:40",
+                    }
+                  }
+                  onClick={undefined}
+                />,
+                <NotificationListItem
+                  event={
+                    Object {
+                      "action": "linode_reboot",
+                      "created": "2016-11-21T20:03:40",
+                      "entity": Object {
+                        "label": "linode-www2",
+                      },
+                      "finished": null,
+                      "id": 385,
+                      "label_message": "",
+                      "linode_id": 1237,
+                      "nodebalancer_id": null,
+                      "percent_complete": 100,
+                      "read": false,
+                      "seen": false,
+                      "stackscript_id": null,
+                      "status": "finished",
+                      "updated": "2016-11-21T20:03:40",
+                    }
+                  }
+                  onClick={undefined}
+                />,
+              ],
+              <div
+                className="NotificationList-listItem NotificationList-end text-sm-center"
+                onClick={null}
+              >
+                No more notifications.
+              </div>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": "0",
+              "nodeType": "function",
+              "props": Object {
+                "event": Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                },
+                "onClick": undefined,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": "1",
+              "nodeType": "function",
+              "props": Object {
+                "event": Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 386,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": true,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:12:40",
+                },
+                "onClick": undefined,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": "2",
+              "nodeType": "function",
+              "props": Object {
+                "event": Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                },
+                "onClick": undefined,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": "3",
+              "nodeType": "function",
+              "props": Object {
+                "event": Object {
+                  "action": "linode_reboot",
+                  "created": "2016-11-21T20:03:40",
+                  "entity": Object {
+                    "label": "linode-www2",
+                  },
+                  "finished": null,
+                  "id": 385,
+                  "label_message": "",
+                  "linode_id": 1237,
+                  "nodebalancer_id": null,
+                  "percent_complete": 100,
+                  "read": false,
+                  "seen": false,
+                  "stackscript_id": null,
+                  "status": "finished",
+                  "updated": "2016-11-21T20:03:40",
+                },
+                "onClick": undefined,
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": "No more notifications.",
+                "className": "NotificationList-listItem NotificationList-end text-sm-center",
+                "onClick": null,
+              },
+              "ref": null,
+              "rendered": "No more notifications.",
+              "type": "div",
+            },
+          ],
+          "type": "div",
+        },
+        "type": "div",
+      },
+      "type": "div",
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactFifteenAdapter {
+      "options": Object {
+        "supportPrevContextArgumentOfComponentDidUpdate": true,
+      },
+    },
+  },
+}
+`;

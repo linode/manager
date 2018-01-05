@@ -1,10 +1,10 @@
-import _ from 'lodash';
+import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { ModalFormGroup, Select } from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
-import { FormModalBody } from 'linode-components/modals';
+import { ModalFormGroup, Select } from 'linode-components';
+import { onChange } from 'linode-components';
+import { FormModalBody } from 'linode-components';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -84,7 +84,7 @@ export default class AttachVolume extends Component {
           value: parseInt(config.id),
         };
       }
-    ) : null;
+      ) : null;
 
     const linodeConfigs = [
       ...(allConfigs[linode] || configs || {}),
@@ -95,7 +95,7 @@ export default class AttachVolume extends Component {
       this.setState({ config });
     }
 
-    const filteredLinodes = _.pickBy(linodes, linode => linode.region === volume.region);
+    const filteredLinodes = pickBy(linodes, linode => linode.region === volume.region);
 
     return (
       <FormModalBody

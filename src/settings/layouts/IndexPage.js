@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components';
 import {
   Radio,
   Checkboxes,
@@ -10,8 +10,8 @@ import {
   FormGroup,
   FormSummary,
   SubmitButton,
-} from 'linode-components/forms';
-import { onChange } from 'linode-components/forms/utilities';
+} from 'linode-components';
+import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions';
 import api from '~/api';
@@ -68,7 +68,7 @@ export class IndexPage extends Component {
               onSubmit={this.onSubmit}
               analytics={{ title: 'Account Settings' }}
             >
-              <FormGroup className="row">
+              <FormGroup className="row" name="default">
                 <label className="col-form-label col-sm-2">Default Behavior</label>
                 <div className="col-sm-10">
                   <Checkboxes>
@@ -95,7 +95,7 @@ export class IndexPage extends Component {
                   </div>
                 </div>
               </FormGroup>
-              <FormGroup className="row">
+              <FormGroup className="row" name="submit">
                 <div className="offset-sm-2 col-sm-10">
                   <SubmitButton disabled={loading} />
                   <FormSummary errors={errors} success="Account saved." />
