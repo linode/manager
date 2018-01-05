@@ -109,19 +109,19 @@ IndexPage.propTypes = {
   account: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     account: state.api.account,
   };
-}
+};
+
+const preloadRequest = async (dispatch, props) => {
+  if (!Object.keys(props.account).length) {
+    await dispatch(api.account.one());
+  }
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      if (!Object.keys(props.account).length) {
-        await dispatch(api.account.one());
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

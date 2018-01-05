@@ -95,18 +95,18 @@ function mapStateToProps(state, props) {
   };
 }
 
+const preloadRequest = async (dispatch, props) => {
+  const { ids, params: { stackscriptId } } = props;
+  const requests = [api.stackscripts.one([stackscriptId])];
+
+  if (!ids.length) {
+    requests.push(api.images.all());
+  }
+
+  return Promise.all(requests.map(dispatch));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      const { ids, params: { stackscriptId } } = props;
-      const requests = [api.stackscripts.one([stackscriptId])];
-
-      if (!ids.length) {
-        requests.push(api.images.all());
-      }
-
-      return Promise.all(requests.map(dispatch));
-    }
-  )
+  Preload(preloadRequest)
 )(StackScriptPage);

@@ -48,13 +48,13 @@ IndexPage.propTypes = {
   location: PropTypes.object,
 };
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+  await dispatch(getIPs(id));
+};
+
 export default compose(
   connect(selectLinode),
   withRouter,
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(getIPs(id));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

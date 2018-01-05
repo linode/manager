@@ -92,17 +92,17 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+  const requests = [
+    api.types.one([type.id]),
+    api.linodes.configs.all([id]),
+  ];
+
+  await Promise.all(requests.map(dispatch));
+};
+
 export default compose(
   connect(selectLinode),
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      const requests = [
-        api.types.one([type.id]),
-        api.linodes.configs.all([id]),
-      ];
-
-      await Promise.all(requests.map(dispatch));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

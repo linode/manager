@@ -180,14 +180,13 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  // Restricted users will get a 403 on /v4/profile/users
+  const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
+  await dispatch(api.users.all()).catch(onReject);
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      // Restricted users will get a 403 on /v4/profile/users
-      const onReject = reason => reason.status !== 403 ? Promise.reject(reason) : null;
-
-      await dispatch(api.users.all()).catch(onReject);
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

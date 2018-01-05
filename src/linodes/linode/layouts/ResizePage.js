@@ -109,13 +109,13 @@ function mapStateToProps(state, props) {
   return { linode, types };
 }
 
+const preloadRequest = async (dispatch, props) => {
+  if (!props.types.ids.length) {
+    await dispatch(api.types.all());
+  }
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      if (!props.types.ids.length) {
-        await dispatch(api.types.all());
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(ResizePage);

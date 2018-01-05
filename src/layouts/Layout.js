@@ -154,20 +154,20 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch, props) => {
+  // This is a special preload that is only called once on page load because
+  // all pages are rendered through here and preloads don't get called again
+  // if they were just called.
+  if (isEmpty(props.username)) {
+    await Promise.all([
+      api.profile.one(),
+      api.banners.one(),
+    ].map(dispatch));
+    // Needed for time display component that is not attached to Redux.
+  }
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    // This is a special preload that is only called once on page load because
-    // all pages are rendered through here and preloads don't get called again
-    // if they were just called.
-    async function (dispatch, props) {
-      if (isEmpty(props.username)) {
-        await Promise.all([
-          api.profile.one(),
-          api.banners.one(),
-        ].map(dispatch));
-        // Needed for time display component that is not attached to Redux.
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(Layout);

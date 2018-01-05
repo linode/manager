@@ -67,12 +67,12 @@ function mapStateToProps(state, ownProps) {
   return { domain };
 }
 
+const preloadRequest = async (dispatch, { params: { domainLabel } }) => {
+  const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
+  await dispatch(api.domains.records.all([id]));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { domainLabel } }) {
-      const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
-      await dispatch(api.domains.records.all([id]));
-    }
-  )
+  Preload(preloadRequest)
 )(ZonePage);

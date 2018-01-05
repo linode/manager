@@ -174,17 +174,17 @@ IndexPage.propTypes = {
 };
 
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     tickets: state.api.tickets,
   };
-}
+};
+
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.tickets.all());
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await dispatch(api.tickets.all());
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

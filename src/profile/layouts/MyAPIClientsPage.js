@@ -178,18 +178,18 @@ MyAPIClientsPage.propTypes = {
   selectedMap: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     clients: state.api.clients,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
-}
+};
+
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.clients.all());
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await dispatch(api.clients.all());
-    }
-  )
+  Preload(preloadRequest)
 )(MyAPIClientsPage);

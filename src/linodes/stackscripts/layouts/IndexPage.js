@@ -193,11 +193,11 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

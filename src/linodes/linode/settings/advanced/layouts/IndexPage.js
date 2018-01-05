@@ -38,20 +38,20 @@ const mapStateToProps = (state, props) => {
   };
 };
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+  const requests = [
+    api.linodes.disks.all([id]),
+    api.linodes.volumes.all([id]),
+    api.kernels.page(0),
+    api.images.all(),
+  ];
+
+  await Promise.all(requests.map(r => dispatch(r)));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-      const requests = [
-        api.linodes.disks.all([id]),
-        api.linodes.volumes.all([id]),
-        api.kernels.page(0),
-        api.images.all(),
-      ];
-
-      await Promise.all(requests.map(r => dispatch(r)));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

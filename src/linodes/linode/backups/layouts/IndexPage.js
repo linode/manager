@@ -98,15 +98,15 @@ IndexPage.propTypes = {
   route: PropTypes.object.isRequired,
 };
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+  if (backups.enabled) {
+    await dispatch(linodeBackups(id));
+  }
+};
+
 export default compose(
   connect(selectLinode),
   withRouter,
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      if (backups.enabled) {
-        await dispatch(linodeBackups(id));
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

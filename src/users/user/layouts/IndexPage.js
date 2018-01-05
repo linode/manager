@@ -75,11 +75,11 @@ export function selectUser(state, props) {
   return { user };
 }
 
+const preloadRequest = async (dispatch, { username }) => {
+  await dispatch(getObjectByLabelLazily('users', username, 'username'));
+};
+
 export default compose(
   connect(selectUser),
-  Preload(
-    async function (dispatch, { username }) {
-      await dispatch(getObjectByLabelLazily('users', username, 'username'));
-    }
-  ),
+  Preload(preloadRequest),
 )(IndexPage);

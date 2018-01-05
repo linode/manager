@@ -125,11 +125,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
+const preloadRequest = async (dispatch, { params: { invoiceId } }) => {
+  await dispatch(api.invoices.items.all([invoiceId]));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { invoiceId } }) {
-      await dispatch(api.invoices.items.all([invoiceId]));
-    }
-  )
+  Preload(preloadRequest)
 )(InvoicePage);

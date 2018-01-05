@@ -181,11 +181,11 @@ function select(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.domains.all());
+};
+
 export default compose(
   connect(select),
-  Preload(
-    async function (dispatch) {
-      await dispatch(api.domains.all());
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

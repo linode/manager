@@ -81,13 +81,13 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  await Promise.all([
+    api.linodes, api.volumes,
+  ].map(o => dispatch(o.all())));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await Promise.all([
-        api.linodes, api.volumes,
-      ].map(o => dispatch(o.all())));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);
