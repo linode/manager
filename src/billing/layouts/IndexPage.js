@@ -60,9 +60,11 @@ export default compose(
   connect(),
   Preload(
     async function (dispatch) {
-      await dispatch(api.account.one());
-      await dispatch(api.invoices.all());
-      await dispatch(api.payments.all());
+      await Promise.all([
+        api.account.one(),
+        api.invoices.all(),
+        api.payments.all(),
+      ].map(dispatch));
     }
   )
 )(IndexPage);
