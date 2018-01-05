@@ -195,19 +195,19 @@ function mapStateToProps(state, ownProps) {
   return { nodebalancer, timezone, transfer };
 }
 
+const preloadRequest = async (dispatch, props) => {
+  const { params: { nbLabel } } = props;
+  await dispatch(transferPool());
+  const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+
+  try {
+    await dispatch(nodebalancerStats(id));
+  } catch (e) {
+    // Stats aren't available.
+  }
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      const { params: { nbLabel } } = props;
-      await dispatch(transferPool());
-      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-
-      try {
-        await dispatch(nodebalancerStats(id));
-      } catch (e) {
-        // Stats aren't available.
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(DashboardPage);

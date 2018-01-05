@@ -56,15 +56,15 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+const preloadRequest = async (dispatch) => {
+  await Promise.all([
+    api.account.one(),
+    api.invoices.all(),
+    api.payments.all(),
+  ].map(dispatch));
+};
+
 export default compose(
   connect(),
-  Preload(
-    async function (dispatch) {
-      await Promise.all([
-        api.account.one(),
-        api.invoices.all(),
-        api.payments.all(),
-      ].map(dispatch));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

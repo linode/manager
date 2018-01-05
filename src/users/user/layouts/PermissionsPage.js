@@ -34,8 +34,10 @@ export class PermissionsPage extends Component {
     const { dispatch, user: { username } } = this.props;
     const { global, linode, nodebalancer, domain,
       stackscript, longview, image, volume } = this.state;
-    const data = { global, linode, nodebalancer,
-      domain, stackscript, longview, image, volume };
+    const data = {
+      global, linode, nodebalancer,
+      domain, stackscript, longview, image, volume,
+    };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.users.permissions.put(data, username),
@@ -296,15 +298,15 @@ PermissionsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
+const preloadRequest = async (dispatch, { params: { username } }) => {
+  const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
+
+  if (user.restricted) {
+    await dispatch(api.users.permissions.one([username]));
+  }
+};
+
 export default compose(
   connect(selectUser),
-  Preload(
-    async function (dispatch, { params: { username } }) {
-      const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
-
-      if (user.restricted) {
-        await dispatch(api.users.permissions.one([username]));
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(PermissionsPage);

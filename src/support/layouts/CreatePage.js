@@ -166,22 +166,22 @@ CreatePage.propTypes = {
   nodebalancers: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     nodebalancers: state.api.nodebalancers.nodebalancers,
     linodes: state.api.linodes.linodes,
     domains: state.api.domains.domains,
     volumes: state.api.volumes.volumes,
   };
-}
+};
+
+const preloadRequest = async (dispatch) => {
+  await Promise.all([
+    api.linodes, api.domains, api.nodebalancers, api.volumes,
+  ].map(o => dispatch(o.all())));
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await Promise.all([
-        api.linodes, api.domains, api.nodebalancers, api.volumes,
-      ].map(o => dispatch(o.all())));
-    }
-  )
+  Preload(preloadRequest)
 )(CreatePage);

@@ -153,13 +153,13 @@ function mapStateToProps({ api }, props) {
   };
 }
 
+const preloadRequest = async (dispatch, props) => {
+  if (isEmpty(props.images) || isEmpty(props.images.ids)) {
+    await dispatch(api.images.all());
+  }
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      if (isEmpty(props.images) || isEmpty(props.images.ids)) {
-        await dispatch(api.images.all());
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(RebuildPage);

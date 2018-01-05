@@ -188,22 +188,24 @@ TicketPage.propTypes = {
   replies: PropTypes.array.isRequired,
 };
 
-function mapStateToProps(state, props) {
+const mapStateToProps = (state, props) => {
   const { ticketId } = props.params;
   const ticket = state.api.tickets.tickets[ticketId];
   return {
     ticket,
     replies: ticket && ticket._replies.replies,
   };
-}
+};
+
+const preloadRequest = async (dispatch, props) => {
+  const { routeParams: { ticketId } } = props;
+  await Promise.all([
+    getObjectByLabelLazily('tickets', ticketId, 'id'),
+    api.tickets.replies.all([ticketId]),
+  ].map(dispatch));
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, props) {
-      const { routeParams: { ticketId } } = props;
-      await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-      await dispatch(api.tickets.replies.all([ticketId]));
-    }
-  )
+  Preload(preloadRequest)
 )(TicketPage);

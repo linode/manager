@@ -287,18 +287,18 @@ function mapStateToProps(state, props) {
   return { linode, username, timezone, transfer, images };
 }
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  await dispatch(transferPool());
+  const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+  try {
+    await dispatch(linodeStats(id));
+  } catch (e) {
+    // Stats aren't available.
+  }
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      await dispatch(transferPool());
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-      try {
-        await dispatch(linodeStats(id));
-      } catch (e) {
-        // Stats aren't available.
-      }
-    }
-  )
+  Preload(preloadRequest)
 )(DashboardPage);

@@ -82,13 +82,12 @@ function mapStateToProps(state, props) {
   const config = nodebalancer._configs.configs[configId];
   return { nodebalancer, config };
 }
+const preloadRequest = async (dispatch, { params: { nbLabel } }) => {
+  const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+  await dispatch(api.nodebalancers.configs.all([id]));
+};
 
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { nbLabel } }) {
-      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(api.nodebalancers.configs.all([id]));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

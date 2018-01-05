@@ -40,15 +40,15 @@ RescuePage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
+const preloadReqeust = async (dispatch, { params: { linodeLabel } }) => {
+  const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+  await Promise.all([
+    api.linodes.disks,
+    api.linodes.volumes,
+  ].map(o => dispatch(o.all([id]))));
+};
+
 export default compose(
   connect(selectLinode),
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await Promise.all([
-        api.linodes.disks,
-        api.linodes.volumes,
-      ].map(o => dispatch(o.all([id]))));
-    }
-  )
+  Preload(preloadReqeust)
 )(RescuePage);

@@ -183,16 +183,16 @@ function mapStateToProps(state, props) {
   return { linode, linodes };
 }
 
+const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+  const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+
+  await Promise.all([
+    ipv4s(region),
+    api.linodes.all([], undefined, createHeaderFilter({ region })),
+  ].map(dispatch));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch, { params: { linodeLabel } }) {
-      const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-      await Promise.all([
-        ipv4s(region),
-        api.linodes.all([], undefined, createHeaderFilter({ region })),
-      ].map(dispatch));
-    }
-  )
+  Preload(preloadRequest)
 )(IPTransferPage);

@@ -210,14 +210,14 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  await Promise.all([
+    api.images.all(),
+    api.linodes.all(),
+  ].map(dispatch));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      await Promise.all([
-        api.images.all(),
-        api.linodes.all(),
-      ].map(dispatch));
-    }
-  )
+  Preload(preloadRequest)
 )(IndexPage);

@@ -65,12 +65,12 @@ function mapStateToProps(state, props) {
   return { linode, backup, linodes };
 }
 
+const preloadRequest = async (dispatch) => {
+  // All linodes are in-fact needed for restore dialog.
+  await dispatch(api.linodes.all());
+};
+
 export default compose(
   connect(mapStateToProps),
-  Preload(
-    async function (dispatch) {
-      // All linodes are in-fact needed for restore dialog.
-      await dispatch(api.linodes.all());
-    }
-  )
+  Preload(preloadRequest)
 )(BackupPage);
