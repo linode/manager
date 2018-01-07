@@ -6,7 +6,6 @@ import _ from 'lodash';
 import { formatDNSSeconds } from '~/domains/components/SelectDNSSeconds';
 import { MasterZone } from '~/domains/components/MasterZone';
 import { api } from '~/data';
-import { Card } from 'linode-components';
 
 const { domains } = api;
 
@@ -47,27 +46,16 @@ describe('domains/components/MasterZone', () => {
       />
     );
 
-    const cards = wrapper.findWhere((n) => n.type() === Card);
 
-    const srv = wrapper.findWhere((n) => {
-      return n.type() === Card && n.prop('id') === 'srv';
-    });
+    const srv = wrapper.find('Card#srv');
 
-    const mx = cards.findWhere((n) => {
-      return n.prop('id') === 'mx';
-    });
+    const mx = wrapper.find('Card#mx');
 
-    const cname = cards.findWhere((n) => {
-      return n.prop('id') === 'cname';
-    });
+    const cname = wrapper.find('Card#cname');
 
-    const a = cards.findWhere((n) => {
-      return n.prop('id') === 'a';
-    });
+    const a = wrapper.find('Card#a');
 
-    const txt = cards.findWhere((n) => {
-      return n.prop('id') === 'txt';
-    });
+    const txt = wrapper.find('Card#txt');
 
 
     expect(srv.length).toBe(1);

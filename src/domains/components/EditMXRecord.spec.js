@@ -7,8 +7,6 @@ import EditMXRecord from '~/domains/components/EditMXRecord';
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 
-import { Input } from 'linode-components';
-
 describe('domains/components/EditMXRecord', () => {
   const sandbox = sinon.sandbox.create();
 
@@ -43,11 +41,11 @@ describe('domains/components/EditMXRecord', () => {
         close={() => { }}
       />
     );
-    const mailserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'mailserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
-    const preference = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'preference');
+    const mailserver = wrapper.find('Input#mailserver');
+
+    const subdomain = wrapper.find('Input#subdomain');
+
+    const preference = wrapper.find('Input#preference');
 
     expect(mailserver.props().value).toBe(currentRecord.target);
     expect(subdomain.props().value).toBe(currentRecord.name || currentZone.domain);
@@ -69,11 +67,9 @@ describe('domains/components/EditMXRecord', () => {
       />
     );
 
-    const mailserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'mailserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
-    const preference = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'preference');
+    const mailserver = wrapper.find('Input#mailserver');
+    const subdomain = wrapper.find('Input#subdomain');
+    const preference = wrapper.find('Input#preference');
 
     mailserver.simulate('change', createSimulatedEvent('mailserver', 'mx1.tester1234.com'));
     subdomain.simulate('change', createSimulatedEvent('subdomain', 'tester1234.com'));
@@ -110,11 +106,9 @@ describe('domains/components/EditMXRecord', () => {
       />
     );
 
-    const mailserver = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'mailserver');
-    const subdomain = wrapper.findWhere((a) => a.type() === Input && a.prop('id') === 'subdomain');
-    const preference = wrapper.findWhere((a) => a.type() === Input
-      && a.prop('id') === 'preference');
+    const mailserver = wrapper.find('Input#mailserver');
+    const subdomain = wrapper.find('Input#subdomain');
+    const preference = wrapper.find('Input#preference');
 
     mailserver.simulate('change', createSimulatedEvent('mailserver', 'mx1.tester1234.com'));
     subdomain.simulate('change', createSimulatedEvent('subdomain', 'tester1234.com'));
