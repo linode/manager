@@ -99,9 +99,9 @@ export function assignIPs(region, assignments) {
   };
 }
 
-export function setRDNS(ip, rdns) {
+export function setRDNS(ip, linodeId, rdns) {
   return async function (dispatch, getState) {
-    const { linode_id: linodeId, address, version } = ip;
+    const { address, version } = ip;
     const rawAddress = address.split('/')[0].trim();
     let _ip = await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
       { rdns }));
@@ -159,7 +159,6 @@ export function getIPs(linodeId) {
         address: ips.ipv6.link_local,
         type: 'link-local',
         version: 'ipv6',
-        linode_id: linodeId,
       };
     }
 
@@ -168,7 +167,6 @@ export function getIPs(linodeId) {
         ...ips.ipv6.slaac,
         type: 'slaac',
         version: 'ipv6',
-        linode_id: linodeId,
       };
     }
 
@@ -184,7 +182,6 @@ export function getIPs(linodeId) {
       _ips[ip.address] = {
         ...ip,
         version: 'ipv6',
-        linode_id: linodeId,
       };
     });
 
@@ -201,11 +198,11 @@ export function setShared(linodeId, ips) {
   };
 }
 
-export function deleteIP(ip) {
+export function deleteIP(ip, linodeId) {
   return async function (dispatch, getState) {
     await dispatch(fetch.delete(`/networking/ipv4/${ip.address}`));
 
-    const linode = getState().api.linodes.linodes[ip.linode_id];
+    const linode = getState().api.linodes.linodes[linodeId];
     const _ips = omitBy(linode._ips, (_, key) => key === ip.address);
     dispatch(actions.one({ _ips }, linode.id));
   };
