@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import capitalize from 'lodash/capitalize';
+
 import filter from 'lodash/filter';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
@@ -13,8 +13,7 @@ import { MassEditControl } from 'linode-components';
 import { ListHeader } from 'linode-components';
 import { ListBody } from 'linode-components';
 import { setAnalytics, setSource } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
-import { DeleteModalBody } from 'linode-components';
+import { confirmThenDelete } from '~/utilities';
 import {
   LabelCell,
   CheckboxCell,
@@ -47,27 +46,11 @@ export class IndexPage extends Component {
     dispatch(setAnalytics(['images']));
   }
 
-  deleteImages = (imagesToDelete) => {
-    const { dispatch } = this.props;
-    const imagesArr = Array.isArray(imagesToDelete) ? imagesToDelete : [imagesToDelete];
-
-    const selectedStackimages = imagesArr.map(l => l.label);
-
-    dispatch(showModal('Delete Image(s)', (
-      <DeleteModalBody
-        onSubmit={async () => {
-          const ids = imagesArr.map(function (image) { return image.id; });
-
-          await Promise.all(ids.map(id => dispatch(api.images.delete(id))));
-          dispatch(toggleSelected(OBJECT_TYPE, ids));
-          dispatch(hideModal());
-        }}
-        items={selectedStackimages}
-        typeOfItem="Images"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
-  }
+  deleteImages = confirmThenDelete(
+    this.props.dispatch,
+    'Image',
+    api.images.delete,
+    OBJECT_TYPE).bind(this);
 
   renderImageActions = ({ column, record }) => {
     const { dispatch } = this.props;
@@ -133,7 +116,7 @@ export class IndexPage extends Component {
               {
                 label: 'Size',
                 dataFn: (image) => {
-                  const size = image.min_deploy_size;
+                  const size = image.size;
                   return `${size} MB`;
                 },
               },
@@ -141,12 +124,6 @@ export class IndexPage extends Component {
                 cellComponent: TimeCell,
                 timeKey: 'created',
                 label: 'Created',
-              },
-              {
-                headerClassName: 'StatusColumn',
-                titleKey: 'status',
-                label: 'Status',
-                dataFn: (image) => capitalize(image.status),
               },
               { cellComponent: this.renderImageActions },
             ]}

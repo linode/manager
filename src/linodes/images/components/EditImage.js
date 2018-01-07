@@ -73,7 +73,7 @@ export default class EditImage extends Component {
             />
           </ModalFormGroup>
           <ModalFormGroup label="Size">
-            {image.min_deploy_size} MB
+            {image.size} MB
           </ModalFormGroup>
           <ModalFormGroup errors={errors} id="description" label="Description" apiKey="description">
             <div>
