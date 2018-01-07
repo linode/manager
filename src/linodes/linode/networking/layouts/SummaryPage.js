@@ -42,11 +42,11 @@ export class SummaryPage extends Component {
     )));
   };
 
-  resetRDNS = (ip) => {
+  resetRDNS = (ip, linodeId) => {
     const { dispatch } = this.props;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => setRDNS(ip, null),
+      () => setRDNS(ip, linodeId, null),
     ], [], ip.address));
   }
 
@@ -104,13 +104,13 @@ export class SummaryPage extends Component {
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
       groups.splice(1, 0, { elements: [
-        { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record) },
+        { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
       ] });
 
       if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
         groups[1].elements.push({
-          name, action: () => this.resetRDNS(record),
+          name, action: () => this.resetRDNS(record, linode.id),
         });
       }
     }
