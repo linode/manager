@@ -62,7 +62,7 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
 
     changeInput(modal, 'image', image.id);
     expect(modal.find('[type="number"]').props())
-      .to.have.property('min').that.equals(image.min_deploy_size);
+      .to.have.property('min').that.equals(image.size);
   });
 
   it.skip('should dismiss the modal when Cancel is clicked', async () => {
