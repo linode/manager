@@ -6,9 +6,6 @@ import EditTXTRecord from '~/domains/components/EditTXTRecord';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
-import { Input } from 'linode-components';
-import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
-
 
 describe('domains/components/EditTXTRecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -45,18 +42,12 @@ describe('domains/components/EditTXTRecord', () => {
       />
     );
 
-    const textname = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textname';
-    });
+    const textname = wrapper.find('Input#textname');
 
 
-    const textvalue = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textvalue';
-    });
+    const textvalue = wrapper.find('Input#textvalue');
 
-    const ttl = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     expect(textname.props().value).toBe(currentRecord.name);
     expect(textvalue.props().value).toBe(currentRecord.target);
@@ -79,17 +70,11 @@ describe('domains/components/EditTXTRecord', () => {
       />
     );
 
-    const textname = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textname';
-    });
+    const textname = wrapper.find('Input#textname');
 
-    const textvalue = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textvalue';
-    });
+    const textvalue = wrapper.find('Input#textvalue');
 
-    const ttl = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     textname.simulate('change', createSimulatedEvent('textname', 'somename'));
     textvalue.simulate('change', createSimulatedEvent('textvalue', 'someval'));
@@ -124,17 +109,11 @@ describe('domains/components/EditTXTRecord', () => {
       />
     );
 
-    const textname = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textname';
-    });
+    const textname = wrapper.find('Input#textname');
 
-    const textvalue = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'textvalue';
-    });
+    const textvalue = wrapper.find('Input#textvalue');
 
-    const ttl = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     textname.simulate('change', createSimulatedEvent('textname', 'somename'));
     textvalue.simulate('change', createSimulatedEvent('textvalue', 'someval'));

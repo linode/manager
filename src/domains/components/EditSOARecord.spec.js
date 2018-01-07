@@ -7,8 +7,6 @@ import EditSOARecord from '~/domains/components/EditSOARecord';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
-import { Input, Select } from 'linode-components';
-import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 
 describe('domains/components/EditSOARecord', () => {
@@ -40,33 +38,19 @@ describe('domains/components/EditSOARecord', () => {
       />
     );
 
-    const domain = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'domain';
-    });
+    const domain = wrapper.find('Input#domain');
 
-    const group = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'group';
-    });
+    const group = wrapper.find('Input#group');
 
-    const email = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'email';
-    });
+    const email = wrapper.find('Input#email');
 
-    const defaultTTL = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'defaultTTL';
-    });
+    const defaultTTL = wrapper.find('SelectDNSSeconds#defaultTTL');
 
-    const refreshRate = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'refreshRate';
-    });
+    const refreshRate = wrapper.find('SelectDNSSeconds#refreshRate');
 
-    const retryRate = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'retryRate';
-    });
+    const retryRate = wrapper.find('SelectDNSSeconds#retryRate');
 
-    const expireTime = wrapper.findWhere((n) => {
-      return n.type() === Select && n.prop('id') === 'expireTime';
-    });
+    const expireTime = wrapper.find('Select#expireTime');
 
     expect(domain.props().value).toBe(currentZone.domain);
     expect(group.props().value).toBe(currentZone.group);
@@ -89,33 +73,19 @@ describe('domains/components/EditSOARecord', () => {
       />
     );
 
-    const domain = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'domain';
-    });
+    const domain = wrapper.find('Input#domain');
 
-    const group = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'group';
-    });
+    const group = wrapper.find('Input#group');
 
-    const email = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'email';
-    });
+    const email = wrapper.find('Input#email');
 
-    const defaultTTL = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'defaultTTL';
-    });
+    const defaultTTL = wrapper.find('SelectDNSSeconds#defaultTTL');
 
-    const refreshRate = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'refreshRate';
-    });
+    const refreshRate = wrapper.find('SelectDNSSeconds#refreshRate');
 
-    const retryRate = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'retryRate';
-    });
+    const retryRate = wrapper.find('SelectDNSSeconds#retryRate');
 
-    const expireTime = wrapper.findWhere((n) => {
-      return n.type() === Select && n.prop('id') === 'expireTime';
-    });
+    const expireTime = wrapper.find('Select#expireTime');
 
     domain.simulate('change', createSimulatedEvent('domain', 'tester1234.com'));
     group.simulate('change', createSimulatedEvent('group', 'tester-zones'));
