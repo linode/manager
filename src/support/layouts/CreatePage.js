@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
-
+import { compose } from 'redux';
 import { Card } from 'linode-components';
 import {
   Input,
@@ -21,17 +21,12 @@ import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import TicketHelper from '../components/TicketHelper';
 
 
 export class CreatePage extends Component {
-  static async preload({ dispatch }) {
-    await Promise.all([
-      api.linodes, api.domains, api.nodebalancers, api.volumes,
-    ].map(o => dispatch(o.all())));
-  }
-
   constructor(props) {
     super(props);
 
@@ -171,13 +166,22 @@ CreatePage.propTypes = {
   nodebalancers: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     nodebalancers: state.api.nodebalancers.nodebalancers,
     linodes: state.api.linodes.linodes,
     domains: state.api.domains.domains,
     volumes: state.api.volumes.volumes,
   };
-}
+};
 
-export default connect(mapStateToProps)(CreatePage);
+const preloadRequest = async (dispatch) => {
+  await Promise.all([
+    api.linodes, api.domains, api.nodebalancers, api.volumes,
+  ].map(o => dispatch(o.all())));
+};
+
+export default compose(
+  connect(mapStateToProps),
+  Preload(preloadRequest)
+)(CreatePage);

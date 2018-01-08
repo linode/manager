@@ -1,36 +1,30 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import api from '~/api';
 
 import { BackupRestore, BackupDetails } from '../components';
 import { selectLinode } from '../../utilities';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
-export class BackupPage extends Component {
-  static async preload({ dispatch }) {
-    // All linodes are in-fact needed for restore dialog.
-    await dispatch(api.linodes.all());
-  }
-
-  render() {
-    const { dispatch, linode, backup } = this.props;
-    return (
-      <div>
-        <section>
-          <BackupDetails linode={linode} backup={backup} dispatch={dispatch} />
-        </section>
-        <BackupRestore
-          linode={linode}
-          backup={backup}
-          dispatch={dispatch}
-          linodes={this.props.linodes}
-        />
-      </div>
-    );
-  }
-}
+export const BackupPage = (props) => {
+  const { dispatch, linode, backup } = props;
+  return (
+    <div>
+      <section>
+        <BackupDetails linode={linode} backup={backup} dispatch={dispatch} />
+      </section>
+      <BackupRestore
+        linode={linode}
+        backup={backup}
+        dispatch={dispatch}
+        linodes={this.props.linodes}
+      />
+    </div>
+  );
+};
 
 BackupPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -39,7 +33,7 @@ BackupPage.propTypes = {
   backup: PropTypes.object.isRequired,
 };
 
-function select(state, props) {
+function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api;
   const backupId = parseInt(props.params.backupId);
@@ -71,4 +65,12 @@ function select(state, props) {
   return { linode, backup, linodes };
 }
 
-export default connect(select)(BackupPage);
+const preloadRequest = async (dispatch) => {
+  // All linodes are in-fact needed for restore dialog.
+  await dispatch(api.linodes.all());
+};
+
+export default compose(
+  connect(mapStateToProps),
+  Preload(preloadRequest)
+)(BackupPage);
