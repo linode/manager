@@ -1,14 +1,16 @@
 import {
-  genConfig, ReducerGenerator, genActions, ONE, MANY, POST,
+  addParentRefs, ReducerGenerator, genActions, ONE, MANY, POST,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'tickets',
+export const config = addParentRefs({
+  name: 'tickets',
+  primaryKey: 'id',
   endpoint: id => `/support/tickets/${id}`,
   supports: [ONE, MANY, POST],
   subresources: {
     _replies: {
-      plural: 'replies',
+      name: 'replies',
+      primaryKey: 'id',
       endpoint: (ticket, reply) => `/support/tickets/${ticket}/replies/${reply}`,
       supports: [ONE, MANY, POST],
     },

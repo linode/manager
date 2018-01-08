@@ -1,20 +1,23 @@
 import {
-  genConfig, ReducerGenerator, genActions,
+  addParentRefs, ReducerGenerator, genActions,
   ONE, MANY, PUT, DELETE, POST,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'nodebalancers',
+export const config = addParentRefs({
+  name: 'nodebalancers',
+  primaryKey: 'id',
   endpoint: id => `/nodebalancers/${id}`,
   supports: [ONE, MANY, PUT, DELETE, POST],
   subresources: {
     _configs: {
-      plural: 'configs',
+      name: 'configs',
+      primaryKey: 'id',
       endpoint: (id, nbConfigId) => `/nodebalancers/${id}/configs/${nbConfigId}`,
       supports: [ONE, MANY, PUT, POST, DELETE],
       subresources: {
         _nodes: {
-          plural: 'nodes',
+          name: 'nodes',
+          primaryKey: 'id',
           endpoint: (id, nbConfigId, nodeId) => {
             return `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`;
           },
