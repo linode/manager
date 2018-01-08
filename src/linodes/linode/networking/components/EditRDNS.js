@@ -13,10 +13,11 @@ import { dispatchOrStoreErrors } from '~/api/util';
 export default class EditRDNS extends Component {
   static title = 'Edit RDNS Entry'
 
-  static trigger(dispatch, ip) {
+  static trigger(dispatch, ip, linodeId) {
     return dispatch(showModal(EditRDNS.title, (
       <EditRDNS
         ip={ip}
+        linodeId={linodeId}
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
       />
@@ -35,11 +36,11 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip, close } = this.props;
+    const { dispatch, ip, linodeId, close } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => setRDNS(ip, hostname),
+      () => setRDNS(ip, linodeId, hostname),
       close,
     ]));
   }
@@ -83,5 +84,6 @@ EditRDNS.propTypes = {
   dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   ip: PropTypes.object.isRequired,
+  linodeId: PropTypes.number.isRequired,
   close: PropTypes.func.isRequired,
 };

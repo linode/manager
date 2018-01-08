@@ -3,7 +3,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import EditARecord from '~/domains/components/EditARecord';
-import { Input } from 'linode-components';
+
 import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 import { expectDispatchOrStoreErrors, expectRequest, createSimulatedEvent } from '~/test.helpers';
@@ -48,13 +48,9 @@ describe('domains/components/EditARecord', () => {
       />
     );
 
-    const nameserver = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'hostname';
-    });
+    const nameserver = wrapper.find('Input#hostname');
 
-    const subdomain = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'ip';
-    });
+    const subdomain = wrapper.find('Input#ip');
 
     const ttl = wrapper.findWhere((n) => {
       return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
@@ -81,13 +77,9 @@ describe('domains/components/EditARecord', () => {
       />
     );
 
-    const hostnameInput = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('name') === 'hostname';
-    });
+    const hostnameInput = wrapper.find('Input#hostname');
 
-    const ipInput = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('name') === 'ip';
-    });
+    const ipInput = wrapper.find('Input#ip');
 
     const ttlInput = wrapper.findWhere((n) => {
       return n.type() === SelectDNSSeconds && n.prop('name') === 'ttl';
@@ -127,13 +119,9 @@ describe('domains/components/EditARecord', () => {
         close={close}
       />
     );
-    const hostnameInput = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('name') === 'hostname';
-    });
+    const hostnameInput = wrapper.find('Input#hostname');
 
-    const ipInput = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('name') === 'ip';
-    });
+    const ipInput = wrapper.find('Input#ip');
 
     const ttlInput = wrapper.findWhere((n) => {
       return n.type() === SelectDNSSeconds && n.prop('name') === 'ttl';

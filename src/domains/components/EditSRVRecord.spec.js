@@ -3,8 +3,6 @@ import React from 'react';
 import sinon from 'sinon';
 
 import EditSRVRecord from '~/domains/components/EditSRVRecord';
-import { Input, Select } from 'linode-components';
-import SelectDNSSeconds from '~/domains/components/SelectDNSSeconds';
 
 import { createSimulatedEvent, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
@@ -45,33 +43,19 @@ describe('domains/components/EditSRVRecord', () => {
       />
     );
 
-    const service = page.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'service';
-    });
+    const service = page.find('Input#service');
 
-    const protocol = page.findWhere((n) => {
-      return n.type() === Select && n.prop('id') === 'protocol';
-    });
+    const protocol = page.find('Select#protocol');
 
-    const target = page.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'target';
-    });
+    const target = page.find('Input#target');
 
-    const priority = page.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'priority';
-    });
+    const priority = page.find('Input#priority');
 
-    const weight = page.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'weight';
-    });
+    const weight = page.find('Input#weight');
 
-    const port = page.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'port';
-    });
+    const port = page.find('Input#port');
 
-    const ttl = page.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = page.find('SelectDNSSeconds#ttl');
 
     expect(service.props().value).toEqual(currentRecord.service);
     expect(protocol.props().value).toEqual(currentRecord.protocol);
@@ -98,33 +82,19 @@ describe('domains/components/EditSRVRecord', () => {
       />
     );
 
-    const service = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'service';
-    });
+    const service = wrapper.find('Input#service');
 
-    const protocol = wrapper.findWhere((n) => {
-      return n.type() === Select && n.prop('id') === 'protocol';
-    });
+    const protocol = wrapper.find('Select#protocol');
 
-    const target = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'target';
-    });
+    const target = wrapper.find('Input#target');
 
-    const priority = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'priority';
-    });
+    const priority = wrapper.find('Input#priority');
 
-    const weight = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'weight';
-    });
+    const weight = wrapper.find('Input#weight');
 
-    const port = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'port';
-    });
+    const port = wrapper.find('Input#port');
 
-    const ttl = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     service.simulate('change', createSimulatedEvent('service', '_ips'));
     protocol.simulate('change', createSimulatedEvent('protocol', '_udp'));
@@ -166,33 +136,19 @@ describe('domains/components/EditSRVRecord', () => {
         close={close}
       />
     );
-    const service = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'service';
-    });
+    const service = wrapper.find('Input#service');
 
-    const protocol = wrapper.findWhere((n) => {
-      return n.type() === Select && n.prop('id') === 'protocol';
-    });
+    const protocol = wrapper.find('Select#protocol');
 
-    const target = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'target';
-    });
+    const target = wrapper.find('Input#target');
 
-    const priority = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'priority';
-    });
+    const priority = wrapper.find('Input#priority');
 
-    const weight = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'weight';
-    });
+    const weight = wrapper.find('Input#weight');
 
-    const port = wrapper.findWhere((n) => {
-      return n.type() === Input && n.prop('id') === 'port';
-    });
+    const port = wrapper.find('Input#port');
 
-    const ttl = wrapper.findWhere((n) => {
-      return n.type() === SelectDNSSeconds && n.prop('id') === 'ttl';
-    });
+    const ttl = wrapper.find('SelectDNSSeconds#ttl');
 
     service.simulate('change', createSimulatedEvent('service', '_ips'));
     protocol.simulate('change', createSimulatedEvent('protocol', '_udp'));

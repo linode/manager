@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { ZONES } from '~/constants';
+import { ZONES, LISH_ROOT } from '~/constants';
 import { getObjectByLabelLazily } from '~/api/util';
 import { lishToken } from '~/api/ad-hoc/linodes';
+
 
 export function addCSSLink(url) {
   const head = window.document.querySelector('head');
@@ -51,7 +52,7 @@ export class Weblish extends Component {
     const { linode } = this.state;
     const { lish_token: token } = await dispatch(lishToken(linode.id));
     const socket = new WebSocket(
-      `wss://${ZONES[linode.region]}.webconsole.linode.com:8181/${token}/weblish`);
+      `wss://${ZONES[linode.region]}.${LISH_ROOT}:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
       this.setState({ renderingLish: true }, this.renderTerminal(socket)));
   }

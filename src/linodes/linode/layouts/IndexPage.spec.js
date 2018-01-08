@@ -3,9 +3,8 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 
 import { state } from '~/data';
-import { testLinode, testLinode1235, testLinode1237 } from '~/data/linodes';
+import { testLinode, testLinode1235 } from '~/data/linodes';
 import { expectRequest } from '~/test.helpers';
-import { Dropdown } from 'linode-components';
 import { IndexPage } from '~/linodes/linode/layouts/IndexPage';
 
 describe('linodes/linode/layouts/IndexPage', () => {
@@ -96,13 +95,13 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(dropdown.length).toBe(1);
   });
 
-  it.skip('does not render power management dropdown when linode is transitioning', () => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        linode={testLinode1237}
-        router={router}
-      />);
-    expect(page.contains(Dropdown)).toBe(false);
-  });
+  // it.skip('does not render power management dropdown when linode is transitioning', () => {
+  //   const page = mount(
+  //     <IndexPage
+  //       dispatch={dispatch}
+  //       linode={testLinode1237}
+  //       router={router}
+  //     />);
+  //   expect(page.contains(Dropdown)).toBe(false);
+  // });
 });
