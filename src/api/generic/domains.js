@@ -1,15 +1,17 @@
 import {
-  genConfig, ReducerGenerator, genActions,
+  addParentRefs, ReducerGenerator, genActions,
   ONE, MANY, PUT, DELETE, POST,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'domains',
+export const config = addParentRefs({
+  name: 'domains',
+  primaryKey: 'id',
   endpoint: id => `/domains/${id}`,
   supports: [ONE, MANY, POST, PUT, DELETE],
   subresources: {
     _records: {
-      plural: 'records',
+      name: 'records',
+      primaryKey: 'id',
       endpoint: (domain, record) => `/domains/${domain}/records/${record}`,
       supports: [ONE, MANY, PUT, POST, DELETE],
     },
