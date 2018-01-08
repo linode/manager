@@ -3,7 +3,6 @@ var process = require('process');
 var express = require('express');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
-var mime = require('mime');
 
 var app = express();
 var compiler = webpack(config);

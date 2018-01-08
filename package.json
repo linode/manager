@@ -98,6 +98,7 @@
     "react-router-redux": "^4.0.5",
     "react-side-effect": "^1.1.3",
     "react-test-renderer": "15.5",
+    "react-vnc-display": "^1.1.0",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
     "xterm": "^2.0.1",
@@ -128,7 +129,8 @@
       "ENV_GA_ID": null,
       "ENV_SENTRY_URL": null,
       "ENV_DEVTOOLS_DISABLED": null,
-      "ENV_VERSION": null
+      "ENV_VERSION": null,
+      "ENV_LISH_ROOT": null
     }
   }
 }
