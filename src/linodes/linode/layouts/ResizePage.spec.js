@@ -23,7 +23,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
     const wrapper = shallow(
       <ResizePage
         dispatch={dispatch}
-        types={api.types}
+        linodeTypes={api.types}
         linode={testLinode}
       />
     );
@@ -34,7 +34,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
     const page = mount(
       <ResizePage
         dispatch={dispatch}
-        types={api.types}
+        linodeTypes={api.types}
         linode={testLinode}
       />
     );

@@ -14,7 +14,7 @@ import {
 import { onChange } from 'linode-components';
 
 import { setSource } from '~/actions/source';
-import api from '~/api';
+import * as linodeTypes from '~/api/linodeTypes';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { ChainedDocumentTitle } from '~/components';
@@ -25,10 +25,8 @@ import { selectLinode } from '../utilities';
 
 
 export class ResizePage extends Component {
-  static async preload({ dispatch, getState }) {
-    if (!getState().api.types.ids.length) {
-      await dispatch(api.types.all());
-    }
+  static async preload({ dispatch }) {
+    await dispatch(linodeTypes.getAll());
   }
 
   constructor(props) {
@@ -58,7 +56,7 @@ export class ResizePage extends Component {
   }
 
   render() {
-    const { types, linode: { label, type: { id: currentType } } } = this.props;
+    const { linodeTypes, linode: { label, type: { id: currentType } } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
@@ -71,14 +69,14 @@ export class ResizePage extends Component {
           <FormGroup className="row" name="current">
             <label className="col-sm-3 col-form-label">Current Plan</label>
             <div className="col-sm-9">
-              <Input disabled value={planStyle(types.types[currentType])} />
+              <Input disabled value={planStyle(linodeTypes[currentType])} />
             </div>
           </FormGroup>
           <FormGroup errors={errors} name="type" className="row">
             <label className="col-sm-3 col-form-label">New Plan</label>
             <div className="col-sm-9">
               <PlanSelect
-                plans={types.types}
+                plans={linodeTypes}
                 value={type}
                 name="type"
                 id="type"
@@ -104,14 +102,14 @@ export class ResizePage extends Component {
 
 ResizePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  types: PropTypes.object.isRequired,
+  linodeTypes: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
 };
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { types } = state.api;
-  return { linode, types };
+  const linodeTypes = state.api.linodeTypes.linodeTypes;
+  return { linode, linodeTypes };
 }
 
 export default connect(select)(ResizePage);

@@ -8,6 +8,7 @@ import { Tabs } from 'linode-components';
 
 import { setAnalytics } from '~/actions';
 import api from '~/api';
+import * as linodeTypes from '~/api/linodeTypes';
 import { getObjectByLabelLazily } from '~/api/util';
 import { ChainedDocumentTitle, GroupLabel } from '~/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
@@ -20,7 +21,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch }, { linodeLabel }) {
     const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     const requests = [
-      api.types.one([type.id]),
+      linodeTypes.getOne(type.id),
       api.linodes.configs.all([id]),
     ];
 
