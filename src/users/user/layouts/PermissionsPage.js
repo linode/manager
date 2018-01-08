@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { Card } from 'linode-components';
 import {
   Checkbox,
@@ -15,18 +15,11 @@ import {
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import { selectUser } from './IndexPage';
 
 export class PermissionsPage extends Component {
-  static async preload({ dispatch }, { username }) {
-    const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
-
-    if (user.restricted) {
-      await dispatch(api.users.permissions.one([username]));
-    }
-  }
-
   constructor(props) {
     super(props);
 
@@ -41,8 +34,10 @@ export class PermissionsPage extends Component {
     const { dispatch, user: { username } } = this.props;
     const { global, linode, nodebalancer, domain,
       stackscript, longview, image, volume } = this.state;
-    const data = { global, linode, nodebalancer,
-      domain, stackscript, longview, image, volume };
+    const data = {
+      global, linode, nodebalancer,
+      domain, stackscript, longview, image, volume,
+    };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.users.permissions.put(data, username),
@@ -303,4 +298,15 @@ PermissionsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(selectUser)(PermissionsPage);
+const preloadRequest = async (dispatch, { params: { username } }) => {
+  const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
+
+  if (user.restricted) {
+    await dispatch(api.users.permissions.one([username]));
+  }
+};
+
+export default compose(
+  connect(selectUser),
+  Preload(preloadRequest)
+)(PermissionsPage);

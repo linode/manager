@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { compose } from 'redux';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import { List } from 'linode-components';
@@ -25,14 +25,11 @@ import { confirmThenDelete } from '~/utilities';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
 import CreateOrEditApplication from '../components/CreateOrEditApplication';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'clients';
 
 export class MyAPIClientsPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.clients.all());
-  }
-
   constructor(props) {
     super(props);
 
@@ -181,11 +178,18 @@ MyAPIClientsPage.propTypes = {
   selectedMap: PropTypes.object.isRequired,
 };
 
-function select(state) {
+const mapStateToProps = (state) => {
   return {
     clients: state.api.clients,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
-}
+};
 
-export default connect(select)(MyAPIClientsPage);
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.clients.all());
+};
+
+export default compose(
+  connect(mapStateToProps),
+  Preload(preloadRequest)
+)(MyAPIClientsPage);

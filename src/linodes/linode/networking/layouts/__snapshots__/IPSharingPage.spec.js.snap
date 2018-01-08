@@ -11018,6 +11018,7 @@ ShallowWrapper {
           </FormGroup>
           <FormGroup
             className=""
+            name="submit"
           >
             <SubmitButton
               className="btn-default"
@@ -16355,6 +16356,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className=""
+              name="submit"
             >
               <SubmitButton
                 className="btn-default"
@@ -21700,6 +21702,7 @@ ShallowWrapper {
               </FormGroup>,
               <FormGroup
                 className=""
+                name="submit"
               >
                 <SubmitButton
                   className="btn-default"
@@ -32328,6 +32331,7 @@ ShallowWrapper {
                   />,
                 ],
                 "className": "",
+                "name": "submit",
               },
               "ref": null,
               "rendered": Array [
@@ -37685,6 +37689,7 @@ ShallowWrapper {
             </FormGroup>
             <FormGroup
               className=""
+              name="submit"
             >
               <SubmitButton
                 className="btn-default"
@@ -43022,6 +43027,7 @@ ShallowWrapper {
               </FormGroup>
               <FormGroup
                 className=""
+                name="submit"
               >
                 <SubmitButton
                   className="btn-default"
@@ -48367,6 +48373,7 @@ ShallowWrapper {
                 </FormGroup>,
                 <FormGroup
                   className=""
+                  name="submit"
                 >
                   <SubmitButton
                     className="btn-default"
@@ -58995,6 +59002,7 @@ ShallowWrapper {
                     />,
                   ],
                   "className": "",
+                  "name": "submit",
                 },
                 "ref": null,
                 "rendered": Array [
