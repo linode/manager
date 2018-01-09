@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.17.2] 2018-01-09
+### Fixed
+ - fix image selection being filtered on status
+ - fix backups listing on create from backup modal
+
 ## [0.17.1] 2018-01-08
 ### Fixed
 - Fix permissions page for usernames with numbers (#2884)
