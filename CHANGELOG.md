@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.17.0] 2017-01-08
+## [0.17.1] 2018-01-08
+### Fixed
+- Fix permissions page for usernames with numbers (#2884)
+
+## [0.17.0] 2018-01-08
 ### Added
 - Pre-commit hook to run "yarn test && yarn lint"
 - Paravirt and Fullvirt appear with a description
