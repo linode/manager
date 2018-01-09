@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRoute, IndexRedirect } from 'react-router';
+import { Route, IndexRoute, IndexRedirect } from 'react-router-dom';
 
 import { AddConfigPage, AdvancedPage, EditConfigPage, IndexPage } from './layouts';
 

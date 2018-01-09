@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
-import withRouter from '~/decorators/withRouter';
 import ModalShell from 'linode-components/dist/modals/ModalShell';
 import { hideModal } from '~/actions/modal';
 import isAuthenticated from '~/decorators/isAuthenticated';
@@ -109,6 +108,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
   isAuthenticated
 )(Layout);

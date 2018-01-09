@@ -5,7 +5,7 @@ import { parse } from 'querystring';
 import isEqual from 'lodash/isEqual';
 
 export default (WrappedComponent) => {
-  class EnhancedComponent extends PureComponent {
+  class QueryParser extends PureComponent {
     shouldComponentUpdate(nextProps) {
       return !isEqual(this.props, nextProps);
     }
@@ -28,11 +28,11 @@ export default (WrappedComponent) => {
     }
   }
 
-  EnhancedComponent.propTypes = {
+  QueryParser.propTypes = {
     location: PropTypes.shape({
       query: PropTypes.object,
     }).isRequired,
   };
 
-  return withRouter(EnhancedComponent);
+  return QueryParser;
 };

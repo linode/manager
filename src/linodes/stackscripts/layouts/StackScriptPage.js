@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { ExternalLink } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';

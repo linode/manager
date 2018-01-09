@@ -22,7 +22,8 @@ import { init as initAnalytics } from './analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
-// import Linodes from '~/linodes';
+import Linodes from '~/linodes';
+
 /**
  * Crazy important, so pay attention boys and girls;
  * Any react-redux connected component which uses a route component (Link, Route,
@@ -74,7 +75,7 @@ const init = () => {
               <div>
                 <ChainedDocumentTitle title="Linode Manager" />
                 <Switch>
-                  <Layout path="/linodes" component={BlankPage} />
+                  <Route path="/linodes" component={Linodes} />
                   {/* <Route path="/nodebalancers" component={NodeBalancers} />
                   <Route path="/domains" component={Domains} />
                   <Route path="/support" component={Support} />

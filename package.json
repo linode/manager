@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.17.1",
+  "version": "0.17.0",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -60,6 +60,9 @@
     "pre-commit": "^1.2.2",
     "qrious": "^2.2.0",
     "react-addons-test-utils": "^15.1.0",
+    "redux-devtools": "^3.3.1",
+    "redux-devtools-dock-monitor": "^1.1.1",
+    "redux-devtools-log-monitor": "^1.0.11",
     "sass-loader": "^3.1.2",
     "sinon": "^4.1.2",
     "style-loader": "^0.13.0",
@@ -71,6 +74,7 @@
   "dependencies": {
     "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
+    "classnames": "^2.2.5",
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",
     "flag-icon-css": "^2.3.0",

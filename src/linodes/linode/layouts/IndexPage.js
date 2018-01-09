@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { Tabs } from 'linode-components';
 import { compose } from 'redux';
@@ -15,7 +15,7 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
-
+import Layout from '~/layouts/Layout';
 
 export class IndexPage extends Component {
   constructor(props) {
@@ -45,43 +45,49 @@ export class IndexPage extends Component {
       { name: 'Backups', link: '/backups' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
-
     return (
-      <div>
-        <ChainedDocumentTitle title={linode.label} />
-        <header className="main-header">
-          <div className="container">
-            <div className="float-sm-left">
-              <Link to="/linodes">Linodes</Link>
-              <h1 title={linode.id}>
-                <Link to={`/linodes/${linode.label}`}>
-                  <GroupLabel object={linode} />
-                </Link>
-              </h1>
-              <div>{planStyle(linode.type)}</div>
+      <Layout
+        component={(matchProps) => {
+          console.log('LinodesLayout:render');
+          return (
+            <div>
+              <ChainedDocumentTitle title={linode.label} />
+              <header className="main-header">
+                <div className="container">
+                  <div className="float-sm-left">
+                    <Link to="/linodes">Linodes</Link>
+                    <h1 title={linode.id}>
+                      <Link to={`/linodes/${linode.label}`}>
+                        <GroupLabel object={linode} />
+                      </Link>
+                    </h1>
+                    <div>{planStyle(linode.type)}</div>
+                  </div>
+                  <span className="float-sm-right">
+                    <StatusDropdown
+                      shortcuts={false}
+                      linode={linode}
+                      short
+                      dispatch={this.props.dispatch}
+                    />
+                  </span>
+                </div>
+              </header>
+              <div className="main-header-fix"></div>
+              <Tabs
+                tabs={tabs}
+                onClick={(e, tabIndex) => {
+                  e.stopPropagation();
+                  this.props.dispatch(push(tabs[tabIndex].link));
+                }}
+                pathname={location.pathname}
+              >
+                <Component {...matchProps} />
+              </Tabs>
             </div>
-            <span className="float-sm-right">
-              <StatusDropdown
-                shortcuts={false}
-                linode={linode}
-                short
-                dispatch={this.props.dispatch}
-              />
-            </span>
-          </div>
-        </header>
-        <div className="main-header-fix"></div>
-        <Tabs
-          tabs={tabs}
-          onClick={(e, tabIndex) => {
-            e.stopPropagation();
-            this.props.dispatch(push(tabs[tabIndex].link));
-          }}
-          pathname={location.pathname}
-        >
-          {this.props.children}
-        </Tabs>
-      </div>
+          );
+        }}
+      />
     );
   }
 }
@@ -104,5 +110,5 @@ const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
 
 export default compose(
   connect(selectLinode),
-  Preload(preloadRequest)
+  Preload(preloadRequest),
 )(IndexPage);
