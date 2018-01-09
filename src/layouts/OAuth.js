@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import withRouter from '../decorators/withRouter';
 import { push } from 'react-router-redux';
 
 import { LOGIN_ROOT, ENVIRONMENT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
-
 import { getStorage, setStorage } from '~/storage';
 
 function getImplicitParams() {
@@ -31,7 +32,6 @@ export class OAuthCallbackPage extends Component {
   async componentDidMount() {
     const { dispatch, location } = this.props;
     const { error, code } = location.query;
-
     if (error) {
       // These errors only happen while developing or setting up the app.
       /* eslint-disable no-console */
@@ -112,7 +112,13 @@ export class OAuthCallbackPage extends Component {
 
 OAuthCallbackPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    hash: PropTypes.any,
+    query: PropTypes.object,
+  }).isRequired,
 };
 
-export default connect()(OAuthCallbackPage);
+export default compose(
+  connect(),
+  withRouter,
+)(OAuthCallbackPage);

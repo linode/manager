@@ -3,164 +3,98 @@ import React from 'react';
 import { render } from 'react-dom';
 import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
 import Raven from 'raven-js';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { ConnectedRouter } from 'react-router-redux';
+import NotFound from 'linode-components/dist/errors/NotFound';
 
-import { InternalError, NotFound } from 'linode-components';
-import { ModalShell } from 'linode-components';
-
-import { setError } from '~/actions/errors';
-import { hideModal } from '~/actions/modal';
-import { actions, thunks, reducer } from '~/api/generic/linodes';
-import Billing from '~/billing';
+import PollingWrapper from '~/components/PollingWrapper';
+import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
-import DevTools from '~/components/DevTools';
+// import { actions, thunks, reducer } from '~/api/generic/linodes';
+import Logout from '~/components/Logout';
+import Layout from '~/layouts/Layout';
+import OAuthComponent from '~/layouts/OAuth';
+
+import handleError from './handleError';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
 import { init as initAnalytics } from './analytics';
-import Domains from '~/domains';
-import Layout from '~/layouts/Layout';
-import Logout from '~/layouts/Logout';
-import OAuthCallbackPage from '~/layouts/OAuth';
-import Glish from './linodes/linode/layouts/Glish';
-import Linodes from '~/linodes';
-import StackScripts from '~/linodes/stackscripts';
-import Weblish from '~/linodes/linode/layouts/Weblish';
-import NodeBalancers from '~/nodebalancers';
-import Profile from '~/profile';
-import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
-import Settings from '~/settings';
-import { store } from '~/store';
-import Support from '~/support';
-import Users from '~/users';
-import Volumes from '~/linodes/volumes';
-import Images from '~/linodes/images';
+import { store, history } from '~/store';
+import { isPathOneOf } from '~/utilities';
+// import Linodes from '~/linodes';
+/**
+ * Crazy important, so pay attention boys and girls;
+ * Any react-redux connected component which uses a route component (Link, Route,
+ * Redirect, etc.,...) you must wrapped the component withRouter.
+ *
+ * @see https://github.com/ReactTraining/react-router/issues/4671#issuecomment-285320076
+ * @example
+ *  export default compose(connect(), withRouter)(Component);
+ */
 
-// eslint-disable-next-line no-unused-vars
-import styles from '../scss/manager.scss';
+/**
+ * @todo I believe we can just import without defining a variable.
+ */
+import styles from '../scss/manager.scss'; // eslint-disable-line no-unused-vars
 
+/**
+ * Page View Analytics
+ */
+initAnalytics(ENVIRONMENT, GA_ID);
+history.listen(({ pathname }) => {
+  if (!isPathOneOf(['/oauth'], pathname)) {
+    window.ga('send', 'pageview');
+  }
+});
 
-const history = syncHistoryWithStore(browserHistory, store);
+window.handleError = handleError(history);
+
 store.dispatch(session.initialize);
 
-window.actions = actions; window.thunks = thunks; window.reducer = reducer;
+// window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-initAnalytics(ENVIRONMENT, GA_ID);
 if (ENVIRONMENT === 'production') {
   Raven
     .config(SENTRY_URL)
     .install();
 }
+/**
+ * Features
+ */
 
-// TODO: move to analytics
-function onPageChange() {
-  // Log page views.
-  if (window.location.pathname.indexOf('/oauth') !== 0) {
-    window.ga('send', 'pageview');
-  }
-}
-
-function fillInMissingProps(props) {
-  // This randomly started not being passed in but is required by RouterContext.
-  if (!props.createElement) {
-    return { ...props, createElement: React.createElement };
-  }
-
-  return props;
-}
-
-window.handleError = function (e) {
-  Raven.captureException(e);
-
-  try {
-    // eslint-disable-next-line no-console
-    console.error(e);
-
-    store.dispatch(setError(e));
-
-    // If we hit an error, any future page changes should trigger a full page load.
-    const errorPagePathname = window.location.pathname;
-    history.listen(function (location) {
-      if (location.pathname !== errorPagePathname) {
-        session.redirect(location.pathname);
-      }
-    });
-
-    const ignoreStatuses = [404, 401];
-    if (ignoreStatuses.indexOf(e.status) === -1) {
-      render(
-        <ModalShell
-          open
-          title={'Oh no! This page is broken.'}
-        >
-          {/* Yes, we could use window.reload() but we've already got this utility function that
-          * can be stubbed out. */}
-          <InternalError
-            returnHome={() => session.redirect(window.location.pathname)}
-          />
-        </ModalShell>,
-        document.getElementById('emergency-modal')
-      );
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-
-  // Needed for react-guard.
-  return null;
-};
-
+const BlankPage = () => (<div>This page intentionally left blank.</div>);
 const init = () => {
   try {
     render(
       <Provider store={store}>
-        <div>
-          <ChainedDocumentTitle title="Linode Manager" />
-          <Router
-            history={history}
-            onUpdate={onPageChange}
-            dispatch={store.dispatch}
-            render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
-          >
-            <Route
-              path="/logout"
-              component={Logout}
-            />
-            <Route path="oauth">
-              <Route path="callback" component={OAuthCallbackPage} />
-            </Route>
-            <Route
-              path="/linodes/:linodeLabel/weblish"
-              component={Weblish}
-            />
-            <Route
-              path="/linodes/:linodeLabel/glish"
-              component={Glish}
-            />
-            <Route
-              onChange={() => store.dispatch(hideModal())}
-              path="/"
-              component={Layout}
-            >
-              <IndexRedirect to="/linodes" />
-              {Linodes}
-              {StackScripts}
-              {NodeBalancers}
-              {Domains}
-              {Profile}
-              {Users}
-              {Billing}
-              {Volumes}
-              {Images}
-              {Settings}
-              {Support}
-              <Route path="*" component={NotFound} />
-            </Route>
-          </Router>
-          <DevTools />
-        </div>
+        <PollingWrapper>
+          <ClickCapture>
+            <ConnectedRouter history={history}>
+              <div>
+                <ChainedDocumentTitle title="Linode Manager" />
+                <Switch>
+                  <Layout path="/linodes" component={BlankPage} />
+                  {/* <Route path="/nodebalancers" component={NodeBalancers} />
+                  <Route path="/domains" component={Domains} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/stackscripts" component={Stackscripts} />
+                  <Route path="/images" component={Images} />
+                  <Route path="/volumes" component={Volumes} />
+                  <Route path="/billing" component={Billing} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/settings" component={Settings} />
+                  <Route path="/users" component={Users} /> */}
+                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                  <Layout path="/" exact component={BlankPage} />
+                  <Route exact path="/logout" component={Logout} />
+                  <Route exact path="/oauth/callback" component={OAuthComponent} />
+                  <Layout component={NotFound} />
+                </Switch>
+              </div>
+            </ConnectedRouter>
+          </ClickCapture>
+        </PollingWrapper>
       </Provider>,
       document.getElementById('root')
     );
