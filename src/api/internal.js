@@ -1,6 +1,6 @@
 import isArray from 'lodash/isArray';
 import reduce from 'lodash/reduce';
-import isNaN from 'lodash/isNaN';
+import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
 export const ONE = 'ONE';
@@ -124,7 +124,7 @@ export class ReducerGenerator {
       return { ...oldStateMany, ...action.resource };
     }
 
-    const nonNanActionIds = (action.ids || []).filter(i => !isNaN(i));
+    const nonNanActionIds = (action.ids || []).filter(i => !_isNaN(i));
     const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
       action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
