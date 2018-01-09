@@ -42,18 +42,18 @@ export default class RestoreLinode extends Component {
 
   onLinodeChange = (e) => {
     this.onChange(e);
-    this.setState({ fetchingBackups: true }, async () => {
-      const linodeId = e.target.value;
-      const { allBackups } = this.state;
+    const linodeId = e.target.value;
+    const { allBackups } = this.state;
 
-      if (!allBackups[linodeId]) {
+    if (!allBackups[linodeId]) {
+      this.setState({ fetchingBackups: true }, async () => {
         const backups = await this.props.dispatch(linodeBackups(linodeId));
         this.setState({
           fetchingBackups: false,
           allBackups: { ...allBackups, [linodeId]: backups },
         });
-      }
-    });
+      });
+    }
   }
 
   onSubmit = () => {
