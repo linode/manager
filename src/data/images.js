@@ -45,7 +45,7 @@ export const testPrivateImage = {
   id: 'private/38',
   label: 'testImage',
   description: 'image details',
-  vendor: 'Unknown',
+  vendor: null,
   created: '2017-08-08T13:55:16',
   created_by: 'zues',
   size: 2048,

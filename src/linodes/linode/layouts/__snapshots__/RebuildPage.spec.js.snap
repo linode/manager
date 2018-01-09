@@ -76,7 +76,7 @@ ShallowWrapper {
           "recommended": true,
           "size": 2048,
           "type": "manual",
-          "vendor": "Unknown",
+          "vendor": null,
         },
         "private/39": Object {
           "_polling": false,
@@ -90,7 +90,7 @@ ShallowWrapper {
           "recommended": true,
           "size": 2048,
           "type": "automatic",
-          "vendor": "Unknown",
+          "vendor": null,
         },
       }
     }
