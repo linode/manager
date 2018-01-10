@@ -80,8 +80,6 @@ export function genActions(config) {
       actions[fns[feature]] = actionGenerators[feature](config);
     }
   });
-  actions.invalidate = (ids = [], partial = false) =>
-    ({ type: `GEN@${fullyQualified(config)}/INVALIDATE`, ids, partial });
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       const subresource = config.subresources[key];
@@ -192,29 +190,6 @@ export class ReducerGenerator {
     };
   }
 
-  static invalidate(config, state, action) {
-    let newState = { ...state };
-    if (action.partial) {
-      // Keep data but mark as invalid to be overwritten
-      // when new data is available by thunks.all.
-      if (action.ids.length) {
-        // action.ids should only ever be just 1 id
-        newState[config.name][action.ids[0]].invalid = true;
-      } else {
-        newState.invalid = true;
-      }
-    } else {
-      if (action.ids.length) {
-        // action.ids should only ever be just 1 id
-        delete newState[config.name][action.ids[0]];
-      } else {
-        newState = generateDefaultStateFull(config);
-      }
-    }
-
-    return { ...newState, __updatedAt: new Date() };
-  }
-
   static subresource(config, state, action) {
     let path = action.type.substr(action.type.indexOf('@') + 1);
     path = path.substr(0, path.indexOf('/'));
@@ -266,8 +241,6 @@ export class ReducerGenerator {
         return ReducerGenerator.many(config, state, action);
       case `GEN@${fullyQualified(config)}/DELETE`:
         return ReducerGenerator.del(config, state, action);
-      case `GEN@${fullyQualified(config)}/INVALIDATE`:
-        return ReducerGenerator.invalidate(config, state, action);
       // eslint-disable-next-line no-case-declarations
       default:
         if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {

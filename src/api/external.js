@@ -73,10 +73,7 @@ function genThunkPage(config, actions) {
 }
 
 /*
- * This function fetches all pages. If the final page indicates the total results
- * were not fetched, it restarts the process. If it is fixing partial invalidation,
- * it waits to invalidate and store the new data into the store until all the
- * pages have been fetched.
+ * This function fetches all pages, stores them in Redux and returns the result
  */
 function genThunkAll(config, actions, fetchPage) {
   function fetchAll(ids = [], resourceFilter, options) {
