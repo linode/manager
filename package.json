@@ -102,6 +102,7 @@
     "react-vnc-display": "^1.1.0",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
+    "why-did-you-update": "^0.1.0",
     "xterm": "^2.0.1",
     "zxcvbn": "^4.4.2"
   },

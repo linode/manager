@@ -37,15 +37,8 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 const OBJECT_TYPE = 'linodes';
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    await dispatch(api.linodes.all());
-    await dispatch(api.images.all());
-    await dispatch(transferPool());
-  }
-
   constructor(props) {
     super(props);
-
     this.state = { filter: '' };
   }
 
@@ -125,7 +118,7 @@ export class IndexPage extends Component {
                   elements: [
                     { name: 'Power On', action: this.powerOn },
                     { name: 'Power Off', action: this.powerOff },
-                  ]
+                  ],
                 },
                 { elements: [{ name: 'Delete', action: this.deleteLinodes }] },
               ]}

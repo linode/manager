@@ -13,7 +13,7 @@ const Navigation = ({ location: { pathname } }) => {
 
   const links = [
     { linkClass: 'MainHeader-link', to: '/linodes', label: 'Linodes', highlight, key: 0 },
-    { linkClass: 'MainHeader-link', to: '/nodebalancers', label: 'Node Balancers', key: 1 },
+    { linkClass: 'MainHeader-link', to: '/nodebalancers', label: 'NodeBalancers', key: 1 },
     { linkClass: 'MainHeader-link', to: '/domains', label: 'Domains', key: 2 },
     { linkClass: 'MainHeader-link', to: '/support', label: 'Support', key: 3 },
   ];

@@ -13,7 +13,6 @@ import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 // import { actions, thunks, reducer } from '~/api/generic/linodes';
 import Logout from '~/components/Logout';
-import Layout from '~/layouts/Layout';
 import OAuthComponent from '~/layouts/OAuth';
 
 import handleError from './handleError';
@@ -24,6 +23,13 @@ import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
 
+import NavigationLink from '~/layouts/NavigationLink';
+import Navigation from '~/layouts/Navigation';
+import Footer from '~/layouts/Footer';
+import MiniHeader from '~/layouts/MiniHeader';
+
+import { whyDidYouUpdate } from 'why-did-you-update';
+whyDidYouUpdate(React, { exclude: /^Connect/ });
 /**
  * Crazy important, so pay attention boys and girls;
  * Any react-redux connected component which uses a route component (Link, Route,
@@ -63,8 +69,40 @@ if (ENVIRONMENT === 'production') {
 /**
  * Features
  */
+const LinodeContextMenu = () => {
+  const links = [
+    { to: '/stackscripts', label: 'StackScripts', linkClass: 'ContextHeader-link' },
+    { to: '/images', label: 'Images', linkClass: 'ContextHeader-link' },
+    { to: '/volumes', label: 'Volumes', linkClass: 'ContextHeader-link' },
+  ];
+
+  return (
+    <div className="ContextHeader">
+      <div className="container">
+        <div className="Menu">
+          {links.map((props, key) => (
+            <div className="Menu-item" key={key}>
+              {React.createElement(NavigationLink, props)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+const ContextNavigation = () => (
+  <div>
+    <Route path="/linodes" render={LinodeContextMenu} />
+    <Route path="/images" component={LinodeContextMenu} />
+    <Route path="/stackscripts" component={LinodeContextMenu} />
+    <Route path="/volumes" component={LinodeContextMenu} />
+  </div>
+);
 
 const BlankPage = () => (<div>This page intentionally left blank.</div>);
+
 const init = () => {
   try {
     render(
@@ -72,26 +110,41 @@ const init = () => {
         <PollingWrapper>
           <ClickCapture>
             <ConnectedRouter history={history}>
-              <div>
+              <div className="Layout" >
                 <ChainedDocumentTitle title="Linode Manager" />
-                <Switch>
-                  <Route path="/linodes" component={Linodes} />
-                  {/* <Route path="/nodebalancers" component={NodeBalancers} />
-                  <Route path="/domains" component={Domains} />
-                  <Route path="/support" component={Support} />
-                  <Route path="/stackscripts" component={Stackscripts} />
-                  <Route path="/images" component={Images} />
-                  <Route path="/volumes" component={Volumes} />
-                  <Route path="/billing" component={Billing} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/users" component={Users} /> */}
-                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                  <Layout path="/" exact component={BlankPage} />
-                  <Route exact path="/logout" component={Logout} />
-                  <Route exact path="/oauth/callback" component={OAuthComponent} />
-                  <Layout component={NotFound} />
-                </Switch>
+                <div className="Layout-inner">
+                  {/* <ModalShell
+                      open={modal.open}
+                      title={modal.title}
+                      close={() => hideModal()}
+                    >
+                      {modal.body}
+                    </ModalShell> */}
+                  <div className="Header">
+                    <MiniHeader />
+                    <Navigation />
+                    <ContextNavigation />
+                  </div>
+                  <Switch>
+                    <Route path="/linodes" component={Linodes} />
+                    {/* <Route path="/nodebalancers" component={NodeBalancers} />
+                      <Route path="/domains" component={Domains} />
+                      <Route path="/support" component={Support} />
+                      <Route path="/stackscripts" component={Stackscripts} />
+                      <Route path="/images" component={Images} />
+                      <Route path="/volumes" component={Volumes} />
+                      <Route path="/billing" component={Billing} />
+                      <Route path="/profile" component={Profile} />
+                      <Route path="/settings" component={Settings} />
+                      <Route path="/users" component={Users} /> */}
+                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                    <Route path="/" exact component={BlankPage} />
+                    <Route exact path="/logout" component={Logout} />
+                    <Route exact path="/oauth/callback" component={OAuthComponent} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </div>
+                <Footer />
               </div>
             </ConnectedRouter>
           </ClickCapture>

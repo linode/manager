@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Link } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 
-import { Tabs } from 'linode-components';
+// import { Tabs } from 'linode-components';
 import { compose } from 'redux';
 import { setAnalytics } from '~/actions';
 import api from '~/api';
@@ -15,7 +15,6 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
-import Layout from '~/layouts/Layout';
 
 export class IndexPage extends Component {
   constructor(props) {
@@ -46,7 +45,7 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
     return (
-      <Layout
+      <Route
         component={(matchProps) => {
           console.log('LinodesLayout:render');
           return (
@@ -98,7 +97,7 @@ IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+const preloadRequest = async (dispatch, { computedMatch: { params: { linodeLabel } } }) => {
   const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
   const requests = [
     api.types.one([type.id]),

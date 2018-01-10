@@ -3,26 +3,28 @@ import { Link, Route } from 'react-router-dom';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const NavigationLink = ({ linkClass, to, label, highlight, ...rest }) => (
-  <Route
-    path={to}
-    children={(matchProps) => {
-      const { match } = matchProps;
-      return (
-        <Link
-          className={classnames({
-            [linkClass]: true,
-            [`${linkClass}--selected`]: match || highlight,
-          })}
-          to={to}
-          {...rest}
-        >
-          {label}
-        </Link>
-      );
-    }}
-  />
-);
+const NavigationLink = ({ linkClass, to, label, highlight, ...rest }) => {
+  return (
+    <Route
+      path={to}
+      children={(matchProps) => {
+        const { match } = matchProps;
+        return (
+          <Link
+            className={classnames({
+              [linkClass]: true,
+              [`${linkClass}--selected`]: match || highlight,
+            })}
+            to={to}
+            {...rest}
+          >
+            {label}
+          </Link>
+        );
+      }}
+    />
+  )
+};
 
 NavigationLink.propTypes = {
   linkClass: PropTypes.string.isRequired,
