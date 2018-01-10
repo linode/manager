@@ -55,12 +55,11 @@ function genThunkOne(config, actions) {
  * The results are returned.
  */
 function genThunkPage(config, actions) {
-  function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
-    fetchBeganAt, headers) {
+  function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true, headers) {
     return async (dispatch) => {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
       const resources = await dispatch(fetch.get(endpoint, undefined, headers));
-      resources[config.name] = resources.data || [];
+      resources[config.plural] = resources.data || [];
       const filteredResources = filterResources(config, resources, resourceFilter);
       if (storeInState) {
         await dispatch(actions.many(filteredResources, ...ids));
@@ -80,13 +79,13 @@ function genThunkAll(config, actions, fetchPage) {
     return async (dispatch) => {
       // Grab first page so we know how many there are.
       const resource = await dispatch(
-        fetchPage(0, ids, resourceFilter, true, null, options));
+        fetchPage(0, ids, resourceFilter, true, options));
       const resources = [resource];
 
       // Grab all pages we know about and store them in Redux.
       const requests = [];
       for (let i = 1; i < resources[0].pages; i += 1) {
-        requests.push(fetchPage(i, ids, resourceFilter, true, null, options));
+        requests.push(fetchPage(i, ids, resourceFilter, true, options));
       }
 
       // Gather all the results for for return to the caller
