@@ -1,6 +1,6 @@
 import { fetch } from './fetch';
 import {
-  ONE, MANY, DELETE, POST, PUT,
+  ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
 } from './internal';
 
 
