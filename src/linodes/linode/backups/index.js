@@ -35,6 +35,7 @@ class LinodeBackupsIndex extends Component {
       location: { pathname },
       onSubmit,
       linode,
+      type,
     } = this.props;
 
     const matched = (path, options) => Boolean(
@@ -43,7 +44,7 @@ class LinodeBackupsIndex extends Component {
 
     if (!linode.backups.enabled) {
       const { loading, errors } = this.state;
-      const backupPrice = linode.type.addons.backups.price.monthly;
+      const backupPrice = type.addons.backups.price.monthly;
 
       return (
         <Card header={<CardHeader title="Enable backups" />}>
@@ -96,7 +97,14 @@ LinodeBackupsIndex.propTypes = {
   setSource: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired, // @todo Define the shape of a Linode.
+  type: PropTypes.object.isRequired,
 };
+
+function mapStateToProps(state, props) {
+  const { linode } = selectLinode(state, props);
+  const type = linode && state.api.types.types[linode.type];
+  return { linode, type };
+}
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatch,
@@ -121,6 +129,6 @@ const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) 
 };
 
 export default compose(
-  connect(selectLinode, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   Preload(preloadRequest),
 )(LinodeBackupsIndex);
