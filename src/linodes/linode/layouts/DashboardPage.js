@@ -83,7 +83,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode, dispatch, images } = this.props;
+    const { username, linode, dispatch, images, types } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -123,7 +123,7 @@ export class DashboardPage extends Component {
             <div className="row">
               <div className="col-sm-4 row-label">Type</div>
               <div className="col-sm-8" id="type">
-                {planStats(linode.type)}
+                {planStats(types[linode.type])}
                 <div>
                   <small className="text-muted">
                     <Link to={`/linodes/${linode.label}/resize`}>Resize</Link>
@@ -293,6 +293,7 @@ DashboardPage.propTypes = {
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   transfer: PropTypes.object.isRequired,
+  types: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, props) {
@@ -300,7 +301,8 @@ function mapStateToProps(state, props) {
   const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
-  return { linode, username, timezone, transfer, images };
+  const types = state.api.types.types;
+  return { linode, username, timezone, transfer, images, types };
 }
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
