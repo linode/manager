@@ -22,14 +22,16 @@ export class RescuePage extends Component {
     const { dispatch, linode } = this.props;
 
     return (
-      <div className="row">
-        <ChainedDocumentTitle title="Rescue" />
-        <section className="col-lg-6 col-md-12 col-sm-12">
-          <RescueMode dispatch={dispatch} linode={linode} />
-        </section>
-        <section className="col-lg-6 col-md-12 col-sm-12">
-          <ResetRootPassword dispatch={dispatch} linode={linode} />
-        </section>
+      <div className="container">
+        <div className="row">
+          <ChainedDocumentTitle title="Rescue" />
+          <section className="col-lg-6 col-md-12 col-sm-12">
+            <RescueMode dispatch={dispatch} linode={linode} />
+          </section>
+          <section className="col-lg-6 col-md-12 col-sm-12">
+            <ResetRootPassword dispatch={dispatch} linode={linode} />
+          </section>
+        </div>
       </div>
     );
   }
@@ -40,7 +42,7 @@ RescuePage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
-const preloadReqeust = async (dispatch, { params: { linodeLabel } }) => {
+const preloadReqeust = async (dispatch, { match: { params: { linodeLabel } } }) => {
   const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
   await Promise.all([
     api.linodes.disks,

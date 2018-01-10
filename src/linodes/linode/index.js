@@ -20,6 +20,10 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from './utilities/';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
+import DashboardPage from './layouts/DashboardPage';
+import ResizePage from './layouts/ResizePage';
+import RescuePage from './layouts/RescuePage';
+import RebuildPage from './layouts/RebuildPage';
 
 const LinodeIndex = (props) => {
   const {
@@ -69,13 +73,13 @@ const LinodeIndex = (props) => {
       </header>
       <TabsComponent tabs={tabData} />
       <Switch>
-        <Route path={`${path}/rebuild`} component={() => <div className="container"><h1>rebuild</h1></div>} />
-        <Route path={`${path}/resize`} component={() => <div className="container"><h1>resize</h1></div>} />
-        <Route path={`${path}/rescue`} component={() => <div className="container"><h1>rescue</h1></div>} />
+        <Route path={`${path}/rebuild`} component={RebuildPage} />
+        <Route path={`${path}/resize`} component={ResizePage} />
+        <Route path={`${path}/rescue`} component={RescuePage} />
         <Route path={`${path}/networking`} component={() => <div className="container"><h1>networking</h1></div>} />
         <Route path={`${path}/backups`} component={() => <div className="container"><h1>backups</h1></div>} />
         <Route path={`${path}/settings`} component={() => <div className="container"><h1>settings</h1></div>} />
-        <Route exact path={path} component={() => <div className="container"><h1>dashboard</h1></div>} />
+        <Route exact path={path} component={DashboardPage} />
         <Redirect to="/not-found" />
       </Switch>
     </div>
@@ -90,6 +94,8 @@ LinodeIndex.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }).isRequired,
+  linode: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {

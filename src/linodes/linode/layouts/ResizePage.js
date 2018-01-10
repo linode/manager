@@ -57,42 +57,44 @@ export class ResizePage extends Component {
     const { type, errors, loading } = this.state;
 
     return (
-      <Card header={<CardHeader title="Resize" />}>
-        <ChainedDocumentTitle title="Resize" />
-        <Form
-          onSubmit={this.onSubmit}
-          analytics={{ title: 'Resize Linode' }}
-        >
-          <FormGroup className="row" name="current">
-            <label className="col-sm-3 col-form-label">Current Plan</label>
-            <div className="col-sm-9">
-              <Input disabled value={planStyle(types.types[currentType])} />
-            </div>
-          </FormGroup>
-          <FormGroup errors={errors} name="type" className="row">
-            <label className="col-sm-3 col-form-label">New Plan</label>
-            <div className="col-sm-9">
-              <PlanSelect
-                plans={types.types}
-                value={type}
-                name="type"
-                id="type"
-                onChange={this.onChange}
-              />
-              <FormGroupError errors={errors} name="type" inline={false} />
-            </div>
-          </FormGroup>
-          <FormGroup className="row" name="submit">
-            <div className="col-sm-9 offset-sm-3">
-              <SubmitButton
-                disabled={loading}
-                disabledChildren="Resizing"
-              >Resize</SubmitButton>
-              <FormSummary errors={errors} success="Linode is being resized." />
-            </div>
-          </FormGroup>
-        </Form>
-      </Card>
+      <div className="container">
+        <Card header={<CardHeader title="Resize" />}>
+          <ChainedDocumentTitle title="Resize" />
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Resize Linode' }}
+          >
+            <FormGroup className="row" name="current">
+              <label className="col-sm-3 col-form-label">Current Plan</label>
+              <div className="col-sm-9">
+                <Input disabled value={planStyle(types.types[currentType])} />
+              </div>
+            </FormGroup>
+            <FormGroup errors={errors} name="type" className="row">
+              <label className="col-sm-3 col-form-label">New Plan</label>
+              <div className="col-sm-9">
+                <PlanSelect
+                  plans={types.types}
+                  value={type}
+                  name="type"
+                  id="type"
+                  onChange={this.onChange}
+                />
+                <FormGroupError errors={errors} name="type" inline={false} />
+              </div>
+            </FormGroup>
+            <FormGroup className="row" name="submit">
+              <div className="col-sm-9 offset-sm-3">
+                <SubmitButton
+                  disabled={loading}
+                  disabledChildren="Resizing"
+                >Resize</SubmitButton>
+                <FormSummary errors={errors} success="Linode is being resized." />
+              </div>
+            </FormGroup>
+          </Form>
+        </Card>
+      </div>
     );
   }
 }

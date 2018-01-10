@@ -34,8 +34,8 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class DashboardPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       year: new Date().getFullYear().toString(),
@@ -202,7 +202,7 @@ export class DashboardPage extends Component {
                 </small>
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup name="glish" className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Glish
                 <div><small className="text-muted">NoVNC Console</small></div>
@@ -232,7 +232,7 @@ export class DashboardPage extends Component {
     const months = ['Last 24', 'Jan', 'Feb', 'Mar', 'Apr', 'May',
       'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(
       (month, i) => ({ value: i, label: month })
-    );
+      );
 
     let body = <p>No graphs are available.</p>;
     if (stats) {
@@ -273,7 +273,7 @@ export class DashboardPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         {this.renderDetails()}
         <div className="row">
           <div className="col-sm-12">
@@ -303,7 +303,7 @@ function mapStateToProps(state, props) {
   return { linode, username, timezone, transfer, images };
 }
 
-const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
   await dispatch(transferPool());
   const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
