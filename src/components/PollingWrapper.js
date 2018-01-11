@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -27,9 +27,6 @@ const POLLING = Polling({
 
 class PollingWrapper extends Component {
   async componentDidMount() {
-    console.log('====================================');
-    console.log('PollingWrapper:componentDidMount');
-    console.log('====================================');
     const { dispatch } = this.props;
 
     // OAuth token is not available during the callback
@@ -51,18 +48,12 @@ class PollingWrapper extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    console.log('====================================');
-    console.log('PollingWrapper:shouldComponentUpdate');
-    console.log('====================================');
     return !isEqual(this.props.events, nextProps.events)
       || this.props.eventTriggeringRequests !== nextProps.eventTriggeringRequests
       || this.props.location !== nextProps.location;
   }
 
   componentWillUpdate(nextProps) {
-    console.log('====================================');
-    console.log('PollingWrapper:componentWillUpdate');
-    console.log('====================================');
     const { dispatch } = this.props;
     const { events, eventTriggeringRequests } = nextProps;
 
@@ -86,9 +77,6 @@ class PollingWrapper extends Component {
   }
 
   componentWillUnmount() {
-    console.log('====================================');
-    console.log('PollingWrapper:componentWillUnmount');
-    console.log('====================================');
     POLLING.stop(POLLING_ID);
   }
 

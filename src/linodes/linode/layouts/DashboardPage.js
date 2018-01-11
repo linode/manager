@@ -232,7 +232,7 @@ export class DashboardPage extends Component {
     const months = ['Last 24', 'Jan', 'Feb', 'Mar', 'Apr', 'May',
       'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(
       (month, i) => ({ value: i, label: month })
-      );
+    );
 
     let body = <p>No graphs are available.</p>;
     if (stats) {

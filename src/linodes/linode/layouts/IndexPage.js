@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link, Route } from 'react-router-dom';
 
-// import { Tabs } from 'linode-components';
+import { Tabs } from 'linode-components';
 import { compose } from 'redux';
 import { setAnalytics } from '~/actions';
 import api from '~/api';

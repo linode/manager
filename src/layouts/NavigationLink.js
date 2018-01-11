@@ -23,7 +23,7 @@ const NavigationLink = ({ linkClass, to, label, highlight, ...rest }) => {
         );
       }}
     />
-  )
+  );
 };
 
 NavigationLink.propTypes = {

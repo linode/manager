@@ -87,16 +87,26 @@ class LinodeIndex extends Component {
           <Route path={`${path}/rebuild`} component={RebuildPage} />
           <Route path={`${path}/resize`} component={ResizePage} />
           <Route path={`${path}/rescue`} component={RescuePage} />
-          <Route path={`${path}/networking`} component={() => <div className="container"><h1>networking</h1></div>} />
-          <Route path={`${path}/backups`} component={() => <div className="container"><h1>backups</h1></div>} />
-          <Route path={`${path}/settings`} component={() => <div className="container"><h1>settings</h1></div>} />
+          <Route
+            path={`${path}/networking`}
+            component={() =>
+              <div className="container"><h1>networking</h1></div>}
+          />
+          <Route
+            path={`${path}/backups`}
+            component={() => <div className="container"><h1>backups</h1></div>}
+          />
+          <Route
+            path={`${path}/settings`}
+            component={() => <div className="container"><h1>settings</h1></div>}
+          />
           <Route exact path={path} component={DashboardPage} />
           <Redirect to="/not-found" />
         </Switch>
       </div>
     );
   }
-};
+}
 
 LinodeIndex.propTypes = {
   match: PropTypes.shape({

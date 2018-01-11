@@ -28,10 +28,8 @@ class AuthenticationWrapper extends Component {
       showChildren: false,
     };
   }
+
   componentWillMount() {
-    console.log('====================================');
-    console.log('AuthenticationWrapper:componentWillMount');
-    console.log('====================================');
     const { isAuthenticated, location: { pathname }, redirectToLogin } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
@@ -40,7 +38,6 @@ class AuthenticationWrapper extends Component {
     }
 
     if (!isAuthenticated) {
-      console.log('Bail, bail, bail!!!');
       return redirectToLogin();
     }
   }
@@ -53,9 +50,6 @@ class AuthenticationWrapper extends Component {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
-    console.log('====================================');
-    console.log('AuthenticationWrapper:render', showChildren);
-    console.log('====================================');
     return (<div>{showChildren && children}</div>);
   }
 }
@@ -69,6 +63,7 @@ AuthenticationWrapper.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  children: PropTypes.node,
 };
 
 AuthenticationWrapper.defaultProps = {
