@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import Raven from 'raven-js';
 import InternalError from 'linode-components/dist/errors/InternalError';
 import ModalShell from 'linode-components/dist/modals/ModalShell';
-import { store } from './index';
+import { store } from './store';
 import { setError } from '~/actions/errors';
 import * as session from '~/session';
 
