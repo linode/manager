@@ -12,21 +12,21 @@ export const page = {
 };
 
 export const testConfigOne = {
-  singular: 'nodebalancers',
+  name: 'nodebalancers',
   primaryKey: 'id',
   endpoint: id => `/nodebalancers/${id}`,
   supports: [ONE],
 };
 
 export const testConfigMany = {
-  plural: 'nodebalancers',
+  name: 'nodebalancers',
   primaryKey: 'id',
   endpoint: id => `/nodebalancers/${id}`,
   supports: [MANY],
 };
 
 export const testConfigDelete = {
-  singular: 'nodebalancers',
+  name: 'nodebalancers',
   primaryKey: 'id',
   endpoint: id => `/nodebalancers/${id}`,
   supports: [DELETE],
