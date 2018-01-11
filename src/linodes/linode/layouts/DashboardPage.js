@@ -83,7 +83,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode, dispatch, images, types } = this.props;
+    const { username, linode, dispatch, images, type } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -123,7 +123,7 @@ export class DashboardPage extends Component {
             <div className="row">
               <div className="col-sm-4 row-label">Type</div>
               <div className="col-sm-8" id="type">
-                {planStats(types[linode.type])}
+                {planStats(type)}
                 <div>
                   <small className="text-muted">
                     <Link to={`/linodes/${linode.label}/resize`}>Resize</Link>
@@ -140,7 +140,7 @@ export class DashboardPage extends Component {
                     <small className="text-muted">
                       <Link
                         className="force-link"
-                        onClick={() => UpgradeToKVM.trigger(dispatch, linode)}
+                        onClick={() => UpgradeToKVM.trigger(dispatch, linode, type)}
                       >Upgrade to KVM</Link>
                     </small>
                   </div>
@@ -293,7 +293,7 @@ DashboardPage.propTypes = {
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   transfer: PropTypes.object.isRequired,
-  types: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, props) {
@@ -301,8 +301,8 @@ function mapStateToProps(state, props) {
   const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
-  const types = state.api.types.types;
-  return { linode, username, timezone, transfer, images, types };
+  const type = state.api.types.types[linode.type];
+  return { linode, username, timezone, transfer, images, type };
 }
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
