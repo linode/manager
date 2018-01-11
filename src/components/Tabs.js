@@ -3,11 +3,12 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const Tab = ({ name, to, selected, disabled }) => {
+const Tab = ({ name, to, selected, disabled, parentClass }) => {
+
   const classes = classnames({
-    'linode-tabs__tab': true,
-    'linode-tabs__tab--selected': selected,
-    'linode-tabs__tab--disabled': disabled,
+    [`${parentClass}__tab`]: true,
+    [`${parentClass}__tab--selected`]: selected,
+    [`${parentClass}__tab--disabled`]: disabled,
   });
 
   return (
@@ -30,11 +31,11 @@ Tab.defaultProps = {
 };
 
 
-const TabsComponent = ({ tabs }) => {
+const TabsComponent = ({ tabs, parentClass = 'linode-tabs' }) => {
   return (
-    <div className="linode-tabs__container">
-      <ul className="linode-tabs__tab-list">
-        {tabs.map((props, key) => React.createElement(Tab, { ...props, key }))}
+    <div className={`${parentClass}__container`}>
+      <ul className={`${parentClass}__tab-list`}>
+        {tabs.map((props, key) => React.createElement(Tab, { ...props, key, parentClass }))}
       </ul>
     </div>
   );

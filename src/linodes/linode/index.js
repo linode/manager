@@ -25,6 +25,7 @@ import DashboardPage from './layouts/DashboardPage';
 import ResizePage from './layouts/ResizePage';
 import RescuePage from './layouts/RescuePage';
 import RebuildPage from './layouts/RebuildPage';
+import NetworkPage from './networking';
 
 class LinodeIndex extends Component {
   async componentDidMount() {
@@ -87,11 +88,7 @@ class LinodeIndex extends Component {
           <Route path={`${path}/rebuild`} component={RebuildPage} />
           <Route path={`${path}/resize`} component={ResizePage} />
           <Route path={`${path}/rescue`} component={RescuePage} />
-          <Route
-            path={`${path}/networking`}
-            component={() =>
-              <div className="container"><h1>networking</h1></div>}
-          />
+          <Route path={`${path}/networking`} component={NetworkPage} />
           <Route
             path={`${path}/backups`}
             component={() => <div className="container"><h1>backups</h1></div>}
@@ -121,6 +118,7 @@ LinodeIndex.propTypes = {
 };
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
+  await dispatch(api.images.all());
   const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
   const requests = [
     api.types.one([type.id]),

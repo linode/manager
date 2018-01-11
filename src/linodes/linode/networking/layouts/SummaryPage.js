@@ -97,15 +97,17 @@ export class SummaryPage extends Component {
       ip => ip.type === 'public' && ip.version === 'ipv4').length;
 
     if (['slaac', 'link-local', 'private'].indexOf(record.type.toLowerCase()) !== -1
-        || numPublicIPv4 === 1) {
+      || numPublicIPv4 === 1) {
       // Cannot delete slaac, link-local, private, or last public IPv4 address.
       groups.pop();
     }
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
-      groups.splice(1, 0, { elements: [
-        { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
-      ] });
+      groups.splice(1, 0, {
+        elements: [
+          { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
+        ]
+      });
 
       if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
@@ -127,36 +129,38 @@ export class SummaryPage extends Component {
 
   renderIPSection(ips, type) {
     return (
-      <ListGroup name={type} key={type}>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              dataKey: 'address',
-              label: 'Address',
-              headerClassName: 'IPAddressColumn',
-            },
-            {
-              cellComponent: LabelCell,
-              headerClassName: 'LabelColumn',
-              dataKey: 'rdns',
-              label: 'Reverse DNS',
-              titleKey: 'rdns',
-              tooltipEnabled: true,
-            },
-            {
-              dataKey: 'type',
-              label: 'Type',
-            },
-            {
-              cellComponent: this.renderIPNav,
-              headerClassName: 'IPNavColumn',
-            },
-          ]}
-          data={ips}
-          noDataMessage={`You have no ${type} addresses.`}
-        />
-      </ListGroup>
+      <div className="container">
+        <ListGroup name={type} key={type}>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                dataKey: 'address',
+                label: 'Address',
+                headerClassName: 'IPAddressColumn',
+              },
+              {
+                cellComponent: LabelCell,
+                headerClassName: 'LabelColumn',
+                dataKey: 'rdns',
+                label: 'Reverse DNS',
+                titleKey: 'rdns',
+                tooltipEnabled: true,
+              },
+              {
+                dataKey: 'type',
+                label: 'Type',
+              },
+              {
+                cellComponent: this.renderIPNav,
+                headerClassName: 'IPNavColumn',
+              },
+            ]}
+            data={ips}
+            noDataMessage={`You have no ${type} addresses.`}
+          />
+        </ListGroup>
+      </div>
     );
   }
 
@@ -184,7 +188,7 @@ export class SummaryPage extends Component {
     });
 
     return (
-      <div>
+      <div className="container">
         <header className="NavigationHeader clearfix">
           {/* TODO: Add rdnslookup when API supports it */}
           {this.renderAddButton()}
