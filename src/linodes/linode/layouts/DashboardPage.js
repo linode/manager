@@ -301,7 +301,7 @@ function mapStateToProps(state, props) {
   const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
-  const type = state.api.types.types[linode.type];
+  const type = linode && state.api.types.types[linode.type];
   return { linode, username, timezone, transfer, images, type };
 }
 

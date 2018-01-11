@@ -437,6 +437,31 @@ ShallowWrapper {
         "linodeLabel": "test-linode-1233",
       }
     }
+    type={
+      Object {
+        "_polling": false,
+        "addons": Object {
+          "backups": Object {
+            "price": Object {
+              "monthly": 2.5,
+            },
+          },
+        },
+        "class": "standard",
+        "disk": 24576,
+        "id": "linode2048.5",
+        "label": "Linode 2048",
+        "memory": 2048,
+        "network_out": 125,
+        "price": Object {
+          "hourly": 0.015,
+          "monthly": 10,
+        },
+        "service_type": "linode",
+        "transfer": 2000,
+        "vcpus": 2,
+      }
+    }
     volumes={
       Object {
         "38": Object {
@@ -891,6 +916,31 @@ ShallowWrapper {
             "vcpus": 2,
           }
         }
+        type={
+          Object {
+            "_polling": false,
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2.5,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode2048.5",
+            "label": "Linode 2048",
+            "memory": 2048,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.015,
+              "monthly": 10,
+            },
+            "service_type": "linode",
+            "transfer": 2000,
+            "vcpus": 2,
+          }
+        }
         volumes={
           Object {
             "38": Object {
@@ -1331,6 +1381,29 @@ ShallowWrapper {
             "transfer": 2000,
             "vcpus": 2,
           },
+          "vcpus": 2,
+        },
+        "type": Object {
+          "_polling": false,
+          "addons": Object {
+            "backups": Object {
+              "price": Object {
+                "monthly": 2.5,
+              },
+            },
+          },
+          "class": "standard",
+          "disk": 24576,
+          "id": "linode2048.5",
+          "label": "Linode 2048",
+          "memory": 2048,
+          "network_out": 125,
+          "price": Object {
+            "hourly": 0.015,
+            "monthly": 10,
+          },
+          "service_type": "linode",
+          "transfer": 2000,
           "vcpus": 2,
         },
         "volumes": Object {
@@ -1785,6 +1858,31 @@ ShallowWrapper {
               "vcpus": 2,
             }
           }
+          type={
+            Object {
+              "_polling": false,
+              "addons": Object {
+                "backups": Object {
+                  "price": Object {
+                    "monthly": 2.5,
+                  },
+                },
+              },
+              "class": "standard",
+              "disk": 24576,
+              "id": "linode2048.5",
+              "label": "Linode 2048",
+              "memory": 2048,
+              "network_out": 125,
+              "price": Object {
+                "hourly": 0.015,
+                "monthly": 10,
+              },
+              "service_type": "linode",
+              "transfer": 2000,
+              "vcpus": 2,
+            }
+          }
           volumes={
             Object {
               "38": Object {
@@ -2225,6 +2323,29 @@ ShallowWrapper {
               "transfer": 2000,
               "vcpus": 2,
             },
+            "vcpus": 2,
+          },
+          "type": Object {
+            "_polling": false,
+            "addons": Object {
+              "backups": Object {
+                "price": Object {
+                  "monthly": 2.5,
+                },
+              },
+            },
+            "class": "standard",
+            "disk": 24576,
+            "id": "linode2048.5",
+            "label": "Linode 2048",
+            "memory": 2048,
+            "network_out": 125,
+            "price": Object {
+              "hourly": 0.015,
+              "monthly": 10,
+            },
+            "service_type": "linode",
+            "transfer": 2000,
             "vcpus": 2,
           },
           "volumes": Object {
