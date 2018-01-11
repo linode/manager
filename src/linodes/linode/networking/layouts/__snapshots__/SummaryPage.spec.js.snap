@@ -357,122 +357,131 @@ ShallowWrapper {
           className=""
         >
           <ListBody>
-            <ListGroup
-              name="IPv4"
+            <div
+              className="container"
             >
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "97.107.143.2",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.2",
-                      "linode_id": 1234,
-                      "prefix": 17,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Private",
-                      "version": "ipv4",
-                    },
-                    Object {
-                      "address": "97.107.143.0",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.0",
-                      "linode_id": 1234,
-                      "prefix": 24,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Public",
-                      "version": "ipv4",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no IPv4 addresses."
-              />
-            </ListGroup>
-            <ListGroup
-              name="IPv6"
+              <ListGroup
+                name="IPv4"
+              >
+                <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "dataKey": "address",
+                        "headerClassName": "IPAddressColumn",
+                        "label": "Address",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "rdns",
+                        "headerClassName": "LabelColumn",
+                        "label": "Reverse DNS",
+                        "titleKey": "rdns",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "type",
+                        "label": "Type",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "IPNavColumn",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "address": "97.107.143.2",
+                        "gateway": "97.107.143.0",
+                        "key": "97.107.143.2",
+                        "linode_id": 1234,
+                        "prefix": 17,
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "Private",
+                        "version": "ipv4",
+                      },
+                      Object {
+                        "address": "97.107.143.0",
+                        "gateway": "97.107.143.0",
+                        "key": "97.107.143.0",
+                        "linode_id": 1234,
+                        "prefix": 24,
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "Public",
+                        "version": "ipv4",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no IPv4 addresses."
+                />
+              </ListGroup>
+            </div>
+            <div
+              className="container"
             >
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "fe80::f03c:91ff:fe0a:181f",
-                      "key": "fe80::f03c:91ff:fe0a:181f",
-                      "linode_id": 1234,
-                      "type": "Link-Local",
-                      "version": "ipv6",
-                    },
-                    Object {
-                      "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                      "gateway": "fe80::1",
-                      "key": "2600:3c03::f03c:91ff:fe0a:1",
-                      "linode_id": 1234,
-                      "prefix": "64",
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "SLAAC",
-                      "version": "ipv6",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no IPv6 addresses."
-              />
-            </ListGroup>
+              <ListGroup
+                name="IPv6"
+              >
+                <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "dataKey": "address",
+                        "headerClassName": "IPAddressColumn",
+                        "label": "Address",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "rdns",
+                        "headerClassName": "LabelColumn",
+                        "label": "Reverse DNS",
+                        "titleKey": "rdns",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "type",
+                        "label": "Type",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "IPNavColumn",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "address": "fe80::f03c:91ff:fe0a:181f",
+                        "key": "fe80::f03c:91ff:fe0a:181f",
+                        "linode_id": 1234,
+                        "type": "Link-Local",
+                        "version": "ipv6",
+                      },
+                      Object {
+                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                        "gateway": "fe80::1",
+                        "key": "2600:3c03::f03c:91ff:fe0a:1",
+                        "linode_id": 1234,
+                        "prefix": "64",
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "SLAAC",
+                        "version": "ipv6",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no IPv6 addresses."
+                />
+              </ListGroup>
+            </div>
           </ListBody>
         </List>,
       ],
+      "className": "container",
     },
     "ref": null,
     "rendered": Array [
@@ -515,119 +524,127 @@ ShallowWrapper {
         "nodeType": "function",
         "props": Object {
           "children": <ListBody>
-            <ListGroup
-              name="IPv4"
+            <div
+              className="container"
             >
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "97.107.143.2",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.2",
-                      "linode_id": 1234,
-                      "prefix": 17,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Private",
-                      "version": "ipv4",
-                    },
-                    Object {
-                      "address": "97.107.143.0",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.0",
-                      "linode_id": 1234,
-                      "prefix": 24,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Public",
-                      "version": "ipv4",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no IPv4 addresses."
-              />
-            </ListGroup>
-            <ListGroup
-              name="IPv6"
+              <ListGroup
+                name="IPv4"
+              >
+                <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "dataKey": "address",
+                        "headerClassName": "IPAddressColumn",
+                        "label": "Address",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "rdns",
+                        "headerClassName": "LabelColumn",
+                        "label": "Reverse DNS",
+                        "titleKey": "rdns",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "type",
+                        "label": "Type",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "IPNavColumn",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "address": "97.107.143.2",
+                        "gateway": "97.107.143.0",
+                        "key": "97.107.143.2",
+                        "linode_id": 1234,
+                        "prefix": 17,
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "Private",
+                        "version": "ipv4",
+                      },
+                      Object {
+                        "address": "97.107.143.0",
+                        "gateway": "97.107.143.0",
+                        "key": "97.107.143.0",
+                        "linode_id": 1234,
+                        "prefix": 24,
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "Public",
+                        "version": "ipv4",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no IPv4 addresses."
+                />
+              </ListGroup>
+            </div>
+            <div
+              className="container"
             >
-              <Table
-                className="Table--secondary"
-                columns={
-                  Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ]
-                }
-                data={
-                  Array [
-                    Object {
-                      "address": "fe80::f03c:91ff:fe0a:181f",
-                      "key": "fe80::f03c:91ff:fe0a:181f",
-                      "linode_id": 1234,
-                      "type": "Link-Local",
-                      "version": "ipv6",
-                    },
-                    Object {
-                      "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                      "gateway": "fe80::1",
-                      "key": "2600:3c03::f03c:91ff:fe0a:1",
-                      "linode_id": 1234,
-                      "prefix": "64",
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "SLAAC",
-                      "version": "ipv6",
-                    },
-                  ]
-                }
-                disableHeader={false}
-                noDataMessage="You have no IPv6 addresses."
-              />
-            </ListGroup>
+              <ListGroup
+                name="IPv6"
+              >
+                <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "dataKey": "address",
+                        "headerClassName": "IPAddressColumn",
+                        "label": "Address",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "rdns",
+                        "headerClassName": "LabelColumn",
+                        "label": "Reverse DNS",
+                        "titleKey": "rdns",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "type",
+                        "label": "Type",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "IPNavColumn",
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "address": "fe80::f03c:91ff:fe0a:181f",
+                        "key": "fe80::f03c:91ff:fe0a:181f",
+                        "linode_id": 1234,
+                        "type": "Link-Local",
+                        "version": "ipv6",
+                      },
+                      Object {
+                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                        "gateway": "fe80::1",
+                        "key": "2600:3c03::f03c:91ff:fe0a:1",
+                        "linode_id": 1234,
+                        "prefix": "64",
+                        "rdns": "li1-1.members.linode.com",
+                        "type": "SLAAC",
+                        "version": "ipv6",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no IPv6 addresses."
+                />
+              </ListGroup>
+            </div>
           </ListBody>,
           "className": "",
         },
@@ -638,673 +655,9 @@ ShallowWrapper {
           "nodeType": "function",
           "props": Object {
             "children": Array [
-              <ListGroup
-                name="IPv4"
+              <div
+                className="container"
               >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "97.107.143.2",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.2",
-                        "linode_id": 1234,
-                        "prefix": 17,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Private",
-                        "version": "ipv4",
-                      },
-                      Object {
-                        "address": "97.107.143.0",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.0",
-                        "linode_id": 1234,
-                        "prefix": 24,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Public",
-                        "version": "ipv4",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv4 addresses."
-                />
-              </ListGroup>,
-              <ListGroup
-                name="IPv6"
-              >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "fe80::f03c:91ff:fe0a:181f",
-                        "key": "fe80::f03c:91ff:fe0a:181f",
-                        "linode_id": 1234,
-                        "type": "Link-Local",
-                        "version": "ipv6",
-                      },
-                      Object {
-                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                        "gateway": "fe80::1",
-                        "key": "2600:3c03::f03c:91ff:fe0a:1",
-                        "linode_id": 1234,
-                        "prefix": "64",
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "SLAAC",
-                        "version": "ipv6",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv6 addresses."
-                />
-              </ListGroup>,
-            ],
-          },
-          "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": "IPv4",
-              "nodeType": "function",
-              "props": Object {
-                "children": <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "97.107.143.2",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.2",
-                        "linode_id": 1234,
-                        "prefix": 17,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Private",
-                        "version": "ipv4",
-                      },
-                      Object {
-                        "address": "97.107.143.0",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.0",
-                        "linode_id": 1234,
-                        "prefix": 24,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Public",
-                        "version": "ipv4",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv4 addresses."
-                />,
-                "name": "IPv4",
-              },
-              "ref": null,
-              "rendered": Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "className": "Table--secondary",
-                  "columns": Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ],
-                  "data": Array [
-                    Object {
-                      "address": "97.107.143.2",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.2",
-                      "linode_id": 1234,
-                      "prefix": 17,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Private",
-                      "version": "ipv4",
-                    },
-                    Object {
-                      "address": "97.107.143.0",
-                      "gateway": "97.107.143.0",
-                      "key": "97.107.143.0",
-                      "linode_id": 1234,
-                      "prefix": 24,
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "Public",
-                      "version": "ipv4",
-                    },
-                  ],
-                  "disableHeader": false,
-                  "noDataMessage": "You have no IPv4 addresses.",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              "type": [Function],
-            },
-            Object {
-              "instance": null,
-              "key": "IPv6",
-              "nodeType": "function",
-              "props": Object {
-                "children": <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "fe80::f03c:91ff:fe0a:181f",
-                        "key": "fe80::f03c:91ff:fe0a:181f",
-                        "linode_id": 1234,
-                        "type": "Link-Local",
-                        "version": "ipv6",
-                      },
-                      Object {
-                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                        "gateway": "fe80::1",
-                        "key": "2600:3c03::f03c:91ff:fe0a:1",
-                        "linode_id": 1234,
-                        "prefix": "64",
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "SLAAC",
-                        "version": "ipv6",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv6 addresses."
-                />,
-                "name": "IPv6",
-              },
-              "ref": null,
-              "rendered": Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "className": "Table--secondary",
-                  "columns": Array [
-                    Object {
-                      "dataKey": "address",
-                      "headerClassName": "IPAddressColumn",
-                      "label": "Address",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "dataKey": "rdns",
-                      "headerClassName": "LabelColumn",
-                      "label": "Reverse DNS",
-                      "titleKey": "rdns",
-                      "tooltipEnabled": true,
-                    },
-                    Object {
-                      "dataKey": "type",
-                      "label": "Type",
-                    },
-                    Object {
-                      "cellComponent": [Function],
-                      "headerClassName": "IPNavColumn",
-                    },
-                  ],
-                  "data": Array [
-                    Object {
-                      "address": "fe80::f03c:91ff:fe0a:181f",
-                      "key": "fe80::f03c:91ff:fe0a:181f",
-                      "linode_id": 1234,
-                      "type": "Link-Local",
-                      "version": "ipv6",
-                    },
-                    Object {
-                      "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                      "gateway": "fe80::1",
-                      "key": "2600:3c03::f03c:91ff:fe0a:1",
-                      "linode_id": 1234,
-                      "prefix": "64",
-                      "rdns": "li1-1.members.linode.com",
-                      "type": "SLAAC",
-                      "version": "ipv6",
-                    },
-                  ],
-                  "disableHeader": false,
-                  "noDataMessage": "You have no IPv6 addresses.",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              "type": [Function],
-            },
-          ],
-          "type": [Function],
-        },
-        "type": [Function],
-      },
-    ],
-    "type": "div",
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": Array [
-          <header
-            className="NavigationHeader clearfix"
-          >
-            <PrimaryButton
-              buttonClass="btn-default"
-              className="float-sm-right"
-              onClick={[Function]}
-              options={Array []}
-            >
-              Add an IP Address
-            </PrimaryButton>
-          </header>,
-          <List
-            className=""
-          >
-            <ListBody>
-              <ListGroup
-                name="IPv4"
-              >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "97.107.143.2",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.2",
-                        "linode_id": 1234,
-                        "prefix": 17,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Private",
-                        "version": "ipv4",
-                      },
-                      Object {
-                        "address": "97.107.143.0",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.0",
-                        "linode_id": 1234,
-                        "prefix": 24,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Public",
-                        "version": "ipv4",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv4 addresses."
-                />
-              </ListGroup>
-              <ListGroup
-                name="IPv6"
-              >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "fe80::f03c:91ff:fe0a:181f",
-                        "key": "fe80::f03c:91ff:fe0a:181f",
-                        "linode_id": 1234,
-                        "type": "Link-Local",
-                        "version": "ipv6",
-                      },
-                      Object {
-                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                        "gateway": "fe80::1",
-                        "key": "2600:3c03::f03c:91ff:fe0a:1",
-                        "linode_id": 1234,
-                        "prefix": "64",
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "SLAAC",
-                        "version": "ipv6",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv6 addresses."
-                />
-              </ListGroup>
-            </ListBody>
-          </List>,
-        ],
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": <PrimaryButton
-              buttonClass="btn-default"
-              className="float-sm-right"
-              onClick={[Function]}
-              options={Array []}
-            >
-              Add an IP Address
-            </PrimaryButton>,
-            "className": "NavigationHeader clearfix",
-          },
-          "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "buttonClass": "btn-default",
-              "children": "Add an IP Address",
-              "className": "float-sm-right",
-              "onClick": [Function],
-              "options": Array [],
-            },
-            "ref": null,
-            "rendered": "Add an IP Address",
-            "type": [Function],
-          },
-          "type": "header",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "children": <ListBody>
-              <ListGroup
-                name="IPv4"
-              >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "97.107.143.2",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.2",
-                        "linode_id": 1234,
-                        "prefix": 17,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Private",
-                        "version": "ipv4",
-                      },
-                      Object {
-                        "address": "97.107.143.0",
-                        "gateway": "97.107.143.0",
-                        "key": "97.107.143.0",
-                        "linode_id": 1234,
-                        "prefix": 24,
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "Public",
-                        "version": "ipv4",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv4 addresses."
-                />
-              </ListGroup>
-              <ListGroup
-                name="IPv6"
-              >
-                <Table
-                  className="Table--secondary"
-                  columns={
-                    Array [
-                      Object {
-                        "dataKey": "address",
-                        "headerClassName": "IPAddressColumn",
-                        "label": "Address",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "dataKey": "rdns",
-                        "headerClassName": "LabelColumn",
-                        "label": "Reverse DNS",
-                        "titleKey": "rdns",
-                        "tooltipEnabled": true,
-                      },
-                      Object {
-                        "dataKey": "type",
-                        "label": "Type",
-                      },
-                      Object {
-                        "cellComponent": [Function],
-                        "headerClassName": "IPNavColumn",
-                      },
-                    ]
-                  }
-                  data={
-                    Array [
-                      Object {
-                        "address": "fe80::f03c:91ff:fe0a:181f",
-                        "key": "fe80::f03c:91ff:fe0a:181f",
-                        "linode_id": 1234,
-                        "type": "Link-Local",
-                        "version": "ipv6",
-                      },
-                      Object {
-                        "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
-                        "gateway": "fe80::1",
-                        "key": "2600:3c03::f03c:91ff:fe0a:1",
-                        "linode_id": 1234,
-                        "prefix": "64",
-                        "rdns": "li1-1.members.linode.com",
-                        "type": "SLAAC",
-                        "version": "ipv6",
-                      },
-                    ]
-                  }
-                  disableHeader={false}
-                  noDataMessage="You have no IPv6 addresses."
-                />
-              </ListGroup>
-            </ListBody>,
-            "className": "",
-          },
-          "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "children": Array [
                 <ListGroup
                   name="IPv4"
                 >
@@ -1362,7 +715,11 @@ ShallowWrapper {
                     disableHeader={false}
                     noDataMessage="You have no IPv4 addresses."
                   />
-                </ListGroup>,
+                </ListGroup>
+              </div>,
+              <div
+                className="container"
+              >
                 <ListGroup
                   name="IPv6"
                 >
@@ -1417,12 +774,79 @@ ShallowWrapper {
                     disableHeader={false}
                     noDataMessage="You have no IPv6 addresses."
                   />
+                </ListGroup>
+              </div>,
+            ],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ListGroup
+                  name="IPv4"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "97.107.143.2",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.2",
+                          "linode_id": 1234,
+                          "prefix": 17,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Private",
+                          "version": "ipv4",
+                        },
+                        Object {
+                          "address": "97.107.143.0",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.0",
+                          "linode_id": 1234,
+                          "prefix": 24,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Public",
+                          "version": "ipv4",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv4 addresses."
+                  />
                 </ListGroup>,
-              ],
-            },
-            "ref": null,
-            "rendered": Array [
-              Object {
+                "className": "container",
+              },
+              "ref": null,
+              "rendered": Object {
                 "instance": null,
                 "key": "IPv4",
                 "nodeType": "function",
@@ -1544,7 +968,72 @@ ShallowWrapper {
                 },
                 "type": [Function],
               },
-              Object {
+              "type": "div",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": <ListGroup
+                  name="IPv6"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "fe80::f03c:91ff:fe0a:181f",
+                          "key": "fe80::f03c:91ff:fe0a:181f",
+                          "linode_id": 1234,
+                          "type": "Link-Local",
+                          "version": "ipv6",
+                        },
+                        Object {
+                          "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                          "gateway": "fe80::1",
+                          "key": "2600:3c03::f03c:91ff:fe0a:1",
+                          "linode_id": 1234,
+                          "prefix": "64",
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "SLAAC",
+                          "version": "ipv6",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv6 addresses."
+                  />
+                </ListGroup>,
+                "className": "container",
+              },
+              "ref": null,
+              "rendered": Object {
                 "instance": null,
                 "key": "IPv6",
                 "nodeType": "function",
@@ -1659,6 +1148,833 @@ ShallowWrapper {
                   "type": [Function],
                 },
                 "type": [Function],
+              },
+              "type": "div",
+            },
+          ],
+          "type": [Function],
+        },
+        "type": [Function],
+      },
+    ],
+    "type": "div",
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {
+        "children": Array [
+          <header
+            className="NavigationHeader clearfix"
+          >
+            <PrimaryButton
+              buttonClass="btn-default"
+              className="float-sm-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add an IP Address
+            </PrimaryButton>
+          </header>,
+          <List
+            className=""
+          >
+            <ListBody>
+              <div
+                className="container"
+              >
+                <ListGroup
+                  name="IPv4"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "97.107.143.2",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.2",
+                          "linode_id": 1234,
+                          "prefix": 17,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Private",
+                          "version": "ipv4",
+                        },
+                        Object {
+                          "address": "97.107.143.0",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.0",
+                          "linode_id": 1234,
+                          "prefix": 24,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Public",
+                          "version": "ipv4",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv4 addresses."
+                  />
+                </ListGroup>
+              </div>
+              <div
+                className="container"
+              >
+                <ListGroup
+                  name="IPv6"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "fe80::f03c:91ff:fe0a:181f",
+                          "key": "fe80::f03c:91ff:fe0a:181f",
+                          "linode_id": 1234,
+                          "type": "Link-Local",
+                          "version": "ipv6",
+                        },
+                        Object {
+                          "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                          "gateway": "fe80::1",
+                          "key": "2600:3c03::f03c:91ff:fe0a:1",
+                          "linode_id": 1234,
+                          "prefix": "64",
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "SLAAC",
+                          "version": "ipv6",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv6 addresses."
+                  />
+                </ListGroup>
+              </div>
+            </ListBody>
+          </List>,
+        ],
+        "className": "container",
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "host",
+          "props": Object {
+            "children": <PrimaryButton
+              buttonClass="btn-default"
+              className="float-sm-right"
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add an IP Address
+            </PrimaryButton>,
+            "className": "NavigationHeader clearfix",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "buttonClass": "btn-default",
+              "children": "Add an IP Address",
+              "className": "float-sm-right",
+              "onClick": [Function],
+              "options": Array [],
+            },
+            "ref": null,
+            "rendered": "Add an IP Address",
+            "type": [Function],
+          },
+          "type": "header",
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": <ListBody>
+              <div
+                className="container"
+              >
+                <ListGroup
+                  name="IPv4"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "97.107.143.2",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.2",
+                          "linode_id": 1234,
+                          "prefix": 17,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Private",
+                          "version": "ipv4",
+                        },
+                        Object {
+                          "address": "97.107.143.0",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.0",
+                          "linode_id": 1234,
+                          "prefix": 24,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Public",
+                          "version": "ipv4",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv4 addresses."
+                  />
+                </ListGroup>
+              </div>
+              <div
+                className="container"
+              >
+                <ListGroup
+                  name="IPv6"
+                >
+                  <Table
+                    className="Table--secondary"
+                    columns={
+                      Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ]
+                    }
+                    data={
+                      Array [
+                        Object {
+                          "address": "fe80::f03c:91ff:fe0a:181f",
+                          "key": "fe80::f03c:91ff:fe0a:181f",
+                          "linode_id": 1234,
+                          "type": "Link-Local",
+                          "version": "ipv6",
+                        },
+                        Object {
+                          "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                          "gateway": "fe80::1",
+                          "key": "2600:3c03::f03c:91ff:fe0a:1",
+                          "linode_id": 1234,
+                          "prefix": "64",
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "SLAAC",
+                          "version": "ipv6",
+                        },
+                      ]
+                    }
+                    disableHeader={false}
+                    noDataMessage="You have no IPv6 addresses."
+                  />
+                </ListGroup>
+              </div>
+            </ListBody>,
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "children": Array [
+                <div
+                  className="container"
+                >
+                  <ListGroup
+                    name="IPv4"
+                  >
+                    <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "97.107.143.2",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.2",
+                            "linode_id": 1234,
+                            "prefix": 17,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Private",
+                            "version": "ipv4",
+                          },
+                          Object {
+                            "address": "97.107.143.0",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.0",
+                            "linode_id": 1234,
+                            "prefix": 24,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Public",
+                            "version": "ipv4",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv4 addresses."
+                    />
+                  </ListGroup>
+                </div>,
+                <div
+                  className="container"
+                >
+                  <ListGroup
+                    name="IPv6"
+                  >
+                    <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "fe80::f03c:91ff:fe0a:181f",
+                            "key": "fe80::f03c:91ff:fe0a:181f",
+                            "linode_id": 1234,
+                            "type": "Link-Local",
+                            "version": "ipv6",
+                          },
+                          Object {
+                            "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                            "gateway": "fe80::1",
+                            "key": "2600:3c03::f03c:91ff:fe0a:1",
+                            "linode_id": 1234,
+                            "prefix": "64",
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "SLAAC",
+                            "version": "ipv6",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv6 addresses."
+                    />
+                  </ListGroup>
+                </div>,
+              ],
+            },
+            "ref": null,
+            "rendered": Array [
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <ListGroup
+                    name="IPv4"
+                  >
+                    <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "97.107.143.2",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.2",
+                            "linode_id": 1234,
+                            "prefix": 17,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Private",
+                            "version": "ipv4",
+                          },
+                          Object {
+                            "address": "97.107.143.0",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.0",
+                            "linode_id": 1234,
+                            "prefix": 24,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Public",
+                            "version": "ipv4",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv4 addresses."
+                    />
+                  </ListGroup>,
+                  "className": "container",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": "IPv4",
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "97.107.143.2",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.2",
+                            "linode_id": 1234,
+                            "prefix": 17,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Private",
+                            "version": "ipv4",
+                          },
+                          Object {
+                            "address": "97.107.143.0",
+                            "gateway": "97.107.143.0",
+                            "key": "97.107.143.0",
+                            "linode_id": 1234,
+                            "prefix": 24,
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "Public",
+                            "version": "ipv4",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv4 addresses."
+                    />,
+                    "name": "IPv4",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "Table--secondary",
+                      "columns": Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ],
+                      "data": Array [
+                        Object {
+                          "address": "97.107.143.2",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.2",
+                          "linode_id": 1234,
+                          "prefix": 17,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Private",
+                          "version": "ipv4",
+                        },
+                        Object {
+                          "address": "97.107.143.0",
+                          "gateway": "97.107.143.0",
+                          "key": "97.107.143.0",
+                          "linode_id": 1234,
+                          "prefix": 24,
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "Public",
+                          "version": "ipv4",
+                        },
+                      ],
+                      "disableHeader": false,
+                      "noDataMessage": "You have no IPv4 addresses.",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+                "type": "div",
+              },
+              Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "host",
+                "props": Object {
+                  "children": <ListGroup
+                    name="IPv6"
+                  >
+                    <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "fe80::f03c:91ff:fe0a:181f",
+                            "key": "fe80::f03c:91ff:fe0a:181f",
+                            "linode_id": 1234,
+                            "type": "Link-Local",
+                            "version": "ipv6",
+                          },
+                          Object {
+                            "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                            "gateway": "fe80::1",
+                            "key": "2600:3c03::f03c:91ff:fe0a:1",
+                            "linode_id": 1234,
+                            "prefix": "64",
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "SLAAC",
+                            "version": "ipv6",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv6 addresses."
+                    />
+                  </ListGroup>,
+                  "className": "container",
+                },
+                "ref": null,
+                "rendered": Object {
+                  "instance": null,
+                  "key": "IPv6",
+                  "nodeType": "function",
+                  "props": Object {
+                    "children": <Table
+                      className="Table--secondary"
+                      columns={
+                        Array [
+                          Object {
+                            "dataKey": "address",
+                            "headerClassName": "IPAddressColumn",
+                            "label": "Address",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "dataKey": "rdns",
+                            "headerClassName": "LabelColumn",
+                            "label": "Reverse DNS",
+                            "titleKey": "rdns",
+                            "tooltipEnabled": true,
+                          },
+                          Object {
+                            "dataKey": "type",
+                            "label": "Type",
+                          },
+                          Object {
+                            "cellComponent": [Function],
+                            "headerClassName": "IPNavColumn",
+                          },
+                        ]
+                      }
+                      data={
+                        Array [
+                          Object {
+                            "address": "fe80::f03c:91ff:fe0a:181f",
+                            "key": "fe80::f03c:91ff:fe0a:181f",
+                            "linode_id": 1234,
+                            "type": "Link-Local",
+                            "version": "ipv6",
+                          },
+                          Object {
+                            "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                            "gateway": "fe80::1",
+                            "key": "2600:3c03::f03c:91ff:fe0a:1",
+                            "linode_id": 1234,
+                            "prefix": "64",
+                            "rdns": "li1-1.members.linode.com",
+                            "type": "SLAAC",
+                            "version": "ipv6",
+                          },
+                        ]
+                      }
+                      disableHeader={false}
+                      noDataMessage="You have no IPv6 addresses."
+                    />,
+                    "name": "IPv6",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "Table--secondary",
+                      "columns": Array [
+                        Object {
+                          "dataKey": "address",
+                          "headerClassName": "IPAddressColumn",
+                          "label": "Address",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "dataKey": "rdns",
+                          "headerClassName": "LabelColumn",
+                          "label": "Reverse DNS",
+                          "titleKey": "rdns",
+                          "tooltipEnabled": true,
+                        },
+                        Object {
+                          "dataKey": "type",
+                          "label": "Type",
+                        },
+                        Object {
+                          "cellComponent": [Function],
+                          "headerClassName": "IPNavColumn",
+                        },
+                      ],
+                      "data": Array [
+                        Object {
+                          "address": "fe80::f03c:91ff:fe0a:181f",
+                          "key": "fe80::f03c:91ff:fe0a:181f",
+                          "linode_id": 1234,
+                          "type": "Link-Local",
+                          "version": "ipv6",
+                        },
+                        Object {
+                          "address": "2600:3c03::f03c:91ff:fe0a:1 / 64",
+                          "gateway": "fe80::1",
+                          "key": "2600:3c03::f03c:91ff:fe0a:1",
+                          "linode_id": 1234,
+                          "prefix": "64",
+                          "rdns": "li1-1.members.linode.com",
+                          "type": "SLAAC",
+                          "version": "ipv6",
+                        },
+                      ],
+                      "disableHeader": false,
+                      "noDataMessage": "You have no IPv6 addresses.",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": [Function],
+                },
+                "type": "div",
               },
             ],
             "type": [Function],

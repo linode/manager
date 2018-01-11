@@ -127,8 +127,7 @@ ShallowWrapper {
           className="MainHeader-brand"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/"
           >
             <span
@@ -218,8 +217,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/"
           >
             <span
@@ -251,8 +249,7 @@ ShallowWrapper {
                 width={35}
               />
             </span>,
-            "onlyActiveOnIndex": false,
-            "style": Object {},
+            "replace": false,
             "to": "/",
           },
           "ref": null,
@@ -457,8 +454,7 @@ ShallowWrapper {
             className="MainHeader-brand"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/"
             >
               <span
@@ -548,8 +544,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/"
             >
               <span
@@ -581,8 +576,7 @@ ShallowWrapper {
                   width={35}
                 />
               </span>,
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/",
             },
             "ref": null,

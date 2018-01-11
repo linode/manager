@@ -24,8 +24,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/profile"
           >
             My Profile
@@ -50,8 +49,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/settings"
           >
             Account Settings
@@ -61,8 +59,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/billing"
           >
             Billing
@@ -72,8 +69,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/users"
           >
             Users
@@ -117,8 +113,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/logout"
           >
             Log out
@@ -138,8 +133,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -164,8 +158,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -175,8 +168,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -186,8 +178,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -231,8 +222,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -249,8 +239,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -264,8 +253,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "My Profile",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/profile",
             },
             "ref": null,
@@ -328,8 +316,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -343,8 +330,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Account Settings",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/settings",
             },
             "ref": null,
@@ -359,8 +345,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -374,8 +359,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Billing",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/billing",
             },
             "ref": null,
@@ -390,8 +374,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -405,8 +388,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Users",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/users",
             },
             "ref": null,
@@ -532,8 +514,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -547,8 +528,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Log out",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/logout",
             },
             "ref": null,
@@ -575,8 +555,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -601,8 +580,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -612,8 +590,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -623,8 +600,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -668,8 +644,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -689,8 +664,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/profile"
               >
                 My Profile
@@ -715,8 +689,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/settings"
               >
                 Account Settings
@@ -726,8 +699,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/billing"
               >
                 Billing
@@ -737,8 +709,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -782,8 +753,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/logout"
               >
                 Log out
@@ -800,8 +770,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/profile"
               >
                 My Profile
@@ -815,8 +784,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "My Profile",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/profile",
               },
               "ref": null,
@@ -879,8 +847,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/settings"
               >
                 Account Settings
@@ -894,8 +861,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Account Settings",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/settings",
               },
               "ref": null,
@@ -910,8 +876,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/billing"
               >
                 Billing
@@ -925,8 +890,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Billing",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/billing",
               },
               "ref": null,
@@ -941,8 +905,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -956,8 +919,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Users",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/users",
               },
               "ref": null,
@@ -1083,8 +1045,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/logout"
               >
                 Log out
@@ -1098,8 +1059,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Log out",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/logout",
               },
               "ref": null,
@@ -1150,8 +1110,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/profile"
           >
             My Profile
@@ -1176,8 +1135,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/settings"
           >
             Account Settings
@@ -1187,8 +1145,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/billing"
           >
             Billing
@@ -1198,8 +1155,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/users"
           >
             Users
@@ -1243,8 +1199,7 @@ ShallowWrapper {
           className="SessionMenu-item"
         >
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/logout"
           >
             Log out
@@ -1264,8 +1219,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -1290,8 +1244,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -1301,8 +1254,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -1312,8 +1264,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -1357,8 +1308,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -1375,8 +1325,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -1390,8 +1339,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "My Profile",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/profile",
             },
             "ref": null,
@@ -1454,8 +1402,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -1469,8 +1416,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Account Settings",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/settings",
             },
             "ref": null,
@@ -1485,8 +1431,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -1500,8 +1445,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Billing",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/billing",
             },
             "ref": null,
@@ -1516,8 +1460,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -1531,8 +1474,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Users",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/users",
             },
             "ref": null,
@@ -1658,8 +1600,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -1673,8 +1614,7 @@ ShallowWrapper {
             "nodeType": "class",
             "props": Object {
               "children": "Log out",
-              "onlyActiveOnIndex": false,
-              "style": Object {},
+              "replace": false,
               "to": "/logout",
             },
             "ref": null,
@@ -1701,8 +1641,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/profile"
             >
               My Profile
@@ -1727,8 +1666,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/settings"
             >
               Account Settings
@@ -1738,8 +1676,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/billing"
             >
               Billing
@@ -1749,8 +1686,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/users"
             >
               Users
@@ -1794,8 +1730,7 @@ ShallowWrapper {
             className="SessionMenu-item"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/logout"
             >
               Log out
@@ -1815,8 +1750,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/profile"
               >
                 My Profile
@@ -1841,8 +1775,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/settings"
               >
                 Account Settings
@@ -1852,8 +1785,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/billing"
               >
                 Billing
@@ -1863,8 +1795,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -1908,8 +1839,7 @@ ShallowWrapper {
               className="SessionMenu-item"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/logout"
               >
                 Log out
@@ -1926,8 +1856,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/profile"
               >
                 My Profile
@@ -1941,8 +1870,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "My Profile",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/profile",
               },
               "ref": null,
@@ -2005,8 +1933,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/settings"
               >
                 Account Settings
@@ -2020,8 +1947,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Account Settings",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/settings",
               },
               "ref": null,
@@ -2036,8 +1962,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/billing"
               >
                 Billing
@@ -2051,8 +1976,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Billing",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/billing",
               },
               "ref": null,
@@ -2067,8 +1991,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -2082,8 +2005,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Users",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/users",
               },
               "ref": null,
@@ -2209,8 +2131,7 @@ ShallowWrapper {
             "nodeType": "host",
             "props": Object {
               "children": <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/logout"
               >
                 Log out
@@ -2224,8 +2145,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Log out",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/logout",
               },
               "ref": null,

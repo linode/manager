@@ -13,13 +13,8 @@ import {
 } from 'linode-components';
 
 import { setSource } from '~/actions/source';
-import api from '~/api';
-import { ipv4s, assignIPs } from '~/api/ad-hoc/networking';
-import {
-  createHeaderFilter,
-  dispatchOrStoreErrors,
-  getObjectByLabelLazily,
-} from '~/api/util';
+import { assignIPs } from '~/api/ad-hoc/networking';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import { IPList } from '../components';
 import { selectLinode } from '../../utilities';

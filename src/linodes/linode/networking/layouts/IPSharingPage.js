@@ -17,20 +17,11 @@ import {
   CheckboxCell,
   LinkCell,
 } from 'linode-components';
-import api from '~/api';
-import { ipv4s } from '~/api/ad-hoc/networking';
-import {
-  createHeaderFilter,
-  dispatchOrStoreErrors,
-  getObjectByLabelLazily,
-} from '~/api/util';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/ad-hoc/networking';
 import { IPRdnsCell } from '~/components/tables/cells';
-
 import { selectLinode } from '../../utilities';
-import { ComponentPreload as Preload } from '~/decorators/Preload';
-
 
 export class IPSharingPage extends Component {
   constructor(props) {

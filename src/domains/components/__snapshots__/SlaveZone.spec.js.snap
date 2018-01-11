@@ -135,8 +135,7 @@ ShallowWrapper {
             className="container"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/domains"
             >
               Domains
@@ -321,8 +320,7 @@ ShallowWrapper {
             className="container"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/domains"
             >
               Domains
@@ -344,8 +342,7 @@ ShallowWrapper {
           "props": Object {
             "children": Array [
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -367,8 +364,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Domains",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/domains",
               },
               "ref": null,
@@ -888,8 +884,7 @@ ShallowWrapper {
               className="container"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -1074,8 +1069,7 @@ ShallowWrapper {
               className="container"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -1097,8 +1091,7 @@ ShallowWrapper {
             "props": Object {
               "children": Array [
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains"
                 >
                   Domains
@@ -1120,8 +1113,7 @@ ShallowWrapper {
                 "nodeType": "class",
                 "props": Object {
                   "children": "Domains",
-                  "onlyActiveOnIndex": false,
-                  "style": Object {},
+                  "replace": false,
                   "to": "/domains",
                 },
                 "ref": null,

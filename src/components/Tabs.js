@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const Tab = ({ name, to, selected, disabled, parentClass }) => {
-
   const classes = classnames({
     [`${parentClass}__tab`]: true,
     [`${parentClass}__tab--selected`]: selected,
@@ -23,13 +22,14 @@ Tab.propTypes = {
   to: PropTypes.string.isRequired,
   selected: PropTypes.bool,
   disabled: PropTypes.bool,
+  parentClass: PropTypes.string,
 };
 
 Tab.defaultProps = {
   selected: false,
   disabled: false,
+  parentClass: 'linode-tabs',
 };
-
 
 const TabsComponent = ({ tabs, parentClass = 'linode-tabs' }) => {
   return (
@@ -43,6 +43,11 @@ const TabsComponent = ({ tabs, parentClass = 'linode-tabs' }) => {
 
 TabsComponent.propTypes = {
   tabs: PropTypes.array.isRequired,
+  parentClass: PropTypes.string,
+};
+
+TabsComponent.defaultProps = {
+  parentClass: 'linode-tabs',
 };
 
 export default TabsComponent;

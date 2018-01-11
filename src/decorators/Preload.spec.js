@@ -12,6 +12,8 @@ describe('decorators/Preload', () => {
     Preload({ delay, loader, method })(child);
 
   it('should render loading component', async () => {
+    const dispatch = jest.fn();
+
     const mockPromise = jest.fn(() => sleep(200));
     const PreloadedComponent = createPreloader(
       200,
@@ -19,7 +21,9 @@ describe('decorators/Preload', () => {
       LoadingComponent,
       ChildComponent
     );
-    const wrapper = mount(React.createElement(PreloadedComponent, { myProp: true }));
+    const wrapper = mount(React.createElement(PreloadedComponent, {
+      myProp: true, dispatch,
+    }));
 
     // Initial / Loading
     expect(wrapper.find(LoadingComponent)).toHaveLength(1);
@@ -31,10 +35,11 @@ describe('decorators/Preload', () => {
     wrapper.update();
     expect(wrapper.find(ChildComponent)).toHaveLength(1);
     expect(wrapper.find(ChildComponent).props())
-      .toEqual({ myProp: true });
+      .toEqual({ myProp: true, dispatch });
   });
 
   it('should render loading component with error', async () => {
+    const dispatch = jest.fn();
     const mockRejection = jest.fn(() => Promise.reject(new TypeError()));
     const PreloadedComponent = createPreloader(
       200,
@@ -42,7 +47,9 @@ describe('decorators/Preload', () => {
       LoadingComponent,
       ChildComponent
     );
-    const wrapper = mount(React.createElement(PreloadedComponent, { myProp: true }));
+    const wrapper = mount(React.createElement(PreloadedComponent, {
+      myProp: true, dispatch,
+    }));
 
     await sleep(300);
     wrapper.update();

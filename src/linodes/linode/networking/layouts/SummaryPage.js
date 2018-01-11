@@ -106,7 +106,7 @@ export class SummaryPage extends Component {
       groups.splice(1, 0, {
         elements: [
           { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
-        ]
+        ],
       });
 
       if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {

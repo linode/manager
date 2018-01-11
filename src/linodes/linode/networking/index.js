@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch, matchPath, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import TabsComponent from '~/components/Tabs';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
@@ -49,6 +50,17 @@ const LinodeNetworkingIndex = (props) => {
     </div>
   );
 };
+
+LinodeNetworkingIndex.propTypes = {
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
   const { region, id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
