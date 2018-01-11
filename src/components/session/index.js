@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
 
@@ -113,14 +113,11 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-const preloadRequest = async (dispatch, { username }) => {
-  if (!username) {
-    await dispatch(api.profile.one());
-  }
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.profile.one());
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
   Preload(preloadRequest),
 )(Session);

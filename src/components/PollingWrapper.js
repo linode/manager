@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import isEqual from 'lodash/isEqual';
 
+import { withRouter } from 'react-router-dom';
 import api from '~/api';
 import Polling from '~/api/polling';
 import { createHeaderFilter, greaterThanDatetimeFilter, lessThanNowFilter } from '~/api/util';
@@ -25,6 +27,9 @@ const POLLING = Polling({
 
 class PollingWrapper extends Component {
   async componentDidMount() {
+    console.log('====================================');
+    console.log('PollingWrapper:componentDidMount');
+    console.log('====================================');
     const { dispatch } = this.props;
 
     // OAuth token is not available during the callback
@@ -46,10 +51,18 @@ class PollingWrapper extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    console.log('====================================');
+    console.log('PollingWrapper:shouldComponentUpdate');
+    console.log('====================================');
     return !isEqual(this.props.events, nextProps.events)
-      || this.props.eventTriggeringRequests !== nextProps.eventTriggeringRequests;
+      || this.props.eventTriggeringRequests !== nextProps.eventTriggeringRequests
+      || this.props.location !== nextProps.location;
   }
+
   componentWillUpdate(nextProps) {
+    console.log('====================================');
+    console.log('PollingWrapper:componentWillUpdate');
+    console.log('====================================');
     const { dispatch } = this.props;
     const { events, eventTriggeringRequests } = nextProps;
 
@@ -73,26 +86,31 @@ class PollingWrapper extends Component {
   }
 
   componentWillUnmount() {
+    console.log('====================================');
+    console.log('PollingWrapper:componentWillUnmount');
+    console.log('====================================');
     POLLING.stop(POLLING_ID);
   }
+
   render() {
-    return (
-      <div>{this.props.children}</div>
-    );
+    return null;
   }
 }
 
 PollingWrapper.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired,
   eventTriggeringRequests: PropTypes.number.isRequired,
   fetchEventsPage: PropTypes.func.isRequired,
   events: PropTypes.object,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   events: state.api.events,
   eventTriggeringRequests: state.events.eventTriggeringRequests,
+  isAuthenticated: Boolean(state.authentication.token),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -101,4 +119,4 @@ const mapDispatchToProps = (dispatch) => ({
     return dispatch(api.events.page(0, [], null, true, null, headers));
   },
 });
-export default connect(mapStateToProps, mapDispatchToProps)(PollingWrapper);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PollingWrapper));

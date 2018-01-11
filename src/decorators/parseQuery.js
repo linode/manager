@@ -1,11 +1,10 @@
-import { createElement, Component, PureComponent } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'querystring';
 import isEqual from 'lodash/isEqual';
 
 export default (WrappedComponent) => {
-  class QueryParser extends PureComponent {
+  class QueryParser extends Component {
     shouldComponentUpdate(nextProps) {
       return !isEqual(this.props, nextProps);
     }
@@ -24,7 +23,7 @@ export default (WrappedComponent) => {
         },
       };
 
-      return createElement(WrappedComponent, updatedProps);
+      return React.createElement(WrappedComponent, updatedProps);
     }
   }
 

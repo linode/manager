@@ -28,8 +28,7 @@ import Navigation from '~/layouts/Navigation';
 import Footer from '~/layouts/Footer';
 import MiniHeader from '~/layouts/MiniHeader';
 
-import { whyDidYouUpdate } from 'why-did-you-update';
-whyDidYouUpdate(React, { exclude: /^Connect/ });
+import AuthenticationWrapper from '~/components/AuthenticationWrapper';
 /**
  * Crazy important, so pay attention boys and girls;
  * Any react-redux connected component which uses a route component (Link, Route,
@@ -107,27 +106,29 @@ const init = () => {
   try {
     render(
       <Provider store={store}>
-        <PollingWrapper>
-          <ClickCapture>
-            <ConnectedRouter history={history}>
-              <div className="Layout" >
-                <ChainedDocumentTitle title="Linode Manager" />
-                <div className="Layout-inner">
-                  {/* <ModalShell
+        <ClickCapture>
+          <ConnectedRouter history={history}>
+            <div>
+              <AuthenticationWrapper>
+                <PollingWrapper />
+                <div className="Layout" >
+                  <ChainedDocumentTitle title="Linode Manager" />
+                  <div className="Layout-inner">
+                    {/* <ModalShell
                       open={modal.open}
                       title={modal.title}
                       close={() => hideModal()}
                     >
                       {modal.body}
                     </ModalShell> */}
-                  <div className="Header">
-                    <MiniHeader />
-                    <Navigation />
-                    <ContextNavigation />
-                  </div>
-                  <Switch>
-                    <Route path="/linodes" component={Linodes} />
-                    {/* <Route path="/nodebalancers" component={NodeBalancers} />
+                    <div className="Header">
+                      <MiniHeader />
+                      <Navigation />
+                      <ContextNavigation />
+                    </div>
+                    <Switch>
+                      <Route path="/linodes" component={Linodes} />
+                      {/* <Route path="/nodebalancers" component={NodeBalancers} />
                       <Route path="/domains" component={Domains} />
                       <Route path="/support" component={Support} />
                       <Route path="/stackscripts" component={Stackscripts} />
@@ -137,18 +138,19 @@ const init = () => {
                       <Route path="/profile" component={Profile} />
                       <Route path="/settings" component={Settings} />
                       <Route path="/users" component={Users} /> */}
-                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                    <Route path="/" exact component={BlankPage} />
-                    <Route exact path="/logout" component={Logout} />
-                    <Route exact path="/oauth/callback" component={OAuthComponent} />
-                    <Route component={NotFound} />
-                  </Switch>
+                      <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                      <Route path="/" exact component={BlankPage} />
+                      <Route exact path="/logout" component={Logout} />
+                      <Route exact path="/oauth/callback" component={OAuthComponent} />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </div>
+                  <Footer />
                 </div>
-                <Footer />
-              </div>
-            </ConnectedRouter>
-          </ClickCapture>
-        </PollingWrapper>
+              </AuthenticationWrapper>
+            </div>
+          </ConnectedRouter>
+        </ClickCapture>
       </Provider>,
       document.getElementById('root')
     );
