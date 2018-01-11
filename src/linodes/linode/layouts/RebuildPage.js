@@ -39,9 +39,8 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id, label } } = this.props;
+    const { images, dispatch, linode: { id, label } } = this.props;
     const { password, image } = this.state;
-    const imageVendor = this.props.image.vendor;
 
     const data = {
       image: image,
@@ -65,7 +64,7 @@ export class RebuildPage extends Component {
       >
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
-          Are you sure you want to rebuild <strong>{label}</strong> with {imageVendor}?
+          Are you sure you want to rebuild <strong>{label}</strong> with {images[image].label}?
         </p>
       </ConfirmModalBody>
     )));
