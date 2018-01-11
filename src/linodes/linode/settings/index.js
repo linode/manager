@@ -36,7 +36,7 @@ const LinodeSettingsIndex = (props) => {
   return (
     <div>
       <TabsComponent tabs={tabs} parentClass="linode-tabs--sub" />
-      <ChainedDocumentTitle title="Networking" />
+      <ChainedDocumentTitle title="Settings" />
       <Switch>
         <Route path={`${path}/alerts`} component={AlertsPage} />
         <Route path={`${path}/advanced/configs/create`} component={AddConfigPage} />
