@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ComponentLoader from '~/components/loaders/ComponentLoader';
 import PageLoader from '~/components/loaders/PageLoader';
+import invariant from 'invariant';
 
 const CONFIG_DEFAULTS = { delay: 0 };
 
@@ -23,6 +24,10 @@ const Preload = (config) => (Child) => {
     constructor(props) {
       super(props);
       const { dispatch, ...rest } = props;
+
+      // eslint-disable-next-line max-len
+      invariant(dispatch, '`dispatch` is required in Preload. Add connect() the component and ensure dispatch is available.');
+
       this.newProps = { dispatch, rest };
       this.state = { loading: true, pastDelay: false };
 
