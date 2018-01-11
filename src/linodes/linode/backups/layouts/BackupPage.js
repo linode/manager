@@ -12,7 +12,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 export const BackupPage = (props) => {
   const { dispatch, linode, backup } = props;
   return (
-    <div>
+    <div className="container">
       <section>
         <BackupDetails linode={linode} backup={backup} dispatch={dispatch} />
       </section>

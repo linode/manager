@@ -23,9 +23,10 @@ import { selectLinode } from './utilities/';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import DashboardPage from './layouts/DashboardPage';
-import ResizePage from './layouts/ResizePage';
-import RescuePage from './layouts/RescuePage';
 import RebuildPage from './layouts/RebuildPage';
+import RescuePage from './layouts/RescuePage';
+import ResizePage from './layouts/ResizePage';
+import BackupPage from './backups';
 import NetworkPage from './networking';
 import SettingsPage from './settings';
 
@@ -91,10 +92,7 @@ class LinodeIndex extends Component {
           <Route path={`${path}/resize`} component={ResizePage} />
           <Route path={`${path}/rescue`} component={RescuePage} />
           <Route path={`${path}/networking`} component={NetworkPage} />
-          <Route
-            path={`${path}/backups`}
-            component={() => <div className="container"><h1>backups</h1></div>}
-          />
+          <Route path={`${path}/backups`} component={BackupPage} />
           <Route path={`${path}/settings`} component={SettingsPage} />
           <Route exact path={path} component={DashboardPage} />
           <Redirect to="/not-found" />

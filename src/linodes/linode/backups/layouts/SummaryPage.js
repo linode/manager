@@ -97,25 +97,27 @@ export class SummaryPage extends Component {
 
     const daily = backups.daily;
     const snapshot = backups.snapshot &&
-                     (backups.snapshot.in_progress ?
-                       backups.snapshot.in_progress :
-                       backups.snapshot.current) ||
-                     undefined;
+      (backups.snapshot.in_progress ?
+        backups.snapshot.in_progress :
+        backups.snapshot.current) ||
+      undefined;
     const weekly = backups.weekly && backups.weekly.length ? backups.weekly[0] : undefined;
     const biweekly = backups.weekly && backups.weekly.length === 2 ? backups.weekly[1] : undefined;
 
     return (
-      <Card header={<CardHeader title="Restorable backups" />}>
-        <p>
-          Select a backup to see details and restore to a Linode.
-        </p>
-        <div className="Backup-container row">
-          <this.renderBlock title="Daily" backup={daily} />
-          <this.renderBlock title="Weekly" backup={weekly} />
-          <this.renderBlock title="Biweekly" backup={biweekly} />
-          <this.renderBlock title="Snapshot" backup={snapshot} />
-        </div>
-      </Card>
+      <div className="container">
+        <Card header={<CardHeader title="Restorable backups" />}>
+          <p>
+            Select a backup to see details and restore to a Linode.
+          </p>
+          <div className="Backup-container row">
+            <this.renderBlock title="Daily" backup={daily} />
+            <this.renderBlock title="Weekly" backup={weekly} />
+            <this.renderBlock title="Biweekly" backup={biweekly} />
+            <this.renderBlock title="Snapshot" backup={snapshot} />
+          </div>
+        </Card>
+      </div>
     );
   }
 }

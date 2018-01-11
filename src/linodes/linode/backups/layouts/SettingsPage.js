@@ -21,7 +21,7 @@ export class SettingsPage extends Component {
     const { backups: { schedule: { day, window } } } = linode;
 
     return (
-      <div>
+      <div className="container">
         <section>
           <Card header={<CardHeader title="Manage Schedule" />}>
             <ScheduleForm linode={linode} day={day} window={window} dispatch={dispatch} />
