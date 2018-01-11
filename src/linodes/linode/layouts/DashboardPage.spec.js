@@ -7,6 +7,7 @@ import { ZONES } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 
 import { testLinode, testLinode1246 } from '~/data/linodes';
+import { testType } from '~/data/types';
 
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
@@ -21,6 +22,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   const props = {
     dispatch,
     linode: testLinode,
+    type: testType,
     timezone: 'UTC',
     transfer: { usage: 1, quota: 5 },
     username: 'tdude',
