@@ -7,6 +7,7 @@ import { ZONES } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 
 import { testLinode, testLinode1246 } from '~/data/linodes';
+import { apiTestImage } from '~/data/images';
 import { testType } from '~/data/types';
 
 
@@ -22,6 +23,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   const props = {
     dispatch,
     linode: testLinode,
+    image: apiTestImage,
     type: testType,
     timezone: 'UTC',
     transfer: { usage: 1, quota: 5 },
@@ -105,6 +107,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = shallow(
       <DashboardPage
         linode={testLinode}
+        image={apiTestImage}
       />);
 
     expect(page.find('.input-group').at(0).find('Input').length).toBe(1);
