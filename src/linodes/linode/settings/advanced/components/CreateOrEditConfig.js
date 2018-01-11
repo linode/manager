@@ -285,7 +285,7 @@ export default class CreateOrEditConfig extends Component {
         <FormGroup className="row" errors={errors} name="root_device">
           <label className="col-sm-2 col-form-label">root / boot device</label>
           <div className="col-sm-10">
-            <FormGroup>
+            <FormGroup name="root-device-select">
               <RadioSelectCombo
                 radioChecked={isCustomRoot === false}
                 radioOnChange={() => this.setState({
@@ -303,7 +303,7 @@ export default class CreateOrEditConfig extends Component {
               />
               <FormGroupError errors={errors} name={!isCustomRoot ? 'root_device' : ''} />
             </FormGroup>
-            <FormGroup>
+            <FormGroup name="custom-root-device">
               <RadioInputCombo
                 radioId="isCustomRoot-true"
                 radioLabel="Custom"

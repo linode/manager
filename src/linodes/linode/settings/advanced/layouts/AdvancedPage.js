@@ -16,7 +16,7 @@ export class AdvancedPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <section>
           <Configs {...this.props} selectedMap={this.props.configsSelectedMap} />
         </section>

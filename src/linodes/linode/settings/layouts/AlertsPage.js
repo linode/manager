@@ -63,28 +63,30 @@ export class AlertsPage extends Component {
     const crumbs = `alerts.${key}`;
 
     return (
-      <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
-        <label className="col-sm-2 col-form-label">{name}</label>
-        <div className="col-sm-10">
-          <div className="clearfix">
-            <div className="float-sm-left">
-              <Input
-                type="number"
-                value={value}
-                onChange={thresholdChange}
-                label={label}
+      <div key={key}>
+        <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
+          <label className="col-sm-2 col-form-label">{name}</label>
+          <div className="col-sm-10">
+            <div className="clearfix">
+              <div className="float-sm-left">
+                <Input
+                  type="number"
+                  value={value}
+                  onChange={thresholdChange}
+                  label={label}
+                />
+              </div>
+              <FormGroupError
+                errors={errors}
+                name="threshold"
+                crumbs={crumbs}
+                className="float-sm-left"
               />
             </div>
-            <FormGroupError
-              errors={errors}
-              name="threshold"
-              crumbs={crumbs}
-              className="float-sm-left"
-            />
+            <small className="text-muted">Triggered by: {text} exceeding this value</small>
           </div>
-          <small className="text-muted">Triggered by: {text} exceeding this value</small>
-        </div>
-      </FormGroup>
+        </FormGroup>
+      </div>
     );
   }
 
@@ -117,20 +119,22 @@ export class AlertsPage extends Component {
     const header = <CardHeader title="Alerts" />;
 
     return (
-      <Card header={header}>
-        <Form
-          onSubmit={this.onSubmit}
-          analytics={{ title: 'Linode Alert Settings' }}
-        >
-          {alerts.map(this.renderAlertRow)}
-          <div className="row">
-            <div className="offset-sm-2 col-sm-10">
-              <SubmitButton disabled={loading} />
-              <FormSummary errors={errors} success="Alerts settings saved." />
+      <div className="container">
+        <Card header={header}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'Linode Alert Settings' }}
+          >
+            {alerts.map(this.renderAlertRow)}
+            <div className="row">
+              <div className="offset-sm-2 col-sm-10">
+                <SubmitButton disabled={loading} />
+                <FormSummary errors={errors} success="Alerts settings saved." />
+              </div>
             </div>
-          </div>
-        </Form>
-      </Card>
+          </Form>
+        </Card>
+      </div>
     );
   }
 }

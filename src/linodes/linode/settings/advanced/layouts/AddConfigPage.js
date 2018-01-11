@@ -20,18 +20,20 @@ export class AddConfigPage extends Component {
     const header = <CardHeader title="Add a Config" />;
 
     return (
-      <Card header={header}>
-        <CreateOrEditConfig
-          linode={linode}
-          kernels={kernels}
-          account={account}
-          disks={linode._disks.disks}
-          volumes={linode._volumes.volumes}
-          dispatch={dispatch}
-          submitText="Add Config"
-          submitDisabledText="Adding Config"
-        />
-      </Card>
+      <div className="container">
+        <Card header={header}>
+          <CreateOrEditConfig
+            linode={linode}
+            kernels={kernels}
+            account={account}
+            disks={linode._disks.disks}
+            volumes={linode._volumes.volumes}
+            dispatch={dispatch}
+            submitText="Add Config"
+            submitDisabledText="Adding Config"
+          />
+        </Card>
+      </div>
     );
   }
 }

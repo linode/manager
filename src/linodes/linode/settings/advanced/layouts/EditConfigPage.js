@@ -25,17 +25,19 @@ export class EditConfigPage extends Component {
     const header = <CardHeader title="Edit Config" />;
 
     return !config ? null : (
-      <Card header={header}>
-        <CreateOrEditConfig
-          linode={linode}
-          config={config}
-          kernels={kernels}
-          account={account}
-          disks={disks}
-          volumes={volumes}
-          dispatch={dispatch}
-        />
-      </Card>
+      <div className="container">
+        <Card header={header}>
+          <CreateOrEditConfig
+            linode={linode}
+            config={config}
+            kernels={kernels}
+            account={account}
+            disks={disks}
+            volumes={volumes}
+            dispatch={dispatch}
+          />
+        </Card>
+      </div>
     );
   }
 }
@@ -54,7 +56,7 @@ export function select(state, props) {
   const { linode } = selectLinode(state, props);
   const { disks } = linode._disks;
   const { volumes } = linode._volumes;
-  const config = linode._configs.configs[props.params.configId];
+  const config = linode._configs.configs[props.match.params.configId];
   const { kernels, account } = state.api;
   return { linode, config, kernels, account, disks, volumes };
 }

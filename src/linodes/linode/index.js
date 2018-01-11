@@ -21,11 +21,13 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from './utilities/';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
+
 import DashboardPage from './layouts/DashboardPage';
 import ResizePage from './layouts/ResizePage';
 import RescuePage from './layouts/RescuePage';
 import RebuildPage from './layouts/RebuildPage';
 import NetworkPage from './networking';
+import SettingsPage from './settings';
 
 class LinodeIndex extends Component {
   async componentDidMount() {
@@ -93,10 +95,7 @@ class LinodeIndex extends Component {
             path={`${path}/backups`}
             component={() => <div className="container"><h1>backups</h1></div>}
           />
-          <Route
-            path={`${path}/settings`}
-            component={() => <div className="container"><h1>settings</h1></div>}
-          />
+          <Route path={`${path}/settings`} component={SettingsPage} />
           <Route exact path={path} component={DashboardPage} />
           <Redirect to="/not-found" />
         </Switch>
