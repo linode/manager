@@ -94,6 +94,21 @@ ShallowWrapper {
         },
       }
     }
+    image={
+      Object {
+        "created": "2009-01-01T00:00:00",
+        "created_by": "linode",
+        "deprecated": false,
+        "description": "Test Image",
+        "id": "linode/arch2016.05",
+        "is_public": true,
+        "label": "Arch Linux 2016.05",
+        "recommended": true,
+        "size": 550,
+        "type": "manual",
+        "vendor": "Arch",
+      }
+    }
     linode={
       Object {
         "_backups": Object {
@@ -375,11 +390,7 @@ ShallowWrapper {
         "group": "Test Group",
         "hypervisor": "kvm",
         "id": 1234,
-        "image": Object {
-          "id": "linode/ubuntu15.10",
-          "label": "Ubuntu 15.10",
-          "vendor": "Ubuntu",
-        },
+        "image": "linode/arch2016.05",
         "ipv4": Array [
           "97.107.143.0",
           "97.107.143.1",
@@ -438,7 +449,7 @@ ShallowWrapper {
               <Input
                 className=""
                 disabled={true}
-                value="Ubuntu 15.10"
+                value="Arch Linux 2016.05"
               />
             </div>
           </FormGroup>
@@ -460,7 +471,7 @@ ShallowWrapper {
                 images={undefined}
                 name="image"
                 onChange={[Function]}
-                value="linode/ubuntu15.10"
+                value="linode/arch2016.05"
               />
               <FormGroupError
                 className=""
@@ -577,7 +588,7 @@ ShallowWrapper {
                 <Input
                   className=""
                   disabled={true}
-                  value="Ubuntu 15.10"
+                  value="Arch Linux 2016.05"
                 />
               </div>
             </FormGroup>,
@@ -599,7 +610,7 @@ ShallowWrapper {
                   images={undefined}
                   name="image"
                   onChange={[Function]}
-                  value="linode/ubuntu15.10"
+                  value="linode/arch2016.05"
                 />
                 <FormGroupError
                   className=""
@@ -685,7 +696,7 @@ ShallowWrapper {
                   <Input
                     className=""
                     disabled={true}
-                    value="Ubuntu 15.10"
+                    value="Arch Linux 2016.05"
                   />
                 </div>,
               ],
@@ -714,7 +725,7 @@ ShallowWrapper {
                   "children": <Input
                     className=""
                     disabled={true}
-                    value="Ubuntu 15.10"
+                    value="Arch Linux 2016.05"
                   />,
                   "className": "col-sm-9",
                 },
@@ -726,7 +737,7 @@ ShallowWrapper {
                   "props": Object {
                     "className": "",
                     "disabled": true,
-                    "value": "Ubuntu 15.10",
+                    "value": "Arch Linux 2016.05",
                   },
                   "ref": null,
                   "rendered": null,
@@ -756,7 +767,7 @@ ShallowWrapper {
                     images={undefined}
                     name="image"
                     onChange={[Function]}
-                    value="linode/ubuntu15.10"
+                    value="linode/arch2016.05"
                   />
                   <FormGroupError
                     className=""
@@ -795,7 +806,7 @@ ShallowWrapper {
                       images={undefined}
                       name="image"
                       onChange={[Function]}
-                      value="linode/ubuntu15.10"
+                      value="linode/arch2016.05"
                     />,
                     <FormGroupError
                       className=""
@@ -817,7 +828,7 @@ ShallowWrapper {
                       "images": undefined,
                       "name": "image",
                       "onChange": [Function],
-                      "value": "linode/ubuntu15.10",
+                      "value": "linode/arch2016.05",
                     },
                     "ref": null,
                     "rendered": null,
@@ -1081,7 +1092,7 @@ ShallowWrapper {
                 <Input
                   className=""
                   disabled={true}
-                  value="Ubuntu 15.10"
+                  value="Arch Linux 2016.05"
                 />
               </div>
             </FormGroup>
@@ -1103,7 +1114,7 @@ ShallowWrapper {
                   images={undefined}
                   name="image"
                   onChange={[Function]}
-                  value="linode/ubuntu15.10"
+                  value="linode/arch2016.05"
                 />
                 <FormGroupError
                   className=""
@@ -1220,7 +1231,7 @@ ShallowWrapper {
                   <Input
                     className=""
                     disabled={true}
-                    value="Ubuntu 15.10"
+                    value="Arch Linux 2016.05"
                   />
                 </div>
               </FormGroup>,
@@ -1242,7 +1253,7 @@ ShallowWrapper {
                     images={undefined}
                     name="image"
                     onChange={[Function]}
-                    value="linode/ubuntu15.10"
+                    value="linode/arch2016.05"
                   />
                   <FormGroupError
                     className=""
@@ -1328,7 +1339,7 @@ ShallowWrapper {
                     <Input
                       className=""
                       disabled={true}
-                      value="Ubuntu 15.10"
+                      value="Arch Linux 2016.05"
                     />
                   </div>,
                 ],
@@ -1357,7 +1368,7 @@ ShallowWrapper {
                     "children": <Input
                       className=""
                       disabled={true}
-                      value="Ubuntu 15.10"
+                      value="Arch Linux 2016.05"
                     />,
                     "className": "col-sm-9",
                   },
@@ -1369,7 +1380,7 @@ ShallowWrapper {
                     "props": Object {
                       "className": "",
                       "disabled": true,
-                      "value": "Ubuntu 15.10",
+                      "value": "Arch Linux 2016.05",
                     },
                     "ref": null,
                     "rendered": null,
@@ -1399,7 +1410,7 @@ ShallowWrapper {
                       images={undefined}
                       name="image"
                       onChange={[Function]}
-                      value="linode/ubuntu15.10"
+                      value="linode/arch2016.05"
                     />
                     <FormGroupError
                       className=""
@@ -1438,7 +1449,7 @@ ShallowWrapper {
                         images={undefined}
                         name="image"
                         onChange={[Function]}
-                        value="linode/ubuntu15.10"
+                        value="linode/arch2016.05"
                       />,
                       <FormGroupError
                         className=""
@@ -1460,7 +1471,7 @@ ShallowWrapper {
                         "images": undefined,
                         "name": "image",
                         "onChange": [Function],
-                        "value": "linode/ubuntu15.10",
+                        "value": "linode/arch2016.05",
                       },
                       "ref": null,
                       "rendered": null,

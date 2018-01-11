@@ -321,11 +321,7 @@ ShallowWrapper {
         "group": "Test Group",
         "hypervisor": "kvm",
         "id": 1238,
-        "image": Object {
-          "id": "linode/ubuntu15.10",
-          "label": "Ubuntu 15.10",
-          "vendor": "Ubuntu",
-        },
+        "image": "linode/arch2016.05",
         "ipv4": Array [
           "97.107.143.15",
           "97.107.143.16",
