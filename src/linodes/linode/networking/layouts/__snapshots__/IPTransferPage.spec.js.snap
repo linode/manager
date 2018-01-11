@@ -301,29 +301,7 @@ ShallowWrapper {
         "memory": 2048,
         "region": "us-east-1a",
         "status": "running",
-        "type": Object {
-          "_polling": false,
-          "addons": Object {
-            "backups": Object {
-              "price": Object {
-                "monthly": 2.5,
-              },
-            },
-          },
-          "class": "standard",
-          "disk": 24576,
-          "id": "linode2048.5",
-          "label": "Linode 2048",
-          "memory": 2048,
-          "network_out": 125,
-          "price": Object {
-            "hourly": 0.015,
-            "monthly": 10,
-          },
-          "service_type": "linode",
-          "transfer": 2000,
-          "vcpus": 2,
-        },
+        "type": "linode2048.5",
         "vcpus": 2,
       }
     }
@@ -655,29 +633,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1234": Object {
@@ -974,29 +930,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1235": Object {
@@ -1346,29 +1280,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1236": Object {
@@ -1615,29 +1527,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1237": Object {
@@ -1934,29 +1824,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "booting",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1238": Object {
@@ -2287,29 +2155,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1239": Object {
@@ -2568,29 +2414,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1240": Object {
@@ -2884,29 +2708,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1241": Object {
@@ -3165,29 +2967,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1242": Object {
@@ -3464,29 +3244,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1243": Object {
@@ -3783,29 +3541,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1245": Object {
@@ -4117,29 +3853,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1246": Object {
@@ -4436,29 +4150,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1247": Object {
@@ -4742,29 +4434,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1248": Object {
@@ -5061,29 +4731,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "provisioning",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1249": Object {
@@ -5369,29 +5017,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1250": Object {
@@ -5668,29 +5294,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
       }
@@ -6134,29 +5738,7 @@ ShallowWrapper {
                     "memory": 2048,
                     "region": "us-east-1a",
                     "status": "running",
-                    "type": Object {
-                      "_polling": false,
-                      "addons": Object {
-                        "backups": Object {
-                          "price": Object {
-                            "monthly": 2.5,
-                          },
-                        },
-                      },
-                      "class": "standard",
-                      "disk": 24576,
-                      "id": "linode2048.5",
-                      "label": "Linode 2048",
-                      "memory": 2048,
-                      "network_out": 125,
-                      "price": Object {
-                        "hourly": 0.015,
-                        "monthly": 10,
-                      },
-                      "service_type": "linode",
-                      "transfer": 2000,
-                      "vcpus": 2,
-                    },
+                    "type": "linode2048.5",
                     "vcpus": 2,
                   }
                 }
@@ -6496,29 +6078,7 @@ ShallowWrapper {
                     "memory": 2048,
                     "region": "us-east-1a",
                     "status": "running",
-                    "type": Object {
-                      "_polling": false,
-                      "addons": Object {
-                        "backups": Object {
-                          "price": Object {
-                            "monthly": 2.5,
-                          },
-                        },
-                      },
-                      "class": "standard",
-                      "disk": 24576,
-                      "id": "linode2048.5",
-                      "label": "Linode 2048",
-                      "memory": 2048,
-                      "network_out": 125,
-                      "price": Object {
-                        "hourly": 0.015,
-                        "monthly": 10,
-                      },
-                      "service_type": "linode",
-                      "transfer": 2000,
-                      "vcpus": 2,
-                    },
+                    "type": "linode2048.5",
                     "vcpus": 2,
                   }
                 }
@@ -6977,29 +6537,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -7339,29 +6877,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -7828,29 +7344,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -8190,29 +7684,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -8899,29 +8371,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9261,29 +8711,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9598,29 +9026,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9930,29 +9336,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       },
                       "onChange": [Function],
@@ -10297,29 +9681,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -10661,29 +10023,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       },
                       "onChange": [Function],
@@ -11164,29 +10504,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -11526,29 +10844,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -12007,29 +11303,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -12369,29 +11643,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -12858,29 +12110,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -13220,29 +12450,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -13929,29 +13137,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14291,29 +13477,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14628,29 +13792,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14960,29 +14102,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         },
                         "onChange": [Function],
@@ -15327,29 +14447,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -15691,29 +14789,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         },
                         "onChange": [Function],

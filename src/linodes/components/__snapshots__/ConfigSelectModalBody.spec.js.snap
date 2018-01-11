@@ -335,29 +335,7 @@ ShallowWrapper {
         "memory": 2048,
         "region": "us-east-1a",
         "status": "offline",
-        "type": Object {
-          "_polling": false,
-          "addons": Object {
-            "backups": Object {
-              "price": Object {
-                "monthly": 2.5,
-              },
-            },
-          },
-          "class": "standard",
-          "disk": 24576,
-          "id": "linode2048.5",
-          "label": "Linode 2048",
-          "memory": 2048,
-          "network_out": 125,
-          "price": Object {
-            "hourly": 0.015,
-            "monthly": 10,
-          },
-          "service_type": "linode",
-          "transfer": 2000,
-          "vcpus": 2,
-        },
+        "type": "linode2048.5",
         "vcpus": 2,
       }
     }
