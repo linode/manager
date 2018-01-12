@@ -1,6 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
+import { StaticRouter } from 'react-router-dom';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { IndexPage } from '~/nodebalancers/layouts/IndexPage';
@@ -23,24 +24,28 @@ describe('nodebalancers/layouts/IndexPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        transfer={{ used: 1, quota: 5 }}
-        nodebalancers={nodebalancers}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{}}
+          transfer={{ used: 1, quota: 5 }}
+          nodebalancers={nodebalancers}
+        />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
   it('renders a list of Nodebalancers', () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        transfer={{ used: 1, quota: 5 }}
-        nodebalancers={nodebalancers}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{}}
+          transfer={{ used: 1, quota: 5 }}
+          nodebalancers={nodebalancers}
+        />
+      </StaticRouter>
     );
 
     const zone = page.find('.TableRow');
@@ -57,12 +62,14 @@ describe('nodebalancers/layouts/IndexPage', () => {
 
   it('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        transfer={{ used: 1, quota: 5 }}
-        nodebalancers={nodebalancers}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{}}
+          transfer={{ used: 1, quota: 5 }}
+          nodebalancers={nodebalancers}
+        />
+      </StaticRouter>
     );
 
     const zoneDelete = page.find('.TableRow Button').at(0);
@@ -75,12 +82,14 @@ describe('nodebalancers/layouts/IndexPage', () => {
 
   it('deletes selected nodebalancers when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{ 1: true }}
-        transfer={{ used: 1, quota: 5 }}
-        nodebalancers={nodebalancers}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{ 1: true }}
+          transfer={{ used: 1, quota: 5 }}
+          nodebalancers={nodebalancers}
+        />
+      </StaticRouter>
     );
 
     dispatch.reset();

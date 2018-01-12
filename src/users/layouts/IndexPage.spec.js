@@ -1,6 +1,7 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
+import { StaticRouter } from 'react-router-dom';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { getEmailHash } from '~/cache';
@@ -26,19 +27,23 @@ describe('users/layouts/IndexPage', () => {
   it('should render without error', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage dispatch={mockDispatch} selectedMap={{}} profile={profile} users={users} />
+      <StaticRouter>
+        <IndexPage dispatch={mockDispatch} selectedMap={{}} profile={profile} users={users} />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
   it('renders a list of Users', () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        profile={profile}
-        users={users}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{}}
+          profile={profile}
+          users={users}
+        />
+      </StaticRouter>
     );
 
     const zone = page.find('.TableRow');
@@ -59,12 +64,14 @@ describe('users/layouts/IndexPage', () => {
 
   it('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        profile={profile}
-        users={users}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{}}
+          profile={profile}
+          users={users}
+        />
+      </StaticRouter>
     );
 
     const zoneDelete = page.find('.TableRow Button').at(0);
@@ -77,12 +84,14 @@ describe('users/layouts/IndexPage', () => {
 
   it('deletes selected users when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        selectedMap={{ 1: true }}
-        profile={profile}
-        users={users}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          selectedMap={{ 1: true }}
+          profile={profile}
+          users={users}
+        />
+      </StaticRouter>
     );
 
     dispatch.reset();

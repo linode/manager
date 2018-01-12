@@ -1,6 +1,5 @@
 import React from 'react';
-import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import { InvoicePage } from '~/billing/layouts/InvoicePage';
 import { api } from '~/data';
@@ -11,51 +10,25 @@ const { invoices } = api;
 describe('billing/layouts/InvoicePage', () => {
   const invoice = invoices.invoices[1234];
   const items = invoice._items.data;
-  const sandbox = sinon.sandbox.create();
+  const dispatch = jest.fn();
 
-  afterEach(() => {
-    sandbox.restore();
-  });
+  const wrapper = shallow(
+    <InvoicePage
+      dispatch={dispatch}
+      invoice={invoice}
+      items={items}
+    />
+  );
 
-  const dispatch = sandbox.spy();
   it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <InvoicePage
-        dispatch={dispatch}
-        invoice={invoice}
-        items={items}
-      />
-    );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('renders a list of invoice items', () => {
-    const page = mount(
-      <InvoicePage
-        dispatch={dispatch}
-        invoice={invoice}
-        items={items}
-      />
-    );
-
-    expect(page.find('.TableRow').length).toEqual(items.length);
-
-    page.unmount();
+  it('renders a table with invoice data', () => {
+    expect(wrapper.find('Table').prop('data')).toEqual(items);
   });
 
   it('renders invoice total', () => {
-    const page = mount(
-      <InvoicePage
-        dispatch={dispatch}
-        invoice={invoice}
-        items={items}
-      />
-    );
-
-    const expected = page.find('strong').text();
-    const result = 'Invoice Total: $10.00';
-    expect(expected).toEqual(result);
-    page.unmount();
+    expect(wrapper.find('Currency').prop('value')).toEqual(invoice.total);
   });
 });

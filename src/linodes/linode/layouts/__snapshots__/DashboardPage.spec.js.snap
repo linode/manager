@@ -396,8 +396,7 @@ ShallowWrapper {
                       className="text-muted"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/networking"
                       >
                         Networking
@@ -747,8 +746,7 @@ ShallowWrapper {
                       className="text-muted"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/rebuild"
                       >
                         Rebuild
@@ -775,8 +773,7 @@ ShallowWrapper {
                       className="text-muted"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/resize"
                       >
                         Resize
@@ -1135,8 +1132,7 @@ ShallowWrapper {
                   id="backup-status"
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/linodes/test-linode/backups"
                   >
                     View Backups
@@ -1575,6 +1571,7 @@ ShallowWrapper {
               </FormGroup>
               <FormGroup
                 className="row"
+                name="glish"
               >
                 <label
                   className="col-sm-4 col-form-label"
@@ -2299,8 +2296,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/networking"
                         >
                           Networking
@@ -2650,8 +2646,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/rebuild"
                         >
                           Rebuild
@@ -2678,8 +2673,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/resize"
                         >
                           Resize
@@ -3038,8 +3032,7 @@ ShallowWrapper {
                     id="backup-status"
                   >
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/linodes/test-linode/backups"
                     >
                       View Backups
@@ -3478,6 +3471,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="glish"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -3889,8 +3883,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/networking"
                         >
                           Networking
@@ -4240,8 +4233,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/rebuild"
                         >
                           Rebuild
@@ -4268,8 +4260,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/resize"
                         >
                           Resize
@@ -4628,8 +4619,7 @@ ShallowWrapper {
                     id="backup-status"
                   >
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/linodes/test-linode/backups"
                     >
                       View Backups
@@ -4675,8 +4665,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/networking"
                           >
                             Networking
@@ -5026,8 +5015,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/rebuild"
                           >
                             Rebuild
@@ -5054,8 +5042,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/resize"
                           >
                             Resize
@@ -5415,8 +5402,7 @@ ShallowWrapper {
                       id="backup-status"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/backups"
                       >
                         View Backups
@@ -5463,8 +5449,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/networking"
                             >
                               Networking
@@ -5513,8 +5498,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/networking"
                               >
                                 Networking
@@ -5581,8 +5565,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/networking"
                               >
                                 Networking
@@ -5596,8 +5579,7 @@ ShallowWrapper {
                             "nodeType": "host",
                             "props": Object {
                               "children": <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/networking"
                               >
                                 Networking
@@ -5611,8 +5593,7 @@ ShallowWrapper {
                               "nodeType": "class",
                               "props": Object {
                                 "children": "Networking",
-                                "onlyActiveOnIndex": false,
-                                "style": Object {},
+                                "replace": false,
                                 "to": "/linodes/test-linode/networking",
                               },
                               "ref": null,
@@ -5973,8 +5954,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/rebuild"
                             >
                               Rebuild
@@ -6334,8 +6314,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/rebuild"
                               >
                                 Rebuild
@@ -6687,8 +6666,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/rebuild"
                               >
                                 Rebuild
@@ -6702,8 +6680,7 @@ ShallowWrapper {
                             "nodeType": "host",
                             "props": Object {
                               "children": <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/rebuild"
                               >
                                 Rebuild
@@ -6717,8 +6694,7 @@ ShallowWrapper {
                               "nodeType": "class",
                               "props": Object {
                                 "children": "Rebuild",
-                                "onlyActiveOnIndex": false,
-                                "style": Object {},
+                                "replace": false,
                                 "to": "/linodes/test-linode/rebuild",
                               },
                               "ref": null,
@@ -6756,8 +6732,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/resize"
                             >
                               Resize
@@ -6794,8 +6769,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/resize"
                               >
                                 Resize
@@ -6818,8 +6792,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/resize"
                               >
                                 Resize
@@ -6833,8 +6806,7 @@ ShallowWrapper {
                             "nodeType": "host",
                             "props": Object {
                               "children": <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/resize"
                               >
                                 Resize
@@ -6848,8 +6820,7 @@ ShallowWrapper {
                               "nodeType": "class",
                               "props": Object {
                                 "children": "Resize",
-                                "onlyActiveOnIndex": false,
-                                "style": Object {},
+                                "replace": false,
                                 "to": "/linodes/test-linode/resize",
                               },
                               "ref": null,
@@ -7905,8 +7876,7 @@ ShallowWrapper {
                         id="backup-status"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/backups"
                         >
                           View Backups
@@ -7935,8 +7905,7 @@ ShallowWrapper {
                       "nodeType": "host",
                       "props": Object {
                         "children": <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/backups"
                         >
                           View Backups
@@ -7951,8 +7920,7 @@ ShallowWrapper {
                         "nodeType": "class",
                         "props": Object {
                           "children": "View Backups",
-                          "onlyActiveOnIndex": false,
-                          "style": Object {},
+                          "replace": false,
                           "to": "/linodes/test-linode/backups",
                         },
                         "ref": null,
@@ -8401,6 +8369,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="glish"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -9181,6 +9150,7 @@ ShallowWrapper {
                   </FormGroup>,
                   <FormGroup
                     className="row"
+                    name="glish"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -11972,6 +11942,7 @@ ShallowWrapper {
                       </div>,
                     ],
                     "className": "row",
+                    "name": "glish",
                   },
                   "ref": null,
                   "rendered": Array [
@@ -14255,8 +14226,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/networking"
                         >
                           Networking
@@ -14606,8 +14576,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/rebuild"
                         >
                           Rebuild
@@ -14634,8 +14603,7 @@ ShallowWrapper {
                         className="text-muted"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/resize"
                         >
                           Resize
@@ -14994,8 +14962,7 @@ ShallowWrapper {
                     id="backup-status"
                   >
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/linodes/test-linode/backups"
                     >
                       View Backups
@@ -15434,6 +15401,7 @@ ShallowWrapper {
                 </FormGroup>
                 <FormGroup
                   className="row"
+                  name="glish"
                 >
                   <label
                     className="col-sm-4 col-form-label"
@@ -16158,8 +16126,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/networking"
                           >
                             Networking
@@ -16509,8 +16476,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/rebuild"
                           >
                             Rebuild
@@ -16537,8 +16503,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/resize"
                           >
                             Resize
@@ -16897,8 +16862,7 @@ ShallowWrapper {
                       id="backup-status"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/backups"
                       >
                         View Backups
@@ -17337,6 +17301,7 @@ ShallowWrapper {
                   </FormGroup>
                   <FormGroup
                     className="row"
+                    name="glish"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -17748,8 +17713,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/networking"
                           >
                             Networking
@@ -18099,8 +18063,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/rebuild"
                           >
                             Rebuild
@@ -18127,8 +18090,7 @@ ShallowWrapper {
                           className="text-muted"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/resize"
                           >
                             Resize
@@ -18487,8 +18449,7 @@ ShallowWrapper {
                       id="backup-status"
                     >
                       <Link
-                        onlyActiveOnIndex={false}
-                        style={Object {}}
+                        replace={false}
                         to="/linodes/test-linode/backups"
                       >
                         View Backups
@@ -18534,8 +18495,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/networking"
                             >
                               Networking
@@ -18885,8 +18845,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/rebuild"
                             >
                               Rebuild
@@ -18913,8 +18872,7 @@ ShallowWrapper {
                             className="text-muted"
                           >
                             <Link
-                              onlyActiveOnIndex={false}
-                              style={Object {}}
+                              replace={false}
                               to="/linodes/test-linode/resize"
                             >
                               Resize
@@ -19274,8 +19232,7 @@ ShallowWrapper {
                         id="backup-status"
                       >
                         <Link
-                          onlyActiveOnIndex={false}
-                          style={Object {}}
+                          replace={false}
                           to="/linodes/test-linode/backups"
                         >
                           View Backups
@@ -19322,8 +19279,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/networking"
                               >
                                 Networking
@@ -19372,8 +19328,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/networking"
                                 >
                                   Networking
@@ -19440,8 +19395,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/networking"
                                 >
                                   Networking
@@ -19455,8 +19409,7 @@ ShallowWrapper {
                               "nodeType": "host",
                               "props": Object {
                                 "children": <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/networking"
                                 >
                                   Networking
@@ -19470,8 +19423,7 @@ ShallowWrapper {
                                 "nodeType": "class",
                                 "props": Object {
                                   "children": "Networking",
-                                  "onlyActiveOnIndex": false,
-                                  "style": Object {},
+                                  "replace": false,
                                   "to": "/linodes/test-linode/networking",
                                 },
                                 "ref": null,
@@ -19832,8 +19784,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/rebuild"
                               >
                                 Rebuild
@@ -20193,8 +20144,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/rebuild"
                                 >
                                   Rebuild
@@ -20546,8 +20496,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/rebuild"
                                 >
                                   Rebuild
@@ -20561,8 +20510,7 @@ ShallowWrapper {
                               "nodeType": "host",
                               "props": Object {
                                 "children": <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/rebuild"
                                 >
                                   Rebuild
@@ -20576,8 +20524,7 @@ ShallowWrapper {
                                 "nodeType": "class",
                                 "props": Object {
                                   "children": "Rebuild",
-                                  "onlyActiveOnIndex": false,
-                                  "style": Object {},
+                                  "replace": false,
                                   "to": "/linodes/test-linode/rebuild",
                                 },
                                 "ref": null,
@@ -20615,8 +20562,7 @@ ShallowWrapper {
                               className="text-muted"
                             >
                               <Link
-                                onlyActiveOnIndex={false}
-                                style={Object {}}
+                                replace={false}
                                 to="/linodes/test-linode/resize"
                               >
                                 Resize
@@ -20653,8 +20599,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/resize"
                                 >
                                   Resize
@@ -20677,8 +20622,7 @@ ShallowWrapper {
                                 className="text-muted"
                               >
                                 <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/resize"
                                 >
                                   Resize
@@ -20692,8 +20636,7 @@ ShallowWrapper {
                               "nodeType": "host",
                               "props": Object {
                                 "children": <Link
-                                  onlyActiveOnIndex={false}
-                                  style={Object {}}
+                                  replace={false}
                                   to="/linodes/test-linode/resize"
                                 >
                                   Resize
@@ -20707,8 +20650,7 @@ ShallowWrapper {
                                 "nodeType": "class",
                                 "props": Object {
                                   "children": "Resize",
-                                  "onlyActiveOnIndex": false,
-                                  "style": Object {},
+                                  "replace": false,
                                   "to": "/linodes/test-linode/resize",
                                 },
                                 "ref": null,
@@ -21764,8 +21706,7 @@ ShallowWrapper {
                           id="backup-status"
                         >
                           <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/backups"
                           >
                             View Backups
@@ -21794,8 +21735,7 @@ ShallowWrapper {
                         "nodeType": "host",
                         "props": Object {
                           "children": <Link
-                            onlyActiveOnIndex={false}
-                            style={Object {}}
+                            replace={false}
                             to="/linodes/test-linode/backups"
                           >
                             View Backups
@@ -21810,8 +21750,7 @@ ShallowWrapper {
                           "nodeType": "class",
                           "props": Object {
                             "children": "View Backups",
-                            "onlyActiveOnIndex": false,
-                            "style": Object {},
+                            "replace": false,
                             "to": "/linodes/test-linode/backups",
                           },
                           "ref": null,
@@ -22260,6 +22199,7 @@ ShallowWrapper {
                   </FormGroup>
                   <FormGroup
                     className="row"
+                    name="glish"
                   >
                     <label
                       className="col-sm-4 col-form-label"
@@ -23040,6 +22980,7 @@ ShallowWrapper {
                     </FormGroup>,
                     <FormGroup
                       className="row"
+                      name="glish"
                     >
                       <label
                         className="col-sm-4 col-form-label"
@@ -25831,6 +25772,7 @@ ShallowWrapper {
                         </div>,
                       ],
                       "className": "row",
+                      "name": "glish",
                     },
                     "ref": null,
                     "rendered": Array [

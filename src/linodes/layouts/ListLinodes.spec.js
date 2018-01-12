@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 
-import { IndexPage } from '~/linodes/layouts/IndexPage';
+import { ListLinodesPage } from './ListLinodes';
 import { api } from '~/data';
 import { expectRequest } from '~/test.helpers.js';
 
@@ -21,7 +21,7 @@ describe('linodes/layouts/IndexPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage
+      <ListLinodesPage
         images={{}}
         types={{}}
         dispatch={dispatch}
@@ -35,7 +35,7 @@ describe('linodes/layouts/IndexPage', () => {
 
   it.skip('renders a list of Linodes', () => {
     const page = mount(
-      <IndexPage
+      <ListLinodesPage
         images={{}}
         types={{}}
         dispatch={dispatch}
@@ -51,7 +51,7 @@ describe('linodes/layouts/IndexPage', () => {
 
   it.skip('deletes selected linodes when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
+      <ListLinodesPage
         images={{}}
         types={{}}
         dispatch={dispatch}

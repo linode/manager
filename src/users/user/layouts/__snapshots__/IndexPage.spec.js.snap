@@ -44,8 +44,7 @@ ShallowWrapper {
               className="float-sm-left"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -54,8 +53,7 @@ ShallowWrapper {
                 title="testuser1"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users/testuser1"
                 >
                   testuser1
@@ -110,8 +108,7 @@ ShallowWrapper {
               className="float-sm-left"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -120,8 +117,7 @@ ShallowWrapper {
                 title="testuser1"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users/testuser1"
                 >
                   testuser1
@@ -141,8 +137,7 @@ ShallowWrapper {
               className="float-sm-left"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/users"
               >
                 Users
@@ -151,8 +146,7 @@ ShallowWrapper {
                 title="testuser1"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users/testuser1"
                 >
                   testuser1
@@ -169,8 +163,7 @@ ShallowWrapper {
             "props": Object {
               "children": Array [
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users"
                 >
                   Users
@@ -179,8 +172,7 @@ ShallowWrapper {
                   title="testuser1"
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users/testuser1"
                   >
                     testuser1
@@ -197,8 +189,7 @@ ShallowWrapper {
                 "nodeType": "class",
                 "props": Object {
                   "children": "Users",
-                  "onlyActiveOnIndex": false,
-                  "style": Object {},
+                  "replace": false,
                   "to": "/users",
                 },
                 "ref": null,
@@ -211,8 +202,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users/testuser1"
                   >
                     testuser1
@@ -226,8 +216,7 @@ ShallowWrapper {
                   "nodeType": "class",
                   "props": Object {
                     "children": "testuser1",
-                    "onlyActiveOnIndex": false,
-                    "style": Object {},
+                    "replace": false,
                     "to": "/users/testuser1",
                   },
                   "ref": null,
@@ -306,8 +295,7 @@ ShallowWrapper {
                 className="float-sm-left"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users"
                 >
                   Users
@@ -316,8 +304,7 @@ ShallowWrapper {
                   title="testuser1"
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users/testuser1"
                   >
                     testuser1
@@ -372,8 +359,7 @@ ShallowWrapper {
                 className="float-sm-left"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users"
                 >
                   Users
@@ -382,8 +368,7 @@ ShallowWrapper {
                   title="testuser1"
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users/testuser1"
                   >
                     testuser1
@@ -403,8 +388,7 @@ ShallowWrapper {
                 className="float-sm-left"
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/users"
                 >
                   Users
@@ -413,8 +397,7 @@ ShallowWrapper {
                   title="testuser1"
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users/testuser1"
                   >
                     testuser1
@@ -431,8 +414,7 @@ ShallowWrapper {
               "props": Object {
                 "children": Array [
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/users"
                   >
                     Users
@@ -441,8 +423,7 @@ ShallowWrapper {
                     title="testuser1"
                   >
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/users/testuser1"
                     >
                       testuser1
@@ -459,8 +440,7 @@ ShallowWrapper {
                   "nodeType": "class",
                   "props": Object {
                     "children": "Users",
-                    "onlyActiveOnIndex": false,
-                    "style": Object {},
+                    "replace": false,
                     "to": "/users",
                   },
                   "ref": null,
@@ -473,8 +453,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/users/testuser1"
                     >
                       testuser1
@@ -488,8 +467,7 @@ ShallowWrapper {
                     "nodeType": "class",
                     "props": Object {
                       "children": "testuser1",
-                      "onlyActiveOnIndex": false,
-                      "style": Object {},
+                      "replace": false,
                       "to": "/users/testuser1",
                     },
                     "ref": null,

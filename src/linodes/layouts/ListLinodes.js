@@ -1,10 +1,9 @@
 import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
-import { ComponentPreload as Preload } from '~/decorators/Preload';
 import { PrimaryButton } from 'linode-components';
 import { Input } from 'linode-components';
 import { List, ScrollingList } from 'linode-components';
@@ -29,16 +28,17 @@ import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 import { confirmThenDelete } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
-import { AddLinode, CloneLinode, RestoreLinode } from '../components';
-import { TransferPool } from '../../components';
-
+import AddLinode from '../components/AddLinode';
+import CloneLinode from '../components/CloneLinode';
+import RestoreLinode from '../components/RestoreLinode';
+import TransferPool from '../../components/TransferPool';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'linodes';
 
-export class IndexPage extends Component {
+export class ListLinodesPage extends Component {
   constructor(props) {
     super(props);
-
     this.state = { filter: '' };
   }
 
@@ -114,10 +114,12 @@ export class IndexPage extends Component {
               dispatch={dispatch}
               massEditGroups={[
                 { elements: [{ name: 'Reboot', action: this.reboot }] },
-                { elements: [
-                  { name: 'Power On', action: this.powerOn },
-                  { name: 'Power Off', action: this.powerOff },
-                ] },
+                {
+                  elements: [
+                    { name: 'Power On', action: this.powerOn },
+                    { name: 'Power Off', action: this.powerOff },
+                  ],
+                },
                 { elements: [{ name: 'Delete', action: this.deleteLinodes }] },
               ]}
               selectedMap={selectedMap}
@@ -226,7 +228,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+ListLinodesPage.propTypes = {
   dispatch: PropTypes.func,
   linodes: PropTypes.object.isRequired,
   transfer: PropTypes.object.isRequired,
@@ -251,12 +253,14 @@ function mapStateToProps(state) {
 }
 
 const preloadRequest = async (dispatch) => {
-  await Promise.all(
-    [api.linodes.all(), api.images.all(), transferPool()].map(dispatch)
-  );
+  await Promise.all([
+    transferPool(),
+    api.linodes.all(),
+    api.images.all(),
+  ].map(dispatch));
 };
 
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest),
-)(IndexPage);
+)(ListLinodesPage);

@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { LOGIN_ROOT } from '~/constants';
-import { Logout } from '~/layouts/Logout';
+import { Logout } from './Logout';
 import { logout } from '~/actions/authentication';
 import { expire, redirect } from '~/session';
 

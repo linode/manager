@@ -1,43 +1,39 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import sinon from 'sinon';
-
-import { NotificationListItem } from '~/components/notifications';
+import { StaticRouter } from 'react-router-dom';
+import NotificationListItem from './NotificationListItem';
 
 import { api } from '~/data';
 
 const events = api.events;
 
 describe('components/notifications/NotificationListItem', () => {
-  const sandbox = sinon.sandbox.create();
-
   function makeNotificationListItem(event = events.events[386]) {
     return (
-      <NotificationListItem
-        event={event}
-      />
+      <StaticRouter>
+        <NotificationListItem event={event} />
+      </StaticRouter>
     );
   }
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   it('should render without error', () => {
-    const wrapper = shallow(
-      <NotificationListItem event={events.events[386]} />
-    );
+    const wrapper = shallow(makeNotificationListItem(events.events[386]));
+    const notification = wrapper.dive().dive();
 
-    expect(wrapper).toMatchSnapshot();
+    expect(notification).toMatchSnapshot();
   });
 
   it('renders unread notification', () => {
-    const notification = shallow(makeNotificationListItem(events.events[385]));
+    const wrapper = shallow(makeNotificationListItem(events.events[385]));
+    const notification = wrapper.dive().dive();
+
     expect(notification.find('.NotificationList-listItem--unread').length).toBe(1);
   });
 
   it('renders read notification', () => {
-    const notification = shallow(makeNotificationListItem());
+    const wrapper = shallow(makeNotificationListItem());
+    const notification = wrapper.dive();
+
     expect(notification.find('.NotificationList-listItem--unread').length).toBe(0);
   });
 });

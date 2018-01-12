@@ -4,7 +4,7 @@ exports[`linodes/layouts/IndexPage should render without error 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <IndexPage
+  Symbol(enzyme.__unrendered__): <ListLinodesPage
     dispatch={[Function]}
     images={Object {}}
     linodes={

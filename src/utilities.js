@@ -1,4 +1,5 @@
 import React from 'react';
+import { matchPath } from 'react-router-dom';
 import isFunction from 'lodash/isFunction';
 import capitalize from 'lodash/capitalize';
 
@@ -43,10 +44,14 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
 }
 
 
-/**
- * @todo EXTRACT
- */
+export const isPathOneOf = (paths, pathname, props) => {
+  return paths.reduce((result, path) => {
+    return result || Boolean(matchPath(pathname, { ...props, path }));
+  }, false);
+};
+
 export const getLinodeByLabel = (linodes, label) => {
   return Object.values(linodes)
     .find((linode) => linode.label === label);
 };
+

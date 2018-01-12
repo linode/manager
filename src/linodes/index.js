@@ -1,12 +1,25 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import ListLinodesPage from '~/linodes/layouts/ListLinodes';
+import LinodeIndex from './linode/index';
+import NotFound from 'linode-components/dist/errors/NotFound';
 
-import IndexPage from './layouts/IndexPage';
-import LinodePage from './linode';
+const LinodesIndex = (props) => {
+  const { match: { path } } = props;
+  return (
+    <Switch>
+      <Route component={LinodeIndex} path={`${path}/:linodeLabel`} />
+      <Route component={ListLinodesPage} exact path={`${path}/`} />
+      <Route component={NotFound} />
+    </Switch >
+  );
+};
 
-export default (
-  <Route path="/linodes">
-    <IndexRoute component={IndexPage} />
-    {LinodePage}
-  </Route>
-);
+LinodesIndex.propTypes = {
+  match: PropTypes.shape({
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export default LinodesIndex;

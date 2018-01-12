@@ -2,6 +2,7 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
+import { StaticRouter } from 'react-router-dom';
 
 import { CreatePage } from '~/support/layouts/CreatePage';
 
@@ -25,26 +26,30 @@ describe('support/layouts/CreatePage', () => {
   it('should render without error', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
-      <CreatePage
-        linodes={api.linodes.linodes}
-        domains={api.domains.domains}
-        nodebalancers={api.nodebalancers.nodebalancers}
-        volumes={api.volumes.volumes}
-        dispatch={mockDispatch}
-      />
+      <StaticRouter>
+        <CreatePage
+          linodes={api.linodes.linodes}
+          domains={api.domains.domains}
+          nodebalancers={api.nodebalancers.nodebalancers}
+          volumes={api.volumes.volumes}
+          dispatch={mockDispatch}
+        />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
   it('opens a ticket', async () => {
     const page = mount(
-      <CreatePage
-        linodes={api.linodes.linodes}
-        domains={api.domains.domains}
-        nodebalancers={api.nodebalancers.nodebalancers}
-        volumes={api.volumes.volumes}
-        dispatch={dispatch}
-      />
+      <StaticRouter>
+        <CreatePage
+          linodes={api.linodes.linodes}
+          domains={api.domains.domains}
+          nodebalancers={api.nodebalancers.nodebalancers}
+          volumes={api.volumes.volumes}
+          dispatch={dispatch}
+        />
+      </StaticRouter>
     );
     const summaryWrapper = page.find('input#summary');
     summaryWrapper.simulate(

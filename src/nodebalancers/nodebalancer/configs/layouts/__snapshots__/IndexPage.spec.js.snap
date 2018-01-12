@@ -159,8 +159,7 @@ ShallowWrapper {
                 title={23}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/nodebalancers/nodebalancer-1/configs/1"
                 >
                   Port 
@@ -237,8 +236,7 @@ ShallowWrapper {
                 title={23}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/nodebalancers/nodebalancer-1/configs/1"
                 >
                   Port 
@@ -276,8 +274,7 @@ ShallowWrapper {
                 title={23}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/nodebalancers/nodebalancer-1/configs/1"
                 >
                   Port 
@@ -312,8 +309,7 @@ ShallowWrapper {
                   title={23}
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/nodebalancers/nodebalancer-1/configs/1"
                   >
                     Port 
@@ -351,8 +347,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/nodebalancers/nodebalancer-1/configs/1"
                   >
                     Port 
@@ -370,8 +365,7 @@ ShallowWrapper {
                       "Port ",
                       80,
                     ],
-                    "onlyActiveOnIndex": false,
-                    "style": Object {},
+                    "replace": false,
                     "to": "/nodebalancers/nodebalancer-1/configs/1",
                   },
                   "ref": null,
@@ -474,8 +468,7 @@ ShallowWrapper {
                   title={23}
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/nodebalancers/nodebalancer-1/configs/1"
                   >
                     Port 
@@ -552,8 +545,7 @@ ShallowWrapper {
                   title={23}
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/nodebalancers/nodebalancer-1/configs/1"
                   >
                     Port 
@@ -591,8 +583,7 @@ ShallowWrapper {
                   title={23}
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/nodebalancers/nodebalancer-1/configs/1"
                   >
                     Port 
@@ -627,8 +618,7 @@ ShallowWrapper {
                     title={23}
                   >
                     <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/nodebalancers/nodebalancer-1/configs/1"
                     >
                       Port 
@@ -666,8 +656,7 @@ ShallowWrapper {
                   "nodeType": "host",
                   "props": Object {
                     "children": <Link
-                      onlyActiveOnIndex={false}
-                      style={Object {}}
+                      replace={false}
                       to="/nodebalancers/nodebalancer-1/configs/1"
                     >
                       Port 
@@ -685,8 +674,7 @@ ShallowWrapper {
                         "Port ",
                         80,
                       ],
-                      "onlyActiveOnIndex": false,
-                      "style": Object {},
+                      "replace": false,
                       "to": "/nodebalancers/nodebalancer-1/configs/1",
                     },
                     "ref": null,

@@ -97,15 +97,17 @@ export class SummaryPage extends Component {
       ip => ip.type === 'public' && ip.version === 'ipv4').length;
 
     if (['slaac', 'link-local', 'private'].indexOf(record.type.toLowerCase()) !== -1
-        || numPublicIPv4 === 1) {
+      || numPublicIPv4 === 1) {
       // Cannot delete slaac, link-local, private, or last public IPv4 address.
       groups.pop();
     }
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
-      groups.splice(1, 0, { elements: [
-        { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
-      ] });
+      groups.splice(1, 0, {
+        elements: [
+          { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
+        ],
+      });
 
       if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';

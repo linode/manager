@@ -353,8 +353,7 @@ ShallowWrapper {
           1
           /month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to 
           <Link
-            onlyActiveOnIndex={false}
-            style={Object {}}
+            replace={false}
             to="/support/create"
           >
             create a ticket
@@ -392,8 +391,7 @@ ShallowWrapper {
             1
             /month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to 
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/support/create"
             >
               create a ticket
@@ -425,8 +423,7 @@ ShallowWrapper {
               1,
               "/month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to ",
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/support/create"
               >
                 create a ticket
@@ -445,8 +442,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "create a ticket",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/support/create",
               },
               "ref": null,
@@ -510,8 +506,7 @@ ShallowWrapper {
             1
             /month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to 
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/support/create"
             >
               create a ticket
@@ -549,8 +544,7 @@ ShallowWrapper {
               1
               /month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to 
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/support/create"
               >
                 create a ticket
@@ -582,8 +576,7 @@ ShallowWrapper {
                 1,
                 "/month charge for each additional public IPv4. To request more IPv6 addresses, you'll have to ",
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/support/create"
                 >
                   create a ticket
@@ -602,8 +595,7 @@ ShallowWrapper {
                 "nodeType": "class",
                 "props": Object {
                   "children": "create a ticket",
-                  "onlyActiveOnIndex": false,
-                  "style": Object {},
+                  "replace": false,
                   "to": "/support/create",
                 },
                 "ref": null,

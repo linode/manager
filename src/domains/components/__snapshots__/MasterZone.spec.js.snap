@@ -55,8 +55,7 @@ ShallowWrapper {
             className="container"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/domains"
             >
               Domains
@@ -65,8 +64,7 @@ ShallowWrapper {
               title={2}
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains/example1.com"
               >
                 <GroupLabel
@@ -696,8 +694,7 @@ ShallowWrapper {
             className="container"
           >
             <Link
-              onlyActiveOnIndex={false}
-              style={Object {}}
+              replace={false}
               to="/domains"
             >
               Domains
@@ -706,8 +703,7 @@ ShallowWrapper {
               title={2}
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains/example1.com"
               >
                 <GroupLabel
@@ -754,8 +750,7 @@ ShallowWrapper {
           "props": Object {
             "children": Array [
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -764,8 +759,7 @@ ShallowWrapper {
                 title={2}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains/example1.com"
                 >
                   <GroupLabel
@@ -812,8 +806,7 @@ ShallowWrapper {
               "nodeType": "class",
               "props": Object {
                 "children": "Domains",
-                "onlyActiveOnIndex": false,
-                "style": Object {},
+                "replace": false,
                 "to": "/domains",
               },
               "ref": null,
@@ -826,8 +819,7 @@ ShallowWrapper {
               "nodeType": "host",
               "props": Object {
                 "children": <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains/example1.com"
                 >
                   <GroupLabel
@@ -901,8 +893,7 @@ ShallowWrapper {
                       }
                     }
                   />,
-                  "onlyActiveOnIndex": false,
-                  "style": Object {},
+                  "replace": false,
                   "to": "/domains/example1.com",
                 },
                 "ref": null,
@@ -3233,8 +3224,7 @@ ShallowWrapper {
               className="container"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -3243,8 +3233,7 @@ ShallowWrapper {
                 title={2}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains/example1.com"
                 >
                   <GroupLabel
@@ -3874,8 +3863,7 @@ ShallowWrapper {
               className="container"
             >
               <Link
-                onlyActiveOnIndex={false}
-                style={Object {}}
+                replace={false}
                 to="/domains"
               >
                 Domains
@@ -3884,8 +3872,7 @@ ShallowWrapper {
                 title={2}
               >
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains/example1.com"
                 >
                   <GroupLabel
@@ -3932,8 +3919,7 @@ ShallowWrapper {
             "props": Object {
               "children": Array [
                 <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
+                  replace={false}
                   to="/domains"
                 >
                   Domains
@@ -3942,8 +3928,7 @@ ShallowWrapper {
                   title={2}
                 >
                   <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/domains/example1.com"
                   >
                     <GroupLabel
@@ -3990,8 +3975,7 @@ ShallowWrapper {
                 "nodeType": "class",
                 "props": Object {
                   "children": "Domains",
-                  "onlyActiveOnIndex": false,
-                  "style": Object {},
+                  "replace": false,
                   "to": "/domains",
                 },
                 "ref": null,
@@ -4004,8 +3988,7 @@ ShallowWrapper {
                 "nodeType": "host",
                 "props": Object {
                   "children": <Link
-                    onlyActiveOnIndex={false}
-                    style={Object {}}
+                    replace={false}
                     to="/domains/example1.com"
                   >
                     <GroupLabel
@@ -4079,8 +4062,7 @@ ShallowWrapper {
                         }
                       }
                     />,
-                    "onlyActiveOnIndex": false,
-                    "style": Object {},
+                    "replace": false,
                     "to": "/domains/example1.com",
                   },
                   "ref": null,

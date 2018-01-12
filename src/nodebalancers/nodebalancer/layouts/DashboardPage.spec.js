@@ -1,6 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
+import { StaticRouter } from 'react-router-dom';
 
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import { DashboardPage } from '~/nodebalancers/nodebalancer/layouts/DashboardPage';
@@ -17,22 +18,26 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <DashboardPage
-        dispatch={dispatch}
-        nodebalancer={configsNodeBalancer}
-        transfer={{ used: 1, quota: 5 }}
-      />
+      <StaticRouter>
+        <DashboardPage
+          dispatch={dispatch}
+          nodebalancer={configsNodeBalancer}
+          transfer={{ used: 1, quota: 5 }}
+        />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
   it('displays nodebalancer configs', () => {
     const page = mount(
-      <DashboardPage
-        dispatch={dispatch}
-        nodebalancer={configsNodeBalancer}
-        transfer={{ used: 1, quota: 5 }}
-      />
+      <StaticRouter>
+        <DashboardPage
+          dispatch={dispatch}
+          nodebalancer={configsNodeBalancer}
+          transfer={{ used: 1, quota: 5 }}
+        />
+      </StaticRouter>
     );
     const firstRow = page.find('tr').at(1);
     const secondRow = page.find('tr').at(2);

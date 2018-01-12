@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRedirect } from 'react-router';
+import { Route, IndexRedirect } from 'react-router-dom';
 
 import StyleguideIndex from './StyleguideIndex';
 import {

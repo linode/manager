@@ -132,7 +132,7 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
   return (state, props) => {
     const object = objectFromMapByLabel(
       state.api[collection][collection],
-      props.params[paramField],
+      props.match.params[paramField],
       labelName);
 
     return { [resultField]: fullyLoadedObject(object) ? object : null };

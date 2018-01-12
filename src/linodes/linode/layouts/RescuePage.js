@@ -40,7 +40,7 @@ RescuePage.propTypes = {
   linode: PropTypes.object.isRequired,
 };
 
-const preloadReqeust = async (dispatch, { params: { linodeLabel } }) => {
+const preloadReqeust = async (dispatch, { match: { params: { linodeLabel } } }) => {
   const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
   await Promise.all([
     api.linodes.disks,

@@ -1,20 +1,14 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
+import isEqual from 'lodash/isEqual';
+
+import { withRouter } from 'react-router-dom';
 import api from '~/api';
-import { eventRead } from '~/api/ad-hoc/events';
 import Polling from '~/api/polling';
-import {
-  createHeaderFilter,
-  greaterThanDatetimeFilter,
-  lessThanDatetimeFilter,
-  lessThanNowFilter,
-} from '~/api/util';
+import { createHeaderFilter, greaterThanDatetimeFilter, lessThanNowFilter } from '~/api/util';
 import { EVENT_POLLING_DELAY } from '~/constants';
-
-import NotificationList from './NotificationList';
-
 
 const MIN_SHOWN_EVENTS = 10;
 const POLLING_ID = 'events';
@@ -31,13 +25,7 @@ const POLLING = Polling({
   maxBackoffTimeout: FIVE_MINUTES,
 });
 
-export class Notifications extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { loadingMore: false };
-  }
-
+class PollingWrapper extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
 
@@ -52,11 +40,17 @@ export class Notifications extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
+      this.props.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
     }
 
     // initialize polling for unseen events
     dispatch(POLLING.start(POLLING_ID));
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props.events, nextProps.events)
+      || this.props.eventTriggeringRequests !== nextProps.eventTriggeringRequests
+      || this.props.location !== nextProps.location;
   }
 
   componentWillUpdate(nextProps) {
@@ -86,61 +80,31 @@ export class Notifications extends Component {
     POLLING.stop(POLLING_ID);
   }
 
-  onClickItem = async event => {
-    const { dispatch } = this.props;
-
-    if (!event.read) {
-      await dispatch(eventRead(event.id));
-    }
-  };
-
-  onClickShowMore = e => {
-    e.stopPropagation(); // don't let the toggle close the list
-    const { events } = this.props;
-
-    const currentOldestCreatedDate = events.events[events.ids[events.ids.length - 1]].created;
-    this.setState({ loading: true });
-    this.fetchEventsPage(createHeaderFilter({
-      seen: true,
-      ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
-    }));
-    this.setState({ loading: false });
-  };
-
-  fetchEventsPage(headers = null) {
-    const { dispatch } = this.props;
-    return dispatch(api.events.page(0, [], null, true, null, headers));
-  }
-
   render() {
-    const { events, notifications = { open: false } } = this.props;
-
-    return (
-      <NotificationList
-        events={events}
-        loading={this.state.loading}
-        open={notifications.open}
-        onClickItem={this.onClickItem}
-        onClickShowMore={this.onClickShowMore}
-      />
-    );
+    return null;
   }
 }
 
-Notifications.propTypes = {
+PollingWrapper.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  events: PropTypes.object,
-  notifications: PropTypes.object.isRequired,
   eventTriggeringRequests: PropTypes.number.isRequired,
+  fetchEventsPage: PropTypes.func.isRequired,
+  events: PropTypes.object,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }).isRequired,
 };
 
+const mapStateToProps = (state) => ({
+  events: state.api.events,
+  eventTriggeringRequests: state.events.eventTriggeringRequests,
+  isAuthenticated: Boolean(state.authentication.token),
+});
 
-function select(state) {
-  return {
-    eventTriggeringRequests: state.events.eventTriggeringRequests,
-    notifications: state.notifications,
-    events: state.api.events,
-  };
-}
-
-export default connect(select)(Notifications);
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  fetchEventsPage(headers = null) {
+    return dispatch(api.events.page(0, [], null, true, null, headers));
+  },
+});
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PollingWrapper));

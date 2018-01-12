@@ -1,18 +1,22 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 
 import NotificationListItem from './NotificationListItem';
 
-
-export default class NotificationList extends Component {
+export class NotificationList extends Component {
   constructor(props) {
     super(props);
 
     this.state = { totalResults: props.events.totalResults || 0 };
   }
-
-  componentWillUpdate(nextProps) {
-    this.updateTotalResults(nextProps.events);
+  shouldComponentUpdate(nextProps) {
+    return !isEqual(this.props.events, nextProps.events)
+      || this.props.loading !== nextProps.loading
+      || this.props.open !== nextProps.open;
   }
 
   onClickShowMore = e => {
@@ -22,7 +26,7 @@ export default class NotificationList extends Component {
 
   updateTotalResults(events) {
     if (events.totalResults > this.state.totalResults) {
-      this.setState({ totalResults: events.totalResults });
+      this.setState((prevState) => ({ ...prevState, totalResults: events.totalResults }));
     }
   }
 
@@ -66,9 +70,9 @@ export default class NotificationList extends Component {
 }
 
 NotificationList.propTypes = {
+  open: PropTypes.bool.isRequired,
   events: PropTypes.object.isRequired,
   loading: PropTypes.bool,
-  open: PropTypes.bool.isRequired,
   onClickItem: PropTypes.func,
   onClickShowMore: PropTypes.func,
 };
@@ -76,3 +80,13 @@ NotificationList.propTypes = {
 NotificationList.defaultProps = {
   open: false,
 };
+
+const mapStateToProps = (state) => ({
+  open: Boolean(state.notifications.open),
+  events: state.api.events,
+});
+
+export default compose(
+  connect(mapStateToProps),
+  withRouter,
+)(NotificationList);
