@@ -8,7 +8,7 @@ import { stringify } from 'querystring';
 import { APP_ROOT, LOGIN_ROOT } from '~/constants';
 import { clientId } from '~/secrets';
 
-const create0Auth = (path, clientId, scope = '*', responseType, redirectUri) => {
+const createOAuth = (path, clientId, scope = '*', responseType, redirectUri) => {
   const query = {
     client_id: clientId,
     scope,
@@ -75,7 +75,7 @@ const mapDispatchToProps = (state, ownProps) => ({
     const { location: { pathname, search } } = ownProps;
     const returnURL = `${pathname}${search && `%3F${search}`}`;
 
-    window.location = create0Auth(
+    window.location = createOAuth(
       `${LOGIN_ROOT}/oauth/authorize`,
       clientId,
       '*',
