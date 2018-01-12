@@ -9,26 +9,31 @@ export const MANY = 'MANY';
 export const POST = 'POST';
 export const DELETE = 'DELETE';
 
+
+export function isPlural(config) {
+  return config.supports.indexOf(MANY) > -1;
+}
+
 /**
  * Adds parent properties to all subresources and returns a new config.
  */
-export function genConfig(config, parent = undefined) {
-  const result = { primaryKey: 'id', ...config, parent };
+export function addParentRefs(config, parent = undefined) {
+  const result = { ...config, parent };
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       result.subresources[key] =
-        genConfig(config.subresources[key], result);
+        addParentRefs(config.subresources[key], result);
     });
   }
   return Object.freeze(result);
 }
 
 function fullyQualified(resource) {
-  let path = resource.plural ? resource.plural : resource.singular;
+  let path = resource.name;
   let res = resource;
   while (res.parent) {
     res = res.parent;
-    path = `${res.plural ? res.plural : res.singular}.${path}`;
+    path = `${res.name}.${path}`;
   }
   return path;
 }
@@ -81,28 +86,20 @@ export function genActions(config) {
     Object.keys(config.subresources).forEach((key) => {
       const subresource = config.subresources[key];
       const subActions = genActions(subresource, 2);
-      if (subresource.plural) {
-        actions[subresource.plural] = subActions;
-      } else if (subresource.singular) {
-        actions[subresource.singular] = subActions;
-      }
+      actions[subresource.name] = subActions;
     });
   }
-  if (config.plural) {
-    actions.type = config.plural;
-  } else if (config.singular) {
-    actions.type = config.singular;
-  }
+  actions.type = config.name;
   return actions;
 }
 
 export function generateDefaultStateFull(config) {
-  if (config.plural) {
+  if (isPlural(config)) {
     return {
       totalPages: -1,
       totalResults: -1,
       ids: [],
-      [config.plural]: {},
+      [config.name]: {},
     };
   }
 
@@ -120,14 +117,14 @@ export function generateDefaultStateOne(config, one) {
 
 export class ReducerGenerator {
   static one(config, oldStateMany, action) {
-    if (config.singular) {
+    if (!isPlural(config)) {
       return { ...oldStateMany, ...action.resource };
     }
 
     const nonNanActionIds = (action.ids || []).filter(i => !_isNaN(i));
     const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
       action.resource[config.primaryKey];
-    const oldStateOne = oldStateMany[config.plural][id];
+    const oldStateOne = oldStateMany[config.name][id];
     const newStateOne = oldStateOne ? action.resource :
       generateDefaultStateOne(config, action.resource);
 
@@ -152,8 +149,8 @@ export class ReducerGenerator {
 
     const newStateMany = {
       ...oldStateMany,
-      [config.plural]: {
-        ...oldStateMany[config.plural],
+      [config.name]: {
+        ...oldStateMany[config.name],
         [id]: combinedStateOne,
       },
     };
@@ -164,17 +161,17 @@ export class ReducerGenerator {
   static many(config, oldState, action) {
     const { page } = action;
 
-    const newState = page[config.plural].reduce((stateAccumulator, oneObject) =>
+    const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
         ids: [oneObject[config.primaryKey]],
         resource: oneObject,
         dispatch: action.dispatch,
       }), oldState);
 
-    let ids = Object.values(newState[config.plural]).map((obj) => obj[config.primaryKey]);
+    let ids = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
 
     if (config.sortFn) {
-      ids = config.sortFn(ids, newState[config.plural]);
+      ids = config.sortFn(ids, newState[config.name]);
     }
 
     return {
@@ -187,11 +184,11 @@ export class ReducerGenerator {
 
   static del(config, state, action) {
     const id = action.ids[action.ids.length - 1];
-    const newMany = omit(state[config.plural], id);
+    const newMany = omit(state[config.name], id);
     return {
       ...state,
       ids: Object.values(newMany).map(({ id }) => id),
-      [config.plural]: newMany,
+      [config.name]: newMany,
     };
   }
 
@@ -202,14 +199,14 @@ export class ReducerGenerator {
       // when new data is available by thunks.all.
       if (action.ids.length) {
         // action.ids should only ever be just 1 id
-        newState[config.plural][action.ids[0]].invalid = true;
+        newState[config.name][action.ids[0]].invalid = true;
       } else {
         newState.invalid = true;
       }
     } else {
       if (action.ids.length) {
         // action.ids should only ever be just 1 id
-        delete newState[config.plural][action.ids[0]];
+        delete newState[config.name][action.ids[0]];
       } else {
         newState = generateDefaultStateFull(config);
       }
@@ -227,7 +224,7 @@ export class ReducerGenerator {
     let name = null;
     let i;
     for (i = 0; i < names.length; i += 1) {
-      if (names[i] === config.plural) {
+      if (names[i] === config.name) {
         name = names[i + 1];
         break;
       }
@@ -241,7 +238,7 @@ export class ReducerGenerator {
     for (i = 0; i < keys.length; i += 1) {
       subkey = keys[i];
       subconfig = config.subresources[subkey];
-      if (subconfig.plural === name || subconfig.singular === name) {
+      if (subconfig.name === name) {
         break;
       }
     }
@@ -251,7 +248,7 @@ export class ReducerGenerator {
     }
 
     const subaction = { ...action, ids: ids.splice(1) };
-    const item = state[config.plural][ids[0]];
+    const item = state[config.name][ids[0]];
     return ReducerGenerator.one(config, state, {
       ids: action.ids,
       // eslint-disable-next-line no-use-before-define

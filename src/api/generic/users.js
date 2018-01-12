@@ -1,21 +1,23 @@
 import {
-  genConfig, ReducerGenerator, genActions,
+  addParentRefs, ReducerGenerator, genActions,
   ONE, MANY, DELETE, PUT, POST,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'users',
+export const config = addParentRefs({
+  name: 'users',
   primaryKey: 'username',
   endpoint: user => `/account/users/${user}`,
   supports: [ONE, MANY, DELETE, PUT, POST],
   subresources: {
     _permissions: {
-      singular: 'permissions',
+      name: 'permissions',
+      primaryKey: 'id',
       endpoint: user => `/account/users/${user}/grants`,
       supports: [ONE, PUT],
     },
     _password: {
-      singular: 'password',
+      name: 'password',
+      primaryKey: 'id',
       endpoint: user => `/account/users/${user}/password`,
       supports: [POST],
     },

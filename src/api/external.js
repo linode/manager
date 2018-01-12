@@ -1,6 +1,6 @@
 import { fetch } from './fetch';
 import {
-  ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
+  ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull, isPlural,
 } from './internal';
 
 
@@ -36,26 +36,26 @@ export function getStateOfSpecificResource(config, state, ids) {
     Object.keys(parent.subresources).forEach(s => match(s, parent));
     root = parent;
   }
-  let refined = state.api[root.plural || root.singular];
+  let refined = state.api[root.name];
   const _ids = [...ids];
   let current = root;
   let name = null;
 
   while (current !== config) {
     name = path.pop();
-    if (current.singular) {
-      // Not totally sure how things would work with a plural inside a singular
-      refined = refined[current.singular][name];
+    if (isPlural(current)) {
+      refined = refined[current.name][_ids.shift()][name];
     } else {
-      refined = refined[current.plural][_ids.shift()][name];
+      // Not totally sure how things would work with a plural inside a singular
+      refined = refined[current.name][name];
     }
     current = current.subresources[name];
   }
 
   if (_ids.length) {
     // Should only be a plural one anyway, but just in case.
-    const objects = refined[current.plural || current.singular];
-    if (current.singular) {
+    const objects = refined[current.name];
+    if (!isPlural(current)) {
       return objects;
     }
 
@@ -71,22 +71,22 @@ export function getStateOfSpecificResource(config, state, ids) {
 export function filterResources(config, resources, resourceFilter) {
   const filteredResources = { ...resources };
 
-  for (let i = 0; i < filteredResources[config.plural].length; i += 1) {
-    const object = filteredResources[config.plural][i];
+  for (let i = 0; i < filteredResources[config.name].length; i += 1) {
+    const object = filteredResources[config.name][i];
     const filteredObject = resourceFilter ? resourceFilter(object) : object;
 
     if (!filteredObject || !Object.keys(filteredObject).length) {
-      filteredResources[config.plural].splice(i, 1);
+      filteredResources[config.name].splice(i, 1);
     } else {
-      filteredResources[config.plural][i] = {
+      filteredResources[config.name][i] = {
         ...object,
         ...filteredObject,
       };
     }
   }
 
-  const oldObjects = resources[config.plural];
-  const newObjects = filteredResources[config.plural];
+  const oldObjects = resources[config.name];
+  const newObjects = filteredResources[config.name];
   if (oldObjects.length !== newObjects.length) {
     filteredResources.totalResults -= (oldObjects.length - newObjects.length);
   }
@@ -115,7 +115,7 @@ function genThunkPage(config, actions) {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
       const resources = await dispatch(fetch.get(endpoint, undefined, headers));
-      resources[config.plural] = resources.data || [];
+      resources[config.name] = resources.data || [];
 
       const now = fetchBeganAt || new Date();
 
@@ -125,7 +125,7 @@ function genThunkPage(config, actions) {
 
       // Refetch any existing results that have been updated since fetchBeganAt.
       const fetchOne = genThunkOne(config, actions);
-      const objects = await Promise.all(filteredResources[config.plural].map(async (resource) => {
+      const objects = await Promise.all(filteredResources[config.name].map(async (resource) => {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
@@ -150,7 +150,7 @@ function genThunkPage(config, actions) {
 
       const updatedResources = {
         ...filteredResources,
-        [config.plural]: objects,
+        [config.name]: objects,
       };
 
       if (storeInState) {
@@ -200,7 +200,7 @@ function genThunkAll(config, actions, fetchPage) {
       // If the number of total results returned by the last page is different
       // than the total number of results we have, restart.
       const numFetchedResources = resources.map(
-        resource => resource[config.plural].length
+        resource => resource[config.name].length
       ).reduce((a, b) => a + b);
       const numExpectedResources = resources[resources.length - 1].results;
       if (numFetchedResources !== numExpectedResources) {
@@ -219,7 +219,7 @@ function genThunkAll(config, actions, fetchPage) {
       // The resulting object will look like this, return it so anyone can use it immediately.
       const res = {
         ...resources[resources.length - 1],
-        [config.plural]: resources.reduce((a, b) => [...a, ...b[config.plural]], []),
+        [config.name]: resources.reduce((a, b) => [...a, ...b[config.name]], []),
       };
 
       return res;
@@ -283,19 +283,10 @@ export default function apiActionReducerGenerator(config, actions) {
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       const subresource = config.subresources[key];
-      if (subresource.plural) {
-        thunks[subresource.plural] = apiActionReducerGenerator(subresource,
-          actions[subresource.plural]);
-      } else if (subresource.singular) {
-        thunks[subresource.singular] = apiActionReducerGenerator(subresource,
-          actions[subresource.singular]);
-      }
+      thunks[subresource.name] = apiActionReducerGenerator(subresource,
+        actions[subresource.name]);
     });
   }
-  if (config.plural) {
-    thunks.type = config.plural;
-  } else if (config.singular) {
-    thunks.type = config.singular;
-  }
+  thunks.type = config.name;
   return thunks;
 }

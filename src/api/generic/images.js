@@ -1,13 +1,14 @@
 import {
-  genConfig, ReducerGenerator, genActions,
+  ReducerGenerator, genActions,
   ONE, MANY, POST, PUT, DELETE,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'images',
+export const config = {
+  name: 'images',
+  primaryKey: 'id',
   endpoint: id => `/images/${id}`,
   supports: [ONE, MANY, POST, PUT, DELETE],
-});
+};
 
 export const actions = genActions(config);
 export const { reducer } = new ReducerGenerator(config);
