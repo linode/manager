@@ -11,7 +11,6 @@ import NotFound from 'linode-components/dist/errors/NotFound';
 import PollingWrapper from '~/components/PollingWrapper';
 import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
-// import { actions, thunks, reducer } from '~/api/generic/linodes';
 import Logout from '~/components/Logout';
 import OAuthComponent from '~/layouts/OAuth';
 
@@ -23,21 +22,12 @@ import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
 
-import NavigationLink from '~/layouts/NavigationLink';
 import Navigation from '~/layouts/Navigation';
+import ContextNavigation from '~/layouts/ContextNavigation';
 import Footer from '~/layouts/Footer';
 import MiniHeader from '~/layouts/MiniHeader';
 
 import AuthenticationWrapper from '~/components/AuthenticationWrapper';
-/**
- * Crazy important, so pay attention boys and girls;
- * Any react-redux connected component which uses a route component (Link, Route,
- * Redirect, etc.,...) you must wrapped the component withRouter.
- *
- * @see https://github.com/ReactTraining/react-router/issues/4671#issuecomment-285320076
- * @example
- *  export default compose(connect(), withRouter)(Component);
- */
 
 /**
  * @todo I believe we can just import without defining a variable.
@@ -58,49 +48,12 @@ window.handleError = handleError(history);
 
 store.dispatch(session.initialize);
 
-// window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
 if (ENVIRONMENT === 'production') {
   Raven
     .config(SENTRY_URL)
     .install();
 }
-/**
- * Features
- */
-const LinodeContextMenu = () => {
-  const links = [
-    { to: '/stackscripts', label: 'StackScripts', linkClass: 'ContextHeader-link' },
-    { to: '/images', label: 'Images', linkClass: 'ContextHeader-link' },
-    { to: '/volumes', label: 'Volumes', linkClass: 'ContextHeader-link' },
-  ];
-
-  return (
-    <div className="ContextHeader">
-      <div className="container">
-        <div className="Menu">
-          {links.map((props, key) => (
-            <div className="Menu-item" key={key}>
-              {React.createElement(NavigationLink, props)}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-const ContextNavigation = () => (
-  <div>
-    <Route path="/linodes" render={LinodeContextMenu} />
-    <Route path="/images" component={LinodeContextMenu} />
-    <Route path="/stackscripts" component={LinodeContextMenu} />
-    <Route path="/volumes" component={LinodeContextMenu} />
-  </div>
-);
-
-const BlankPage = () => (<div>This page intentionally left blank.</div>);
 
 const init = () => {
   try {
@@ -139,7 +92,6 @@ const init = () => {
                       <Route path="/settings" component={Settings} />
                       <Route path="/users" component={Users} /> */}
                       <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                      <Route path="/" exact component={BlankPage} />
                       <Route exact path="/logout" component={Logout} />
                       <Route exact path="/oauth/callback" component={OAuthComponent} />
                       <Route component={NotFound} />
