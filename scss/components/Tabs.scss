@@ -19,6 +19,7 @@ $text-color: #111;
     }
   
     &__tab {
+      color: $text-color;
       display: inline-block;
       border: 1px solid transparent;
       border-bottom: none;
@@ -29,7 +30,6 @@ $text-color: #111;
       cursor: pointer;
 
       a:link, a:visited, a:hover, a:active {
-        color: $text-color;
         text-decoration: none;
       }
 
@@ -90,6 +90,7 @@ $text-color: #111;
   }
 
   &__tab {
+    color: $text-color;
     display: inline-block;
     border-bottom: 1px solid transparent;
     bottom: -1px;
@@ -99,7 +100,6 @@ $text-color: #111;
     cursor: pointer;
 
     a:link, a:visited, a:hover, a:active {
-      color: $text-color;
       text-decoration: none;
     }
 

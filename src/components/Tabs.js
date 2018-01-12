@@ -11,9 +11,11 @@ const Tab = ({ name, to, selected, disabled, parentClass }) => {
   });
 
   return (
-    <li className={classes}>
-      <Link to={to}>{name}</Link>
-    </li>
+    <Link to={to}>
+      <li className={classes}>
+        {name}
+      </li>
+    </Link>
   );
 };
 
