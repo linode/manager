@@ -1,12 +1,13 @@
 import {
-  genConfig, ReducerGenerator, genActions, ONE, PUT,
+  ReducerGenerator, genActions, ONE, PUT,
 } from '~/api/internal';
 
-export const config = genConfig({
-  singular: 'profile',
+export const config = {
+  name: 'profile',
+  primaryKey: 'id',
   endpoint: () => '/profile',
   supports: [ONE, PUT],
-});
+};
 
 export const actions = genActions(config);
 export const { reducer } = new ReducerGenerator(config);

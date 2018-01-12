@@ -1,9 +1,10 @@
 import {
-  genConfig, ReducerGenerator, genActions, ONE, MANY,
+  ReducerGenerator, genActions, ONE, MANY,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'events',
+export const config = {
+  name: 'events',
+  primaryKey: 'id',
   endpoint: id => `/account/events/${id}`,
   supports: [ONE, MANY],
 
@@ -24,7 +25,7 @@ export const config = genConfig({
       return 0;
     });
   },
-});
+};
 
 export const actions = genActions(config);
 export const { reducer } = new ReducerGenerator(config);

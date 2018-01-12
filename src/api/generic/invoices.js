@@ -1,14 +1,15 @@
 import {
-  genConfig, ReducerGenerator, genActions, ONE, MANY,
+  addParentRefs, ReducerGenerator, genActions, ONE, MANY,
 } from '~/api/internal';
 
-export const config = genConfig({
-  plural: 'invoices',
+export const config = addParentRefs({
+  name: 'invoices',
+  primaryKey: 'id',
   endpoint: id => `/account/invoices/${id}`,
   supports: [ONE, MANY],
   subresources: {
     _items: {
-      plural: 'items',
+      name: 'items',
       primaryKey: 'label',
       endpoint: id => `/account/invoices/${id}/items`,
       supports: [MANY],
