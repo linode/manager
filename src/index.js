@@ -8,7 +8,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import NotFound from 'linode-components/dist/errors/NotFound';
 
-import PollingWrapper from '~/components/PollingWrapper';
 import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import Logout from '~/components/Logout';
@@ -63,7 +62,6 @@ const init = () => {
           <ConnectedRouter history={history}>
             <div>
               <AuthenticationWrapper>
-                <PollingWrapper />
                 <div className="Layout" >
                   <ChainedDocumentTitle title="Linode Manager" />
                   <div className="Layout-inner">
