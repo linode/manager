@@ -2,7 +2,7 @@ import range from 'lodash/range';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { Button } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
@@ -34,8 +34,8 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class DashboardPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       year: new Date().getFullYear().toString(),
@@ -202,7 +202,7 @@ export class DashboardPage extends Component {
                 </small>
               </div>
             </FormGroup>
-            <FormGroup className="row">
+            <FormGroup name="glish" className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Glish
                 <div><small className="text-muted">NoVNC Console</small></div>
@@ -303,7 +303,7 @@ function mapStateToProps(state, props) {
   return { linode, username, timezone, transfer, images };
 }
 
-const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
+const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
   await dispatch(transferPool());
   const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 

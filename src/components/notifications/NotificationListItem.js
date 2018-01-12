@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import TimeDisplay from '~/components/TimeDisplay';
 
 import EventTypeMap from './EventTypes';
@@ -107,7 +107,6 @@ export default function NotificationListItem(props) {
 
   const eventLink = eventOptions != null ? eventOptions.redirectUrl(event.entity)
     : '#';
-
   return (
     <Link
       to={eventLink}

@@ -1,6 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
+import { StaticRouter } from 'react-router-dom';
 
 import { IndexPage } from '~/support/layouts/IndexPage';
 import { api } from '~/data';
@@ -16,20 +17,24 @@ describe('support/layouts/IndexPage', () => {
   it('should render without error', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage
-        dispatch={mockDispatch}
-        tickets={api.tickets}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={mockDispatch}
+          tickets={api.tickets}
+        />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
   it('renders a list of tickets', () => {
     const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        tickets={api.tickets}
-      />
+      <StaticRouter>
+        <IndexPage
+          dispatch={dispatch}
+          tickets={api.tickets}
+        />
+      </StaticRouter>
     );
 
     const tickets = page.find('.TableRow');

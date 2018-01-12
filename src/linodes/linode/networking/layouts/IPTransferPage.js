@@ -13,18 +13,11 @@ import {
 } from 'linode-components';
 
 import { setSource } from '~/actions/source';
-import api from '~/api';
-import { ipv4s, assignIPs } from '~/api/ad-hoc/networking';
-import {
-  createHeaderFilter,
-  dispatchOrStoreErrors,
-  getObjectByLabelLazily,
-} from '~/api/util';
+import { assignIPs } from '~/api/ad-hoc/networking';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import { IPList } from '../components';
 import { selectLinode } from '../../utilities';
-import { ComponentPreload as Preload } from '~/decorators/Preload';
-
 
 export class IPTransferPage extends Component {
   constructor() {
@@ -183,16 +176,6 @@ function mapStateToProps(state, props) {
   return { linode, linodes };
 }
 
-const preloadRequest = async (dispatch, { params: { linodeLabel } }) => {
-  const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-
-  await Promise.all([
-    ipv4s(region),
-    api.linodes.all([], undefined, createHeaderFilter({ region })),
-  ].map(dispatch));
-};
-
 export default compose(
   connect(mapStateToProps),
-  Preload(preloadRequest)
 )(IPTransferPage);

@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
-
+import { StaticRouter } from 'react-router-dom';
 import { DashboardPage } from '~/billing/layouts/DashboardPage';
 import { api } from '~/data';
 import { account } from '~/data/account';
@@ -21,21 +21,25 @@ describe('billing/layouts/DashboardPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <DashboardPage
-        dispatch={dispatch}
-        account={account}
-        invoices={invoices.invoices}
-      />
+      <StaticRouter>
+        <DashboardPage
+          dispatch={dispatch}
+          account={account}
+          invoices={invoices.invoices}
+        />
+      </StaticRouter>
     );
     expect(wrapper).toMatchSnapshot();
   });
   it('renders account info', () => {
     const page = mount(
-      <DashboardPage
-        dispatch={dispatch}
-        account={account}
-        invoices={invoices.invoices}
-      />
+      <StaticRouter>
+        <DashboardPage
+          dispatch={dispatch}
+          account={account}
+          invoices={invoices.invoices}
+        />
+      </StaticRouter>
     );
 
     const address = page.find('#address');

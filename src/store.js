@@ -1,29 +1,26 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
-import { browserHistory } from 'react-router';
+import thunk from 'redux-thunk';
+import reducers from './reducers';
+import createHistory from 'history/createBrowserHistory';
 
-import reducer from '~/reducers';
-import DevTools from '~/components/DevTools';
+export const history = createHistory();
 
-const enhancers = [applyMiddleware(thunk, routerMiddleware(browserHistory))];
-if (DevTools.instrument) {
-  enhancers.push(DevTools.instrument());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+function initStore(history) {
+  return createStore(
+    reducers,
+    composeEnhancers(
+      applyMiddleware(...[
+        /**
+         * List middleware here in order of expected execution from top down.
+         */
+        routerMiddleware(history),
+        thunk,
+      ]),
+    ),
+  );
 }
 
-const composedEnhancers = compose(...enhancers);
-
-export function configureStore(initialState) {
-  const store = createStore(reducer, initialState, composedEnhancers);
-
-  if (module.hot) {
-    module.hot.accept('./reducers', () =>
-      // eslint-disable-next-line global-require
-      store.replaceReducer(require('./reducers')['default'])
-    );
-  }
-
-  return store;
-}
-
-export const store = configureStore();
+export const store = initStore(history);

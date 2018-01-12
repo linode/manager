@@ -1,0 +1,141 @@
+$text-color: #111;
+
+.linode-tabs {
+    &__container {
+      width: 100%;
+      margin-bottom: 15px;
+      background-color: #FEFEFE;
+      border-bottom: 1px solid #CCC;
+    }
+    
+    &__tab-list {
+      margin: 0 auto;
+      padding: 0;
+
+      @media (min-width: 1200px) {
+        width: 1140px;
+        max-width: 100%
+      }
+    }
+  
+    &__tab {
+      color: $text-color;
+      display: inline-block;
+      border: 1px solid transparent;
+      border-bottom: none;
+      bottom: -1px;
+      position: relative;
+      list-style: none;
+      padding: 6px 12px;
+      cursor: pointer;
+
+      a:link, a:visited, a:hover, a:active {
+        text-decoration: none;
+      }
+
+      &--selected {
+        background: #fafafa;
+        border-color: #aaa;
+        color: $text-color;
+        border-radius: 5px 5px 0 0;
+      }
+  
+      &--disabled {
+        color: darkgrey;
+        cursor: default;
+      }
+  
+      &:focus {
+        box-shadow: 0 0 5px hsl(208, 99%, 50%);
+        border-color: hsl(208, 99%, 50%);
+        outline: none;
+  
+        &:after {
+          content: "";
+          position: absolute;
+          height: 5px;
+          left: -4px;
+          right: -4px;
+          bottom: -5px;
+          background: #fff;
+        }
+      }
+    }
+  
+    &__tab-panel {
+      display: none;
+  
+      &--selected {
+        display: block;
+      }
+    }
+  }
+
+.linode-tabs--sub {
+  &__container {
+    width: 100%;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+  }
+  
+  &__tab-list {
+    margin: 0 auto;
+    padding: 0;
+    border-bottom: 1px solid #CCC;
+
+    @media (min-width: 1200px) {
+      width: 1140px;
+      max-width: 100%
+    }
+  }
+
+  &__tab {
+    color: $text-color;
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+    bottom: -1px;
+    position: relative;
+    list-style: none;
+    padding: 6px 12px;
+    cursor: pointer;
+
+    a:link, a:visited, a:hover, a:active {
+      text-decoration: none;
+    }
+
+    &--selected {
+      background: #fafafa;
+      border-bottom: 3px solid #4A90E2;
+      color: $text-color;
+    }
+
+    &--disabled {
+      color: darkgrey;
+      cursor: default;
+    }
+
+    &:focus {
+      box-shadow: 0 0 5px hsl(208, 99%, 50%);
+      border-color: hsl(208, 99%, 50%);
+      outline: none;
+
+      &:after {
+        content: "";
+        position: absolute;
+        height: 5px;
+        left: -4px;
+        right: -4px;
+        bottom: -5px;
+        background: #fff;
+      }
+    }
+  }
+
+  &__tab-panel {
+    display: none;
+
+    &--selected {
+      display: block;
+    }
+  }
+}

@@ -63,28 +63,30 @@ export class AlertsPage extends Component {
     const crumbs = `alerts.${key}`;
 
     return (
-      <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
-        <label className="col-sm-2 col-form-label">{name}</label>
-        <div className="col-sm-10">
-          <div className="clearfix">
-            <div className="float-sm-left">
-              <Input
-                type="number"
-                value={value}
-                onChange={thresholdChange}
-                label={label}
+      <div key={key}>
+        <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
+          <label className="col-sm-2 col-form-label">{name}</label>
+          <div className="col-sm-10">
+            <div className="clearfix">
+              <div className="float-sm-left">
+                <Input
+                  type="number"
+                  value={value}
+                  onChange={thresholdChange}
+                  label={label}
+                />
+              </div>
+              <FormGroupError
+                errors={errors}
+                name="threshold"
+                crumbs={crumbs}
+                className="float-sm-left"
               />
             </div>
-            <FormGroupError
-              errors={errors}
-              name="threshold"
-              crumbs={crumbs}
-              className="float-sm-left"
-            />
+            <small className="text-muted">Triggered by: {text} exceeding this value</small>
           </div>
-          <small className="text-muted">Triggered by: {text} exceeding this value</small>
-        </div>
-      </FormGroup>
+        </FormGroup>
+      </div>
     );
   }
 

@@ -1,10 +1,10 @@
-import {
-  EventTypeMap,
+import EventTypeMap, {
   baseRedirect,
   getLinodeRedirectUrl,
   getLinodeAdvancedRedirectUrl,
   getLinodeBackupRedirectUrl,
-} from '~/components/notifications';
+} from './EventTypes';
+
 import { api } from '~/data';
 
 const events = api.events;
