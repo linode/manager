@@ -105,19 +105,17 @@ export class SummaryPage extends Component {
     const biweekly = backups.weekly && backups.weekly.length === 2 ? backups.weekly[1] : undefined;
 
     return (
-      <div className="container">
-        <Card header={<CardHeader title="Restorable backups" />}>
-          <p>
-            Select a backup to see details and restore to a Linode.
-          </p>
-          <div className="Backup-container row">
-            <this.renderBlock title="Daily" backup={daily} />
-            <this.renderBlock title="Weekly" backup={weekly} />
-            <this.renderBlock title="Biweekly" backup={biweekly} />
-            <this.renderBlock title="Snapshot" backup={snapshot} />
-          </div>
-        </Card>
-      </div>
+      <Card header={<CardHeader title="Restorable backups" />}>
+        <p>
+          Select a backup to see details and restore to a Linode.
+        </p>
+        <div className="Backup-container row">
+          <this.renderBlock title="Daily" backup={daily} />
+          <this.renderBlock title="Weekly" backup={weekly} />
+          <this.renderBlock title="Biweekly" backup={biweekly} />
+          <this.renderBlock title="Snapshot" backup={snapshot} />
+        </div>
+      </Card>
     );
   }
 }

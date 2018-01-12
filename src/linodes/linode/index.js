@@ -65,8 +65,8 @@ class LinodeIndex extends Component {
     return (
       <div>
         <ChainedDocumentTitle title={linode.label} />
-        <header className="main-header">
-          <div className="container">
+        <div className="container">
+          <header className="main-header">
             <div className="float-sm-left">
               <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
@@ -84,19 +84,21 @@ class LinodeIndex extends Component {
                 dispatch={dispatch}
               />
             </span>
-          </div>
-        </header>
+          </header>
+        </div>
         <TabsComponent tabs={tabData} />
-        <Switch>
-          <Route path={`${path}/rebuild`} component={RebuildPage} />
-          <Route path={`${path}/resize`} component={ResizePage} />
-          <Route path={`${path}/rescue`} component={RescuePage} />
-          <Route path={`${path}/networking`} component={NetworkPage} />
-          <Route path={`${path}/backups`} component={BackupPage} />
-          <Route path={`${path}/settings`} component={SettingsPage} />
-          <Route exact path={path} component={DashboardPage} />
-          <Redirect to="/not-found" />
-        </Switch>
+        <div className="container">
+          <Switch>
+            <Route path={`${path}/rebuild`} component={RebuildPage} />
+            <Route path={`${path}/resize`} component={ResizePage} />
+            <Route path={`${path}/rescue`} component={RescuePage} />
+            <Route path={`${path}/networking`} component={NetworkPage} />
+            <Route path={`${path}/backups`} component={BackupPage} />
+            <Route path={`${path}/settings`} component={SettingsPage} />
+            <Route exact path={path} component={DashboardPage} />
+            <Redirect to="/not-found" />
+          </Switch>
+        </div>
       </div>
     );
   }

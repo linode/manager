@@ -16,19 +16,17 @@ export class DNSResolversPage extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <section className="col-lg-6 col-md-12 col-sm-12">
-            <Card className="full-height" header={<CardHeader title="IPv4 Resolvers" />}>
-              {IPV4_DNS_RESOLVERS.map(r => <div key={r}>{r}</div>)}
-            </Card>
-          </section>
-          <section className="col-lg-6 col-md-12 col-sm-12">
-            <Card className="full-height" header={<CardHeader title="IPv6 Resolvers" />}>
-              {IPV6_DNS_RESOLVERS.map(r => <div key={r}>{r}</div>)}
-            </Card>
-          </section>
-        </div>
+      <div className="row">
+        <section className="col-lg-6 col-md-12 col-sm-12">
+          <Card className="full-height" header={<CardHeader title="IPv4 Resolvers" />}>
+            {IPV4_DNS_RESOLVERS.map(r => <div key={r}>{r}</div>)}
+          </Card>
+        </section>
+        <section className="col-lg-6 col-md-12 col-sm-12">
+          <Card className="full-height" header={<CardHeader title="IPv6 Resolvers" />}>
+            {IPV6_DNS_RESOLVERS.map(r => <div key={r}>{r}</div>)}
+          </Card>
+        </section>
       </div>
     );
   }

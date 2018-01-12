@@ -129,38 +129,36 @@ export class SummaryPage extends Component {
 
   renderIPSection(ips, type) {
     return (
-      <div className="container">
-        <ListGroup name={type} key={type}>
-          <Table
-            className="Table--secondary"
-            columns={[
-              {
-                dataKey: 'address',
-                label: 'Address',
-                headerClassName: 'IPAddressColumn',
-              },
-              {
-                cellComponent: LabelCell,
-                headerClassName: 'LabelColumn',
-                dataKey: 'rdns',
-                label: 'Reverse DNS',
-                titleKey: 'rdns',
-                tooltipEnabled: true,
-              },
-              {
-                dataKey: 'type',
-                label: 'Type',
-              },
-              {
-                cellComponent: this.renderIPNav,
-                headerClassName: 'IPNavColumn',
-              },
-            ]}
-            data={ips}
-            noDataMessage={`You have no ${type} addresses.`}
-          />
-        </ListGroup>
-      </div>
+      <ListGroup name={type} key={type}>
+        <Table
+          className="Table--secondary"
+          columns={[
+            {
+              dataKey: 'address',
+              label: 'Address',
+              headerClassName: 'IPAddressColumn',
+            },
+            {
+              cellComponent: LabelCell,
+              headerClassName: 'LabelColumn',
+              dataKey: 'rdns',
+              label: 'Reverse DNS',
+              titleKey: 'rdns',
+              tooltipEnabled: true,
+            },
+            {
+              dataKey: 'type',
+              label: 'Type',
+            },
+            {
+              cellComponent: this.renderIPNav,
+              headerClassName: 'IPNavColumn',
+            },
+          ]}
+          data={ips}
+          noDataMessage={`You have no ${type} addresses.`}
+        />
+      </ListGroup>
     );
   }
 
@@ -188,7 +186,7 @@ export class SummaryPage extends Component {
     });
 
     return (
-      <div className="container">
+      <div>
         <header className="NavigationHeader clearfix">
           {/* TODO: Add rdnslookup when API supports it */}
           {this.renderAddButton()}

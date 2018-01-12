@@ -12,7 +12,7 @@ const LinodesIndex = (props) => {
       <Route component={LinodeIndex} path={`${path}/:linodeLabel`} />
       <Route component={ListLinodesPage} exact path={`${path}/`} />
       <Route component={NotFound} />
-    </Switch>
+    </Switch >
   );
 };
 

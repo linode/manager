@@ -76,62 +76,61 @@ export class RebuildPage extends Component {
     const { image, errors, loading } = this.state;
 
     return (
-      <div className="container">
-        <Card header={<CardHeader title="Rebuild" />}>
-          <ChainedDocumentTitle title="Rebuild" />
-          <p>
-            Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
-          </p>
-          <Form
-            onSubmit={this.onSubmit}
-            analytics={{ title: 'Rebuild Linode' }}
-          >
-            <FormGroup className="row" name="image">
-              <label className="col-sm-3 col-form-label">Current Image</label>
-              <div className="col-sm-9">
-                <Input
-                  disabled
-                  value={linode.image.label}
-                />
-              </div>
-            </FormGroup>
-            <FormGroup errors={errors} name="image" className="row">
-              <label className="col-sm-3 col-form-label">New Image</label>
-              <div className="col-sm-9">
-                <DistributionSelect
-                  images={images}
-                  value={image}
-                  name="image"
-                  id="image"
-                  onChange={this.onChange}
-                />
-                <FormGroupError errors={errors} name="image" inline={false} />
-              </div>
-            </FormGroup>
-            <FormGroup errors={errors} name="root_pass" className="row">
-              <label htmlFor="password" className="col-sm-3 col-form-label">Root password</label>
-              <div className="col-sm-9 clearfix">
-                <PasswordInput
-                  name="password"
-                  id="password"
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  className="float-sm-left"
-                />
-                <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
-              </div>
-            </FormGroup>
-            <FormGroup className="row" name="submit">
-              <div className="col-sm-9 offset-sm-3">
-                <SubmitButton
-                  disabled={loading}
-                  disabledChildren="Rebuilding"
-                >Rebuild</SubmitButton>
-                <FormSummary errors={errors} success="Linode is being rebuilt." />
-              </div>
-            </FormGroup>
-          </Form>
-        </Card></div>
+      <Card header={<CardHeader title="Rebuild" />}>
+        <ChainedDocumentTitle title="Rebuild" />
+        <p>
+          Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
+        </p>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Rebuild Linode' }}
+        >
+          <FormGroup className="row" name="image">
+            <label className="col-sm-3 col-form-label">Current Image</label>
+            <div className="col-sm-9">
+              <Input
+                disabled
+                value={linode.image.label}
+              />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} name="image" className="row">
+            <label className="col-sm-3 col-form-label">New Image</label>
+            <div className="col-sm-9">
+              <DistributionSelect
+                images={images}
+                value={image}
+                name="image"
+                id="image"
+                onChange={this.onChange}
+              />
+              <FormGroupError errors={errors} name="image" inline={false} />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} name="root_pass" className="row">
+            <label htmlFor="password" className="col-sm-3 col-form-label">Root password</label>
+            <div className="col-sm-9 clearfix">
+              <PasswordInput
+                name="password"
+                id="password"
+                value={this.state.password}
+                onChange={this.onChange}
+                className="float-sm-left"
+              />
+              <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
+            </div>
+          </FormGroup>
+          <FormGroup className="row" name="submit">
+            <div className="col-sm-9 offset-sm-3">
+              <SubmitButton
+                disabled={loading}
+                disabledChildren="Rebuilding"
+              >Rebuild</SubmitButton>
+              <FormSummary errors={errors} success="Linode is being rebuilt." />
+            </div>
+          </FormGroup>
+        </Form>
+      </Card>
     );
   }
 }

@@ -28,52 +28,48 @@ export class StackScriptPage extends Component {
       <div>
         <ChainedDocumentTitle title={stackscript.label} />
         <header className="main-header main-header--border">
-          <div className="container">
-            <Link to="/stackscripts">StackScripts</Link>
-            <h1 title={stackscript.id}>
-              <Link to={`/stackscripts/${stackscript.label}`}>
-                {stackscript.label}
-              </Link>
-            </h1>
-          </div>
+          <Link to="/stackscripts">StackScripts</Link>
+          <h1 title={stackscript.id}>
+            <Link to={`/stackscripts/${stackscript.label}`}>
+              {stackscript.label}
+            </Link>
+          </h1>
         </header>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <section>
-                <Card header={<CardHeader title="Settings" />}>
-                  <Settings
-                    dispatch={dispatch}
-                    stackscript={stackscript}
-                    images={filter(images, i => i.is_public)}
-                  />
-                </Card>
-              </section>
-              <Card header={<CardHeader title="Tips" />}>
-                <p>
-                  Check out the StackScript <ExternalLink to="https://www.linode.com/docs/platform/stackscripts">documentation</ExternalLink>. But keep in mind:
-                </p>
-                <ul>
-                  <li>
-                    There are four default environment variables provided to you:
-                    <ul>
-                      <li>LINODE_ID</li>
-                      <li>LINODE_LISHUSERNAME</li>
-                      <li>LINODE_RAM</li>
-                      <li>LINODE_DATACENTERID</li>
-                    </ul>
-                  </li>
-                </ul>
-              </Card>
-            </div>
-            <div className="col-md-8">
-              <Card header={<CardHeader title="Editor" />}>
-                <Editor
+        <div className="row">
+          <div className="col-md-4">
+            <section>
+              <Card header={<CardHeader title="Settings" />}>
+                <Settings
                   dispatch={dispatch}
                   stackscript={stackscript}
+                  images={filter(images, i => i.is_public)}
                 />
               </Card>
-            </div>
+            </section>
+            <Card header={<CardHeader title="Tips" />}>
+              <p>
+                Check out the StackScript <ExternalLink to="https://www.linode.com/docs/platform/stackscripts">documentation</ExternalLink>. But keep in mind:
+              </p>
+              <ul>
+                <li>
+                  There are four default environment variables provided to you:
+                  <ul>
+                    <li>LINODE_ID</li>
+                    <li>LINODE_LISHUSERNAME</li>
+                    <li>LINODE_RAM</li>
+                    <li>LINODE_DATACENTERID</li>
+                  </ul>
+                </li>
+              </ul>
+            </Card>
+          </div>
+          <div className="col-md-8">
+            <Card header={<CardHeader title="Editor" />}>
+              <Editor
+                dispatch={dispatch}
+                stackscript={stackscript}
+              />
+            </Card>
           </div>
         </div>
       </div>

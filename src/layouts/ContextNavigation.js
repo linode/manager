@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import NavigationLink from './NavigationLink';
 
 const LinodeContextMenu = () => {
@@ -25,10 +25,10 @@ const LinodeContextMenu = () => {
 };
 
 export default () => (
-  <div>
+  <Switch>
     <Route path="/linodes" render={LinodeContextMenu} />
     <Route path="/images" component={LinodeContextMenu} />
     <Route path="/stackscripts" component={LinodeContextMenu} />
     <Route path="/volumes" component={LinodeContextMenu} />
-  </div>
+  </Switch>
 );

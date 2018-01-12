@@ -119,22 +119,20 @@ export class AlertsPage extends Component {
     const header = <CardHeader title="Alerts" />;
 
     return (
-      <div className="container">
-        <Card header={header}>
-          <Form
-            onSubmit={this.onSubmit}
-            analytics={{ title: 'Linode Alert Settings' }}
-          >
-            {alerts.map(this.renderAlertRow)}
-            <div className="row">
-              <div className="offset-sm-2 col-sm-10">
-                <SubmitButton disabled={loading} />
-                <FormSummary errors={errors} success="Alerts settings saved." />
-              </div>
+      <Card header={header}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Linode Alert Settings' }}
+        >
+          {alerts.map(this.renderAlertRow)}
+          <div className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <SubmitButton disabled={loading} />
+              <FormSummary errors={errors} success="Alerts settings saved." />
             </div>
-          </Form>
-        </Card>
-      </div>
+          </div>
+        </Form>
+      </Card>
     );
   }
 }

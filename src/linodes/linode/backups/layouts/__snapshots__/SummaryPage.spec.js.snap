@@ -288,19 +288,12 @@ ShallowWrapper {
   Symbol(enzyme.__node__): Object {
     "instance": null,
     "key": undefined,
-    "nodeType": "host",
+    "nodeType": "function",
     "props": Object {
-      "children": <Card
-        className=""
-        header={
-          <CardHeader
-            title="Restorable backups"
-          />
-        }
-      >
+      "children": Array [
         <p>
           Select a backup to see details and restore to a Linode.
-        </p>
+        </p>,
         <div
           className="Backup-container row"
         >
@@ -320,12 +313,109 @@ ShallowWrapper {
             backup={undefined}
             title="Snapshot"
           />
-        </div>
-      </Card>,
-      "className": "container",
+        </div>,
+      ],
+      "className": "",
+      "header": <CardHeader
+        title="Restorable backups"
+      />,
     },
     "ref": null,
-    "rendered": Object {
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": "Select a backup to see details and restore to a Linode.",
+        },
+        "ref": null,
+        "rendered": "Select a backup to see details and restore to a Linode.",
+        "type": "p",
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {
+          "children": Array [
+            <Unknown
+              backup={null}
+              title="Daily"
+            />,
+            <Unknown
+              backup={undefined}
+              title="Weekly"
+            />,
+            <Unknown
+              backup={undefined}
+              title="Biweekly"
+            />,
+            <Unknown
+              backup={undefined}
+              title="Snapshot"
+            />,
+          ],
+          "className": "Backup-container row",
+        },
+        "ref": null,
+        "rendered": Array [
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "backup": null,
+              "title": "Daily",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "backup": undefined,
+              "title": "Weekly",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "backup": undefined,
+              "title": "Biweekly",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+          Object {
+            "instance": null,
+            "key": undefined,
+            "nodeType": "function",
+            "props": Object {
+              "backup": undefined,
+              "title": "Snapshot",
+            },
+            "ref": null,
+            "rendered": null,
+            "type": [Function],
+          },
+        ],
+        "type": "div",
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
       "instance": null,
       "key": undefined,
       "nodeType": "function",
@@ -453,180 +543,6 @@ ShallowWrapper {
         },
       ],
       "type": [Function],
-    },
-    "type": "div",
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {
-        "children": <Card
-          className=""
-          header={
-            <CardHeader
-              title="Restorable backups"
-            />
-          }
-        >
-          <p>
-            Select a backup to see details and restore to a Linode.
-          </p>
-          <div
-            className="Backup-container row"
-          >
-            <Unknown
-              backup={null}
-              title="Daily"
-            />
-            <Unknown
-              backup={undefined}
-              title="Weekly"
-            />
-            <Unknown
-              backup={undefined}
-              title="Biweekly"
-            />
-            <Unknown
-              backup={undefined}
-              title="Snapshot"
-            />
-          </div>
-        </Card>,
-        "className": "container",
-      },
-      "ref": null,
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "function",
-        "props": Object {
-          "children": Array [
-            <p>
-              Select a backup to see details and restore to a Linode.
-            </p>,
-            <div
-              className="Backup-container row"
-            >
-              <Unknown
-                backup={null}
-                title="Daily"
-              />
-              <Unknown
-                backup={undefined}
-                title="Weekly"
-              />
-              <Unknown
-                backup={undefined}
-                title="Biweekly"
-              />
-              <Unknown
-                backup={undefined}
-                title="Snapshot"
-              />
-            </div>,
-          ],
-          "className": "",
-          "header": <CardHeader
-            title="Restorable backups"
-          />,
-        },
-        "ref": null,
-        "rendered": Array [
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": "Select a backup to see details and restore to a Linode.",
-            },
-            "ref": null,
-            "rendered": "Select a backup to see details and restore to a Linode.",
-            "type": "p",
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "host",
-            "props": Object {
-              "children": Array [
-                <Unknown
-                  backup={null}
-                  title="Daily"
-                />,
-                <Unknown
-                  backup={undefined}
-                  title="Weekly"
-                />,
-                <Unknown
-                  backup={undefined}
-                  title="Biweekly"
-                />,
-                <Unknown
-                  backup={undefined}
-                  title="Snapshot"
-                />,
-              ],
-              "className": "Backup-container row",
-            },
-            "ref": null,
-            "rendered": Array [
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "backup": null,
-                  "title": "Daily",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "backup": undefined,
-                  "title": "Weekly",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "backup": undefined,
-                  "title": "Biweekly",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "backup": undefined,
-                  "title": "Snapshot",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-            ],
-            "type": "div",
-          },
-        ],
-        "type": [Function],
-      },
-      "type": "div",
     },
   ],
   Symbol(enzyme.__options__): Object {

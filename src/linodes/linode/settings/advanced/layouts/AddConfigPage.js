@@ -20,7 +20,7 @@ export class AddConfigPage extends Component {
     const header = <CardHeader title="Add a Config" />;
 
     return (
-      <div className="container">
+      <div>
         <Card header={header}>
           <CreateOrEditConfig
             linode={linode}

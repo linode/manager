@@ -159,9 +159,7 @@ export class IPTransferPage extends Component {
     }
 
     return (
-      <div className="container">
-        <Card header={<CardHeader title="IP Transfer" />}>{body}</Card>
-      </div>
+      <Card header={<CardHeader title="IP Transfer" />}>{body}</Card>
     );
   }
 }

@@ -25,19 +25,17 @@ export class EditConfigPage extends Component {
     const header = <CardHeader title="Edit Config" />;
 
     return !config ? null : (
-      <div className="container">
-        <Card header={header}>
-          <CreateOrEditConfig
-            linode={linode}
-            config={config}
-            kernels={kernels}
-            account={account}
-            disks={disks}
-            volumes={volumes}
-            dispatch={dispatch}
-          />
-        </Card>
-      </div>
+      <Card header={header}>
+        <CreateOrEditConfig
+          linode={linode}
+          config={config}
+          kernels={kernels}
+          account={account}
+          disks={disks}
+          volumes={volumes}
+          dispatch={dispatch}
+        />
+      </Card>
     );
   }
 }

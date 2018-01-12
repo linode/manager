@@ -160,9 +160,7 @@ export class IPSharingPage extends Component {
     }
 
     return (
-      <div className="container">
-        <Card header={<CardHeader title="IP Sharing" />}>{body}</Card>
-      </div>
+      <Card header={<CardHeader title="IP Sharing" />}>{body}</Card>
     );
   }
 }

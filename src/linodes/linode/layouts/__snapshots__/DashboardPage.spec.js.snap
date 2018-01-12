@@ -2244,7 +2244,6 @@ ShallowWrapper {
           }
         />,
       ],
-      "className": "container",
     },
     "ref": null,
     "rendered": Array [
@@ -16075,7 +16074,6 @@ ShallowWrapper {
             }
           />,
         ],
-        "className": "container",
       },
       "ref": null,
       "rendered": Array [
