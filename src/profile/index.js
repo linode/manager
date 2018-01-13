@@ -89,11 +89,11 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
 };
 
-function select(state) {
+function mapStateToProps(state) {
   // TODO refactor with abstractor changes, see other 'select' method usage in profile/page(s)
   return {
     profile: state.api.profile,
   };
 }
 
-export default connect(select)(IndexPage);
+export default connect(mapStateToProps)(IndexPage);
