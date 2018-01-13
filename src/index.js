@@ -20,6 +20,7 @@ import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
+import Domains from '~/domains';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -79,9 +80,9 @@ const init = () => {
                     </div>
                     <Switch>
                       <Route path="/linodes" component={Linodes} />
-                      {/* <Route path="/nodebalancers" component={NodeBalancers} />
+                      {/* <Route path="/nodebalancers" component={NodeBalancers} /> */}
                       <Route path="/domains" component={Domains} />
-                      <Route path="/support" component={Support} />
+                      {/* <Route path="/support" component={Support} />
                       <Route path="/stackscripts" component={Stackscripts} />
                       <Route path="/images" component={Images} />
                       <Route path="/volumes" component={Volumes} />
