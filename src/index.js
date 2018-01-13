@@ -20,6 +20,7 @@ import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
+import StackScripts from './linodes/stackscripts';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -79,16 +80,7 @@ const init = () => {
                     </div>
                     <Switch>
                       <Route path="/linodes" component={Linodes} />
-                      {/* <Route path="/nodebalancers" component={NodeBalancers} />
-                      <Route path="/domains" component={Domains} />
-                      <Route path="/support" component={Support} />
-                      <Route path="/stackscripts" component={Stackscripts} />
-                      <Route path="/images" component={Images} />
-                      <Route path="/volumes" component={Volumes} />
-                      <Route path="/billing" component={Billing} />
-                      <Route path="/profile" component={Profile} />
-                      <Route path="/settings" component={Settings} />
-                      <Route path="/users" component={Users} /> */}
+                      <Route path="/stackscripts" component={StackScripts} />
                       <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
                       <Route exact path="/logout" component={Logout} />
                       <Route exact path="/oauth/callback" component={OAuthComponent} />
