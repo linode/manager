@@ -143,7 +143,8 @@ export class DashboardPage extends Component {
                 <Table
                   className="Table--secondary"
                   columns={[
-                    { textKey: 'port', label: 'Port',
+                    {
+                      textKey: 'port', label: 'Port',
                       cellComponent: LinkCell,
                       hrefFn: function (config) {
                         return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
@@ -186,7 +187,7 @@ DashboardPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const params = ownProps.params;
+  const params = ownProps.match.params;
   const nbLabel = params.nbLabel;
   const { timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
@@ -195,8 +196,7 @@ function mapStateToProps(state, ownProps) {
   return { nodebalancer, timezone, transfer };
 }
 
-const preloadRequest = async (dispatch, props) => {
-  const { params: { nbLabel } } = props;
+const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {
   await dispatch(transferPool());
   const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
 
