@@ -46,23 +46,24 @@ function parseIntIfActualInt(string) {
   return isNaN(string) ? string : parseInt(string);
 }
 
-const actionGenerators = {
-  [ONE]: c => (resource, ...ids) => (dispatch) =>
+const actionCreatorGenerators = {
+  // These functions take a config and return Redux Action Creators
+  [ONE]: config => (resource, ...ids) => (dispatch) =>
     dispatch({
       resource,
       dispatch,
-      type: `GEN@${fullyQualified(c)}/ONE`,
+      type: `GEN@${fullyQualified(config)}/ONE`,
       ids: ids.map(parseIntIfActualInt),
     }),
-  [MANY]: c => (page, ...ids) => (dispatch) =>
+  [MANY]: config => (page, ...ids) => (dispatch) =>
     dispatch({
       page,
       dispatch,
-      type: `GEN@${fullyQualified(c)}/MANY`,
+      type: `GEN@${fullyQualified(config)}/MANY`,
       ids: ids.map(parseIntIfActualInt),
     }),
-  [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
+  [DELETE]: config => (...ids) =>
+    ({ type: `GEN@${fullyQualified(config)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
 };
 
 /**
@@ -76,8 +77,8 @@ export function genActions(config) {
     [DELETE]: 'delete',
   };
   config.supports.forEach((feature) => {
-    if (typeof actionGenerators[feature] !== 'undefined') {
-      actions[fns[feature]] = actionGenerators[feature](config);
+    if (typeof actionCreatorGenerators[feature] !== 'undefined') {
+      actions[fns[feature]] = actionCreatorGenerators[feature](config);
     }
   });
   if (config.subresources) {
