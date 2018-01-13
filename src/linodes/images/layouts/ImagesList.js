@@ -33,7 +33,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'images';
 
-export class IndexPage extends Component {
+export class ImagesList extends Component {
   constructor(props) {
     super(props);
 
@@ -171,7 +171,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+ImagesList.propTypes = {
   dispatch: PropTypes.func,
   images: PropTypes.object,
   linodes: PropTypes.object,
@@ -197,4 +197,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(ImagesList);
