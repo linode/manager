@@ -13,7 +13,7 @@ import SlaveZone from '../components/SlaveZone';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
-export class ZonePage extends Component {
+export class DomainDetails extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -47,7 +47,7 @@ export class ZonePage extends Component {
   }
 }
 
-ZonePage.propTypes = {
+DomainDetails.propTypes = {
   dispatch: PropTypes.func.isRequired,
   domain: PropTypes.object.isRequired,
 };
@@ -75,4 +75,4 @@ const preloadRequest = async (dispatch, { match: { params: { domainLabel } } }) 
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(ZonePage);
+)(DomainDetails);

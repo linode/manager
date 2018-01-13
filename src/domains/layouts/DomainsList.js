@@ -30,7 +30,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'domains';
 
-export class IndexPage extends Component {
+export class DomainsList extends Component {
   constructor(props) {
     super(props);
 
@@ -165,7 +165,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+DomainsList.propTypes = {
   dispatch: PropTypes.func,
   domains: PropTypes.object,
   email: PropTypes.string,
@@ -173,7 +173,7 @@ IndexPage.propTypes = {
 };
 
 
-function select(state) {
+function mapStateToProps(state) {
   return {
     domains: state.api.domains,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
@@ -186,6 +186,6 @@ const preloadRequest = async (dispatch) => {
 };
 
 export default compose(
-  connect(select),
+  connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(DomainsList);
