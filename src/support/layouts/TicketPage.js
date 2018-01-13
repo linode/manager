@@ -185,23 +185,21 @@ export class TicketPage extends Component {
 TicketPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   ticket: PropTypes.object.isRequired,
-  replies: PropTypes.array.isRequired,
+  replies: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, props) => {
-  const { ticketId } = props.params;
+const mapStateToProps = (state, { match: { params: { ticketId } } }) => {
   const ticket = state.api.tickets.tickets[ticketId];
+
   return {
     ticket,
-    replies: ticket && ticket._replies.replies,
+    replies: ticket && ticket._replies && ticket._replies.replies,
   };
 };
 
-const preloadRequest = async (dispatch, props) => {
-  const { routeParams: { ticketId } } = props;
+const preloadRequest = async (dispatch, { match: { params: { ticketId } } }) => {
   await Promise.all([
     getObjectByLabelLazily('tickets', ticketId, 'id'),
-    api.tickets.replies.all([ticketId]),
   ].map(dispatch));
 };
 
