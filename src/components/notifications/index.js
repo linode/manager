@@ -123,7 +123,7 @@ class Notifications extends Component {
 
   fetchEventsPage(headers = null) {
     const { dispatch } = this.props;
-    return dispatch(api.events.page(0, [], null, true, null, headers));
+    return dispatch(api.events.page(0, [], null, headers));
   }
 
   render() {
@@ -188,7 +188,7 @@ const mapDispatchToProps = (dispatch) => ({
     }
   },
   fetchEventsPage(headers = null) {
-    return dispatch(api.events.page(0, [], null, true, null, headers));
+    return dispatch(api.events.page(0, [], null, headers));
   },
 });
 
