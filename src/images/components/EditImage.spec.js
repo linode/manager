@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { EditImage } from '~/linodes/images/components';
+import EditImage from '../components';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testPrivateImage } from '~/data/images';

@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { AddImage } from '~/linodes/images/components';
+import AddImage from './AddImage';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
