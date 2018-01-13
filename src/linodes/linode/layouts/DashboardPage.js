@@ -138,10 +138,10 @@ export class DashboardPage extends Component {
                   Xen
                   <div>
                     <small className="text-muted">
-                      <Link
+                      <a
                         className="force-link"
                         onClick={() => UpgradeToKVM.trigger(dispatch, linode, type)}
-                      >Upgrade to KVM</Link>
+                      >Upgrade to KVM</a>
                     </small>
                   </div>
                 </div>
