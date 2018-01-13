@@ -20,7 +20,7 @@ import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
-import Volumes from '~/linodes/volumes';
+import Volumes from '~/volumes';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
