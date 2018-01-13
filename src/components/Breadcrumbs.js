@@ -14,7 +14,7 @@ export default function Breadcrumbs(props) {
               <div>
                 {groupLabel ? <div><small>{groupLabel}</small></div> : null}
                 <div className="Breadcrumbs-crumbLink">
-                  <Link to={to}>{label}</Link>
+                  {to ? <Link to={to}>{label}</Link> : label}
                 </div>
               </div>
               <div className="Breadcrumbs-divider">
