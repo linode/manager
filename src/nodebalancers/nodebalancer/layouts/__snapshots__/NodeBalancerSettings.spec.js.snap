@@ -4,7 +4,7 @@ exports[`nodebalancers/nodebalancer/layouts/SettingsPage should render without e
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <SettingsPage
+  Symbol(enzyme.__unrendered__): <NodeBalancerSettings
     dispatch={[Function]}
     nodebalancer={
       Object {

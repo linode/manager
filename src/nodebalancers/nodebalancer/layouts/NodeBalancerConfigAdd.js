@@ -11,7 +11,7 @@ import { objectFromMapByLabel } from '~/api/util';
 import { ConfigForm } from '../components';
 
 
-export class AddConfigPage extends Component {
+export class NodeBalancerConfigAdd extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -39,12 +39,12 @@ export class AddConfigPage extends Component {
   }
 }
 
-AddConfigPage.propTypes = {
+NodeBalancerConfigAdd.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
 };
 
-function select(state, ownProps) {
+function mapStateToProps(state, ownProps) {
   const params = ownProps.params;
   const nbLabel = params.nbLabel;
 
@@ -53,5 +53,5 @@ function select(state, ownProps) {
   return { nodebalancer };
 }
 
-export default connect(select)(AddConfigPage);
+export default connect(mapStateToProps)(NodeBalancerConfigAdd);
 

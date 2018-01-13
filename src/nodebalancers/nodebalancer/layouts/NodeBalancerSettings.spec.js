@@ -9,7 +9,7 @@ import {
   expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
-import { SettingsPage } from '~/nodebalancers/nodebalancer/layouts/SettingsPage';
+import { NodeBalancerSettings } from './NodeBalancerSettings';
 
 
 describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
@@ -24,7 +24,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <SettingsPage
+      <NodeBalancerSettings
         dispatch={dispatch}
         nodebalancer={configsNodeBalancer}
       />
@@ -34,7 +34,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
   it('renders display page', async () => {
     const page = mount(
-      <SettingsPage
+      <NodeBalancerSettings
         dispatch={dispatch}
         nodebalancer={configsNodeBalancer}
       />
@@ -47,7 +47,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
   it('makes request to save changes', async () => {
     const page = mount(
-      <SettingsPage
+      <NodeBalancerSettings
         dispatch={dispatch}
         nodebalancer={configsNodeBalancer}
       />
@@ -70,7 +70,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
   it('redirects if the label changed', async () => {
     const page = mount(
-      <SettingsPage
+      <NodeBalancerSettings
         dispatch={dispatch}
         nodebalancer={configsNodeBalancer}
       />

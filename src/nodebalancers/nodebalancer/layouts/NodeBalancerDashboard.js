@@ -30,7 +30,7 @@ import {
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
-export class DashboardPage extends Component {
+export class NodeBalancerDashboard extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -179,7 +179,7 @@ export class DashboardPage extends Component {
   }
 }
 
-DashboardPage.propTypes = {
+NodeBalancerDashboard.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
   timezone: PropTypes.string,
@@ -210,4 +210,4 @@ const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(DashboardPage);
+)(NodeBalancerDashboard);

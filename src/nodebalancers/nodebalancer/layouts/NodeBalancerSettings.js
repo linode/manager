@@ -18,7 +18,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
 
-export class SettingsPage extends Component {
+export class NodeBalancerSettings extends Component {
   constructor(props) {
     super(props);
 
@@ -103,7 +103,7 @@ export class SettingsPage extends Component {
   }
 }
 
-SettingsPage.propTypes = {
+NodeBalancerSettings.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
 };
@@ -114,4 +114,4 @@ function select(state, { match: { params: { nbLabel } } }) {
   return { nodebalancer };
 }
 
-export default connect(select)(SettingsPage);
+export default connect(select)(NodeBalancerSettings);

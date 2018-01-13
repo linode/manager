@@ -8,7 +8,7 @@ import {
   expectRequest,
 } from '~/test.helpers';
 import { configsNodeBalancer } from '~/data/nodebalancers';
-import { EditConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/EditConfigPage';
+import { NodeBalancerConfigEdit } from './NodeBalancerConfigEdit';
 
 describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -22,7 +22,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <EditConfigPage
+      <NodeBalancerConfigEdit
         id="1"
         nodebalancer={configsNodeBalancer}
         config={configsNodeBalancer._configs.configs[1]}
@@ -36,7 +36,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
   it('commits changes to the API', async () => {
     const id = 1;
     const page = mount(
-      <EditConfigPage
+      <NodeBalancerConfigEdit
         id={id}
         nodebalancer={configsNodeBalancer}
         config={configsNodeBalancer._configs.configs[id]}
@@ -93,7 +93,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
   it('commits changes to the API with HTTPS', async () => {
     const id = 1;
     const page = await mount(
-      <EditConfigPage
+      <NodeBalancerConfigEdit
         id={id}
         nodebalancer={configsNodeBalancer}
         config={configsNodeBalancer._configs.configs[id]}

@@ -8,7 +8,7 @@ ShallowWrapper {
     basename=""
     location="/"
   >
-    <DashboardPage
+    <NodeBalancerDashboard
       dispatch={[Function]}
       nodebalancer={
         Object {
@@ -101,7 +101,7 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "class",
     "props": Object {
-      "children": <DashboardPage
+      "children": <NodeBalancerDashboard
         dispatch={[Function]}
         nodebalancer={
           Object {
@@ -291,7 +291,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "children": <DashboardPage
+        "children": <NodeBalancerDashboard
           dispatch={[Function]}
           nodebalancer={
             Object {

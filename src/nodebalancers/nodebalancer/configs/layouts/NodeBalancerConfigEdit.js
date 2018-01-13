@@ -12,7 +12,7 @@ import { objectFromMapByLabel } from '~/api/util';
 import { ConfigForm } from '../../components';
 
 
-export class EditConfigPage extends Component {
+export class NodeBalancerConfigEdit extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -45,7 +45,7 @@ export class EditConfigPage extends Component {
   }
 }
 
-EditConfigPage.propTypes = {
+NodeBalancerConfigEdit.propTypes = {
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
@@ -60,4 +60,4 @@ function mapStateToProps(state, { match: { params: { nbLabel, configId } } }) {
   return { nodebalancer, config };
 }
 
-export default connect(mapStateToProps)(EditConfigPage);
+export default connect(mapStateToProps)(NodeBalancerConfigEdit);
