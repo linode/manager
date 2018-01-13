@@ -166,7 +166,7 @@ ShallowWrapper {
         <SideEffect(ChainedDocumentTitle)
           title="Invoice #1234"
         />,
-        <UNDEFINED
+        <Breadcrumbs
           crumbs={
             Array [
               Object {
@@ -348,7 +348,7 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": null,
-        "type": undefined,
+        "type": [Function],
       },
       Object {
         "instance": null,
@@ -831,7 +831,7 @@ ShallowWrapper {
           <SideEffect(ChainedDocumentTitle)
             title="Invoice #1234"
           />,
-          <UNDEFINED
+          <Breadcrumbs
             crumbs={
               Array [
                 Object {
@@ -1013,7 +1013,7 @@ ShallowWrapper {
           },
           "ref": null,
           "rendered": null,
-          "type": undefined,
+          "type": [Function],
         },
         Object {
           "instance": null,
