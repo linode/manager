@@ -4,7 +4,7 @@ exports[`components/ZonePage should render without error 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <ZonePage
+  Symbol(enzyme.__unrendered__): <DomainDetails
     dispatch={[Function]}
     domain={
       Object {

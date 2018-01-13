@@ -4,7 +4,7 @@ exports[`domains/layouts/IndexPage renders with minimum required props 1`] = `
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <IndexPage
+  Symbol(enzyme.__unrendered__): <DomainsList
     dispatch={[Function]}
     domains={
       Object {
