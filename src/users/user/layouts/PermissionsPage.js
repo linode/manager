@@ -230,8 +230,8 @@ export class PermissionsPage extends Component {
             objects: volume,
             dataColumns: (id) => thingPermissions(`volume-grants-${id}`),
           },
-          ].map(section => (
-            <div className="form-group Permissions-section">
+          ].map((section, key) => (
+            <div className="form-group Permissions-section" key={key}>
               <h3>{section.title}</h3>
               {!section.objects.length ?
                 <div className="text-muted">No {section.title}s found.</div> :
@@ -239,42 +239,41 @@ export class PermissionsPage extends Component {
                   <thead>
                     <tr>
                       <th className="LabelColumn">{section.title}</th>
-                      {headerColumns.map((column, index) => (
-                        <th className="PermissionsCheckboxColumn" key={index}>{column.label}</th>
+                      {headerColumns.map((column, keyA) => (
+                        <th className="PermissionsCheckboxColumn" key={keyA}>{column.label}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {section.objects.map((object, idx) => (
-                      <tr className="TableRow  ">
+                    {section.objects.map((object, keyB) => (
+                      <tr className="TableRow" key={keyB}>
                         <td className="TableCell LabelCell">
                           <div className="TableCell-content">
                             <span>{object.label}</span>
                           </div>
                         </td>
-                        {section.dataColumns(object.id).map(
-                          (column) => {
-                            return (
-                              <td className="TableCell  ">
-                                <div className="TableCell-content Radio">
-                                  <label>
-                                    <input
-                                      className="Radio-input"
-                                      type="radio"
-                                      name={`grants-${section.parentKey}-${object.id}`}
-                                      id={
-                                        `grants-${section.parentKey}-${object.id}-${column.value}`}
-                                      onChange={this.updateGrant(section.parentKey, object, idx)}
-                                      value={column.value}
-                                      checked={object.permissions ===
-                                        (column.value === 'none' ? null : column.value)}
-                                      title={object.label}
-                                    />
-                                  </label>
-                                </div>
-                              </td>
-                            );
-                          })}
+                        {section.dataColumns(object.id).map((column, keyC) => {
+                          return (
+                            <td className="TableCell" key={keyC}>
+                              <div className="TableCell-content Radio">
+                                <label>
+                                  <input
+                                    className="Radio-input"
+                                    type="radio"
+                                    name={`grants-${section.parentKey}-${object.id}`}
+                                    id={
+                                      `grants-${section.parentKey}-${object.id}-${column.value}`}
+                                    onChange={this.updateGrant(section.parentKey, object, keyB)}
+                                    value={column.value}
+                                    checked={object.permissions ===
+                                      (column.value === 'none' ? null : column.value)}
+                                    title={object.label}
+                                  />
+                                </label>
+                              </div>
+                            </td>
+                          );
+                        })}
                       </tr>
                     ))}
                   </tbody>
@@ -298,7 +297,7 @@ PermissionsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-const preloadRequest = async (dispatch, { params: { username } }) => {
+const preloadRequest = async (dispatch, { match: { params: { username } } }) => {
   const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
 
   if (user.restricted) {

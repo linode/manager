@@ -68,9 +68,8 @@ IndexPage.propTypes = {
   children: PropTypes.node,
 };
 
-export function selectUser(state, props) {
+export function selectUser(state, { match: { params: { username } } }) {
   const { users } = state.api.users;
-  const { username } = props.params;
   const user = users[username];
   return { user };
 }
