@@ -2,15 +2,15 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import IndexPage from './layouts/IndexPage';
-import StackScriptPage from './layouts/StackScriptPage';
+import StackScriptsList from './layouts/StackScriptsList';
+import StackScriptDetails from './layouts/StackScriptDetails';
 
 const StackScriptsIndex = (props) => {
   const { match: { path } } = props;
   return (
     <Switch>
-      <Route component={StackScriptPage} path={`${path}/:stackscriptId`} />
-      <Route component={IndexPage} exact path={path} />
+      <Route component={StackScriptDetails} path={`${path}/:stackscriptId`} />
+      <Route component={StackScriptsList} exact path={path} />
       <Redirect to="/not-found" />
     </Switch >
   );

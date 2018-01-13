@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { DEFAULT_DISTRIBUTION } from '~/constants';
-import { IndexPage } from './IndexPage';
+import { StackScriptsList } from './StackScriptsList';
 
 import { api } from '~/data';
 import {
@@ -29,7 +29,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage
+      <StackScriptsList
         dispatch={dispatch}
         selectedMap={{}}
         stackscripts={stackscripts}
@@ -40,7 +40,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
   it.skip('renders a list of stackscripts', () => {
     const page = mount(
-      <IndexPage
+      <StackScriptsList
         dispatch={dispatch}
         selectedMap={{}}
         stackscripts={stackscripts}
@@ -63,7 +63,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
   it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <IndexPage
+      <StackScriptsList
         dispatch={dispatch}
         selectedMap={{}}
         stackscripts={stackscripts}
@@ -80,7 +80,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
   it.skip('deletes selected stackscripts when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
+      <StackScriptsList
         dispatch={dispatch}
         selectedMap={{ 1: true }}
         stackscripts={stackscripts}
@@ -100,7 +100,7 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
 
   it.skip('creates a stackscript', async () => {
     const page = mount(
-      <IndexPage
+      <StackScriptsList
         dispatch={dispatch}
         selectedMap={{}}
         stackscripts={stackscripts}
