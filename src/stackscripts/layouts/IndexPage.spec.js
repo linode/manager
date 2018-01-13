@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { DEFAULT_DISTRIBUTION } from '~/constants';
-import { IndexPage } from '~/linodes/stackscripts/layouts/IndexPage';
+import { IndexPage } from './IndexPage';
 
 import { api } from '~/data';
 import {

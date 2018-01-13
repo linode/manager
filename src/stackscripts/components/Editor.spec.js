@@ -2,12 +2,13 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import Settings from '~/linodes/stackscripts/components/Settings';
+import Editor from './Editor';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers.js';
 import { testStackScript } from '~/data/stackscripts';
 
-describe('linodes/stackscripts/components/Settings', () => {
+
+describe('linodes/stackscripts/components/Editor', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -19,28 +20,24 @@ describe('linodes/stackscripts/components/Settings', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <Settings
+      <Editor
         dispatch={dispatch}
         stackscript={testStackScript}
-        distributions={{}}
       />
     );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it.skip('saves stackscript settings', async () => {
+  it.skip('saves stackscript editor', async () => {
     const component = mount(
-      <Settings
+      <Editor
         dispatch={dispatch}
         stackscript={testStackScript}
-        images={{}}
       />
     );
 
-    changeInput(component, 'label', 'WordPress');
-    changeInput(component, 'description', 'My stackscript');
-    changeInput(component, 'images', ['linode/debian6']);
-    changeInput(component, 'isPublic', true);
+    changeInput(component, 'script', 'my script', { nameOnly: true, displayName: 'CodeEditor' });
+    changeInput(component, 'revision', 'revision note');
 
     component.find('Form').props().onSubmit();
 
@@ -48,10 +45,8 @@ describe('linodes/stackscripts/components/Settings', () => {
       ([fn]) => expectRequest(fn, `/linode/stackscripts/${testStackScript.id}`, {
         method: 'PUT',
         body: {
-          label: 'WordPress',
-          description: 'My stackscript',
-          images: ['linode/debian6'],
-          is_public: true,
+          script: 'my script',
+          rev_note: 'revision note',
         },
       }),
     ], 1);

@@ -2,13 +2,12 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import Editor from '~/linodes/stackscripts/components/Editor';
+import Settings from './Settings';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers.js';
 import { testStackScript } from '~/data/stackscripts';
 
-
-describe('linodes/stackscripts/components/Editor', () => {
+describe('linodes/stackscripts/components/Settings', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -20,24 +19,28 @@ describe('linodes/stackscripts/components/Editor', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <Editor
+      <Settings
         dispatch={dispatch}
         stackscript={testStackScript}
+        distributions={{}}
       />
     );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it.skip('saves stackscript editor', async () => {
+  it.skip('saves stackscript settings', async () => {
     const component = mount(
-      <Editor
+      <Settings
         dispatch={dispatch}
         stackscript={testStackScript}
+        images={{}}
       />
     );
 
-    changeInput(component, 'script', 'my script', { nameOnly: true, displayName: 'CodeEditor' });
-    changeInput(component, 'revision', 'revision note');
+    changeInput(component, 'label', 'WordPress');
+    changeInput(component, 'description', 'My stackscript');
+    changeInput(component, 'images', ['linode/debian6']);
+    changeInput(component, 'isPublic', true);
 
     component.find('Form').props().onSubmit();
 
@@ -45,8 +48,10 @@ describe('linodes/stackscripts/components/Editor', () => {
       ([fn]) => expectRequest(fn, `/linode/stackscripts/${testStackScript.id}`, {
         method: 'PUT',
         body: {
-          script: 'my script',
-          rev_note: 'revision note',
+          label: 'WordPress',
+          description: 'My stackscript',
+          images: ['linode/debian6'],
+          is_public: true,
         },
       }),
     ], 1);
