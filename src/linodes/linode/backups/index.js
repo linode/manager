@@ -25,6 +25,11 @@ import SettingsPage from './layouts/SettingsPage';
 import SummaryPage from './layouts/SummaryPage';
 import BackupPage from './layouts/BackupPage';
 class LinodeBackupsIndex extends Component {
+  constructor() {
+    super();
+    this.state = { errors: {} };
+  }
+
   componentDidMount() {
     this.props.setSource();
   }
@@ -43,7 +48,7 @@ class LinodeBackupsIndex extends Component {
     );
 
     if (!linode.backups.enabled) {
-      const { loading, errors } = this.state;
+      const { errors } = this.state;
       const backupPrice = type.addons.backups.price.monthly;
 
       return (
@@ -57,7 +62,6 @@ class LinodeBackupsIndex extends Component {
             </p>
             <SubmitButton
               className="btn-primary"
-              disabled={loading}
               disabledChildren="Enabling backups"
             >Enable backups</SubmitButton>
             <FormSummary errors={errors} />
