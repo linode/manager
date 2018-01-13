@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import { IndexPage } from '~/support/layouts/IndexPage';
+import { TicketsList } from './TicketsList';
 import { api } from '~/data';
 
 describe('support/layouts/IndexPage', () => {
@@ -18,7 +18,7 @@ describe('support/layouts/IndexPage', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
       <StaticRouter>
-        <IndexPage
+        <TicketsList
           dispatch={mockDispatch}
           tickets={api.tickets}
         />
@@ -30,7 +30,7 @@ describe('support/layouts/IndexPage', () => {
   it('renders a list of tickets', () => {
     const page = mount(
       <StaticRouter>
-        <IndexPage
+        <TicketsList
           dispatch={dispatch}
           tickets={api.tickets}
         />

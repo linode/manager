@@ -8,7 +8,7 @@ ShallowWrapper {
     basename=""
     location="/"
   >
-    <CreatePage
+    <TicketCreate
       dispatch={[Function]}
       domains={
         Object {
@@ -5722,7 +5722,7 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "class",
     "props": Object {
-      "children": <CreatePage
+      "children": <TicketCreate
         dispatch={[Function]}
         domains={
           Object {
@@ -17150,7 +17150,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "children": <CreatePage
+        "children": <TicketCreate
           dispatch={[Function]}
           domains={
             Object {
