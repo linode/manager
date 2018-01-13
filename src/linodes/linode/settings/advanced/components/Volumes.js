@@ -5,7 +5,8 @@ import React from 'react';
 import { PrimaryButton } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
 
-import { AddEditVolume, VolumesList } from '~/linodes/volumes/components';
+import AddEditVolume from '~/volumes/components/AddEditVolume';
+import VolumesList from '~/volumes/components/VolumesList';
 
 
 export default function Volumes(props) {

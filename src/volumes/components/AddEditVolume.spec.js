@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import sinon from 'sinon';
 
 import { AVAILABLE_VOLUME_REGIONS } from '~/constants';
-import { AddEditVolume } from '~/linodes/volumes/components';
+import AddEditVolume from './AddEditVolume';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
