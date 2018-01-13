@@ -12,10 +12,10 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 import Breadcrumbs from '~/components/Breadcrumbs';
 import { ChainedDocumentTitle } from '~/components';
 import TabsComponent from '~/components/Tabs';
-import DashboardPage from './layouts/DashboardPage';
-import EditConfigPage from './layouts/EditConfigPage';
+import DashboardPage from './layouts/NodeBalancerConfigDashboard';
+import EditConfigPage from './layouts/NodeBalancerConfigEdit';
 
-export class IndexPage extends Component {
+export class NodeBalancerConfigsIndex extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer', 'config']));
@@ -75,7 +75,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+NodeBalancerConfigsIndex.propTypes = {
   match: PropTypes.shape({
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
@@ -103,4 +103,4 @@ const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(NodeBalancerConfigsIndex);

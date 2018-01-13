@@ -14,10 +14,10 @@ import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { ChainedDocumentTitle, GroupLabel } from '~/components';
 
-import DashboardPage from './layouts/DashboardPage';
-import SettingsPage from './layouts/SettingsPage';
+import NodeBalancerDashboard from './layouts/NodeBalancerDashboard';
+import NodeBalancerSettings from './layouts/NodeBalancerSettings';
 
-export class NodeBalancerIndexPage extends Component {
+export class NodeBalancerIndex extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setAnalytics(['nodebalancers', 'nodebalancer']));
@@ -60,8 +60,8 @@ export class NodeBalancerIndexPage extends Component {
         <TabsComponent tabs={tabData} />
         <div className="container">
           <Switch>
-            <Route path={`${path}/settings`} component={SettingsPage} />
-            <Route exact path={path} component={DashboardPage} />
+            <Route path={`${path}/settings`} component={NodeBalancerSettings} />
+            <Route exact path={path} component={NodeBalancerDashboard} />
             <Redirect to="/not-found" />
           </Switch>
         </div>
@@ -70,7 +70,7 @@ export class NodeBalancerIndexPage extends Component {
   }
 }
 
-NodeBalancerIndexPage.propTypes = {
+NodeBalancerIndex.propTypes = {
   match: PropTypes.shape({
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
@@ -97,4 +97,4 @@ const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(NodeBalancerIndexPage);
+)(NodeBalancerIndex);

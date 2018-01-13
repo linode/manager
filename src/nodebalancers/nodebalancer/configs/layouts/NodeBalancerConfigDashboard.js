@@ -20,7 +20,7 @@ import NodeModal from '../components/NodeModal';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
-export class DashboardPage extends Component {
+export class NodeBalancerConfigDashboard extends Component {
   deleteNBConfigNode(nodebalancer, config, node) {
     const { dispatch } = this.props;
     const title = 'Delete Node';
@@ -139,7 +139,7 @@ export class DashboardPage extends Component {
   }
 }
 
-DashboardPage.propTypes = {
+NodeBalancerConfigDashboard.propTypes = {
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
@@ -162,4 +162,4 @@ const preloadRequest = async (dispatch, { match: { params: { nbLabel, configId }
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(DashboardPage);
+)(NodeBalancerConfigDashboard);

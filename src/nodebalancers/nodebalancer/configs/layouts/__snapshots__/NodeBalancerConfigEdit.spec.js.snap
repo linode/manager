@@ -4,7 +4,7 @@ exports[`nodebalancers/nodebalancer/configs/layouts/EditConfigPage should render
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <EditConfigPage
+  Symbol(enzyme.__unrendered__): <NodeBalancerConfigEdit
     config={
       Object {
         "_nodes": Object {

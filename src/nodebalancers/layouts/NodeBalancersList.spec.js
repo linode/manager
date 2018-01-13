@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { NodeBalancersListPage } from './NodeBalancersListPage';
+import { NodeBalancersList } from './NodeBalancersList';
 
 import { api } from '~/data';
 import { expectRequest } from '~/test.helpers.js';
@@ -25,7 +25,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <StaticRouter>
-        <NodeBalancersListPage
+        <NodeBalancersList
           dispatch={dispatch}
           selectedMap={{}}
           transfer={{ used: 1, quota: 5 }}
@@ -39,7 +39,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
   it('renders a list of Nodebalancers', () => {
     const page = mount(
       <StaticRouter>
-        <NodeBalancersListPage
+        <NodeBalancersList
           dispatch={dispatch}
           selectedMap={{}}
           transfer={{ used: 1, quota: 5 }}
@@ -63,7 +63,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
   it('shows the delete modal when delete is pressed', () => {
     const page = mount(
       <StaticRouter>
-        <NodeBalancersListPage
+        <NodeBalancersList
           dispatch={dispatch}
           selectedMap={{}}
           transfer={{ used: 1, quota: 5 }}
@@ -83,7 +83,7 @@ describe('nodebalancers/layouts/IndexPage', () => {
   it('deletes selected nodebalancers when delete is pressed', async () => {
     const page = mount(
       <StaticRouter>
-        <NodeBalancersListPage
+        <NodeBalancersList
           dispatch={dispatch}
           selectedMap={{ 1: true }}
           transfer={{ used: 1, quota: 5 }}

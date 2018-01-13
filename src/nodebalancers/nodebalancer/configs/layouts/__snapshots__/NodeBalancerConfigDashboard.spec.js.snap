@@ -4,7 +4,7 @@ exports[`nodebalancers/nodebalancer/configs/layouts/DashboardPage should render 
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <DashboardPage
+  Symbol(enzyme.__unrendered__): <NodeBalancerConfigDashboard
     config={
       Object {
         "_nodes": Object {

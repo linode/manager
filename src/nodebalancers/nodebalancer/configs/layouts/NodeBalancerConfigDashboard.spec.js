@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 
 import { configsNodeBalancer } from '~/data/nodebalancers';
-import { DashboardPage } from '~/nodebalancers/nodebalancer/configs/layouts/DashboardPage';
+import { NodeBalancerConfigDashboard } from './NodeBalancerConfigDashboard';
 
 describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -16,7 +16,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
 
   it('should render without error', () => {
     const wrapper = shallow(
-      <DashboardPage
+      <NodeBalancerConfigDashboard
         config={configsNodeBalancer._configs.configs[1]}
         nodebalancer={configsNodeBalancer}
       />
@@ -26,7 +26,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
 
   it('displays the config view summary', async () => {
     const page = await mount(
-      <DashboardPage
+      <NodeBalancerConfigDashboard
         config={configsNodeBalancer._configs.configs[1]}
         nodebalancer={configsNodeBalancer}
       />

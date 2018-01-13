@@ -4,7 +4,7 @@ exports[`nodebalancers/nodebalancer/layouts/AddConfigPage should render without 
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <AddConfigPage
+  Symbol(enzyme.__unrendered__): <NodeBalancerConfigAdd
     dispatch={[Function]}
     nodebalancer={
       Object {

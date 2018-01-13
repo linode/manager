@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { push } from 'react-router-redux';
 
-import { AddConfigPage } from '~/nodebalancers/nodebalancer/layouts/AddConfigPage';
+import { NodeBalancerConfigAdd } from './NodeBalancerConfigAdd';
 
 import {
   createSimulatedEvent,
@@ -25,7 +25,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <AddConfigPage
+      <NodeBalancerConfigAdd
         nodebalancer={configsNodeBalancer}
         dispatch={dispatch}
       />
@@ -35,7 +35,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
 
   it('commits changes to the API', async () => {
     const page = await mount(
-      <AddConfigPage
+      <NodeBalancerConfigAdd
         nodebalancer={configsNodeBalancer}
         dispatch={dispatch}
       />
@@ -87,7 +87,7 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
 
   it('commits changes to the API with HTTPS', async () => {
     const page = await mount(
-      <AddConfigPage
+      <NodeBalancerConfigAdd
         nodebalancer={configsNodeBalancer}
         dispatch={dispatch}
       />

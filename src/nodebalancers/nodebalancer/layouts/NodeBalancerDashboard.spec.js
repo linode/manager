@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
 import { configsNodeBalancer } from '~/data/nodebalancers';
-import { DashboardPage } from '~/nodebalancers/nodebalancer/layouts/DashboardPage';
+import { NodeBalancerDashboard } from './NodeBalancerDashboard';
 
 describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,7 +19,7 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
       <StaticRouter>
-        <DashboardPage
+        <NodeBalancerDashboard
           dispatch={dispatch}
           nodebalancer={configsNodeBalancer}
           transfer={{ used: 1, quota: 5 }}
@@ -32,7 +32,7 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
   it('displays nodebalancer configs', () => {
     const page = mount(
       <StaticRouter>
-        <DashboardPage
+        <NodeBalancerDashboard
           dispatch={dispatch}
           nodebalancer={configsNodeBalancer}
           transfer={{ used: 1, quota: 5 }}
