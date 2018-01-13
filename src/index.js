@@ -20,7 +20,7 @@ import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
-import StackScripts from './linodes/stackscripts';
+import StackScripts from './stackscripts';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
