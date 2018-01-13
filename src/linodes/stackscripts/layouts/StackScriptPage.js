@@ -28,48 +28,52 @@ export class StackScriptPage extends Component {
       <div>
         <ChainedDocumentTitle title={stackscript.label} />
         <header className="main-header main-header--border">
-          <Link to="/stackscripts">StackScripts</Link>
-          <h1 title={stackscript.id}>
-            <Link to={`/stackscripts/${stackscript.label}`}>
-              {stackscript.label}
-            </Link>
-          </h1>
+          <div className="container">
+            <Link to="/stackscripts">StackScripts</Link>
+            <h1 title={stackscript.id}>
+              <Link to={`/stackscripts/${stackscript.label}`}>
+                {stackscript.label}
+              </Link>
+            </h1>
+          </div>
         </header>
-        <div className="row">
-          <div className="col-md-4">
-            <section>
-              <Card header={<CardHeader title="Settings" />}>
-                <Settings
+        <div className="container">
+          <div className="row">
+            <div className="col-md-4">
+              <section>
+                <Card header={<CardHeader title="Settings" />}>
+                  <Settings
+                    dispatch={dispatch}
+                    stackscript={stackscript}
+                    images={filter(images, i => i.is_public)}
+                  />
+                </Card>
+              </section>
+              <Card header={<CardHeader title="Tips" />}>
+                <p>
+                  Check out the StackScript <ExternalLink to="https://www.linode.com/docs/platform/stackscripts">documentation</ExternalLink>. But keep in mind:
+                </p>
+                <ul>
+                  <li>
+                    There are four default environment variables provided to you:
+                    <ul>
+                      <li>LINODE_ID</li>
+                      <li>LINODE_LISHUSERNAME</li>
+                      <li>LINODE_RAM</li>
+                      <li>LINODE_DATACENTERID</li>
+                    </ul>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+            <div className="col-md-8">
+              <Card header={<CardHeader title="Editor" />}>
+                <Editor
                   dispatch={dispatch}
                   stackscript={stackscript}
-                  images={filter(images, i => i.is_public)}
                 />
               </Card>
-            </section>
-            <Card header={<CardHeader title="Tips" />}>
-              <p>
-                Check out the StackScript <ExternalLink to="https://www.linode.com/docs/platform/stackscripts">documentation</ExternalLink>. But keep in mind:
-              </p>
-              <ul>
-                <li>
-                  There are four default environment variables provided to you:
-                  <ul>
-                    <li>LINODE_ID</li>
-                    <li>LINODE_LISHUSERNAME</li>
-                    <li>LINODE_RAM</li>
-                    <li>LINODE_DATACENTERID</li>
-                  </ul>
-                </li>
-              </ul>
-            </Card>
-          </div>
-          <div className="col-md-8">
-            <Card header={<CardHeader title="Editor" />}>
-              <Editor
-                dispatch={dispatch}
-                stackscript={stackscript}
-              />
-            </Card>
+            </div>
           </div>
         </div>
       </div>
@@ -83,16 +87,19 @@ StackScriptPage.propTypes = {
   images: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state, { match: { params: { stackscriptId } } }) {
   return {
-    stackscript: state.api.stackscripts.stackscripts[props.params.stackscriptId],
+    stackscript: state.api.stackscripts.stackscripts[stackscriptId],
     images: state.api.images.images,
     ids: state.api.images.ids,
   };
 }
 
 const preloadRequest = async (dispatch, props) => {
-  const { ids, params: { stackscriptId } } = props;
+  const {
+    ids,
+    match: { params: { stackscriptId } },
+  } = props;
   const requests = [api.stackscripts.one([stackscriptId])];
 
   if (!ids.length) {
