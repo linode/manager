@@ -47,23 +47,23 @@ function parseIntIfActualInt(string) {
 }
 
 const actionCreatorGenerators = {
-  // These functions take a config and return Redux Action Creators
-  [ONE]: config => (resource, ...ids) => (dispatch) =>
-    dispatch({
+  [ONE]: c => (resource, ...ids) =>
+    ({
       resource,
-      dispatch,
-      type: `GEN@${fullyQualified(config)}/ONE`,
+      type: `GEN@${fullyQualified(c)}/ONE`,
       ids: ids.map(parseIntIfActualInt),
     }),
-  [MANY]: config => (page, ...ids) => (dispatch) =>
-    dispatch({
+  [MANY]: c => (page, ...ids) =>
+    ({
       page,
-      dispatch,
-      type: `GEN@${fullyQualified(config)}/MANY`,
+      type: `GEN@${fullyQualified(c)}/MANY`,
       ids: ids.map(parseIntIfActualInt),
     }),
-  [DELETE]: config => (...ids) =>
-    ({ type: `GEN@${fullyQualified(config)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
+  [DELETE]: c => (...ids) =>
+    ({
+      type: `GEN@${fullyQualified(c)}/DELETE`,
+      ids: ids.map(parseIntIfActualInt),
+    }),
 };
 
 /**
@@ -128,23 +128,6 @@ export class ReducerGenerator {
       generateDefaultStateOne(config, action.resource);
 
     const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
-
-    if (config.properties && action.dispatch) {
-      Object.keys(config.properties).forEach(function (property) {
-        const accessor = config.properties[property];
-
-        const stateWithoutPropertyDefined = newStateOne;
-        if (typeof stateWithoutPropertyDefined[property] !== 'undefined') {
-          Object.defineProperty(combinedStateOne, property, {
-            get: () => action.dispatch(accessor(newStateOne)),
-          });
-        }
-      });
-    }
-
-    (config.properiesMasks || []).forEach(function (property) {
-      delete combinedStateOne[property];
-    });
 
     const newStateMany = {
       ...oldStateMany,
