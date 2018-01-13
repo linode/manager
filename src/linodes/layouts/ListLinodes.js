@@ -97,7 +97,7 @@ export class ListLinodesPage extends Component {
   powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
   reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
-  renderLinodes(linodes) {
+  renderLinodes(linodes, types) {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
@@ -150,7 +150,7 @@ export class ListLinodesPage extends Component {
                       headerClassName: 'LabelColumn',
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                       tooltipEnabled: true,
-                      subtitleFn: linode => planStyle(linode.type),
+                      subtitleFn: linode => planStyle(types[linode.type]),
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
@@ -214,7 +214,7 @@ export class ListLinodesPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(linodes).length ? this.renderLinodes(linodes) : (
+          {Object.keys(linodes).length ? this.renderLinodes(linodes, types) : (
             <CreateHelper
               label="Linodes"
               linkText="Add a Linode"
