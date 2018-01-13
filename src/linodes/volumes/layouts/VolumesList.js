@@ -10,13 +10,13 @@ import api from '~/api';
 import { ChainedDocumentTitle } from '~/components';
 import CreateHelper from '~/components/CreateHelper';
 
-import { AddEditVolume, VolumesList } from '../components';
+import { AddEditVolume, VolumesList as VolumesListComponent } from '../components';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 const OBJECT_TYPE = 'volumes';
 
-export class IndexPage extends Component {
+export class VolumesList extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -45,7 +45,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(volumes).length ?
-            <VolumesList
+            <VolumesListComponent
               objectType={OBJECT_TYPE}
               volumes={volumes}
               linodes={linodes.linodes}
@@ -65,7 +65,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+VolumesList.propTypes = {
   dispatch: PropTypes.func,
   volumes: PropTypes.object,
   linodes: PropTypes.object,
@@ -90,4 +90,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(VolumesList);

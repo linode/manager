@@ -1,13 +1,13 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import IndexPage from './layouts/IndexPage';
+import VolumesList from './layouts/VolumesList';
 
 const VolumesIndex = (props) => {
   const { match: { path } } = props;
   return (
     <Switch>
-      <Route component={IndexPage} exact path={path} />
+      <Route component={VolumesList} exact path={path} />
       <Redirect to="/not-found" />
     </Switch >
   );
