@@ -52,11 +52,11 @@ ZonePage.propTypes = {
   domain: PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state, { match: { params: { domainLabel } } }) {
   const { domains } = state.api;
-  const { params } = ownProps;
+
   let domain = Object.values(domains.domains).filter(
-    d => d.domain === params.domainLabel)[0];
+    d => d.domain === domainLabel)[0];
 
   if (domain) {
     domain = {
@@ -67,7 +67,7 @@ function mapStateToProps(state, ownProps) {
   return { domain };
 }
 
-const preloadRequest = async (dispatch, { params: { domainLabel } }) => {
+const preloadRequest = async (dispatch, { match: { params: { domainLabel } } }) => {
   const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
   await dispatch(api.domains.records.all([id]));
 };
