@@ -51,10 +51,8 @@ EditConfigPage.propTypes = {
   nodebalancer: PropTypes.object.isRequired,
 };
 
-function select(state, ownProps) {
-  const params = ownProps.params;
-  const nbLabel = params.nbLabel;
-  const id = parseInt(params.configId);
+function mapStateToProps(state, { match: { params: { nbLabel, configId } } }) {
+  const id = parseInt(configId);
 
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, id, 'id');
@@ -62,4 +60,4 @@ function select(state, ownProps) {
   return { nodebalancer, config };
 }
 
-export default connect(select)(EditConfigPage);
+export default connect(mapStateToProps)(EditConfigPage);

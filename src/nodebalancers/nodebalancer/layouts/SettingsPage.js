@@ -41,7 +41,7 @@ export class SettingsPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
-      () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
+      () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => { },
     ]));
   }
 
@@ -108,10 +108,7 @@ SettingsPage.propTypes = {
   nodebalancer: PropTypes.object,
 };
 
-function select(state, ownProps) {
-  const params = ownProps.params;
-  const nbLabel = params.nbLabel;
-
+function select(state, { match: { params: { nbLabel } } }) {
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
 
   return { nodebalancer };

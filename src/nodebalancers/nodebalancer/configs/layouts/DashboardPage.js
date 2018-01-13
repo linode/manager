@@ -145,14 +145,13 @@ DashboardPage.propTypes = {
   nodebalancer: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, props) => {
-  const { nbLabel, configId } = props.params;
+const mapStateToProps = (state, { match: { params: { nbLabel, configId } } }) => {
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
   return { config, nodebalancer };
 };
 
-const preloadRequest = async (dispatch, { params: { nbLabel, configId } }) => {
+const preloadRequest = async (dispatch, { match: { params: { nbLabel, configId } } }) => {
   const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
   await Promise.all([
     api.nodebalancers.configs.one([id, configId]),

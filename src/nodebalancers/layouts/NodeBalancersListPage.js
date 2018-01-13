@@ -35,7 +35,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'nodebalancers';
 
-export class IndexPage extends Component {
+export class NodeBalancersListPage extends Component {
   constructor(props) {
     super(props);
 
@@ -145,7 +145,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+NodeBalancersListPage.propTypes = {
   dispatch: PropTypes.func,
   transfer: PropTypes.object.isRequired,
   nodebalancers: PropTypes.object,
@@ -173,4 +173,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(NodeBalancersListPage);
