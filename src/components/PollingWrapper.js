@@ -104,7 +104,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
   fetchEventsPage(headers = null) {
-    return dispatch(api.events.page(0, [], null, true, null, headers));
+    return dispatch(api.events.page(0, [], null, headers));
   },
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PollingWrapper));
