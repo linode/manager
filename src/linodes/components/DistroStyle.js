@@ -6,26 +6,26 @@ import { distros as distroAssets } from '~/assets';
 
 
 export default function DistroStyle(props) {
-  const { linode } = props;
+  const { image } = props;
 
-  if (!linode || !linode.image || !linode.image.vendor) {
+  if (!image.vendor) {
     return <span className="distro-style">Unknown</span>;
   }
 
-  const src = distroAssets[lowerCase(linode.image.vendor)];
+  const src = distroAssets[lowerCase(image.vendor)];
 
   return (
     <span className="distro-style">
       {src ? <img
         src={src}
-        alt={linode.image.vendor}
+        alt={image.vendor}
         width="15" height="15"
       /> : ''}
-      <span>{linode.image.label}</span>
+      <span>{image.label}</span>
     </span>
   );
 }
 
 DistroStyle.propTypes = {
-  linode: PropTypes.object,
+  image: PropTypes.object.isRequired,
 };

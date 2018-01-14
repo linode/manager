@@ -83,7 +83,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username, linode, dispatch, images } = this.props;
+    const { username, linode, dispatch, image, type } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -112,7 +112,7 @@ export class DashboardPage extends Component {
             <div className="row">
               <div className="col-sm-4 row-label">Deployed From</div>
               <div className="col-sm-8" id="distro">
-                <DistroStyle linode={linode} images={images} />
+                <DistroStyle image={image} />
                 <div>
                   <small className="text-muted">
                     <Link to={`/linodes/${linode.label}/rebuild`}>Rebuild</Link>
@@ -123,7 +123,7 @@ export class DashboardPage extends Component {
             <div className="row">
               <div className="col-sm-4 row-label">Type</div>
               <div className="col-sm-8" id="type">
-                {planStats(linode.type)}
+                {planStats(type)}
                 <div>
                   <small className="text-muted">
                     <Link to={`/linodes/${linode.label}/resize`}>Resize</Link>
@@ -138,10 +138,10 @@ export class DashboardPage extends Component {
                   Xen
                   <div>
                     <small className="text-muted">
-                      <Link
+                      <a
                         className="force-link"
-                        onClick={() => UpgradeToKVM.trigger(dispatch, linode)}
-                      >Upgrade to KVM</Link>
+                        onClick={() => UpgradeToKVM.trigger(dispatch, linode, type)}
+                      >Upgrade to KVM</a>
                     </small>
                   </div>
                 </div>
@@ -288,19 +288,21 @@ export class DashboardPage extends Component {
 
 DashboardPage.propTypes = {
   linode: PropTypes.object,
-  images: PropTypes.object.isRequired,
+  image: PropTypes.object.isRequired,
   username: PropTypes.string,
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   transfer: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
-  const { images } = state.api.images;
   const { username, timezone } = state.api.profile;
   const transfer = state.api.account._transferpool;
-  return { linode, username, timezone, transfer, images };
+  const type = linode && state.api.types.types[linode.type];
+  const image = linode && state.api.images.images[linode.image];
+  return { linode, username, timezone, transfer, image, type };
 }
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
