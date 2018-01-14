@@ -22,6 +22,7 @@ import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
 import NodeBalancers from '~/nodebalancers';
 import Domains from '~/domains';
+import Support from '~/support';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -83,8 +84,9 @@ const init = () => {
                       <Route path="/linodes" component={Linodes} />
                       <Route path="/nodebalancers" component={NodeBalancers} />
                       <Route path="/domains" component={Domains} />
-                      {/* <Route path="/support" component={Support} />
-                      <Route path="/stackscripts" component={Stackscripts} />
+                      <Route path="/support" component={Support} />
+                      <Route path="/support" component={Support} />
+                      {/* <Route path="/stackscripts" component={Stackscripts} />
                       <Route path="/images" component={Images} />
                       <Route path="/volumes" component={Volumes} />
                       <Route path="/billing" component={Billing} />

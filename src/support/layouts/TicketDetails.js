@@ -26,7 +26,7 @@ import { setAnalytics, setSource } from '~/actions';
 import { ChainedDocumentTitle } from '~/components';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
-import { renderTicketCreationInfo } from './IndexPage';
+import { renderTicketCreationInfo } from './TicketsList';
 import TicketReply from '../components/TicketReply';
 import TicketHelper from '../components/TicketHelper';
 
@@ -40,7 +40,7 @@ export function AttachmentTooBigError() {
 
 AttachmentTooBigError.prototype = new Error();
 
-export class TicketPage extends Component {
+export class TicketDetails extends Component {
   constructor() {
     super();
 
@@ -182,30 +182,27 @@ export class TicketPage extends Component {
   }
 }
 
-TicketPage.propTypes = {
+TicketDetails.propTypes = {
   dispatch: PropTypes.func.isRequired,
   ticket: PropTypes.object.isRequired,
-  replies: PropTypes.array.isRequired,
+  replies: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, props) => {
-  const { ticketId } = props.params;
+const mapStateToProps = (state, { match: { params: { ticketId } } }) => {
   const ticket = state.api.tickets.tickets[ticketId];
+
   return {
     ticket,
-    replies: ticket && ticket._replies.replies,
+    replies: ticket && ticket._replies && ticket._replies.replies,
   };
 };
 
-const preloadRequest = async (dispatch, props) => {
-  const { routeParams: { ticketId } } = props;
-  await Promise.all([
-    getObjectByLabelLazily('tickets', ticketId, 'id'),
-    api.tickets.replies.all([ticketId]),
-  ].map(dispatch));
+const preloadRequest = async (dispatch, { match: { params: { ticketId } } }) => {
+  await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
+  await dispatch(api.tickets.replies.all([ticketId]));
 };
 
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(TicketPage);
+)(TicketDetails);
