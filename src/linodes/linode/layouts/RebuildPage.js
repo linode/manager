@@ -21,7 +21,7 @@ export class RebuildPage extends Component {
   constructor(props) {
     super(props);
 
-    const image = props.linode.image;
+    const image = props.image;
 
     this.state = {
       image: image ? image.id : undefined,
@@ -39,9 +39,8 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id, label } } = this.props;
+    const { images, dispatch, linode: { id, label } } = this.props;
     const { password, image } = this.state;
-    const imageVendor = this.props.linode.image.vendor;
 
     const data = {
       image: image,
@@ -65,14 +64,14 @@ export class RebuildPage extends Component {
       >
         <p>
           Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
-          Are you sure you want to rebuild <strong>{label}</strong> with {imageVendor}?
+          Are you sure you want to rebuild <strong>{label}</strong> with {images[image].label}?
         </p>
       </ConfirmModalBody>
     )));
   }
 
   render() {
-    const { images, linode } = this.props;
+    const { images, image: currentImage } = this.props;
     const { image, errors, loading } = this.state;
 
     return (
@@ -90,7 +89,7 @@ export class RebuildPage extends Component {
             <div className="col-sm-9">
               <Input
                 disabled
-                value={linode.image.label}
+                value={currentImage.label}
               />
             </div>
           </FormGroup>
@@ -139,12 +138,18 @@ RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   images: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
+  image: PropTypes.object.isRequired,
 };
 
+
 function mapStateToProps({ api }, { match: { params: { linodeLabel } } }) {
+  const linode = getLinodeByLabel(api.linodes.linodes, linodeLabel);
+  const images = api.images.images;
+  const image = linode && api.images.images[linode.image];
   return {
-    linode: getLinodeByLabel(api.linodes.linodes, linodeLabel),
-    images: api.images.images,
+    linode,
+    images,
+    image,
   };
 }
 
