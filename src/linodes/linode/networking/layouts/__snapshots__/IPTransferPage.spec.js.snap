@@ -287,11 +287,7 @@ ShallowWrapper {
         "group": "Test Group",
         "hypervisor": "kvm",
         "id": 1234,
-        "image": Object {
-          "id": "linode/ubuntu15.10",
-          "label": "Ubuntu 15.10",
-          "vendor": "Ubuntu",
-        },
+        "image": "linode/arch2016.05",
         "ipv4": Array [
           "97.107.143.0",
           "97.107.143.1",
@@ -301,29 +297,7 @@ ShallowWrapper {
         "memory": 2048,
         "region": "us-east-1a",
         "status": "running",
-        "type": Object {
-          "_polling": false,
-          "addons": Object {
-            "backups": Object {
-              "price": Object {
-                "monthly": 2.5,
-              },
-            },
-          },
-          "class": "standard",
-          "disk": 24576,
-          "id": "linode2048.5",
-          "label": "Linode 2048",
-          "memory": 2048,
-          "network_out": 125,
-          "price": Object {
-            "hourly": 0.015,
-            "monthly": 10,
-          },
-          "service_type": "linode",
-          "transfer": 2000,
-          "vcpus": 2,
-        },
+        "type": "linode2048.5",
         "vcpus": 2,
       }
     }
@@ -641,11 +615,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1233,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.3",
             "97.107.143.4",
@@ -655,29 +625,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1234": Object {
@@ -960,11 +908,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1234,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.0",
             "97.107.143.1",
@@ -974,29 +918,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1235": Object {
@@ -1332,11 +1254,7 @@ ShallowWrapper {
           "group": "",
           "hypervisor": "kvm",
           "id": 1235,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.6",
             "97.107.143.7",
@@ -1346,29 +1264,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1236": Object {
@@ -1601,11 +1497,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1236,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.9",
             "97.107.143.10",
@@ -1615,29 +1507,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1237": Object {
@@ -1920,11 +1790,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1237,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.12",
             "97.107.143.13",
@@ -1934,29 +1800,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "booting",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1238": Object {
@@ -2273,11 +2117,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1238,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.15",
             "97.107.143.16",
@@ -2287,29 +2127,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1239": Object {
@@ -2554,11 +2372,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1239,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.18",
             "97.107.143.19",
@@ -2568,29 +2382,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1240": Object {
@@ -2870,11 +2662,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1240,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.21",
             "97.107.143.22",
@@ -2884,29 +2672,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1241": Object {
@@ -3151,11 +2917,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1241,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.24",
             "97.107.143.25",
@@ -3165,29 +2927,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1242": Object {
@@ -3450,11 +3190,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1242,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.27",
             "97.107.143.28",
@@ -3464,29 +3200,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1243": Object {
@@ -3769,11 +3483,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1243,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.30",
             "97.107.143.31",
@@ -3783,29 +3493,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "offline",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1245": Object {
@@ -4103,11 +3791,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1245,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.33",
             "97.107.143.34",
@@ -4117,29 +3801,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1246": Object {
@@ -4422,11 +4084,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1246,
-          "image": Object {
-            "id": null,
-            "label": "Unknown",
-            "vendor": "unknown",
-          },
+          "image": null,
           "ipv4": Array [
             "97.107.143.37",
             "97.107.143.38",
@@ -4436,29 +4094,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1247": Object {
@@ -4729,11 +4365,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1247,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.40",
           ],
@@ -4742,29 +4374,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1248": Object {
@@ -5047,11 +4657,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1248,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.44",
             "97.107.143.45",
@@ -5061,29 +4667,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "provisioning",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1249": Object {
@@ -5355,11 +4939,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1249,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.47",
             "97.107.143.48",
@@ -5369,29 +4949,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
         "1250": Object {
@@ -5654,11 +5212,7 @@ ShallowWrapper {
           "group": "Test Group",
           "hypervisor": "kvm",
           "id": 1250,
-          "image": Object {
-            "id": "linode/ubuntu15.10",
-            "label": "Ubuntu 15.10",
-            "vendor": "Ubuntu",
-          },
+          "image": "linode/arch2016.05",
           "ipv4": Array [
             "97.107.143.50",
             "97.107.143.51",
@@ -5668,29 +5222,7 @@ ShallowWrapper {
           "memory": 2048,
           "region": "us-east-1a",
           "status": "running",
-          "type": Object {
-            "_polling": false,
-            "addons": Object {
-              "backups": Object {
-                "price": Object {
-                  "monthly": 2.5,
-                },
-              },
-            },
-            "class": "standard",
-            "disk": 24576,
-            "id": "linode2048.5",
-            "label": "Linode 2048",
-            "memory": 2048,
-            "network_out": 125,
-            "price": Object {
-              "hourly": 0.015,
-              "monthly": 10,
-            },
-            "service_type": "linode",
-            "transfer": 2000,
-            "vcpus": 2,
-          },
+          "type": "linode2048.5",
           "vcpus": 2,
         },
       }
@@ -6120,11 +5652,7 @@ ShallowWrapper {
                     "group": "Test Group",
                     "hypervisor": "kvm",
                     "id": 1234,
-                    "image": Object {
-                      "id": "linode/ubuntu15.10",
-                      "label": "Ubuntu 15.10",
-                      "vendor": "Ubuntu",
-                    },
+                    "image": "linode/arch2016.05",
                     "ipv4": Array [
                       "97.107.143.0",
                       "97.107.143.1",
@@ -6134,29 +5662,7 @@ ShallowWrapper {
                     "memory": 2048,
                     "region": "us-east-1a",
                     "status": "running",
-                    "type": Object {
-                      "_polling": false,
-                      "addons": Object {
-                        "backups": Object {
-                          "price": Object {
-                            "monthly": 2.5,
-                          },
-                        },
-                      },
-                      "class": "standard",
-                      "disk": 24576,
-                      "id": "linode2048.5",
-                      "label": "Linode 2048",
-                      "memory": 2048,
-                      "network_out": 125,
-                      "price": Object {
-                        "hourly": 0.015,
-                        "monthly": 10,
-                      },
-                      "service_type": "linode",
-                      "transfer": 2000,
-                      "vcpus": 2,
-                    },
+                    "type": "linode2048.5",
                     "vcpus": 2,
                   }
                 }
@@ -6482,11 +5988,7 @@ ShallowWrapper {
                     "group": "Test Group",
                     "hypervisor": "kvm",
                     "id": 1233,
-                    "image": Object {
-                      "id": "linode/ubuntu15.10",
-                      "label": "Ubuntu 15.10",
-                      "vendor": "Ubuntu",
-                    },
+                    "image": "linode/arch2016.05",
                     "ipv4": Array [
                       "97.107.143.3",
                       "97.107.143.4",
@@ -6496,29 +5998,7 @@ ShallowWrapper {
                     "memory": 2048,
                     "region": "us-east-1a",
                     "status": "running",
-                    "type": Object {
-                      "_polling": false,
-                      "addons": Object {
-                        "backups": Object {
-                          "price": Object {
-                            "monthly": 2.5,
-                          },
-                        },
-                      },
-                      "class": "standard",
-                      "disk": 24576,
-                      "id": "linode2048.5",
-                      "label": "Linode 2048",
-                      "memory": 2048,
-                      "network_out": 125,
-                      "price": Object {
-                        "hourly": 0.015,
-                        "monthly": 10,
-                      },
-                      "service_type": "linode",
-                      "transfer": 2000,
-                      "vcpus": 2,
-                    },
+                    "type": "linode2048.5",
                     "vcpus": 2,
                   }
                 }
@@ -6963,11 +6443,7 @@ ShallowWrapper {
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1234,
-                      "image": Object {
-                        "id": "linode/ubuntu15.10",
-                        "label": "Ubuntu 15.10",
-                        "vendor": "Ubuntu",
-                      },
+                      "image": "linode/arch2016.05",
                       "ipv4": Array [
                         "97.107.143.0",
                         "97.107.143.1",
@@ -6977,29 +6453,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -7325,11 +6779,7 @@ ShallowWrapper {
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1233,
-                      "image": Object {
-                        "id": "linode/ubuntu15.10",
-                        "label": "Ubuntu 15.10",
-                        "vendor": "Ubuntu",
-                      },
+                      "image": "linode/arch2016.05",
                       "ipv4": Array [
                         "97.107.143.3",
                         "97.107.143.4",
@@ -7339,29 +6789,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -7814,11 +7242,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1234,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",
@@ -7828,29 +7252,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -8176,11 +7578,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1233,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -8190,29 +7588,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -8885,11 +8261,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1234,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.0",
                             "97.107.143.1",
@@ -8899,29 +8271,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9247,11 +8597,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1233,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -9261,29 +8607,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9584,11 +8908,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1234,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.0",
                             "97.107.143.1",
@@ -9598,29 +8918,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -9916,11 +9214,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1234,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",
@@ -9930,29 +9224,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       },
                       "onChange": [Function],
@@ -10283,11 +9555,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1233,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -10297,29 +9565,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -10647,11 +9893,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1233,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -10661,29 +9903,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       },
                       "onChange": [Function],
@@ -11150,11 +10370,7 @@ ShallowWrapper {
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1234,
-                      "image": Object {
-                        "id": "linode/ubuntu15.10",
-                        "label": "Ubuntu 15.10",
-                        "vendor": "Ubuntu",
-                      },
+                      "image": "linode/arch2016.05",
                       "ipv4": Array [
                         "97.107.143.0",
                         "97.107.143.1",
@@ -11164,29 +10380,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -11512,11 +10706,7 @@ ShallowWrapper {
                       "group": "Test Group",
                       "hypervisor": "kvm",
                       "id": 1233,
-                      "image": Object {
-                        "id": "linode/ubuntu15.10",
-                        "label": "Ubuntu 15.10",
-                        "vendor": "Ubuntu",
-                      },
+                      "image": "linode/arch2016.05",
                       "ipv4": Array [
                         "97.107.143.3",
                         "97.107.143.4",
@@ -11526,29 +10716,7 @@ ShallowWrapper {
                       "memory": 2048,
                       "region": "us-east-1a",
                       "status": "running",
-                      "type": Object {
-                        "_polling": false,
-                        "addons": Object {
-                          "backups": Object {
-                            "price": Object {
-                              "monthly": 2.5,
-                            },
-                          },
-                        },
-                        "class": "standard",
-                        "disk": 24576,
-                        "id": "linode2048.5",
-                        "label": "Linode 2048",
-                        "memory": 2048,
-                        "network_out": 125,
-                        "price": Object {
-                          "hourly": 0.015,
-                          "monthly": 10,
-                        },
-                        "service_type": "linode",
-                        "transfer": 2000,
-                        "vcpus": 2,
-                      },
+                      "type": "linode2048.5",
                       "vcpus": 2,
                     }
                   }
@@ -11993,11 +11161,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1234,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.0",
                           "97.107.143.1",
@@ -12007,29 +11171,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -12355,11 +11497,7 @@ ShallowWrapper {
                         "group": "Test Group",
                         "hypervisor": "kvm",
                         "id": 1233,
-                        "image": Object {
-                          "id": "linode/ubuntu15.10",
-                          "label": "Ubuntu 15.10",
-                          "vendor": "Ubuntu",
-                        },
+                        "image": "linode/arch2016.05",
                         "ipv4": Array [
                           "97.107.143.3",
                           "97.107.143.4",
@@ -12369,29 +11507,7 @@ ShallowWrapper {
                         "memory": 2048,
                         "region": "us-east-1a",
                         "status": "running",
-                        "type": Object {
-                          "_polling": false,
-                          "addons": Object {
-                            "backups": Object {
-                              "price": Object {
-                                "monthly": 2.5,
-                              },
-                            },
-                          },
-                          "class": "standard",
-                          "disk": 24576,
-                          "id": "linode2048.5",
-                          "label": "Linode 2048",
-                          "memory": 2048,
-                          "network_out": 125,
-                          "price": Object {
-                            "hourly": 0.015,
-                            "monthly": 10,
-                          },
-                          "service_type": "linode",
-                          "transfer": 2000,
-                          "vcpus": 2,
-                        },
+                        "type": "linode2048.5",
                         "vcpus": 2,
                       }
                     }
@@ -12844,11 +11960,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1234,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.0",
                             "97.107.143.1",
@@ -12858,29 +11970,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -13206,11 +12296,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1233,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -13220,29 +12306,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         }
                       }
@@ -13915,11 +12979,7 @@ ShallowWrapper {
                             "group": "Test Group",
                             "hypervisor": "kvm",
                             "id": 1234,
-                            "image": Object {
-                              "id": "linode/ubuntu15.10",
-                              "label": "Ubuntu 15.10",
-                              "vendor": "Ubuntu",
-                            },
+                            "image": "linode/arch2016.05",
                             "ipv4": Array [
                               "97.107.143.0",
                               "97.107.143.1",
@@ -13929,29 +12989,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14277,11 +13315,7 @@ ShallowWrapper {
                             "group": "Test Group",
                             "hypervisor": "kvm",
                             "id": 1233,
-                            "image": Object {
-                              "id": "linode/ubuntu15.10",
-                              "label": "Ubuntu 15.10",
-                              "vendor": "Ubuntu",
-                            },
+                            "image": "linode/arch2016.05",
                             "ipv4": Array [
                               "97.107.143.3",
                               "97.107.143.4",
@@ -14291,29 +13325,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14614,11 +13626,7 @@ ShallowWrapper {
                             "group": "Test Group",
                             "hypervisor": "kvm",
                             "id": 1234,
-                            "image": Object {
-                              "id": "linode/ubuntu15.10",
-                              "label": "Ubuntu 15.10",
-                              "vendor": "Ubuntu",
-                            },
+                            "image": "linode/arch2016.05",
                             "ipv4": Array [
                               "97.107.143.0",
                               "97.107.143.1",
@@ -14628,29 +13636,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -14946,11 +13932,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1234,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.0",
                             "97.107.143.1",
@@ -14960,29 +13942,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         },
                         "onChange": [Function],
@@ -15313,11 +14273,7 @@ ShallowWrapper {
                             "group": "Test Group",
                             "hypervisor": "kvm",
                             "id": 1233,
-                            "image": Object {
-                              "id": "linode/ubuntu15.10",
-                              "label": "Ubuntu 15.10",
-                              "vendor": "Ubuntu",
-                            },
+                            "image": "linode/arch2016.05",
                             "ipv4": Array [
                               "97.107.143.3",
                               "97.107.143.4",
@@ -15327,29 +14283,7 @@ ShallowWrapper {
                             "memory": 2048,
                             "region": "us-east-1a",
                             "status": "running",
-                            "type": Object {
-                              "_polling": false,
-                              "addons": Object {
-                                "backups": Object {
-                                  "price": Object {
-                                    "monthly": 2.5,
-                                  },
-                                },
-                              },
-                              "class": "standard",
-                              "disk": 24576,
-                              "id": "linode2048.5",
-                              "label": "Linode 2048",
-                              "memory": 2048,
-                              "network_out": 125,
-                              "price": Object {
-                                "hourly": 0.015,
-                                "monthly": 10,
-                              },
-                              "service_type": "linode",
-                              "transfer": 2000,
-                              "vcpus": 2,
-                            },
+                            "type": "linode2048.5",
                             "vcpus": 2,
                           }
                         }
@@ -15677,11 +14611,7 @@ ShallowWrapper {
                           "group": "Test Group",
                           "hypervisor": "kvm",
                           "id": 1233,
-                          "image": Object {
-                            "id": "linode/ubuntu15.10",
-                            "label": "Ubuntu 15.10",
-                            "vendor": "Ubuntu",
-                          },
+                          "image": "linode/arch2016.05",
                           "ipv4": Array [
                             "97.107.143.3",
                             "97.107.143.4",
@@ -15691,29 +14621,7 @@ ShallowWrapper {
                           "memory": 2048,
                           "region": "us-east-1a",
                           "status": "running",
-                          "type": Object {
-                            "_polling": false,
-                            "addons": Object {
-                              "backups": Object {
-                                "price": Object {
-                                  "monthly": 2.5,
-                                },
-                              },
-                            },
-                            "class": "standard",
-                            "disk": 24576,
-                            "id": "linode2048.5",
-                            "label": "Linode 2048",
-                            "memory": 2048,
-                            "network_out": 125,
-                            "price": Object {
-                              "hourly": 0.015,
-                              "monthly": 10,
-                            },
-                            "service_type": "linode",
-                            "transfer": 2000,
-                            "vcpus": 2,
-                          },
+                          "type": "linode2048.5",
                           "vcpus": 2,
                         },
                         "onChange": [Function],
@@ -15764,9 +14672,9 @@ ShallowWrapper {
     },
   ],
   Symbol(enzyme.__options__): Object {
-    "adapter": ReactFifteenAdapter {
+    "adapter": ReactSixteenAdapter {
       "options": Object {
-        "supportPrevContextArgumentOfComponentDidUpdate": true,
+        "enableComponentDidUpdateOnSetState": true,
       },
     },
   },
