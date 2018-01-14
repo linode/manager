@@ -27,6 +27,7 @@ import StackScripts from './stackscripts';
 import Images from '~/images';
 import Volumes from '~/volumes';
 import Billing from '~/billing';
+import Profile from '~/profile';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -94,8 +95,8 @@ const init = () => {
                       <Route path="/images" component={Images} />
                       <Route path="/volumes" component={Volumes} />
                       <Route path="/billing" component={Billing} />
-                      {/* <Route path="/profile" component={Profile} />
-                      <Route path="/settings" component={Settings} />
+                      <Route path="/profile" component={Profile} />
+                      {/* <Route path="/settings" component={Settings} />
                       <Route path="/users" component={Users} /> */}
                       <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
                       <Route exact path="/logout" component={Logout} />
