@@ -8,28 +8,6 @@ export const config = addParentRefs({
   primaryKey: 'id',
   endpoint: id => `/linode/instances/${id}`,
   supports: [ONE, MANY, PUT, DELETE, POST],
-  properties: {
-    type: (linode) => function (_, getState) {
-      const types = getState().api.types.types || {};
-
-      return {
-        label: 'Unknown',
-        id: linode.type,
-        ...types[linode.type] || {},
-        ...linode.specs,
-      };
-    },
-    image: (linode) => function (_, getState) {
-      const images = getState().api.images.images || {};
-
-      return {
-        vendor: 'Unknown',
-        label: 'Unknown',
-        id: linode.image,
-        ...images[linode.image],
-      };
-    },
-  },
   subresources: {
     _configs: {
       name: 'configs',

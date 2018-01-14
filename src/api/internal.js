@@ -46,23 +46,24 @@ function parseIntIfActualInt(string) {
   return isNaN(string) ? string : parseInt(string);
 }
 
-const actionGenerators = {
-  [ONE]: c => (resource, ...ids) => (dispatch) =>
-    dispatch({
+const actionCreatorGenerators = {
+  [ONE]: c => (resource, ...ids) =>
+    ({
       resource,
-      dispatch,
       type: `GEN@${fullyQualified(c)}/ONE`,
       ids: ids.map(parseIntIfActualInt),
     }),
-  [MANY]: c => (page, ...ids) => (dispatch) =>
-    dispatch({
+  [MANY]: c => (page, ...ids) =>
+    ({
       page,
-      dispatch,
       type: `GEN@${fullyQualified(c)}/MANY`,
       ids: ids.map(parseIntIfActualInt),
     }),
   [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
+    ({
+      type: `GEN@${fullyQualified(c)}/DELETE`,
+      ids: ids.map(parseIntIfActualInt),
+    }),
 };
 
 /**
@@ -76,12 +77,10 @@ export function genActions(config) {
     [DELETE]: 'delete',
   };
   config.supports.forEach((feature) => {
-    if (typeof actionGenerators[feature] !== 'undefined') {
-      actions[fns[feature]] = actionGenerators[feature](config);
+    if (typeof actionCreatorGenerators[feature] !== 'undefined') {
+      actions[fns[feature]] = actionCreatorGenerators[feature](config);
     }
   });
-  actions.invalidate = (ids = [], partial = false) =>
-    ({ type: `GEN@${fullyQualified(config)}/INVALIDATE`, ids, partial });
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       const subresource = config.subresources[key];
@@ -130,23 +129,6 @@ export class ReducerGenerator {
 
     const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
 
-    if (config.properties && action.dispatch) {
-      Object.keys(config.properties).forEach(function (property) {
-        const accessor = config.properties[property];
-
-        const stateWithoutPropertyDefined = newStateOne;
-        if (typeof stateWithoutPropertyDefined[property] !== 'undefined') {
-          Object.defineProperty(combinedStateOne, property, {
-            get: () => action.dispatch(accessor(newStateOne)),
-          });
-        }
-      });
-    }
-
-    (config.properiesMasks || []).forEach(function (property) {
-      delete combinedStateOne[property];
-    });
-
     const newStateMany = {
       ...oldStateMany,
       [config.name]: {
@@ -190,29 +172,6 @@ export class ReducerGenerator {
       ids: Object.values(newMany).map(({ id }) => id),
       [config.name]: newMany,
     };
-  }
-
-  static invalidate(config, state, action) {
-    let newState = { ...state };
-    if (action.partial) {
-      // Keep data but mark as invalid to be overwritten
-      // when new data is available by thunks.all.
-      if (action.ids.length) {
-        // action.ids should only ever be just 1 id
-        newState[config.name][action.ids[0]].invalid = true;
-      } else {
-        newState.invalid = true;
-      }
-    } else {
-      if (action.ids.length) {
-        // action.ids should only ever be just 1 id
-        delete newState[config.name][action.ids[0]];
-      } else {
-        newState = generateDefaultStateFull(config);
-      }
-    }
-
-    return { ...newState, __updatedAt: new Date() };
   }
 
   static subresource(config, state, action) {
@@ -266,8 +225,6 @@ export class ReducerGenerator {
         return ReducerGenerator.many(config, state, action);
       case `GEN@${fullyQualified(config)}/DELETE`:
         return ReducerGenerator.del(config, state, action);
-      case `GEN@${fullyQualified(config)}/INVALIDATE`:
-        return ReducerGenerator.invalidate(config, state, action);
       // eslint-disable-next-line no-case-declarations
       default:
         if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {
