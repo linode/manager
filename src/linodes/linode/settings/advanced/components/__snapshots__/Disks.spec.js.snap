@@ -288,11 +288,7 @@ ShallowWrapper {
         "group": "Test Group",
         "hypervisor": "kvm",
         "id": 1234,
-        "image": Object {
-          "id": "linode/ubuntu15.10",
-          "label": "Ubuntu 15.10",
-          "vendor": "Ubuntu",
-        },
+        "image": "linode/arch2016.05",
         "ipv4": Array [
           "97.107.143.0",
           "97.107.143.1",
@@ -302,33 +298,36 @@ ShallowWrapper {
         "memory": 2048,
         "region": "us-east-1a",
         "status": "running",
-        "type": Object {
-          "_polling": false,
-          "addons": Object {
-            "backups": Object {
-              "price": Object {
-                "monthly": 2.5,
-              },
-            },
-          },
-          "class": "standard",
-          "disk": 24576,
-          "id": "linode2048.5",
-          "label": "Linode 2048",
-          "memory": 2048,
-          "network_out": 125,
-          "price": Object {
-            "hourly": 0.015,
-            "monthly": 10,
-          },
-          "service_type": "linode",
-          "transfer": 2000,
-          "vcpus": 2,
-        },
+        "type": "linode2048.5",
         "vcpus": 2,
       }
     }
     selectedMap={Object {}}
+    type={
+      Object {
+        "_polling": false,
+        "addons": Object {
+          "backups": Object {
+            "price": Object {
+              "monthly": 2.5,
+            },
+          },
+        },
+        "class": "standard",
+        "disk": 24576,
+        "id": "linode2048.5",
+        "label": "Linode 2048",
+        "memory": 2048,
+        "network_out": 125,
+        "price": Object {
+          "hourly": 0.015,
+          "monthly": 10,
+        },
+        "service_type": "linode",
+        "transfer": 2000,
+        "vcpus": 2,
+      }
+    }
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -1464,9 +1463,9 @@ ShallowWrapper {
     },
   ],
   Symbol(enzyme.__options__): Object {
-    "adapter": ReactFifteenAdapter {
+    "adapter": ReactSixteenAdapter {
       "options": Object {
-        "supportPrevContextArgumentOfComponentDidUpdate": true,
+        "enableComponentDidUpdateOnSetState": true,
       },
     },
   },

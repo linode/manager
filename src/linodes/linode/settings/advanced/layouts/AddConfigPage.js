@@ -16,7 +16,7 @@ export class AddConfigPage extends Component {
   }
 
   render() {
-    const { dispatch, kernels, linode, account } = this.props;
+    const { dispatch, kernels, linode, type, account } = this.props;
     const header = <CardHeader title="Add a Config" />;
 
     return (
@@ -24,6 +24,7 @@ export class AddConfigPage extends Component {
         <Card header={header}>
           <CreateOrEditConfig
             linode={linode}
+            type={type}
             kernels={kernels}
             account={account}
             disks={linode._disks.disks}
@@ -40,6 +41,7 @@ export class AddConfigPage extends Component {
 
 AddConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -47,8 +49,9 @@ AddConfigPage.propTypes = {
 
 export function select(state, props) {
   const { linode } = selectLinode(state, props);
+  const type = linode && state.api.types.types[linode.type];
   const { kernels, account } = state.api;
-  return { linode, kernels, account };
+  return { linode, type, kernels, account };
 }
 
 export default connect(select)(AddConfigPage);
