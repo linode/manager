@@ -29,6 +29,7 @@ import Volumes from '~/volumes';
 import Billing from '~/billing';
 import Profile from '~/profile';
 import Settings from '~/settings';
+import Users from '~/users';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -98,7 +99,7 @@ const init = () => {
                       <Route path="/billing" component={Billing} />
                       <Route path="/profile" component={Profile} />
                       <Route path="/settings" component={Settings} />
-                      {/* <Route path="/users" component={Users} /> */}
+                      <Route path="/users" component={Users} />
                       <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
                       <Route exact path="/logout" component={Logout} />
                       <Route exact path="/oauth/callback" component={OAuthComponent} />
