@@ -7,6 +7,7 @@ import { Disks } from '~/linodes/linode/settings/advanced/components';
 
 import { expectRequest } from '~/test.helpers.js';
 import { testLinode } from '~/data/linodes';
+import { testType } from '~/data/types';
 
 
 describe('linodes/linode/settings/advanced/components/Disks', () => {
@@ -26,6 +27,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
         dispatch={dispatch}
         selectedMap={{}}
         linode={testLinode}
+        type={testType}
       />
     );
     expect(wrapper).toMatchSnapshot();
@@ -38,6 +40,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
         dispatch={dispatch}
         selectedMap={{}}
         linode={testLinode}
+        type={testType}
       />
     );
 
@@ -54,6 +57,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
         images={{}}
         dispatch={dispatch}
         linode={testLinode}
+        type={testType}
         selectedMap={{}}
       />
     );
@@ -72,6 +76,7 @@ describe('linodes/linode/settings/advanced/components/Disks', () => {
         images={{}}
         dispatch={dispatch}
         linode={testLinode}
+        type={testType}
         selectedMap={{ 12345: true }}
       />
     );
