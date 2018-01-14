@@ -3,7 +3,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { VolumesList } from '~/linodes/volumes/components';
+import VolumesList from './VolumesList';
 
 import { api } from '~/data';
 
