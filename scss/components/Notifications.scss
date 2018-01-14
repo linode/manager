@@ -1,14 +1,15 @@
 .NotificationList {
     display: none;
+    font-size: 14px;
     $notifications-width: 350px;
 
     &--open {
         display: block;
         position: absolute;
-        height: 100%;
+        height: 100vh;
         top: $nav-height + $mini-nav-height;
         z-index: 1001;
-        left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
+        right: 0;
 
         @media (max-width: #{$grid-max-width}) {
             left: 100%;
@@ -38,6 +39,7 @@
     &-listItem {
         border-bottom: $border;
         color: $black;
+        min-height: 64px;
         cursor: pointer;
         cursor: hand;
         padding: 10px 15px;
@@ -64,6 +66,7 @@
         div {
             text-overflow: ellipsis;
             overflow-x: hidden;
+            line-height: initial;
         }
     }
 

@@ -68,22 +68,20 @@ const Session = ({ username, menuStatus, toggleMenu, avatarLink }) => {
   }
 
   return (
-    <div>
-      <div
-        className="MainHeader-session"
-        onClick={() => toggleMenu(menuStatus)}
-      >
-        <span className="MainHeader-username">
-          {username}
-        </span>
-        <img
-          className="MainHeader-gravatar"
-          src={avatarLink}
-          alt="User Avatar"
-          height={35}
-          width={35}
-        />
-      </div>
+    <div
+      className="MainHeader-session"
+      onClick={() => toggleMenu(menuStatus)}
+    >
+      <span className="MainHeader-username">
+        {username}
+      </span>
+      <img
+        className="MainHeader-gravatar"
+        src={avatarLink}
+        alt="User Avatar"
+        height={35}
+        width={35}
+      />
       <Menu open={menuStatus} />
     </div>
   );
