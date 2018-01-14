@@ -21,6 +21,7 @@ import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 import Linodes from '~/linodes';
 import NodeBalancers from '~/nodebalancers';
+import Domains from '~/domains';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -81,8 +82,8 @@ const init = () => {
                     <Switch>
                       <Route path="/linodes" component={Linodes} />
                       <Route path="/nodebalancers" component={NodeBalancers} />
-                      {/* <Route path="/domains" component={Domains} />
-                      <Route path="/support" component={Support} />
+                      <Route path="/domains" component={Domains} />
+                      {/* <Route path="/support" component={Support} />
                       <Route path="/stackscripts" component={Stackscripts} />
                       <Route path="/images" component={Images} />
                       <Route path="/volumes" component={Volumes} />
