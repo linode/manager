@@ -10,11 +10,12 @@ import { dispatchOrStoreErrors } from '~/api/util';
 
 export default class UpgradeToKVM extends Component {
   static title = 'Upgrade to KVM';
-  static trigger(dispatch, linode) {
+  static trigger(dispatch, linode, type) {
     return dispatch(showModal(UpgradeToKVM.title, (
       <UpgradeToKVM
         dispatch={dispatch}
         linode={linode}
+        type={type}
       />
     )));
   }
@@ -26,9 +27,9 @@ export default class UpgradeToKVM extends Component {
   }
 
   render() {
-    const { dispatch, linode } = this.props;
+    const { dispatch, linode, type } = this.props;
     const { errors } = this.state;
-    const migrateEst = Math.round(linode.type.disk / (4000 / 60) / 60);
+    const migrateEst = Math.round(type.disk / (4000 / 60) / 60);
 
     return (
       <ConfirmModalBody
@@ -48,7 +49,7 @@ export default class UpgradeToKVM extends Component {
           </p>
           <p>
             {/* eslint-disable max-len */}
-            To migrate {(linode.type.disk / 1024)} GiB of disks will take about {migrateEst} minutes to complete.
+            To migrate {(type.disk / 1024)} GiB of disks will take about {migrateEst} minutes to complete.
             {/* eslint-enable max-len */}
           </p>
         </div>
@@ -59,6 +60,7 @@ export default class UpgradeToKVM extends Component {
 
 UpgradeToKVM.propTypes = {
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

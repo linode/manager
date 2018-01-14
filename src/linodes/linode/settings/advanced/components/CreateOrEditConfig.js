@@ -109,7 +109,7 @@ export default class CreateOrEditConfig extends Component {
     })), 'version').reverse();
   }
   render() {
-    const { linode, config } = this.props;
+    const { linode, type, config } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, rootDevice, initrd, errors, virtMode,
       runLevel, ramLimit, isMaxRam, devices, enableDistroHelper, enableNetworkHelper,
@@ -234,7 +234,7 @@ export default class CreateOrEditConfig extends Component {
                 name="isMaxRam"
                 checked={isMaxRam}
                 onChange={this.onChange}
-                label={`Maximum (${linode.type.memory} MB)`}
+                label={`Maximum (${type.memory} MB)`}
               />
             </div>
             <div>
@@ -399,6 +399,7 @@ CreateOrEditConfig.propTypes = {
   dispatch: PropTypes.func.isRequired,
   kernels: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   disks: PropTypes.object.isRequired,
   volumes: PropTypes.object.isRequired,
