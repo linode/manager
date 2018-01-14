@@ -19,7 +19,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
-import { AddImage } from '~/linodes/images/components';
+import { AddImage } from '~/images/components';
 
 
 export default class Disks extends Component {
