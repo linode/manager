@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { IndexPage } from '~/domains/layouts/IndexPage';
+import { DomainsList } from './DomainsList';
 
 import { api } from '~/data';
 import { expectRequest } from '~/test.helpers';
@@ -23,7 +23,7 @@ describe('domains/layouts/IndexPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <IndexPage
+      <DomainsList
         dispatch={dispatch}
         selectedMap={{}}
         domains={domains}
@@ -34,7 +34,7 @@ describe('domains/layouts/IndexPage', () => {
 
   it.only('renders with minimum required props', () => {
     const wrapper = shallow(
-      <IndexPage
+      <DomainsList
         dispatch={dispatch}
         selectedMap={{}}
         domains={domains}
@@ -49,7 +49,7 @@ describe('domains/layouts/IndexPage', () => {
    */
   it.skip('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <IndexPage
+      <DomainsList
         dispatch={dispatch}
         selectedMap={{}}
         domains={domains}
@@ -69,7 +69,7 @@ describe('domains/layouts/IndexPage', () => {
    */
   it.skip('deletes selected domains when delete is pressed', async () => {
     const page = mount(
-      <IndexPage
+      <DomainsList
         dispatch={dispatch}
         selectedMap={{ 1: true }}
         domains={domains}
