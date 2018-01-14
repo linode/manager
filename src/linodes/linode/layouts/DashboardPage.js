@@ -288,7 +288,7 @@ export class DashboardPage extends Component {
 
 DashboardPage.propTypes = {
   linode: PropTypes.object,
-  image: PropTypes.object.isRequired,
+  image: PropTypes.object,
   username: PropTypes.string,
   timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
