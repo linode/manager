@@ -21,13 +21,14 @@ export class EditConfigPage extends Component {
   }
 
   render() {
-    const { dispatch, config, kernels, linode, disks, volumes, account } = this.props;
+    const { dispatch, config, kernels, linode, disks, volumes, account, type } = this.props;
     const header = <CardHeader title="Edit Config" />;
 
     return !config ? null : (
       <Card header={header}>
         <CreateOrEditConfig
           linode={linode}
+          type={type}
           config={config}
           kernels={kernels}
           account={account}
@@ -42,6 +43,7 @@ export class EditConfigPage extends Component {
 
 EditConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   disks: PropTypes.object.isRequired,
@@ -52,11 +54,12 @@ EditConfigPage.propTypes = {
 
 export function select(state, props) {
   const { linode } = selectLinode(state, props);
+  const type = state.api.types.types[linode.type];
   const { disks } = linode._disks;
   const { volumes } = linode._volumes;
   const config = linode._configs.configs[props.match.params.configId];
   const { kernels, account } = state.api;
-  return { linode, config, kernels, account, disks, volumes };
+  return { linode, type, config, kernels, account, disks, volumes };
 }
 
 export default connect(select)(EditConfigPage);
