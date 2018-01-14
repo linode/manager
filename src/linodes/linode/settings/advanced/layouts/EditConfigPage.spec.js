@@ -10,6 +10,7 @@ import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditC
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
+import { testType } from '~/data/types';
 
 
 describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
@@ -23,6 +24,7 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
 
   const props = deepFreeze({
     linode: testLinode,
+    type: testType,
     config: testLinode._configs.configs[12345],
     disks: testLinode._disks.disks,
     kernels: api.kernels,
