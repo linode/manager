@@ -38,9 +38,9 @@ export default class Disks extends Component {
     Disks.OBJECT_TYPE).bind(this)
 
   freeSpace() {
-    const { linode } = this.props;
+    const { linode, type } = this.props;
     const disks = Object.values(linode._disks.disks);
-    const total = linode.type.disk;
+    const total = type.disk;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     return total - used;
   }
@@ -169,6 +169,7 @@ export default class Disks extends Component {
 Disks.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   images: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
 };

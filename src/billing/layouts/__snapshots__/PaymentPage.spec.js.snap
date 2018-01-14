@@ -24,7 +24,7 @@ ShallowWrapper {
         <SideEffect(ChainedDocumentTitle)
           title="Payment #undefined"
         />,
-        <UNDEFINED
+        <Breadcrumbs
           crumbs={
             Array [
               Object {
@@ -126,7 +126,7 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": null,
-        "type": undefined,
+        "type": [Function],
       },
       Object {
         "instance": null,
@@ -369,7 +369,7 @@ ShallowWrapper {
           <SideEffect(ChainedDocumentTitle)
             title="Payment #undefined"
           />,
-          <UNDEFINED
+          <Breadcrumbs
             crumbs={
               Array [
                 Object {
@@ -471,7 +471,7 @@ ShallowWrapper {
           },
           "ref": null,
           "rendered": null,
-          "type": undefined,
+          "type": [Function],
         },
         Object {
           "instance": null,
@@ -706,9 +706,9 @@ ShallowWrapper {
     },
   ],
   Symbol(enzyme.__options__): Object {
-    "adapter": ReactFifteenAdapter {
+    "adapter": ReactSixteenAdapter {
       "options": Object {
-        "supportPrevContextArgumentOfComponentDidUpdate": true,
+        "enableComponentDidUpdateOnSetState": true,
       },
     },
   },

@@ -41,6 +41,7 @@ class LinodeIndex extends Component {
       match: { path, url },
       location: { pathname },
       linode,
+      type,
       dispatch,
     } = this.props;
 
@@ -74,7 +75,7 @@ class LinodeIndex extends Component {
                   <GroupLabel object={linode} />
                 </Link>
               </h1>
-              <div>{planStyle(linode.type)}</div>
+              <div>{planStyle(type)}</div>
             </div>
             <span className="float-sm-right">
               <StatusDropdown
@@ -113,14 +114,21 @@ LinodeIndex.propTypes = {
     pathname: PropTypes.string.isRequired,
   }).isRequired,
   linode: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
+
+function mapStateToProps(state, props) {
+  const { linode } = selectLinode(state, props);
+  const type = linode && state.api.types.types[linode.type];
+  return { linode, type };
+}
 
 const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) => {
   await dispatch(api.images.all());
   const { id, type } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
   const requests = [
-    api.types.one([type.id]),
+    api.types.one([type]),
     api.linodes.configs.all([id]),
   ];
 
@@ -128,7 +136,7 @@ const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) 
 };
 
 export default compose(
-  connect(selectLinode),
+  connect(mapStateToProps),
   withRouter,
   Preload(preloadRequest),
 )(LinodeIndex);
