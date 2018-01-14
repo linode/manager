@@ -10,7 +10,7 @@ import {
 } from '~/test.helpers';
 import { api } from '~/data';
 import { testLinode } from '~/data/linodes';
-
+import { apiTestImage } from '~/data/images';
 
 describe('linodes/linode/layouts/RebuildPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,6 +26,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
         dispatch={dispatch}
         distributions={api.images.images}
         linode={testLinode}
+        image={apiTestImage}
       />
     );
     expect(wrapper).toMatchSnapshot();
@@ -38,6 +39,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
         dispatch={dispatch}
         images={api.images.images}
         linode={testLinode}
+        image={apiTestImage}
       />
     );
 
