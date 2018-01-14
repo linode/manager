@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
 
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { TicketPage } from '~/support/layouts/TicketPage';
+import { TicketDetails } from './TicketDetails';
 
 import { expectRequest, expectDispatchOrStoreErrors } from '~/test.helpers';
 import { testTicket, closedTicket } from '~/data/tickets';
@@ -22,7 +22,7 @@ describe('support/layouts/TicketPage', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={testTicket}
           replies={testTicket._replies.replies}
           dispatch={mockDispatch}
@@ -36,7 +36,7 @@ describe('support/layouts/TicketPage', () => {
     const { replies } = testTicket._replies;
     const page = mount(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={testTicket}
           replies={testTicket._replies.replies}
           dispatch={() => { }}
@@ -52,7 +52,7 @@ describe('support/layouts/TicketPage', () => {
     const dispatch = sandbox.spy();
     const wrapper = shallow(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={closedTicket}
           replies={closedTicket._replies.replies}
           dispatch={dispatch}
@@ -67,7 +67,7 @@ describe('support/layouts/TicketPage', () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={testTicket}
           replies={testTicket._replies.replies}
           dispatch={dispatch}
@@ -99,7 +99,7 @@ describe('support/layouts/TicketPage', () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={testTicket}
           replies={testTicket._replies.replies}
           dispatch={dispatch}
@@ -129,7 +129,7 @@ describe('support/layouts/TicketPage', () => {
 
     const wrapper = shallow(
       <StaticRouter>
-        <TicketPage
+        <TicketDetails
           ticket={testTicket}
           replies={testTicket._replies.replies}
           dispatch={dispatch}

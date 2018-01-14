@@ -58,7 +58,7 @@ export function renderTicketCreationInfo(ticket) {
   );
 }
 
-export class IndexPage extends Component {
+export class TicketsList extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -168,7 +168,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+TicketsList.propTypes = {
   dispatch: PropTypes.func.isRequired,
   tickets: PropTypes.object.isRequired,
 };
@@ -187,4 +187,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(TicketsList);

@@ -26,7 +26,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 import TicketHelper from '../components/TicketHelper';
 
 
-export class CreatePage extends Component {
+export class TicketCreate extends Component {
   constructor(props) {
     super(props);
 
@@ -158,7 +158,7 @@ export class CreatePage extends Component {
   }
 }
 
-CreatePage.propTypes = {
+TicketCreate.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   domains: PropTypes.object.isRequired,
@@ -184,4 +184,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(CreatePage);
+)(TicketCreate);

@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
 
-import { CreatePage } from '~/support/layouts/CreatePage';
+import { TicketCreate } from './TicketCreate';
 
 import {
   createSimulatedEvent,
@@ -27,7 +27,7 @@ describe('support/layouts/CreatePage', () => {
     const mockDispatch = jest.fn();
     const wrapper = shallow(
       <StaticRouter>
-        <CreatePage
+        <TicketCreate
           linodes={api.linodes.linodes}
           domains={api.domains.domains}
           nodebalancers={api.nodebalancers.nodebalancers}
@@ -42,7 +42,7 @@ describe('support/layouts/CreatePage', () => {
   it('opens a ticket', async () => {
     const page = mount(
       <StaticRouter>
-        <CreatePage
+        <TicketCreate
           linodes={api.linodes.linodes}
           domains={api.domains.domains}
           nodebalancers={api.nodebalancers.nodebalancers}

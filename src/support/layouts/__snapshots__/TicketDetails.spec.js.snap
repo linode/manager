@@ -8,7 +8,7 @@ ShallowWrapper {
     basename=""
     location="/"
   >
-    <TicketPage
+    <TicketDetails
       dispatch={[Function]}
       replies={
         Array [
@@ -61,7 +61,7 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "class",
     "props": Object {
-      "children": <TicketPage
+      "children": <TicketDetails
         dispatch={[Function]}
         replies={
           Array [
@@ -171,7 +171,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "children": <TicketPage
+        "children": <TicketDetails
           dispatch={[Function]}
           replies={
             Array [
