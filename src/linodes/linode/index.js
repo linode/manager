@@ -66,8 +66,8 @@ class LinodeIndex extends Component {
     return (
       <div>
         <ChainedDocumentTitle title={linode.label} />
-        <div className="container">
-          <header className="main-header">
+        <header className="main-header">
+          <div className="container">
             <div className="float-sm-left">
               <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
@@ -85,8 +85,8 @@ class LinodeIndex extends Component {
                 dispatch={dispatch}
               />
             </span>
-          </header>
-        </div>
+          </div>
+        </header>
         <TabsComponent tabs={tabData} />
         <div className="container">
           <Switch>
