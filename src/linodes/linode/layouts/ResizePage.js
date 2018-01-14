@@ -30,7 +30,7 @@ export class ResizePage extends Component {
     super(props);
 
     this.state = {
-      type: props.linode.type.id,
+      type: props.linode.type,
       errors: {},
       loading: false,
     };
@@ -53,7 +53,7 @@ export class ResizePage extends Component {
   }
 
   render() {
-    const { types, linode: { label, type: { id: currentType } } } = this.props;
+    const { types, linode: { label, type: currentType } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
