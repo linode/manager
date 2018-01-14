@@ -1,5 +1,6 @@
 import { testType } from './types';
 import { apiTestRegion } from './regions';
+import { apiTestImage } from './images';
 
 const stats = {
   netv6: {
@@ -94,17 +95,13 @@ function createTestLinode(id) {
     ipv4: [ipv4.address, secondIPv4.address],
     ipv6: ipv6.address,
     created: '2016-07-06T16:47:27',
-    type: testType,
+    type: testType.id,
     status: 'running',
     region: apiTestRegion.id,
     memory: 2048,
     disk: 20480,
     vcpus: 2,
-    image: {
-      id: 'linode/ubuntu15.10',
-      vendor: 'Ubuntu',
-      label: 'Ubuntu 15.10',
-    },
+    image: apiTestImage.id,
     alerts: {
       cpu: 90,
       io: 5000,
@@ -479,11 +476,7 @@ export const testLinode1245 = {
 
 export const testLinode1246 = {
   ...createTestLinode(1246),
-  image: {
-    id: null,
-    label: 'Unknown',
-    vendor: 'unknown',
-  },
+  image: null,
 };
 
 const rdnsIP1247 = { ...createTestIPv4(1247), rdns: 'host.rdns.tld' };
