@@ -6,7 +6,7 @@ import moment from 'moment-timezone';
 import { getStorage } from '~/storage';
 import { ChainedDocumentTitle } from '~/components';
 import { Card, CardHeader } from 'linode-components';
-import { Breadcrumbs } from 'linode-components';
+import Breadcrumbs from '~/components/Breadcrumbs';
 import { Table } from 'linode-components';
 import Currency from '~/components/Currency';
 import { setSource } from '~/actions/source';
@@ -85,9 +85,7 @@ PaymentPage.propTypes = {
   payment: PropTypes.object.isRequired,
 };
 
-function select(state, ownProps) {
-  const params = ownProps.params;
-  const paymentId = params.paymentId;
+function select(state, { match: { params: { paymentId } } }) {
   const payment = state.api.payments.payments[paymentId];
 
   return {

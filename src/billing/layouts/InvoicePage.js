@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 import { compose } from 'redux';
 import { Card, CardHeader } from 'linode-components';
-import { Breadcrumbs } from 'linode-components';
+import Breadcrumbs from '~/components/Breadcrumbs';
 import { Table } from 'linode-components';
 import Currency from '~/components/Currency';
 import api from '~/api';
@@ -110,12 +110,10 @@ export class InvoicePage extends Component {
 InvoicePage.propTypes = {
   dispatch: PropTypes.func,
   invoice: PropTypes.object.isRequired,
-  items: PropTypes.array,
+  items: PropTypes.object,
 };
 
-function mapStateToProps(state, ownProps) {
-  const params = ownProps.params;
-  const invoiceId = params.invoiceId;
+function mapStateToProps(state, { match: { params: { invoiceId } } }) {
   const invoice = state.api.invoices.invoices[invoiceId];
   const items = invoice._items.items;
 
@@ -125,7 +123,7 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-const preloadRequest = async (dispatch, { params: { invoiceId } }) => {
+const preloadRequest = async (dispatch, { match: { params: { invoiceId } } }) => {
   await dispatch(api.invoices.items.all([invoiceId]));
 };
 
