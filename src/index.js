@@ -25,6 +25,7 @@ import Domains from '~/domains';
 import Support from '~/support';
 import StackScripts from './stackscripts';
 import Images from '~/images';
+import Volumes from '~/volumes';
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -90,8 +91,8 @@ const init = () => {
                       <Route path="/support" component={Support} />
                       <Route path="/stackscripts" component={StackScripts} />
                       <Route path="/images" component={Images} />
-                      {/* <Route path="/volumes" component={Volumes} />
-                      <Route path="/billing" component={Billing} />
+                      <Route path="/volumes" component={Volumes} />
+                      {/* <Route path="/billing" component={Billing} />
                       <Route path="/profile" component={Profile} />
                       <Route path="/settings" component={Settings} />
                       <Route path="/users" component={Users} /> */}

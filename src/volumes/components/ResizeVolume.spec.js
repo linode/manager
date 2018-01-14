@@ -1,16 +1,13 @@
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 
-import { AttachVolume } from '~/linodes/volumes/components';
+import ResizeVolume from './ResizeVolume';
 
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
-import { api } from '~/data';
 import { testVolume } from '~/data/volumes';
 
 
-const { linodes: { linodes } } = api;
-
-describe('linodes/volumes/components/AttachVolume', function () {
+describe('linodes/volumes/components/ResizeVolume', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
 
@@ -19,22 +16,19 @@ describe('linodes/volumes/components/AttachVolume', function () {
     dispatch = sandbox.spy();
   });
 
-  it.skip('attaches a volume', async function () {
-    AttachVolume.trigger(dispatch, linodes, testVolume);
+  it.skip('resizes a volume', async function () {
+    ResizeVolume.trigger(dispatch, testVolume);
     const modal = mount(dispatch.firstCall.args[0].body);
 
-    changeInput(modal, 'linode', '1234');
+    changeInput(modal, 'size', 20);
 
     dispatch.reset();
     await modal.find('Form').props().onSubmit();
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}/attach`, {
+      ([fn]) => expectRequest(fn, `/volumes/${testVolume.id}/resize`, {
         method: 'POST',
-        body: {
-          linode_id: 1234,
-          config_id: 12345,
-        },
+        body: { size: 20 },
       }),
     ], 1);
   });
