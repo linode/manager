@@ -30,7 +30,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'stackscripts';
 
-export class IndexPage extends Component {
+export class StackScriptsList extends Component {
   constructor(props) {
     super(props);
 
@@ -179,7 +179,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+StackScriptsList.propTypes = {
   dispatch: PropTypes.func,
   stackscripts: PropTypes.object,
   selectedMap: PropTypes.object.isRequired,
@@ -200,4 +200,4 @@ const preloadRequest = async (dispatch) => {
 export default compose(
   connect(mapStateToProps),
   Preload(preloadRequest)
-)(IndexPage);
+)(StackScriptsList);
