@@ -43,7 +43,6 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
   };
 }
 
-
 export const isPathOneOf = (paths, pathname, props) => {
   return paths.reduce((result, path) => {
     return result || Boolean(matchPath(pathname, { ...props, path }));

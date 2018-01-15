@@ -4955,7 +4955,7 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
-        <Connect(PortalModal) />,
+        <div />,
         <SideEffect(ChainedDocumentTitle)
           title="Linodes"
         />,
@@ -15022,9 +15022,10 @@ ShallowWrapper {
       Object {
         "instance": null,
         "key": undefined,
-        "nodeType": "class",
+        "nodeType": "host",
         "props": Object {
           "children": Array [
+            false,
             false,
             false,
             false,
@@ -15037,8 +15038,9 @@ ShallowWrapper {
           false,
           false,
           false,
+          false,
         ],
-        "type": [Function],
+        "type": "div",
       },
       Object {
         "instance": null,
@@ -65287,7 +65289,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
-          <Connect(PortalModal) />,
+          <div />,
           <SideEffect(ChainedDocumentTitle)
             title="Linodes"
           />,
@@ -75354,9 +75356,10 @@ ShallowWrapper {
         Object {
           "instance": null,
           "key": undefined,
-          "nodeType": "class",
+          "nodeType": "host",
           "props": Object {
             "children": Array [
+              false,
               false,
               false,
               false,
@@ -75369,8 +75372,9 @@ ShallowWrapper {
             false,
             false,
             false,
+            false,
           ],
-          "type": [Function],
+          "type": "div",
         },
         Object {
           "instance": null,

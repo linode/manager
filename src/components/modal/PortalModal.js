@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
 
 import { ModalShell } from 'linode-components';
 
-import { hideModal } from '~/actions/modal';
 
 class PortalModal extends Component {
   constructor(props) {
@@ -14,11 +12,12 @@ class PortalModal extends Component {
   }
 
   render() {
+    const { title, onClose } = this.props;
     return ReactDOM.createPortal(
       <ModalShell
-        title={this.props.modal.title}
-        open={this.props.modal.open}
-        close={() => this.props.hideModal()}
+        open /* close the modal by not rendering the PortalModal */
+        title={title}
+        close={onClose}
         {...this.props}
       />,
       this.selector
@@ -27,20 +26,8 @@ class PortalModal extends Component {
 }
 
 PortalModal.propTypes = {
-  modal: PropTypes.object.isRequired,
-  hideModal: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  hideModal() {
-    dispatch(hideModal());
-  },
-});
-
-function mapStateToProps(state) {
-  return {
-    modal: state.modal,
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PortalModal);
+export default PortalModal;
