@@ -14,6 +14,7 @@ const ClickCapture = ({
 }) => {
   return (
     <div
+      className="Layout"
       onClick={(e) => {
         if (notificationsMenuStatus && !e.target.className.includes('NotificationList-listItem')) {
           hideNotificationWindow();
@@ -32,7 +33,7 @@ ClickCapture.propTypes = {
   hideSessionWindow: PropTypes.func.isRequired,
   notificationsMenuStatus: PropTypes.bool.isRequired,
   hideNotificationWindow: PropTypes.func.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
 };
 
 const mapStateToProps = (state) => ({

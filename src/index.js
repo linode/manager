@@ -125,63 +125,56 @@ if (ENVIRONMENT === 'production') {
     .install();
 }
 
-const init = () => {
-  try {
-    render(
-      <Provider store={store}>
-        <ClickCapture>
-          <ConnectedRouter history={history}>
-            <div>
-              <AuthenticationWrapper>
-                <div className="Layout" >
-                  <ChainedDocumentTitle title="Linode Manager" />
-                  <div className="Layout-inner">
-                    {/* <ModalShell
+try {
+  render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <AuthenticationWrapper>
+          <ClickCapture>
+            <ChainedDocumentTitle title="Linode Manager" />
+            <div className="Layout-inner">
+              {/* <ModalShell
                       open={modal.open}
                       title={modal.title}
                       close={() => hideModal()}
                     >
                       {modal.body}
                     </ModalShell> */}
-                    <div className="Header">
-                      <MiniHeader />
-                      <Navigation />
-                      <ContextNavigation />
-                    </div>
-                    <Switch>
-                      <Route path="/linodes" component={Linodes} />
-                      <Route path="/nodebalancers" component={NodeBalancers} />
-                      <Route path="/domains" component={Domains} />
-                      <Route path="/support" component={Support} />
-                      <Route path="/support" component={Support} />
-                      <Route path="/stackscripts" component={StackScripts} />
-                      <Route path="/images" component={Images} />
-                      <Route path="/volumes" component={Volumes} />
-                      <Route path="/billing" component={Billing} />
-                      <Route path="/profile" component={Profile} />
-                      <Route path="/settings" component={Settings} />
-                      <Route path="/users" component={Users} />
-                      <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                      <Route exact path="/logout" component={Logout} />
-                      <Route exact path="/oauth/callback" component={OAuthComponent} />
-                      <Route component={NotFound} />
-                    </Switch>
-                  </div>
-                  <Footer />
-                </div>
-              </AuthenticationWrapper>
+              <div className="Header">
+                <MiniHeader />
+                <Navigation />
+                <ContextNavigation />
+              </div>
+              <Switch>
+                <Route path="/linodes" component={Linodes} />
+                <Route path="/nodebalancers" component={NodeBalancers} />
+                <Route path="/domains" component={Domains} />
+                <Route path="/support" component={Support} />
+                <Route path="/support" component={Support} />
+                <Route path="/stackscripts" component={StackScripts} />
+                <Route path="/images" component={Images} />
+                <Route path="/volumes" component={Volumes} />
+                <Route path="/billing" component={Billing} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/users" component={Users} />
+                <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                <Route exact path="/logout" component={Logout} />
+                <Route exact path="/oauth/callback" component={OAuthComponent} />
+                <Route component={NotFound} />
+              </Switch>
             </div>
-          </ConnectedRouter>
-        </ClickCapture>
-      </Provider>,
-      document.getElementById('root')
-    );
-  } catch (e) {
-    window.handleError(e);
-  }
-};
+            <Footer />
+          </ClickCapture>
+        </AuthenticationWrapper>
+      </ConnectedRouter>
+    </Provider>,
+    document.getElementById('root')
+  );
+} catch (e) {
+  window.handleError(e);
+}
 
-window.init = init;
 
 // React is not in a great state right now w.r.t. error handling in render functions.
 // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461
