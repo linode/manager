@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.17.3] 2018-01-15
+### Fixed
+ - Allow config selection when adding a Volume to a Linode
 
 ## [0.17.2] 2018-01-09
 ### Fixed
