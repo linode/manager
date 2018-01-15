@@ -7,6 +7,7 @@ import Raven from 'raven-js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import NotFound from 'linode-components/dist/errors/NotFound';
+import Loadable from 'react-loadable';
 
 import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
@@ -19,17 +20,73 @@ import { init as initAnalytics } from './analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
-import Linodes from '~/linodes';
-import NodeBalancers from '~/nodebalancers';
-import Domains from '~/domains';
-import Support from '~/support';
-import StackScripts from './stackscripts';
-import Images from '~/images';
-import Volumes from '~/volumes';
-import Billing from '~/billing';
-import Profile from '~/profile';
-import Settings from '~/settings';
-import Users from '~/users';
+
+const FeatureLoader = ({ error, pastDelay, isTimedout }) => {
+  if (error) {
+    window.handleError(error);
+  }
+
+  if (pastDelay) {
+    return (<div>Loading...</div>);
+  }
+
+  return null;
+};
+
+const Linodes = Loadable({
+  loader: () => import('./linodes'),
+  loading: FeatureLoader,
+});
+
+const NodeBalancers = Loadable({
+  loader: () => import('./nodebalancers'),
+  loading: FeatureLoader,
+});
+
+const Domains = Loadable({
+  loader: () => import('./domains'),
+  loading: FeatureLoader,
+});
+
+const Support = Loadable({
+  loader: () => import('./support'),
+  loading: FeatureLoader,
+});
+
+const StackScripts = Loadable({
+  loader: () => import('./stackscripts'),
+  loading: FeatureLoader,
+});
+
+const Images = Loadable({
+  loader: () => import('./images'),
+  loading: FeatureLoader,
+});
+
+const Volumes = Loadable({
+  loader: () => import('./volumes'),
+  loading: FeatureLoader,
+});
+
+const Billing = Loadable({
+  loader: () => import('./billing'),
+  loading: FeatureLoader,
+});
+
+const Profile = Loadable({
+  loader: () => import('./profile'),
+  loading: FeatureLoader,
+});
+
+const Settings = Loadable({
+  loader: () => import('./settings'),
+  loading: FeatureLoader,
+});
+
+const Users = Loadable({
+  loader: () => import('./users'),
+  loading: FeatureLoader,
+});
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
