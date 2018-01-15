@@ -1,21 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { PrimaryButton } from 'linode-components';
-
-import { Input } from 'linode-components';
-import { List } from 'linode-components';
-import { ListBody } from 'linode-components';
-import { MassEditControl } from 'linode-components';
-import { ListHeader } from 'linode-components';
-import { Table } from 'linode-components';
-import {
-  ButtonCell,
-  CheckboxCell,
-  LinkCell,
-  ThumbnailCell,
-} from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Input from 'linode-components/dist/forms/Input';
+import List from 'linode-components/dist/lists/List';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
+import MassEditControl from 'linode-components/dist/lists/controls/MassEditControl';
+import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
+import Table from 'linode-components/dist/tables/Table';
+import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
+import ThumbnailCell from 'linode-components/dist/tables/cells/ThumbnailCell';
 import { compose } from 'redux';
 
 import { ComponentPreload as Preload } from '~/decorators/Preload';

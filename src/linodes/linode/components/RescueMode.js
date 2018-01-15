@@ -1,14 +1,13 @@
 import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
-import { Card, CardHeader } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormSummary,
-  SubmitButton,
-} from 'linode-components';
 
 import { rescueLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';

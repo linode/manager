@@ -1,16 +1,20 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
-
-import {
-  Form, FormGroup, FormGroupError, PasswordInput, Input, Checkboxes, Radio, SubmitButton,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import PasswordInput from 'linode-components/dist/forms/PasswordInput';
+import Checkboxes from 'linode-components/dist/forms/Checkboxes';
+import Radio from 'linode-components/dist/forms/Radio';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Input from 'linode-components/dist/forms/Input';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/generic/users';
-import { FormSummary } from 'linode-components';
 
 
 export default class UserForm extends Component {

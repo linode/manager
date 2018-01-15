@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Table from 'linode-components/dist/tables/Table';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 
-import { Table } from 'linode-components';
-import { CheckboxCell } from 'linode-components';
 import { IPRdnsCell } from '~/components/tables/cells';
 
 

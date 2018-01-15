@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { Form, SubmitButton, FormSummary } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
+import Form from 'linode-components/dist/forms/Form';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
 
 import { TimeDisplay } from '~/components';
 

@@ -21,6 +21,10 @@ import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
 
+/**
+ * @todo Finish this...
+ * @param {{ error: Error pastDelay: Boolean, isTimedout: Boolean }} props
+ */
 const FeatureLoader = ({ error, pastDelay, isTimedout }) => {
   if (error) {
     window.handleError(error);

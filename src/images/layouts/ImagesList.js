@@ -2,23 +2,20 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
 import filter from 'lodash/filter';
-import { PrimaryButton } from 'linode-components';
-import { Input } from 'linode-components';
-import { List } from 'linode-components';
-import { Table } from 'linode-components';
-import { Dropdown } from 'linode-components';
-import { MassEditControl } from 'linode-components';
-import { ListHeader } from 'linode-components';
-import { ListBody } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Input from 'linode-components/dist/forms/Input';
+import List from 'linode-components/dist/lists/List';
+import Table from 'linode-components/dist/tables/Table';
+import Dropdown from 'linode-components/dist/dropdowns/Dropdown';
+import MassEditControl from 'linode-components/dist/lists/controls/MassEditControl';
+import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
 import { setAnalytics, setSource } from '~/actions';
 import { confirmThenDelete } from '~/utilities';
-import {
-  LabelCell,
-  CheckboxCell,
-  TableCell,
-} from 'linode-components';
+import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
@@ -56,8 +53,12 @@ export class ImagesList extends Component {
     const { dispatch } = this.props;
 
     const groups = [
-      { elements: [{ name: 'Edit', action: () =>
-        EditImage.trigger(dispatch, record) }] },
+      {
+        elements: [{
+          name: 'Edit', action: () =>
+            EditImage.trigger(dispatch, record),
+        }],
+      },
       { elements: [{ name: 'Delete', action: () => this.deleteImages(record) }] },
     ];
 
@@ -86,9 +87,11 @@ export class ImagesList extends Component {
             <MassEditControl
               data={sorted}
               dispatch={dispatch}
-              massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteImages },
-              ] }]}
+              massEditGroups={[{
+                elements: [
+                  { name: 'Delete', action: this.deleteImages },
+                ],
+              }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}

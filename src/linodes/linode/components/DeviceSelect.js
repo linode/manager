@@ -1,12 +1,11 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import mapValues from 'lodash/mapValues';
 import isEmpty from 'lodash/isEmpty';
-
-import PropTypes from 'prop-types';
-import React from 'react';
-
-import { FormGroup, FormGroupError, Select } from 'linode-components';
-
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import Select from 'linode-components/dist/forms/Select';
 
 export default function DeviceSelect(props) {
   const {

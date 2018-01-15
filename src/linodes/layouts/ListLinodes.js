@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
-import { PrimaryButton } from 'linode-components';
-import { Input } from 'linode-components';
-import { List, ScrollingList } from 'linode-components';
-import { ListBody, ListGroup } from 'linode-components';
-import { MassEditControl } from 'linode-components';
-import { ListHeader } from 'linode-components';
-import { ConfirmModalBody } from 'linode-components';
-import { Table } from 'linode-components';
-import { CheckboxCell, LinkCell } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Input from 'linode-components/dist/forms/Input';
+import List from 'linode-components/dist/lists/List';
+import ScrollingList from 'linode-components/dist/lists/ScrollingList';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
+import ListGroup from 'linode-components/dist/lists/bodies/ListGroup';
+import MassEditControl from 'linode-components/dist/lists/controls/MassEditControl';
+import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
+import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
+import Table from 'linode-components/dist/tables/Table';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
 
 import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';

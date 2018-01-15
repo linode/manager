@@ -7,8 +7,8 @@ import groupBy from 'lodash/groupBy';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ExternalLink } from 'linode-components';
-import { Select } from 'linode-components';
+import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
+import Select from 'linode-components/dist/forms/Select';
 
 import { DISTRIBUTION_DISPLAY_ORDER } from '~/constants';
 

@@ -2,17 +2,16 @@ import pickBy from 'lodash/pickBy';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Checkbox from 'linode-components/dist/forms/Checkbox';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
-import { Card, CardHeader } from 'linode-components';
-import {
-  Checkbox,
-  Form,
-  FormGroup,
-  FormSummary,
-  SubmitButton,
-} from 'linode-components';
-import { onChange } from 'linode-components';
-import { ConfirmModalBody } from 'linode-components';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/ad-hoc/backups';

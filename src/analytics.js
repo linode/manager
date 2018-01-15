@@ -1,4 +1,4 @@
-import { EVENTS } from 'linode-components';
+import { EVENTS } from 'linode-components/dist/utils/EmitEvent';
 
 import { store } from '~/store';
 

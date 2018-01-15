@@ -1,14 +1,17 @@
 import range from 'lodash/range';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Button from 'linode-components/dist/buttons/Button';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import Input from 'linode-components/dist/forms/Input';
+import Select from 'linode-components/dist/forms/Select';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
-import { Button } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
-import { FormGroup, Input, Select } from 'linode-components';
-import { onChange } from 'linode-components';
-import { compose } from 'redux';
 import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
 import { linodeStats } from '~/api/ad-hoc/linodes';

@@ -3,7 +3,7 @@ import { matchPath } from 'react-router-dom';
 import isFunction from 'lodash/isFunction';
 import capitalize from 'lodash/capitalize';
 
-import { DeleteModalBody } from 'linode-components';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { removeSelected } from '~/actions/select';

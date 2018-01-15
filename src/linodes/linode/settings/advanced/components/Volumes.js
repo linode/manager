@@ -2,8 +2,9 @@ import omitBy from 'lodash/omitBy';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { PrimaryButton } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
 
 import AddEditVolume from '~/volumes/components/AddEditVolume';
 import VolumesList from '~/volumes/components/VolumesList';

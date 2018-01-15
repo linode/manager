@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { TableCell } from 'linode-components';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
 
 
 export default function IPAddressCell(props) {

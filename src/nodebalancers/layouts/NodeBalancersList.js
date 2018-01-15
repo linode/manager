@@ -2,24 +2,19 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { PrimaryButton } from 'linode-components';
-import { Input } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Input from 'linode-components/dist/forms/Input';
 import CreateHelper from '~/components/CreateHelper';
-import { List } from 'linode-components';
-import { Table } from 'linode-components';
-import { ListBody } from 'linode-components';
-import { ListHeader } from 'linode-components';
-import {
-  ButtonCell,
-  CheckboxCell,
-  LinkCell,
-} from 'linode-components';
-import {
-  RegionCell,
-  IPAddressCell,
-} from '~/components/tables/cells';
-import { MassEditControl } from 'linode-components';
+import List from 'linode-components/dist/lists/List';
+import Table from 'linode-components/dist/tables/Table';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
+import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
+import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
+import MassEditControl from 'linode-components/dist/lists/controls/MassEditControl';
 
+import { RegionCell, IPAddressCell } from '~/components/tables/cells';
 import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
@@ -69,9 +64,11 @@ export class NodeBalancersList extends Component {
             <MassEditControl
               data={sorted}
               dispatch={dispatch}
-              massEditGroups={[{ elements: [
-                { name: 'Delete', action: this.deleteNodeBalancers },
-              ] }]}
+              massEditGroups={[{
+                elements: [
+                  { name: 'Delete', action: this.deleteNodeBalancers },
+                ],
+              }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
