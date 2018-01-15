@@ -70,6 +70,7 @@ export class ListLinodesPage extends Component {
 
   deleteLinodesAction = (linodes) => {
     const { dispatch } = this.props;
+    const linodeLabels = linodes.map(linode => linode.label);
     const linodeIds = linodes.map(linode => linode.id);
 
     const callback = () => {
@@ -85,7 +86,7 @@ export class ListLinodesPage extends Component {
 
     this.setState({
       activeModal: 'massDeleteLinodes',
-      modalItems: linodeIds,
+      modalItems: linodeLabels,
       modalOnSubmit: callback,
       modalTitle: title,
     });
