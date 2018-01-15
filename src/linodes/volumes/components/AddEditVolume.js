@@ -49,6 +49,11 @@ export default class AddEditVolume extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  async componentDidMount() {
+    const { linode: linodeId } = this.props;
+    this.fetchLinodeConfigs(linodeId);
+  }
+
   onRegionChange = async (e) => {
     this.onChange(e);
     this.setState({
@@ -68,18 +73,7 @@ export default class AddEditVolume extends Component {
     }
 
     if (!allConfigs[linodeId]) {
-      const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
-      const linodeConfigs = Object.values(configs.data).map(function (config) {
-        return {
-          label: config.label,
-          value: parseInt(config.id),
-        };
-      });
-
-      this.setState({
-        config: undefined,
-        allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
-      });
+      this.fetchLinodeConfigs(linodeId);
     }
   }
 
@@ -91,7 +85,7 @@ export default class AddEditVolume extends Component {
       region,
       size: +size,
       linode_id: linode === LinodeSelect.EMPTY ? undefined : +linode,
-      config_id: config,
+      config_id: +config,
     };
 
     if (!data.linode_id) {
@@ -112,6 +106,22 @@ export default class AddEditVolume extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, actions));
   }
 
+  fetchLinodeConfigs = async (linodeId) => {
+    const { allConfigs } = this.state;
+    const configs = await this.props.dispatch(api.linodes.configs.all([linodeId]));
+    const linodeConfigs = Object.values(configs.data).map(function (config) {
+      return {
+        label: config.label,
+        value: parseInt(config.id),
+      };
+    });
+
+    this.setState({
+      config: undefined,
+      allConfigs: { ...allConfigs, [linodeId]: linodeConfigs },
+    });
+  }
+
   render() {
     const { close, title, volume, linode: original } = this.props;
     const {
@@ -130,7 +140,7 @@ export default class AddEditVolume extends Component {
     const newVolumeOnLinode = !volume && original;
     const showLinodeAndRegion = !volume && !original;
     const existingVolume = !!volume;
-    const showLinodeConfigs = !existingVolume && (configs.length !== 1);
+    const showLinodeConfigs = !existingVolume && (configs.length > 1);
 
     const filteredLinodes = pickBy(linodes,
       linode => linode.region === region
