@@ -21,7 +21,7 @@ import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
 import { confirmThenDelete } from '~/utilities';

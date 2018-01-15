@@ -21,7 +21,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/ad-hoc/tickets';
 import { setAnalytics, setSource } from '~/actions';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './TicketsList';

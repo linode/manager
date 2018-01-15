@@ -16,7 +16,7 @@ import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
 

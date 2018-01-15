@@ -9,7 +9,7 @@ import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class NotificationsPage extends Component {

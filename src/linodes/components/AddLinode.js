@@ -10,7 +10,7 @@ import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { RegionSelect } from '~/components';
+import RegionSelect from '~/components/RegionSelect';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import DistributionSelect from './DistributionSelect';

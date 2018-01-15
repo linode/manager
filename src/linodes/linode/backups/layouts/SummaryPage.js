@@ -8,7 +8,7 @@ import FormSummary from 'linode-components/dist/forms/FormSummary';
 import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 
-import { TimeDisplay } from '~/components';
+import TimeDisplay from '~/components/TimeDisplay';
 
 import { TakeSnapshot } from '../components';
 import { selectLinode } from '../../utilities';

@@ -20,7 +20,7 @@ import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';

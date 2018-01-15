@@ -18,7 +18,7 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import TicketHelper from '../components/TicketHelper';

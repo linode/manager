@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 export function ReferralsPage(props) {
   const { code, url, total, completed, pending, credit } = props.referrals;

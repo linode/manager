@@ -14,7 +14,7 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class LishPage extends Component {

@@ -19,7 +19,7 @@ import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
 

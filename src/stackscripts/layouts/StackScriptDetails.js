@@ -10,7 +10,7 @@ import CardHeader from 'linode-components/dist/cards/CardHeader';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import { Editor, Settings } from '../components';
 import { ComponentPreload as Preload } from '~/decorators/Preload';

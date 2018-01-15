@@ -17,7 +17,7 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import { updateCard } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class CreditCardPage extends Component {

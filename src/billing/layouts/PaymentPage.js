@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 import Breadcrumbs from '~/components/Breadcrumbs';

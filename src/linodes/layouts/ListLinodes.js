@@ -23,7 +23,7 @@ import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';

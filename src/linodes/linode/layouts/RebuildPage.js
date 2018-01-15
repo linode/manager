@@ -18,7 +18,7 @@ import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { DistributionSelect } from '~/linodes/components';
 import { getLinodeByLabel } from '~/utilities';
 

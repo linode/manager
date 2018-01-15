@@ -13,7 +13,7 @@ import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
-import { GroupLabel } from '~/components';
+import GroupLabel from '~/components/GroupLabel';
 import { NAME_SERVERS } from '~/constants';
 
 import { formatDNSSeconds, ONE_DAY } from './SelectDNSSeconds';

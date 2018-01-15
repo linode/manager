@@ -16,7 +16,7 @@ import Table from 'linode-components/dist/tables/Table';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,

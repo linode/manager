@@ -15,7 +15,7 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import { makePayment } from '~/api/ad-hoc/account';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import Currency from '~/components/Currency';
 

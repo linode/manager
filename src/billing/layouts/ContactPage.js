@@ -17,7 +17,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { Countries } from '~/constants';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class ContactPage extends Component {

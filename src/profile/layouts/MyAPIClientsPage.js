@@ -20,7 +20,7 @@ import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { resetSecret } from '~/api/ad-hoc/clients';
 import { transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { API_ROOT } from '~/constants';
 import { DefaultClientThumb } from '~/assets';
 import { confirmThenDelete } from '~/utilities';

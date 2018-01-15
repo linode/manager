@@ -20,7 +20,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { createHeaderFilter, transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 
 import AddStackScript from '../components/AddStackScript';

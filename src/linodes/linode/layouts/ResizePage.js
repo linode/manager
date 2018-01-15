@@ -16,7 +16,7 @@ import { setSource } from '~/actions/source';
 import api from '~/api';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';

@@ -8,7 +8,7 @@ import CardHeader from 'linode-components/dist/cards/CardHeader';
 import { BillingHistoryList } from '../components/BillingHistoryList';
 import Currency from '~/components/Currency';
 import { setSource } from '~/actions/source';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 
 export class HistoryPage extends Component {

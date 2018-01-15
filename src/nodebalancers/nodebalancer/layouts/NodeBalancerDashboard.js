@@ -18,7 +18,7 @@ import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { nodebalancerStats } from '~/api/ad-hoc/nodebalancers';
 import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
-import { TransferPool } from '~/components';
+import TransferPool from '~/components/TransferPool';
 import {
   GraphGroup,
   makeConnectionsGraphMetadata,

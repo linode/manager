@@ -11,7 +11,7 @@ import Currency from '~/components/Currency';
 import api from '~/api';
 import { setSource } from '~/actions/source';
 
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { getStorage } from '~/storage';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 

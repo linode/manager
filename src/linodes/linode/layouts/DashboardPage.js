@@ -16,7 +16,8 @@ import { setSource } from '~/actions/source';
 import { transferPool } from '~/api/ad-hoc//account';
 import { linodeStats } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-import { ChainedDocumentTitle, TransferPool } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import TransferPool from '~/components/TransferPool';
 import {
   GraphGroup,
   makeCPUGraphMetadata,

@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import Tabs from 'linode-components/dist/tabs/Tabs';
 
 import { setAnalytics, setSource } from '~/actions';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 export class IndexPage extends Component {
   async componentDidMount() {
