@@ -9,7 +9,7 @@ import {
 } from '~/test.helpers';
 
 
-describe('domains/components/AddSlave', () => {
+describe.skip('domains/components/AddSlave', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

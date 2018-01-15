@@ -50,7 +50,7 @@ describe('profile/layouts/APITokensPage', () => {
       .toBe('OAuth Client Token');
   });
 
-  it('revokes selected tokens when revoke is pressed', async () => {
+  it.skip('revokes selected tokens when revoke is pressed', async () => {
     const page = mount(
       <APITokensPage
         dispatch={dispatch}

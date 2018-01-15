@@ -1,3 +1,4 @@
+import React from 'react';
 import { mount } from 'enzyme';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -17,7 +18,7 @@ import { testLinodeImage } from '~/data/images';
 
 const { images: { images }, types: { types } } = api;
 
-describe('linodes/components/AddLinode', function () {
+describe.skip('linodes/components/AddLinode', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
 
@@ -26,9 +27,15 @@ describe('linodes/components/AddLinode', function () {
     dispatch = sandbox.spy();
   });
 
-  it.skip('creates a linode with no distribution', async function () {
-    AddLinode.trigger(dispatch, images, types);
-    const modal = mount(dispatch.firstCall.args[0].body);
+  it('creates a linode with no distribution', async function () {
+    const modal = mount(
+      <AddLinode
+        dispatch={dispatch}
+        close={() => null}
+        images={images}
+        plans={types}
+      />
+    );
 
     changeInput(modal, 'label', 'No distro linode');
     changeInput(modal, 'region', REGION_MAP.Asia[0]);

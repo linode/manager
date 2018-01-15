@@ -56,7 +56,7 @@ describe('profile/layouts/MyAPIClientsPage', () => {
       .toBe('http://localhost:3000/oauth/callback');
   });
 
-  it('deletes selected clients when delete is pressed', async () => {
+  it.skip('deletes selected clients when delete is pressed', async () => {
     const page = mount(
       <MyAPIClientsPage
         dispatch={dispatch}

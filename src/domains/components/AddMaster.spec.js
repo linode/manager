@@ -7,7 +7,7 @@ import { AddMaster } from '~/domains/components';
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 
 
-describe('domains/components/AddMaster', () => {
+describe.skip('domains/components/AddMaster', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
