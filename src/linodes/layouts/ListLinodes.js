@@ -24,6 +24,7 @@ import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import PortalModal from '~/components/modal/PortalModal';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
@@ -41,7 +42,13 @@ const OBJECT_TYPE = 'linodes';
 export class ListLinodesPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { filter: '' };
+    this.state = {
+      filter: '',
+      modalTitle: '',
+      modalOnSubmit: () => null,
+      modalAnalytics: {},
+      modalBody: null,
+    };
   }
 
   componentDidMount() {
@@ -85,19 +92,46 @@ export class ListLinodesPage extends Component {
     }
 
     const title = `Confirm ${confirmType}`;
-    dispatch(showModal(title, (
-      <ConfirmModalBody
-        onCancel={() => dispatch(hideModal())}
-        onSubmit={callback}
-        analytics={{ title }}
-      >{modalBody}</ConfirmModalBody>
-    )));
+
+    this.setState({
+      activeModal: 'massEditConfirm',
+      modalTitle: title,
+      modalOnSubmit: callback,
+      modalAnalytics: { title },
+      modalBody,
+    }, () => dispatch(showModal(title)));
   }
 
-  powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
-
+  powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off');
   powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
   reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
+
+  addLinodeModal = () => {
+    const { dispatch } = this.props;
+    this.setState({
+      activeModal: 'addLinode',
+    }, () => dispatch(showModal(AddLinode.title)));
+  };
+
+  cloneLinodeModal = () => {
+    const { dispatch } = this.props;
+    this.setState({
+      activeModal: 'cloneLinode',
+    }, () => dispatch(showModal(CloneLinode.title)));
+  }
+
+  restoreLinodeModal = () => {
+    const { dispatch } = this.props;
+    this.setState({
+      activeModal: 'restoreLinode',
+    }, () => dispatch(showModal(RestoreLinode.title)));
+  }
+
+  hideModal = () => {
+    const { dispatch } = this.props;
+    dispatch(hideModal());
+    this.setState({ activeModal: '' });
+  }
 
   renderLinodes(linodes, types) {
     const { dispatch, selectedMap } = this.props;
@@ -188,27 +222,66 @@ export class ListLinodesPage extends Component {
     );
   }
 
-  render() {
-    const { dispatch, linodes, images, types, transfer } = this.props;
+  renderModal = () => {
+    const { dispatch, linodes, images, types } = this.props;
+    const { activeModal, modalAnalytics, modalBody, modalOnSubmit } = this.state;
+    return (
+      <PortalModal>
+        {(activeModal === 'massEditConfirm') &&
+          <ConfirmModalBody
+            analytics={modalAnalytics}
+            onCancel={this.hideModal}
+            onSubmit={() => modalOnSubmit()}
+          >
+            {modalBody}
+          </ConfirmModalBody>
+        }
+        {(activeModal === 'addLinode') &&
+          <AddLinode
+            dispatch={dispatch}
+            close={this.hideModal}
+            images={images}
+            plans={types}
+          />
+        }
+        {(activeModal === 'cloneLinode') &&
+          <CloneLinode
+            dispatch={dispatch}
+            close={this.hideModal}
+            linodes={linodes}
+            plans={types}
+          />
+        }
+        {(activeModal === 'restoreLinode') &&
+          <RestoreLinode
+            dispatch={dispatch}
+            close={this.hideModal}
+            linodes={linodes}
+            plans={types}
+          />
+        }
+      </PortalModal>
+    );
+  }
 
-    const addLinode = () => AddLinode.trigger(dispatch, images, types);
-    const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
-    const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
+  render() {
+    const { linodes, types, transfer } = this.props;
 
     const addOptions = [
-      { name: 'Create from Backup', action: restoreLinode },
-      { name: 'Clone a Linode', action: cloneLinode },
+      { name: 'Create from Backup', action: this.restoreLinodeModal },
+      { name: 'Clone a Linode', action: this.cloneLinodeModal },
     ];
 
     return (
       <div className="PrimaryPage container">
+        {this.renderModal()}
         <ChainedDocumentTitle title="Linodes" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Linodes</h1>
             <PrimaryButton
               className="float-right"
-              onClick={addLinode}
+              onClick={this.addLinodeModal}
               options={addOptions}
             >
               Add a Linode
@@ -220,7 +293,7 @@ export class ListLinodesPage extends Component {
             <CreateHelper
               label="Linodes"
               linkText="Add a Linode"
-              onClick={addLinode}
+              onClick={this.addLinodeModal}
             />
           )}
         </div>
