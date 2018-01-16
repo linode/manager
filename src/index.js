@@ -116,46 +116,42 @@ try {
     <Provider store={store}>
       <ClickCapture>
         <ConnectedRouter history={history}>
-          <div>
-            <AuthenticationWrapper>
-              <div className="Layout" >
-                <ChainedDocumentTitle title="Linode Manager" />
-                <div className="Layout-inner">
-                  {/* <ModalShell
+          <AuthenticationWrapper>
+            <ChainedDocumentTitle title="Linode Manager" />
+            <div className="Layout-inner">
+              {/* <ModalShell
                       open={modal.open}
                       title={modal.title}
                       close={() => hideModal()}
                     >
                       {modal.body}
                     </ModalShell> */}
-                  <div className="Header">
-                    <MiniHeader />
-                    <Navigation />
-                    <ContextNavigation />
-                  </div>
-                  <Switch>
-                    <Route path="/linodes" component={Linodes} />
-                    <Route path="/nodebalancers" component={NodeBalancers} />
-                    <Route path="/domains" component={Domains} />
-                    <Route path="/support" component={Support} />
-                    <Route path="/support" component={Support} />
-                    <Route path="/stackscripts" component={StackScripts} />
-                    <Route path="/images" component={Images} />
-                    <Route path="/volumes" component={Volumes} />
-                    <Route path="/billing" component={Billing} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/settings" component={Settings} />
-                    <Route path="/users" component={Users} />
-                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                    <Route exact path="/logout" component={Logout} />
-                    <Route exact path="/oauth/callback" component={OAuthComponent} />
-                    <Route component={NotFound} />
-                  </Switch>
-                </div>
-                <Footer />
+              <div className="Header">
+                <MiniHeader />
+                <Navigation />
+                <ContextNavigation />
               </div>
-            </AuthenticationWrapper>
-          </div>
+              <Switch>
+                <Route path="/linodes" component={Linodes} />
+                <Route path="/nodebalancers" component={NodeBalancers} />
+                <Route path="/domains" component={Domains} />
+                <Route path="/support" component={Support} />
+                <Route path="/support" component={Support} />
+                <Route path="/stackscripts" component={StackScripts} />
+                <Route path="/images" component={Images} />
+                <Route path="/volumes" component={Volumes} />
+                <Route path="/billing" component={Billing} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/users" component={Users} />
+                <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                <Route exact path="/logout" component={Logout} />
+                <Route exact path="/oauth/callback" component={OAuthComponent} />
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+            <Footer />
+          </AuthenticationWrapper>
         </ConnectedRouter>
       </ClickCapture>
     </Provider>,

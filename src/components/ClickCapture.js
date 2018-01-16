@@ -14,6 +14,7 @@ const ClickCapture = ({
 }) => {
   return (
     <div
+      className="Layout"
       onClick={(e) => {
         if (notificationsMenuStatus && !e.target.className.includes('NotificationList-listItem')) {
           hideNotificationWindow();
