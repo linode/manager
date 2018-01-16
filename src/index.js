@@ -20,76 +20,61 @@ import { init as initAnalytics } from './analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
-
-/**
- * @todo Finish this...
- * @param {{ error: Error pastDelay: Boolean, isTimedout: Boolean }} props
- */
-const FeatureLoader = ({ error, pastDelay, isTimedout }) => {
-  if (error) {
-    window.handleError(error);
-  }
-
-  if (pastDelay) {
-    return (<div>Loading...</div>);
-  }
-
-  return null;
-};
+import PageLoader from '~/components/loaders/PageLoader';
 
 const Linodes = Loadable({
   loader: () => import('./linodes'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const NodeBalancers = Loadable({
   loader: () => import('./nodebalancers'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Domains = Loadable({
   loader: () => import('./domains'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Support = Loadable({
   loader: () => import('./support'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const StackScripts = Loadable({
   loader: () => import('./stackscripts'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Images = Loadable({
   loader: () => import('./images'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Volumes = Loadable({
   loader: () => import('./volumes'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Billing = Loadable({
   loader: () => import('./billing'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Profile = Loadable({
   loader: () => import('./profile'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Settings = Loadable({
   loader: () => import('./settings'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 const Users = Loadable({
   loader: () => import('./users'),
-  loading: FeatureLoader,
+  loading: PageLoader,
 });
 
 import Navigation from '~/layouts/Navigation';
