@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 import { hideSession } from '~/actions/session';
 import { hideNotifications } from '~/actions/notifications';
 
@@ -50,4 +51,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClickCapture);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+)(ClickCapture);
