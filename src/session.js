@@ -3,9 +3,9 @@ import { APP_ROOT, LOGIN_ROOT } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
-const AUTH_TOKEN = 'authentication/oauth-token';
-const AUTH_SCOPES = 'authentication/scopes';
-const AUTH_EXPIRES = 'authentication/expires';
+export const AUTH_TOKEN = 'authentication/oauth-token';
+export const AUTH_SCOPES = 'authentication/scopes';
+export const AUTH_EXPIRES = 'authentication/expires';
 
 export function redirect(location) {
   window.location = location;

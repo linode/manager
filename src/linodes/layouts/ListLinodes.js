@@ -27,6 +27,8 @@ import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cell
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 import { confirmThenDelete } from '~/utilities';
 
+import apiWrapper from '~/linode-api';
+
 import { planStyle } from '../components/PlanStyle';
 import AddLinode from '../components/AddLinode';
 import CloneLinode from '../components/CloneLinode';
@@ -48,6 +50,18 @@ export class ListLinodesPage extends Component {
     dispatch(setAnalytics(['linodes']));
 
     ['images', 'types'].map(f => dispatch(api[f].all()));
+  }
+
+  componentWillReceiveProps() {
+    /* NB: Remove this! Just a quick test of the apiWrapper */
+    const { linodes } = this.props;
+    if (Object.values(linodes)) {
+      const linodeId = Object.values(linodes)[0].id;
+      apiWrapper.fetch.get(`/linode/instances/${linodeId}`)
+        .then(res => res.json())
+        .then(json => console.log('linode', json));
+    }
+    /* NB: Remove this! Just a quick test of the apiWrapper */
   }
 
   deleteLinodes = confirmThenDelete(
