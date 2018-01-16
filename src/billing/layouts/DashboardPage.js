@@ -10,7 +10,7 @@ import FormGroup from 'linode-components/dist/forms/FormGroup';
 import { setSource } from '~/actions/source';
 import Currency from '~/components/Currency';
 
-import BillingHistoryList from '../components/BillingHistoryList';
+import { BillingHistoryList } from '../components/BillingHistoryList';
 
 
 export class DashboardPage extends Component {
