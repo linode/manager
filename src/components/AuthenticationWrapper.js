@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -50,7 +50,7 @@ class AuthenticationWrapper extends Component {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
-    return (<Fragment>{showChildren && children}</Fragment>);
+    return (<div>{showChildren && children}</div>);
   }
 }
 

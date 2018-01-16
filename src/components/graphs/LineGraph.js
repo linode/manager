@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Chart from 'chart.js/dist/Chart.min';
+import Chart from 'chart.js';
 import merge from 'lodash/merge';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';

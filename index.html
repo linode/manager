@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link async rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css" />
-    <link async rel="stylesheet" href="/assets/noscript/styles.css" />
+    <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/noscript/styles.css" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="https://www.linode.com/favicon.ico" />
     <title>Linode Manager</title>
   </head>
@@ -16,8 +16,9 @@
     </noscript>
     <div id="root" class="full-height"></div>
     <div id="emergency-modal"></div>
-    <script src="/static/vendor.js"></script>
-    <script async src="/static/main.js"></script>
-    <script async src="/assets/zxcvbn.js"></script>
+    <script src="/static/common.js"></script>
+    <script src="/static/bundle.js"></script>
+    <script src="/assets/zxcvbn.js"></script>
+    <script>window.init();</script>
   </body>
 </html>
