@@ -47,6 +47,7 @@ function partialFetch(method = 'GET') {
         dispatch(resetEventsPoll());
       }
 
+      /* NB: Import the apiWrapper and use it here instead of rawFetch */
       return new Promise((accept, reject) => {
         rawFetch(path, options).then(async (response) => {
           const { status, headers } = response;

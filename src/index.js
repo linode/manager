@@ -37,7 +37,6 @@ import Footer from '~/layouts/Footer';
 import MiniHeader from '~/layouts/MiniHeader';
 
 import AuthenticationWrapper from '~/components/AuthenticationWrapper';
-import apiWrapper from '~/linode-api';
 
 /**
  * @todo I believe we can just import without defining a variable.
