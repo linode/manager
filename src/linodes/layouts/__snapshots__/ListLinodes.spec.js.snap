@@ -4955,7 +4955,7 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
-        <div />,
+        null,
         <SideEffect(ChainedDocumentTitle)
           title="Linodes"
         />,
@@ -15019,29 +15019,7 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
-      Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {
-          "children": Array [
-            false,
-            false,
-            false,
-            false,
-            false,
-          ],
-        },
-        "ref": null,
-        "rendered": Array [
-          false,
-          false,
-          false,
-          false,
-          false,
-        ],
-        "type": "div",
-      },
+      null,
       Object {
         "instance": null,
         "key": undefined,
@@ -65289,7 +65267,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
-          <div />,
+          null,
           <SideEffect(ChainedDocumentTitle)
             title="Linodes"
           />,
@@ -75353,29 +75331,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": Array [
-              false,
-              false,
-              false,
-              false,
-              false,
-            ],
-          },
-          "ref": null,
-          "rendered": Array [
-            false,
-            false,
-            false,
-            false,
-            false,
-          ],
-          "type": "div",
-        },
+        null,
         Object {
           "instance": null,
           "key": undefined,
