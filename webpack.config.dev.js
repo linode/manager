@@ -17,10 +17,15 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
+    chunkFilename: '[name].js',
     publicPath: '/static/',
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: ({ resource }) => /node_modules/.test(resource),
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -53,7 +58,6 @@ module.exports = {
             options: {
               includePaths: [
                 path.resolve(__dirname, './node_modules/bootstrap/scss/'),
-                path.resolve(__dirname, './node_modules/linode-components/scss/'),
               ],
             },
           },
@@ -64,9 +68,6 @@ module.exports = {
         use: ['babel-loader'],
         include: [
           path.join(__dirname, 'src'),
-          path.resolve(__dirname, './node_modules/linode-components'),
-          path.resolve(__dirname, './components'),
-          path.resolve(__dirname, './node_modules/linode-styleguide'),
         ],
       },
       {
@@ -77,9 +78,6 @@ module.exports = {
     ],
   },
   resolve: {
-    alias: {
-      react: path.join(__dirname, 'node_modules', 'react'),
-    },
     extensions: ['.js', '.jsx'],
   },
 };
