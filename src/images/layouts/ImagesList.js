@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import filter from 'lodash/filter';
+
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
 import Input from 'linode-components/dist/forms/Input';
 import List from 'linode-components/dist/lists/List';
@@ -17,12 +19,15 @@ import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 import TableCell from 'linode-components/dist/tables/cells/TableCell';
 
+
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
-import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import { ChainedDocumentTitle } from '~/components';
+import { PortalModal } from '~/components/modal';
 import CreateHelper from '~/components/CreateHelper';
 import { TimeCell } from '~/components/tables/cells';
+import { hideModal, deleteModalProps } from '~/utilities';
 
 import { AddImage, EditImage } from '../components';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
@@ -34,7 +39,12 @@ export class ImagesList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { filter: '' };
+    this.state = {
+      filter: '',
+      modal: null,
+    };
+
+    this.hideModal = hideModal.bind(this);
   }
 
   async componentDidMount() {
@@ -43,23 +53,77 @@ export class ImagesList extends Component {
     dispatch(setAnalytics(['images']));
   }
 
-  deleteImages = confirmThenDelete(
-    this.props.dispatch,
-    'Image',
-    api.images.delete,
-    OBJECT_TYPE).bind(this);
+  deleteImagesModal = (images) => {
+    const { dispatch } = this.props;
+    this.setState({
+      modal: deleteModalProps(
+        dispatch, images, api.images.delete, 'Image', OBJECT_TYPE,
+        this.hideModal),
+    });
+  };
+
+  addImageModal = () => {
+    this.setState({
+      modal: {
+        name: 'addImage',
+        title: AddImage.title,
+      },
+    });
+  };
+
+  editImageModal = (image) => {
+    this.setState({
+      modal: {
+        name: 'editImage',
+        image: image,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch, linodes } = this.props;
+    if (!this.state.modal) {
+      return null;
+    }
+    const { name, title, image } = this.state.modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'massDeleteImage') &&
+          <DeleteModalBody
+            {...this.state.modal}
+          />
+        }
+        {(name === 'addImage') &&
+          <AddImage
+            dispatch={dispatch}
+            linodes={linodes}
+            title={AddImage.title}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'editImage') &&
+          <EditImage
+            dispatch={dispatch}
+            image={image}
+            close={this.hideModal}
+          />
+        }
+      </PortalModal>
+    );
+  }
 
   renderImageActions = ({ column, record }) => {
-    const { dispatch } = this.props;
-
     const groups = [
       {
         elements: [{
           name: 'Edit', action: () =>
-            EditImage.trigger(dispatch, record),
+            this.editImageModal(record),
         }],
       },
-      { elements: [{ name: 'Delete', action: () => this.deleteImages(record) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteImagesModal([record]) }] },
     ];
 
     return (
@@ -89,7 +153,7 @@ export class ImagesList extends Component {
               dispatch={dispatch}
               massEditGroups={[{
                 elements: [
-                  { name: 'Delete', action: this.deleteImages },
+                  { name: 'Delete', action: this.deleteImagesModal },
                 ],
               }]}
               selectedMap={selectedMap}
@@ -142,18 +206,19 @@ export class ImagesList extends Component {
   }
 
   render() {
-    const { dispatch, images, linodes } = this.props;
+    const { images } = this.props;
     const privateImages = filter(images.images, i => !i.is_public);
 
     return (
       <div className="PrimaryPage container">
+        {this.renderModal()}
         <ChainedDocumentTitle title="Images" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Images</h1>
             <PrimaryButton
               className="float-sm-right"
-              onClick={() => AddImage.trigger(dispatch, linodes)}
+              onClick={() => this.addImageModal()}
             >
               Add an Image
             </PrimaryButton>
@@ -164,7 +229,7 @@ export class ImagesList extends Component {
             this.renderImages(privateImages) :
             <CreateHelper
               label="Images"
-              onClick={() => AddImage.trigger(dispatch, linodes)}
+              onClick={() => this.addImageModal()}
               linkText="Add an Image"
             />
           }

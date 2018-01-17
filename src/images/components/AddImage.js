@@ -7,7 +7,7 @@ import Select from 'linode-components/dist/forms/Select';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import api from '~/api';
 import { imagizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -85,7 +85,7 @@ export default class AddImage extends Component {
 
   onSubmit = () => {
     const { description, label, linode, disk } = this.state;
-    const { dispatch } = this.props;
+    const { dispatch, close } = this.props;
 
     const requests = [
       () => imagizeLinodeDisk(
@@ -93,7 +93,7 @@ export default class AddImage extends Component {
         disk.id || disk,
         { label, description },
       ),
-      hideModal,
+      close,
     ];
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
@@ -152,7 +152,7 @@ export default class AddImage extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { close } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
     const disks = allDisks[linode] || [];
     const isSimpleLinode = this.isSimpleLinode(disks);
@@ -160,7 +160,7 @@ export default class AddImage extends Component {
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => close()}
         buttonText="Create Image"
         analytics={{ title: AddImage.title }}
         errors={errors}
@@ -212,4 +212,5 @@ AddImage.propTypes = {
   title: PropTypes.string.isRequired,
   linode: PropTypes.object,
   disk: PropTypes.object,
+  close: PropTypes.func.isRequired,
 };
