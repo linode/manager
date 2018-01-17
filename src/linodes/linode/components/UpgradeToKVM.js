@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
 import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import { kvmifyLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -27,7 +27,7 @@ export default class UpgradeToKVM extends Component {
   }
 
   render() {
-    const { dispatch, linode, type } = this.props;
+    const { dispatch, linode, type, close } = this.props;
     const { errors } = this.state;
     const migrateEst = Math.round(type.disk / (4000 / 60) / 60);
 
@@ -35,9 +35,9 @@ export default class UpgradeToKVM extends Component {
       <ConfirmModalBody
         onSubmit={() => dispatch(dispatchOrStoreErrors.call(this, [
           () => kvmifyLinode(linode.id),
-          hideModal,
+          close,
         ]))}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={close}
         analytics={{ title: UpgradeToKVM.title }}
         errors={errors}
       >
@@ -63,4 +63,5 @@ UpgradeToKVM.propTypes = {
   type: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };
