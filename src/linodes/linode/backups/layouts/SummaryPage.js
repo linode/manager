@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import Form from 'linode-components/dist/forms/Form';
 import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 import FormSummary from 'linode-components/dist/forms/FormSummary';
@@ -9,6 +10,8 @@ import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 
 import TimeDisplay from '~/components/TimeDisplay';
+import { PortalModal } from '~/components/modal';
+import { hideModal } from '~/utilities';
 
 import { TakeSnapshot } from '../components';
 import { selectLinode } from '../../utilities';
@@ -21,7 +24,43 @@ export class SummaryPage extends Component {
     this.state = {
       errors: {},
       loading: false,
+      modal: null,
     };
+
+    this.hideModal = hideModal.bind(this);
+  }
+
+  takeSnapshotModal = (linode) => {
+    this.setState({
+      modal: {
+        title: TakeSnapshot.title,
+        name: 'takeSnapshot',
+        linode: linode,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch } = this.props;
+    const { modal } = this.state;
+    if (!modal) {
+      return null;
+    }
+    const { name, title, linode } = modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'takeSnapshot') &&
+          <TakeSnapshot
+            dispatch={dispatch}
+            linode={linode}
+            close={this.hideModal}
+          />
+        }
+      </PortalModal>
+    );
   }
 
   renderBlock = ({ title, backup }) => {
@@ -64,12 +103,12 @@ export class SummaryPage extends Component {
   }
 
   renderEmptySnapshot() {
-    const { dispatch, linode } = this.props;
+    const { linode } = this.props;
     const { loading, errors } = this.state;
 
     return (
       <Form
-        onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
+        onSubmit={() => this.takeSnapshotModal(linode)}
         className="Backup Backup-emptySnapshot col-sm-3"
         title="Take first snapshot"
       >
@@ -108,6 +147,7 @@ export class SummaryPage extends Component {
 
     return (
       <Card header={<CardHeader title="Restorable backups" />}>
+        {this.renderModal()}
         <p>
           Select a backup to see details and restore to a Linode.
         </p>
