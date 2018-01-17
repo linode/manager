@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Linode/manager",
   "devDependencies": {
+    "@types/jest": "^22.0.1",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.3.15",
     "babel-eslint": "^8.0.2",
@@ -72,6 +73,7 @@
     "xunit-file": "^0.0.9"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "bootstrap": "4.0.0-alpha.6",
     "chart.js": "^2.5.0",
     "d3": "^3.5.17",
@@ -111,6 +113,9 @@
     "coverageDirectory": "<rootDir>/coverage",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/testPolyfills.js"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
