@@ -5,7 +5,7 @@ import Input from 'linode-components/dist/forms/Input';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import api from '~/api';
 import { resizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -39,9 +39,9 @@ export default class EditDisk extends Component {
 
   onSubmit = () => {
     const { size, label } = this.state;
-    const { linode, disk, dispatch } = this.props;
+    const { linode, disk, dispatch, close } = this.props;
 
-    const requests = [hideModal];
+    const requests = [close];
     if (size !== disk.size) {
       requests.unshift(() => resizeLinodeDisk(linode.id, disk.id, parseInt(size)));
     }
@@ -54,13 +54,13 @@ export default class EditDisk extends Component {
   }
 
   render() {
-    const { disk, free, dispatch } = this.props;
+    const { disk, free, close } = this.props;
     const { label, size, errors } = this.state;
 
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={close}
         analytics={{ title: EditDisk.title }}
         errors={errors}
       >
@@ -104,4 +104,5 @@ EditDisk.propTypes = {
   free: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };
