@@ -18,7 +18,7 @@ describe.skip('domains/components/AddSlave', () => {
 
   const dispatch = sandbox.stub();
 
-  it('submits form and redirects to domain', async () => {
+  it.skip('submits form and redirects to domain', async () => {
     AddSlave.trigger(dispatch);
 
     const wrapper = shallow(dispatch.firstCall.args[0].body);

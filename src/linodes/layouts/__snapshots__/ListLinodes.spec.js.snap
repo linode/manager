@@ -9956,7 +9956,7 @@ ShallowWrapper {
                       Object {
                         "elements": Array [
                           Object {
-                            "action": [Function],
+                            "action": undefined,
                             "name": "Delete",
                           },
                         ],
@@ -20110,7 +20110,7 @@ ShallowWrapper {
                       Object {
                         "elements": Array [
                           Object {
-                            "action": [Function],
+                            "action": undefined,
                             "name": "Delete",
                           },
                         ],
@@ -30127,7 +30127,7 @@ ShallowWrapper {
                         Object {
                           "elements": Array [
                             Object {
-                              "action": [Function],
+                              "action": undefined,
                               "name": "Delete",
                             },
                           ],
@@ -40142,7 +40142,7 @@ ShallowWrapper {
                           Object {
                             "elements": Array [
                               Object {
-                                "action": [Function],
+                                "action": undefined,
                                 "name": "Delete",
                               },
                             ],
@@ -45128,7 +45128,7 @@ ShallowWrapper {
                           Object {
                             "elements": Array [
                               Object {
-                                "action": [Function],
+                                "action": undefined,
                                 "name": "Delete",
                               },
                             ],
@@ -50097,7 +50097,7 @@ ShallowWrapper {
                         Object {
                           "elements": Array [
                             Object {
-                              "action": [Function],
+                              "action": undefined,
                               "name": "Delete",
                             },
                           ],
@@ -70268,7 +70268,7 @@ ShallowWrapper {
                         Object {
                           "elements": Array [
                             Object {
-                              "action": [Function],
+                              "action": undefined,
                               "name": "Delete",
                             },
                           ],
@@ -80422,7 +80422,7 @@ ShallowWrapper {
                         Object {
                           "elements": Array [
                             Object {
-                              "action": [Function],
+                              "action": undefined,
                               "name": "Delete",
                             },
                           ],
@@ -90439,7 +90439,7 @@ ShallowWrapper {
                           Object {
                             "elements": Array [
                               Object {
-                                "action": [Function],
+                                "action": undefined,
                                 "name": "Delete",
                               },
                             ],
@@ -100454,7 +100454,7 @@ ShallowWrapper {
                             Object {
                               "elements": Array [
                                 Object {
-                                  "action": [Function],
+                                  "action": undefined,
                                   "name": "Delete",
                                 },
                               ],
@@ -105440,7 +105440,7 @@ ShallowWrapper {
                             Object {
                               "elements": Array [
                                 Object {
-                                  "action": [Function],
+                                  "action": undefined,
                                   "name": "Delete",
                                 },
                               ],
@@ -110409,7 +110409,7 @@ ShallowWrapper {
                           Object {
                             "elements": Array [
                               Object {
-                                "action": [Function],
+                                "action": undefined,
                                 "name": "Delete",
                               },
                             ],
