@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import { PrimaryButton } from 'linode-components';
+import { DeleteModalBody } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
 import { Dropdown } from 'linode-components';
 import { Input } from 'linode-components';
@@ -15,7 +16,8 @@ import { CheckboxCell, LabelCell, TableCell } from 'linode-components';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
-import { confirmThenDelete } from '~/utilities';
+import { PortalModal } from '~/components/modal';
+import { hideModal, deleteModalProps } from '~/utilities';
 
 import AddDisk from './AddDisk';
 import EditDisk from './EditDisk';
@@ -28,14 +30,13 @@ export default class Disks extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { filter: '' };
-  }
+    this.state = {
+      filter: '',
+      modal: null,
+    };
 
-  deleteDisks = confirmThenDelete(
-    this.props.dispatch,
-    'disk',
-    (id) => api.linodes.disks.delete(this.props.linode.id, id),
-    Disks.OBJECT_TYPE).bind(this)
+    this.hideModal = hideModal.bind(this);
+  }
 
   freeSpace() {
     const { linode, type } = this.props;
@@ -49,20 +50,115 @@ export default class Disks extends Component {
     return ['offline', 'provisioning'].indexOf(this.props.linode.status) !== -1;
   }
 
-  renderDiskActions = ({ column, record }) => {
+  deleteDisksModal = (disks) => {
     const { dispatch, linode } = this.props;
+    const del = (id) => api.linodes.disks.delete(linode.id, id);
+    this.setState({
+      modal: {
+        ...deleteModalProps(
+          dispatch, disks, del,
+          'Disk', Disks.OBJECT_TYPE, this.hideModal),
+        name: 'massDeleteDisk',
+      },
+    });
+  };
+
+  addImageModal = (linode, disk) => {
+    this.setState({
+      modal: {
+        name: 'addImage',
+        title: AddImage.title,
+        linode,
+        disk,
+      },
+    });
+  }
+
+  addDiskModal = (linode, images, free) => {
+    this.setState({
+      modal: {
+        name: 'addDisk',
+        title: AddDisk.title,
+        linode,
+        images,
+        free,
+      },
+    });
+  }
+
+  editDiskModal = (linode, disk, free) => {
+    this.setState({
+      modal: {
+        name: 'editDisk',
+        title: EditDisk.title,
+        linode,
+        disk,
+        free,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch } = this.props;
+    if (!this.state.modal) {
+      return null;
+    }
+    const { name, title, free, linode, disk, images } = this.state.modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'addDisk') &&
+          <AddDisk
+            dispatch={dispatch}
+            images={images}
+            linode={linode}
+            free={free}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'editDisk') &&
+          <EditDisk
+            dispatch={dispatch}
+            free={free}
+            linode={linode}
+            disk={disk}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'addImage') &&
+          <AddImage
+            dispatch={dispatch}
+            linode={linode}
+            disk={disk}
+            title={AddImage.title}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'massDeleteDisk') &&
+          <DeleteModalBody
+            {...this.state.modal}
+          />
+        }
+      </PortalModal>
+    );
+  }
+
+  renderDiskActions = ({ column, record }) => {
+    const { linode } = this.props;
     const free = this.freeSpace();
 
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
-        EditDisk.trigger(dispatch, linode, record, free) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteDisks(record) }] },
+        this.editDiskModal(linode, record, free) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteDisksModal([record]) }] },
     ];
 
     if (record.filesystem !== 'swap') {
       groups.splice(1, 0, { elements: [{
         name: 'Create an Image',
-        action: () => AddImage.trigger(dispatch, undefined, linode, record),
+        action: () => this.addImageModal(linode, record),
       }] });
     }
 
@@ -104,7 +200,7 @@ export default class Disks extends Component {
       <PrimaryButton
         className="float-right"
         buttonClass="btn-default"
-        onClick={() => AddDisk.trigger(dispatch, linode, images, free)}
+        onClick={() => this.addDiskModal(linode, images, free)}
         disabled={free === 0}
       >
         Add a Disk
@@ -115,6 +211,7 @@ export default class Disks extends Component {
 
     return (
       <Card header={header}>
+        {this.renderModal()}
         <List>
           <ListHeader className="Menu">
             <div className="Menu-item">
@@ -122,7 +219,7 @@ export default class Disks extends Component {
                 data={sorted}
                 dispatch={dispatch}
                 massEditGroups={[{ elements: [
-                  { name: 'Delete', action: this.deleteDisks },
+                  { name: 'Delete', action: this.deleteDisksModal },
                 ] }]}
                 selectedMap={selectedMap}
                 objectType={Disks.OBJECT_TYPE}

@@ -5,7 +5,7 @@ import { Input, ModalFormGroup, PasswordInput, Select } from 'linode-components'
 import { onChange } from 'linode-components';
 import { FormModalBody } from 'linode-components';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
@@ -41,7 +41,7 @@ export default class AddDisk extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode } = this.props;
+    const { dispatch, linode, close } = this.props;
     const { label, size, image, password, filesystem } = this.state;
     const data = {
       label,
@@ -53,12 +53,12 @@ export default class AddDisk extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.linodes.disks.post(data, linode.id),
-      hideModal,
+      close,
     ]));
   }
 
   render() {
-    const { dispatch, free, images } = this.props;
+    const { free, images, close } = this.props;
     const { label, size, image, filesystem, password, errors } = this.state;
 
     let minimumStorageSize = 8;
@@ -76,7 +76,7 @@ export default class AddDisk extends Component {
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={close}
         buttonText="Add Disk"
         buttonDisabledText="Adding Disk"
         analytics={{ title: AddDisk.title, action: 'add' }}
@@ -150,4 +150,5 @@ AddDisk.propTypes = {
   linode: PropTypes.object.isRequired,
   free: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };

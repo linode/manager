@@ -97,18 +97,20 @@ export default class AddImage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
-  disksByType = disks => {
+  disksByType = (disks, disk) => {
     const rawDisks = disks.filter(disk => disk.filesystem === 'raw');
     const swapDisks = disks.filter(disk => disk.filesystem === 'swap');
     const regularDisks = disks.filter(disk => ['ext3', 'ext4'].indexOf(disk.filesystem) > -1);
     const initDisks = disks.filter(disk => disk.filesystem === 'ext2');
-    const diskOptions = [...regularDisks, ...initDisks];
+    let diskOptions = [...regularDisks, ...initDisks];
+    // This is for the "create image from disk" entrypoint
+    diskOptions = (!disks.length && disk) ? [disk] : diskOptions;
     return {
-      rawDisks: rawDisks,
-      swapDisks: swapDisks,
-      regularDisks: regularDisks,
-      initDisks: initDisks,
-      diskOptions: diskOptions,
+      rawDisks,
+      swapDisks,
+      regularDisks,
+      initDisks,
+      diskOptions,
     };
   }
 
@@ -122,8 +124,8 @@ export default class AddImage extends Component {
   }
 
   renderDiskOptions = (disks, disk) => {
-    const { rawDisks, swapDisks, diskOptions } = this.disksByType(disks);
-    const diskField = diskOptions.length ?
+    const { rawDisks, swapDisks, diskOptions } = this.disksByType(disks, disk);
+    const diskField = (diskOptions.length) ?
       /* UX request:
         If a Linode is not a "Simple Linode" but it only has one option,
         still show the select field!
