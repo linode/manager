@@ -128,6 +128,7 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
+        null,
         <header
           className="main-header main-header--border"
         >
@@ -311,6 +312,7 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
+      null,
       Object {
         "instance": null,
         "key": undefined,
@@ -877,6 +879,7 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
+          null,
           <header
             className="main-header main-header--border"
           >
@@ -1060,6 +1063,7 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
+        null,
         Object {
           "instance": null,
           "key": undefined,
