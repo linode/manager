@@ -10,7 +10,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export const BackupPage = (props) => {
-  const { dispatch, linode, backup } = props;
+  const { dispatch, linodes, linode, backup } = props;
   return (
     <div>
       <section>
@@ -20,7 +20,7 @@ export const BackupPage = (props) => {
         linode={linode}
         backup={backup}
         dispatch={dispatch}
-        linodes={this.props.linodes}
+        linodes={linodes}
       />
     </div>
   );
