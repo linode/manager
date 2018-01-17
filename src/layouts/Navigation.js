@@ -9,13 +9,14 @@ import Session from '~/components/session';
 import { isPathOneOf } from '~/utilities';
 
 const Navigation = ({ location: { pathname } }) => {
-  const highlight = isPathOneOf(['/stackscripts', '/volumes', '/images'], pathname);
+  const highlight = isPathOneOf(['/stackscripts', '/images'], pathname);
 
   const links = [
     { linkClass: 'MainHeader-link', to: '/linodes', label: 'Linodes', highlight, key: 0 },
-    { linkClass: 'MainHeader-link', to: '/nodebalancers', label: 'NodeBalancers', key: 1 },
-    { linkClass: 'MainHeader-link', to: '/domains', label: 'Domains', key: 2 },
-    { linkClass: 'MainHeader-link', to: '/support', label: 'Support', key: 3 },
+    { linkClass: 'MainHeader-link', to: '/volumes', label: 'Volumes', key: 1 },
+    { linkClass: 'MainHeader-link', to: '/nodebalancers', label: 'NodeBalancers', key: 2 },
+    { linkClass: 'MainHeader-link', to: '/domains', label: 'Domains', key: 3 },
+    { linkClass: 'MainHeader-link', to: '/support', label: 'Support', key: 4 },
   ];
 
   return (
