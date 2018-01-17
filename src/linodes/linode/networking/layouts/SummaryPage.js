@@ -4,45 +4,38 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import ListBody from 'linode-components/dist/lists/bodies/ListBody';
 import ListGroup from 'linode-components/dist/lists/bodies/ListGroup';
 import Dropdown from 'linode-components/dist/dropdowns/Dropdown';
 import List from 'linode-components/dist/lists/List';
-import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 import Table from 'linode-components/dist/tables/Table';
 import TableCell from 'linode-components/dist//tables/cells/TableCell';
 import LabelCell from 'linode-components/dist//tables/cells/LabelCell';
 
-import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { addIP, deleteIP, setRDNS } from '~/api/ad-hoc/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { PortalModal } from '~/components/modal';
+import { hideModal } from '~/utilities';
 
 import { MoreInfo, EditRDNS, AddIP } from '../components';
 import { selectLinode } from '../../utilities';
 
 
 export class SummaryPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { modal: null };
+
+    this.hideModal = hideModal.bind(this);
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
-
-  deleteIP = (ip) => {
-    const { dispatch } = this.props;
-
-    return dispatch(showModal('Delete IP Address', (
-      <DeleteModalBody
-        onSubmit={async () => {
-          dispatch(deleteIP(ip));
-          dispatch(hideModal());
-        }}
-        items={[ip.address]}
-        typeOfItem="IPs"
-        onCancel={() => dispatch(hideModal())}
-      />
-    )));
-  };
 
   resetRDNS = (ip, linodeId) => {
     const { dispatch } = this.props;
@@ -52,10 +45,102 @@ export class SummaryPage extends Component {
     ], [], ip.address));
   }
 
+  addIpModal = (linode) => {
+    this.setState({
+      modal: {
+        title: AddIP.title,
+        name: 'addIp',
+        linode: linode,
+      },
+    });
+  }
+
+  deleteIpModal = (ip) => {
+    this.setState({
+      modal: {
+        title: AddIP.title,
+        name: 'deleteIp',
+        ip: ip,
+      },
+    });
+  }
+
+  moreInfoModal = (ip) => {
+    this.setState({
+      modal: {
+        title: MoreInfo.title,
+        name: 'moreInfo',
+        ip: ip,
+      },
+    });
+  }
+
+  editRDNSModal = (ip, linodeId) => {
+    this.setState({
+      modal: {
+        title: EditRDNS.title,
+        name: 'editRDNS',
+        ip: ip,
+        linodeId: linodeId,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch } = this.props;
+    const { modal } = this.state;
+    if (!modal) {
+      return null;
+    }
+    const { name, title, linode, ip, linodeId } = modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'addIp') &&
+          <AddIP
+            dispatch={dispatch}
+            linode={linode}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'moreInfo') &&
+          <FormModalBody
+            onSubmit={this.hideModal}
+            noCancel
+            buttonText="Done"
+            buttonDisableText="Done"
+            analytics={{ title: MoreInfo.title, action: 'info' }}
+          >
+            <MoreInfo dispatch={dispatch} ip={ip} />
+          </FormModalBody>
+        }
+        {(name === 'editRDNS') &&
+          <EditRDNS
+            ip={ip}
+            linodeId={linodeId}
+            dispatch={dispatch}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'deleteIp') &&
+          <DeleteModalBody
+            onSubmit={async () => {
+              dispatch(deleteIP(ip));
+              dispatch(hideModal());
+            }}
+            items={[ip.address]}
+            typeOfItem="IPs"
+            onCancel={this.hideModal}
+          />
+        }
+      </PortalModal>
+    );
+  }
+
   renderAddButton() {
     const { dispatch, linode } = this.props;
-
-    const addIPModal = () => AddIP.trigger(dispatch, linode);
 
     const privateIPv4s = Object.values(linode._ips).filter(
       ip => ip.version === 'ipv4' && ip.type === 'private');
@@ -64,7 +149,7 @@ export class SummaryPage extends Component {
         <PrimaryButton
           className="float-sm-right"
           buttonClass="btn-default"
-          onClick={addIPModal}
+          onClick={() => this.addIpModal(linode)}
         >
           Add an IP Address
         </PrimaryButton>
@@ -76,7 +161,7 @@ export class SummaryPage extends Component {
         className="float-sm-right"
         buttonClass="btn-default"
         onClick={() => dispatch(addIP(linode.id, 'private'))}
-        options={[{ name: 'Add a Public IP Address', action: addIPModal }]}
+        options={[{ name: 'Add a Public IP Address', action: () => this.addIpModal(linode) }]}
       >
         Enable Private IPv4
       </PrimaryButton>
@@ -84,15 +169,15 @@ export class SummaryPage extends Component {
   }
 
   renderIPNav = ({ column, record }) => {
-    const { dispatch, linode } = this.props;
+    const { linode } = this.props;
 
     if (record.type.toLowerCase() === 'link-local') {
       return <TableCell column={column} record={record} />;
     }
 
     const groups = [
-      { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      { elements: [{ name: 'Delete', action: () => this.deleteIP(record) }] },
+      { elements: [{ name: 'More Info', action: () => this.moreInfoModal(record) }] },
+      { elements: [{ name: 'Delete', action: () => this.deleteIpModal(record) }] },
     ];
 
     const numPublicIPv4 = Object.values(linode._ips).filter(
@@ -107,7 +192,7 @@ export class SummaryPage extends Component {
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
       groups.splice(1, 0, {
         elements: [
-          { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record, linode.id) },
+          { name: 'Edit RDNS', action: () => this.editRDNSModal(record, linode.id) },
         ],
       });
 
@@ -191,6 +276,7 @@ export class SummaryPage extends Component {
       <div>
         <header className="NavigationHeader clearfix">
           {/* TODO: Add rdnslookup when API supports it */}
+          {this.renderModal()}
           {this.renderAddButton()}
         </header>
         <List>
