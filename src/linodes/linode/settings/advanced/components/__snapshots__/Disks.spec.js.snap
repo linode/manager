@@ -341,570 +341,9 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "function",
     "props": Object {
-      "children": <List
-        className=""
-      >
-        <ListHeader
-          className="Menu"
-        >
-          <div
-            className="Menu-item"
-          >
-            <MassEditControl
-              data={
-                Array [
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "ext4",
-                    "id": 12345,
-                    "label": "Arch Linux 2015.08 Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "swap",
-                    "id": 12346,
-                    "label": "Swap Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                ]
-              }
-              dispatch={[Function]}
-              massEditGroups={
-                Array [
-                  Object {
-                    "elements": Array [
-                      Object {
-                        "action": [Function],
-                        "name": "Delete",
-                      },
-                    ],
-                  },
-                ]
-              }
-              objectType="linode-disks"
-              selectedKey="id"
-              selectedMap={Object {}}
-              toggleSelected={[Function]}
-            />
-          </div>
-          <div
-            className="Menu-item"
-          >
-            <Input
-              className=""
-              onChange={[Function]}
-              placeholder="Filter..."
-              value=""
-            />
-          </div>
-        </ListHeader>
-        <ListBody>
-          <Table
-            className="Table--secondary"
-            columns={
-              Array [
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "CheckboxColumn",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "dataKey": "label",
-                  "label": "Label",
-                  "titleKey": "label",
-                  "tooltipEnabled": true,
-                },
-                Object {
-                  "dataKey": "size",
-                  "formatFn": [Function],
-                  "label": "Size",
-                },
-                Object {
-                  "cellComponent": [Function],
-                },
-              ]
-            }
-            data={
-              Array [
-                Object {
-                  "created": "2016-08-09T19:47:11",
-                  "filesystem": "ext4",
-                  "id": 12345,
-                  "label": "Arch Linux 2015.08 Disk",
-                  "size": 6144,
-                  "updated": "2016-08-09T19:47:11",
-                },
-                Object {
-                  "created": "2016-08-09T19:47:11",
-                  "filesystem": "swap",
-                  "id": 12346,
-                  "label": "Swap Disk",
-                  "size": 6144,
-                  "updated": "2016-08-09T19:47:11",
-                },
-              ]
-            }
-            disableHeader={false}
-            noDataMessage="You have no disks."
-            onToggleSelect={[Function]}
-            selectedMap={Object {}}
-          />
-        </ListBody>
-      </List>,
-      "className": "",
-      "header": <CardHeader
-        nav={
-          <PrimaryButton
-            buttonClass="btn-default"
-            className="float-right"
-            disabled={false}
-            onClick={[Function]}
-            options={Array []}
-          >
-            Add a Disk
-          </PrimaryButton>
-        }
-        title="Disks"
-      />,
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "children": Array [
-          <ListHeader
-            className="Menu"
-          >
-            <div
-              className="Menu-item"
-            >
-              <MassEditControl
-                data={
-                  Array [
-                    Object {
-                      "created": "2016-08-09T19:47:11",
-                      "filesystem": "ext4",
-                      "id": 12345,
-                      "label": "Arch Linux 2015.08 Disk",
-                      "size": 6144,
-                      "updated": "2016-08-09T19:47:11",
-                    },
-                    Object {
-                      "created": "2016-08-09T19:47:11",
-                      "filesystem": "swap",
-                      "id": 12346,
-                      "label": "Swap Disk",
-                      "size": 6144,
-                      "updated": "2016-08-09T19:47:11",
-                    },
-                  ]
-                }
-                dispatch={[Function]}
-                massEditGroups={
-                  Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ]
-                }
-                objectType="linode-disks"
-                selectedKey="id"
-                selectedMap={Object {}}
-                toggleSelected={[Function]}
-              />
-            </div>
-            <div
-              className="Menu-item"
-            >
-              <Input
-                className=""
-                onChange={[Function]}
-                placeholder="Filter..."
-                value=""
-              />
-            </div>
-          </ListHeader>,
-          <ListBody>
-            <Table
-              className="Table--secondary"
-              columns={
-                Array [
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "CheckboxColumn",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "dataKey": "label",
-                    "label": "Label",
-                    "titleKey": "label",
-                    "tooltipEnabled": true,
-                  },
-                  Object {
-                    "dataKey": "size",
-                    "formatFn": [Function],
-                    "label": "Size",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "ext4",
-                    "id": 12345,
-                    "label": "Arch Linux 2015.08 Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "swap",
-                    "id": 12346,
-                    "label": "Swap Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                ]
-              }
-              disableHeader={false}
-              noDataMessage="You have no disks."
-              onToggleSelect={[Function]}
-              selectedMap={Object {}}
-            />
-          </ListBody>,
-        ],
-        "className": "",
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "children": Array [
-              <div
-                className="Menu-item"
-              >
-                <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "created": "2016-08-09T19:47:11",
-                        "filesystem": "ext4",
-                        "id": 12345,
-                        "label": "Arch Linux 2015.08 Disk",
-                        "size": 6144,
-                        "updated": "2016-08-09T19:47:11",
-                      },
-                      Object {
-                        "created": "2016-08-09T19:47:11",
-                        "filesystem": "swap",
-                        "id": 12346,
-                        "label": "Swap Disk",
-                        "size": 6144,
-                        "updated": "2016-08-09T19:47:11",
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="linode-disks"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />
-              </div>,
-              <div
-                className="Menu-item"
-              >
-                <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />
-              </div>,
-            ],
-            "className": "Menu",
-          },
-          "ref": null,
-          "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": <MassEditControl
-                  data={
-                    Array [
-                      Object {
-                        "created": "2016-08-09T19:47:11",
-                        "filesystem": "ext4",
-                        "id": 12345,
-                        "label": "Arch Linux 2015.08 Disk",
-                        "size": 6144,
-                        "updated": "2016-08-09T19:47:11",
-                      },
-                      Object {
-                        "created": "2016-08-09T19:47:11",
-                        "filesystem": "swap",
-                        "id": 12346,
-                        "label": "Swap Disk",
-                        "size": 6144,
-                        "updated": "2016-08-09T19:47:11",
-                      },
-                    ]
-                  }
-                  dispatch={[Function]}
-                  massEditGroups={
-                    Array [
-                      Object {
-                        "elements": Array [
-                          Object {
-                            "action": [Function],
-                            "name": "Delete",
-                          },
-                        ],
-                      },
-                    ]
-                  }
-                  objectType="linode-disks"
-                  selectedKey="id"
-                  selectedMap={Object {}}
-                  toggleSelected={[Function]}
-                />,
-                "className": "Menu-item",
-              },
-              "ref": null,
-              "rendered": Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "class",
-                "props": Object {
-                  "data": Array [
-                    Object {
-                      "created": "2016-08-09T19:47:11",
-                      "filesystem": "ext4",
-                      "id": 12345,
-                      "label": "Arch Linux 2015.08 Disk",
-                      "size": 6144,
-                      "updated": "2016-08-09T19:47:11",
-                    },
-                    Object {
-                      "created": "2016-08-09T19:47:11",
-                      "filesystem": "swap",
-                      "id": 12346,
-                      "label": "Swap Disk",
-                      "size": 6144,
-                      "updated": "2016-08-09T19:47:11",
-                    },
-                  ],
-                  "dispatch": [Function],
-                  "massEditGroups": Array [
-                    Object {
-                      "elements": Array [
-                        Object {
-                          "action": [Function],
-                          "name": "Delete",
-                        },
-                      ],
-                    },
-                  ],
-                  "objectType": "linode-disks",
-                  "selectedKey": "id",
-                  "selectedMap": Object {},
-                  "toggleSelected": [Function],
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              "type": "div",
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": <Input
-                  className=""
-                  onChange={[Function]}
-                  placeholder="Filter..."
-                  value=""
-                />,
-                "className": "Menu-item",
-              },
-              "ref": null,
-              "rendered": Object {
-                "instance": null,
-                "key": undefined,
-                "nodeType": "function",
-                "props": Object {
-                  "className": "",
-                  "onChange": [Function],
-                  "placeholder": "Filter...",
-                  "value": "",
-                },
-                "ref": null,
-                "rendered": null,
-                "type": [Function],
-              },
-              "type": "div",
-            },
-          ],
-          "type": [Function],
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "children": <Table
-              className="Table--secondary"
-              columns={
-                Array [
-                  Object {
-                    "cellComponent": [Function],
-                    "headerClassName": "CheckboxColumn",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                    "dataKey": "label",
-                    "label": "Label",
-                    "titleKey": "label",
-                    "tooltipEnabled": true,
-                  },
-                  Object {
-                    "dataKey": "size",
-                    "formatFn": [Function],
-                    "label": "Size",
-                  },
-                  Object {
-                    "cellComponent": [Function],
-                  },
-                ]
-              }
-              data={
-                Array [
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "ext4",
-                    "id": 12345,
-                    "label": "Arch Linux 2015.08 Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                  Object {
-                    "created": "2016-08-09T19:47:11",
-                    "filesystem": "swap",
-                    "id": 12346,
-                    "label": "Swap Disk",
-                    "size": 6144,
-                    "updated": "2016-08-09T19:47:11",
-                  },
-                ]
-              }
-              disableHeader={false}
-              noDataMessage="You have no disks."
-              onToggleSelect={[Function]}
-              selectedMap={Object {}}
-            />,
-          },
-          "ref": null,
-          "rendered": Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "className": "Table--secondary",
-              "columns": Array [
-                Object {
-                  "cellComponent": [Function],
-                  "headerClassName": "CheckboxColumn",
-                },
-                Object {
-                  "cellComponent": [Function],
-                  "dataKey": "label",
-                  "label": "Label",
-                  "titleKey": "label",
-                  "tooltipEnabled": true,
-                },
-                Object {
-                  "dataKey": "size",
-                  "formatFn": [Function],
-                  "label": "Size",
-                },
-                Object {
-                  "cellComponent": [Function],
-                },
-              ],
-              "data": Array [
-                Object {
-                  "created": "2016-08-09T19:47:11",
-                  "filesystem": "ext4",
-                  "id": 12345,
-                  "label": "Arch Linux 2015.08 Disk",
-                  "size": 6144,
-                  "updated": "2016-08-09T19:47:11",
-                },
-                Object {
-                  "created": "2016-08-09T19:47:11",
-                  "filesystem": "swap",
-                  "id": 12346,
-                  "label": "Swap Disk",
-                  "size": 6144,
-                  "updated": "2016-08-09T19:47:11",
-                },
-              ],
-              "disableHeader": false,
-              "noDataMessage": "You have no disks.",
-              "onToggleSelect": [Function],
-              "selectedMap": Object {},
-            },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
-          },
-          "type": [Function],
-        },
-      ],
-      "type": [Function],
-    },
-    "type": [Function],
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "children": <List
+      "children": Array [
+        null,
+        <List
           className=""
         >
           <ListHeader
@@ -1017,24 +456,27 @@ ShallowWrapper {
             />
           </ListBody>
         </List>,
-        "className": "",
-        "header": <CardHeader
-          nav={
-            <PrimaryButton
-              buttonClass="btn-default"
-              className="float-right"
-              disabled={false}
-              onClick={[Function]}
-              options={Array []}
-            >
-              Add a Disk
-            </PrimaryButton>
-          }
-          title="Disks"
-        />,
-      },
-      "ref": null,
-      "rendered": Object {
+      ],
+      "className": "",
+      "header": <CardHeader
+        nav={
+          <PrimaryButton
+            buttonClass="btn-default"
+            className="float-right"
+            disabled={false}
+            onClick={[Function]}
+            options={Array []}
+          >
+            Add a Disk
+          </PrimaryButton>
+        }
+        title="Disks"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      null,
+      Object {
         "instance": null,
         "key": undefined,
         "nodeType": "function",
@@ -1459,6 +901,576 @@ ShallowWrapper {
         ],
         "type": [Function],
       },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          null,
+          <List
+            className=""
+          >
+            <ListHeader
+              className="Menu"
+            >
+              <div
+                className="Menu-item"
+              >
+                <MassEditControl
+                  data={
+                    Array [
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "ext4",
+                        "id": 12345,
+                        "label": "Arch Linux 2015.08 Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "swap",
+                        "id": 12346,
+                        "label": "Swap Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                    ]
+                  }
+                  dispatch={[Function]}
+                  massEditGroups={
+                    Array [
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "action": [Function],
+                            "name": "Delete",
+                          },
+                        ],
+                      },
+                    ]
+                  }
+                  objectType="linode-disks"
+                  selectedKey="id"
+                  selectedMap={Object {}}
+                  toggleSelected={[Function]}
+                />
+              </div>
+              <div
+                className="Menu-item"
+              >
+                <Input
+                  className=""
+                  onChange={[Function]}
+                  placeholder="Filter..."
+                  value=""
+                />
+              </div>
+            </ListHeader>
+            <ListBody>
+              <Table
+                className="Table--secondary"
+                columns={
+                  Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "dataKey": "label",
+                      "label": "Label",
+                      "titleKey": "label",
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "dataKey": "size",
+                      "formatFn": [Function],
+                      "label": "Size",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                    },
+                  ]
+                }
+                data={
+                  Array [
+                    Object {
+                      "created": "2016-08-09T19:47:11",
+                      "filesystem": "ext4",
+                      "id": 12345,
+                      "label": "Arch Linux 2015.08 Disk",
+                      "size": 6144,
+                      "updated": "2016-08-09T19:47:11",
+                    },
+                    Object {
+                      "created": "2016-08-09T19:47:11",
+                      "filesystem": "swap",
+                      "id": 12346,
+                      "label": "Swap Disk",
+                      "size": 6144,
+                      "updated": "2016-08-09T19:47:11",
+                    },
+                  ]
+                }
+                disableHeader={false}
+                noDataMessage="You have no disks."
+                onToggleSelect={[Function]}
+                selectedMap={Object {}}
+              />
+            </ListBody>
+          </List>,
+        ],
+        "className": "",
+        "header": <CardHeader
+          nav={
+            <PrimaryButton
+              buttonClass="btn-default"
+              className="float-right"
+              disabled={false}
+              onClick={[Function]}
+              options={Array []}
+            >
+              Add a Disk
+            </PrimaryButton>
+          }
+          title="Disks"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "children": Array [
+              <ListHeader
+                className="Menu"
+              >
+                <div
+                  className="Menu-item"
+                >
+                  <MassEditControl
+                    data={
+                      Array [
+                        Object {
+                          "created": "2016-08-09T19:47:11",
+                          "filesystem": "ext4",
+                          "id": 12345,
+                          "label": "Arch Linux 2015.08 Disk",
+                          "size": 6144,
+                          "updated": "2016-08-09T19:47:11",
+                        },
+                        Object {
+                          "created": "2016-08-09T19:47:11",
+                          "filesystem": "swap",
+                          "id": 12346,
+                          "label": "Swap Disk",
+                          "size": 6144,
+                          "updated": "2016-08-09T19:47:11",
+                        },
+                      ]
+                    }
+                    dispatch={[Function]}
+                    massEditGroups={
+                      Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ]
+                    }
+                    objectType="linode-disks"
+                    selectedKey="id"
+                    selectedMap={Object {}}
+                    toggleSelected={[Function]}
+                  />
+                </div>
+                <div
+                  className="Menu-item"
+                >
+                  <Input
+                    className=""
+                    onChange={[Function]}
+                    placeholder="Filter..."
+                    value=""
+                  />
+                </div>
+              </ListHeader>,
+              <ListBody>
+                <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "label",
+                        "label": "Label",
+                        "titleKey": "label",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "size",
+                        "formatFn": [Function],
+                        "label": "Size",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "ext4",
+                        "id": 12345,
+                        "label": "Arch Linux 2015.08 Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "swap",
+                        "id": 12346,
+                        "label": "Swap Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no disks."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />
+              </ListBody>,
+            ],
+            "className": "",
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": Array [
+                  <div
+                    className="Menu-item"
+                  >
+                    <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "created": "2016-08-09T19:47:11",
+                            "filesystem": "ext4",
+                            "id": 12345,
+                            "label": "Arch Linux 2015.08 Disk",
+                            "size": 6144,
+                            "updated": "2016-08-09T19:47:11",
+                          },
+                          Object {
+                            "created": "2016-08-09T19:47:11",
+                            "filesystem": "swap",
+                            "id": 12346,
+                            "label": "Swap Disk",
+                            "size": 6144,
+                            "updated": "2016-08-09T19:47:11",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="linode-disks"
+                      selectedKey="id"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />
+                  </div>,
+                  <div
+                    className="Menu-item"
+                  >
+                    <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />
+                  </div>,
+                ],
+                "className": "Menu",
+              },
+              "ref": null,
+              "rendered": Array [
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <MassEditControl
+                      data={
+                        Array [
+                          Object {
+                            "created": "2016-08-09T19:47:11",
+                            "filesystem": "ext4",
+                            "id": 12345,
+                            "label": "Arch Linux 2015.08 Disk",
+                            "size": 6144,
+                            "updated": "2016-08-09T19:47:11",
+                          },
+                          Object {
+                            "created": "2016-08-09T19:47:11",
+                            "filesystem": "swap",
+                            "id": 12346,
+                            "label": "Swap Disk",
+                            "size": 6144,
+                            "updated": "2016-08-09T19:47:11",
+                          },
+                        ]
+                      }
+                      dispatch={[Function]}
+                      massEditGroups={
+                        Array [
+                          Object {
+                            "elements": Array [
+                              Object {
+                                "action": [Function],
+                                "name": "Delete",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                      objectType="linode-disks"
+                      selectedKey="id"
+                      selectedMap={Object {}}
+                      toggleSelected={[Function]}
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "class",
+                    "props": Object {
+                      "data": Array [
+                        Object {
+                          "created": "2016-08-09T19:47:11",
+                          "filesystem": "ext4",
+                          "id": 12345,
+                          "label": "Arch Linux 2015.08 Disk",
+                          "size": 6144,
+                          "updated": "2016-08-09T19:47:11",
+                        },
+                        Object {
+                          "created": "2016-08-09T19:47:11",
+                          "filesystem": "swap",
+                          "id": 12346,
+                          "label": "Swap Disk",
+                          "size": 6144,
+                          "updated": "2016-08-09T19:47:11",
+                        },
+                      ],
+                      "dispatch": [Function],
+                      "massEditGroups": Array [
+                        Object {
+                          "elements": Array [
+                            Object {
+                              "action": [Function],
+                              "name": "Delete",
+                            },
+                          ],
+                        },
+                      ],
+                      "objectType": "linode-disks",
+                      "selectedKey": "id",
+                      "selectedMap": Object {},
+                      "toggleSelected": [Function],
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": <Input
+                      className=""
+                      onChange={[Function]}
+                      placeholder="Filter..."
+                      value=""
+                    />,
+                    "className": "Menu-item",
+                  },
+                  "ref": null,
+                  "rendered": Object {
+                    "instance": null,
+                    "key": undefined,
+                    "nodeType": "function",
+                    "props": Object {
+                      "className": "",
+                      "onChange": [Function],
+                      "placeholder": "Filter...",
+                      "value": "",
+                    },
+                    "ref": null,
+                    "rendered": null,
+                    "type": [Function],
+                  },
+                  "type": "div",
+                },
+              ],
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": <Table
+                  className="Table--secondary"
+                  columns={
+                    Array [
+                      Object {
+                        "cellComponent": [Function],
+                        "headerClassName": "CheckboxColumn",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                        "dataKey": "label",
+                        "label": "Label",
+                        "titleKey": "label",
+                        "tooltipEnabled": true,
+                      },
+                      Object {
+                        "dataKey": "size",
+                        "formatFn": [Function],
+                        "label": "Size",
+                      },
+                      Object {
+                        "cellComponent": [Function],
+                      },
+                    ]
+                  }
+                  data={
+                    Array [
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "ext4",
+                        "id": 12345,
+                        "label": "Arch Linux 2015.08 Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                      Object {
+                        "created": "2016-08-09T19:47:11",
+                        "filesystem": "swap",
+                        "id": 12346,
+                        "label": "Swap Disk",
+                        "size": 6144,
+                        "updated": "2016-08-09T19:47:11",
+                      },
+                    ]
+                  }
+                  disableHeader={false}
+                  noDataMessage="You have no disks."
+                  onToggleSelect={[Function]}
+                  selectedMap={Object {}}
+                />,
+              },
+              "ref": null,
+              "rendered": Object {
+                "instance": null,
+                "key": undefined,
+                "nodeType": "function",
+                "props": Object {
+                  "className": "Table--secondary",
+                  "columns": Array [
+                    Object {
+                      "cellComponent": [Function],
+                      "headerClassName": "CheckboxColumn",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                      "dataKey": "label",
+                      "label": "Label",
+                      "titleKey": "label",
+                      "tooltipEnabled": true,
+                    },
+                    Object {
+                      "dataKey": "size",
+                      "formatFn": [Function],
+                      "label": "Size",
+                    },
+                    Object {
+                      "cellComponent": [Function],
+                    },
+                  ],
+                  "data": Array [
+                    Object {
+                      "created": "2016-08-09T19:47:11",
+                      "filesystem": "ext4",
+                      "id": 12345,
+                      "label": "Arch Linux 2015.08 Disk",
+                      "size": 6144,
+                      "updated": "2016-08-09T19:47:11",
+                    },
+                    Object {
+                      "created": "2016-08-09T19:47:11",
+                      "filesystem": "swap",
+                      "id": 12346,
+                      "label": "Swap Disk",
+                      "size": 6144,
+                      "updated": "2016-08-09T19:47:11",
+                    },
+                  ],
+                  "disableHeader": false,
+                  "noDataMessage": "You have no disks.",
+                  "onToggleSelect": [Function],
+                  "selectedMap": Object {},
+                },
+                "ref": null,
+                "rendered": null,
+                "type": [Function],
+              },
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+      ],
       "type": [Function],
     },
   ],

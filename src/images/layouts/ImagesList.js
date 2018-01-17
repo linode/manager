@@ -56,9 +56,12 @@ export class ImagesList extends Component {
   deleteImagesModal = (images) => {
     const { dispatch } = this.props;
     this.setState({
-      modal: deleteModalProps(
-        dispatch, images, api.images.delete, 'Image', OBJECT_TYPE,
-        this.hideModal),
+      modal: {
+        ...deleteModalProps(
+          dispatch, images, api.images.delete,
+          'Image', OBJECT_TYPE, this.hideModal),
+        name: 'massDeleteImage',
+      },
     });
   };
 
@@ -75,6 +78,7 @@ export class ImagesList extends Component {
     this.setState({
       modal: {
         name: 'editImage',
+        title: EditImage.title,
         image: image,
       },
     });
