@@ -36,7 +36,7 @@ BackupPage.propTypes = {
 function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api;
-  const backupId = parseInt(props.params.backupId);
+  const backupId = parseInt(props.match.params.backupId);
 
   const backups = linode._backups;
   let backup;
