@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { TableCell } from 'linode-components';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
 import TimeDisplay from '~/components/TimeDisplay';
 
 

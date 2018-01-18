@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import { compose } from 'redux';
 import { hideSession } from '~/actions/session';
 import { hideNotifications } from '~/actions/notifications';
 
@@ -14,6 +14,7 @@ const ClickCapture = ({
 }) => {
   return (
     <div
+      className="Layout"
       onClick={(e) => {
         if (notificationsMenuStatus && !e.target.className.includes('NotificationList-listItem')) {
           hideNotificationWindow();
@@ -49,4 +50,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClickCapture);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+)(ClickCapture);

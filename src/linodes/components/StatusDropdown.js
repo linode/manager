@@ -4,10 +4,11 @@ import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
-
-import { FormGroup, FormGroupError } from 'linode-components';
-import { Dropdown } from 'linode-components';
-import { ConfirmModalBody, DeleteModalBody } from 'linode-components';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import Dropdown from 'linode-components/dist/dropdowns/Dropdown';
+import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -217,9 +218,11 @@ export default class StatusDropdown extends Component {
   linodeToGroups = linode => {
     const status = linode.status;
     // we always show the current status
-    const finalGroups = [{ elements: [
-      { name: LinodeStatesReadable[status] || capitalize(status) },
-    ] }];
+    const finalGroups = [{
+      elements: [
+        { name: LinodeStatesReadable[status] || capitalize(status) },
+      ],
+    }];
     const transitionStates = [
       'shutting_down',
       'booting',
@@ -233,24 +236,32 @@ export default class StatusDropdown extends Component {
     // don't allow power actions in a transition state
     if (!(find(transitionStates, el => el === status))) {
       if (status !== 'offline') {
-        finalGroups.push({ elements: [
-          { name: 'Reboot', action: this.rebootLinode },
-          { name: 'Power Off', action: this.powerOffLinode },
-        ] });
+        finalGroups.push({
+          elements: [
+            { name: 'Reboot', action: this.rebootLinode },
+            { name: 'Power Off', action: this.powerOffLinode },
+          ],
+        });
       } else {
-        finalGroups.push({ elements: [
-          { name: 'Power On', action: this.powerOnLinode },
-        ] });
+        finalGroups.push({
+          elements: [
+            { name: 'Power On', action: this.powerOnLinode },
+          ],
+        });
       }
     }
     // we always allow Lish
-    finalGroups.push({ elements: [
-      { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
-    ] });
+    finalGroups.push({
+      elements: [
+        { name: 'Launch Console', action: () => launchWeblishConsole(linode) },
+      ],
+    });
     // we always allow deletion
-    finalGroups.push({ elements: [
-      { name: 'Delete', action: this.deleteLinode },
-    ] });
+    finalGroups.push({
+      elements: [
+        { name: 'Delete', action: this.deleteLinode },
+      ],
+    });
     return finalGroups;
   }
 

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import QRious from 'qrious';
 import React, { Component } from 'react';
-
-import { ModalFormGroup, Input } from 'linode-components';
-import { onChange } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import Input from 'linode-components/dist/forms/Input';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { confirmTFA } from '~/api/ad-hoc/profile';

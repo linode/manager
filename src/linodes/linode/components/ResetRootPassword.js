@@ -1,18 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { Card, CardHeader } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormGroupError,
-  FormSummary,
-  SubmitButton,
-  Select,
-  PasswordInput,
-} from 'linode-components';
-import { FormModalBody } from 'linode-components';
-import { onChange } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Select from 'linode-components/dist/forms/Select';
+import PasswordInput from 'linode-components/dist/forms/PasswordInput';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { resetPassword } from '~/api/ad-hoc/linodes';
 import { showModal, hideModal } from '~/actions/modal';

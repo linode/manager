@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { PrimaryButton } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 
 import { AddEditVolume, VolumesList as VolumesListComponent } from '../components';

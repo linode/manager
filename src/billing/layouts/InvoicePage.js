@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment-timezone';
 import { compose } from 'redux';
-import { Card, CardHeader } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
 import Breadcrumbs from '~/components/Breadcrumbs';
-import { Table } from 'linode-components';
+import Table from 'linode-components/dist/tables/Table';
 import Currency from '~/components/Currency';
 import api from '~/api';
 import { setSource } from '~/actions/source';
 
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { getStorage } from '~/storage';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
