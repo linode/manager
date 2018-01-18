@@ -1,6 +1,7 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import thunk from 'redux-thunk';
+import authenticationMiddleware from '~/middleware/authentication';
 import reducers from './reducers';
 import createHistory from 'history/createBrowserHistory';
 
@@ -18,6 +19,7 @@ function initStore(history) {
          */
         routerMiddleware(history),
         thunk,
+        authenticationMiddleware,
       ]),
     ),
   );
