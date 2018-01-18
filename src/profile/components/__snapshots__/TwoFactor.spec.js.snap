@@ -20,144 +20,9 @@ ShallowWrapper {
     "key": undefined,
     "nodeType": "function",
     "props": Object {
-      "children": <Form
-        analytics={
-          Object {
-            "title": "Change Two-Factor Authentication",
-          }
-        }
-        className=""
-        noSubmitEvent={false}
-        onSubmit={[Function]}
-      >
-        <p>
-          Two-factor authentication (TFA) is currently 
-          <strong>
-            enabled
-          </strong>
-          .
-        </p>
-        <SubmitButton
-          className="btn-default"
-          disabled={false}
-          disabledChildren="Disabling"
-        >
-          Disable
-        </SubmitButton>
-        <FormSummary
-          className=""
-          errors={Object {}}
-        />
-      </Form>,
-      "className": "",
-      "header": <CardHeader
-        title="Change Two-Factor Authentication"
-      />,
-    },
-    "ref": null,
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "analytics": Object {
-          "title": "Change Two-Factor Authentication",
-        },
-        "children": Array [
-          <p>
-            Two-factor authentication (TFA) is currently 
-            <strong>
-              enabled
-            </strong>
-            .
-          </p>,
-          <SubmitButton
-            className="btn-default"
-            disabled={false}
-            disabledChildren="Disabling"
-          >
-            Disable
-          </SubmitButton>,
-          <FormSummary
-            className=""
-            errors={Object {}}
-          />,
-        ],
-        "className": "",
-        "noSubmitEvent": false,
-        "onSubmit": [Function],
-      },
-      "ref": null,
-      "rendered": Array [
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "host",
-          "props": Object {
-            "children": Array [
-              "Two-factor authentication (TFA) is currently ",
-              <strong>
-                enabled
-              </strong>,
-              ".",
-            ],
-          },
-          "ref": null,
-          "rendered": Array [
-            "Two-factor authentication (TFA) is currently ",
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "host",
-              "props": Object {
-                "children": "enabled",
-              },
-              "ref": null,
-              "rendered": "enabled",
-              "type": "strong",
-            },
-            ".",
-          ],
-          "type": "p",
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "children": "Disable",
-            "className": "btn-default",
-            "disabled": false,
-            "disabledChildren": "Disabling",
-          },
-          "ref": null,
-          "rendered": "Disable",
-          "type": [Function],
-        },
-        Object {
-          "instance": null,
-          "key": undefined,
-          "nodeType": "function",
-          "props": Object {
-            "className": "",
-            "errors": Object {},
-          },
-          "ref": null,
-          "rendered": null,
-          "type": [Function],
-        },
-      ],
-      "type": [Function],
-    },
-    "type": [Function],
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "function",
-      "props": Object {
-        "children": <Form
+      "children": Array [
+        null,
+        <Form
           analytics={
             Object {
               "title": "Change Two-Factor Authentication",
@@ -186,13 +51,16 @@ ShallowWrapper {
             errors={Object {}}
           />
         </Form>,
-        "className": "",
-        "header": <CardHeader
-          title="Change Two-Factor Authentication"
-        />,
-      },
-      "ref": null,
-      "rendered": Object {
+      ],
+      "className": "",
+      "header": <CardHeader
+        title="Change Two-Factor Authentication"
+      />,
+    },
+    "ref": null,
+    "rendered": Array [
+      null,
+      Object {
         "instance": null,
         "key": undefined,
         "nodeType": "function",
@@ -286,6 +154,150 @@ ShallowWrapper {
         ],
         "type": [Function],
       },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "function",
+      "props": Object {
+        "children": Array [
+          null,
+          <Form
+            analytics={
+              Object {
+                "title": "Change Two-Factor Authentication",
+              }
+            }
+            className=""
+            noSubmitEvent={false}
+            onSubmit={[Function]}
+          >
+            <p>
+              Two-factor authentication (TFA) is currently 
+              <strong>
+                enabled
+              </strong>
+              .
+            </p>
+            <SubmitButton
+              className="btn-default"
+              disabled={false}
+              disabledChildren="Disabling"
+            >
+              Disable
+            </SubmitButton>
+            <FormSummary
+              className=""
+              errors={Object {}}
+            />
+          </Form>,
+        ],
+        "className": "",
+        "header": <CardHeader
+          title="Change Two-Factor Authentication"
+        />,
+      },
+      "ref": null,
+      "rendered": Array [
+        null,
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "function",
+          "props": Object {
+            "analytics": Object {
+              "title": "Change Two-Factor Authentication",
+            },
+            "children": Array [
+              <p>
+                Two-factor authentication (TFA) is currently 
+                <strong>
+                  enabled
+                </strong>
+                .
+              </p>,
+              <SubmitButton
+                className="btn-default"
+                disabled={false}
+                disabledChildren="Disabling"
+              >
+                Disable
+              </SubmitButton>,
+              <FormSummary
+                className=""
+                errors={Object {}}
+              />,
+            ],
+            "className": "",
+            "noSubmitEvent": false,
+            "onSubmit": [Function],
+          },
+          "ref": null,
+          "rendered": Array [
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "host",
+              "props": Object {
+                "children": Array [
+                  "Two-factor authentication (TFA) is currently ",
+                  <strong>
+                    enabled
+                  </strong>,
+                  ".",
+                ],
+              },
+              "ref": null,
+              "rendered": Array [
+                "Two-factor authentication (TFA) is currently ",
+                Object {
+                  "instance": null,
+                  "key": undefined,
+                  "nodeType": "host",
+                  "props": Object {
+                    "children": "enabled",
+                  },
+                  "ref": null,
+                  "rendered": "enabled",
+                  "type": "strong",
+                },
+                ".",
+              ],
+              "type": "p",
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "children": "Disable",
+                "className": "btn-default",
+                "disabled": false,
+                "disabledChildren": "Disabling",
+              },
+              "ref": null,
+              "rendered": "Disable",
+              "type": [Function],
+            },
+            Object {
+              "instance": null,
+              "key": undefined,
+              "nodeType": "function",
+              "props": Object {
+                "className": "",
+                "errors": Object {},
+              },
+              "ref": null,
+              "rendered": null,
+              "type": [Function],
+            },
+          ],
+          "type": [Function],
+        },
+      ],
       "type": [Function],
     },
   ],

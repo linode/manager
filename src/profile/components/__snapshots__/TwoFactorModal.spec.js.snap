@@ -33,7 +33,7 @@ ShallowWrapper {
         noCancel={false}
         noCancelEvent={false}
         noSubmit={false}
-        onCancel={[Function]}
+        onCancel={undefined}
         onSubmit={[Function]}
       >
         <div>
@@ -138,7 +138,7 @@ ShallowWrapper {
         "noCancel": false,
         "noCancelEvent": false,
         "noSubmit": false,
-        "onCancel": [Function],
+        "onCancel": undefined,
         "onSubmit": [Function],
       },
       "ref": null,
@@ -330,7 +330,7 @@ ShallowWrapper {
           noCancel={false}
           noCancelEvent={false}
           noSubmit={false}
-          onCancel={[Function]}
+          onCancel={undefined}
           onSubmit={[Function]}
         >
           <div>
@@ -435,7 +435,7 @@ ShallowWrapper {
           "noCancel": false,
           "noCancelEvent": false,
           "noSubmit": false,
-          "onCancel": [Function],
+          "onCancel": undefined,
           "onSubmit": [Function],
         },
         "ref": null,
