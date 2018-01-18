@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
 import Input from 'linode-components/dist/forms/Input';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import CreateHelper from '~/components/CreateHelper';
 import List from 'linode-components/dist/lists/List';
 import Table from 'linode-components/dist/tables/Table';
@@ -22,6 +24,8 @@ import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { confirmThenDelete } from '~/utilities';
+import { PortalModal } from '~/components/modal';
+import { hideModal, deleteModalProps } from '~/utilities';
 
 import { AddNodeBalancer } from '../components';
 import { TransferPool } from '../../components';
@@ -34,7 +38,12 @@ export class NodeBalancersList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { filter: '' };
+    this.state = {
+      filter: '',
+      modal: null,
+    };
+
+    this.hideModal = hideModal.bind(this);
   }
 
   async componentDidMount() {
@@ -43,11 +52,52 @@ export class NodeBalancersList extends Component {
     dispatch(setAnalytics(['nodebalancers']));
   }
 
-  deleteNodeBalancers = confirmThenDelete(
-    this.props.dispatch,
-    'NodeBalancer',
-    api.nodebalancers.delete,
-    OBJECT_TYPE).bind(this)
+  deleteNodeBalancersModal = (images) => {
+    const { dispatch } = this.props;
+    this.setState({
+      modal: {
+        ...deleteModalProps(
+          dispatch, images, api.nodebalancers.delete,
+          'NodeBalancer', OBJECT_TYPE, this.hideModal),
+        name: 'massDeleteNodebalancer',
+      },
+    });
+  };
+
+  addNodeBalancerModal = () => {
+    this.setState({
+      modal: {
+        name: 'addNodeBalancer',
+        title: AddNodeBalancer.title,
+      },
+    });
+  };
+
+  renderModal = () => {
+    const { dispatch } = this.props;
+    if (!this.state.modal) {
+      return null;
+    }
+    const { name, title } = this.state.modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'addNodeBalancer') &&
+          <AddNodeBalancer
+            dispatch={dispatch}
+            close={this.hideModal}
+          />
+        }
+        {(name === 'massDeleteNodebalancer') &&
+          <DeleteModalBody
+            {...this.state.modal}
+          />
+        }
+      </PortalModal>
+    );
+  }
 
   render() {
     const { dispatch, nodebalancers, selectedMap, transfer } = this.props;
@@ -66,7 +116,7 @@ export class NodeBalancersList extends Component {
               dispatch={dispatch}
               massEditGroups={[{
                 elements: [
-                  { name: 'Delete', action: this.deleteNodeBalancers },
+                  { name: 'Delete', action: this.deleteNodeBalancersModal },
                 ],
               }]}
               selectedMap={selectedMap}
@@ -96,7 +146,7 @@ export class NodeBalancersList extends Component {
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',
-                onClick: (nodebalancer) => { this.deleteNodeBalancers([nodebalancer]); },
+                onClick: (nodebalancer) => { this.deleteNodeBalancersModal([nodebalancer]); },
                 text: 'Delete',
               },
             ]}
@@ -112,15 +162,14 @@ export class NodeBalancersList extends Component {
       </List>
     );
 
-    const addNodeBalancer = () => AddNodeBalancer.trigger(dispatch);
-
     return (
       <div className="PrimaryPage container">
         <ChainedDocumentTitle title="NodeBalancers" />
+        {this.renderModal()}
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">NodeBalancers</h1>
-            <PrimaryButton onClick={addNodeBalancer} className="float-right">
+            <PrimaryButton onClick={this.addNodeBalancerModal} className="float-right">
               Add a NodeBalancer
             </PrimaryButton>
           </div>
@@ -130,7 +179,7 @@ export class NodeBalancersList extends Component {
             <CreateHelper
               label="NodeBalancers"
               linkText="Add a NodeBalancer"
-              onClick={addNodeBalancer}
+              onClick={this.addNodeBalancerModal}
             />
           )}
         </div>
