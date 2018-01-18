@@ -2,11 +2,17 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-
+import authenticationMiddleware from '~/middleware/authentication';
 import reducer from '~/reducers';
 import DevTools from '~/components/DevTools';
 
-const enhancers = [applyMiddleware(thunk, routerMiddleware(browserHistory))];
+const enhancers = [
+  applyMiddleware(
+    thunk,
+    routerMiddleware(browserHistory),
+    authenticationMiddleware
+  ),
+];
 if (DevTools.instrument) {
   enhancers.push(DevTools.instrument());
 }

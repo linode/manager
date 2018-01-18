@@ -39,7 +39,6 @@ import Images from '~/linodes/images';
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 
-
 const history = syncHistoryWithStore(browserHistory, store);
 store.dispatch(session.initialize);
 
@@ -121,7 +120,7 @@ const init = () => {
             history={history}
             onUpdate={onPageChange}
             dispatch={store.dispatch}
-            render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
+            render={props => <LoadingRouterContext {...fillInMissingProps(props) } />}
           >
             <Route
               path="/logout"

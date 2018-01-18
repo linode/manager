@@ -1,5 +1,27 @@
 import invariant from 'invariant';
 import Axios from 'axios';
+import debug from 'debug';
+
+const log = debug('LinodeAPI');
+
+Axios.interceptors.request.use((config) => {
+  console.group(config.url);
+  log('-->', config.method, config.url);
+  return config;
+});
+
+Axios.interceptors.response.use(
+  (response) => {
+    log('<--', response.config.method, response.config.url);
+    console.groupEnd(response.config.url);
+    return Promise.resolve(response);
+  },
+  (error) => {
+    log('<!--', error.config.method, error.config.url, error.response.status, error.response.statusText, error.response.data);
+    console.groupEnd(error.config.url);
+    return Promise.reject(error);
+  }
+);
 
 class LinodeAPI {
   static NULL_API_KEY_ERROR = 'LinodeAPI requires an API key';
@@ -22,10 +44,9 @@ class LinodeAPI {
   }
 
   set key(apiKey) {
-    invariant(apiKey, LinodeAPI.NULL_API_KEY_ERROR);
     this.apiKey = apiKey;
 
-    this.opts.headers.Authorization = LinodeAPI.tokenString(apiKey);
+    this.opts.headers.Authorization = apiKey && LinodeAPI.tokenString(apiKey);
   }
 
   get = (url, params, filter) => {
@@ -33,7 +54,7 @@ class LinodeAPI {
       ...this.opts,
       headers: {
         ...this.opts.headers,
-        'x-filter': JSON.stringify(filter),
+        ...(filter && { 'x-filter': JSON.stringify(filter) }),
       },
       url,
       method: 'GET',
