@@ -143,7 +143,7 @@ Glish.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { params: { linodeLabel } } = ownProps;
+  const { match: { params: { linodeLabel } } } = ownProps;
   return {
     getCurrentLinode: () => dispatch(getObjectByLabelLazily('linodes', linodeLabel)),
     getLishToken: (linodeId) => dispatch(lishToken(linodeId)),
