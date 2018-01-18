@@ -8,8 +8,10 @@ import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
 import { toggleTFA } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { PortalModal } from '~/components/modal';
 
 import { TwoFactorModal } from './TwoFactorModal';
+import { hideModal } from '~/utilities';
 
 
 export default class TwoFactor extends Component {
@@ -20,18 +22,54 @@ export default class TwoFactor extends Component {
       tfaCode: '',
       errors: {},
       loading: false,
+      modal: null,
     };
+
+    this.hideModal = hideModal.bind(this);
   }
 
   onSubmit = () => {
-    const { dispatch, tfaEnabled, username } = this.props;
+    const { dispatch, tfaEnabled } = this.props;
 
     const requests = [() => toggleTFA(!tfaEnabled)];
     if (!tfaEnabled) {
-      requests.push(({ secret }) => TwoFactorModal.trigger(dispatch, secret, username));
+      requests.push(({ secret }) => this.twoFactorModal(secret));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
+  }
+
+  twoFactorModal = (secret) => {
+    this.setState({
+      modal: {
+        name: 'twoFactor',
+        title: TwoFactorModal.title,
+        secret: secret,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch, username } = this.props;
+    if (!this.state.modal) {
+      return null;
+    }
+    const { name, title, secret } = this.state.modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'twoFactor') &&
+          <TwoFactorModal
+            dispatch={dispatch}
+            secret={secret}
+            username={username}
+            close={this.hideModal}
+          />
+        }
+      </PortalModal>
+    );
   }
 
   render() {
@@ -43,6 +81,7 @@ export default class TwoFactor extends Component {
 
     return (
       <Card header={header}>
+        {this.renderModal()}
         <Form
           onSubmit={this.onSubmit}
           analytics={{ title }}
