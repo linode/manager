@@ -6,21 +6,28 @@ import { Provider } from 'react-redux';
 import Raven from 'raven-js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
-import NotFound from 'linode-components/dist/errors/NotFound';
 import Loadable from 'react-loadable';
+import NotFound from 'linode-components/dist/errors/NotFound';
 
+import OAuthComponent from '~/layouts/OAuth';
+import Navigation from '~/layouts/Navigation';
+import MiniHeader from '~/layouts/MiniHeader';
+import Footer from '~/layouts/Footer';
 import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import PageLoader from '~/components/loaders/PageLoader';
 import Logout from '~/components/Logout';
-import OAuthComponent from '~/layouts/OAuth';
+import AuthenticationWrapper from '~/components/AuthenticationWrapper';
+import Banners from '~/components/Banners';
 
-import handleError from './handleError';
+import handleError from '~/handleError';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
-import { init as initAnalytics } from './analytics';
+import { init as initAnalytics } from '~/analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
-import PageLoader from '~/components/loaders/PageLoader';
+import ContextNavigation from '~/layouts/ContextNavigation';
+import ModalContainer from '~/components/ModalContainer';
 
 const Linodes = Loadable({
   loader: () => import('./linodes'),
@@ -77,13 +84,6 @@ const Users = Loadable({
   loading: PageLoader,
 });
 
-import Navigation from '~/layouts/Navigation';
-import ContextNavigation from '~/layouts/ContextNavigation';
-import Footer from '~/layouts/Footer';
-import MiniHeader from '~/layouts/MiniHeader';
-
-import AuthenticationWrapper from '~/components/AuthenticationWrapper';
-
 /**
  * @todo I believe we can just import without defining a variable.
  */
@@ -119,36 +119,33 @@ try {
           <AuthenticationWrapper>
             <ChainedDocumentTitle title="Linode Manager" />
             <div className="Layout-inner">
-              {/* <ModalShell
-                      open={modal.open}
-                      title={modal.title}
-                      close={() => hideModal()}
-                    >
-                      {modal.body}
-                    </ModalShell> */}
+              <ModalContainer />
               <div className="Header">
                 <MiniHeader />
                 <Navigation />
                 <ContextNavigation />
               </div>
-              <Switch>
-                <Route path="/linodes" component={Linodes} />
-                <Route path="/nodebalancers" component={NodeBalancers} />
-                <Route path="/domains" component={Domains} />
-                <Route path="/support" component={Support} />
-                <Route path="/support" component={Support} />
-                <Route path="/stackscripts" component={StackScripts} />
-                <Route path="/images" component={Images} />
-                <Route path="/volumes" component={Volumes} />
-                <Route path="/billing" component={Billing} />
-                <Route path="/profile" component={Profile} />
-                <Route path="/settings" component={Settings} />
-                <Route path="/users" component={Users} />
-                <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                <Route exact path="/logout" component={Logout} />
-                <Route exact path="/oauth/callback" component={OAuthComponent} />
-                <Route component={NotFound} />
-              </Switch>
+              <div className="main">
+                <Route render={(matchProps) => <Banners {...matchProps} />} />
+                <Switch>
+                  <Route path="/linodes" component={Linodes} />
+                  <Route path="/nodebalancers" component={NodeBalancers} />
+                  <Route path="/domains" component={Domains} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/stackscripts" component={StackScripts} />
+                  <Route path="/images" component={Images} />
+                  <Route path="/volumes" component={Volumes} />
+                  <Route path="/billing" component={Billing} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/settings" component={Settings} />
+                  <Route path="/users" component={Users} />
+                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                  <Route exact path="/logout" component={Logout} />
+                  <Route exact path="/oauth/callback" component={OAuthComponent} />
+                  <Route component={NotFound} />
+                </Switch>
+              </div>
             </div>
             <Footer />
           </AuthenticationWrapper>
