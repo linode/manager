@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { render } from 'react-dom';
 import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
@@ -31,6 +31,16 @@ import ModalContainer from '~/components/ModalContainer';
 
 const Linodes = Loadable({
   loader: () => import('./linodes'),
+  loading: PageLoader,
+});
+
+const Glish = Loadable({
+  loader: () => import('./linodes/linode/layouts/Glish'),
+  loading: PageLoader,
+});
+
+const Weblish = Loadable({
+  loader: () => import('./linodes/linode/layouts/Weblish'),
   loading: PageLoader,
 });
 
@@ -117,37 +127,48 @@ try {
       <ClickCapture>
         <ConnectedRouter history={history}>
           <AuthenticationWrapper>
-            <ChainedDocumentTitle title="Linode Manager" />
-            <div className="Layout-inner">
-              <ModalContainer />
-              <div className="Header">
-                <MiniHeader />
-                <Navigation />
-                <ContextNavigation />
-              </div>
-              <div className="main">
-                <Route render={(matchProps) => <Banners {...matchProps} />} />
-                <Switch>
-                  <Route path="/linodes" component={Linodes} />
-                  <Route path="/nodebalancers" component={NodeBalancers} />
-                  <Route path="/domains" component={Domains} />
-                  <Route path="/support" component={Support} />
-                  <Route path="/support" component={Support} />
-                  <Route path="/stackscripts" component={StackScripts} />
-                  <Route path="/images" component={Images} />
-                  <Route path="/volumes" component={Volumes} />
-                  <Route path="/billing" component={Billing} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/users" component={Users} />
-                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                  <Route exact path="/logout" component={Logout} />
-                  <Route exact path="/oauth/callback" component={OAuthComponent} />
-                  <Route component={NotFound} />
-                </Switch>
-              </div>
-            </div>
-            <Footer />
+            <Switch>
+              <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
+              <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
+              <Route
+                render={() => (
+                  <Fragment>
+                    <ChainedDocumentTitle title="Linode Manager" />
+                    <div className="Layout-inner">
+                      <ModalContainer />
+                      <div className="Header">
+                        <MiniHeader />
+                        <Navigation />
+                        <ContextNavigation />
+                      </div>
+                      <div className="main">
+                        <Route render={(matchProps) => <Banners {...matchProps} />} />
+                        <Switch>
+                          <Route path="/linodes" component={Linodes} />
+                          <Route path="/nodebalancers" component={NodeBalancers} />
+                          <Route path="/domains" component={Domains} />
+                          <Route path="/support" component={Support} />
+                          <Route path="/support" component={Support} />
+                          <Route path="/stackscripts" component={StackScripts} />
+                          <Route path="/images" component={Images} />
+                          <Route path="/volumes" component={Volumes} />
+                          <Route path="/billing" component={Billing} />
+                          <Route path="/profile" component={Profile} />
+                          <Route path="/settings" component={Settings} />
+                          <Route path="/users" component={Users} />
+                          <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                          <Route exact path="/logout" component={Logout} />
+                          <Route exact path="/oauth/callback" component={OAuthComponent} />
+                          <Route component={NotFound} />
+                        </Switch>
+                      </div>
+                    </div>
+                    <Footer />
+                  </Fragment>
+                )
+                }
+              />
+            </Switch>
           </AuthenticationWrapper>
         </ConnectedRouter>
       </ClickCapture>

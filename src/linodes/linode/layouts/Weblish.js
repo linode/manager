@@ -41,7 +41,7 @@ export class Weblish extends Component {
   }
 
   async componentWillMount() {
-    const { dispatch, params: { linodeLabel } } = this.props;
+    const { dispatch, match: { params: { linodeLabel } } } = this.props;
     const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     this.setState({ linode });
     await this.connect();
@@ -98,8 +98,10 @@ export class Weblish extends Component {
 
 Weblish.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      linodeLabel: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
