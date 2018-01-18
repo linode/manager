@@ -4,12 +4,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'redux';
-import { ExternalLink } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
+import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import { Editor, Settings } from '../components';
 import { ComponentPreload as Preload } from '~/decorators/Preload';

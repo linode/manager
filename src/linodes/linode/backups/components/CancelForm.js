@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { Form, FormSummary, SubmitButton } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import Form from 'linode-components/dist/forms/Form';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { cancelBackup } from '~/api/ad-hoc/backups';
 import { showModal, hideModal } from '~/actions/modal';

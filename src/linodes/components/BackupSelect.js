@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import moment from 'moment-timezone';
-import { Select } from 'linode-components';
+import Select from 'linode-components/dist/forms/Select';
 
 
 export default function BackupSelect(props) {

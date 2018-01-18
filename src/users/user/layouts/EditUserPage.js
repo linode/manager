@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
 
 import { selectUser } from './IndexPage';
 import { UserForm } from '../../components';

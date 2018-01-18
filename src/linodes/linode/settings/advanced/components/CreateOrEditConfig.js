@@ -1,29 +1,26 @@
+import React, { Component } from 'react';
+import { push } from 'react-router-redux';
+import PropTypes from 'prop-types';
 import mapValues from 'lodash/mapValues';
 import pickBy from 'lodash/pickBy';
 import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
-
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { push } from 'react-router-redux';
-
-import { CancelButton, ExternalLink } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormSummary,
-  FormGroupError,
-  Input,
-  Select,
-  Radio,
-  RadioInputCombo,
-  RadioSelectCombo,
-  Checkbox,
-  Checkboxes,
-  SubmitButton,
-  Textarea,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+import CancelButton from 'linode-components/dist/buttons/CancelButton';
+import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import Input from 'linode-components/dist/forms/Input';
+import Select from 'linode-components/dist/forms/Select';
+import Radio from 'linode-components/dist/forms/Radio';
+import RadioInputCombo from 'linode-components/dist/forms/RadioInputCombo';
+import RadioSelectCombo from 'linode-components/dist/forms/RadioSelectCombo';
+import Checkbox from 'linode-components/dist/forms/Checkbox';
+import Checkboxes from 'linode-components/dist/forms/Checkboxes';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';

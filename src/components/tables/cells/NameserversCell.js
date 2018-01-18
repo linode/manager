@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Dropdown } from 'linode-components';
-import { TableCell } from 'linode-components';
+import Dropdown from 'linode-components/dist/dropdowns/Dropdown';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
 
 
 export default function NameserversCell(props) {

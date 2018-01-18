@@ -7,12 +7,8 @@ import { withRouter } from 'react-router-dom';
 
 import { EVENT_POLLING_DELAY } from '~/constants';
 import { eventRead } from '~/api/ad-hoc/events';
-import {
-  createHeaderFilter,
-  lessThanDatetimeFilter,
-  greaterThanDatetimeFilter,
-  lessThanNowFilter,
-} from '~/api/util';
+import { lessThanDatetimeFilter, lessThanNowFilter } from '~/api/lessThanDateFilter';
+import { createHeaderFilter, greaterThanDatetimeFilter } from '~/api/util';
 
 import api from '~/api';
 import { eventSeen } from '~/api/ad-hoc/events';

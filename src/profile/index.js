@@ -6,7 +6,7 @@ import { Route, Switch, matchPath, Redirect } from 'react-router-dom';
 import TabsComponent from '~/components/Tabs';
 
 import { setAnalytics, setSource } from '~/actions';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import AuthenticationPage from './layouts/AuthenticationPage';
 import DisplayPage from './layouts/DisplayPage';

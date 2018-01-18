@@ -1,9 +1,11 @@
 import capitalize from 'lodash/capitalize';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import { Card, CardHeader } from 'linode-components';
-import { Form, FormGroup, SubmitButton } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Form from 'linode-components/dist/forms/FormGroup';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
 import TimeDisplay from '~/components/TimeDisplay';
 import Region from '~/linodes/components/Region';

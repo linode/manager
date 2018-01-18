@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Select } from 'linode-components';
-import { onChange } from 'linode-components';
+import Select from 'linode-components/dist/forms/Select';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import LineGraph from './LineGraph';
 

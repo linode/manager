@@ -3,10 +3,12 @@ import { config as linodeConfig } from '~/api/generic/linodes';
 import {
   getObjectByLabelLazily,
   Error404,
-  lessThanDatetimeFilter,
-  lessThanNowFilter,
   createHeaderFilter,
 } from '~/api/util';
+import {
+  lessThanDatetimeFilter,
+  lessThanNowFilter,
+} from '~/api/lessThanDateFilter';
 import { state } from '~/data';
 import { testLinode } from '~/data/linodes';
 import { expectRequest } from '~/test.helpers';

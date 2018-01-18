@@ -3,18 +3,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Card } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormGroupError,
-  FormSummary,
-  SubmitButton,
-  Textarea,
-  Input,
-} from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import Input from 'linode-components/dist/forms/Input';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Textarea from 'linode-components/dist/forms/Textarea';
 
-import { onChange } from 'linode-components';
+import { onChange } from 'linode-components/dist/forms/utilities';
 import { compose } from 'redux';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
@@ -23,7 +21,7 @@ import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/ad-hoc/tickets';
 import { setAnalytics, setSource } from '~/actions';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './TicketsList';

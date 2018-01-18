@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
-
-import {
-  Form,
-  FormGroup,
-  FormGroupError,
-  FormSummary,
-  Input,
-  Select,
-  Checkbox,
-  SubmitButton,
-  Textarea,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import Input from 'linode-components/dist/forms/Input';
+import Select from 'linode-components/dist/forms/Select';
+import Checkbox from 'linode-components/dist/forms/Checkbox';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
 import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';
@@ -83,7 +80,7 @@ export default class ConfigForm extends Component {
     const idsPath = [nodebalancer.id, config.id].filter(Boolean);
     const calls = [];
     if ((config.id && protocol === 'https') &&
-        (config.protocol !== 'https' || (sslCert || sslKey))) {
+      (config.protocol !== 'https' || (sslCert || sslKey))) {
       calls.push(() => updateConfigSSL(sslData, ...idsPath));
     }
     calls.push(() => api.nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
@@ -191,7 +188,7 @@ export default class ConfigForm extends Component {
                   id="sslCert"
                   name="sslCert"
                   placeholder="SSL certificate (including chained intermediate
-                    certificates if needed)"
+                  certificates if needed)"
                   value={sslCert}
                   onChange={this.onChange}
                 />

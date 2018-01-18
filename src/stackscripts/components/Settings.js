@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import Input from 'linode-components/dist/forms/Input';
+import Checkbox from 'linode-components/dist/forms/Checkbox';
 
-import {
-  Checkbox,
-  Input,
-  Form,
-  FormGroup,
-  FormSummary,
-  SubmitButton,
-  Textarea,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';

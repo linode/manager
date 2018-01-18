@@ -10,7 +10,7 @@ import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import TabsComponent from '~/components/Tabs';
 import DashboardPage from './layouts/NodeBalancerConfigDashboard';
 import EditConfigPage from './layouts/NodeBalancerConfigEdit';

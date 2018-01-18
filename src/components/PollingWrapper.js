@@ -7,7 +7,8 @@ import isEqual from 'lodash/isEqual';
 import { withRouter } from 'react-router-dom';
 import api from '~/api';
 import Polling from '~/api/polling';
-import { createHeaderFilter, greaterThanDatetimeFilter, lessThanNowFilter } from '~/api/util';
+import { lessThanNowFilter } from '~/api/lessThanDateFilter';
+import { createHeaderFilter, greaterThanDatetimeFilter } from '~/api/util';
 import { EVENT_POLLING_DELAY } from '~/constants';
 
 const MIN_SHOWN_EVENTS = 10;

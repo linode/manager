@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { ExternalLink } from 'linode-components';
-import { ModalFormGroup, Input, Textarea } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import Input from 'linode-components/dist/forms/Input';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { IPV4_DNS_RESOLVERS, IPV6_DNS_RESOLVERS } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';

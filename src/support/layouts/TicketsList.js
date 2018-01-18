@@ -1,22 +1,22 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { compose } from 'redux';
 import map from 'lodash/map';
 import groupBy from 'lodash/groupBy';
 import sortBy from 'lodash/sortBy';
-
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { compose } from 'redux';
-
-import { PrimaryButton } from 'linode-components';
-import { ListBody, ListGroup } from 'linode-components';
-import { TableCell, LinkCell } from 'linode-components';
-import { List } from 'linode-components';
-import { Table } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
+import ListGroup from 'linode-components/dist/lists/bodies/ListGroup';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
+import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
+import List from 'linode-components/dist/lists/List';
+import Table from 'linode-components/dist/tables/Table';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl, getVolumeRedirectUrl,

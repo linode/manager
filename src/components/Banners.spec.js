@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-
-import Banners, { filterBy } from '~/components/Banners';
+import { Banners, filterBy } from '~/components/Banners';
 import {
   importantBanner,
   importantBanners,
