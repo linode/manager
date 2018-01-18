@@ -6,7 +6,6 @@ const LinodeContextMenu = () => {
   const links = [
     { to: '/stackscripts', label: 'StackScripts', linkClass: 'ContextHeader-link' },
     { to: '/images', label: 'Images', linkClass: 'ContextHeader-link' },
-    { to: '/volumes', label: 'Volumes', linkClass: 'ContextHeader-link' },
   ];
 
   return (
@@ -29,6 +28,5 @@ export default () => (
     <Route path="/linodes" render={LinodeContextMenu} />
     <Route path="/images" component={LinodeContextMenu} />
     <Route path="/stackscripts" component={LinodeContextMenu} />
-    <Route path="/volumes" component={LinodeContextMenu} />
   </Switch>
 );
