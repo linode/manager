@@ -1,39 +1,42 @@
 import { actions } from '../generic/linodes';
 import { actions as imageActions } from '../generic/images';
-import { fetch } from '../fetch';
-
+import request from '~/request';
 
 function linodeAction(id, action, body, handleRsp) {
   return async (dispatch) => {
-    const rsp = await dispatch(fetch.post(`/linode/instances/${id}/${action}`, body));
+    const resp = await request.post(`/linode/instances/${id}/${action}`, body);
 
     if (handleRsp) {
-      dispatch(handleRsp(rsp));
+      dispatch(handleRsp(resp));
     }
   };
 }
-
+// Verified
 export function powerOnLinode(id, configId = null) {
   return linodeAction(id, 'boot', { config_id: configId }, () =>
     actions.one({ status: 'booting' }, id));
 }
 
+// Verified
 export function powerOffLinode(id) {
   return linodeAction(id, 'shutdown', {}, () =>
     actions.one({ status: 'shutting_down' }, id));
 }
 
+// Verfied
 export function rebootLinode(id, configId = null) {
   return linodeAction(id, 'reboot', { config_id: configId }, () =>
     actions.one({ status: 'rebooting' }, id));
 }
 
+// Verified
 export function rescueLinode(id, devices = null) {
   return linodeAction(id, 'rescue', { devices }, () =>
     // Add this manually so StatusDropdown will start polling.
     actions.one({ status: 'rebooting' }, id));
 }
 
+// Verified
 export function rebuildLinode(id, config = null) {
   function makeNormalResponse(rsp, resource) {
     return {
@@ -44,70 +47,87 @@ export function rebuildLinode(id, config = null) {
     };
   }
 
-  function handleRsp(rsp) {
+  function handleRsp({ data }) {
     return async (dispatch) => {
       // Add this manually so StatusDropdown will start polling.
       dispatch(actions.one({ status: 'rebuilding' }, id));
-      await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
-      await dispatch(actions.configs.many(makeNormalResponse(rsp, 'configs'), id));
+      await dispatch(actions.disks.many(makeNormalResponse(data, 'disks'), id));
+      await dispatch(actions.configs.many(makeNormalResponse(data, 'configs'), id));
     };
   }
 
   return linodeAction(id, 'rebuild', config, handleRsp);
 }
 
+// Verified
 export function lishToken(linodeId) {
-  return fetch.post(`/linode/instances/${linodeId}/lish_token`);
+  request.post(`/linode/instances/${linodeId}/lish_token`);
+  return (dispatch) => { dispatch({ type: '@@noop' }); };
 }
 
+// Verified
 export function resetPassword(linodeId, diskId, password) {
-  return (dispatch) =>
-    dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/password`, { password }));
+  return () =>
+    request.post(`/linode/instances/${linodeId}/disks/${diskId}/password`, { password });
 }
 
+// Verified
 export function resizeLinodeDisk(linodeId, diskId, size) {
   return async (dispatch) => {
     dispatch(actions.disks.one({ id: diskId, size }, linodeId, diskId));
-    await dispatch(fetch.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
-      { size }));
+    await request.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
+      { size });
     // TODO: fetch until complete
   };
 }
 
+// Verified
 export function imagizeLinodeDisk(linodeId, diskId, data) {
   return async (dispatch) => {
     const imagizeUrl = `/linode/instances/${linodeId}/disks/${diskId}/imagize`;
-    const image = await dispatch(fetch.post(imagizeUrl, data));
+    const { data: image } = await request.post(imagizeUrl, data);
     dispatch(imageActions.one(image));
     return image;
   };
 }
 
+// Verified
 export function resizeLinode(linodeId, type) {
-  return (dispatch) => dispatch(fetch.post(`/linode/instances/${linodeId}/resize`, { type }));
+  return () => request.post(`/linode/instances/${linodeId}/resize`, { type });
 }
 
+// Verified
 export function linodeBackups(linodeId) {
   return async (dispatch) => {
-    const _backups = await dispatch(fetch.get(`/linode/instances/${linodeId}/backups`));
+    const { data: _backups } = await request.get(`/linode/instances/${linodeId}/backups`);
     dispatch(actions.one({ _backups }, linodeId));
     return _backups;
   };
 }
 
+// Verified
 export function linodeStats(linodeId, year, month) {
   return async (dispatch) => {
     const path = year && month ? `/linode/instances/${linodeId}/stats/${year}/${month}` :
       `/linode/instances/${linodeId}/stats`;
-    const { data: _stats } = await dispatch(fetch.get(path));
+    const { data: { state: _stats } } = await request.get(path);
     dispatch(actions.one({ _stats }, linodeId));
   };
 }
 
-export function cloneLinode(linodeId, regionId, planId, backups, label,
-  targetId = undefined, configs = [], disks = []) {
+// Verified
+export function cloneLinode(
+  linodeId,
+  regionId,
+  planId,
+  backups,
+  label,
+  targetId = undefined,
+  configs = [],
+  disks = []
+) {
   return async function (dispatch) {
-    const clonedLinode = await dispatch(fetch.post(`/linode/instances/${linodeId}/clone`, {
+    const { data: clonedLinode } = await request.post(`/linode/instances/${linodeId}/clone`, {
       region: regionId,
       backups_enabled: backups,
       label: label,
@@ -115,7 +135,7 @@ export function cloneLinode(linodeId, regionId, planId, backups, label,
       disks: disks.length ? disks : undefined,
       configs: configs.length ? disks : undefined,
       linode: targetId,
-    }));
+    });
     dispatch(actions.one(clonedLinode, clonedLinode.id));
     return clonedLinode;
   };
@@ -123,7 +143,7 @@ export function cloneLinode(linodeId, regionId, planId, backups, label,
 
 export function kvmifyLinode(linodeId) {
   return async function (dispatch) {
-    const kvmifiedLinode = await dispatch(fetch.post(`/linode/instances/${linodeId}/kvmify`));
+    const { data: kvmifiedLinode } = await request.post(`/linode/instances/${linodeId}/kvmify`);
     dispatch(actions.one(kvmifiedLinode, kvmifiedLinode.id));
     return kvmifiedLinode;
   };
