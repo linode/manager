@@ -10,7 +10,7 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export const BackupPage = (props) => {
-  const { dispatch, linode, backup } = props;
+  const { dispatch, linodes, linode, backup } = props;
   return (
     <div>
       <section>
@@ -20,7 +20,7 @@ export const BackupPage = (props) => {
         linode={linode}
         backup={backup}
         dispatch={dispatch}
-        linodes={this.props.linodes}
+        linodes={linodes}
       />
     </div>
   );
@@ -36,7 +36,7 @@ BackupPage.propTypes = {
 function mapStateToProps(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api;
-  const backupId = parseInt(props.params.backupId);
+  const backupId = parseInt(props.match.params.backupId);
 
   const backups = linode._backups;
   let backup;

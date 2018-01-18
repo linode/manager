@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 import { Form, SubmitButton, FormSummary } from 'linode-components';
 import { Card, CardHeader } from 'linode-components';
 
+import { PortalModal } from '~/components/modal';
 import { TimeDisplay } from '~/components';
+import { hideModal } from '~/utilities';
 
 import { TakeSnapshot } from '../components';
 import { selectLinode } from '../../utilities';
@@ -19,7 +21,43 @@ export class SummaryPage extends Component {
     this.state = {
       errors: {},
       loading: false,
+      modal: null,
     };
+
+    this.hideModal = hideModal.bind(this);
+  }
+
+  takeSnapshotModal = (linode) => {
+    this.setState({
+      modal: {
+        title: TakeSnapshot.title,
+        name: 'takeSnapshot',
+        linode: linode,
+      },
+    });
+  }
+
+  renderModal = () => {
+    const { dispatch } = this.props;
+    const { modal } = this.state;
+    if (!modal) {
+      return null;
+    }
+    const { name, title, linode } = modal;
+    return (
+      <PortalModal
+        title={title}
+        onClose={this.hideModal}
+      >
+        {(name === 'takeSnapshot') &&
+          <TakeSnapshot
+            dispatch={dispatch}
+            linode={linode}
+            close={this.hideModal}
+          />
+        }
+      </PortalModal>
+    );
   }
 
   renderBlock = ({ title, backup }) => {
@@ -62,12 +100,12 @@ export class SummaryPage extends Component {
   }
 
   renderEmptySnapshot() {
-    const { dispatch, linode } = this.props;
+    const { linode } = this.props;
     const { loading, errors } = this.state;
 
     return (
       <Form
-        onSubmit={() => TakeSnapshot.trigger(dispatch, linode)}
+        onSubmit={() => this.takeSnapshotModal(linode)}
         className="Backup Backup-emptySnapshot col-sm-3"
         title="Take first snapshot"
       >
@@ -106,6 +144,7 @@ export class SummaryPage extends Component {
 
     return (
       <Card header={<CardHeader title="Restorable backups" />}>
+        {this.renderModal()}
         <p>
           Select a backup to see details and restore to a Linode.
         </p>
