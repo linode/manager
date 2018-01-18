@@ -83,6 +83,7 @@ import Footer from '~/layouts/Footer';
 import MiniHeader from '~/layouts/MiniHeader';
 
 import AuthenticationWrapper from '~/components/AuthenticationWrapper';
+import Banners from '~/components/Banners';
 
 /**
  * @todo I believe we can just import without defining a variable.
@@ -131,24 +132,27 @@ try {
                 <Navigation />
                 <ContextNavigation />
               </div>
-              <Switch>
-                <Route path="/linodes" component={Linodes} />
-                <Route path="/nodebalancers" component={NodeBalancers} />
-                <Route path="/domains" component={Domains} />
-                <Route path="/support" component={Support} />
-                <Route path="/support" component={Support} />
-                <Route path="/stackscripts" component={StackScripts} />
-                <Route path="/images" component={Images} />
-                <Route path="/volumes" component={Volumes} />
-                <Route path="/billing" component={Billing} />
-                <Route path="/profile" component={Profile} />
-                <Route path="/settings" component={Settings} />
-                <Route path="/users" component={Users} />
-                <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                <Route exact path="/logout" component={Logout} />
-                <Route exact path="/oauth/callback" component={OAuthComponent} />
-                <Route component={NotFound} />
-              </Switch>
+              <div className="main">
+                <Route render={(matchProps) => <Banners {...matchProps} />} />
+                <Switch>
+                  <Route path="/linodes" component={Linodes} />
+                  <Route path="/nodebalancers" component={NodeBalancers} />
+                  <Route path="/domains" component={Domains} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/stackscripts" component={StackScripts} />
+                  <Route path="/images" component={Images} />
+                  <Route path="/volumes" component={Volumes} />
+                  <Route path="/billing" component={Billing} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/settings" component={Settings} />
+                  <Route path="/users" component={Users} />
+                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                  <Route exact path="/logout" component={Logout} />
+                  <Route exact path="/oauth/callback" component={OAuthComponent} />
+                  <Route component={NotFound} />
+                </Switch>
+              </div>
             </div>
             <Footer />
           </AuthenticationWrapper>

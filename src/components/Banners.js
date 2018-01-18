@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 
@@ -202,7 +203,7 @@ function renderBanners(banners, linode = {}) {
   );
 }
 
-export default function Banners(props) {
+export function Banners(props) {
   const { banners, linode } = props;
   return banners.length ? renderBanners(banners, linode) : null;
 }
@@ -215,3 +216,24 @@ Banners.propTypes = {
 Banners.defaultProps = {
   banners: [],
 };
+
+const getLinodeIdFromStateByLabel = (state, label) => Object
+  .values(state.api.linodes.linodes)
+  .find((linode) => linode.label === label);
+
+const mapStateToProps = (state, { match: { params: { linodeLabel } } }) => ({
+  linode: linodeLabel && getLinodeIdFromStateByLabel(state, linodeLabel),
+  banners: state.api.banners.data,
+});
+
+const ConnectedBanners = connect(mapStateToProps)(Banners);
+
+ConnectedBanners.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      linodeLabel: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
+
+export default ConnectedBanners;
