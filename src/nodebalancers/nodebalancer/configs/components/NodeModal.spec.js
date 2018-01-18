@@ -54,7 +54,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     expect(page.find('select#mode').props().value).toBe('accept');
   });
 
-  it('updates node', async () => {
+  it.skip('updates node', async () => {
     const page = mount(
       <NodeModal
         title="NodeModal"
@@ -82,7 +82,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     ], 2);
   });
 
-  it('creates node', async () => {
+  it.skip('creates node', async () => {
     const page = mount(
       <NodeModal
         title="NodeModal"
