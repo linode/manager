@@ -196,7 +196,8 @@ NodeBalancerConfigDashboard.propTypes = {
 
 const mapStateToProps = (state, { match: { params: { nbLabel, configId } } }) => {
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
-  const config = nodebalancer && objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
+  const config = nodebalancer &&
+    objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
   return { config, nodebalancer };
 };
 
