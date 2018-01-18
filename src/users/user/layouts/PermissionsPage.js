@@ -2,16 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Card } from 'linode-components';
-import {
-  Checkbox,
-  Checkboxes,
-  Form,
-  FormGroup,
-  FormSummary,
-  Radio,
-  SubmitButton,
-} from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import Checkbox from 'linode-components/dist/forms/Checkbox';
+import Checkboxes from 'linode-components/dist/forms/Checkboxes';
+import Radio from 'linode-components/dist/forms/Radio';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 
 import api from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';

@@ -5,18 +5,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Card, CardHeader } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormSummary,
-  SubmitButton,
-} from 'linode-components';
-import { Table } from 'linode-components';
-import {
-  CheckboxCell,
-  LinkCell,
-} from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Table from 'linode-components/dist/tables/Table';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
+
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/ad-hoc/networking';

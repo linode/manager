@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Card, CardHeader } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormSummary,
-  SubmitButton,
-  Select,
-} from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Select from 'linode-components/dist/forms/Select';
 
 import { setSource } from '~/actions/source';
 import { assignIPs } from '~/api/ad-hoc/networking';

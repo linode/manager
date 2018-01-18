@@ -7,6 +7,7 @@ import Raven from 'raven-js';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import NotFound from 'linode-components/dist/errors/NotFound';
+import Loadable from 'react-loadable';
 
 import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
@@ -19,17 +20,62 @@ import { init as initAnalytics } from './analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
 import { isPathOneOf } from '~/utilities';
-import Linodes from '~/linodes';
-import NodeBalancers from '~/nodebalancers';
-import Domains from '~/domains';
-import Support from '~/support';
-import StackScripts from './stackscripts';
-import Images from '~/images';
-import Volumes from '~/volumes';
-import Billing from '~/billing';
-import Profile from '~/profile';
-import Settings from '~/settings';
-import Users from '~/users';
+import PageLoader from '~/components/loaders/PageLoader';
+
+const Linodes = Loadable({
+  loader: () => import('./linodes'),
+  loading: PageLoader,
+});
+
+const NodeBalancers = Loadable({
+  loader: () => import('./nodebalancers'),
+  loading: PageLoader,
+});
+
+const Domains = Loadable({
+  loader: () => import('./domains'),
+  loading: PageLoader,
+});
+
+const Support = Loadable({
+  loader: () => import('./support'),
+  loading: PageLoader,
+});
+
+const StackScripts = Loadable({
+  loader: () => import('./stackscripts'),
+  loading: PageLoader,
+});
+
+const Images = Loadable({
+  loader: () => import('./images'),
+  loading: PageLoader,
+});
+
+const Volumes = Loadable({
+  loader: () => import('./volumes'),
+  loading: PageLoader,
+});
+
+const Billing = Loadable({
+  loader: () => import('./billing'),
+  loading: PageLoader,
+});
+
+const Profile = Loadable({
+  loader: () => import('./profile'),
+  loading: PageLoader,
+});
+
+const Settings = Loadable({
+  loader: () => import('./settings'),
+  loading: PageLoader,
+});
+
+const Users = Loadable({
+  loader: () => import('./users'),
+  loading: PageLoader,
+});
 
 import Navigation from '~/layouts/Navigation';
 import ContextNavigation from '~/layouts/ContextNavigation';
@@ -64,63 +110,56 @@ if (ENVIRONMENT === 'production') {
     .install();
 }
 
-const init = () => {
-  try {
-    render(
-      <Provider store={store}>
-        <ClickCapture>
-          <ConnectedRouter history={history}>
-            <div>
-              <AuthenticationWrapper>
-                <div className="Layout" >
-                  <ChainedDocumentTitle title="Linode Manager" />
-                  <div className="Layout-inner">
-                    {/* <ModalShell
+
+try {
+  render(
+    <Provider store={store}>
+      <ClickCapture>
+        <ConnectedRouter history={history}>
+          <AuthenticationWrapper>
+            <ChainedDocumentTitle title="Linode Manager" />
+            <div className="Layout-inner">
+              {/* <ModalShell
                       open={modal.open}
                       title={modal.title}
                       close={() => hideModal()}
                     >
                       {modal.body}
                     </ModalShell> */}
-                    <div className="Header">
-                      <MiniHeader />
-                      <Navigation />
-                      <ContextNavigation />
-                    </div>
-                    <Switch>
-                      <Route path="/linodes" component={Linodes} />
-                      <Route path="/nodebalancers" component={NodeBalancers} />
-                      <Route path="/domains" component={Domains} />
-                      <Route path="/support" component={Support} />
-                      <Route path="/support" component={Support} />
-                      <Route path="/stackscripts" component={StackScripts} />
-                      <Route path="/images" component={Images} />
-                      <Route path="/volumes" component={Volumes} />
-                      <Route path="/billing" component={Billing} />
-                      <Route path="/profile" component={Profile} />
-                      <Route path="/settings" component={Settings} />
-                      <Route path="/users" component={Users} />
-                      <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                      <Route exact path="/logout" component={Logout} />
-                      <Route exact path="/oauth/callback" component={OAuthComponent} />
-                      <Route component={NotFound} />
-                    </Switch>
-                  </div>
-                  <Footer />
-                </div>
-              </AuthenticationWrapper>
+              <div className="Header">
+                <MiniHeader />
+                <Navigation />
+                <ContextNavigation />
+              </div>
+              <Switch>
+                <Route path="/linodes" component={Linodes} />
+                <Route path="/nodebalancers" component={NodeBalancers} />
+                <Route path="/domains" component={Domains} />
+                <Route path="/support" component={Support} />
+                <Route path="/support" component={Support} />
+                <Route path="/stackscripts" component={StackScripts} />
+                <Route path="/images" component={Images} />
+                <Route path="/volumes" component={Volumes} />
+                <Route path="/billing" component={Billing} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/users" component={Users} />
+                <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                <Route exact path="/logout" component={Logout} />
+                <Route exact path="/oauth/callback" component={OAuthComponent} />
+                <Route component={NotFound} />
+              </Switch>
             </div>
-          </ConnectedRouter>
-        </ClickCapture>
-      </Provider>,
-      document.getElementById('root')
-    );
-  } catch (e) {
-    window.handleError(e);
-  }
-};
-
-window.init = init;
+            <Footer />
+          </AuthenticationWrapper>
+        </ConnectedRouter>
+      </ClickCapture>
+    </Provider>,
+    document.getElementById('root')
+  );
+} catch (e) {
+  window.handleError(e);
+}
 
 // React is not in a great state right now w.r.t. error handling in render functions.
 // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461

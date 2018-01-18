@@ -2,16 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-
-import { Card } from 'linode-components';
-import {
-  Form,
-  FormGroup,
-  FormGroupError,
-  FormSummary,
-  SubmitButton,
-  Input,
-} from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Input from 'linode-components/dist/forms/Input';
 
 import { setSource } from '~/actions';
 import api from '~/api';

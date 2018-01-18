@@ -1,16 +1,19 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { PrimaryButton } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
-import { Dropdown } from 'linode-components';
-import { Input } from 'linode-components';
-import { List } from 'linode-components';
-import { ListBody } from 'linode-components';
-import { MassEditControl } from 'linode-components';
-import { ListHeader } from 'linode-components';
-import { Table } from 'linode-components';
-import { CheckboxCell, LabelCell, TableCell } from 'linode-components';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Dropdown from 'linode-components/dist/dropdowns/Dropdown';
+import Input from 'linode-components/dist/forms/Input';
+import List from 'linode-components/dist/lists/List';
+import ListBody from 'linode-components/dist/lists/bodies/ListBody';
+import MassEditControl from 'linode-components/dist/lists/controls/MassEditControl';
+import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
+import Table from 'linode-components/dist/tables/Table';
+import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
+import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
+import TableCell from 'linode-components/dist/tables/cells/TableCell';
 
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';

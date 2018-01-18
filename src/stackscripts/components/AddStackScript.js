@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Input, ModalFormGroup } from 'linode-components';
-import { FormModalBody } from 'linode-components';
-import { onChange } from 'linode-components';
+import Input from 'linode-components/dist/forms/Input';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';

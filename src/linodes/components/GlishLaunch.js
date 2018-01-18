@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button } from 'linode-components';
+import Button from 'linode-components/dist/buttons/Button';
 
 
 export function launchGlishConsole(linode) {

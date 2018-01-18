@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PageLoader = ({ isLoading, pastDelay, error }) => {
+const PageLoader = ({ pastDelay, error }) => {
   if (error) {
     return window.handleError(error);
   }
 
-  if (isLoading && pastDelay) {
+  if (pastDelay) {
     return (
       <div className="AppLoader">
         <div className="AppLoader-text font-medium">Loading the Manager...</div>

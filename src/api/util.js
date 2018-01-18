@@ -7,8 +7,6 @@ import isObject from 'lodash/isObject';
 import flatten from 'lodash/flatten';
 import pickBy from 'lodash/pickBy';
 
-import moment from 'moment';
-
 import api from './';
 import { fullyLoadedObject } from './external';
 
@@ -139,24 +137,12 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
   };
 }
 
-export function lessThanDatetimeFilter(key, datetime) {
-  return {
-    [key]: {
-      '+lt': datetime,
-    },
-  };
-}
-
 export function greaterThanDatetimeFilter(key, datetime) {
   return {
     [key]: {
       '+gt': datetime,
     },
   };
-}
-
-export function lessThanNowFilter(key) {
-  return lessThanDatetimeFilter(key, moment().toISOString());
 }
 
 export function createHeaderFilter(filter) {

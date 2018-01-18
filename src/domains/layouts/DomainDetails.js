@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import MasterZone from '../components/MasterZone';
 import SlaveZone from '../components/SlaveZone';

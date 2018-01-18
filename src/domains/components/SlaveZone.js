@@ -3,9 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Card, CardHeader } from 'linode-components';
-import { Table } from 'linode-components';
-import { ButtonCell } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Table from 'linode-components/dist/tables/Table';
+import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
 
 import EditSOARecord from '../components/EditSOARecord';
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { setAnalytics } from '~/actions';
 import api from '~/api';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import TabsComponent from '~/components/Tabs';

@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { ModalFormGroup, Input, Select } from 'linode-components';
-import { onChange } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import Input from 'linode-components/dist/forms/Input';
+import Select from 'linode-components/dist/forms/Select';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';

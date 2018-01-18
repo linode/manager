@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { replace } from 'react-router-redux';
-
-import { Input, ModalFormGroup, Select, Textarea } from 'linode-components';
-import { onChange } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import Input from 'linode-components/dist/forms/Input';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import Select from 'linode-components/dist/forms/Select';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
@@ -155,8 +157,8 @@ export default class EditSOARecord extends Component {
               label="Masters"
               id="masterIps"
               apiKey="master_ips"
-              description="The IP addresses of the master DNS servers for this zone.
-                           Semicolon delimited. (maximum: 6)"
+              // eslint-disable-next-line max-len
+              description="The IP addresses of the master DNS servers for this zone. Semicolon delimited. (maximum: 6)"
             >
               <Textarea
                 name="masterIps"
@@ -172,8 +174,8 @@ export default class EditSOARecord extends Component {
             label="Domain Transfers"
             apiKey="axfr_ips"
             id="axfrIps"
-            description="The IP addresses allowed to AXFR this entire zone.
-                         Semicolon delimited. (maximum: 6)"
+            // eslint-disable-next-line max-len
+            description="The IP addresses allowed to AXFR this entire zone. Semicolon delimited. (maximum: 6)"
           >
             <Textarea
               name="axfrIps"
@@ -232,8 +234,8 @@ export default class EditSOARecord extends Component {
               </ModalFormGroup>
               <ModalFormGroup
                 label="Refresh Rate"
-                description="How often secondary (slave) nameservers check with
-                  the master for updates"
+                // eslint-disable-next-line max-len
+                description="How often secondary (slave) nameservers check with the master for updates"
                 id="refreshRate"
                 apiKey="refresh_sec"
                 errors={errors}
@@ -247,8 +249,8 @@ export default class EditSOARecord extends Component {
               </ModalFormGroup>
               <ModalFormGroup
                 label="Retry Rate"
-                description={('How long secondary (slave) nameservers wait to contact the master ' +
-                              'nameserver again if the last attempt failed')}
+                // eslint-disable-next-line max-len
+                description={('How long secondary (slave) nameservers wait to contact the master nameserver again if the last attempt failed')}
                 id="retryRate"
                 apiKey="retry_sec"
                 errors={errors}
@@ -262,9 +264,8 @@ export default class EditSOARecord extends Component {
               </ModalFormGroup>
               <ModalFormGroup
                 label="Expire Time"
-                description="How long secondary (slave) nameservers wait
-                  before considering DNS data stale if it cannot reach the
-                  master nameserver"
+                // eslint-disable-next-line max-len
+                description="How long secondary (slave) nameservers wait before considering DNS data stale if it cannot reach the master nameserver"
                 id="expireTime"
                 apiKey="expire_sec"
                 errors={errors}
@@ -278,7 +279,8 @@ export default class EditSOARecord extends Component {
                 />
               </ModalFormGroup>
             </span>
-          )}
+          )
+          }
         </div>
       </FormModalBody>
     );
