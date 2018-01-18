@@ -23,12 +23,37 @@ without having to write any of the above "by-hand".
 
 The configuration object must contain some information about the endpoint,
 and possibly some "sub-endpoints". What we call the `config` object here is
-actually the object passed to genConfig. This is a plain object which can
-contain the following keys.
+a plain JavaScript object which can contain the following keys.
 
 ### `name: string` (required)
 
-This
+This is the name given to the resource on the resulting `api.` interface.
+For a root resource, this must be the same name as the module filename. For
+subresources, the name can be arbitrary. It is reccomended that the name 
+match the first portion of the API endpoint with which it is associated. It
+is also reccomended that if the endpoint returns collections of objects, 
+then this name be plural, otherwise it should be singular.
+
+#### **Examples**
+
+* For a singular root endpoint:
+
+    name: 'account'
+
+The resulting interface:
+
+    # get the account place it in the Redux store
+    const account = await dispatch(api.account.one())
+    # update account data and place it in the Redux store
+    const account = await dispatch(api.account.put(data))
+
+* For a plural root endpoint
+
+    name: 'linodes'
+
+The resulting interface:
+
+
 
 ### `endpoint : function(id?: string): string` (required)
 
