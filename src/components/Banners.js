@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 
+import api from '~/api';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 /**
  * @param {[function]} pred Array of functions whos only arguement is the
  * data provided and must return a boolean.
@@ -226,7 +229,14 @@ const mapStateToProps = (state, { match: { params: { linodeLabel } } }) => ({
   banners: state.api.banners.data,
 });
 
-const ConnectedBanners = connect(mapStateToProps)(Banners);
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.banners.one());
+};
+
+const ConnectedBanners = compose(
+  connect(mapStateToProps),
+  Preload(preloadRequest),
+)(Banners);
 
 ConnectedBanners.propTypes = {
   match: PropTypes.shape({
