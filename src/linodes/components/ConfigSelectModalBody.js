@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
-
-import { ModalFormGroup, Radio } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import Radio from 'linode-components/dist/forms/Radio';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { hideModal } from '~/actions/modal';
 import { rebootLinode } from '~/api/ad-hoc/linodes';

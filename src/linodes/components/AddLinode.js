@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
-
-import { Input, ModalFormGroup, PasswordInput } from 'linode-components';
-import { onChange } from 'linode-components';
-import { FormModalBody } from 'linode-components';
+import Input from 'linode-components/dist/forms/Input';
+import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
+import PasswordInput from 'linode-components/dist/forms/PasswordInput';
+import { onChange } from 'linode-components/dist/forms/utilities';
+import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { RegionSelect } from '~/components';
+import RegionSelect from '~/components/RegionSelect';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import DistributionSelect from './DistributionSelect';

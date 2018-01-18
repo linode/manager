@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 
 import { RescueMode, ResetRootPassword } from '../components';
 import { selectLinode } from '../utilities';

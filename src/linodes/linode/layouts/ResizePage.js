@@ -2,22 +2,21 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Card, CardHeader } from 'linode-components';
-import {
-  FormGroup,
-  FormGroupError,
-  Form,
-  FormSummary,
-  SubmitButton,
-  Input,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import Form from 'linode-components/dist/forms/Form';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import Input from 'linode-components/dist/forms/Input';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import { setSource } from '~/actions/source';
 import api from '~/api';
 import { resizeLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { PlanSelect } from '~/linodes/components';
 import { planStyle } from '~/linodes/components/PlanStyle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';

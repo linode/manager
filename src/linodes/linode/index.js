@@ -15,7 +15,8 @@ import TabsComponent from '~/components/Tabs';
 import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { ChainedDocumentTitle, GroupLabel } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import GroupLabel from '~/components/GroupLabel';
 import { planStyle } from '~/linodes/components/PlanStyle';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 

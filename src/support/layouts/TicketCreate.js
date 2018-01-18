@@ -4,23 +4,21 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
-import { Card } from 'linode-components';
-import {
-  Input,
-  Select,
-  Form,
-  FormGroup,
-  FormGroupError,
-  FormSummary,
-  SubmitButton,
-  Textarea,
-} from 'linode-components';
-import { onChange } from 'linode-components';
+import Card from 'linode-components/dist/cards/Card';
+import Form from 'linode-components/dist/forms/Form';
+import FormGroup from 'linode-components/dist/forms/FormGroup';
+import FormGroupError from 'linode-components/dist/forms/FormGroupError';
+import FormSummary from 'linode-components/dist/forms/FormSummary';
+import Input from 'linode-components/dist/forms/Input';
+import Textarea from 'linode-components/dist/forms/Textarea';
+import Select from 'linode-components/dist/forms/Select';
+import SubmitButton from 'linode-components/dist/forms/SubmitButton';
+import { onChange } from 'linode-components/dist/forms/utilities';
 
 import { setAnalytics, setSource } from '~/actions';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 import TicketHelper from '../components/TicketHelper';

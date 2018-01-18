@@ -2,17 +2,18 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { DeleteModalBody } from 'linode-components';
-import { PrimaryButton } from 'linode-components';
-import { Card, CardHeader } from 'linode-components';
-import { Table } from 'linode-components';
-import { ButtonCell, LabelCell } from 'linode-components';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
+import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import Card from 'linode-components/dist/cards/Card';
+import CardHeader from 'linode-components/dist/cards/CardHeader';
+import Table from 'linode-components/dist/tables/Table';
+import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
+import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
-import { GroupLabel } from '~/components';
+import GroupLabel from '~/components/GroupLabel';
 import { NAME_SERVERS } from '~/constants';
 
 import { formatDNSSeconds, ONE_DAY } from './SelectDNSSeconds';

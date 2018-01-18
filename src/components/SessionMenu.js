@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ExternalLink } from 'linode-components';
+import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
 
 
 export default function SessionMenu(props) {

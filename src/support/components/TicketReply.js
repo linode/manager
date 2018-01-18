@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Card from 'linode-components/dist/cards/Card';
+import CardImageHeader from 'linode-components/dist/cards/CardImageHeader';
 
-import { Card, CardImageHeader } from 'linode-components';
 import TimeDisplay from '~/components/TimeDisplay';
 
 export function getLineBreakCharacter(text) {

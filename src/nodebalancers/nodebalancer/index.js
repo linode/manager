@@ -12,7 +12,8 @@ import { ComponentPreload as Preload } from '~/decorators/Preload';
 import { setAnalytics } from '~/actions';
 import api from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { ChainedDocumentTitle, GroupLabel } from '~/components';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import GroupLabel from '~/components/GroupLabel';
 
 import NodeBalancerDashboard from './layouts/NodeBalancerDashboard';
 import NodeBalancerSettings from './layouts/NodeBalancerSettings';
