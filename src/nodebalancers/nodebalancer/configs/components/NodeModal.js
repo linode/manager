@@ -5,7 +5,7 @@ import { ModalFormGroup, Input, Select } from 'linode-components';
 import { onChange } from 'linode-components';
 import { FormModalBody } from 'linode-components';
 
-import { hideModal, showModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -41,11 +41,11 @@ export default class NodeModal extends Component {
     super(props);
 
     this.state = {
-      id: props.node.id,
-      label: props.node.label,
-      address: props.node.address,
-      weight: props.node.weight,
-      mode: props.node.mode,
+      id: props.node && props.node.id,
+      label: props.node && props.node.label,
+      address: props.node && props.node.address,
+      weight: props.node && props.node.weight,
+      mode: props.node && props.node.mode,
       errors: {},
     };
 
@@ -53,7 +53,7 @@ export default class NodeModal extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, nodebalancerId, configId } = this.props;
+    const { dispatch, nodebalancerId, configId, close } = this.props;
     const state = this.state;
     const data = {
       label: state.label,
@@ -65,12 +65,12 @@ export default class NodeModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => api.nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-      hideModal,
+      close,
     ]));
   }
 
   render() {
-    const { dispatch, title } = this.props;
+    const { title, close } = this.props;
     const { id, label, address, weight, mode, errors } = this.state;
 
     const modeOptions = [
@@ -82,7 +82,7 @@ export default class NodeModal extends Component {
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={close}
         buttonText={id ? undefined : 'Add Node'}
         buttonDisabledText={id ? undefined : 'Adding Node'}
         analytics={{ title, action: id ? 'edit' : 'add' }}
@@ -160,4 +160,5 @@ NodeModal.propTypes = {
   configId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   nodebalancerId: PropTypes.number.isRequired,
   node: PropTypes.object,
+  close: PropTypes.func.isRequired,
 };

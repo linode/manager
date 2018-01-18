@@ -45,7 +45,7 @@ NodeBalancerConfigAdd.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const params = ownProps.params;
+  const params = ownProps.match.params;
   const nbLabel = params.nbLabel;
 
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
