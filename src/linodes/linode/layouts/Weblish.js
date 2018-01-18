@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 
 import { ZONES } from '~/constants';
 import { getObjectByLabelLazily } from '~/api/util';
-import { lishToken } from '~/api/ad-hoc/linodes';
+import request from '~/request';
 
 export function addCSSLink(url) {
   const head = window.document.querySelector('head');
@@ -47,9 +47,8 @@ export class Weblish extends Component {
   }
 
   async connect() {
-    const { dispatch } = this.props;
     const { linode } = this.state;
-    const { lish_token: token } = await dispatch(lishToken(linode.id));
+    const { data: { lish_token: token } } = await request.post(`/linode/instances/${linode.id}/lish_token`);
     const socket = new WebSocket(
       `wss://${ZONES[linode.region]}.webconsole.linode.com:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
