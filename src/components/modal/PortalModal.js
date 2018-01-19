@@ -11,24 +11,6 @@ class PortalModal extends Component {
     this.selector = document.getElementById('portal-modal');
   }
 
-  getPropFromChildren(prop) {
-    const { children } = this.props;
-    if (Array.isArray(children)) {
-      const activeChild = children.find(child => !!child);
-      return activeChild.props && activeChild.props[prop];
-    } else if (typeof(children) === 'object') {
-      return children.props && children.props[prop];
-    }
-  }
-
-  getCloseFromChildren() {
-    return (
-      this.getPropFromChildren('close') ||
-      this.getPropFromChildren('onClose') ||
-      this.getPropFromChildren('onCancel')
-    );
-  }
-
   activeChild() {
     const { children } = this.props;
     if (Array.isArray(children)) {
@@ -48,8 +30,10 @@ class PortalModal extends Component {
       throw new Error('PortalModal must have exactly one child (the Modal body)');
     }
 
-    const title = this.getPropFromChildren('title');
-    const close = this.getCloseFromChildren();
+    const title = activeChild.props.title;
+    const close = (activeChild.props.close ||
+                   activeChild.props.onClose ||
+                   activeChild.props.onCancel);
 
     return ReactDOM.createPortal(
       <ModalShell
