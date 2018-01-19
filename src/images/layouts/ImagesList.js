@@ -14,7 +14,6 @@ import MassEditControl from 'linode-components/dist/lists/controls/MassEditContr
 import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
 import ListBody from 'linode-components/dist/lists/bodies/ListBody';
 import { setAnalytics, setSource } from '~/actions';
-import { confirmThenDelete } from '~/utilities';
 import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 import TableCell from 'linode-components/dist/tables/cells/TableCell';

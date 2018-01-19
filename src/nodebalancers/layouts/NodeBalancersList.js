@@ -23,7 +23,6 @@ import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
-import { confirmThenDelete } from '~/utilities';
 import { PortalModal } from '~/components/modal';
 import { hideModal, deleteModalProps } from '~/utilities';
 
