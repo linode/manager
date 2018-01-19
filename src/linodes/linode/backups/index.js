@@ -36,9 +36,9 @@ class LinodeBackupsIndex extends Component {
 
   render() {
     const {
-      dispatch,
       match: { url, path },
       location: { pathname },
+      onSubmit,
       linode,
       type,
     } = this.props;
@@ -54,10 +54,7 @@ class LinodeBackupsIndex extends Component {
       return (
         <Card header={<CardHeader title="Enable backups" />}>
           <Form
-            onSubmit={() => dispatch(dispatchOrStoreErrors.call(this, [
-              () => enableBackup(linode.id),
-              () => linodeBackups(linode.id),
-            ]))}
+            onSubmit={onSubmit}
             analytics={{ title: 'Enable Backups' }}
           >
             <p>
@@ -105,7 +102,6 @@ LinodeBackupsIndex.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired, // @todo Define the shape of a Linode.
   type: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state, props) {
@@ -114,10 +110,18 @@ function mapStateToProps(state, props) {
   return { linode, type };
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   dispatch,
   setSource() {
     dispatch(setSource(__filename));
+  },
+
+  onSubmit() {
+    const { linode } = ownProps;
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => enableBackup(linode.id),
+      () => linodeBackups(linode.id),
+    ]));
   },
 });
 

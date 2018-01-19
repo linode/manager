@@ -7,7 +7,7 @@ import Input from 'linode-components/dist/forms/Input';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import { takeBackup } from '~/api/ad-hoc/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -36,24 +36,22 @@ export default class TakeSnapshot extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode, close } = this.props;
+    const { dispatch, linode } = this.props;
     const { label } = this.state;
 
-    dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id, label),
       ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
     ]));
-
-    close();
   }
 
   render() {
-    const { close } = this.props;
+    const { dispatch } = this.props;
     const { errors, label } = this.state;
 
     return (
       <FormModalBody
-        onCancel={close}
+        onCancel={() => dispatch(hideModal())}
         onSubmit={this.onSubmit}
         buttonText="Take Snapshot"
         buttonDisabledText="Taking Snapshot"
@@ -78,5 +76,4 @@ export default class TakeSnapshot extends Component {
 TakeSnapshot.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
-  close: PropTypes.func.isRequired,
 };

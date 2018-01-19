@@ -46,7 +46,6 @@ ShallowWrapper {
         <SideEffect(ChainedDocumentTitle)
           title="API Tokens"
         />,
-        null,
         <header
           className="NavigationHeader clearfix"
         >
@@ -251,7 +250,6 @@ ShallowWrapper {
         "rendered": null,
         "type": [Function],
       },
-      null,
       Object {
         "instance": null,
         "key": undefined,
@@ -1041,7 +1039,6 @@ ShallowWrapper {
           <SideEffect(ChainedDocumentTitle)
             title="API Tokens"
           />,
-          null,
           <header
             className="NavigationHeader clearfix"
           >
@@ -1246,7 +1243,6 @@ ShallowWrapper {
           "rendered": null,
           "type": [Function],
         },
-        null,
         Object {
           "instance": null,
           "key": undefined,

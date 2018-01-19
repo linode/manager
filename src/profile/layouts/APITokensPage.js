@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
 import Input from 'linode-components/dist/forms/Input';
 import List from 'linode-components/dist/lists/List';
@@ -13,16 +12,13 @@ import ListHeader from 'linode-components/dist/lists/headers/ListHeader';
 import Table from 'linode-components/dist/tables/Table';
 import DropdownCell from 'linode-components/dist/tables/cells/DropdownCell';
 import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
-import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
 
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
-import { PortalModal } from '~/components/modal';
 import { TimeCell } from '~/components/tables/cells';
 import { confirmThenDelete } from '~/utilities';
-import { hideModal } from '~/utilities';
 
 import TokenMoreInfo from '../components/TokenMoreInfo';
 import EditPersonalAccessToken from '../components/EditPersonalAccessToken';
@@ -36,24 +32,21 @@ export class APITokensPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      filter: '',
-      modal: null,
-    };
-
-    this.hideModal = hideModal.bind(this);
+    this.state = { filter: '' };
   }
 
   createDropdownGroups = (token) => {
+    const { dispatch } = this.props;
+
     const groups = [
-      { elements: [{ name: 'More Info', action: () => this.tokenMoreInfoModal(token) }] },
+      { elements: [{ name: 'More Info', action: () => TokenMoreInfo.trigger(dispatch, token) }] },
       { elements: [{ name: 'Revoke', action: () => this.revokeTokens(token) }] },
     ];
 
     if (!this.isApp(token)) {
       groups.splice(1, 0, {
         elements: [
-          { name: 'Edit', action: () => this.editPersonalAccessTokenModal(token) },
+          { name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) },
         ],
       });
     }
@@ -79,76 +72,7 @@ export class APITokensPage extends Component {
     OBJECT_TYPE,
     (t) => t.label,
     'revoke',
-    'revoking').bind(this);
-
-  createPersonalAccessTokenModal = () => {
-    this.setState({
-      modal: {
-        name: 'createPersonalAccessToken',
-        title: CreatePersonalAccessToken.title,
-      },
-    });
-  }
-
-  editPersonalAccessTokenModal = (token) => {
-    this.setState({
-      modal: {
-        name: 'editPersonalAccessToken',
-        title: EditPersonalAccessToken.title,
-        token: token,
-      },
-    });
-  }
-
-  tokenMoreInfoModal = (token) => {
-    this.setState({
-      modal: {
-        name: 'tokenMoreInfo',
-        title: TokenMoreInfo.title,
-        token: token,
-      },
-    });
-  }
-
-  renderModal = () => {
-    const { dispatch } = this.props;
-    if (!this.state.modal) {
-      return null;
-    }
-    const { name, title, token } = this.state.modal;
-    return (
-      <PortalModal
-        title={title}
-        onClose={this.hideModal}
-      >
-        {(name === 'tokenMoreInfo') &&
-          <ConfirmModalBody
-            noCancel
-            onSubmit={this.hideModal}
-            buttonText="Done"
-          >
-            <TokenMoreInfo scopes={token.scopes} />
-          </ConfirmModalBody>
-        }
-        {(name === 'editPersonalAccessToken') &&
-          <EditPersonalAccessToken
-            id={token.id}
-            label={token.label}
-            dispatch={dispatch}
-            close={this.hideModal}
-          />
-        }
-        {(name === 'createPersonalAccessToken') &&
-          <EditPersonalAccessToken
-            id={token.id}
-            label={token.label}
-            dispatch={dispatch}
-            close={this.hideModal}
-          />
-        }
-      </PortalModal>
-    );
-  }
+    'revoking').bind(this)
 
   renderTokens = () => {
     const { dispatch, selectedMap, tokens } = this.props;
@@ -233,7 +157,6 @@ export class APITokensPage extends Component {
     return (
       <div>
         <ChainedDocumentTitle title="API Tokens" />
-        {this.renderModal()}
         <header className="NavigationHeader clearfix">
           <PrimaryButton
             onClick={() => CreatePersonalAccessToken.trigger(dispatch)}

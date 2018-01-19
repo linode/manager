@@ -265,7 +265,6 @@ ShallowWrapper {
     "nodeType": "function",
     "props": Object {
       "children": Array [
-        null,
         <p>
           Select a backup to see details and restore to a Linode.
         </p>,
@@ -297,7 +296,6 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
-      null,
       Object {
         "instance": null,
         "key": undefined,
@@ -397,7 +395,6 @@ ShallowWrapper {
       "nodeType": "function",
       "props": Object {
         "children": Array [
-          null,
           <p>
             Select a backup to see details and restore to a Linode.
           </p>,
@@ -429,7 +426,6 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
-        null,
         Object {
           "instance": null,
           "key": undefined,

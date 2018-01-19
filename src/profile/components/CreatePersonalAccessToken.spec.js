@@ -29,7 +29,7 @@ describe('profile/components/CreatePersonalAccessToken', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it.skip('creates a new token', async () => {
+  it('creates a new token', async () => {
     const page = shallow(
       <CreatePersonalAccessToken
         dispatch={dispatch}

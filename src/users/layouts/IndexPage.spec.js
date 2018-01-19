@@ -82,7 +82,7 @@ describe('users/layouts/IndexPage', () => {
     expect(dispatch.firstCall.args[0].type).toBe(SHOW_MODAL);
   });
 
-  it.skip('deletes selected users when delete is pressed', async () => {
+  it('deletes selected users when delete is pressed', async () => {
     const page = mount(
       <StaticRouter>
         <IndexPage

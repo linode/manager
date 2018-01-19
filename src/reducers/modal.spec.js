@@ -28,8 +28,8 @@ describe('reducers/modal', () => {
       body: null,
     })).toEqual({
       title: null,
-      open: false,
       body: null,
+      open: false,
     });
   });
 

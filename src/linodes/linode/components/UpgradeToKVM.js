@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import ExternalLink from 'linode-components/dist/buttons/ExternalLink';
 import ConfirmModalBody from 'linode-components/dist/modals/ConfirmModalBody';
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import { kvmifyLinode } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -27,7 +27,7 @@ export default class UpgradeToKVM extends Component {
   }
 
   render() {
-    const { dispatch, linode, type, close } = this.props;
+    const { dispatch, linode, type } = this.props;
     const { errors } = this.state;
     const migrateEst = Math.round(type.disk / (4000 / 60) / 60);
 
@@ -35,15 +35,15 @@ export default class UpgradeToKVM extends Component {
       <ConfirmModalBody
         onSubmit={() => dispatch(dispatchOrStoreErrors.call(this, [
           () => kvmifyLinode(linode.id),
-          close,
+          hideModal,
         ]))}
-        onCancel={close}
+        onCancel={() => dispatch(hideModal())}
         analytics={{ title: UpgradeToKVM.title }}
         errors={errors}
       >
         <div>
           <p>
-            <strong>{linode.label}</strong> will be shut down, migrated to a KVM host, and then
+            <strong>{linode.label}</strong> will be shut down, migrated to a KVM box, and then
             booted back up. Specific changes from Xen to KVM are detailed in
             our <ExternalLink to="https://www.linode.com/docs/platform/kvm">KVM Reference guide</ExternalLink>.
           </p>
@@ -63,5 +63,4 @@ UpgradeToKVM.propTypes = {
   type: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
 };

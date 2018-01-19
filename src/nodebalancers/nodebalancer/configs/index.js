@@ -164,7 +164,7 @@ NodeBalancerConfigsIndex.propTypes = {
 function mapStateToProps(state, { match: { params: { nbLabel } } }) {
   const { nodebalancers } = state.api.nodebalancers;
   const nodebalancer = objectFromMapByLabel(Object.values(nodebalancers), nbLabel);
-  const config = nodebalancer && nodebalancer._configs.configs[configId];
+  const config = nodebalancer._configs.configs[configId];
   return { nodebalancer, config };
 }
 const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {

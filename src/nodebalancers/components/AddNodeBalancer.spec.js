@@ -12,7 +12,7 @@ import {
 } from '~/test.helpers';
 
 
-describe.skip('linodes/components/AddNodeBalancer', function () {
+describe('linodes/components/AddNodeBalancer', function () {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 

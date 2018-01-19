@@ -7,7 +7,7 @@ import Select from 'linode-components/dist/forms/Select';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
 import { imagizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -85,7 +85,7 @@ export default class AddImage extends Component {
 
   onSubmit = () => {
     const { description, label, linode, disk } = this.state;
-    const { dispatch, close } = this.props;
+    const { dispatch } = this.props;
 
     const requests = [
       () => imagizeLinodeDisk(
@@ -93,26 +93,24 @@ export default class AddImage extends Component {
         disk.id || disk,
         { label, description },
       ),
-      close,
+      hideModal,
     ];
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
-  disksByType = (disks, disk) => {
+  disksByType = disks => {
     const rawDisks = disks.filter(disk => disk.filesystem === 'raw');
     const swapDisks = disks.filter(disk => disk.filesystem === 'swap');
     const regularDisks = disks.filter(disk => ['ext3', 'ext4'].indexOf(disk.filesystem) > -1);
     const initDisks = disks.filter(disk => disk.filesystem === 'ext2');
-    let diskOptions = [...regularDisks, ...initDisks];
-    // This is for the "create image from disk" entrypoint
-    diskOptions = (!disks.length && disk) ? [disk] : diskOptions;
+    const diskOptions = [...regularDisks, ...initDisks];
     return {
-      rawDisks,
-      swapDisks,
-      regularDisks,
-      initDisks,
-      diskOptions,
+      rawDisks: rawDisks,
+      swapDisks: swapDisks,
+      regularDisks: regularDisks,
+      initDisks: initDisks,
+      diskOptions: diskOptions,
     };
   }
 
@@ -126,8 +124,8 @@ export default class AddImage extends Component {
   }
 
   renderDiskOptions = (disks, disk) => {
-    const { rawDisks, swapDisks, diskOptions } = this.disksByType(disks, disk);
-    const diskField = (diskOptions.length) ?
+    const { rawDisks, swapDisks, diskOptions } = this.disksByType(disks);
+    const diskField = diskOptions.length ?
       /* UX request:
         If a Linode is not a "Simple Linode" but it only has one option,
         still show the select field!
@@ -154,7 +152,7 @@ export default class AddImage extends Component {
   }
 
   render() {
-    const { close } = this.props;
+    const { dispatch } = this.props;
     const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
     const disks = allDisks[linode] || [];
     const isSimpleLinode = this.isSimpleLinode(disks);
@@ -162,7 +160,7 @@ export default class AddImage extends Component {
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={() => close()}
+        onCancel={() => dispatch(hideModal())}
         buttonText="Create Image"
         analytics={{ title: AddImage.title }}
         errors={errors}
@@ -214,5 +212,4 @@ AddImage.propTypes = {
   title: PropTypes.string.isRequired,
   linode: PropTypes.object,
   disk: PropTypes.object,
-  close: PropTypes.func.isRequired,
 };

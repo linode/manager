@@ -9,7 +9,7 @@ import {
   expectRequest,
 } from '~/test.helpers';
 
-describe.skip('users/components/AddUser', () => {
+describe('users/components/AddUser', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

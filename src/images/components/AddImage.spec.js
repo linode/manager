@@ -12,7 +12,7 @@ import {
 
 const { linodes } = api;
 
-describe.skip('linodes/images/components/AddImage', function () {
+describe('linodes/images/components/AddImage', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
 
