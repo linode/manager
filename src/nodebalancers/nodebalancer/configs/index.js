@@ -14,6 +14,7 @@ import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import TabsComponent from '~/components/Tabs';
 import DashboardPage from './layouts/NodeBalancerConfigDashboard';
 import EditConfigPage from './layouts/NodeBalancerConfigEdit';
+import AddConfigPage from '../layouts/NodeBalancerConfigAdd';
 
 export class NodeBalancerConfigsIndex extends Component {
   async componentDidMount() {
@@ -29,7 +30,7 @@ export class NodeBalancerConfigsIndex extends Component {
       config,
     } = this.props;
 
-    if (!nodebalancer || !config) return null;
+    if (!nodebalancer) return null;
 
     const matched = (path, options) => Boolean(
       matchPath(pathname, { path, ...options })
@@ -40,24 +41,37 @@ export class NodeBalancerConfigsIndex extends Component {
       { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
     ];
 
-    const tabData = [
-      { name: 'Dashboard', to: url, selected: matched(url, { exact: true }) },
-      { name: 'Settings', to: `${url}/settings`, selected: matched(`${url}/settings`) },
-    ];
+    const tabData = config
+      ? [
+        { name: 'Dashboard', to: url, selected: matched(url, { exact: true }) },
+        { name: 'Settings', to: `${url}/settings`, selected: matched(`${url}/settings`) },
+      ]
+      : [
+        {
+          name: 'Dashboard',
+          to: `/nodebalancers/${nodebalancer.label}`,
+          selected: matched('/nodebalancers/:nbLabel/configs/create', { exact: true }),
+        },
+        { name: 'Settings', to: `/nodebalancers/${nodebalancer.label}/settings`, selected: false },
+      ];
 
+    const documentTitle = config
+      ? <ChainedDocumentTitle title={`Port ${config.port} - ${nodebalancer.label}`} />
+      : <ChainedDocumentTitle title={nodebalancer.label} />;
 
     return (
       <div>
-        <ChainedDocumentTitle title={`Port ${config.port} - ${nodebalancer.label}`} />
+        {documentTitle}
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">
               <Breadcrumbs crumbs={crumbs} />
-              <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}`}>
-                  Port {config.port}
-                </Link>
-              </h1>
+              {config &&
+                <h1 title={nodebalancer.id}>
+                  <Link to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}`}>
+                    Port {config.port}
+                  </Link>
+                </h1>}
             </div>
           </div>
         </header>
@@ -65,8 +79,9 @@ export class NodeBalancerConfigsIndex extends Component {
         <TabsComponent tabs={tabData} />
         <div className="container">
           <Switch>
-            <Route path={`${path}/settings`} component={EditConfigPage} />
-            <Route exact path={path} component={DashboardPage} />
+            <Route path={`${path}/create`} component={AddConfigPage} />
+            <Route path={`${path}/:configId/settings`} component={EditConfigPage} />
+            <Route exact path={`${path}/:configId`} component={DashboardPage} />
             <Redirect to="/not-found" />
           </Switch>
         </div>
@@ -92,7 +107,7 @@ NodeBalancerConfigsIndex.propTypes = {
 function mapStateToProps(state, { match: { params: { nbLabel, configId } } }) {
   const { nodebalancers } = state.api.nodebalancers;
   const nodebalancer = objectFromMapByLabel(Object.values(nodebalancers), nbLabel);
-  const config = nodebalancer._configs.configs[configId];
+  const config = nodebalancer && nodebalancer._configs.configs[configId];
   return { nodebalancer, config };
 }
 const preloadRequest = async (dispatch, { match: { params: { nbLabel } } }) => {
