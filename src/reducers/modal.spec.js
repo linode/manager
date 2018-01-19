@@ -10,8 +10,10 @@ describe('reducers/modal', () => {
     expect(modal(state, {
       type: actions.SHOW_MODAL,
       title: 'title',
+      body: 'body',
     })).toEqual({
       title: 'title',
+      body: 'body',
       open: true,
     });
   });
@@ -23,9 +25,11 @@ describe('reducers/modal', () => {
     expect(modal(state, {
       type: actions.HIDE_MODAL,
       title: null,
+      body: null,
     })).toEqual({
       title: null,
       open: false,
+      body: null,
     });
   });
 

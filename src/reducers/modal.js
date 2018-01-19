@@ -12,11 +12,13 @@ export default function modal(state = defaultState, action) {
       return {
         open: true,
         title: action.title,
+        body: action.body,
       };
     case HIDE_MODAL:
       return {
         open: false,
         title: null,
+        body: null,
       };
     default:
       return { ...state };
