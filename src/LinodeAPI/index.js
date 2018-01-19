@@ -39,6 +39,8 @@ class LinodeAPI {
 
   static tokenString = (v) => `Bearer ${v}`;
 
+  interceptors = Axios.interceptors;
+
   constructor(baseURL, apiKey) {
     invariant(baseURL, LinodeAPI.NULL_BASE_URL_ERROR);
     this.baseURL = baseURL;
@@ -72,18 +74,26 @@ class LinodeAPI {
     });
   }
 
-  post = (url, data) => {
+  post = (url, data, contentType) => {
     return Axios({
       ...this.opts,
+      headers: {
+        ...this.opts.headers,
+        ...(contentType && { 'content-type': contentType }),
+      },
       url,
       method: 'POST',
       data,
     });
   }
 
-  put = (url, data) => {
+  put = (url, data, contentType) => {
     return Axios({
       ...this.opts,
+      headers: {
+        ...this.opts.headers,
+        ...(contentType && { 'content-type': contentType }),
+      },
       url,
       method: 'PUT',
       data,

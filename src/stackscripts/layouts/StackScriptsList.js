@@ -19,7 +19,7 @@ import { setAnalytics, setSource } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
-import { createHeaderFilter, transform } from '~/api/util';
+import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
 
@@ -193,7 +193,7 @@ function mapStateToProps(state) {
 }
 
 const preloadRequest = async (dispatch) => {
-  await dispatch(api.stackscripts.all([], null, createHeaderFilter({ mine: true })));
+  await dispatch(api.stackscripts.all([], null, { mine: true }));
 };
 
 export default compose(

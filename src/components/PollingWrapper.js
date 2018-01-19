@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import api from '~/api';
 import Polling from '~/api/polling';
 import { lessThanNowFilter } from '~/api/lessThanDateFilter';
-import { createHeaderFilter, greaterThanDatetimeFilter } from '~/api/util';
+import { greaterThanDatetimeFilter } from '~/api/util';
 import { EVENT_POLLING_DELAY } from '~/constants';
 
 const MIN_SHOWN_EVENTS = 10;
@@ -17,7 +17,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 let filterOptions = { seen: false };
 const fetchAllEvents = () => (dispatch) =>
-  dispatch(api.events.all([], null, createHeaderFilter(filterOptions)));
+  dispatch(api.events.all([], null, filterOptions));
 
 const POLLING = Polling({
   apiRequestFn: fetchAllEvents,
@@ -41,7 +41,7 @@ class PollingWrapper extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.props.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
+      this.props.fetchEventsPage(lessThanNowFilter('created'));
     }
 
     // initialize polling for unseen events
