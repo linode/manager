@@ -10,7 +10,6 @@ import { compose } from 'redux';
 import api from '~/api';
 import { ipv4s, getIPs } from '~/api/ad-hoc/networking';
 import {
-  createHeaderFilter,
   getObjectByLabelLazily,
 } from '~/api/util';
 
@@ -67,7 +66,7 @@ const preloadRequest = async (dispatch, { match: { params: { linodeLabel } } }) 
   await Promise.all([
     getIPs(id),
     ipv4s(region),
-    api.linodes.all([], undefined, createHeaderFilter({ region })),
+    api.linodes.all([], undefined, { region }),
   ].map(dispatch));
 };
 

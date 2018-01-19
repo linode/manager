@@ -113,9 +113,9 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       return await dispatch(api[pluralName].one([label]));
     }
 
-    const response = await dispatch(api[pluralName].all([], undefined, {
-      'X-Filter': { [labelName]: label },
-    }));
+    const response = await dispatch(api[pluralName].all([], undefined,
+      { [labelName]: label },
+    ));
 
     if (!response.results) {
       throw new Error404();
@@ -142,12 +142,6 @@ export function greaterThanDatetimeFilter(key, datetime) {
     [key]: {
       '+gt': datetime,
     },
-  };
-}
-
-export function createHeaderFilter(filter) {
-  return {
-    'X-Filter': filter,
   };
 }
 
