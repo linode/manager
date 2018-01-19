@@ -10,7 +10,7 @@ import pickBy from 'lodash/pickBy';
 import api from './';
 import { fullyLoadedObject } from './external';
 
-
+import get from 'lodash/get';
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
 // http://stackoverflow.com/a/38020283/1507139
@@ -20,10 +20,11 @@ export function Error404() {
 
 Error404.prototype = new Error();
 
-export async function reduceErrors(response) {
-  const json = await response.json();
+export function reduceErrors(errorResponse) {
+  const _errors = get(errorResponse, ['response', 'data', 'errors'], []);
+
   const errors = { _: [] };
-  json.errors.forEach(error => {
+  _errors.forEach(error => {
     let key = '_';
     if (error.field) {
       key = error.field;
@@ -56,11 +57,7 @@ export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
           results[i] = await dispatch(nextDispatch);
         }
       } catch (response) {
-        if (!response.json) {
-          throw response;
-        }
-
-        const errors = await reduceErrors(response);
+        const errors = reduceErrors(response);
         errors._ = errors._.concat(extraWholeFormFields.reduce((flattenedErrors, field) => {
           const error = errors[field];
           if (Array.isArray(error)) {

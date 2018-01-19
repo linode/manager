@@ -37,8 +37,7 @@ request.interceptors.response.use(
         || error.response.status === 401) {
       store.dispatch(session.expireAndReAuth);
     }
-
-    return error;
+    return Promise.reject(error);
   }
 );
 
