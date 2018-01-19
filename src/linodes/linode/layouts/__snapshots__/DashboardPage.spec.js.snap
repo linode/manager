@@ -364,7 +364,6 @@ ShallowWrapper {
     "nodeType": "host",
     "props": Object {
       "children": Array [
-        null,
         <div
           className="row"
         >
@@ -1877,7 +1876,6 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
-      null,
       Object {
         "instance": null,
         "key": undefined,
@@ -11423,7 +11421,6 @@ ShallowWrapper {
       "nodeType": "host",
       "props": Object {
         "children": Array [
-          null,
           <div
             className="row"
           >
@@ -12936,7 +12933,6 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
-        null,
         Object {
           "instance": null,
           "key": undefined,

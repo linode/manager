@@ -7,7 +7,7 @@ import { AddMaster } from '~/domains/components';
 import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 
 
-describe.skip('domains/components/AddMaster', () => {
+describe('domains/components/AddMaster', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -16,7 +16,7 @@ describe.skip('domains/components/AddMaster', () => {
 
   const dispatch = sandbox.stub();
 
-  it.skip('submits form and redirects to domain', async () => {
+  it('submits form and redirects to domain', async () => {
     AddMaster.trigger(dispatch);
     const component = shallow(dispatch.firstCall.args[0].body, '');
 

@@ -6,7 +6,7 @@ import Input from 'linode-components/dist/forms/Input';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import { confirmTFA } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -46,15 +46,14 @@ export class TwoFactorModal extends Component {
   }
 
   twoFactorScratchModal(scratch) {
-    const { close } = this.props;
     const title = 'Two-Factor Authentication Enabled';
 
     return (dispatch) => dispatch(showModal(title,
       <FormModalBody
         buttonText="I understand"
         buttonDisabledText="I understand"
-        onSubmit={close}
-        onCancel={close}
+        onSubmit={() => dispatch(hideModal())}
+        onCancel={() => dispatch(hideModal())}
         noCancel
         analytics={{ title }}
       >
@@ -70,7 +69,7 @@ export class TwoFactorModal extends Component {
   }
 
   render() {
-    const { secret, username, close } = this.props;
+    const { dispatch, secret, username } = this.props;
     const { tfaCode, errors } = this.state;
     const QRcode = new QRious({
       value: `otpauth://totp/LinodeManager%3A${username}?secret=${secret}`,
@@ -84,7 +83,7 @@ export class TwoFactorModal extends Component {
           buttonText="Enable"
           buttonDisabledText="Enabling"
           onSubmit={this.onSubmit}
-          onCancel={close}
+          onCancel={() => dispatch(hideModal())}
           analytics={{ title: TwoFactorModal.title }}
           errors={errors}
         >
@@ -120,5 +119,4 @@ TwoFactorModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   secret: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  close: PropTypes.string.isRequired,
 };

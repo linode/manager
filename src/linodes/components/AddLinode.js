@@ -7,6 +7,7 @@ import PasswordInput from 'linode-components/dist/forms/PasswordInput';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
+import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import RegionSelect from '~/components/RegionSelect';
@@ -19,14 +20,21 @@ import PlanSelect from './PlanSelect';
 export default class AddLinode extends Component {
   static title = 'Add a Linode'
 
+  static trigger(dispatch, images, plans) {
+    return dispatch(showModal(AddLinode.title, (
+      <AddLinode
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+        images={images}
+        plans={plans}
+      />
+    )));
+  }
+
   constructor(props) {
     super(props);
 
-    this.state = {
-      errors: {},
-      password: '',
-      label: '',
-    };
+    this.state = { errors: {}, password: '' };
 
     this.onChange = onChange.bind(this);
   }

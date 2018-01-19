@@ -18,7 +18,6 @@ import { linodeStats } from '~/api/ad-hoc/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import TransferPool from '~/components/TransferPool';
-import { PortalModal } from '~/components/modal';
 import {
   GraphGroup,
   makeCPUGraphMetadata,
@@ -31,7 +30,6 @@ import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import GlishLaunch from '~/linodes/components/GlishLaunch';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
-import { hideModal } from '~/utilities';
 
 import { selectLinode } from '../utilities';
 import { planStats } from '../../components/PlanStyle';
@@ -46,11 +44,9 @@ export class DashboardPage extends Component {
     this.state = {
       year: new Date().getFullYear().toString(),
       month: '0',
-      modal: null,
     };
 
     this.onChange = onChange.bind(this);
-    this.hideModal = hideModal.bind(this);
   }
 
   async componentDidMount() {
@@ -90,44 +86,8 @@ export class DashboardPage extends Component {
     this.setState({ month: month, year: value });
   }
 
-  upgradeToKVMModal = (linode, type) => {
-    this.setState({
-      modal: {
-        title: UpgradeToKVM.title,
-        name: 'upgradeToKVM',
-        linode: linode,
-        type: type,
-      },
-    });
-  }
-
-
-  renderModal = () => {
-    const { dispatch } = this.props;
-    const { modal } = this.state;
-    if (!modal) {
-      return null;
-    }
-    const { name, title, linode, type } = modal;
-    return (
-      <PortalModal
-        title={title}
-        onClose={this.hideModal}
-      >
-        {(name === 'upgradeToKVM') &&
-          <UpgradeToKVM
-            dispatch={dispatch}
-            linode={linode}
-            type={type}
-            close={this.hideModal}
-          />
-        }
-      </PortalModal>
-    );
-  }
-
   renderDetails() {
-    const { username, linode, image, type } = this.props;
+    const { username, linode, dispatch, image, type } = this.props;
     const lishLink = `${username}@lish-${ZONES[linode.region]}.linode.com`;
 
     const publicIPv4 = linode.ipv4.filter(ip => !ip.startsWith('192.168'))[0];
@@ -184,7 +144,7 @@ export class DashboardPage extends Component {
                     <small className="text-muted">
                       <a
                         className="force-link"
-                        onClick={() => this.upgradeToKVMModal(linode, type)}
+                        onClick={() => UpgradeToKVM.trigger(dispatch, linode, type)}
                       >Upgrade to KVM</a>
                     </small>
                   </div>
@@ -318,7 +278,6 @@ export class DashboardPage extends Component {
   render() {
     return (
       <div>
-        {this.renderModal()}
         {this.renderDetails()}
         <div className="row">
           <div className="col-sm-12">

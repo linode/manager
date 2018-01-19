@@ -344,7 +344,6 @@ ShallowWrapper {
     "props": Object {
       "children": Array [
         null,
-        null,
         <FormGroup
           className="row"
           name="type"
@@ -532,7 +531,6 @@ ShallowWrapper {
     },
     "ref": null,
     "rendered": Array [
-      null,
       null,
       Object {
         "instance": null,
@@ -1176,7 +1174,6 @@ ShallowWrapper {
       "props": Object {
         "children": Array [
           null,
-          null,
           <FormGroup
             className="row"
             name="type"
@@ -1364,7 +1361,6 @@ ShallowWrapper {
       },
       "ref": null,
       "rendered": Array [
-        null,
         null,
         Object {
           "instance": null,

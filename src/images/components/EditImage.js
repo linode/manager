@@ -7,7 +7,7 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 import TimeDisplay from '~/components/TimeDisplay';
 
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -38,22 +38,22 @@ export default class EditImage extends Component {
 
   onSubmit = () => {
     const { description, label } = this.state;
-    const { image, dispatch, close } = this.props;
+    const { image, dispatch } = this.props;
 
-    const requests = [close];
+    const requests = [hideModal];
     requests.unshift(() => api.images.put({ label, description }, image.id));
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   render() {
-    const { image, close } = this.props;
+    const { image, dispatch } = this.props;
     const { label, description, errors } = this.state;
 
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={close}
+        onCancel={() => dispatch(hideModal())}
         analytics={{ title: EditImage.title }}
         errors={errors}
       >
@@ -95,6 +95,5 @@ export default class EditImage extends Component {
 EditImage.propTypes = {
   image: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
 };

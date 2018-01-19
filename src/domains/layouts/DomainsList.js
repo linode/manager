@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
-import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import Input from 'linode-components/dist/forms/Input';
 import List from 'linode-components/dist/lists/List';
 import Table from 'linode-components/dist/tables/Table';
@@ -17,15 +15,13 @@ import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
 import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
 
-import { removeSelected } from '~/actions/select';
-import { dispatchOrStoreErrors } from '~/api/util';
 import { setAnalytics, setSource } from '~/actions';
 import { default as toggleSelected } from '~/actions/select';
 import api from '~/api';
 import { transform } from '~/api/util';
-import { ChainedDocumentTitle } from '~/components';
-import { PortalModal } from '~/components/modal';
+import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
+import { confirmThenDelete } from '~/utilities';
 
 import { AddMaster, AddSlave } from '../components';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
@@ -36,10 +32,8 @@ const OBJECT_TYPE = 'domains';
 export class DomainsList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      filter: '',
-      modal: this.initModalState(),
-    };
+
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
@@ -48,6 +42,13 @@ export class DomainsList extends Component {
     dispatch(setAnalytics(['domains']));
   }
 
+  deleteDomains = confirmThenDelete(
+    this.props.dispatch,
+    'domain',
+    api.domains.delete,
+    OBJECT_TYPE,
+    'domain').bind(this)
+
   formatStatus(s) {
     if (s === 'has_errors') {
       return 'Has Errors';
@@ -55,58 +56,6 @@ export class DomainsList extends Component {
 
     return capitalize(s);
   }
-
-  initModalState = () => ({
-    name: null,
-    title: '',
-    items: [],
-    onSubmit: () => null,
-  });
-
-  hideModal = () => this.setState({ modal: this.initModalState() });
-
-  addMasterModal = () => this.setState({
-    modal: {
-      ...this.initModalState(),
-      name: 'addMaster',
-      title: AddMaster.title,
-    },
-  });
-
-  addSlaveModal = () => this.setState({
-    modal: {
-      ...this.initModalState(),
-      name: 'addSlave',
-      title: AddSlave.title,
-    },
-  });
-
-  deleteDomainsModal = (domains) => {
-    const { dispatch } = this.props;
-    const labels = domains.map(domain => domain.domain);
-    const ids = domains.map(domain => domain.id);
-
-    const callback = () => {
-      dispatch(dispatchOrStoreErrors.call(this, [
-        () => (dispatch) => Promise.all(ids.map(id => dispatch(api.domains.delete(id)))),
-        () => removeSelected(OBJECT_TYPE, ids),
-      ]));
-      this.hideModal();
-    };
-
-    const plural = ids.length > 1 ? 's' : '';
-    const title = `Delete Domain${plural}`;
-
-    this.setState({
-      modal: {
-        ...this.initModalState(),
-        name: 'massDeleteDomains',
-        title: title,
-        items: labels,
-        onSubmit: callback,
-      },
-    });
-  };
 
   /**
    * @todo For testing purposes, and due to the complexity,
@@ -131,7 +80,7 @@ export class DomainsList extends Component {
               dispatch={dispatch}
               massEditGroups={[{
                 elements: [
-                  { name: 'Delete', action: this.deleteDomainsModal },
+                  { name: 'Delete', action: this.deleteDomains },
                 ],
               }]}
               selectedMap={selectedMap}
@@ -168,7 +117,7 @@ export class DomainsList extends Component {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
                       text: 'Delete',
-                      onClick: (domain) => { this.deleteDomainsModal([domain]); },
+                      onClick: (domain) => { this.deleteDomains([domain]); },
                     },
                   ]}
                   noDataMessage="No domains found."
@@ -187,58 +136,22 @@ export class DomainsList extends Component {
     );
   }
 
-  renderModal = () => {
-    const { dispatch, email } = this.props;
-    const { name, title, items, onSubmit } = this.state.modal;
-    if (!name) {
-      return null;
-    }
-    return (
-      <PortalModal
-        title={title}
-        onClose={this.hideModal}
-      >
-        {(name === 'addMaster') &&
-          <AddMaster
-            dispatch={dispatch}
-            close={() => dispatch(this.hideModal())}
-            email={email}
-          />
-        }
-        {(name === 'addSlave') &&
-          <AddSlave
-            dispatch={dispatch}
-            close={() => dispatch(this.hideModal())}
-          />
-        }
-        {(name === 'massDeleteDomains') &&
-          <DeleteModalBody
-            onSubmit={onSubmit}
-            items={items}
-            typeOfItem="domains"
-            onCancel={this.hideModal}
-            deleteAction="delete"
-            deleteActionPending="deleting"
-          />
-        }
-      </PortalModal>
-    );
-  }
-
   render() {
+    const { dispatch, email } = this.props;
+
+    const addMaster = () => AddMaster.trigger(dispatch, email);
+    const addSlave = () => AddSlave.trigger(dispatch);
+
     const addOptions = [
-      { name: 'Add a Slave Domain', action: this.addSlaveModal },
+      { name: 'Add a Slave Domain', action: addSlave },
     ];
 
     return (
       <div className="PrimaryPage container">
-        {this.renderModal()}
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Domains</h1>
-            <PrimaryButton
-              onClick={this.addMasterModal} options={addOptions} className="float-right"
-            >
+            <PrimaryButton onClick={addMaster} options={addOptions} className="float-right">
               Add a Domain
             </PrimaryButton>
           </div>
@@ -246,7 +159,7 @@ export class DomainsList extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.domains.domains).length ?
             this.renderZones(this.props.domains.domains) :
-            <CreateHelper label="Domains" onClick={this.addMasterModal} linkText="Add a Domain" />}
+            <CreateHelper label="Domains" onClick={addMaster} linkText="Add a Domain" />}
         </div>
       </div>
     );

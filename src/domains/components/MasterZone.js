@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { replace } from 'react-router-redux';
 import { Link } from 'react-router-dom';
 import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
@@ -13,11 +12,9 @@ import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
-import { PortalModal } from '~/components/modal';
 import { NameserversCell } from '~/components/tables/cells';
 import GroupLabel from '~/components/GroupLabel';
 import { NAME_SERVERS } from '~/constants';
-
 
 import { formatDNSSeconds, ONE_DAY } from './SelectDNSSeconds';
 import EditSOARecord from './EditSOARecord';
@@ -30,19 +27,6 @@ import EditCAARecord from './EditCAARecord';
 import EditCNAMERecord from './EditCNAMERecord';
 
 export class MasterZone extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...this.initModalState(),
-    };
-  }
-
-  initModalState = () => ({ activeModal: null });
-
-  showSOAModal = () => this.setState({ activeModal: 'editSOARecord' });
-
-  hideModal = () => this.setState({ ...this.initModalState() });
-
   formatARecords() {
     const { domain } = this.props;
 
@@ -116,31 +100,6 @@ export class MasterZone extends Component {
     return TXT || [];
   }
 
-  renderModal = () => {
-    const { domain, dispatch } = this.props;
-    const { activeModal } = this.state;
-    if (!activeModal) {
-      return null;
-    }
-    return (
-      <PortalModal
-        title={EditSOARecord.title}
-        onClose={this.hideModal}
-      >
-        <EditSOARecord
-          dispatch={dispatch}
-          domains={domain}
-          close={(newDomain) => () => {
-            this.hideModal();
-            if (newDomain) {
-              dispatch(replace(`/domains/${newDomain || domain.domain}`));
-            }
-          }}
-        />
-      </PortalModal>
-    );
-  }
-
   renderDeleteRecord(type, id, name) {
     const { dispatch, domain } = this.props;
 
@@ -204,7 +163,7 @@ export class MasterZone extends Component {
   }
 
   render() {
-    const { domain } = this.props;
+    const { domain, dispatch } = this.props;
 
     const formatSeconds = (records) => {
       return records.map(record => {
@@ -235,7 +194,6 @@ export class MasterZone extends Component {
 
     return (
       <div>
-        {this.renderModal()}
         <header className="main-header main-header--border">
           <div className="container">
             <Link to="/domains">Domains</Link>
@@ -272,7 +230,7 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Edit',
-                    onClick: () => this.showSOAModal(),
+                    onClick: () => EditSOARecord.trigger(dispatch, domain),
                   },
                 ]}
                 data={[soaRecord]}

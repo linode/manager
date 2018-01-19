@@ -13,92 +13,44 @@ import ButtonCell from 'linode-components/dist/tables/cells/ButtonCell';
 import LabelCell from 'linode-components/dist/tables/cells/LabelCell';
 import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 
+import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
-import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { PortalModal } from '~/components/modal';
+import { dispatchOrStoreErrors, getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
-import { hideModal } from '~/utilities';
 
 import NodeModal from '../components/NodeModal';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 
 export class NodeBalancerConfigDashboard extends Component {
-  constructor(props) {
-    super(props);
+  deleteNBConfigNode(nodebalancer, config, node) {
+    const { dispatch } = this.props;
+    const title = 'Delete Node';
 
-    this.state = {
-      modal: null,
-    };
+    dispatch(showModal(title,
+      <DeleteModalBody
+        onSubmit={() => {
+          const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
 
-    this.hideModal = hideModal.bind(this);
-  }
-
-  deleteNodeModal = (node) => {
-    const { dispatch, nodebalancer, config } = this.props;
-    const del = async () => {
-      await dispatch(api.nodebalancers.configs.nodes.delete(nodebalancer.id, config.id, node.id));
-      this.hideModal();
-    };
-    this.setState({
-      modal: {
-        title: 'Delete Node',
-        onSubmit: del,
-        onCancel: this.hideModal,
-        items: [node.label],
-        typeOfItem: 'Node',
-        name: 'deleteNode',
-      },
-    });
-  };
-
-  nodeModal = (node) => {
-    this.setState({
-      modal: {
-        name: 'nodeModal',
-        title: node ? 'Edit Node' : 'Add a Node',
-        node: node,
-      },
-    });
-  }
-
-  renderModal = () => {
-    const { dispatch, nodebalancer, config } = this.props;
-    if (!this.state.modal) {
-      return null;
-    }
-    const { name, title, node } = this.state.modal;
-    return (
-      <PortalModal
-        title={title}
-        onClose={this.hideModal}
-      >
-        {(name === 'nodeModal') &&
-          <NodeModal
-            dispatch={dispatch}
-            configId={config.id}
-            nodebalancerId={nodebalancer.id}
-            title={title}
-            node={node}
-            close={this.hideModal}
-          />
-        }
-        {(name === 'deleteNode') &&
-          <DeleteModalBody
-            {...this.state.modal}
-          />
-        }
-      </PortalModal>
-    );
+          return dispatch(dispatchOrStoreErrors.call(this, [
+            () => api.nodebalancers.configs.nodes.delete(...ids),
+            hideModal,
+          ]));
+        }}
+        onCancel={() => dispatch(hideModal())}
+        items={[node.label]}
+        typeOfItem="Node"
+      />
+    ));
   }
 
   renderNodes() {
-    const { config } = this.props;
+    const { dispatch, nodebalancer, config } = this.props;
     const nodes = Object.values(config._nodes.nodes);
 
     const nav = (
       <PrimaryButton
-        onClick={() => this.nodeModal(null)}
+        onClick={() => NodeModal.trigger(dispatch, nodebalancer, config)}
         buttonClass="btn-default"
         className="float-sm-right"
       >Add a Node</PrimaryButton>
@@ -107,7 +59,6 @@ export class NodeBalancerConfigDashboard extends Component {
 
     return (
       <Card header={header}>
-        {this.renderModal()}
         <List>
           <ListBody>
             <Table
@@ -137,13 +88,13 @@ export class NodeBalancerConfigDashboard extends Component {
                 {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
-                  onClick: (node) => this.nodeModal(node),
+                  onClick: (node) => NodeModal.trigger(dispatch, nodebalancer, config, node),
                   text: 'Edit',
                 },
                 {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
-                  onClick: (node) => this.deleteNodeModal(node),
+                  onClick: (node) => this.deleteNBConfigNode(nodebalancer, config, node),
                   text: 'Delete',
                 },
               ]}
@@ -198,8 +149,7 @@ NodeBalancerConfigDashboard.propTypes = {
 
 const mapStateToProps = (state, { match: { params: { nbLabel, configId } } }) => {
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
-  const config = nodebalancer &&
-    objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
+  const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
   return { config, nodebalancer };
 };
 
