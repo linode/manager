@@ -80,7 +80,7 @@ const mapDispatchToProps = (state, ownProps) => ({
       clientId,
       '*',
       'code',
-      `${encodeURIComponent(APP_ROOT)}/oauth/callback?${encodeURIComponent(returnURL)}` // TODO
+      `${APP_ROOT}/oauth/callback?${returnURL}`
     );
   },
 });
