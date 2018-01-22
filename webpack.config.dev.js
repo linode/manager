@@ -65,9 +65,10 @@ module.exports = {
       },
       {
         test: /\.jsx?/,
-        use: ['babel-loader'],
+        loader: require.resolve('babel-loader'),
         include: [
-          path.join(__dirname, 'src'),
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'node_modules/react-vnc-display'),
         ],
       },
       {
