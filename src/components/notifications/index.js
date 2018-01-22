@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { EVENT_POLLING_DELAY } from '~/constants';
 import { eventRead } from '~/api/ad-hoc/events';
 import { lessThanDatetimeFilter, lessThanNowFilter } from '~/api/lessThanDateFilter';
-import { createHeaderFilter, greaterThanDatetimeFilter } from '~/api/util';
+import { greaterThanDatetimeFilter } from '~/api/util';
 
 import api from '~/api';
 import { eventSeen } from '~/api/ad-hoc/events';
@@ -21,7 +21,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 let filterOptions = { seen: false };
 const fetchAllEvents = () => (dispatch) =>
-  dispatch(api.events.all([], null, createHeaderFilter(filterOptions)));
+  dispatch(api.events.all([], null, filterOptions));
 
 const POLLING = Polling({
   apiRequestFn: fetchAllEvents,
@@ -57,7 +57,7 @@ class Notifications extends Component {
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
     if (this.props.events.totalResults <= MIN_SHOWN_EVENTS) {
-      this.props.fetchEventsPage(createHeaderFilter(lessThanNowFilter('created')));
+      this.props.fetchEventsPage(lessThanNowFilter('created'));
     }
 
     // initialize polling for unseen events
@@ -110,10 +110,10 @@ class Notifications extends Component {
 
     const currentOldestCreatedDate = events.events[events.ids[events.ids.length - 1]].created;
     this.setState({ loading: true });
-    this.fetchEventsPage(createHeaderFilter({
+    this.fetchEventsPage({
       seen: true,
       ...lessThanDatetimeFilter('created', currentOldestCreatedDate),
-    }));
+    });
     this.setState({ loading: false });
   };
 
