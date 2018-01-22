@@ -48,6 +48,7 @@ The resulting interface:
     // the 'name'
     dispatch(api.linodes.all());
     dispatch(api.linodes.one([linodeId]));
+    dispatch(api.linodes.page(2));
     dispatch(api.linodes.put(data, linodeId));
     dispatch(api.linodes.delete(linodeId));
 
@@ -64,8 +65,9 @@ The resulting interface:
 
     // 'configs' here DOES come from the name!
     api.linodes.configs.all([linodeId])
-    // note that for all/one we pass an array of ids, the "path" to the resource
-    api.linodes.configs.one([linodeId, configId])
+    // note that for all/page/one we pass an array of ids, the "path" to the resource
+    api.linodes.configs.one([linodeId, configId]);
+    api.linodes.configs.page(2, [linodeId]);
     // for post/put/delete we pass the "path" ids as separate arguments
     api.linodes.configs.post(data, linodeId, configId);
 
@@ -98,6 +100,8 @@ The resulting interface:
     dispatch(api.account.one());
     dispatch(api.account.put(data);
 
+    state.api.account
+
 For an endpoint that does have a path to individual resources:
 
     endpoint: id => `/domains/${id}`
@@ -111,6 +115,11 @@ The resulting interface:
     // This also uses the endpoint with 'domainId' passed for the 'id' param
     dispatch(api.domains.put(data, domainId));
 
+    // all domains (object keyed by domainId)
+    state.api.domains
+    // a single domain
+    state.api.domains.domains[domainId]
+
 For a subresource:
 
     endpoint: (id, nbConfigId, nodeId) => {
@@ -123,4 +132,123 @@ The resulting interface
     // which collection of nodes we want
     dispatch(api.nodebalancers.configs.nodes.all([nodebalId, configId]));
     dispatch(api.nodebalancers.configs.nodes.one([nodebalId, configId, nodeId]));
-    
+    // For put/post/delete calls, this path is provided as separate arguments
+    dispatch(api.nodebalancers.configs.nodes.delete(nodebalId, configId, nodeId));
+
+    // all nodebalancer nodes (object keyed by nodeId)
+    state.api.nodebalancers.nodebalancers(nodebalId)._configs.configs(configId)._nodes.nodes
+    // a single nodebalancer node
+    state.api.nodebalancers.nodebalancers(nodebalId)._configs.configs(configId)._nodes.nodes(nodeId)
+
+### `supports : Array<string>` (required)
+
+An array indicating the types of action creators that should be generated
+for this endpoint. These are one of `ONE`, `MANY`, `DELETE`, `PUT`, `POST`,
+which are constants that can be imported from `api/internal.js`. `ONE`
+indicates that the endpoint supports `GET` requests that will respond with
+data for a single resource. `MANY` indicates that the endpoint supports
+paginated get requests that will respond with a collection of objects. 
+`DELTETE`, `PUT`, and `POST` indicate the endpoint supports those HTTP
+methods respectively.
+
+Note that the inclusion of `MANY` makes the endpoint a "plural" endpoint, and
+changes the semantics of the `ONE` action creator! If the endpoint does not include
+`MANY`, then the `.one` action creator stores the object data directly on the
+branch of the Redux state tree for that resource. For example, `profile`:
+
+    supports: [ONE, PUT]
+
+The following call
+
+    dispatch(api.profile.one())
+
+Stores the profile data directly on
+
+    api.state.profile
+
+Whereas, `invoices` has the following supported action creators:
+
+    supports: [ONE, MANY]
+
+The following call
+
+    dispatch(api.invoices.one([invoiceId]))
+
+Will store the invoice at the following location
+
+    api.invoices.invoices[invoiceId]
+
+Note that the inclusion of `MANY` will add both the `.all` action creator
+and the `.page` action creator.
+
+Example for top level resource `linodes`:
+
+    supports: [ONE, MANY, PUT, DELETE, POST]
+
+    dispatch(api.linodes.one([linodeId]));
+    dispatch(api.linodes.all());
+    dispatch(api.linodes.page(2));
+    dispatch(api.linodes.put(data, linodeId));
+    dispatch(api.linodes.delete(linodeId));
+    dispatch(api.linodes.post(data));
+
+Example for a subresource `nodebalancers.configs.nodes`:
+
+    supports: [ONE, MANY, PUT, POST, DELETE]
+
+    dispatch(api.nodebalancers.configs.nodes.one([nodebalId, configId, nodeId]));
+    dispatch(api.nodebalancers.configs.nodes.all([nodebalId, configId]));
+    dispatch(api.nodebalancers.configs.nodes.page(0, [nodebalId, configId]));
+    dispatch(api.linodes.put(data, nodebalId, configId, nodeId));
+    dispatch(api.linodes.delete(data, nodebalId, configId, nodeId));
+    dispatch(api.linodes.post(data, nodebalId, configId));
+
+### `primaryKey : string` (required)
+
+This is the property name of a given resource to use as the key for storage in
+the Redux store. It must be a property that uniquely identifies the resource.
+Examples:
+
+For `linodes`
+
+    primaryKey: id
+
+Object stored in the Redux store
+
+    state.api.linodes.linodes(linodeId)
+
+For `users`
+
+    primaryKey: username
+
+Object stored in the Redux store
+
+    state.api.users.users(username)
+
+### `sortFn : function(ids : Array<string>, state) : function(a: string, b: string): number` (optional)
+
+A function used to sort the ids which are placed in the `ids` array in the
+Redux store. This ids array can be used to iterate over the objects in the
+primary store, which are keyed by those ids. This function takes the current
+list of `ids`, and the current `state` for the resource, and must return a
+sorted list of ids. It's reccomended to use `Array.prototype.sort` on the ids
+array.
+
+Example, for `events`:
+
+    sortFn: function (ids, state) {
+        return ids.sort(function (a, b) {
+        const aDate = new Date(state[a].created);
+        const bDate = new Date(state[b].created);
+
+        if (aDate > bDate) {
+            return -1;
+        }
+
+        if (aDate < bDate) {
+            return 1;
+        }
+
+        return 0;
+        });
+    },
