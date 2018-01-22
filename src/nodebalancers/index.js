@@ -4,14 +4,12 @@ import PropTypes from 'prop-types';
 import NodeBalancersList from './layouts/NodeBalancersList';
 import NodeBalancerIndex from './nodebalancer';
 import Configs from './nodebalancer/configs';
-import NodeBalancerConfigAdd from './nodebalancer/layouts/NodeBalancerConfigAdd';
 
 const NodeBalancersIndex = (props) => {
   const { match: { path } } = props;
   return (
     <Switch>
-      <Route component={NodeBalancerConfigAdd} path={`${path}/:nbLabel/configs/create`} />
-      <Route component={Configs} path={`${path}/:nbLabel/configs/:configId`} />
+      <Route component={Configs} path={`${path}/:nbLabel/configs`} />
       <Route component={NodeBalancerIndex} path={`${path}/:nbLabel`} />
       <Route component={NodeBalancersList} exact path={`${path}/`} />
       <Redirect to="/not-found" />
