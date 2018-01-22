@@ -3,7 +3,6 @@ import { config as linodeConfig } from '~/api/generic/linodes';
 import {
   getObjectByLabelLazily,
   Error404,
-  createHeaderFilter,
 } from '~/api/util';
 import {
   lessThanDatetimeFilter,
@@ -52,18 +51,6 @@ describe('api/util', async () => {
         throw Error;
       }
     }
-  });
-
-  it('provides a header structure utility function', function () {
-    const emptyHeader = createHeaderFilter({});
-
-    expect(emptyHeader['X-Filter']).toEqual({});
-  });
-
-  it('provides createHeaderFilter which assigns an object to X-Filter', function () {
-    const emptyHeader = createHeaderFilter({ example: true });
-
-    expect(emptyHeader['X-Filter']).toHaveProperty('example', true);
   });
 
   it('provides a lessThanDatetimeFilter function', function () {

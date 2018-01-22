@@ -15,7 +15,7 @@ import api from '~/api';
 import { actions } from '~/api/generic/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import Polling from '~/api/polling';
-import { createHeaderFilter, dispatchOrStoreErrors } from '~/api/util';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 
 import ConfigSelectModalBody from './ConfigSelectModalBody';
@@ -41,9 +41,9 @@ function fetchLinodes(...ids) {
   return async (dispatch, getState) => {
     const allLinodes = Object.values(getState().api.linodes.linodes);
     const linodes = allLinodes.filter(l => ids.indexOf(l.id.toString()) !== -1);
-    await dispatch(api.linodes.all([], null, createHeaderFilter({
+    await dispatch(api.linodes.all([], null, {
       '+or': linodes.map(({ label }) => ({ label })),
-    })));
+    }));
 
     await Promise.all(linodes.map(linode => {
       // Increment progress with max of 95% growing smaller over time.
