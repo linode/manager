@@ -225,7 +225,7 @@ Object stored in the Redux store
 
     state.api.users.users(username)
 
-### `sortFn : function(ids : Array<string>, state) : function(a: string, b: string): number` (optional)
+### `sortFn : function(ids : Array<string>, state) : Array<string>` (optional)
 
 A function used to sort the ids which are placed in the `ids` array in the
 Redux store. This ids array can be used to iterate over the objects in the
