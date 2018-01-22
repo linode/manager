@@ -27,51 +27,100 @@ a plain JavaScript object which can contain the following keys.
 
 ### `name: string` (required)
 
-This is the name given to the resource on the resulting `api.` interface.
-For a root resource, this must be the same name as the module filename. For
-subresources, the name can be arbitrary. It is reccomended that the name 
-match the first portion of the API endpoint with which it is associated. It
-is also reccomended that if the endpoint returns collections of objects, 
-then this name be plural, otherwise it should be singular.
+This is the name given to the resource on the resulting `api.` action
+generator interface and in the `.api` branch of the Redux state. For a root
+resource, this should be the same name as the module filename. For
+subresources, should be the same name as the state subkey (without the
+underscore). However the name can be arbitrary. It is reccomended that the
+name match the first portion of the API endpoint path with which it is
+associated. It is also reccomended that if the endpoint supports `ALL` (see
+`supports`) then this name be plural, otherwise it should be singular.
 
 #### **Examples**
 
-* For a singular root endpoint:
-
-    name: 'account'
-
-The resulting interface:
-
-    # get the account place it in the Redux store
-    const account = await dispatch(api.account.one())
-    # update account data and place it in the Redux store
-    const account = await dispatch(api.account.put(data))
-
-* For a plural root endpoint
+* For a root endpoint
 
     name: 'linodes'
 
 The resulting interface:
 
+    // the name 'linodes' here comes strictly from the filename and NOT
+    // the 'name'
+    dispatch(api.linodes.all());
+    dispatch(api.linodes.one([linodeId]));
+    dispatch(api.linodes.put(data, linodeId));
+    dispatch(api.linodes.delete(linodeId));
+
+    state.api.linodes;
+    // the 'name' only affects the second 'linodes' here, the name of the
+    // linodes collection
+    state.api.linodes.linodes[linodeId];
+
+* For a subresource
+
+    name: 'configs'
+
+The resulting interface:
+
+    // 'configs' here DOES come from the name!
+    api.linodes.configs.all([linodeId])
+    // note that for all/one we pass an array of ids, the "path" to the resource
+    api.linodes.configs.one([linodeId, configId])
+    // for post/put/delete we pass the "path" ids as separate arguments
+    api.linodes.configs.post(data, linodeId, configId);
+
+    // note that the path to a subresource in state is prefixed with the object's key
+    state.api.linodes.linodes[linodeId]._configs.configs
+    state.api.linodes.linodes[linodeId]._configs.configs[configId]
 
 
 ### `endpoint : function(id?: string): string` (required)
 
 A function which returns a path to the resource, relative to the root of the
 API server. If the resource has both a path for collections and individual
-entities, then this function takes one argument, which must be used as the
-entity key used in the returned path to denote the individual entity. If the
-function has this argument, then the function will be called internally
-with that argument as an empty string in some cases, expecting the resulting
-path to respond with collections. The paths must begin with a single `/`
-character, but can end with or without a `/`.
+resources, then this function takes at least one argument, which is used as
+the resource key in the returned path, to denote the individual resource. If the
+function has this argument, then the function will be called internally with
+that argument as an empty string in some cases, expecting the resulting path
+to respond with collections. The paths must begin with a single `/`
+character, but can end with or without a `/`. For subresources, this function
+takes at least one argument, which are the id(s) of the parent resources
+necessary to construct the path to the individual resource.
 
 #### **Examples**:
 
-For an endpoint that does not have a path to individual entities:
+For an endpoint that does not have a path to individual resources:
 
-    endpoint: () => '/account/settings',
+    endpoint: () => '/account/settings'
 
-For an endpoint that does have a path to individual entities:
+The resulting interface:
 
-    endpoint: id => `/domains/${id}`,
+    dispatch(api.account.one());
+    dispatch(api.account.put(data);
+
+For an endpoint that does have a path to individual resources:
+
+    endpoint: id => `/domains/${id}`
+
+The resulting interface:
+
+    // This uses the endpoint with an empty string passed for the 'id' param
+    dispatch(api.domains.all());
+    // This uses the endpoint with 'domainId' passed for the the 'id' param
+    dispatch(api.domains.one([domainId]));
+    // This also uses the endpoint with 'domainId' passed for the 'id' param
+    dispatch(api.domains.put(data, domainId));
+
+For a subresource:
+
+    endpoint: (id, nbConfigId, nodeId) => {
+        return `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`;
+    },
+
+The resulting interface
+
+    // Note that we need a "path" array of parent resource ids to indicate
+    // which collection of nodes we want
+    dispatch(api.nodebalancers.configs.nodes.all([nodebalId, configId]));
+    dispatch(api.nodebalancers.configs.nodes.one([nodebalId, configId, nodeId]));
+    
