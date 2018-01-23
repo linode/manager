@@ -1,5 +1,4 @@
 import { actions } from '../generic/linodes';
-import { actions as imageActions } from '../generic/images';
 import request from '~/request';
 
 function linodeAction(id, action, body, handleRsp) {
@@ -78,16 +77,6 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
     await request.post(`/linode/instances/${linodeId}/disks/${diskId}/resize`,
       { size });
     // TODO: fetch until complete
-  };
-}
-
-// Verified
-export function imagizeLinodeDisk(linodeId, diskId, data) {
-  return async (dispatch) => {
-    const imagizeUrl = `/linode/instances/${linodeId}/disks/${diskId}/imagize`;
-    const { data: image } = await request.post(imagizeUrl, data);
-    dispatch(imageActions.one(image));
-    return image;
   };
 }
 
