@@ -80,7 +80,10 @@ export default class ConfigForm extends Component {
     const calls = [];
     if ((config.id && protocol === 'https') &&
       (config.protocol !== 'https' || (sslCert || sslKey))) {
-      calls.push(() => api.nodebalancers.configs.put(sslData, nodebalancer.id, config.id));
+      calls.push(() => api.nodebalancers.configs.put(
+        { ...data, ...sslData },
+        nodebalancer.id, config.id)
+      );
     }
     calls.push(() => api.nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
 
