@@ -13,7 +13,6 @@ import Textarea from 'linode-components/dist/forms/Textarea';
 import { onChange } from 'linode-components/dist/forms/utilities';
 
 import api from '~/api';
-import { updateConfigSSL } from '~/api/ad-hoc/nodebalancers';
 import { dispatchOrStoreErrors } from '~/api/util';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
@@ -81,7 +80,7 @@ export default class ConfigForm extends Component {
     const calls = [];
     if ((config.id && protocol === 'https') &&
       (config.protocol !== 'https' || (sslCert || sslKey))) {
-      calls.push(() => updateConfigSSL(sslData, ...idsPath));
+      calls.push(() => api.nodebalancers.configs.put(sslData, nodebalancer.id, config.id));
     }
     calls.push(() => api.nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
 

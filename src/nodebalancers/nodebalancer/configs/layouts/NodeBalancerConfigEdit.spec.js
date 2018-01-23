@@ -128,8 +128,8 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn1]) => expectRequest(fn1, `/nodebalancers/${configsNodeBalancer.id}/configs/${id}/ssl`, {
-        method: 'POST',
+      ([fn1]) => expectRequest(fn1, `/nodebalancers/${configsNodeBalancer.id}/configs/${id}`, {
+        method: 'PUT',
         body: {
           ssl_cert: 'Some ssl cert',
           ssl_key: 'Some ssl key',
