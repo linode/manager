@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+
 import PrimaryButton from 'linode-components/dist/buttons/PrimaryButton';
+import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 import Input from 'linode-components/dist/forms/Input';
 import List from 'linode-components/dist/lists/List';
 import ScrollingList from 'linode-components/dist/lists/ScrollingList';
@@ -17,17 +19,17 @@ import CheckboxCell from 'linode-components/dist/tables/cells/CheckboxCell';
 import LinkCell from 'linode-components/dist/tables/cells/LinkCell';
 
 import { setAnalytics, setSource } from '~/actions';
-import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import api from '~/api';
 import { transferPool } from '~/api/ad-hoc/account';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/ad-hoc/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
-import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
+import { ChainedDocumentTitle } from '~/components';
+import { PortalModal } from '~/components/modal';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
-import { confirmThenDelete } from '~/utilities';
+import { hideModal, deleteModalProps } from '~/utilities';
 
 import { planStyle } from '../components/PlanStyle';
 import AddLinode from '../components/AddLinode';
@@ -41,7 +43,11 @@ const OBJECT_TYPE = 'linodes';
 export class ListLinodesPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { filter: '' };
+    this.state = {
+      filter: '',
+      modal: null,
+    };
+    this.hideModal = hideModal.bind(this);
   }
 
   componentDidMount() {
@@ -52,18 +58,12 @@ export class ListLinodesPage extends Component {
     ['images', 'types'].map(f => dispatch(api[f].all()));
   }
 
-  deleteLinodes = confirmThenDelete(
-    this.props.dispatch,
-    'Linode',
-    api.linodes.delete,
-    OBJECT_TYPE).bind(this)
-
   genericAction(actionToDispatch, linodes, confirmType) {
     const { dispatch } = this.props;
 
     const callback = () => {
       linodes.forEach(linode => dispatch(actionToDispatch(linode.id)));
-      dispatch(hideModal());
+      this.hideModal();
     };
 
     if (!confirmType) {
@@ -85,19 +85,65 @@ export class ListLinodesPage extends Component {
     }
 
     const title = `Confirm ${confirmType}`;
-    dispatch(showModal(title, (
-      <ConfirmModalBody
-        onCancel={() => dispatch(hideModal())}
-        onSubmit={callback}
-        analytics={{ title }}
-      >{modalBody}</ConfirmModalBody>
-    )));
+
+    this.setState({
+      modal: {
+        name: 'massEditConfirm',
+        title,
+        analytics: { title },
+        onSubmit: callback,
+        onCancel: this.hideModal,
+        children: modalBody,
+      },
+    });
   }
 
-  powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
-
+  powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off');
   powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
   reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
+
+  deleteLinodesModal = (linodes) => {
+    const { dispatch } = this.props;
+    this.setState({
+      modal: {
+        name: 'massDeleteLinode',
+        ...deleteModalProps(
+          dispatch,
+          linodes,
+          api.linodes.delete,
+          'Linode',
+          OBJECT_TYPE,
+          this.hideModal),
+      },
+    });
+  }
+
+  addLinodeModal = () => {
+    this.setState({
+      modal: {
+        name: 'addLinode',
+        title: AddLinode.title,
+      },
+    });
+  };
+
+  cloneLinodeModal = () => {
+    this.setState({
+      modal: {
+        name: 'cloneLinode',
+        title: CloneLinode.title,
+      },
+    });
+  }
+
+  restoreLinodeModal = () => {
+    this.setState({
+      modal: {
+        name: 'restoreLinode',
+        title: RestoreLinode.title,
+      },
+    });
+  }
 
   renderLinodes(linodes, types) {
     const { dispatch, selectedMap } = this.props;
@@ -122,7 +168,7 @@ export class ListLinodesPage extends Component {
                     { name: 'Power Off', action: this.powerOff },
                   ],
                 },
-                { elements: [{ name: 'Delete', action: this.deleteLinodes }] },
+                { elements: [{ name: 'Delete', action: this.deleteLinodesModal }] },
               ]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
@@ -188,27 +234,69 @@ export class ListLinodesPage extends Component {
     );
   }
 
-  render() {
-    const { dispatch, linodes, images, types, transfer } = this.props;
+  renderModal = () => {
+    if (!this.state.modal) {
+      return null;
+    }
+    const { name } = this.state.modal;
+    const { dispatch, linodes, images, types } = this.props;
+    return (
+      <PortalModal>
+        {(name === 'massEditConfirm') &&
+          <ConfirmModalBody {...this.state.modal} />
+        }
+        {(name === 'massDeleteLinode') &&
+          <DeleteModalBody {...this.state.modal} />
+        }
+        {(name === 'addLinode') &&
+          <AddLinode
+            {...this.state.modal}
+            dispatch={dispatch}
+            close={this.hideModal}
+            images={images}
+            plans={types}
+          />
+        }
+        {(name === 'cloneLinode') &&
+          <CloneLinode
+            {...this.state.modal}
+            dispatch={dispatch}
+            close={this.hideModal}
+            linodes={linodes}
+            plans={types}
+          />
+        }
+        {(name === 'restoreLinode') &&
+          <RestoreLinode
+            {...this.state.modal}
+            dispatch={dispatch}
+            close={this.hideModal}
+            linodes={linodes}
+            plans={types}
+          />
+        }
+      </PortalModal>
+    );
+  }
 
-    const addLinode = () => AddLinode.trigger(dispatch, images, types);
-    const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
-    const restoreLinode = () => RestoreLinode.trigger(dispatch, linodes, types);
+  render() {
+    const { linodes, types, transfer } = this.props;
 
     const addOptions = [
-      { name: 'Create from Backup', action: restoreLinode },
-      { name: 'Clone a Linode', action: cloneLinode },
+      { name: 'Create from Backup', action: this.restoreLinodeModal },
+      { name: 'Clone a Linode', action: this.cloneLinodeModal },
     ];
 
     return (
       <div className="PrimaryPage container">
+        {this.renderModal()}
         <ChainedDocumentTitle title="Linodes" />
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-left">Linodes</h1>
             <PrimaryButton
               className="float-right"
-              onClick={addLinode}
+              onClick={this.addLinodeModal}
               options={addOptions}
             >
               Add a Linode
@@ -220,7 +308,7 @@ export class ListLinodesPage extends Component {
             <CreateHelper
               label="Linodes"
               linkText="Add a Linode"
-              onClick={addLinode}
+              onClick={this.addLinodeModal}
             />
           )}
         </div>

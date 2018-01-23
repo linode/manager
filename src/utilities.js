@@ -5,7 +5,7 @@ import capitalize from 'lodash/capitalize';
 
 import DeleteModalBody from 'linode-components/dist/modals/DeleteModalBody';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal as showModal_, hideModal as hideModal_ } from '~/actions/modal';
 import { removeSelected } from '~/actions/select';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -22,19 +22,19 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
       title += 's';
     }
 
-    dispatch(showModal(title, (
+    dispatch(showModal_(title, (
       <DeleteModalBody
         onSubmit={function () {
           const ids = toDelete.map(o => o[idKey]);
           return dispatch(dispatchOrStoreErrors.call(this, [
             () => (dispatch) => Promise.all(ids.map(id => dispatch(deleteFunction(id)))),
             () => removeSelected(objectType, ids),
-            hideModal,
+            hideModal_,
           ]));
         }}
         items={toDelete.map(labelFn)}
         typeOfItem={`${objectLabel}s`}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => dispatch(hideModal_())}
         deleteAction={deleteAction}
         deleteActionPending={deleteActionPending}
         boldItems={false}
@@ -43,6 +43,35 @@ export function confirmThenDelete(dispatch, objectLabel, deleteFunction, objectT
   };
 }
 
+/* This must be bound to a Component that uses it */
+export function hideModal() { this.setState({ modal: null }); }
+
+export function deleteModalProps(
+  dispatch, objects, deleteMethod, objectName, objectType, hideModal,
+  labelKey = 'label', idKey = 'id') {
+  const labels = objects.map(objects => objects[labelKey]);
+  const ids = objects.map(objects => objects[idKey]);
+
+  const callback = async () => {
+    await dispatch((dispatch) => Promise.all(ids.map(id => dispatch(deleteMethod(id)))));
+    await removeSelected(objectType, ids);
+    hideModal();
+  };
+
+  const name = capitalize(objectName) + (ids.length > 1 ? 's' : '');
+  const title = `Delete ${name}`;
+
+  return {
+    title: title,
+    name: `massDelete${objectName}`,
+    onSubmit: callback,
+    onCancel: hideModal,
+    items: labels,
+    typeOfItem: name,
+    deleteAction: 'delete',
+    deleteActionPending: 'deleting',
+  };
+}
 
 export const isPathOneOf = (paths, pathname, props) => {
   return paths.reduce((result, path) => {
