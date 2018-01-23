@@ -24,7 +24,7 @@ export class SettingsIndex extends Component {
     super(props);
 
     this.state = {
-      networkHelper: props.account.network_helper ? 'ON' : 'OFF',
+      networkHelper: props.accountsettings.network_helper ? 'ON' : 'OFF',
       errors: {},
     };
 
@@ -41,7 +41,7 @@ export class SettingsIndex extends Component {
     const { networkHelper } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => api.account.put({ network_helper: networkHelper === 'ON' }),
+      () => api.accountsettings.put({ network_helper: networkHelper === 'ON' }),
     ]));
   }
 
@@ -105,18 +105,18 @@ export class SettingsIndex extends Component {
 
 SettingsIndex.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  account: PropTypes.object.isRequired,
+  accountsettings: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    account: state.api.account,
+    accountsettings: state.api.accountsettings,
   };
 };
 
 const preloadRequest = async (dispatch, props) => {
-  if (!Object.keys(props.account).length) {
-    await dispatch(api.account.one());
+  if (!Object.keys(props.accountsettings).length) {
+    await dispatch(api.accountsettings.one());
   }
 };
 
