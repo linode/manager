@@ -21,8 +21,8 @@ import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import Currency from '~/components/Currency';
 import TabsComponent from '~/components/Tabs';
 
-import SettingsPage from './layouts/SettingsPage';
-import SummaryPage from './layouts/SummaryPage';
+import BackupSettingsPage from './layouts/BackupsSettingsPage';
+import BackupSummaryPage from './layouts/BackupsSummaryPage';
 import BackupPage from './layouts/BackupPage';
 class LinodeBackupsIndex extends Component {
   constructor() {
@@ -80,9 +80,9 @@ class LinodeBackupsIndex extends Component {
         <TabsComponent tabs={tabs} parentClass="linode-tabs--sub" />
         <ChainedDocumentTitle title="Backups" />
         <Switch>
-          <Route path={`${path}/settings`} component={(SettingsPage)} />
+          <Route path={`${path}/settings`} component={(BackupSettingsPage)} />
           <Route path={`${path}/:backupId`} component={(BackupPage)} />
-          <Route exact component={(SummaryPage)} />
+          <Route exact component={(BackupSummaryPage)} />
           <Redirect to="/not-found" />
         </Switch>
       </div>
