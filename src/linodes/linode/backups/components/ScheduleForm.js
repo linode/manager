@@ -110,11 +110,16 @@ export class ScheduleForm extends Component {
     const { errors, loading, window, day } = this.state;
     const { tz } = this.props;
     const dayIsSet = day !== 'Scheduling';
-    const timeIsSet = window && window !== '';
+    const timeIsSet = window && window !== '' && window !== 'Scheduling';
     const isScheduled = timeIsSet && dayIsSet;
     const adjustedScheduleOptions = createAdjustedScheduleOptions(tz, day);
     const scheduleOption = find(adjustedScheduleOptions, (i) => i.value === window);
-    const { start, finish } = scheduleOption;
+    let start;
+    let finish;
+    if (scheduleOption) {
+      start = scheduleOption.start;
+      finish = scheduleOption.finish;
+    }
     const timezoneAbbr = moment.tz(tz).format('z');
 
     return (
