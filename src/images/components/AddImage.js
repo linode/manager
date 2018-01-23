@@ -9,13 +9,12 @@ import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
-import { imagizeLinodeDisk } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import LinodeSelect from '~/linodes/components/LinodeSelect';
 
 
 export default class AddImage extends Component {
-  static title = 'Imagize Disk'
+  static title = 'Create Image from Disk'
 
   static trigger(dispatch, linodes, linode, disk) {
     return dispatch(showModal(AddImage.title, (
@@ -84,15 +83,13 @@ export default class AddImage extends Component {
   }
 
   onSubmit = () => {
-    const { description, label, linode, disk } = this.state;
+    const { description, label, disk } = this.state;
     const { dispatch } = this.props;
 
+    const diskId = disk.id || disk;
+
     const requests = [
-      () => imagizeLinodeDisk(
-        linode.id || linode,
-        disk.id || disk,
-        { label, description },
-      ),
+      () => api.images.post({ disk_id: diskId, label, description }),
       hideModal,
     ];
 
