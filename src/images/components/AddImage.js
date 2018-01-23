@@ -9,7 +9,6 @@ import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 
 import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
-import { createImage } from '~/api/ad-hoc/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import LinodeSelect from '~/linodes/components/LinodeSelect';
 
@@ -90,7 +89,7 @@ export default class AddImage extends Component {
     const diskId = disk.id || disk;
 
     const requests = [
-      () => createImage({ disk_id: diskId, label, description }),
+      () => api.images.post({ disk_id: diskId, label, description }),
       hideModal,
     ];
 
