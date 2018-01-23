@@ -1,10 +1,19 @@
+import {
+  OUTAGE,
+  REBOOT_SCHEDULED,
+  XSA,
+  BALANCE_OUTSTANDING,
+  TICKET_IMPORTANT,
+  TICKET_ABUSE,
+} from '~/components/Banners';
+
 export const testApiBanner = {
   entity: {
     id: 1234,
     type: 'ticket',
     label: 'testing ticket',
   },
-  type: 'important_ticket',
+  type: TICKET_IMPORTANT,
   when: null,
 };
 
@@ -23,7 +32,7 @@ export const xsaBanner = {
     type: 'linode',
     url: '/linode/instances/1234',
   },
-  type: 'xsa',
+  type: XSA,
   when: '2017-01-01T00:00:01',
 };
 
@@ -34,7 +43,7 @@ export const outstandingBalanceBanner = {
     type: 'account',
     url: '/account/settings',
   },
-  type: 'outstanding_balance',
+  type: BALANCE_OUTSTANDING,
   when: null,
 };
 
@@ -45,7 +54,7 @@ export const scheduledRebootBanner = {
     type: 'linode',
     url: '/linode/instances/1234',
   },
-  type: 'scheduled_reboot',
+  type: REBOOT_SCHEDULED,
   when: '2017-12-31T23:59:59',
 };
 
@@ -55,7 +64,7 @@ export const testAbuseBanner = {
     id: 1235,
     label: 'ToS Violation',
   },
-  type: 'abuse_ticket',
+  type: TICKET_ABUSE,
 };
 
 export const testAbuseBanner2 = {
@@ -73,7 +82,7 @@ const testOutageBanner1 = {
     type: 'region',
     url: '/regions/us-east-1a',
   },
-  type: 'outage',
+  type: OUTAGE,
 };
 
 const testOutageBanner2 = {
@@ -87,7 +96,8 @@ const testOutageBanner2 = {
 
 export const testGlobalBanner = {
   entity: null,
-  type: 'The new linode cloud manager is in the works!',
+  message: 'The new linode cloud manager is in the works!',
+  type: 'linode',
   when: '2017-12-22T05:00:00',
 };
 

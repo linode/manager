@@ -2,11 +2,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { matchPath } from 'react-router';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 
 import api from '~/api';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
+
+export const OUTAGE = 'outage';
+export const MIGRATION_SCHEDULED = 'migration_scheduled';
+export const MIGRATION_PENDING = 'migration_pending';
+export const REBOOT_SCHEDULED = 'reboot_scheduled';
+export const XSA = 'xsa';
+export const BALANCE_OUTSTANDING = 'balance_outstanding';
+export const TICKET_IMPORTANT = 'ticket_important';
+export const TICKET_ABUSE = 'ticket_abuse';
+export const LINODE = 'linode';
+
 /**
  * @param {[function]} pred Array of functions whos only arguement is the
  * data provided and must return a boolean.
@@ -23,23 +35,6 @@ export function filterBy(pred, data) {
   return data.filter((value) =>
     pred.reduce((result, fn) =>
       result ? fn(value) : result, true));
-}
-
-function globalNoticeFilter(banner) {
-  const standardBannerTypes = [
-    'outage',
-    'scheduled_migration',
-    'pending_migration',
-    'scheduled_reboot',
-    'xsa',
-    'outstanding_balance',
-    'important_ticket',
-    'abuse_ticket',
-  ];
-  /* A global banner has a dynamic type.
-     There is only ever one global banner. */
-  /* TODO: Request that the API return type "global" with an "entity" containing the message */
-  return standardBannerTypes.indexOf(banner.type) === -1;
 }
 
 function importantTicket(banners) {
@@ -78,7 +73,7 @@ function migrations(banners) {
   return (
     banners.map((banner, key) =>
       <div className="warning" key={key}>
-        You have a host migration {banner.type.split('_')[0]} for this linode!
+        You have a host migration {banner.type.split('_')[1]} for this linode!
       </div>
     )
   );
@@ -88,7 +83,7 @@ function scheduledReboot(banners) {
   return (
     banners.map((banner, key) =>
       <div className="warning" key={key}>
-        {banner.entity.label} is scheduled to reboot.
+        This Linode is scheduled to reboot.
       </div>
     )
   );
@@ -99,7 +94,7 @@ function xenSecurityAdvisory(banners) {
     const timestamp = banner.when.replace('T', ' ');
     return (
       <div className="critical" key={key} >
-        {banner.entity.label} is scheduled for an XSA restart at {timestamp}.
+        This Linode is scheduled for an XSA restart at {timestamp}.
       </div>
     );
   });
@@ -134,7 +129,7 @@ function globalNotice(banner) {
   if (banner.length) {
     return (
       <div className="info">
-        {banner[0].type}
+        {banner[0].message}
       </div>
     );
   }
@@ -142,23 +137,23 @@ function globalNotice(banner) {
 
 function renderBanners(banners, linode = {}) {
   const abuseBanners = filterBy(
-    [banner => banner.type === 'abuse_ticket'],
+    [banner => banner.type === TICKET_ABUSE],
     banners
   );
 
   const importantTicketBanners = filterBy(
-    [banner => banner.type === 'important_ticket'],
+    [banner => banner.type === TICKET_IMPORTANT],
     banners
   );
 
   const outstandingBalanceBanners = filterBy(
-    [banner => banner.type === 'outstanding_balance'],
+    [banner => banner.type === BALANCE_OUTSTANDING],
     banners
   );
 
   const migrationBanners = filterBy(
     [
-      banner => ['pending_migration', 'scheduled_migration'].indexOf(banner.type) >= 0,
+      banner => [MIGRATION_PENDING, MIGRATION_SCHEDULED].indexOf(banner.type) >= 0,
       banner => banner.entity.id === linode.id,
     ],
     banners
@@ -166,7 +161,7 @@ function renderBanners(banners, linode = {}) {
 
   const scheduledRebootBanners = filterBy(
     [
-      banner => banner.type === 'scheduled_reboot',
+      banner => banner.type === REBOOT_SCHEDULED,
       banner => banner.entity.id === linode.id,
     ],
     banners
@@ -174,19 +169,19 @@ function renderBanners(banners, linode = {}) {
 
   const xenSecurityAdvisoryBanners = filterBy(
     [
-      banner => banner.type === 'xsa',
+      banner => banner.type === XSA,
       banner => banner.entity.id === linode.id,
     ],
     banners
   );
 
   const outageBanners = filterBy(
-    [banner => banner.type === 'outage'],
+    [banner => banner.type === OUTAGE],
     banners
   );
 
   const globalBanners = filterBy(
-    [globalNoticeFilter],
+    [banner => banner.type === LINODE],
     banners
   );
 
@@ -224,10 +219,16 @@ const getLinodeIdFromStateByLabel = (state, label) => Object
   .values(state.api.linodes.linodes)
   .find((linode) => linode.label === label);
 
-const mapStateToProps = (state, { match: { params: { linodeLabel } } }) => ({
-  linode: linodeLabel && getLinodeIdFromStateByLabel(state, linodeLabel),
-  banners: state.api.banners.data,
-});
+const mapStateToProps = (state, ownProps) => {
+  const match = matchPath(ownProps.location.pathname, {
+    path: '/linodes/:linodeLabel',
+  });
+  const linodeLabel = (match && match.params.linodeLabel) || {};
+  return {
+    linode: linodeLabel && getLinodeIdFromStateByLabel(state, linodeLabel),
+    banners: state.api.banners.data,
+  };
+};
 
 const preloadRequest = async (dispatch) => {
   await dispatch(api.banners.one());
