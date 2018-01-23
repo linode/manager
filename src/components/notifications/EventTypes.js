@@ -172,7 +172,6 @@ const EventTypeMap = {
     pastTensePrefix: 'Disk on',
     redirectUrl: getImagesRedirectUrl,
   },
-
   linode_snapshot: {
     presentTenseAction: 'Taking a snapshot of',
     pastTenseAction: 'taken',

@@ -81,11 +81,10 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   };
 }
 
-// Verified
-export function imagizeLinodeDisk(linodeId, diskId, data) {
+export function createImage(data) {
   return async (dispatch) => {
-    const imagizeUrl = `/linode/instances/${linodeId}/disks/${diskId}/imagize`;
-    const { data: image } = await request.post(imagizeUrl, data);
+    const imageUrl = 'https://api.dev.linode.com/v4/images';
+    const { data: image } = await request.post(imageUrl, data);
     dispatch(imageActions.one(image));
     return image;
   };
