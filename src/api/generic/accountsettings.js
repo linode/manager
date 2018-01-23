@@ -3,9 +3,9 @@ import {
 } from '~/api/internal';
 
 export const config = {
-  name: 'account',
+  name: 'accountsettings',
   primaryKey: 'id',
-  endpoint: () => '/account',
+  endpoint: () => '/account/settings',
   supports: [ONE, PUT],
 };
 
