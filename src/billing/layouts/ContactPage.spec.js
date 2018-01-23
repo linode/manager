@@ -50,7 +50,7 @@ describe('billing/layouts/ContactPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toEqual(2);
     await expectDispatchOrStoreErrors(dispatch.secondCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/settings', {
+      ([fn]) => expectRequest(fn, '/account', {
         method: 'PUT',
         body: {
           email: 'new@gmail.com',
