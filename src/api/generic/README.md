@@ -31,9 +31,9 @@ This is the name given to the resource on the resulting `api.` action
 generator interface and in the `.api` branch of the Redux state. For a root
 resource, this should be the same name as the module filename. For
 subresources, should be the same name as the state subkey (without the
-underscore). However the name can be arbitrary. It is reccomended that the
+underscore). However the name can be arbitrary. It is recommended that the
 name match the first portion of the API endpoint path with which it is
-associated. It is also reccomended that if the endpoint supports `ALL` (see
+associated. It is also recommended that if the endpoint supports `ALL` (see
 `supports`) then this name be plural, otherwise it should be singular.
 
 #### **Examples**
@@ -148,7 +148,7 @@ which are constants that can be imported from `api/internal.js`. `ONE`
 indicates that the endpoint supports `GET` requests that will respond with
 data for a single resource. `MANY` indicates that the endpoint supports
 paginated get requests that will respond with a collection of objects. 
-`DELTETE`, `PUT`, and `POST` indicate the endpoint supports those HTTP
+`DELETE`, `PUT`, and `POST` indicate the endpoint supports those HTTP
 methods respectively.
 
 Note that the inclusion of `MANY` makes the endpoint a "plural" endpoint, and
@@ -231,7 +231,7 @@ A function used to sort the ids which are placed in the `ids` array in the
 Redux store. This ids array can be used to iterate over the objects in the
 primary store, which are keyed by those ids. This function takes the current
 list of `ids`, and the current `state` for the resource, and must return a
-sorted list of ids. It's reccomended to use `Array.prototype.sort` on the ids
+sorted list of ids. It's recommended to use `Array.prototype.sort` on the ids
 array.
 
 Example, for `events`:
