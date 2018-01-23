@@ -40,7 +40,7 @@ export class IndexPage extends Component {
         to: `${url}/authentication`,
         selected: matched(`${url}/authentication`),
       },
-      { name: 'API Tokens', to: `${url}/tokens`, selected: matched(`${url}/token`) },
+      { name: 'API Tokens', to: `${url}/tokens`, selected: matched(`${url}/tokens`) },
       { name: 'My API Clients', to: `${url}/clients`, selected: matched(`${url}/clients`) },
       {
         name: 'Notifications',
@@ -48,7 +48,7 @@ export class IndexPage extends Component {
         selected: matched(`${url}/notifications`),
       },
       { name: 'Referrals', to: `${url}/referrals`, selected: matched(`${url}/referrals`) },
-      { name: 'Lish', to: `${url}/lish`, selected: matched(`${url}/list`) },
+      { name: 'Lish', to: `${url}/lish`, selected: matched(`${url}/lish`) },
     ];
 
     return (
