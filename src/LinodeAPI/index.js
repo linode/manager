@@ -101,7 +101,7 @@ class LinodeAPI {
   }
 
   delete = (url) => {
-    return Axios.delete({
+    return Axios({
       ...this.opts,
       url,
       method: 'DELETE',
