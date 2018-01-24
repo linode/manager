@@ -63,29 +63,16 @@ export default class ConfigForm extends Component {
       check_interval: parseInt(checkInterval),
       check_timeout: parseInt(checkTimeout),
       check_attempts: parseInt(checkAttempts),
+      ...(sslCert && { ssl_cert: sslCert }),
+      ...(sslKey && { ssl_key: sslKey }),
     };
 
-    const sslData = {};
-    if (protocol === 'https') {
-      if (!config.id) {
-        data.ssl_cert = sslCert;
-        data.ssl_key = sslKey;
-      } else {
-        sslData.ssl_cert = sslCert;
-        sslData.ssl_key = sslKey;
-      }
-    }
-
     const idsPath = [nodebalancer.id, config.id].filter(Boolean);
+    const method = config.id ? 'put' : 'post';
     const calls = [];
-    if ((config.id && protocol === 'https') &&
-      (config.protocol !== 'https' || (sslCert || sslKey))) {
-      calls.push(() => api.nodebalancers.configs.put(
-        { ...data, ...sslData },
-        nodebalancer.id, config.id)
-      );
-    }
-    calls.push(() => api.nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
+
+    calls.push(() =>
+      api.nodebalancers.configs[method](data, ...idsPath));
 
     if (!config.id) {
       calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
@@ -189,8 +176,8 @@ export default class ConfigForm extends Component {
                 <Textarea
                   id="sslCert"
                   name="sslCert"
-                  placeholder="SSL certificate (including chained intermediate
-                  certificates if needed)"
+                  // eslint-disable-next-line max-len
+                  placeholder="SSL certificate (including chained intermediate certificates if needed)"
                   value={sslCert}
                   onChange={this.onChange}
                 />
