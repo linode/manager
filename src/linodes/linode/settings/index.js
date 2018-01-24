@@ -11,7 +11,7 @@ import { getObjectByLabelLazily } from '~/api/util';
 import { selectLinode } from '../utilities/selectLinode';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
-import AlertsPage from './layouts/Alertspage';
+import AlertsPage from './layouts/AlertsPage';
 import DisplayPage from './layouts/DisplayPage';
 import EditConfigPage from './advanced/layouts/EditConfigPage';
 import AdvancedPage from './advanced/layouts/AdvancedPage';
