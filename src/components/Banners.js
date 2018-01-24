@@ -72,32 +72,35 @@ function abuseTicket(banners) {
   }
 }
 
-function migrations(banners) {
-  return (
-    banners.map((banner, key) =>
-      <div className="warning" key={key}>
-        You have a host migration {banner.type.split('_')[1]} for this Linode!
-      </div>
-    )
-  );
-}
-
-function scheduledReboot(banners) {
-  return (
-    banners.map((banner, key) =>
-      <div className="warning" key={key}>
-        This Linode is scheduled to reboot.
-      </div>
-    )
-  );
-}
-
-function xenSecurityAdvisory(banners) {
+function migrations(banners, nameEntities) {
   return banners.map((banner, key) => {
+    const entityName = nameEntities ? banner.entity.label : 'this Linode';
+    return (
+      <div className="warning" key={key}>
+        You have a host migration {banner.type.split('_')[1]} for {entityName}!
+      </div>
+    );
+  });
+}
+
+function scheduledReboot(banners, nameEntities) {
+  return banners.map((banner, key) => {
+    const entityName = nameEntities ? banner.entity.label : 'This Linode';
+    return (
+      <div className="warning" key={key}>
+        {entityName} is scheduled to reboot.
+      </div>
+    );
+  });
+}
+
+function xenSecurityAdvisory(banners, nameEntities) {
+  return banners.map((banner, key) => {
+    const entityName = nameEntities ? banner.entity.label : 'This Linode';
     const timestamp = banner.when.replace('T', ' ');
     return (
       <div className="critical" key={key} >
-        This Linode is scheduled for an XSA restart at {timestamp}.
+        {entityName} is scheduled for an XSA restart at {timestamp}.
       </div>
     );
   });
@@ -138,7 +141,7 @@ function globalNotice(banner) {
   }
 }
 
-function renderBanners(banners, linode = {}) {
+function renderBanners(banners, linode = {}, nameEntities) {
   const abuseBanners = filterBy(
     [banner => banner.type === TICKET_ABUSE],
     banners
@@ -157,7 +160,7 @@ function renderBanners(banners, linode = {}) {
   const migrationBanners = filterBy(
     [
       banner => [MIGRATION_PENDING, MIGRATION_SCHEDULED].indexOf(banner.type) >= 0,
-      banner => banner.entity.id === linode.id,
+      banner => nameEntities || (banner.entity.id === linode.id),
     ],
     banners
   );
@@ -165,7 +168,7 @@ function renderBanners(banners, linode = {}) {
   const scheduledRebootBanners = filterBy(
     [
       banner => banner.type === REBOOT_SCHEDULED,
-      banner => banner.entity.id === linode.id,
+      banner => nameEntities || (banner.entity.id === linode.id),
     ],
     banners
   );
@@ -173,7 +176,7 @@ function renderBanners(banners, linode = {}) {
   const xenSecurityAdvisoryBanners = filterBy(
     [
       banner => banner.type === XSA,
-      banner => banner.entity.id === linode.id,
+      banner => nameEntities || (banner.entity.id === linode.id),
     ],
     banners
   );
@@ -195,9 +198,12 @@ function renderBanners(banners, linode = {}) {
         importantTicket(importantTicketBanners)
       }
       {outstandingBalance(outstandingBalanceBanners)}
-      {!isEmpty(migrationBanners) && migrations(migrationBanners)}
-      {!isEmpty(scheduledRebootBanners) && scheduledReboot(scheduledRebootBanners)}
-      {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(xenSecurityAdvisoryBanners)}
+      {!isEmpty(migrationBanners) && migrations(
+        migrationBanners, nameEntities)}
+      {!isEmpty(scheduledRebootBanners) && scheduledReboot(
+        scheduledRebootBanners, nameEntities)}
+      {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(
+        xenSecurityAdvisoryBanners, nameEntities)}
       {!isEmpty(outageBanners) && outage(outageBanners)}
       {!isEmpty(globalBanners) && globalNotice(globalBanners)}
     </div>
@@ -205,13 +211,14 @@ function renderBanners(banners, linode = {}) {
 }
 
 export function Banners(props) {
-  const { banners, linode } = props;
-  return banners.length ? renderBanners(banners, linode) : null;
+  const { banners, linode, nameEntities } = props;
+  return banners.length ? renderBanners(banners, linode, nameEntities) : null;
 }
 
 Banners.propTypes = {
   linode: PropTypes.object,
   banners: PropTypes.array,
+  nameEntities: PropTypes.bool,
 };
 
 Banners.defaultProps = {
