@@ -7,17 +7,20 @@ import { Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 
 import api from '~/api';
+import { BANNER_TYPES } from '~/constants';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
-export const OUTAGE = 'outage';
-export const MIGRATION_SCHEDULED = 'migration_scheduled';
-export const MIGRATION_PENDING = 'migration_pending';
-export const REBOOT_SCHEDULED = 'reboot_scheduled';
-export const XSA = 'xsa';
-export const BALANCE_OUTSTANDING = 'balance_outstanding';
-export const TICKET_IMPORTANT = 'ticket_important';
-export const TICKET_ABUSE = 'ticket_abuse';
-export const LINODE = 'linode';
+const {
+  OUTAGE,
+  MIGRATION_SCHEDULED,
+  MIGRATION_PENDING,
+  REBOOT_SCHEDULED,
+  XSA,
+  BALANCE_OUTSTANDING,
+  TICKET_IMPORTANT,
+  TICKET_ABUSE,
+  LINODE,
+} = BANNER_TYPES;
 
 /**
  * @param {[function]} pred Array of functions whos only arguement is the
@@ -73,7 +76,7 @@ function migrations(banners) {
   return (
     banners.map((banner, key) =>
       <div className="warning" key={key}>
-        You have a host migration {banner.type.split('_')[1]} for this linode!
+        You have a host migration {banner.type.split('_')[1]} for this Linode!
       </div>
     )
   );

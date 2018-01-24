@@ -262,6 +262,18 @@ export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';
 
 export const AVAILABLE_VOLUME_REGIONS = ['us-east-1a', 'us-west-1a'];
 
+export const BANNER_TYPES = {
+  OUTAGE: 'outage',
+  MIGRATION_SCHEDULED: 'migration_scheduled',
+  MIGRATION_PENDING: 'migration_pending',
+  REBOOT_SCHEDULED: 'reboot_scheduled',
+  XSA: 'xsa',
+  BALANCE_OUTSTANDING: 'balance_outstanding',
+  TICKET_IMPORTANT: 'ticket_important',
+  TICKET_ABUSE: 'ticket_abuse',
+  LINODE: 'linode',
+};
+
 export const Countries = {
   AF: 'Afghanistan',
   AL: 'Albania',

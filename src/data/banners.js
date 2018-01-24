@@ -1,11 +1,13 @@
-import {
+import { BANNER_TYPES } from '~/constants';
+
+const {
   OUTAGE,
   REBOOT_SCHEDULED,
   XSA,
   BALANCE_OUTSTANDING,
   TICKET_IMPORTANT,
   TICKET_ABUSE,
-} from '~/components/Banners';
+} = BANNER_TYPES;
 
 export const testApiBanner = {
   entity: {
