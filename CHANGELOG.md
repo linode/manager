@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.0] 2018-01-24
+### Added
+- Glish - a web-based VNC connection to your Linodes
+- Implement some modals using React 16 Portals
+### Changed
+- Initial bundle sizes reduced with code splitting
+- Upgraded to React 16
+- Upgrade to React Router 4
+- Moved "Volumes" to top-level navigation
+
 ## [0.17.3] 2018-01-15
 ### Fixed
 - Allow config selection when adding a Volume to a Linode
