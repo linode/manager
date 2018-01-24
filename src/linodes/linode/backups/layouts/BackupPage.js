@@ -1,46 +1,80 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-// import { compose } from 'redux';
+import { compose } from 'redux';
 import api from '~/api';
 
 import { BackupRestore, BackupDetails } from '../components';
 import { selectLinode } from '../../utilities';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
 
-import unless from 'ramda/src/unless';
-import path from 'ramda/src/path';
-import propOr from 'ramda/src/propOr';
-import assoc from 'ramda/src/assoc';
-import prop from 'ramda/src/prop';
-import compose from 'ramda/src/compose';
-import over from 'ramda/src/over';
-import lensProp from 'ramda/src/lensProp';
-import isNil from 'ramda/src/isNil';
-import curry from 'ramda/src/curry';
-import propEq from 'ramda/src/propEq';
+/**
+ * @func
+ * @param {Object}
+ * @returns {Object[]}
+ */
+export const backupsToList = compose(
 
-const currentSnapshot = path(['snapshot', 'current']);
+  /**
+   * @func
+   * @param {Object} backups
+   * @returns {Object[]} - Array of backup Objects.
+   */
+  (backups) => backups.result,
 
-const inProgressSnapshot = path(['snapshot', 'in_progress']);
+  /**
+   * Appends backups.snapshot.in_progress to backups.result if it exists.
+   *
+   * @func
+   * @param {object} backups
+   * @returns {object}
+   */
+  (backups) => {
+    if (!backups.snapshot.in_progress) {
+      return backups;
+    }
 
-export const findById = curry((id, list) => list.find(propEq('id', id)));
+    return {
+      ...backups,
+      result: [...backups.result, backups.snapshot.in_progress],
+    };
+  },
 
-export const backupsToList = (backups) => compose(
-  prop('result'),
-  unless(
-    compose(isNil, inProgressSnapshot),
-    over(lensProp('result'), (result) => [...result, inProgressSnapshot(backups)])
-  ),
-  unless(
-    compose(isNil, currentSnapshot),
-    over(lensProp('result'), (result) => [...result, currentSnapshot(backups)])
-  ),
-  assoc('result', propOr([], 'automatic', backups)),
-)(backups);
+  /**
+   * Appends backups.snapshot.current to backups.result if it exists.
+   *
+   * @func
+   * @param {object} backups
+   * @returns {object}
+   */
+  (backups) => {
+    if (!backups.snapshot.current) {
+      return backups;
+    }
+
+    return {
+      ...backups,
+      result: [...backups.result, backups.snapshot.current],
+    };
+  },
+
+  /**
+   * Creates a new property 'result' on backups with the value of backups.automatic.
+   *
+   * @func
+   * @param {object} backups
+   * @returns {object}
+   */
+  (backups) => {
+    return {
+      ...backups,
+      result: backups.automatic || [],
+    };
+  },
+);
 
 const mergeBackupsThenFindById = (id, backups) => compose(
-  findById(id),
+  (backups) => backups.find((b) => b.id === id),
   backupsToList,
 )(backups);
 

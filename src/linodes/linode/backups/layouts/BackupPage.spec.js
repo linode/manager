@@ -1,4 +1,4 @@
-import { backupsToList, findById } from './BackupPage';
+import { backupsToList } from './BackupPage';
 
 describe('src/linodes/linode/backups/layouts/BackupPage', () => {
   describe('backupsToList', () => {
@@ -37,23 +37,6 @@ describe('src/linodes/linode/backups/layouts/BackupPage', () => {
       expect(
         backupsToList(withInProgressSnapshot)
       ).toEqual([backup1, backup2, backup3, backup5]);
-    });
-  });
-  describe('findbyId', () => {
-    it('should returns object found by ID', () => {
-      expect(
-        findById(
-          999,
-          [{ id: 1 }, { id: 999 }, { id: 3 }])
-      ).toEqual({ id: 999 });
-    });
-
-    it('should return undefined if object no found', () => {
-      expect(
-        findById(
-          888,
-          [{ id: 1 }, { id: 999 }, { id: 3 }])
-      ).toBeUndefined();
     });
   });
 });
