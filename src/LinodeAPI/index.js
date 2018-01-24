@@ -3,35 +3,28 @@ import Axios from 'axios';
 import debug from 'debug';
 
 const log = debug('LinodeAPI');
+if (process.env.NODE_ENV !== 'production') {
+  Axios.interceptors.request.use((config) => {
+    log(`>> [${config.method}] ${config.baseURL}${config.url}`);
+    return config;
+  });
 
-Axios.interceptors.request.use((config) => {
-  // eslint-disable-next-line no-console
-  console.group(config.url);
-  log('-->', config.method, config.url);
-  return config;
-});
-
-Axios.interceptors.response.use(
-  (response) => {
-    log('<--', response.config.method, response.config.url);
-    // eslint-disable-next-line no-console
-    console.groupEnd(response.config.url);
-    return Promise.resolve(response);
-  },
-  (error) => {
-    log(
-      '<!--',
-      error.config.method,
-      error.config.url,
-      error.response.status,
-      error.response.statusText,
-      error.response.data
-    );
-    // eslint-disable-next-line no-console
-    console.groupEnd(error.config.url);
-    return Promise.reject(error);
-  }
-);
+  Axios.interceptors.response.use(
+    (response) => {
+      log(`<< [${response.config.method}] ${response.config.url}`);
+      return Promise.resolve(response);
+    },
+    (error) => {
+      log(
+        `<< [${error.config.method}] ${error.config.url}`,
+        error.response.status,
+        error.response.statusText,
+        error.response.data
+      );
+      return Promise.reject(error);
+    }
+  );
+}
 
 class LinodeAPI {
   static NULL_API_KEY_ERROR = 'LinodeAPI requires an API key';
