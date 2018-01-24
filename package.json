@@ -87,7 +87,7 @@
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.0",
     "jest": "^21.2.1",
-    "linode-components": "https://github.com/asauber/linode-react-components#6f55404b86dd90d7fa560c61b752afd18cfc4a1b",
+    "linode-components": "https://github.com/linode/linode-react-components#v0.0.7",
     "lodash": "^4.16.4",
     "md5": "^2.1.0",
     "moment": "^2.17.1",
