@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { TimeDisplay } from '~/components';
-import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
+import { BackupsSummaryPage } from './BackupsSummaryPage';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '~/test.helpers';
 import { testLinode, testLinode1235, testLinode1236 } from '~/data/linodes';
@@ -22,7 +22,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   it('should render without error', () => {
     const dispatch = jest.fn();
     const wrapper = shallow(
-      <SummaryPage
+      <BackupsSummaryPage
         dispatch={dispatch}
         linode={testLinode1236}
       />
@@ -32,7 +32,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
   it.skip('renders backup blocks with no backups present', () => {
     const page = mount(
-      <SummaryPage
+      <BackupsSummaryPage
         dispatch={dispatch}
         linode={testLinode1236}
       />
@@ -58,7 +58,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   it.skip('renders backup blocks with all backups present', () => {
     const { daily, weekly, snapshot } = testLinode1235._backups;
     const page = mount(
-      <SummaryPage
+      <BackupsSummaryPage
         dispatch={dispatch}
         linode={testLinode1235}
       />
@@ -85,7 +85,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
   it.skip('takes a snapshot', async () => {
     const page = mount(
-      <SummaryPage
+      <BackupsSummaryPage
         dispatch={dispatch}
         linode={testLinode1236}
       />
@@ -110,7 +110,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
   it.skip('does not show take snapshot button for an auto backup', () => {
     const page = mount(
-      <SummaryPage
+      <BackupsSummaryPage
         dispatch={dispatch}
         linode={testLinode}
       />

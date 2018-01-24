@@ -4,7 +4,7 @@ exports[`linodes/linode/backups/layouts/SummaryPage should render without error 
 ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <SummaryPage
+  Symbol(enzyme.__unrendered__): <BackupsSummaryPage
     dispatch={[Function]}
     linode={
       Object {
@@ -272,18 +272,6 @@ ShallowWrapper {
           className="Backup-container row"
         >
           <Unknown
-            backup={null}
-            title="Daily"
-          />
-          <Unknown
-            backup={undefined}
-            title="Weekly"
-          />
-          <Unknown
-            backup={undefined}
-            title="Biweekly"
-          />
-          <Unknown
             backup={undefined}
             title="Snapshot"
           />
@@ -313,18 +301,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": Array [
-            <Unknown
-              backup={null}
-              title="Daily"
-            />,
-            <Unknown
-              backup={undefined}
-              title="Weekly"
-            />,
-            <Unknown
-              backup={undefined}
-              title="Biweekly"
-            />,
+            Array [],
             <Unknown
               backup={undefined}
               title="Snapshot"
@@ -334,42 +311,6 @@ ShallowWrapper {
         },
         "ref": null,
         "rendered": Array [
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "backup": null,
-              "title": "Daily",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "backup": undefined,
-              "title": "Weekly",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
-          },
-          Object {
-            "instance": null,
-            "key": undefined,
-            "nodeType": "function",
-            "props": Object {
-              "backup": undefined,
-              "title": "Biweekly",
-            },
-            "ref": null,
-            "rendered": null,
-            "type": [Function],
-          },
           Object {
             "instance": null,
             "key": undefined,
@@ -402,18 +343,6 @@ ShallowWrapper {
             className="Backup-container row"
           >
             <Unknown
-              backup={null}
-              title="Daily"
-            />
-            <Unknown
-              backup={undefined}
-              title="Weekly"
-            />
-            <Unknown
-              backup={undefined}
-              title="Biweekly"
-            />
-            <Unknown
               backup={undefined}
               title="Snapshot"
             />
@@ -443,18 +372,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": Array [
-              <Unknown
-                backup={null}
-                title="Daily"
-              />,
-              <Unknown
-                backup={undefined}
-                title="Weekly"
-              />,
-              <Unknown
-                backup={undefined}
-                title="Biweekly"
-              />,
+              Array [],
               <Unknown
                 backup={undefined}
                 title="Snapshot"
@@ -464,42 +382,6 @@ ShallowWrapper {
           },
           "ref": null,
           "rendered": Array [
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "function",
-              "props": Object {
-                "backup": null,
-                "title": "Daily",
-              },
-              "ref": null,
-              "rendered": null,
-              "type": [Function],
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "function",
-              "props": Object {
-                "backup": undefined,
-                "title": "Weekly",
-              },
-              "ref": null,
-              "rendered": null,
-              "type": [Function],
-            },
-            Object {
-              "instance": null,
-              "key": undefined,
-              "nodeType": "function",
-              "props": Object {
-                "backup": undefined,
-                "title": "Biweekly",
-              },
-              "ref": null,
-              "rendered": null,
-              "type": [Function],
-            },
             Object {
               "instance": null,
               "key": undefined,
