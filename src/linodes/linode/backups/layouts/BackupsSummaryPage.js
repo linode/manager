@@ -14,7 +14,7 @@ import { TakeSnapshot } from '../components';
 import { selectLinode } from '../../utilities';
 
 
-export class SummaryPage extends Component {
+export class BackupsSummaryPage extends Component {
   constructor() {
     super();
 
@@ -96,15 +96,13 @@ export class SummaryPage extends Component {
     if (!backups) {
       return null;
     }
-
-    const daily = backups.daily;
-    const snapshot = backups.snapshot &&
-      (backups.snapshot.in_progress ?
-        backups.snapshot.in_progress :
-        backups.snapshot.current) ||
-      undefined;
-    const weekly = backups.weekly && backups.weekly.length ? backups.weekly[0] : undefined;
-    const biweekly = backups.weekly && backups.weekly.length === 2 ? backups.weekly[1] : undefined;
+    const { automatic = [] } = backups;
+    // Ew...
+    const snapshot = backups.snapshot
+      && (backups.snapshot.in_progress
+        ? backups.snapshot.in_progress
+        : backups.snapshot.current)
+      || undefined;
 
     return (
       <Card header={<CardHeader title="Restorable backups" />}>
@@ -112,9 +110,12 @@ export class SummaryPage extends Component {
           Select a backup to see details and restore to a Linode.
         </p>
         <div className="Backup-container row">
-          <this.renderBlock title="Daily" backup={daily} />
-          <this.renderBlock title="Weekly" backup={weekly} />
-          <this.renderBlock title="Biweekly" backup={biweekly} />
+          {automatic.map((backup, index) =>
+            <this.renderBlock
+              key={index}
+              title={`Automatic Backup ${index + 1}`}
+              backup={backup}
+            />)}
           <this.renderBlock title="Snapshot" backup={snapshot} />
         </div>
       </Card>
@@ -122,9 +123,9 @@ export class SummaryPage extends Component {
   }
 }
 
-SummaryPage.propTypes = {
+BackupsSummaryPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
 };
 
-export default connect(selectLinode)(SummaryPage);
+export default connect(selectLinode)(BackupsSummaryPage);
