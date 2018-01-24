@@ -94,7 +94,7 @@ export class RebuildPage extends Component {
             <div className="col-sm-9">
               <Input
                 disabled
-                value={currentImage.label}
+                value={(currentImage && currentImage.label)}
               />
             </div>
           </FormGroup>
@@ -143,7 +143,7 @@ RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   images: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
-  image: PropTypes.object.isRequired,
+  image: PropTypes.object,
 };
 
 
