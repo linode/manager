@@ -8,7 +8,7 @@ import { distros as distroAssets } from '~/assets';
 export default function DistroStyle(props) {
   const { image } = props;
 
-  if (!image.vendor) {
+  if (!image || !image.vendor) {
     return <span className="distro-style">Unknown</span>;
   }
 
@@ -27,5 +27,5 @@ export default function DistroStyle(props) {
 }
 
 DistroStyle.propTypes = {
-  image: PropTypes.object.isRequired,
+  image: PropTypes.object,
 };
