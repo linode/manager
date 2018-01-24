@@ -128,16 +128,11 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn1]) => expectRequest(fn1, `/nodebalancers/${configsNodeBalancer.id}/configs/${id}/ssl`, {
-        method: 'POST',
+      ([fn1]) => expectRequest(fn1, `/nodebalancers/${configsNodeBalancer.id}/configs/${id}`, {
+        method: 'PUT',
         body: {
           ssl_cert: 'Some ssl cert',
           ssl_key: 'Some ssl key',
-        },
-      }),
-      ([fn2]) => expectRequest(fn2, `/nodebalancers/${configsNodeBalancer.id}/configs/${id}`, {
-        method: 'PUT',
-        body: {
           check_timeout: 30,
           check_attempts: 3,
           check_interval: 0,
@@ -151,6 +146,6 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
           check_body: '',
         },
       }),
-    ], 2, [undefined, { id: 1 }]);
+    ], 1, [undefined, { id: 1 }]);
   });
 });
