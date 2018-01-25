@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.1] 2018-01-24
+### Fixed
+- Glish and weblish token fetching bug corrected
+
 ## [0.18.0] 2018-01-24
 ### Added
 - Glish - a web-based VNC connection to your Linodes
