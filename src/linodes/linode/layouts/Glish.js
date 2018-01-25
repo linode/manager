@@ -6,7 +6,7 @@ import { VncDisplay } from 'react-vnc-display';
 import { compose } from 'redux';
 
 import { ZONES, LISH_ROOT } from '~/constants';
-import { lishToken } from '~/api/ad-hoc/linodes';
+import request from '~/request';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import GlishControls from '~/linodes/linode/components/GlishControls';
@@ -30,8 +30,8 @@ export class Glish extends Component {
     const linode = await getCurrentLinode();
     this.setState({ linode: linode });
 
-    const { lish_token: token } = await getLishToken(linode.id);
-    this.setState({ token: token });
+    const { data: { lish_token: token } } = await getLishToken(linode.id);
+    this.setState({ token });
 
     const region = linode && ZONES[linode.region];
     this.refreshMonitor(region, token);
@@ -146,7 +146,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { match: { params: { linodeLabel } } } = ownProps;
   return {
     getCurrentLinode: () => dispatch(getObjectByLabelLazily('linodes', linodeLabel)),
-    getLishToken: (linodeId) => dispatch(lishToken(linodeId)),
+    getLishToken: (linodeId) => request.post(`/linode/instances/${linodeId}/lish_token`),
   };
 };
 
