@@ -131,6 +131,7 @@ try {
               <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
               <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
               <Route exact path="/oauth/callback" component={OAuthComponent} />
+              <Route exact path="/logout" component={Logout} />
               <Route
                 render={() => (
                   <Fragment>
@@ -158,7 +159,6 @@ try {
                           <Route path="/settings" component={Settings} />
                           <Route path="/users" component={Users} />
                           <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                          <Route exact path="/logout" component={Logout} />
                           <Route component={NotFound} />
                         </Switch>
                       </div>
