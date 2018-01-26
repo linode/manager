@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.2] 2018-01-25
+### Fixed
+- Prevent notifications from fetching during login and logout
+
 ## [0.18.1] 2018-01-24
 ### Fixed
 - Glish and weblish token fetching bug corrected
