@@ -124,54 +124,53 @@ if (ENVIRONMENT === 'production') {
 try {
   render(
     <Provider store={store}>
-      <ClickCapture>
-        <ConnectedRouter history={history}>
-          <AuthenticationWrapper>
-            <Switch>
-              <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
-              <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
-              <Route exact path="/oauth/callback" component={OAuthComponent} />
-              <Route exact path="/logout" component={Logout} />
-              <Route
-                render={() => (
-                  <Fragment>
-                    <ChainedDocumentTitle title="Linode Manager" />
-                    <div className="Layout-inner">
-                      <ModalContainer />
-                      <div className="Header">
-                        <MiniHeader />
-                        <Navigation />
-                        <ContextNavigation />
-                      </div>
-                      <div className="main">
-                        <Route render={(matchProps) => <Banners {...matchProps} />} />
-                        <Switch>
-                          <Route path="/linodes" component={Linodes} />
-                          <Route path="/nodebalancers" component={NodeBalancers} />
-                          <Route path="/domains" component={Domains} />
-                          <Route path="/support" component={Support} />
-                          <Route path="/support" component={Support} />
-                          <Route path="/stackscripts" component={StackScripts} />
-                          <Route path="/images" component={Images} />
-                          <Route path="/volumes" component={Volumes} />
-                          <Route path="/billing" component={Billing} />
-                          <Route path="/profile" component={Profile} />
-                          <Route path="/settings" component={Settings} />
-                          <Route path="/users" component={Users} />
-                          <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </div>
+      <ConnectedRouter history={history}>
+        <AuthenticationWrapper>
+          <ClickCapture />
+          <Switch>
+            <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
+            <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
+            <Route exact path="/oauth/callback" component={OAuthComponent} />
+            <Route exact path="/logout" component={Logout} />
+            <Route
+              render={() => (
+                <Fragment>
+                  <ChainedDocumentTitle title="Linode Manager" />
+                  <div className="Header">
+                    <MiniHeader />
+                    <Navigation />
+                    <ContextNavigation />
+                  </div>
+                  <div className="Layout-inner">
+                    <ModalContainer />
+                    <div className="main">
+                      <Route render={(matchProps) => <Banners {...matchProps} />} />
+                      <Switch>
+                        <Route path="/linodes" component={Linodes} />
+                        <Route path="/nodebalancers" component={NodeBalancers} />
+                        <Route path="/domains" component={Domains} />
+                        <Route path="/support" component={Support} />
+                        <Route path="/support" component={Support} />
+                        <Route path="/stackscripts" component={StackScripts} />
+                        <Route path="/images" component={Images} />
+                        <Route path="/volumes" component={Volumes} />
+                        <Route path="/billing" component={Billing} />
+                        <Route path="/profile" component={Profile} />
+                        <Route path="/settings" component={Settings} />
+                        <Route path="/users" component={Users} />
+                        <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                        <Route component={NotFound} />
+                      </Switch>
                     </div>
-                    <Footer />
-                  </Fragment>
-                )
-                }
-              />
-            </Switch>
-          </AuthenticationWrapper>
-        </ConnectedRouter>
-      </ClickCapture>
+                  </div>
+                  <Footer />
+                </Fragment>
+              )
+              }
+            />
+          </Switch>
+        </AuthenticationWrapper>
+      </ConnectedRouter>
     </Provider>,
     document.getElementById('root')
   );
