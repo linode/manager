@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
@@ -62,36 +62,59 @@ Menu.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-const Session = ({ username, menuStatus, toggleMenu, avatarLink }) => {
-  if (!username) {
-    return null;
+class Session extends Component {
+  componentDidMount() {
+    document.addEventListener('click', this.onOutsideClick);
   }
 
-  return (
-    <div
-      className="MainHeader-session"
-      onClick={() => toggleMenu(menuStatus)}
-    >
-      <span className="MainHeader-username">
-        {username}
-      </span>
-      <img
-        className="MainHeader-gravatar"
-        src={avatarLink}
-        alt="User Avatar"
-        height={35}
-        width={35}
-      />
-      <Menu open={menuStatus} />
-    </div>
-  );
-};
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onOutsideClick);
+  }
+
+
+  onOutsideClick = (e) => {
+    const { menuStatus, hideSessionWindow } = this.props;
+    const classes = ['MainHeader-gravatar', 'MainHeader-username', 'MainHeader-session'];
+
+    if (menuStatus && !classes.includes(e.target.className)) {
+      hideSessionWindow();
+    }
+  }
+
+  render() {
+    const { username, menuStatus, toggleMenu, avatarLink } = this.props;
+
+    if (!username) {
+      return null;
+    }
+
+    return (
+      <div
+        className="MainHeader-session"
+        onClick={() => toggleMenu(menuStatus)}
+      >
+        <span className="MainHeader-username">
+          {username}
+        </span>
+        <img
+          className="MainHeader-gravatar"
+          src={avatarLink}
+          alt="User Avatar"
+          height={35}
+          width={35}
+        />
+        <Menu open={menuStatus} />
+      </div>
+    );
+  }
+}
 
 Session.propTypes = {
   username: PropTypes.string,
   avatarLink: PropTypes.string,
   menuStatus: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
+  hideSessionWindow: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -108,6 +131,9 @@ const mapDispatchToProps = (dispatch) => ({
     } else {
       dispatch(showSession());
     }
+  },
+  hideSessionWindow() {
+    dispatch(hideSession());
   },
 });
 
