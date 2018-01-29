@@ -13,7 +13,6 @@ import OAuthComponent from '~/layouts/OAuth';
 import Navigation from '~/layouts/Navigation';
 import MiniHeader from '~/layouts/MiniHeader';
 import Footer from '~/layouts/Footer';
-import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import PageLoader from '~/components/loaders/PageLoader';
 import Logout from '~/components/Logout';
@@ -126,7 +125,6 @@ try {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <AuthenticationWrapper>
-          <ClickCapture />
           <Switch>
             <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
             <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />

@@ -51,6 +51,8 @@ class Notifications extends Component {
       await new Promise(r => setTimeout(r, 100));
     }
 
+    document.addEventListener('click', this.onOutsideClick);
+
     // begin by fetching all unseen events
     await dispatch(fetchAllEvents());
 
@@ -93,6 +95,7 @@ class Notifications extends Component {
   }
 
   componentWillUnmount() {
+    document.removeEventListener('click', this.onOutsideClick);
     POLLING.stop(POLLING_ID);
   }
 
@@ -116,6 +119,15 @@ class Notifications extends Component {
     });
     this.setState({ loading: false });
   };
+
+  onOutsideClick = (e) => {
+    const { menuStatus, hideNotificationWindow } = this.props;
+    const classes = ['MainHeader-notifications', 'fa fa-bell-o'];
+
+    if (menuStatus && !classes.includes(e.target.className)) {
+      hideNotificationWindow();
+    }
+  }
 
   fetchEventsPage(headers = null) {
     const { dispatch } = this.props;
@@ -155,6 +167,7 @@ Notifications.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }).isRequired,
+  hideNotificationWindow: PropTypes.func.isRequired,
 };
 
 Notifications.defaultProps = {
@@ -182,6 +195,9 @@ const mapDispatchToProps = (dispatch) => ({
       markEventsSeen(dispatch, events);
       dispatch(showNotifications());
     }
+  },
+  hideNotificationWindow() {
+    dispatch(hideNotifications());
   },
   fetchEventsPage(headers = null) {
     return dispatch(api.events.page(0, [], null, headers));
