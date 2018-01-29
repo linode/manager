@@ -7,7 +7,7 @@ const withZxcvbn = (Component) => Loadable({
   render(loaded, props) {
     return React.createElement(Component, {
       ...props,
-      calculatePasswordStrength: loaded,
+      passwordStrengthCalculator: loaded,
     });
   },
 });
