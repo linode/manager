@@ -8,7 +8,9 @@ import { api } from '~/data';
 import {
   testLinode1238,
   testLinodeWithRawDisk,
-  testLinodeWithNoDisks } from '~/data/linodes';
+  testLinodeWithNoDisks,
+  testLinodeWithMultipleDisks,
+} from '~/data/linodes';
 
 const { linodes } = api;
 
@@ -129,5 +131,33 @@ describe('linodes/images/components/AddImage', function () {
 
     const helpText = modal.find('#help-raw');
     expect(helpText.length).toBe(0);
+  });
+
+  it('renders a disabled input field when creating from disk', async function () {
+    AddImage.trigger(dispatch,
+      undefined, testLinode1238, testLinode1238._disks.disks['12345']);
+    const modal = await mount(dispatch.firstCall.args[0].body);
+
+    const diskInput = modal.find('Input[name="disk"]');
+    expect(diskInput.length).toBe(1);
+
+    const diskWithValue = modal.find('Input[value="Arch Linux 2015.08 Disk"]');
+    expect(diskWithValue.length).toBe(1);
+  });
+
+  it('renders a select field for a non-simple Linode with valid disks', async function () {
+    AddImage.trigger(dispatch, linodes);
+    const modal = await mount(dispatch.firstCall.args[0].body);
+
+    await modal.setState({
+      linode: testLinodeWithMultipleDisks.id,
+      allDisks: { [testLinodeWithMultipleDisks.id]:
+        Object.values(testLinodeWithMultipleDisks._disks.disks).map(
+          d => ({ value: d.id, label: d.label, size: d.size, filesystem: d.filesystem })) },
+      loading: false,
+    });
+
+    const diskInput = modal.find('Select[name="disk"]');
+    expect(diskInput.length).toBe(1);
   });
 });
