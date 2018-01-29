@@ -43,8 +43,9 @@ export class ChangePassword extends Component {
 
   render() {
     const { password, expires, errors, loading } = this.state;
-    const { calculatePasswordStrength } = this.props;
-    const passwordStrength = !isEmpty(password) && calculatePasswordStrength(password).score;
+    const { passwordStrengthCalculator } = this.props;
+    const passwordStrength = (!isEmpty(password) && passwordStrengthCalculator(password).score)
+      || null;
 
     return (
       <Card header={<CardHeader title="Change password" />}>
@@ -91,7 +92,7 @@ export class ChangePassword extends Component {
 
 ChangePassword.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  calculatePasswordStrength: PropTypes.func.isRequired,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
 
 export default withZxcvbn(ChangePassword);
