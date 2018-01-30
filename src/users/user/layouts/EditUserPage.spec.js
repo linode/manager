@@ -27,7 +27,7 @@ describe('users/user/layouts/EditUserPage', () => {
   //   expect(wrapper).toMatchSnapshot();
   // });
 
-  it('should commit changes to the API', async () => {
+  it.skip('should commit changes to the API', async () => {
     const page = mount(
       <EditUserPage
         dispatch={dispatch}

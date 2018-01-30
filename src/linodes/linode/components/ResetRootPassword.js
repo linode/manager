@@ -15,9 +15,10 @@ import FormModalBody from 'linode-components/dist/modals/FormModalBody';
 import { resetPassword } from '~/api/ad-hoc/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
+import withZxcvbn from '~/decorators/withZxcvbn';
 
 
-export default class ResetRootPassword extends Component {
+export class ResetRootPassword extends Component {
   constructor(props) {
     super(props);
 
@@ -57,8 +58,8 @@ export default class ResetRootPassword extends Component {
     dispatch(showModal(title, (
       <FormModalBody
         buttonText="Reset"
-        children="Are you sure you want to reset the root password for this Linode?
-                  This cannot be undone."
+        // eslint-disable-next-line max-len
+        children="Are you sure you want to reset the root password for this Linode? This cannot be undone."
         onCancel={() => dispatch(hideModal())}
         onSubmit={() => {
           dispatch(hideModal());
@@ -70,8 +71,9 @@ export default class ResetRootPassword extends Component {
   }
 
   render() {
-    const { disk, loading, errors } = this.state;
-    const { linode } = this.props;
+    const { disk, loading, errors, password } = this.state;
+    const { linode, passwordStrengthCalculator } = this.props;
+    const passwordStrength = passwordStrengthCalculator(password);
 
     // TODO: not so much that the Linode must be powered off, but the disk must not be in use.
     // This is difficult to do until we have know the last booted config.
@@ -117,9 +119,10 @@ export default class ResetRootPassword extends Component {
                 <PasswordInput
                   id="password"
                   name="password"
-                  value={this.state.password}
+                  value={password}
                   onChange={this.onChange}
                   disabled={disabled}
+                  strength={passwordStrength}
                 />
               </div>
               <FormGroupError errors={errors} name="password" inline={false} />
@@ -143,4 +146,7 @@ export default class ResetRootPassword extends Component {
 ResetRootPassword.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
+
+export default withZxcvbn(ResetRootPassword);

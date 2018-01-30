@@ -23,7 +23,7 @@ describe('users/layouts/UserForm', () => {
         dispatch={mockDispatch}
         user={testUser}
       />
-    );
+    ).dive();
     expect(wrapper).toMatchSnapshot();
   });
 
@@ -33,7 +33,7 @@ describe('users/layouts/UserForm', () => {
         dispatch={dispatch}
         user={testUser}
       />
-    );
+    ).dive();
 
     const username = page.find('#username');
     expect(username.props().value).toBe(testUser.username);

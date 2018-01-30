@@ -11,13 +11,14 @@ import { hideModal, showModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import RegionSelect from '~/components/RegionSelect';
+import withZxcvbn from '~/decorators/withZxcvbn';
 
 import BackupsCheckbox from './BackupsCheckbox';
 import DistributionSelect from './DistributionSelect';
 import PlanSelect from './PlanSelect';
 
 
-export default class AddLinode extends Component {
+export class AddLinode extends Component {
   static title = 'Add a Linode'
 
   static trigger(dispatch, images, plans) {
@@ -64,8 +65,10 @@ export default class AddLinode extends Component {
   }
 
   render() {
-    const { close, images, plans } = this.props;
+    const { close, images, plans, passwordStrengthCalculator } = this.props;
+
     const { errors, label, image, region, plan, backups, password } = this.state;
+    const passwordStrength = passwordStrengthCalculator(password);
 
     return (
       <FormModalBody
@@ -125,6 +128,7 @@ export default class AddLinode extends Component {
               id="password"
               onChange={this.onChange}
               disabled={image === 'none'}
+              strength={passwordStrength}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups" errors={errors}>
@@ -148,4 +152,7 @@ AddLinode.propTypes = {
   close: PropTypes.func.isRequired,
   images: PropTypes.object.isRequired,
   plans: PropTypes.object.isRequired,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
+
+export default withZxcvbn(AddLinode);
