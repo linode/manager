@@ -25,12 +25,12 @@ export class Glish extends Component {
   }
 
   async componentDidMount() {
-    const { getCurrentLinode } = this.props;
+    const { getCurrentLinode, getLishToken } = this.props;
 
     const linode = await getCurrentLinode();
     this.setState({ linode: linode });
 
-    const { data: { lish_token: token } } = await this.getLishToken(linode.id);
+    const { data: { lish_token: token } } = await getLishToken(linode.id);
     this.setState({ token });
 
     const region = linode && ZONES[linode.region];
@@ -62,8 +62,6 @@ export class Glish extends Component {
         break;
     }
   }
-
-  getLishToken = (linodeId) => request.post(`/linode/instances/${linodeId}/lish_token`);
 
   linodeOnClick = (linodeLabel) => {
     window.opener.location = `/linodes/${linodeLabel}`;
@@ -155,12 +153,14 @@ export class Glish extends Component {
 
 Glish.propTypes = {
   getCurrentLinode: PropTypes.func.isRequired,
+  getLishToken: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { match: { params: { linodeLabel } } } = ownProps;
   return {
     getCurrentLinode: () => dispatch(getObjectByLabelLazily('linodes', linodeLabel)),
+    getLishToken: (linodeId) => request.post(`/linode/instances/${linodeId}/lish_token`),
   };
 };
 
