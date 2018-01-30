@@ -404,6 +404,7 @@ ShallowWrapper {
         "vcpus": 2,
       }
     }
+    passwordStrengthCalculator={[Function]}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -502,6 +503,7 @@ ShallowWrapper {
                 name="password"
                 onChange={[Function]}
                 passwordType="offline_fast_hashing_1e10_per_second"
+                strength={undefined}
                 value=""
               />
               <FormGroupError
@@ -641,6 +643,7 @@ ShallowWrapper {
                   name="password"
                   onChange={[Function]}
                   passwordType="offline_fast_hashing_1e10_per_second"
+                  strength={undefined}
                   value=""
                 />
                 <FormGroupError
@@ -876,6 +879,7 @@ ShallowWrapper {
                     name="password"
                     onChange={[Function]}
                     passwordType="offline_fast_hashing_1e10_per_second"
+                    strength={undefined}
                     value=""
                   />
                   <FormGroupError
@@ -918,6 +922,7 @@ ShallowWrapper {
                       name="password"
                       onChange={[Function]}
                       passwordType="offline_fast_hashing_1e10_per_second"
+                      strength={undefined}
                       value=""
                     />,
                     <FormGroupError
@@ -942,6 +947,7 @@ ShallowWrapper {
                       "name": "password",
                       "onChange": [Function],
                       "passwordType": "offline_fast_hashing_1e10_per_second",
+                      "strength": undefined,
                       "value": "",
                     },
                     "ref": null,
@@ -1145,6 +1151,7 @@ ShallowWrapper {
                   name="password"
                   onChange={[Function]}
                   passwordType="offline_fast_hashing_1e10_per_second"
+                  strength={undefined}
                   value=""
                 />
                 <FormGroupError
@@ -1284,6 +1291,7 @@ ShallowWrapper {
                     name="password"
                     onChange={[Function]}
                     passwordType="offline_fast_hashing_1e10_per_second"
+                    strength={undefined}
                     value=""
                   />
                   <FormGroupError
@@ -1519,6 +1527,7 @@ ShallowWrapper {
                       name="password"
                       onChange={[Function]}
                       passwordType="offline_fast_hashing_1e10_per_second"
+                      strength={undefined}
                       value=""
                     />
                     <FormGroupError
@@ -1561,6 +1570,7 @@ ShallowWrapper {
                         name="password"
                         onChange={[Function]}
                         passwordType="offline_fast_hashing_1e10_per_second"
+                        strength={undefined}
                         value=""
                       />,
                       <FormGroupError
@@ -1585,6 +1595,7 @@ ShallowWrapper {
                         "name": "password",
                         "onChange": [Function],
                         "passwordType": "offline_fast_hashing_1e10_per_second",
+                        "strength": undefined,
                         "value": "",
                       },
                       "ref": null,

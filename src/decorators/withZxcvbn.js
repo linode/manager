@@ -1,15 +1,16 @@
 import React from 'react';
 import Loadable from 'react-loadable';
+import isEmpty from 'lodash/isEmpty';
 
-const withZxcvbn = (Component) => Loadable({
+export default (Component) => Loadable({
   loader: () => import('zxcvbn'),
   loading: () => null,
   render(loaded, props) {
     return React.createElement(Component, {
       ...props,
-      passwordStrengthCalculator: loaded,
+      passwordStrengthCalculator: (v) => isEmpty(v)
+        ? null
+        : loaded(v).score,
     });
   },
 });
-
-export default withZxcvbn;

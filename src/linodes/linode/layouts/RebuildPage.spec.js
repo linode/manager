@@ -27,6 +27,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
         distributions={api.images.images}
         linode={testLinode}
         image={apiTestImage}
+        passwordStrengthCalculator={jest.fn()}
       />
     );
     expect(wrapper).toMatchSnapshot();
