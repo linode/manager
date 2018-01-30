@@ -113,8 +113,8 @@
     "zxcvbn": "^4.4.2"
   },
   "pre-commit": [
-    "test",
-    "lint"
+    "lint",
+    "test"
   ],
   "jest": {
     "coverageDirectory": "<rootDir>/coverage",
