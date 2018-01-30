@@ -5,7 +5,6 @@ import InternalError from 'linode-components/dist/errors/InternalError';
 import ModalShell from 'linode-components/dist/modals/ModalShell';
 import { store } from './store';
 import { setError } from '~/actions/errors';
-import * as session from '~/session';
 
 export default (history) => (e) => {
   Raven.captureException(e);
@@ -20,7 +19,7 @@ export default (history) => (e) => {
     const errorPagePathname = window.location.pathname;
     history.listen(function (location) {
       if (location.pathname !== errorPagePathname) {
-        session.redirect(location.pathname);
+        window.location = location.pathname;
       }
     });
 
@@ -34,7 +33,7 @@ export default (history) => (e) => {
           {/* Yes, we could use window.reload() but we've already got this utility function that
           * can be stubbed out. */}
           <InternalError
-            returnHome={() => session.redirect(window.location.pathname)}
+            returnHome={() => { window.location = window.location.pathname; }}
           />
         </ModalShell>,
         document.getElementById('emergency-modal')

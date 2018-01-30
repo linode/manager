@@ -17,8 +17,7 @@ export class Logout extends Component {
     // Reset state
     dispatch(logout());
 
-    // Called this way allows us to stub it out.
-    session.redirect(`${LOGIN_ROOT}/logout`);
+    window.location = `${LOGIN_ROOT}/logout`;
   }
 
   render() {
