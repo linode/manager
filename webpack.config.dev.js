@@ -1,6 +1,7 @@
 const path = require('path');
 const process = require('process');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const _package = require('./package.json');
 
@@ -12,16 +13,19 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
-    'webpack-hot-middleware/client',
     './src/index',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
     chunkFilename: '[name].js',
-    publicPath: '/static/',
+    publicPath: '/',
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+    }),
+    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -80,5 +84,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+  },
+  devServer: {
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
   },
 };
