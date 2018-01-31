@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import isEmpty from 'lodash/isEmpty';
 import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 import Form from 'linode-components/dist/forms/Form';
@@ -9,14 +10,14 @@ import FormSummary from 'linode-components/dist/forms/FormSummary';
 import PasswordInput from 'linode-components/dist/forms/PasswordInput';
 import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 import { onChange } from 'linode-components/dist/forms/utilities';
-
 import { setPassword } from '~/api/ad-hoc/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectExpiration from './SelectExpiration';
+import withZxcvbn from '~/decorators/withZxcvbn';
 
 
-export default class ChangePassword extends Component {
+export class ChangePassword extends Component {
   constructor() {
     super();
 
@@ -42,6 +43,9 @@ export default class ChangePassword extends Component {
 
   render() {
     const { password, expires, errors, loading } = this.state;
+    const { passwordStrengthCalculator } = this.props;
+    const passwordStrength = (!isEmpty(password) && passwordStrengthCalculator(password).score)
+      || null;
 
     return (
       <Card header={<CardHeader title="Change password" />}>
@@ -57,6 +61,7 @@ export default class ChangePassword extends Component {
                 id="password"
                 value={password}
                 onChange={this.onChange}
+                strength={passwordStrength}
               />
               <FormGroupError errors={errors} name="password" />
             </div>
@@ -87,4 +92,7 @@ export default class ChangePassword extends Component {
 
 ChangePassword.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
+
+export default withZxcvbn(ChangePassword);
