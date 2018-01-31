@@ -1,10 +1,15 @@
 const process = require('process');
 const webpack = require('webpack');
 const _ = require('./webpack.config.dev.js');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const _package = require('./package.json');
 
 _.entry = './src/index';
 _.plugins = [
+  new HtmlWebpackPlugin({
+    template: 'src/index.html',
+  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify('production'),
