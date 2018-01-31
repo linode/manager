@@ -63,6 +63,21 @@ export class Glish extends Component {
     }
   }
 
+  linodeOnClick = (linodeLabel) => {
+    window.opener.location = `/linodes/${linodeLabel}`;
+  }
+
+  linodeAnchor = (linodeLabel) => {
+    return (
+      <a
+        className="force-link text-muted"
+        onClick={() => this.linodeOnClick(linodeLabel)}
+      >
+        {linodeLabel}
+      </a>
+    );
+  }
+
   renewVncToken = () => {
     // renew our VNC session every 5 minutes
     clearInterval(this.renewInterval);
@@ -105,12 +120,12 @@ export class Glish extends Component {
 
     const region = linode && ZONES[linode.region];
 
-    let message = 'Connecting...';
+    let message = <span>Connecting...</span>;
     if (linode && powered === false) {
-      message = `Linode ${linode.id} is powered off`;
+      message = <span>{this.linodeAnchor(linode.label)} is powered off</span>;
     }
     if (linode && connected === true) {
-      message = `Connected to Linode ${linode.id}`;
+      message = <span>Connected to {this.linodeAnchor(linode.label)}</span>;
     }
 
     return (
@@ -120,6 +135,8 @@ export class Glish extends Component {
           connected={connected}
           message={message}
           linodeId={linode && linode.id}
+          linodeLabel={linode && linode.label}
+          linodeAnchor={this.linodeAnchor}
         />
         <div className="text-center">
           {activeVnc && token && region &&
@@ -137,9 +154,6 @@ export class Glish extends Component {
 Glish.propTypes = {
   getCurrentLinode: PropTypes.func.isRequired,
   getLishToken: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

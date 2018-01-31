@@ -209,7 +209,6 @@ export class DashboardPage extends Component {
             <FormGroup name="glish" className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Glish
-                <div><small className="text-muted">NoVNC Console</small></div>
               </label>
               <div className="col-sm-8">
                 <div className="input-group-btn">
