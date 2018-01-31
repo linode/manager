@@ -7,6 +7,7 @@
     "copy-assets": "./bin/copy-assets.sh",
     "build:webpack": "yarn run copy-assets && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "yarn run clean && yarn run build:webpack",
+    "build:inspect": "NODE_ENV=production webpack --config webpack.config.prod.js --profile --json > stats.json && webpack-bundle-analyzer stats.json",
     "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
@@ -69,6 +70,7 @@
     "sinon": "^4.1.2",
     "style-loader": "^0.13.0",
     "webpack": "^3.10",
+    "webpack-bundle-analyzer": "^2.9.2",
     "webpack-dev-server": "^2.11.1",
     "xunit-file": "^0.0.9"
   },

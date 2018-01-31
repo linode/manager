@@ -17,17 +17,25 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
-    chunkFilename: '[name].js',
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[hash].js',
     publicPath: '/',
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+    }),
+
     new webpack.NamedModulesPlugin(),
+
     new webpack.HotModuleReplacementPlugin(),
+
     new webpack.NoEmitOnErrorsPlugin(),
+
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
