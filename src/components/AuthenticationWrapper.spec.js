@@ -52,4 +52,29 @@ describe('AuthenticationWrapper', () => {
 
     expect(expect(mockRedirect.mock.calls.length).toBe(0));
   });
+
+  it('doesn\'t redirect when authenticated', () => {
+    const mockRedirect = jest.fn();
+    const location = {
+      pathname: '/linodes',
+    };
+    const mockHistory = {
+      push: jest.fn(),
+    };
+
+    mount(
+      <StaticRouter>
+        <AuthenticationWrapper
+          isAuthenticated
+          redirectToLogin={mockRedirect}
+          location={location}
+          history={mockHistory}
+        >
+          Hello
+        </AuthenticationWrapper>
+      </StaticRouter>
+    );
+
+    expect(expect(mockRedirect.mock.calls.length).toBe(0));
+  });
 });
