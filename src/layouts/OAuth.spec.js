@@ -78,7 +78,7 @@ describe('layouts/OAuth', () => {
         location={{
           query: {
             code: 'code',
-            return: '/asdf',
+            returnTo: '/asdf',
           },
         }}
       />);
