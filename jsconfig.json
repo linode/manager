@@ -7,7 +7,9 @@
     "exclude": [
         "coverage",
         "node_modules",
-        "exclude"
+        "dist",
+        "stats.json",
+        "assets"
     ],
     "compilerOptions": {
         "baseUrl": "./src",
