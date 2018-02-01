@@ -150,6 +150,10 @@ describe('internal', () => {
     it('should return parsed integer if arg is a number', () => {
       expect(parseIntIfActualInt('1')).toBe(1);
     });
+
+    it('should return parsed integer if arg is a number', () => {
+      expect(parseIntIfActualInt('Andrew is number 1')).toBe('Andrew is number 1');
+    });
   });
 
   describe('genActions', () => {
