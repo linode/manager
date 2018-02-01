@@ -5,6 +5,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const _package = require('./package.json');
 
+function srcPath(subdir) {
+  return subdir
+    ? path.join(__dirname, 'src', subdir)
+    : path.join(__dirname, 'src');
+}
+
 module.exports = {
   context: __dirname,
   node: {
@@ -13,7 +19,7 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
-    './src/index',
+    srcPath('index.js'),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -23,7 +29,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: srcPath('index.html'),
     }),
 
     new webpack.optimize.CommonsChunkPlugin({
@@ -76,10 +82,17 @@ module.exports = {
         ],
       },
       {
+        test: /\.tsx?/,
+        use: [require.resolve('babel-loader'), require.resolve('ts-loader')],
+        include: [
+          srcPath(),
+        ],
+      },
+      {
         test: /\.jsx?/,
         loader: require.resolve('babel-loader'),
         include: [
-          path.resolve(__dirname, 'src'),
+          srcPath(),
           path.resolve(__dirname, 'node_modules/react-vnc-display'),
         ],
       },
@@ -91,7 +104,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '~': srcPath(),
+    },
   },
   devServer: {
     port: 3000,
