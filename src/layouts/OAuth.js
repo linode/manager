@@ -53,7 +53,7 @@ export class OAuthCallbackPage extends Component {
       data.append('client_id', clientId);
       data.append('client_secret', clientSecret);
       data.append('code', code);
-      returnTo = location.query['return'];
+      returnTo = location.query.returnTo;
 
       // Exchange temporary code for access token.
       let resp;
