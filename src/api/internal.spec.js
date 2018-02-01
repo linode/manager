@@ -1,17 +1,19 @@
 import {
-  genActions,
-  isPlural,
   ONE,
   PUT,
   MANY,
   POST,
   DELETE,
+
+  createDefaultState,
+  isPlural,
   addParentRefs,
   fullyQualified,
+  parseIntIfActualInt,
+  genActions,
   generateDefaultStateFull,
   generateDefaultStateOne,
-  createDefaultState,
-  parseIntIfActualInt,
+
 } from './internal';
 
 import { testConfigOne, testConfigMany, testConfigDelete } from '~/data/reduxGen';
@@ -262,7 +264,7 @@ describe('internal', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return something...er other', () => {
+    it('should return an object with recursively initialized default state', () => {
       const subresources = {
         _1: { _1key: '_1value', supports: [] },
         _2: { _2key: '_2value', supports: [] },
