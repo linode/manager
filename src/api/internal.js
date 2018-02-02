@@ -1,5 +1,3 @@
-import isArray from 'lodash/isArray';
-import reduce from 'lodash/reduce';
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
@@ -9,26 +7,48 @@ export const MANY = 'MANY';
 export const POST = 'POST';
 export const DELETE = 'DELETE';
 
+export const createDefaultState = (name) => ({
+  totalPages: -1,
+  totalResults: -1,
+  ids: [],
+  [name]: {},
+});
 
 export function isPlural(config) {
   return config.supports.indexOf(MANY) > -1;
 }
 
 /**
- * Adds parent properties to all subresources and returns a new config.
+ * Given a config object and a parent object, return an object with the parent added
+ * to the config. If the config has subresources, iteratively apply the same.
+ *
+ * @param {Object} config - A config object optionally containing a
+ * subresource collection..
+ * @param {*} [parent] A parent value to add to the config and any subresources.
+ * @returns {Object} The config with parent appended to the config and any subresources.
  */
-export function addParentRefs(config, parent = undefined) {
-  const result = { ...config, parent };
-  if (config.subresources) {
-    Object.keys(config.subresources).forEach((key) => {
-      result.subresources[key] =
-        addParentRefs(config.subresources[key], result);
-    });
+export function addParentRefs({ subresources, ...config }, parent) {
+  const ret = { ...config, subresources, parent };
+
+  if (subresources) {
+    ret.subresources = Object
+      .entries(subresources)
+      .reduce((acc, [key, config]) => ({
+        ...acc, [key]: addParentRefs(config, ret),
+      }), {});
   }
-  return Object.freeze(result);
+
+  return Object.freeze(ret);
 }
 
-function fullyQualified(resource) {
+/**
+ * Return a string  value of the objects name property, and the name of any parent
+ * property object, recursively.
+ *
+ * @param {Object} resource
+ * @returns {String}
+ */
+export function fullyQualified(resource) {
   let path = resource.name;
   let res = resource;
   while (res.parent) {
@@ -38,80 +58,96 @@ function fullyQualified(resource) {
   return path;
 }
 
-function parseIntIfActualInt(string) {
-  if (isArray(string)) {
-    // eslint-disable-next-line no-console
-    console.error('You sent a list of lists rather than a list of ids.');
-  }
-  return isNaN(string) ? string : parseInt(string);
-}
+/**
+ *
+ * @param {*} v - The value to be tested.
+ * @returns {*} - Either the unchanged value or parsed integer.
+ */
+export const parseIntIfActualInt = (v) => isNaN(v) ? v : parseInt(v);
 
-const actionCreatorGenerators = {
-  [ONE]: c => (resource, ...ids) =>
-    ({
-      resource,
-      type: `GEN@${fullyQualified(c)}/ONE`,
-      ids: ids.map(parseIntIfActualInt),
-    }),
-  [MANY]: c => (page, ...ids) =>
-    ({
-      page,
-      type: `GEN@${fullyQualified(c)}/MANY`,
-      ids: ids.map(parseIntIfActualInt),
-    }),
-  [DELETE]: c => (...ids) =>
-    ({
-      type: `GEN@${fullyQualified(c)}/DELETE`,
-      ids: ids.map(parseIntIfActualInt),
-    }),
+export const oneActionCreator = (config) => (resource, ...ids) => ({
+  resource,
+  type: `GEN@${fullyQualified(config)}/ONE`,
+  ids: ids.map(parseIntIfActualInt),
+});
+
+export const manyActionCreator = (config) => (page, ...ids) => ({
+  page,
+  type: `GEN@${fullyQualified(config)}/MANY`,
+  ids: ids.map(parseIntIfActualInt),
+});
+
+export const deleteActionCreator = (config) => (...ids) => ({
+  type: `GEN@${fullyQualified(config)}/DELETE`,
+  ids: ids.map(parseIntIfActualInt),
+});
+
+export const actionCreatorGenerators = {
+  [ONE]: oneActionCreator,
+  [MANY]: manyActionCreator,
+  [DELETE]: deleteActionCreator,
 };
 
 /**
  * Generates action creators for the provided config.
  */
 export function genActions(config) {
-  const actions = { };
-  const fns = {
-    [ONE]: 'one',
-    [MANY]: 'many',
-    [DELETE]: 'delete',
-  };
-  config.supports.forEach((feature) => {
-    if (typeof actionCreatorGenerators[feature] !== 'undefined') {
-      actions[fns[feature]] = actionCreatorGenerators[feature](config);
-    }
-  });
-  if (config.subresources) {
-    Object.keys(config.subresources).forEach((key) => {
-      const subresource = config.subresources[key];
-      const subActions = genActions(subresource, 2);
-      actions[subresource.name] = subActions;
-    });
+  const { name, supports, subresources } = config;
+  let actions = {};
+
+  actions = supports
+    .reduce((result, feature) => {
+      const actionCreator = actionCreatorGenerators[feature];
+      const name = feature.toLowerCase();
+
+      return (actionCreator)
+        ? { ...result, [name]: actionCreator(config) }
+        : result;
+    }, actions);
+
+  if (subresources) {
+    actions = Object
+      .entries(subresources)
+      .reduce((actions, [, subresource]) => {
+        return {
+          ...actions,
+          [subresource.name]: genActions(subresource, 2),
+        };
+      }, actions);
   }
-  actions.type = config.name;
+
+  actions.type = name;
+
   return actions;
 }
 
+/**
+ *
+ * @param {Object} config
+ * @returns {Object} Either an object containing the default pagination results,
+ * or an empty object.
+ */
 export function generateDefaultStateFull(config) {
-  if (isPlural(config)) {
-    return {
-      totalPages: -1,
-      totalResults: -1,
-      ids: [],
-      [config.name]: {},
-    };
-  }
-
-  return {};
+  return isPlural(config)
+    ? createDefaultState(config.name)
+    : {};
 }
 
-export function generateDefaultStateOne(config, one) {
-  const subresources = reduce(
-    config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
-      ...accumulated,
-      [subresourceName]: { ...generateDefaultStateFull(subresourceConfig) },
+/**
+ *
+ * @param {Object} subresources
+ * @param {Object} one
+ * @returns {Object}
+ */
+export function generateDefaultStateOne(subresources = {}, one) {
+  const result = Object
+    .entries(subresources)
+    .reduce((result, [key, config]) => ({
+      ...result,
+      [key]: { ...generateDefaultStateFull(config) },
     }), {});
-  return { ...one, ...subresources };
+
+  return { ...one, ...result };
 }
 
 export class ReducerGenerator {
@@ -125,7 +161,7 @@ export class ReducerGenerator {
       action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.name][id];
     const newStateOne = oldStateOne ? action.resource :
-      generateDefaultStateOne(config, action.resource);
+      generateDefaultStateOne(config.subresources, action.resource);
 
     const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
 
