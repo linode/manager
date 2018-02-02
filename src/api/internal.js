@@ -1,6 +1,5 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
-import isEmpty from 'lodash/isEmpty';
 
 export const ONE = 'ONE';
 export const PUT = 'PUT';
@@ -32,14 +31,11 @@ export function addParentRefs({ subresources, ...config }, parent) {
   const ret = { ...config, subresources, parent };
 
   if (subresources) {
-    let idx = 0;
-    const subresourcesPairs = Object.entries(subresources);
-    const len = subresourcesPairs.length;
-
-    for (; idx < len; idx++) {
-      const [key, config] = subresourcesPairs[idx];
-      ret.subresources[key] = addParentRefs(config, ret);
-    }
+    ret.subresources = Object
+      .entries(subresources)
+      .reduce((acc, [key, config]) => ({
+        ...acc, [key]: addParentRefs(config, ret),
+      }), {});
   }
 
   return Object.freeze(ret);
@@ -93,75 +89,41 @@ export const actionCreatorGenerators = {
 };
 
 /**
- *
- * @param {SUPPORTS[]} supports
- * @param {ConfigObject} config
- * @param {ActionsObject} actions
- */
-export function setFeatureActionCreators(supports, config, actions) {
-  let idx = 0;
-  const len = supports.length;
-
-  for (; idx < len; idx++) {
-    const feature = supports[idx];
-    const name = feature.toLowerCase();
-    const actionCreator = actionCreatorGenerators[feature];
-
-    if (actionCreator) {
-      // eslint-disable-next-line no-param-reassign
-      actions[name] = actionCreator(config);
-    }
-  }
-
-  return actions;
-}
-
-/**
- * Generate actions for a given list of configs.
- *
- * @param {List<Config>} list ConfigObject
- * @param {ActionObject} actions ActionsObject
- * @returns {ActionsObject} ActionsObject
- */
-export function genActionsForConfig(list, actions) {
-  if (isEmpty(list)) {
-    return actions;
-  }
-
-  const configs = Object.values(list);
-  let idx = 0;
-  const len = configs.length;
-
-  for (; idx < len; idx++) {
-    const config = configs[idx];
-    // eslint-disable-next-line no-param-reassign, no-use-before-define
-    actions[config.name] = genActions(config);
-  }
-
-  return actions;
-}
-
-
-/**
- * Generate an action object for a given config.
- *
- * @param {ConfigObject}
- * @returns {ActionsObject}
+ * Generates action creators for the provided config.
  */
 export function genActions(config) {
   const { name, supports, subresources } = config;
-  let actions = { type: name };
+  let actions = {};
 
-  actions = setFeatureActionCreators(supports, config, actions);
+  actions = supports
+    .reduce((result, feature) => {
+      const actionCreator = actionCreatorGenerators[feature];
+      const name = feature.toLowerCase();
 
-  actions = genActionsForConfig(subresources, actions);
+      return (actionCreator)
+        ? { ...result, [name]: actionCreator(config) }
+        : result;
+    }, actions);
+
+  if (subresources) {
+    actions = Object
+      .entries(subresources)
+      .reduce((actions, [, subresource]) => {
+        return {
+          ...actions,
+          [subresource.name]: genActions(subresource, 2),
+        };
+      }, actions);
+  }
+
+  actions.type = name;
 
   return actions;
 }
 
 /**
  *
- * @param {ConfigObject} config
+ * @param {Object} config
  * @returns {Object} Either an object containing the default pagination results,
  * or an empty object.
  */
@@ -173,7 +135,7 @@ export function generateDefaultStateFull(config) {
 
 /**
  *
- * @param {List<Config>} subresources
+ * @param {Object} subresources
  * @param {Object} one
  * @returns {Object}
  */
