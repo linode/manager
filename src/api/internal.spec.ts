@@ -52,10 +52,10 @@ describe('internal', () => {
 
   describe('addParentRefs', () => {
     it('should return an undefined parent if parent is undefined', () => {
-      const config = { value: 1 };
+      const config = { name: 'something' };
 
       expect(
-        addParentRefs(config)
+        addParentRefs(config, undefined)
       ).toEqual({ ...config, parent: undefined });
     });
 

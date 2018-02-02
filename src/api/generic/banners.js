@@ -1,6 +1,6 @@
 import {
   ReducerGenerator, genActions, ONE,
-} from '~/api/internal';
+} from '~/api/internal.ts';
 
 export const config = {
   name: 'banners',

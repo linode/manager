@@ -1,7 +1,7 @@
 import { fetch } from './fetch';
 import {
   ONE, MANY, DELETE, POST, PUT,
-} from './internal';
+} from './internal.ts';
 
 
 // Sometimes the object will have sub-objects of it created before the object actually

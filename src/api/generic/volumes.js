@@ -1,7 +1,7 @@
 import {
   ReducerGenerator, genActions,
   ONE, MANY, POST, PUT, DELETE,
-} from '~/api/internal';
+} from '~/api/internal.ts';
 
 export const config = {
   name: 'volumes',
