@@ -12,16 +12,14 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "target": "es5",
+    "lib": [ "es6", "dom" ],
+    "module": "es6",
     "jsx": "react",
     "allowJs": true,
-    "module": "commonjs",
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
         "~/*": [ "./src/*" ]
-    },
-    "lib": [
-      "es6", "dom"
-    ]
+    }
   }
 }
