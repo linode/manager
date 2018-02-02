@@ -266,7 +266,7 @@ describe('internal', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return something...er other', () => {
+    it('should an object with recursively initialized default state', () => {
       const subresources = {
         _1: { _1key: '_1value', supports: [] },
         _2: { _2key: '_2value', supports: [] },
