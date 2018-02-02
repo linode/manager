@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Linode/manager",
   "devDependencies": {
-    "@types/jest": "^22.0.1",
+    "@types/jest": "^22.1.1",
     "@types/lodash": "^4.14.100",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.3.15",
@@ -70,6 +70,7 @@
     "sass-loader": "^3.1.2",
     "sinon": "^4.1.2",
     "style-loader": "^0.13.0",
+    "ts-jest": "^22.0.2",
     "ts-loader": "^3.4.0",
     "typescript": "^2.7.1",
     "webpack": "^3.10",
@@ -123,7 +124,7 @@
   "jest": {
     "coverageDirectory": "<rootDir>/coverage",
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
+      "src/**/*.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
       "<rootDir>/src/testPolyfills.js"
@@ -133,9 +134,19 @@
       "\\.(css|less)$": "<rootDir>/src/__mocks__/styleMock.js"
     },
     "setupTestFrameworkScriptFile": "<rootDir>/src/testSetup.js",
-    "testRegex": "src/.*\\.spec\\.js$",
+    "testRegex": "spec\\.(jsx?|tsx?)$",
     "transformIgnorePatterns": [
       "/node_modules/(?!(linode-components-*.*?\\.js$))"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
     ],
     "globals": {
       "ENV_API_ROOT": null,
