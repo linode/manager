@@ -87,10 +87,9 @@ const mapDispatchToProps = (dispatch) => ({
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = getStorage('authentication/nonce');
     if (!(nonce && storedNonce === nonce)) {
+      setStorage('authentication/nonce', '');
       dispatch(push('/'));
-      return;
     }
-    setStorage('authentication/nonce', '');
   },
   redirect(path) {
     dispatch(push(path));
