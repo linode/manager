@@ -3,6 +3,18 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
+type ReduxConfig = {
+  name: string,
+  endpoint: (...id?: string[]) => string,
+  supports: string[],
+  primaryKey: string,
+  sortFn?: (ids: string[], state: {}) => string[],
+  subresources?: { [string]: ReduxConfig },
+  parent?: {},
+};
+
+type ApiID = string | number;
+
 export const ONE = 'ONE';
 export const PUT = 'PUT';
 export const MANY = 'MANY';
@@ -15,16 +27,6 @@ export const createDefaultState = (name: string) => ({
   ids: [],
   [name]: {},
 });
-
-type ReduxConfig = {
-  name: string,
-  endpoint: (...id?: string[]) => string,
-  supports: string[],
-  primaryKey: string,
-  sortFn?: (ids: string[], state: {}) => string[],
-  subresources?: { [string]: ReduxConfig },
-  parent?: ReduxConfig,
-};
 
 export function isPlural(config: ReduxConfig) {
   return config.supports.indexOf(MANY) > -1;
@@ -73,8 +75,6 @@ export function fullyQualified(config) : string {
   }
   return path;
 }
-
-type ApiID = string | number;
 
 /**
  *

@@ -1,11 +1,9 @@
 {
   "extends": [
-    "airbnb",
-    "plugin:flowtype/recommended"
+    "airbnb"
   ],
   "plugins": [
-    "babel",
-    "flowtype"
+    "babel"
   ],
   "env": {
     "browser": true,
@@ -43,10 +41,5 @@
         "allowPattern": "^(default|public|private|return)$"
       }
     ]
-  },
-  "settings": {
-    "flowtype": {
-      "onlyFielsWithFlowAnnotation": true
-    }
   }
 }
