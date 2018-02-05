@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { configsNodeBalancer } from '~/data/nodebalancers';
 import { NodeBalancerConfigDashboard } from './NodeBalancerConfigDashboard';
@@ -12,16 +12,6 @@ describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <NodeBalancerConfigDashboard
-        config={configsNodeBalancer._configs.configs[1]}
-        nodebalancer={configsNodeBalancer}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('displays the config view summary', async () => {

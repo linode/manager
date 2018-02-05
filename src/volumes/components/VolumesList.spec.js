@@ -18,20 +18,6 @@ describe('linodes/volumes/components/VolumesList', () => {
 
   const dispatch = sandbox.spy();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <VolumesList
-        dispatch={dispatch}
-        selectedMap={{}}
-        volumes={volumes}
-        objectType="volumes"
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
-
   it.skip('renders a table', () => {
     const wrapper = shallow(
       <VolumesList

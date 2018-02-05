@@ -18,20 +18,6 @@ describe('support/layouts/TicketPage', () => {
     sandbox.restore();
   });
 
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <TicketDetails
-          ticket={testTicket}
-          replies={testTicket._replies.replies}
-          dispatch={mockDispatch}
-        />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders each response', () => {
     const { replies } = testTicket._replies;
     const page = mount(
