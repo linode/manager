@@ -72,7 +72,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],
@@ -541,7 +541,7 @@ ShallowWrapper {
             "calls": Array [
               Array [
                 Object {
-                  "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                  "source": "test",
                   "type": "@@source/SET_SOURCE",
                 },
               ],
@@ -996,7 +996,7 @@ ShallowWrapper {
           "calls": Array [
             Array [
               Object {
-                "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                "source": "test",
                 "type": "@@source/SET_SOURCE",
               },
             ],
@@ -1451,7 +1451,7 @@ ShallowWrapper {
               "calls": Array [
                 Array [
                   Object {
-                    "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                    "source": "test",
                     "type": "@@source/SET_SOURCE",
                   },
                 ],
@@ -1906,7 +1906,7 @@ ShallowWrapper {
             "calls": Array [
               Array [
                 Object {
-                  "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                  "source": "test",
                   "type": "@@source/SET_SOURCE",
                 },
               ],

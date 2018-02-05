@@ -10,7 +10,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],
@@ -153,7 +153,7 @@ ShallowWrapper {
             "calls": Array [
               Array [
                 Object {
-                  "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                  "source": "test",
                   "type": "@@source/SET_SOURCE",
                 },
               ],
@@ -290,7 +290,7 @@ ShallowWrapper {
           "calls": Array [
             Array [
               Object {
-                "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                "source": "test",
                 "type": "@@source/SET_SOURCE",
               },
             ],
@@ -430,7 +430,7 @@ ShallowWrapper {
               "calls": Array [
                 Array [
                   Object {
-                    "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                    "source": "test",
                     "type": "@@source/SET_SOURCE",
                   },
                 ],
@@ -567,7 +567,7 @@ ShallowWrapper {
             "calls": Array [
               Array [
                 Object {
-                  "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                  "source": "test",
                   "type": "@@source/SET_SOURCE",
                 },
               ],

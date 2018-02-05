@@ -10,7 +10,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/layouts/DisplayPage.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],

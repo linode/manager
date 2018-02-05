@@ -10,7 +10,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],
@@ -189,7 +189,7 @@ ShallowWrapper {
                       "calls": Array [
                         Array [
                           Object {
-                            "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                            "source": "test",
                             "type": "@@source/SET_SOURCE",
                           },
                         ],
@@ -530,7 +530,7 @@ ShallowWrapper {
                       "calls": Array [
                         Array [
                           Object {
-                            "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                            "source": "test",
                             "type": "@@source/SET_SOURCE",
                           },
                         ],
@@ -774,7 +774,7 @@ ShallowWrapper {
                         "calls": Array [
                           Array [
                             Object {
-                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "source": "test",
                               "type": "@@source/SET_SOURCE",
                             },
                           ],
@@ -1016,7 +1016,7 @@ ShallowWrapper {
                           "calls": Array [
                             Array [
                               Object {
-                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "source": "test",
                                 "type": "@@source/SET_SOURCE",
                               },
                             ],
@@ -1123,7 +1123,7 @@ ShallowWrapper {
                           "calls": Array [
                             Array [
                               Object {
-                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "source": "test",
                                 "type": "@@source/SET_SOURCE",
                               },
                             ],
@@ -1213,7 +1213,7 @@ ShallowWrapper {
                         "calls": Array [
                           Array [
                             Object {
-                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "source": "test",
                               "type": "@@source/SET_SOURCE",
                             },
                           ],
@@ -1795,7 +1795,7 @@ ShallowWrapper {
                         "calls": Array [
                           Array [
                             Object {
-                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "source": "test",
                               "type": "@@source/SET_SOURCE",
                             },
                           ],
@@ -2136,7 +2136,7 @@ ShallowWrapper {
                         "calls": Array [
                           Array [
                             Object {
-                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "source": "test",
                               "type": "@@source/SET_SOURCE",
                             },
                           ],
@@ -2380,7 +2380,7 @@ ShallowWrapper {
                           "calls": Array [
                             Array [
                               Object {
-                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "source": "test",
                                 "type": "@@source/SET_SOURCE",
                               },
                             ],
@@ -2622,7 +2622,7 @@ ShallowWrapper {
                             "calls": Array [
                               Array [
                                 Object {
-                                  "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                  "source": "test",
                                   "type": "@@source/SET_SOURCE",
                                 },
                               ],
@@ -2729,7 +2729,7 @@ ShallowWrapper {
                             "calls": Array [
                               Array [
                                 Object {
-                                  "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                  "source": "test",
                                   "type": "@@source/SET_SOURCE",
                                 },
                               ],
@@ -2819,7 +2819,7 @@ ShallowWrapper {
                           "calls": Array [
                             Array [
                               Object {
-                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "source": "test",
                                 "type": "@@source/SET_SOURCE",
                               },
                             ],

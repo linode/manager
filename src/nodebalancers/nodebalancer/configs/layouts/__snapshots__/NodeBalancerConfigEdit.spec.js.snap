@@ -46,7 +46,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/configs/layouts/NodeBalancerConfigEdit.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],
@@ -191,7 +191,7 @@ ShallowWrapper {
               "calls": Array [
                 Array [
                   Object {
-                    "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/configs/layouts/NodeBalancerConfigEdit.js",
+                    "source": "test",
                     "type": "@@source/SET_SOURCE",
                   },
                 ],
@@ -367,7 +367,7 @@ ShallowWrapper {
             "calls": Array [
               Array [
                 Object {
-                  "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/configs/layouts/NodeBalancerConfigEdit.js",
+                  "source": "test",
                   "type": "@@source/SET_SOURCE",
                 },
               ],
@@ -509,7 +509,7 @@ ShallowWrapper {
                 "calls": Array [
                   Array [
                     Object {
-                      "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/configs/layouts/NodeBalancerConfigEdit.js",
+                      "source": "test",
                       "type": "@@source/SET_SOURCE",
                     },
                   ],
@@ -685,7 +685,7 @@ ShallowWrapper {
               "calls": Array [
                 Array [
                   Object {
-                    "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/configs/layouts/NodeBalancerConfigEdit.js",
+                    "source": "test",
                     "type": "@@source/SET_SOURCE",
                   },
                 ],

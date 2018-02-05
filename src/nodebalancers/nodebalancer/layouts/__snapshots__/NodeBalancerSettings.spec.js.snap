@@ -10,7 +10,7 @@ ShallowWrapper {
         "calls": Array [
           Array [
             Object {
-              "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerSettings.js",
+              "source": "test",
               "type": "@@source/SET_SOURCE",
             },
           ],
