@@ -5,7 +5,18 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <PaymentPage
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/billing/layouts/PaymentPage.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+        ],
+      }
+    }
     payment={Object {}}
   />,
   Symbol(enzyme.__renderer__): Object {

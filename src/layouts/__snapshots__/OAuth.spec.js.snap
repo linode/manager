@@ -5,7 +5,15 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <OAuthCallbackPage
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            undefined,
+          ],
+        ],
+      }
+    }
     location={
       Object {
         "query": Object {},

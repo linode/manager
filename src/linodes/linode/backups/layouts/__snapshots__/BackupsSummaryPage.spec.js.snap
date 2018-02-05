@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <BackupsSummaryPage
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     linode={
       Object {
         "_backups": Object {

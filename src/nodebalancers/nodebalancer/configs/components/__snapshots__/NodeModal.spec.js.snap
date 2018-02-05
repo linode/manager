@@ -7,7 +7,7 @@ ShallowWrapper {
   Symbol(enzyme.__unrendered__): <NodeModal
     configId="1"
     confirmTest="Edit"
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     node={
       Object {
         "address": "192.168.4.5:80",

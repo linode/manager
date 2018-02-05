@@ -15,7 +15,7 @@ ShallowWrapper {
         "updated": "2016-08-09T19:47:11",
       }
     }
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     free={0}
     linode={
       Object {

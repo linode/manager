@@ -5,8 +5,8 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <CreateOrEditApplication
-    close={[Function]}
-    dispatch={[Function]}
+    close={[MockFunction]}
+    dispatch={[MockFunction]}
     title="CreateOrEditApplication"
   />,
   Symbol(enzyme.__renderer__): Object {
@@ -93,7 +93,7 @@ ShallowWrapper {
       "noCancel": false,
       "noCancelEvent": false,
       "noSubmit": false,
-      "onCancel": [Function],
+      "onCancel": [MockFunction],
       "onSubmit": [Function],
     },
     "ref": null,
@@ -398,7 +398,7 @@ ShallowWrapper {
         "noCancel": false,
         "noCancelEvent": false,
         "noSubmit": false,
-        "onCancel": [Function],
+        "onCancel": [MockFunction],
         "onSubmit": [Function],
       },
       "ref": null,

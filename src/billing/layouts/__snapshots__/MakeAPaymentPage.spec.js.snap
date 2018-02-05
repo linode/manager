@@ -6,7 +6,18 @@ ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <MakeAPaymentPage
     balance={999}
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/billing/layouts/MakeAPaymentPage.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+        ],
+      }
+    }
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],

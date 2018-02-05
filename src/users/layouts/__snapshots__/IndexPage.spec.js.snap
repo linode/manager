@@ -9,7 +9,7 @@ ShallowWrapper {
     location="/"
   >
     <IndexPage
-      dispatch={[Function]}
+      dispatch={[MockFunction]}
       profile={
         Object {
           "authorized_keys": Array [
@@ -148,7 +148,7 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": <IndexPage
-        dispatch={[Function]}
+        dispatch={[MockFunction]}
         profile={
           Object {
             "authorized_keys": Array [
@@ -296,7 +296,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "dispatch": [Function],
+        "dispatch": [MockFunction],
         "profile": Object {
           "authorized_keys": Array [
             "foobar",
@@ -430,7 +430,7 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": <IndexPage
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           profile={
             Object {
               "authorized_keys": Array [
@@ -578,7 +578,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "profile": Object {
             "authorized_keys": Array [
               "foobar",

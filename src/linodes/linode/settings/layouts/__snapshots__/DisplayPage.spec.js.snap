@@ -5,7 +5,18 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <DisplayPage
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/layouts/DisplayPage.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+        ],
+      }
+    }
     linode={
       Object {
         "_backups": Object {

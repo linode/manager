@@ -41,7 +41,7 @@ ShallowWrapper {
         "stickiness": "none",
       }
     }
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     nodebalancer={
       Object {
         "_configs": Object {

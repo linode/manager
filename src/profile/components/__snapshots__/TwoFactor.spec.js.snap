@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TwoFactor
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     tfaEnabled={true}
   />,
   Symbol(enzyme.__renderer__): Object {

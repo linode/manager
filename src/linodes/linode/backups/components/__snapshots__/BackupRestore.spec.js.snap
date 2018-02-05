@@ -33,7 +33,7 @@ ShallowWrapper {
         "updated": "2017-01-31T21:51:51",
       }
     }
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     linode={
       Object {
         "_backups": Object {

@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <DisplayPage
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     profile={
       Object {
         "email": "user@address.com",
@@ -28,12 +28,12 @@ ShallowWrapper {
       "children": Array [
         <section>
           <ChangeTimezone
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
             timezone="US/Eastern"
           />
         </section>,
         <ChangeEmail
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           email="user@address.com"
         />,
       ],
@@ -46,7 +46,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <ChangeTimezone
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
             timezone="US/Eastern"
           />,
         },
@@ -56,7 +56,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "dispatch": [Function],
+            "dispatch": [MockFunction],
             "timezone": "US/Eastern",
           },
           "ref": null,
@@ -70,7 +70,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "email": "user@address.com",
         },
         "ref": null,
@@ -89,12 +89,12 @@ ShallowWrapper {
         "children": Array [
           <section>
             <ChangeTimezone
-              dispatch={[Function]}
+              dispatch={[MockFunction]}
               timezone="US/Eastern"
             />
           </section>,
           <ChangeEmail
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
             email="user@address.com"
           />,
         ],
@@ -107,7 +107,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <ChangeTimezone
-              dispatch={[Function]}
+              dispatch={[MockFunction]}
               timezone="US/Eastern"
             />,
           },
@@ -117,7 +117,7 @@ ShallowWrapper {
             "key": undefined,
             "nodeType": "class",
             "props": Object {
-              "dispatch": [Function],
+              "dispatch": [MockFunction],
               "timezone": "US/Eastern",
             },
             "ref": null,
@@ -131,7 +131,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "dispatch": [Function],
+            "dispatch": [MockFunction],
             "email": "user@address.com",
           },
           "ref": null,

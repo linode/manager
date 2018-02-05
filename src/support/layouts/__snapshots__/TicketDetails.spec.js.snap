@@ -9,7 +9,7 @@ ShallowWrapper {
     location="/"
   >
     <TicketDetails
-      dispatch={[Function]}
+      dispatch={[MockFunction]}
       replies={
         Array [
           Object {
@@ -62,7 +62,7 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": <TicketDetails
-        dispatch={[Function]}
+        dispatch={[MockFunction]}
         replies={
           Array [
             Object {
@@ -124,7 +124,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "dispatch": [Function],
+        "dispatch": [MockFunction],
         "replies": Array [
           Object {
             "created": "2017-03-30T16:48:10",
@@ -172,7 +172,7 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": <TicketDetails
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           replies={
             Array [
               Object {
@@ -234,7 +234,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "replies": Array [
             Object {
               "created": "2017-03-30T16:48:10",

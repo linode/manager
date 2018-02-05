@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <ChangeEmail
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     email="user@example.com"
   />,
   Symbol(enzyme.__renderer__): Object {

@@ -9,7 +9,7 @@ ShallowWrapper {
     location="/"
   >
     <NodeBalancerDashboard
-      dispatch={[Function]}
+      dispatch={[MockFunction]}
       nodebalancer={
         Object {
           "_configs": Object {
@@ -102,7 +102,7 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": <NodeBalancerDashboard
-        dispatch={[Function]}
+        dispatch={[MockFunction]}
         nodebalancer={
           Object {
             "_configs": Object {
@@ -204,7 +204,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "dispatch": [Function],
+        "dispatch": [MockFunction],
         "nodebalancer": Object {
           "_configs": Object {
             "configs": Object {
@@ -292,7 +292,7 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": <NodeBalancerDashboard
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           nodebalancer={
             Object {
               "_configs": Object {
@@ -394,7 +394,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "nodebalancer": Object {
             "_configs": Object {
               "configs": Object {

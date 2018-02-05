@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <APITokensPage
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     selectedMap={Object {}}
     tokens={
       Object {
@@ -90,7 +90,7 @@ ShallowWrapper {
                     },
                   ]
                 }
-                dispatch={[Function]}
+                dispatch={[MockFunction]}
                 massEditGroups={
                   Array [
                     Object {
@@ -318,7 +318,7 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={[MockFunction]}
                   massEditGroups={
                     Array [
                       Object {
@@ -499,7 +499,7 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={[MockFunction]}
                     massEditGroups={
                       Array [
                         Object {
@@ -561,7 +561,7 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={[MockFunction]}
                     massEditGroups={
                       Array [
                         Object {
@@ -607,7 +607,7 @@ ShallowWrapper {
                         "thumbnail_url": null,
                       },
                     ],
-                    "dispatch": [Function],
+                    "dispatch": [MockFunction],
                     "massEditGroups": Array [
                       Object {
                         "elements": Array [
@@ -1083,7 +1083,7 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={[MockFunction]}
                   massEditGroups={
                     Array [
                       Object {
@@ -1311,7 +1311,7 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={[MockFunction]}
                     massEditGroups={
                       Array [
                         Object {
@@ -1492,7 +1492,7 @@ ShallowWrapper {
                           },
                         ]
                       }
-                      dispatch={[Function]}
+                      dispatch={[MockFunction]}
                       massEditGroups={
                         Array [
                           Object {
@@ -1554,7 +1554,7 @@ ShallowWrapper {
                           },
                         ]
                       }
-                      dispatch={[Function]}
+                      dispatch={[MockFunction]}
                       massEditGroups={
                         Array [
                           Object {
@@ -1600,7 +1600,7 @@ ShallowWrapper {
                           "thumbnail_url": null,
                         },
                       ],
-                      "dispatch": [Function],
+                      "dispatch": [MockFunction],
                       "massEditGroups": Array [
                         Object {
                           "elements": Array [

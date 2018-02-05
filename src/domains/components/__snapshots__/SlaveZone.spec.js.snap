@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <SlaveZone
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     domain={
       Object {
         "_polling": false,

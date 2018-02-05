@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <AuthenticationPage
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     profile={
       Object {
         "email": "user@address.com",
@@ -31,11 +31,11 @@ ShallowWrapper {
         />,
         <section>
           <LoadableComponent
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
           />
         </section>,
         <TwoFactor
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           tfaEnabled={undefined}
           username={undefined}
         />,
@@ -60,7 +60,7 @@ ShallowWrapper {
         "nodeType": "host",
         "props": Object {
           "children": <LoadableComponent
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
           />,
         },
         "ref": null,
@@ -69,7 +69,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "dispatch": [Function],
+            "dispatch": [MockFunction],
           },
           "ref": null,
           "rendered": null,
@@ -82,7 +82,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "tfaEnabled": undefined,
           "username": undefined,
         },
@@ -105,11 +105,11 @@ ShallowWrapper {
           />,
           <section>
             <LoadableComponent
-              dispatch={[Function]}
+              dispatch={[MockFunction]}
             />
           </section>,
           <TwoFactor
-            dispatch={[Function]}
+            dispatch={[MockFunction]}
             tfaEnabled={undefined}
             username={undefined}
           />,
@@ -134,7 +134,7 @@ ShallowWrapper {
           "nodeType": "host",
           "props": Object {
             "children": <LoadableComponent
-              dispatch={[Function]}
+              dispatch={[MockFunction]}
             />,
           },
           "ref": null,
@@ -143,7 +143,7 @@ ShallowWrapper {
             "key": undefined,
             "nodeType": "class",
             "props": Object {
-              "dispatch": [Function],
+              "dispatch": [MockFunction],
             },
             "ref": null,
             "rendered": null,
@@ -156,7 +156,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "dispatch": [Function],
+            "dispatch": [MockFunction],
             "tfaEnabled": undefined,
             "username": undefined,
           },

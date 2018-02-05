@@ -67,7 +67,18 @@ ShallowWrapper {
         },
       }
     }
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+        ],
+      }
+    }
     kernels={
       Object {
         "ids": Array [
@@ -525,7 +536,18 @@ ShallowWrapper {
             },
           }
         }
-        dispatch={[Function]}
+        dispatch={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                  "type": "@@source/SET_SOURCE",
+                },
+              ],
+            ],
+          }
+        }
         kernels={
           Object {
             "ids": Array [
@@ -970,7 +992,16 @@ ShallowWrapper {
             "updated": "2016-08-09T19:47:11",
           },
         },
-        "dispatch": [Function],
+        "dispatch": [MockFunction] {
+          "calls": Array [
+            Array [
+              Object {
+                "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                "type": "@@source/SET_SOURCE",
+              },
+            ],
+          ],
+        },
         "kernels": Object {
           "ids": Array [
             "linode/latest_64",
@@ -1415,7 +1446,18 @@ ShallowWrapper {
               },
             }
           }
-          dispatch={[Function]}
+          dispatch={
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                    "type": "@@source/SET_SOURCE",
+                  },
+                ],
+              ],
+            }
+          }
           kernels={
             Object {
               "ids": Array [
@@ -1860,7 +1902,16 @@ ShallowWrapper {
               "updated": "2016-08-09T19:47:11",
             },
           },
-          "dispatch": [Function],
+          "dispatch": [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "source": "/Users/rstires/Projects/manager/src/linodes/linode/settings/advanced/layouts/EditConfigPage.js",
+                  "type": "@@source/SET_SOURCE",
+                },
+              ],
+            ],
+          },
           "kernels": Object {
             "ids": Array [
               "linode/latest_64",

@@ -5,7 +5,21 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <IndexPage
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "category": Array [
+                "users",
+                "user",
+              ],
+              "type": "@@title/SET_ANALYTICS",
+            },
+          ],
+        ],
+      }
+    }
     user={
       Object {
         "_polling": false,

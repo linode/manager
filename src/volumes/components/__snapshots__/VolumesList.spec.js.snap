@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <VolumesList
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     objectType="volumes"
     selectedMap={Object {}}
     volumes={
@@ -59,7 +59,7 @@ ShallowWrapper {
                   },
                 ]
               }
-              dispatch={[Function]}
+              dispatch={[MockFunction]}
               massEditGroups={
                 Array [
                   Object {
@@ -177,7 +177,7 @@ ShallowWrapper {
                     },
                   ]
                 }
-                dispatch={[Function]}
+                dispatch={[MockFunction]}
                 massEditGroups={
                   Array [
                     Object {
@@ -232,7 +232,7 @@ ShallowWrapper {
                     },
                   ]
                 }
-                dispatch={[Function]}
+                dispatch={[MockFunction]}
                 massEditGroups={
                   Array [
                     Object {
@@ -271,7 +271,7 @@ ShallowWrapper {
                     "updated": "2017-08-08T04:00:00",
                   },
                 ],
-                "dispatch": [Function],
+                "dispatch": [MockFunction],
                 "massEditGroups": Array [
                   Object {
                     "elements": Array [
@@ -483,7 +483,7 @@ ShallowWrapper {
                     },
                   ]
                 }
-                dispatch={[Function]}
+                dispatch={[MockFunction]}
                 massEditGroups={
                   Array [
                     Object {
@@ -601,7 +601,7 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={[MockFunction]}
                   massEditGroups={
                     Array [
                       Object {
@@ -656,7 +656,7 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={[MockFunction]}
                   massEditGroups={
                     Array [
                       Object {
@@ -695,7 +695,7 @@ ShallowWrapper {
                       "updated": "2017-08-08T04:00:00",
                     },
                   ],
-                  "dispatch": [Function],
+                  "dispatch": [MockFunction],
                   "massEditGroups": Array [
                     Object {
                       "elements": Array [

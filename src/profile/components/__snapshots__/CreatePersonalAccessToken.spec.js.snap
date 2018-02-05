@@ -5,8 +5,8 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <CreatePersonalAccessToken
-    close={[Function]}
-    dispatch={[Function]}
+    close={[MockFunction]}
+    dispatch={[MockFunction]}
   />,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -672,7 +672,7 @@ ShallowWrapper {
       "noCancel": false,
       "noCancelEvent": false,
       "noSubmit": false,
-      "onCancel": [Function],
+      "onCancel": [MockFunction],
       "onSubmit": [Function],
     },
     "ref": null,
@@ -3342,7 +3342,7 @@ ShallowWrapper {
         "noCancel": false,
         "noCancelEvent": false,
         "noSubmit": false,
-        "onCancel": [Function],
+        "onCancel": [MockFunction],
         "onSubmit": [Function],
       },
       "ref": null,

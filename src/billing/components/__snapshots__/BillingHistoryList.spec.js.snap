@@ -22,7 +22,7 @@ ShallowWrapper {
         "zip": 19102,
       }
     }
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     invoices={
       Object {
         "1234": Object {

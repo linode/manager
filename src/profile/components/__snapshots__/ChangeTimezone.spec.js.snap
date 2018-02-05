@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <ChangeTimezone
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     timezone="US/Eastern"
   />,
   Symbol(enzyme.__renderer__): Object {

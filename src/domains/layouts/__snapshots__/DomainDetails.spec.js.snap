@@ -5,7 +5,27 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <DomainDetails
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+          Array [
+            Object {
+              "category": Array [
+                "domains",
+                "domain",
+              ],
+              "type": "@@title/SET_ANALYTICS",
+            },
+          ],
+        ],
+      }
+    }
     domain={
       Object {
         "_polling": false,
@@ -128,7 +148,27 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": <Connect(MasterZone)
-        dispatch={[Function]}
+        dispatch={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                  "type": "@@source/SET_SOURCE",
+                },
+              ],
+              Array [
+                Object {
+                  "category": Array [
+                    "domains",
+                    "domain",
+                  ],
+                  "type": "@@title/SET_ANALYTICS",
+                },
+              ],
+            ],
+          }
+        }
         domain={
           Object {
             "_polling": false,
@@ -246,7 +286,25 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "dispatch": [Function],
+        "dispatch": [MockFunction] {
+          "calls": Array [
+            Array [
+              Object {
+                "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                "type": "@@source/SET_SOURCE",
+              },
+            ],
+            Array [
+              Object {
+                "category": Array [
+                  "domains",
+                  "domain",
+                ],
+                "type": "@@title/SET_ANALYTICS",
+              },
+            ],
+          ],
+        },
         "domain": Object {
           "_polling": false,
           "_records": Object {
@@ -367,7 +425,27 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": <Connect(MasterZone)
-          dispatch={[Function]}
+          dispatch={
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                    "type": "@@source/SET_SOURCE",
+                  },
+                ],
+                Array [
+                  Object {
+                    "category": Array [
+                      "domains",
+                      "domain",
+                    ],
+                    "type": "@@title/SET_ANALYTICS",
+                  },
+                ],
+              ],
+            }
+          }
           domain={
             Object {
               "_polling": false,
@@ -485,7 +563,25 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "source": "/Users/rstires/Projects/manager/src/domains/layouts/DomainDetails.js",
+                  "type": "@@source/SET_SOURCE",
+                },
+              ],
+              Array [
+                Object {
+                  "category": Array [
+                    "domains",
+                    "domain",
+                  ],
+                  "type": "@@title/SET_ANALYTICS",
+                },
+              ],
+            ],
+          },
           "domain": Object {
             "_polling": false,
             "_records": Object {

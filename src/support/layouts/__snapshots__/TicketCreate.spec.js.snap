@@ -9,7 +9,7 @@ ShallowWrapper {
     location="/"
   >
     <TicketCreate
-      dispatch={[Function]}
+      dispatch={[MockFunction]}
       domains={
         Object {
           "1": Object {
@@ -5300,7 +5300,7 @@ ShallowWrapper {
     "nodeType": "class",
     "props": Object {
       "children": <TicketCreate
-        dispatch={[Function]}
+        dispatch={[MockFunction]}
         domains={
           Object {
             "1": Object {
@@ -10600,7 +10600,7 @@ ShallowWrapper {
       "key": undefined,
       "nodeType": "class",
       "props": Object {
-        "dispatch": [Function],
+        "dispatch": [MockFunction],
         "domains": Object {
           "1": Object {
             "_polling": false,
@@ -15882,7 +15882,7 @@ ShallowWrapper {
       "nodeType": "class",
       "props": Object {
         "children": <TicketCreate
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           domains={
             Object {
               "1": Object {
@@ -21182,7 +21182,7 @@ ShallowWrapper {
         "key": undefined,
         "nodeType": "class",
         "props": Object {
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "domains": Object {
             "1": Object {
               "_polling": false,

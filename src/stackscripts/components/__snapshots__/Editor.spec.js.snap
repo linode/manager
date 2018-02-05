@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <Editor
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     stackscript={
       Object {
         "_polling": false,

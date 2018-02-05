@@ -5,7 +5,7 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <TwoFactorModal
-    dispatch={[Function]}
+    dispatch={[MockFunction]}
     secret="qrCode"
     username="theuser"
   />,

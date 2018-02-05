@@ -26,7 +26,7 @@ ShallowWrapper {
           "zip": 19102,
         }
       }
-      dispatch={[Function]}
+      dispatch={[MockFunction]}
       invoices={
         Object {
           "1234": Object {
@@ -433,7 +433,7 @@ ShallowWrapper {
             "zip": 19102,
           }
         }
-        dispatch={[Function]}
+        dispatch={[MockFunction]}
         invoices={
           Object {
             "1234": Object {
@@ -847,7 +847,7 @@ ShallowWrapper {
           "state": "PA",
           "zip": 19102,
         },
-        "dispatch": [Function],
+        "dispatch": [MockFunction],
         "invoices": Object {
           "1234": Object {
             "_items": Object {
@@ -1251,7 +1251,7 @@ ShallowWrapper {
               "zip": 19102,
             }
           }
-          dispatch={[Function]}
+          dispatch={[MockFunction]}
           invoices={
             Object {
               "1234": Object {
@@ -1665,7 +1665,7 @@ ShallowWrapper {
             "state": "PA",
             "zip": 19102,
           },
-          "dispatch": [Function],
+          "dispatch": [MockFunction],
           "invoices": Object {
             "1234": Object {
               "_items": Object {

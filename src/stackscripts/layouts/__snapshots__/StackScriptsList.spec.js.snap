@@ -5,7 +5,26 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <StackScriptsList
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+          Array [
+            Object {
+              "category": Array [
+                "stackscripts",
+              ],
+              "type": "@@title/SET_ANALYTICS",
+            },
+          ],
+        ],
+      }
+    }
     selectedMap={Object {}}
     stackscripts={
       Object {
@@ -165,7 +184,26 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={
+                    [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Object {
+                            "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                            "type": "@@source/SET_SOURCE",
+                          },
+                        ],
+                        Array [
+                          Object {
+                            "category": Array [
+                              "stackscripts",
+                            ],
+                            "type": "@@title/SET_ANALYTICS",
+                          },
+                        ],
+                      ],
+                    }
+                  }
                   massEditGroups={
                     Array [
                       Object {
@@ -487,7 +525,26 @@ ShallowWrapper {
                       },
                     ]
                   }
-                  dispatch={[Function]}
+                  dispatch={
+                    [MockFunction] {
+                      "calls": Array [
+                        Array [
+                          Object {
+                            "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                            "type": "@@source/SET_SOURCE",
+                          },
+                        ],
+                        Array [
+                          Object {
+                            "category": Array [
+                              "stackscripts",
+                            ],
+                            "type": "@@title/SET_ANALYTICS",
+                          },
+                        ],
+                      ],
+                    }
+                  }
                   massEditGroups={
                     Array [
                       Object {
@@ -712,7 +769,26 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={
+                      [MockFunction] {
+                        "calls": Array [
+                          Array [
+                            Object {
+                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "type": "@@source/SET_SOURCE",
+                            },
+                          ],
+                          Array [
+                            Object {
+                              "category": Array [
+                                "stackscripts",
+                              ],
+                              "type": "@@title/SET_ANALYTICS",
+                            },
+                          ],
+                        ],
+                      }
+                    }
                     massEditGroups={
                       Array [
                         Object {
@@ -935,7 +1011,26 @@ ShallowWrapper {
                           },
                         ]
                       }
-                      dispatch={[Function]}
+                      dispatch={
+                        [MockFunction] {
+                          "calls": Array [
+                            Array [
+                              Object {
+                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "type": "@@source/SET_SOURCE",
+                              },
+                            ],
+                            Array [
+                              Object {
+                                "category": Array [
+                                  "stackscripts",
+                                ],
+                                "type": "@@title/SET_ANALYTICS",
+                              },
+                            ],
+                          ],
+                        }
+                      }
                       massEditGroups={
                         Array [
                           Object {
@@ -1023,7 +1118,26 @@ ShallowWrapper {
                           },
                         ]
                       }
-                      dispatch={[Function]}
+                      dispatch={
+                        [MockFunction] {
+                          "calls": Array [
+                            Array [
+                              Object {
+                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "type": "@@source/SET_SOURCE",
+                              },
+                            ],
+                            Array [
+                              Object {
+                                "category": Array [
+                                  "stackscripts",
+                                ],
+                                "type": "@@title/SET_ANALYTICS",
+                              },
+                            ],
+                          ],
+                        }
+                      }
                       massEditGroups={
                         Array [
                           Object {
@@ -1095,7 +1209,24 @@ ShallowWrapper {
                           ],
                         },
                       ],
-                      "dispatch": [Function],
+                      "dispatch": [MockFunction] {
+                        "calls": Array [
+                          Array [
+                            Object {
+                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "type": "@@source/SET_SOURCE",
+                            },
+                          ],
+                          Array [
+                            Object {
+                              "category": Array [
+                                "stackscripts",
+                              ],
+                              "type": "@@title/SET_ANALYTICS",
+                            },
+                          ],
+                        ],
+                      },
                       "massEditGroups": Array [
                         Object {
                           "elements": Array [
@@ -1659,7 +1790,26 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={
+                      [MockFunction] {
+                        "calls": Array [
+                          Array [
+                            Object {
+                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "type": "@@source/SET_SOURCE",
+                            },
+                          ],
+                          Array [
+                            Object {
+                              "category": Array [
+                                "stackscripts",
+                              ],
+                              "type": "@@title/SET_ANALYTICS",
+                            },
+                          ],
+                        ],
+                      }
+                    }
                     massEditGroups={
                       Array [
                         Object {
@@ -1981,7 +2131,26 @@ ShallowWrapper {
                         },
                       ]
                     }
-                    dispatch={[Function]}
+                    dispatch={
+                      [MockFunction] {
+                        "calls": Array [
+                          Array [
+                            Object {
+                              "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                              "type": "@@source/SET_SOURCE",
+                            },
+                          ],
+                          Array [
+                            Object {
+                              "category": Array [
+                                "stackscripts",
+                              ],
+                              "type": "@@title/SET_ANALYTICS",
+                            },
+                          ],
+                        ],
+                      }
+                    }
                     massEditGroups={
                       Array [
                         Object {
@@ -2206,7 +2375,26 @@ ShallowWrapper {
                           },
                         ]
                       }
-                      dispatch={[Function]}
+                      dispatch={
+                        [MockFunction] {
+                          "calls": Array [
+                            Array [
+                              Object {
+                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "type": "@@source/SET_SOURCE",
+                              },
+                            ],
+                            Array [
+                              Object {
+                                "category": Array [
+                                  "stackscripts",
+                                ],
+                                "type": "@@title/SET_ANALYTICS",
+                              },
+                            ],
+                          ],
+                        }
+                      }
                       massEditGroups={
                         Array [
                           Object {
@@ -2429,7 +2617,26 @@ ShallowWrapper {
                             },
                           ]
                         }
-                        dispatch={[Function]}
+                        dispatch={
+                          [MockFunction] {
+                            "calls": Array [
+                              Array [
+                                Object {
+                                  "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                  "type": "@@source/SET_SOURCE",
+                                },
+                              ],
+                              Array [
+                                Object {
+                                  "category": Array [
+                                    "stackscripts",
+                                  ],
+                                  "type": "@@title/SET_ANALYTICS",
+                                },
+                              ],
+                            ],
+                          }
+                        }
                         massEditGroups={
                           Array [
                             Object {
@@ -2517,7 +2724,26 @@ ShallowWrapper {
                             },
                           ]
                         }
-                        dispatch={[Function]}
+                        dispatch={
+                          [MockFunction] {
+                            "calls": Array [
+                              Array [
+                                Object {
+                                  "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                  "type": "@@source/SET_SOURCE",
+                                },
+                              ],
+                              Array [
+                                Object {
+                                  "category": Array [
+                                    "stackscripts",
+                                  ],
+                                  "type": "@@title/SET_ANALYTICS",
+                                },
+                              ],
+                            ],
+                          }
+                        }
                         massEditGroups={
                           Array [
                             Object {
@@ -2589,7 +2815,24 @@ ShallowWrapper {
                             ],
                           },
                         ],
-                        "dispatch": [Function],
+                        "dispatch": [MockFunction] {
+                          "calls": Array [
+                            Array [
+                              Object {
+                                "source": "/Users/rstires/Projects/manager/src/stackscripts/layouts/StackScriptsList.js",
+                                "type": "@@source/SET_SOURCE",
+                              },
+                            ],
+                            Array [
+                              Object {
+                                "category": Array [
+                                  "stackscripts",
+                                ],
+                                "type": "@@title/SET_ANALYTICS",
+                              },
+                            ],
+                          ],
+                        },
                         "massEditGroups": Array [
                           Object {
                             "elements": Array [

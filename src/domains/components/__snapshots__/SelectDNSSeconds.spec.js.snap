@@ -8,7 +8,7 @@ ShallowWrapper {
     defaultSeconds={0}
     id="ttl"
     name="ttl"
-    onChange={[Function]}
+    onChange={[MockFunction]}
     value={0}
   />,
   Symbol(enzyme.__renderer__): Object {
@@ -29,7 +29,7 @@ ShallowWrapper {
       "className": "",
       "id": "ttl",
       "name": "ttl",
-      "onChange": [Function],
+      "onChange": [MockFunction],
       "options": Array [
         Object {
           "label": "300 (5 minutes)",
@@ -98,7 +98,7 @@ ShallowWrapper {
         "className": "",
         "id": "ttl",
         "name": "ttl",
-        "onChange": [Function],
+        "onChange": [MockFunction],
         "options": Array [
           Object {
             "label": "300 (5 minutes)",

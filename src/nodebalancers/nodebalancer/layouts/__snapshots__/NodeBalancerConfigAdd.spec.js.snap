@@ -5,7 +5,18 @@ ShallowWrapper {
   "length": 1,
   Symbol(enzyme.__root__): [Circular],
   Symbol(enzyme.__unrendered__): <NodeBalancerConfigAdd
-    dispatch={[Function]}
+    dispatch={
+      [MockFunction] {
+        "calls": Array [
+          Array [
+            Object {
+              "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerConfigAdd.js",
+              "type": "@@source/SET_SOURCE",
+            },
+          ],
+        ],
+      }
+    }
     nodebalancer={
       Object {
         "_configs": Object {
@@ -111,7 +122,18 @@ ShallowWrapper {
               "stickiness": "table",
             }
           }
-          dispatch={[Function]}
+          dispatch={
+            [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerConfigAdd.js",
+                    "type": "@@source/SET_SOURCE",
+                  },
+                ],
+              ],
+            }
+          }
           nodebalancer={
             Object {
               "_configs": Object {
@@ -240,7 +262,16 @@ ShallowWrapper {
             "protocol": "http",
             "stickiness": "table",
           },
-          "dispatch": [Function],
+          "dispatch": [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerConfigAdd.js",
+                  "type": "@@source/SET_SOURCE",
+                },
+              ],
+            ],
+          },
           "nodebalancer": Object {
             "_configs": Object {
               "configs": Object {
@@ -347,7 +378,18 @@ ShallowWrapper {
                 "stickiness": "table",
               }
             }
-            dispatch={[Function]}
+            dispatch={
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Object {
+                      "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerConfigAdd.js",
+                      "type": "@@source/SET_SOURCE",
+                    },
+                  ],
+                ],
+              }
+            }
             nodebalancer={
               Object {
                 "_configs": Object {
@@ -476,7 +518,16 @@ ShallowWrapper {
               "protocol": "http",
               "stickiness": "table",
             },
-            "dispatch": [Function],
+            "dispatch": [MockFunction] {
+              "calls": Array [
+                Array [
+                  Object {
+                    "source": "/Users/rstires/Projects/manager/src/nodebalancers/nodebalancer/layouts/NodeBalancerConfigAdd.js",
+                    "type": "@@source/SET_SOURCE",
+                  },
+                ],
+              ],
+            },
             "nodebalancer": Object {
               "_configs": Object {
                 "configs": Object {
