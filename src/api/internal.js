@@ -1,3 +1,5 @@
+// @flow
+
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
@@ -7,14 +9,24 @@ export const MANY = 'MANY';
 export const POST = 'POST';
 export const DELETE = 'DELETE';
 
-export const createDefaultState = (name) => ({
+export const createDefaultState = (name: string) => ({
   totalPages: -1,
   totalResults: -1,
   ids: [],
   [name]: {},
 });
 
-export function isPlural(config) {
+type ReduxConfig = {
+  name: string,
+  endpoint: (...id?: string[]) => string,
+  supports: string[],
+  primaryKey: string,
+  sortFn?: (ids: string[], state: {}) => string[],
+  subresources?: { [string]: ReduxConfig },
+  parent?: ReduxConfig,
+};
+
+export function isPlural(config: ReduxConfig) {
   return config.supports.indexOf(MANY) > -1;
 }
 
@@ -22,12 +34,13 @@ export function isPlural(config) {
  * Given a config object and a parent object, return an object with the parent added
  * to the config. If the config has subresources, iteratively apply the same.
  *
- * @param {Object} config - A config object optionally containing a
- * subresource collection..
- * @param {*} [parent] A parent value to add to the config and any subresources.
- * @returns {Object} The config with parent appended to the config and any subresources.
+ * @param config - A config object optionally containing a subresource
+ * collection.
+ * @param parent - A parent value to add to the config and any subresources.
+ * @returns The config with parent appended to the config and any subresources.
  */
-export function addParentRefs({ subresources, ...config }, parent) {
+export function addParentRefs(
+  { subresources, ...config }: ReduxConfig, parent?: ReduxConfig): ReduxConfig {
   const ret = { ...config, subresources, parent };
 
   if (subresources) {
@@ -42,15 +55,18 @@ export function addParentRefs({ subresources, ...config }, parent) {
 }
 
 /**
- * Return a string  value of the objects name property, and the name of any parent
- * property object, recursively.
+ * Return a path string to the resource via its config, which might be a
+ * subresource config, using config names.
  *
- * @param {Object} resource
+ * For example, given the config for nodebalancers._configs._nodes, return
+ * 'nodebalancers.configs.nodes'
+ *
+ * @param {Object} config
  * @returns {String}
  */
-export function fullyQualified(resource) {
-  let path = resource.name;
-  let res = resource;
+export function fullyQualified(config) : string {
+  let path = config.name;
+  let res = config;
   while (res.parent) {
     res = res.parent;
     path = `${res.name}.${path}`;
@@ -58,26 +74,28 @@ export function fullyQualified(resource) {
   return path;
 }
 
+type ApiID = string | number;
+
 /**
  *
- * @param {*} v - The value to be tested.
- * @returns {*} - Either the unchanged value or parsed integer.
+ * @param v The value to be tested.
+ * @returns Either the unchanged value or parsed integer.
  */
-export const parseIntIfActualInt = (v) => isNaN(v) ? v : parseInt(v);
+export const parseIntIfActualInt = (v: ApiID) => isNaN(v) ? v : parseInt(v);
 
-export const oneActionCreator = (config) => (resource, ...ids) => ({
+export const oneActionCreator = (config) => (resource, ...ids: ApiID[]) => ({
   resource,
   type: `GEN@${fullyQualified(config)}/ONE`,
   ids: ids.map(parseIntIfActualInt),
 });
 
-export const manyActionCreator = (config) => (page, ...ids) => ({
+export const manyActionCreator = (config) => (page, ...ids: ApiID[]) => ({
   page,
   type: `GEN@${fullyQualified(config)}/MANY`,
   ids: ids.map(parseIntIfActualInt),
 });
 
-export const deleteActionCreator = (config) => (...ids) => ({
+export const deleteActionCreator = (config) => (...ids: ApiID[]) => ({
   type: `GEN@${fullyQualified(config)}/DELETE`,
   ids: ids.map(parseIntIfActualInt),
 });

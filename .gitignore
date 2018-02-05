@@ -10,3 +10,4 @@ restart-manager.sh
 secrets*.js
 .vscode
 stats.json
+flow-typed
