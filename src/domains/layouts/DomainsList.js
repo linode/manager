@@ -24,8 +24,7 @@ import CreateHelper from '~/components/CreateHelper';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddMaster, AddSlave } from '../components';
-import { ComponentPreload as Preload } from '~/decorators/Preload';
-
+import { Pagination } from '~/decorators/Pagination';
 
 const OBJECT_TYPE = 'domains';
 
@@ -137,7 +136,7 @@ export class DomainsList extends Component {
   }
 
   render() {
-    const { dispatch, email } = this.props;
+    const { dispatch, email, page: domains } = this.props;
 
     const addMaster = () => AddMaster.trigger(dispatch, email);
     const addSlave = () => AddSlave.trigger(dispatch);
@@ -157,8 +156,8 @@ export class DomainsList extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.domains.domains).length ?
-            this.renderZones(this.props.domains.domains) :
+          {domains ?
+            this.renderZones(domains) :
             <CreateHelper label="Domains" onClick={addMaster} linkText="Add a Domain" />}
         </div>
       </div>
@@ -169,6 +168,7 @@ export class DomainsList extends Component {
 DomainsList.propTypes = {
   dispatch: PropTypes.func,
   domains: PropTypes.object,
+  page: PropTypes.array,
   email: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
 };
@@ -176,17 +176,12 @@ DomainsList.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    domains: state.api.domains,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
     email: state.api.profile.email,
   };
 }
 
-const preloadRequest = async (dispatch) => {
-  await dispatch(api.domains.all());
-};
-
 export default compose(
   connect(mapStateToProps),
-  Preload(preloadRequest)
+  Pagination(api.domains)
 )(DomainsList);
