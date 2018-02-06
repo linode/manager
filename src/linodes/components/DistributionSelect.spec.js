@@ -14,18 +14,6 @@ describe('linodes/components/DistributionSelect', () => {
     sandbox.restore();
   });
 
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <DistributionSelect
-        name="images"
-        onChange={sinon.spy()}
-        images={images}
-        allowNone
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('should render a list of image options', () => {
     const wrapper = shallow(
       <DistributionSelect
@@ -40,6 +28,5 @@ describe('linodes/components/DistributionSelect', () => {
     expect(groups).toContain('Arch');
     expect(groups).toContain('Debian');
     expect(groups).toContain('Images');
-    expect(wrapper).toMatchSnapshot();
   });
 });

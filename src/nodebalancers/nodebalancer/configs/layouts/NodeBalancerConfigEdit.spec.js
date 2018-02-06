@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import {
   createSimulatedEvent,
@@ -18,20 +18,6 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     dispatch.reset();
     sandbox.restore();
   });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <NodeBalancerConfigEdit
-        id="1"
-        nodebalancer={configsNodeBalancer}
-        config={configsNodeBalancer._configs.configs[1]}
-        dispatch={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
 
   it('commits changes to the API', async () => {
     const id = 1;

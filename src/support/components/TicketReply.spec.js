@@ -8,13 +8,6 @@ import TicketReply, {
 import { testTicket } from '~/data/tickets';
 
 describe('support/components/TicketReply', () => {
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <TicketReply createdField="opened" reply={testTicket} />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders all data correctly', () => {
     const page = mount(<TicketReply createdField="opened" reply={testTicket} />);
     const header = page.find('CardImageHeader');

@@ -15,21 +15,6 @@ describe('domains/components/EditSRVRecord', () => {
     sandbox.restore();
   });
 
-  it('should render without error', () => {
-    const currentZone = api.domains.domains['1'];
-    const currentRecord = currentZone._records.records[6];
-    const wrapper = shallow(
-      <EditSRVRecord
-        title="EditSRVRecord"
-        dispatch={() => { }}
-        zone={currentZone}
-        id={currentRecord.id}
-        close={() => { }}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders fields correctly for SRV record', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[6];

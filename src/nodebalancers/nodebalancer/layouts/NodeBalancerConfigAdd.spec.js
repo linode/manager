@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { push } from 'react-router-redux';
 
 import { NodeBalancerConfigAdd } from './NodeBalancerConfigAdd';
@@ -20,17 +20,6 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <NodeBalancerConfigAdd
-        nodebalancer={configsNodeBalancer}
-        dispatch={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('commits changes to the API', async () => {
