@@ -98,6 +98,8 @@ const Users = Loadable({
  */
 import styles from '../scss/manager.scss'; // eslint-disable-line no-unused-vars
 
+import '../scss/test.css';
+
 /**
  * Page View Analytics
  */
