@@ -2,6 +2,8 @@ const path = require('path');
 const process = require('process');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractCSS = new ExtractTextPlugin('[name]-[hash].css');
 
 const _package = require('./package.json');
 
@@ -22,6 +24,7 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
+    ExtractCSS,
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
@@ -62,18 +65,31 @@ module.exports = {
       },
       {
         test: /\.s?css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: [
-                path.resolve(__dirname, './node_modules/bootstrap/scss/'),
-              ],
+        use: ExtractCSS.extract({
+          fallback: 'style-loader',
+          use: [
+            'css-loader',
+            {
+              loader: 'postcss-loader', // Run post css actions
+              options: {
+                plugins: () => {
+                  return [
+                    require('precss'),
+                    require('autoprefixer')
+                  ];
+                }
+              }
             },
-          },
-        ],
+            {
+              loader: 'sass-loader',
+              options: {
+                includePaths: [
+                  path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+                ],
+              },
+            },
+          ]
+        }),
       },
       {
         test: /\.jsx?/,
