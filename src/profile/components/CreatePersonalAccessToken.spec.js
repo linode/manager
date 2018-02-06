@@ -18,17 +18,6 @@ describe('profile/components/CreatePersonalAccessToken', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <CreatePersonalAccessToken
-        dispatch={dispatch}
-        close={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('creates a new token', async () => {
     const page = shallow(
       <CreatePersonalAccessToken

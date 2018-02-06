@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -25,18 +25,6 @@ describe('linodes/stackscripts/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <StackScriptsList
-        dispatch={dispatch}
-        selectedMap={{}}
-        stackscripts={stackscripts}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it.skip('renders a list of stackscripts', () => {
     const page = mount(

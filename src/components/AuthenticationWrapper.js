@@ -89,7 +89,7 @@ const mapDispatchToProps = (state, ownProps) => ({
       `${LOGIN_ROOT}/oauth/authorize`,
       clientId,
       '*',
-      'code',
+      'token',
       `${APP_ROOT}/oauth/callback?returnTo=${returnURL}`,
       nonce
     );

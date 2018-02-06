@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { HistoryPage } from '~/billing/layouts/HistoryPage';
 import { api } from '~/data';
@@ -19,21 +19,6 @@ describe('billing/layouts/HistoryPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <HistoryPage
-          payments={{}}
-          dispatch={dispatch}
-          account={account}
-          invoices={invoices.invoices}
-        />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('renders account balance', () => {
     page = mount(
