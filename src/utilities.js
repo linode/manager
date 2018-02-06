@@ -10,6 +10,11 @@ import { removeSelected } from '~/actions/select';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 /**
+ * @typedef {Object} Deleteable
+ * @prop {string|number} [id]
+ * @prop {string} [label]
+ */
+/**
  * @param {Function} dispatch
  * @param {string|number} objectLabel
  * @param {Function} deleteFunction
@@ -18,7 +23,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
  * @param {string} [deleteAction=delete]
  * @param {string} [deleteActionPending=deleting]
  * @param {string|number} [idKey=id]
- * @returns {function(Array<Collection>): void}
+ * @returns {function(Deleteable|Array<Deleteable>): void}
  */
 export function confirmThenDelete(
   dispatch,
