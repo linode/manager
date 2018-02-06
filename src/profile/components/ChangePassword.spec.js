@@ -1,8 +1,8 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { ChangePassword } from '~/profile/components';
+import { ChangePassword } from './ChangePassword';
 
 import {
   createSimulatedEvent,
@@ -20,20 +20,11 @@ describe('profile/components/ChangePassword', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <ChangePassword
-        dispatch={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('changes password', async () => {
     const page = mount(
       <ChangePassword
         dispatch={dispatch}
+        passwordStrengthCalculator={jest.fn(() => ({ score: 0 }))}
       />
     );
 

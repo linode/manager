@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -15,17 +15,6 @@ describe('linodes/linode/backups/components/CancelForm', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <CancelForm
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('shows cancel backups modal when button is pressed', async () => {

@@ -19,14 +19,6 @@ describe('layouts/OAuth', () => {
     dispatch.mockReset();
   });
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <OAuthCallbackPage dispatch={dispatch} location={{ query: {} }} />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('redirects to / when no code is provided', async () => {
     const redirectMock = jest.fn();
 

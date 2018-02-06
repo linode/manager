@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { DomainsList } from './DomainsList';
@@ -19,30 +19,6 @@ describe('domains/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <DomainsList
-        dispatch={dispatch}
-        selectedMap={{}}
-        domains={domains}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
-  it.only('renders with minimum required props', () => {
-    const wrapper = shallow(
-      <DomainsList
-        dispatch={dispatch}
-        selectedMap={{}}
-        domains={domains}
-      />
-    );
-
-    expect(wrapper).toMatchSnapshot();
-  });
 
   /**
    * @todo skipped.

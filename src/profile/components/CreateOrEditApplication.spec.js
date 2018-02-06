@@ -21,18 +21,6 @@ describe('profile/components/CreateOrEditApplication', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <CreateOrEditApplication
-        title="CreateOrEditApplication"
-        dispatch={dispatch}
-        close={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it.skip('creates a new application', async () => {
     const page = shallow(
       <CreateOrEditApplication

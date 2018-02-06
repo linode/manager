@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import {
   createSimulatedEvent,
@@ -20,21 +20,6 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   });
 
   const dispatch = sandbox.stub();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <NodeModal
-        title="NodeModal"
-        dispatch={dispatch}
-        confirmTest="Edit"
-        configId="1"
-        nodebalancerId="23"
-        node={node}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('renders node modal with data', () => {
     const page = mount(
