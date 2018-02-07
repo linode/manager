@@ -89,6 +89,7 @@ export class AlertsPage extends Component {
   }
 
   render() {
+    // eslint-disable-next-line camelcase
     const { cpu, io, network_in, network_out, transfer_quota } = this.state.alerts;
     const { loading, errors } = this.state;
     const alerts = [

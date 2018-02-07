@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
 import { TicketsList } from './TicketsList';
@@ -12,19 +12,6 @@ describe('support/layouts/IndexPage', () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <TicketsList
-          dispatch={mockDispatch}
-          tickets={api.tickets}
-        />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('renders a list of tickets', () => {
