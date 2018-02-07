@@ -4,115 +4,105 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
+import isEmpty from 'lodash/isEmpty';
 
 import parseQuery from '~/decorators/parseQuery';
-import { LOGIN_ROOT, ENVIRONMENT } from '~/constants';
-import { rawFetch } from '~/fetch';
-import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
 import { getStorage, setStorage } from '~/storage';
 
-function getImplicitParams() {
-  const hashParams = window.location.hash.substr(1).split('&');
-  const params = {};
-  hashParams.forEach(function (hashParam) {
-    const hashParamParts = hashParam.split('=');
-    if (hashParamParts[0] === 'return') {
-      // In src/session.js we send /oauth/callback?{returnTo} as the redirect URI. The oauth
-      // server, login, will return to this URI verbatim. The part we need (for internal use)
-      // is the {returnTo} bit that tells us where in the app to go once we've been authenticated.
-      params.returnTo = hashParam.split('?')[1];
-    } else {
-      params[hashParamParts[0]] = hashParamParts[1];
-    }
-  });
-  return params;
+/**
+ * Splits a string into at most two parts using a separator character.
+ *
+ * @param {string} str The string to split
+ * @param {string} sep The separator character to use
+ * @returns {Array<string>} An array of length 2, which are the two separated parts of str
+ */
+export function splitIntoTwo(str, sep) {
+  const idx = str.indexOf(sep);
+  if (idx === -1 || idx === (str.length - 1)) {
+    throw new Error(`"${str}" cannot be split into two parts by ${sep}`);
+  }
+  return [str.substr(0, idx), str.substr(idx + 1)];
+}
+
+/**
+ * Parses a string of key/value paris separated by '&', with the key and value separated by '='
+ *
+ * @param {string} str The string to parse
+ * @returns {Object} An object of the parsed key/value pairs
+ */
+export function parseQueryParams(str) {
+  return str
+    .split('&')
+    .reduce((acc, keyVal) => {
+      if (isEmpty(keyVal)) { return { ...acc }; }
+      const [key, value] = splitIntoTwo(keyVal, '=');
+      return { ...acc, [key]: value };
+    }, {});
 }
 
 export class OAuthCallbackPage extends Component {
   async componentDidMount() {
-    const { dispatch, location } = this.props;
-    const { error, code } = location.query;
-    if (error) {
-      // These errors only happen while developing or setting up the app.
-      /* eslint-disable no-console */
-      console.log('Error during OAuth callback:');
-      console.error(error);
-      /* eslint-enable no-console */
-      return;
+    const { location, redirect, checkNonce, startSession } = this.props;
+    if (!location.hash || location.hash.length < 2) {
+      return redirect('/');
     }
 
-    let accessToken;
-    let scopes;
-    let expiresIn;
-    let returnTo;
-    const implicitParams = getImplicitParams();
-
-    if (code) {
-      const data = new FormData();
-      data.append('client_id', clientId);
-      data.append('client_secret', clientSecret);
-      data.append('code', code);
-      returnTo = location.query['return'];
-
-      // Exchange temporary code for access token.
-      let resp;
-      try {
-        resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
-          method: 'POST',
-          body: data,
-          mode: 'cors',
-        });
-      } catch (e) {
-        const message = `Failed to exchange temporary code for access token: ${e}`;
-        if (ENVIRONMENT === 'development') {
-          /* eslint-disable no-alert */
-          alert(message);
-          /* eslint-enable no-alert */
-        } else {
-          /* eslint-disable no-console */
-          console.log(message);
-          /* eslint-enable no-console */
-        }
-      }
-
-      ({ access_token: accessToken, scope: scopes, expires_in: expiresIn } = await resp.json());
-    } else if (implicitParams.access_token) {
-      ({
-        access_token: accessToken,
-        scope: scopes,
-        expires_in: expiresIn,
-        returnTo,
-      } = implicitParams);
-      const { state: nonce } = implicitParams;
-      const storedNonce = getStorage('authentication/nonce');
-      // nonce should be set and equal otherwise redirect
-      if (!(nonce && storedNonce === nonce)) {
-        // Retry auth flow
-        dispatch(push('/'));
-        return;
-      }
-      setStorage('authentication/nonce', '');
-    } else {
-      dispatch(push('/'));
-      return;
+    const hashParams = parseQueryParams(location.hash.substr(1));
+    const {
+      access_token: accessToken,
+      scope: scopes,
+      expires_in: expiresIn,
+      state: nonce,
+    } = hashParams;
+    if (!accessToken) {
+      return redirect('/');
     }
+
+    let returnTo = '/';
+    if (hashParams['return']
+        && hashParams['return'].indexOf('?') > -1) {
+      returnTo = parseQueryParams(hashParams['return'].split('?')[1]).returnTo;
+    }
+
+    checkNonce(nonce);
 
     const expireDate = new Date();
-    expireDate.setSeconds(expireDate.getSeconds() + expiresIn);
-    // Token needs to be in redux state for all API calls
-    dispatch(session.start(accessToken, scopes, expireDate));
+    expireDate.setTime(expireDate.getTime() + ((+expiresIn) * 1000));
 
-    // Done OAuth flow. Let the app begin.
-    dispatch(push(returnTo || '/'));
+    // begin our authenticated session
+    startSession(accessToken, scopes, expireDate);
+
+    // redirect to prior page
+    redirect(returnTo);
   }
+
   render() {
     return null;
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  checkNonce(nonce) {
+    // nonce should be set and equal to ours otherwise retry auth
+    const storedNonce = getStorage('authentication/nonce');
+    if (!(nonce && storedNonce === nonce)) {
+      setStorage('authentication/nonce', '');
+      dispatch(push('/'));
+    }
+  },
+  redirect(path) {
+    dispatch(push(path));
+  },
+  startSession(accessToken, scopes, expireDate) {
+    dispatch(session.start(accessToken, scopes, expireDate));
+  },
+});
+
 OAuthCallbackPage.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  redirect: PropTypes.func.isRequired,
+  checkNonce: PropTypes.func.isRequired,
+  startSession: PropTypes.func.isRequired,
   location: PropTypes.shape({
     hash: PropTypes.any,
     query: PropTypes.object,
@@ -120,7 +110,7 @@ OAuthCallbackPage.propTypes = {
 };
 
 export default compose(
-  connect(),
+  connect(undefined, mapDispatchToProps),
   withRouter,
   parseQuery,
 )(OAuthCallbackPage);

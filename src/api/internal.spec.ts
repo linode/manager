@@ -1,28 +1,20 @@
 import {
+  genActions,
+  isPlural,
   ONE,
   PUT,
   MANY,
   POST,
   DELETE,
-
-  createDefaultState,
-  isPlural,
   addParentRefs,
   fullyQualified,
-  parseIntIfActualInt,
-  genActions,
   generateDefaultStateFull,
   generateDefaultStateOne,
-
+  createDefaultState,
+  parseIntIfActualInt,
 } from './internal';
 
-import {
-  testConfigOne,
-  testConfigMany,
-  testConfigDelete,
-  resource,
-  page
-} from '../data/reduxGen';
+import { testConfigOne, testConfigMany, testConfigDelete, resource, page } from '../data/reduxGen.js';
 
 describe('internal', () => {
   describe('createDefaultState', () => {
@@ -52,10 +44,10 @@ describe('internal', () => {
 
   describe('addParentRefs', () => {
     it('should return an undefined parent if parent is undefined', () => {
-      const config = { name: 'something' };
+      const config = { value: 1 };
 
       expect(
-        addParentRefs(config, undefined)
+        addParentRefs(config)
       ).toEqual({ ...config, parent: undefined });
     });
 
@@ -273,7 +265,7 @@ describe('internal', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return an object with recursively initialized default state', () => {
+    it('should an object with recursively initialized default state', () => {
       const subresources = {
         _1: { _1key: '_1value', supports: [] },
         _2: { _2key: '_2value', supports: [] },

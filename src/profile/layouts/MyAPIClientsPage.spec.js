@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -19,18 +19,6 @@ describe('profile/layouts/MyAPIClientsPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <MyAPIClientsPage
-        dispatch={dispatch}
-        selectedMap={{}}
-        clients={clients}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('renders a list of Clients', () => {
     const page = mount(

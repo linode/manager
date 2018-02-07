@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -13,16 +13,6 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <AlertsPage
-        linode={testLinode}
-        dispatch={() => { }}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders all alerts', () => {

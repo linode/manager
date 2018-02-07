@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -18,17 +18,6 @@ describe('linodes/linode/components/RescueMode', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <RescueMode
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('shows disks in rescue mode', async () => {

@@ -1,6 +1,5 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
-import isEmpty from 'lodash/isEmpty';
 
 export const ONE = 'ONE';
 export const PUT = 'PUT';
@@ -54,46 +53,48 @@ interface ReduxAction {
 }
 
 
-export const createDefaultState = (name: string): ResourceState => ({
+export const createDefaultState = (name) => ({
   totalPages: -1,
   totalResults: -1,
   ids: [],
   [name]: {},
 });
 
-export function isPlural(config: ReduxConfig) {
-  return config.supports.indexOf('MANY') > -1;
+export function isPlural(config) {
+  return config.supports.indexOf(MANY) > -1;
 }
 
 /**
  * Given a config object and a parent object, return an object with the parent added
  * to the config. If the config has subresources, iteratively apply the same.
+ *
+ * @param {Object} config - A config object optionally containing a
+ * subresource collection..
+ * @param {*} [parent] A parent value to add to the config and any subresources.
+ * @returns {Object} The config with parent appended to the config and any subresources.
  */
-export function addParentRefs(config: ReduxConfig, parent: ReduxConfig): ReduxConfig {
-  const { subresources, ...rest } = config;
-  const ret = { ...rest, subresources, parent };
+export function addParentRefs({ subresources, ...config }, parent) {
+  const ret = { ...config, subresources, parent };
 
   if (subresources) {
-    let idx = 0;
-    const subresourcesPairs = Object.entries(subresources);
-    const len = subresourcesPairs.length;
-
-    for (; idx < len; idx++) {
-      const [key, config] = subresourcesPairs[idx];
-      ret.subresources[key] = addParentRefs(config, ret);
-    }
+    ret.subresources = Object
+      .entries(subresources)
+      .reduce((acc, [key, config]) => ({
+        ...acc, [key]: addParentRefs(config, ret),
+      }), {});
   }
 
   return Object.freeze(ret);
 }
 
-
 /**
  * Return a string  value of the objects name property, and the name of any parent
  * property object, recursively.
  *
+ * @param {Object} resource
+ * @returns {String}
  */
-export function fullyQualified(resource: ReduxConfig): string {
+export function fullyQualified(resource) {
   let path = resource.name;
   let res = resource;
   while (res.parent) {
@@ -108,30 +109,24 @@ export function fullyQualified(resource: ReduxConfig): string {
  * @param {*} v - The value to be tested.
  * @returns {*} - Either the unchanged value or parsed integer.
  */
-export const parseIntIfActualInt = (v: any): any => isNaN(v) ? v : parseInt(v);
+export const parseIntIfActualInt = (v) => isNaN(v) ? v : parseInt(v);
 
-export const oneActionCreator = (config: ReduxConfig) => (resource: Resource, ...ids: Array<number>): ReduxAction => ({
+export const oneActionCreator = (config) => (resource, ...ids) => ({
   resource,
   type: `GEN@${fullyQualified(config)}/ONE`,
   ids: ids.map(parseIntIfActualInt),
 });
 
-export const manyActionCreator = (config: ReduxConfig) => (page: Page, ...ids: Array<number>): ReduxAction => ({
+export const manyActionCreator = (config) => (page, ...ids) => ({
   page,
   type: `GEN@${fullyQualified(config)}/MANY`,
   ids: ids.map(parseIntIfActualInt),
 });
 
-export const deleteActionCreator = (config: ReduxConfig) => (...ids: Array<number>): ReduxAction => ({
+export const deleteActionCreator = (config) => (...ids) => ({
   type: `GEN@${fullyQualified(config)}/DELETE`,
   ids: ids.map(parseIntIfActualInt),
 });
-
-interface actionCreatorGenerators {
-  ONE: Function,
-  MANY: Function,
-  DELETE: Function,
-}
 
 export const actionCreatorGenerators = {
   [ONE]: oneActionCreator,
@@ -140,75 +135,41 @@ export const actionCreatorGenerators = {
 };
 
 /**
- *
- * @param {SUPPORTS[]} supports
- * @param {ConfigObject} config
- * @param {ActionsObject} actions
- */
-export function setFeatureActionCreators(supports: Array<Feature>, config: ReduxConfig, actions: ReduxAction) {
-  let idx = 0;
-  const len = supports.length;
-
-  for (; idx < len; idx++) {
-    const feature = supports[idx];
-    const name = feature.toLowerCase();
-    const actionCreator = actionCreatorGenerators[feature];
-
-    if (actionCreator) {
-      // eslint-disable-next-line no-param-reassign
-      actions[name] = actionCreator(config);
-    }
-  }
-
-  return actions;
-}
-
-/**
- * Generate actions for a given list of configs.
- *
- * @param {List<Config>} list ConfigObject
- * @param {ActionObject} actions ActionsObject
- * @returns {ActionsObject} ActionsObject
- */
-export function genActionsForConfig(list: List<ReduxConfig>, actions: ReduxAction) {
-  if (isEmpty(list)) {
-    return actions;
-  }
-
-  const configs = Object.values(list);
-  let idx = 0;
-  const len = configs.length;
-
-  for (; idx < len; idx++) {
-    const config = configs[idx];
-    // eslint-disable-next-line no-param-reassign, no-use-before-define
-    actions[config.name] = genActions(config);
-  }
-
-  return actions;
-}
-
-
-/**
- * Generate an action object for a given config.
- *
- * @param {ConfigObject}
- * @returns {ActionsObject}
+ * Generates action creators for the provided config.
  */
 export function genActions(config) {
   const { name, supports, subresources } = config;
-  let actions = { type: name };
+  let actions = {};
 
-  actions = setFeatureActionCreators(supports, config, actions);
+  actions = supports
+    .reduce((result, feature) => {
+      const actionCreator = actionCreatorGenerators[feature];
+      const name = feature.toLowerCase();
 
-  actions = genActionsForConfig(subresources, actions);
+      return (actionCreator)
+        ? { ...result, [name]: actionCreator(config) }
+        : result;
+    }, actions);
+
+  if (subresources) {
+    actions = Object
+      .entries(subresources)
+      .reduce((actions, [, subresource]) => {
+        return {
+          ...actions,
+          [subresource.name]: genActions(subresource, 2),
+        };
+      }, actions);
+  }
+
+  actions.type = name;
 
   return actions;
 }
 
 /**
  *
- * @param {ConfigObject} config
+ * @param {Object} config
  * @returns {Object} Either an object containing the default pagination results,
  * or an empty object.
  */
@@ -220,7 +181,7 @@ export function generateDefaultStateFull(config) {
 
 /**
  *
- * @param {List<Config>} subresources
+ * @param {Object} subresources
  * @param {Object} one
  * @returns {Object}
  */
@@ -261,7 +222,7 @@ export class ReducerGenerator {
     return newStateMany;
   }
 
-  static many(config: ReduxConfig, oldState, action) {
+  static many(config, oldState, action) {
     const { page } = action;
 
     const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
@@ -285,7 +246,7 @@ export class ReducerGenerator {
     };
   }
 
-  static del(config: ReduxConfig, state, action) {
+  static del(config, state, action) {
     const id = action.ids[action.ids.length - 1];
     const newMany = omit(state[config.name], id);
     return {
@@ -295,7 +256,7 @@ export class ReducerGenerator {
     };
   }
 
-  static subresource(config: ReduxConfig, state, action) {
+  static subresource(config, state, action) {
     let path = action.type.substr(action.type.indexOf('@') + 1);
     path = path.substr(0, path.indexOf('/'));
     const names = path.split('.');
@@ -336,7 +297,7 @@ export class ReducerGenerator {
     });
   }
 
-  static reducer(config: ReduxConfig, state, action) {
+  static reducer(config, state, action) {
     const subTypeMatch = `GEN@${fullyQualified(config)}`;
 
     switch (action.type) {
@@ -356,7 +317,7 @@ export class ReducerGenerator {
     }
   }
 
-  constructor(_config: ReduxConfig) {
+  constructor(_config) {
     const defaultState = generateDefaultStateFull(_config);
     this.reducer = (state = defaultState, action) =>
       ReducerGenerator.reducer(_config, state, action);

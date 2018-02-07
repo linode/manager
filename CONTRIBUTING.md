@@ -170,9 +170,6 @@ To generate a coverage report:
 
     yarn test --coverage
 
-### Snapshot Testing
-[Snapshots](https://facebook.github.io/jest/docs/en/snapshot-testing.html) are generated and compared by Jest during testing. Any new or updated React component should include a new or updated snapshot of any important states. (ie A dropdown component may include a snapshot test of both open and closed states).
-
 ## Coding Style
 
 The manager is written in ES6, with some ES7 in use as well. A general guideline

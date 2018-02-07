@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
@@ -30,17 +30,6 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <IPTransferPage
-        dispatch={() => { }}
-        linodes={linodes}
-        linode={testLinode}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders ips', () => {
