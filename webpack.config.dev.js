@@ -56,53 +56,55 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.md$/,
-        use: ['ignore-loader'],
-      },
-      {
-        test: /\.json$/,
-        use: ['json-loader'],
-      },
-      {
-        test: /\.s?css$/,
-        use: ExtractCSS.extract({
-          fallback: 'style-loader',
-          use: [
-            'css-loader',
-            {
-              loader: 'postcss-loader', // Run post css actions
-              options: {
-                plugins: () => {
-                  return [
-                    require('precss'),
-                    require('autoprefixer')
-                  ];
-                }
-              }
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                includePaths: [
-                  path.resolve(__dirname, './node_modules/bootstrap/scss/'),
-                ],
-              },
-            },
-          ]
-        }),
-      },
-      {
-        test: /\.jsx?/,
-        loader: require.resolve('babel-loader'),
-        include: [
-          path.resolve(__dirname, 'src'),
-          path.resolve(__dirname, 'node_modules/react-vnc-display'),
+        oneOf: [
+          {
+            test: /\.md$/,
+            use: ['ignore-loader'],
+          },
+          {
+            test: /\.json$/,
+            use: ['json-loader'],
+          },
+          {
+            test: /\.s?css$/,
+            use: ExtractCSS.extract({
+              fallback: 'style-loader',
+              use: [
+                'css-loader',
+                {
+                  loader: 'postcss-loader', // Run post css actions
+                  options: {
+                    plugins: () => [
+                      require('precss'),
+                      require('autoprefixer')
+                    ],
+                  },
+                },
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    includePaths: [
+                      path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+                    ],
+                  },
+                },
+              ],
+            }),
+          },
+          {
+            test: /\.jsx?/,
+            loader: require.resolve('babel-loader'),
+            include: [
+              path.resolve(__dirname, 'src'),
+              path.resolve(__dirname, 'node_modules/react-vnc-display'),
+            ],
+          },
+          {
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            use: ['file-loader'],
+            include: path.join(__dirname, 'node_modules'),
+          },
         ],
-      },
-      {
-        test: /\.svg$/,
-        use: ['file-loader'],
-        include: path.join(__dirname, 'node_modules'),
       },
     ],
   },
