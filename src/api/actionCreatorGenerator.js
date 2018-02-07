@@ -9,19 +9,19 @@ import {
 } from './external';
 
 /**
- * @typedef {Object} ApiActionReducer
- * @prop {Object} one
- * @prop {Object} page
- * @prop {Object} all
- * @prop {Object} delete
- * @prop {Object} put
- * @prop {Object} post
+ * @typedef {Object} ActionCreator
+ * @prop {Function} [one]
+ * @prop {Function} [page]
+ * @prop {Function} [all]
+ * @prop {Function} [delete]
+ * @prop {Function} [put]
+ * @prop {Function} [post]
  *
  * Generates thunks for the provided config.
  *
  * @param { { supports: Array<string>} } config
  * @param { Object } actions
- * @returns {ApiActionReducer}
+ * @returns {ActionCreator}
  */
 export default function actionCreatorGenerator(config, actions) {
   const thunks = {};
