@@ -16,13 +16,6 @@ describe('components/notifications/NotificationListItem', () => {
     );
   }
 
-  it('should render without error', () => {
-    const wrapper = shallow(makeNotificationListItem(events.events[386]));
-    const notification = wrapper.dive().dive();
-
-    expect(notification).toMatchSnapshot();
-  });
-
   it('renders unread notification', () => {
     const wrapper = shallow(makeNotificationListItem(events.events[385]));
     const notification = wrapper.dive().dive();

@@ -12,17 +12,6 @@ describe('profile/components/TwoFactor', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <TwoFactor
-        dispatch={dispatch}
-        tfaEnabled
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('disable two factor called', async () => {
     const page = shallow(
       <TwoFactor

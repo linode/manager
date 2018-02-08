@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 import { DashboardPage } from '~/billing/layouts/DashboardPage';
 import { api } from '~/data';
@@ -18,19 +18,6 @@ describe('billing/layouts/DashboardPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <DashboardPage
-          dispatch={dispatch}
-          account={account}
-          invoices={invoices.invoices}
-        />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
   it('renders account info', () => {
     const page = mount(
       <StaticRouter>

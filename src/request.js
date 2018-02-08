@@ -1,7 +1,7 @@
 import { resetEventsPoll } from '~/actions/events';
 import { API_ROOT } from '~/constants';
 import LinodeAPI from '~/LinodeAPI';
-import * as session from '~/session';
+import { expire } from '~/session';
 import { store } from '~/store';
 
 const request = new LinodeAPI(API_ROOT);
@@ -26,7 +26,7 @@ Also rejects non-error responses if the API is in Maintainence mode
 request.interceptors.response.use(
   (response) => {
     if (!!response.headers['x-maintenance-mode']) {
-      store.dispatch(session.expireAndReAuth);
+      store.dispatch(expire);
       Promise.reject(response);
     }
 
@@ -35,7 +35,7 @@ request.interceptors.response.use(
   (error) => {
     if (!!error.config.headers['x-maintenance-mode']
         || error.response.status === 401) {
-      store.dispatch(session.expireAndReAuth);
+      store.dispatch(expire);
     }
     return Promise.reject(error);
   }

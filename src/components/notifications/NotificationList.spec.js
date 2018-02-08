@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
 
@@ -17,17 +17,6 @@ describe('components/notifications/NotificationList', () => {
   afterEach(() => {
     sandbox.restore();
   });
-
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <StaticRouter>
-        <NotificationList events={api.events} />
-      </StaticRouter>
-    );
-
-    expect(wrapper).toMatchSnapshot();
-  });
-
 
   it('implements default state', () => {
     const wrapper = mount(
