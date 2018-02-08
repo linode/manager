@@ -495,7 +495,36 @@ describe('internal', () => {
       });
     });
 
-    describe('#del', () => { });
+    describe('#del', () => {
+      describe('with simple values', () => {
+        const config = { name: 'test' };
+        const state = {
+          stateKey: 'state',
+          test: {
+            5: { id: 5 },
+            7: { id: 7 },
+            9: { id: 9 },
+          },
+        };
+        const action = { ids: [5] };
+        const result = ReducerGenerator.del(config, state, action);
+
+        it('should returns updated IDs', () => {
+          expect(result).toHaveProperty('ids', [7, 9]);
+        });
+
+        it('should return updated state', () => {
+          expect(result).toHaveProperty('test', {
+            7: { id: 7 },
+            9: { id: 9 },
+          });
+        });
+
+        it('should leaves other state untouched.', () => {
+          expect(result).toHaveProperty('stateKey', 'state');
+        });
+      });
+    });
 
     describe('#subresource', () => { });
 

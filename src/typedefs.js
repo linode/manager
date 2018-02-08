@@ -25,6 +25,9 @@
  * @typedef {Object<string, Object>} Resource
  *
  *
+ * @typedef {Object} DeleteAction
+ * @prop {Array<number|string>} ids
+ * 
  * @typedef {Object} OneAction
  * @prop {Array<number|string>} ids
  * @prop {Resource} [resource]

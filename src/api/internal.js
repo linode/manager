@@ -221,11 +221,18 @@ export class ReducerGenerator {
     };
   }
 
-  static del(config, state, action) {
+  /**
+   *
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {DeleteAction} action
+   * @returns {State}
+   */
+  static del(config, prevState, action) {
     const id = action.ids[action.ids.length - 1];
-    const newMany = omit(state[config.name], id);
+    const newMany = omit(prevState[config.name], id);
     return {
-      ...state,
+      ...prevState,
       ids: Object.values(newMany).map(({ id }) => id),
       [config.name]: newMany,
     };
