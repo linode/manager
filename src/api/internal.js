@@ -1,3 +1,6 @@
+
+import '~/typedefs';
+
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
@@ -135,7 +138,7 @@ export function generateDefaultStateFull(config) {
 
 /**
  *
- * @param {Object} subresources
+ * @param {Object.<string, ReduxConfig>} subresources
  * @param {Object} one
  * @returns {Object}
  */
@@ -151,29 +154,42 @@ export function generateDefaultStateOne(subresources = {}, one) {
 }
 
 export class ReducerGenerator {
-  static one(config, oldStateMany, action) {
+  /**
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {Action} action
+   * @returns {State}
+   */
+  static one(config, prevState, action) {
     if (!isPlural(config)) {
-      return { ...oldStateMany, ...action.resource };
+      return { ...prevState, ...action.resource };
     }
 
+    const { name, primaryKey, subresources } = config;
+
     const nonNanActionIds = (action.ids || []).filter(i => !_isNaN(i));
-    const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
-      action.resource[config.primaryKey];
-    const oldStateOne = oldStateMany[config.name][id];
-    const newStateOne = oldStateOne ? action.resource :
-      generateDefaultStateOne(config.subresources, action.resource);
 
-    const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
+    const id = nonNanActionIds.length
+      ? nonNanActionIds[action.ids.length - 1]
+      : action.resource[primaryKey];
 
-    const newStateMany = {
-      ...oldStateMany,
-      [config.name]: {
-        ...oldStateMany[config.name],
-        [id]: combinedStateOne,
+    const oldStateOne = prevState[name][id];
+
+    const newStateOne = oldStateOne
+      ? action.resource
+      : generateDefaultStateOne(subresources, action.resource);
+
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        [id]: {
+          ...oldStateOne,
+          ...newStateOne,
+          __updatedAt: new Date(),
+        },
       },
     };
-
-    return newStateMany;
   }
 
   static many(config, oldState, action) {

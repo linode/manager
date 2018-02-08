@@ -12,6 +12,7 @@ import {
   generateDefaultStateOne,
   createDefaultState,
   parseIntIfActualInt,
+  ReducerGenerator,
 } from './internal';
 
 import { testConfigOne, testConfigMany, testConfigDelete } from '~/data/reduxGen';
@@ -285,5 +286,150 @@ describe('internal', () => {
     });
   });
 
-  // describe('ReducerGenerator');
+  describe('ReducerGenerator', () => {
+    describe('#one', () => {
+      it('should return state merged with action.resource if config does not support MANY', () => {
+        const config = {
+          supports: ['ONE'],
+        };
+
+        const state = {
+          stateKey: 'state',
+        };
+
+        const action = {
+          resource: {
+            resourceKey: 'resource',
+          },
+        };
+
+        const result = ReducerGenerator.one(config, state, action);
+
+        const expected = {
+          stateKey: 'state',
+          resourceKey: 'resource',
+        };
+
+        expect(result).toEqual(expected);
+      });
+
+      describe('when action does not contain IDs.', () => {
+        it('should use the primaryKey label in the config', () => {
+          const config = { supports: [MANY], primaryKey: 'id', name: 'test' };
+          const state = { stateKey: 'state', test: {} };
+          const action = {
+            resource: { id: 1, name: 'one' },
+          };
+
+          const result = ReducerGenerator.one(config, state, action);
+          const expected = {
+            stateKey: 'state',
+            test: {
+              1: {
+                id: 1,
+                name: 'one',
+                __updatedAt: new Date(),
+              },
+            },
+          };
+
+          expect(result).toEqual(expected);
+        });
+      });
+
+      describe('when action contains IDs', () => {
+        it('should use the last ID provided as the new object key.', () => {
+          const config = { supports: [MANY], name: 'test' };
+          const state = { stateKey: 'state', test: {} };
+          const action = {
+            resource: { id: 1, name: 'one' },
+            ids: [999],
+          };
+
+          const result = ReducerGenerator.one(config, state, action);
+          const expected = {
+            stateKey: 'state',
+            test: {
+              999: {
+                id: 1,
+                name: 'one',
+                __updatedAt: new Date(),
+              },
+            },
+          };
+
+          expect(result).toEqual(expected);
+        });
+      });
+
+      describe('when state contains an existing resource', () => {
+        it('should merge new resource onto old resource', () => {
+          const config = { supports: [MANY], name: 'test' };
+          const state = {
+            stateKey: 'state', test: {
+              999: { something: 'whatever', name: 'oldName' },
+            },
+          };
+          const action = {
+            resource: { id: 1, name: 'one' },
+            ids: [999],
+          };
+
+          const result = ReducerGenerator.one(config, state, action);
+          const expected = {
+            stateKey: 'state',
+            test: {
+              999: {
+                id: 1,
+                name: 'one',
+                something: 'whatever',
+                __updatedAt: new Date(),
+              },
+            },
+          };
+
+          expect(result).toEqual(expected);
+        });
+      });
+
+      describe('when state does not contains an existing resource', () => {
+        it('should ...', () => {
+          const _sub1 = { supports: [MANY], name: 'sub1' };
+          const config = { supports: [MANY], name: 'test', subresources: { _sub1 } };
+          const state = {
+            stateKey: 'state', test: {},
+          };
+          const action = {
+            resource: { id: 1, name: 'one' },
+            ids: [999],
+          };
+
+          const result = ReducerGenerator.one(config, state, action);
+          const expected = {
+            stateKey: 'state',
+            test: {
+              999: {
+                ...(generateDefaultStateOne(config.subresources, action.resource)),
+                id: 1,
+                name: 'one',
+                __updatedAt: new Date(),
+              },
+            },
+          };
+
+          expect(result).toEqual(expected);
+        });
+      });
+    });
+
+    describe('#many', () => { });
+
+    describe('#del', () => { });
+
+    describe('#subresource', () => { });
+
+    describe('#reducer', () => { });
+
+    describe('constructor', () => { });
+  });
 });
