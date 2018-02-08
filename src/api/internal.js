@@ -157,10 +157,11 @@ export class ReducerGenerator {
   /**
    * @param {ReduxConfig} config
    * @param {State} prevState
-   * @param {Action} action
+   * @param {OneAction} action
+   * @param {Date} [updatedAt]
    * @returns {State}
    */
-  static one(config, prevState, action) {
+  static one(config, prevState, action, updatedAt = new Date()) {
     if (!isPlural(config)) {
       return { ...prevState, ...action.resource };
     }
@@ -186,31 +187,35 @@ export class ReducerGenerator {
         [id]: {
           ...oldStateOne,
           ...newStateOne,
-          __updatedAt: new Date(),
+          __updatedAt: updatedAt,
         },
       },
     };
   }
 
-  static many(config, oldState, action) {
-    const { page } = action;
+  /**
+   *
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {ManyAction} action
+   * @param {Date} [updatedAt]
+   * @returns {State}
+   */
+  static many(config, prevState, action, updatedAt = new Date()) {
+    const { page, dispatch } = action;
 
     const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
         ids: [oneObject[config.primaryKey]],
         resource: oneObject,
-        dispatch: action.dispatch,
-      }), oldState);
+        dispatch,
+      }, updatedAt), prevState);
 
-    let ids = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
-
-    if (config.sortFn) {
-      ids = config.sortFn(ids, newState[config.name]);
-    }
+    const ids = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
 
     return {
       ...newState,
-      ids,
+      ids: config.sortFn ? config.sortFn(ids, newState[config.name]) : ids,
       totalPages: page.pages,
       totalResults: page.results,
     };

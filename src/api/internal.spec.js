@@ -18,6 +18,8 @@ import {
 import { testConfigOne, testConfigMany, testConfigDelete } from '~/data/reduxGen';
 import { resource, page } from '~/data/reduxGen';
 
+const now = new Date();
+
 describe('internal', () => {
   describe('createDefaultState', () => {
     it('should return default state with name: {}', () => {
@@ -158,9 +160,8 @@ describe('internal', () => {
   describe('genActions', () => {
     it('generates an action to update one resource', function () {
       const config = testConfigOne;
-
       const actions = genActions(config);
-      const actionOne = actions.one(resource, '23');
+      const actionOne = actions.one(resource, '23', now);
 
       expect(actionOne.resource.label).toBe('nodebalancer-1');
       expect(actionOne.type).toBe('GEN@nodebalancers/ONE');
@@ -303,7 +304,7 @@ describe('internal', () => {
           },
         };
 
-        const result = ReducerGenerator.one(config, state, action);
+        const result = ReducerGenerator.one(config, state, action, now);
 
         const expected = {
           stateKey: 'state',
@@ -321,14 +322,14 @@ describe('internal', () => {
             resource: { id: 1, name: 'one' },
           };
 
-          const result = ReducerGenerator.one(config, state, action);
+          const result = ReducerGenerator.one(config, state, action, now);
           const expected = {
             stateKey: 'state',
             test: {
               1: {
                 id: 1,
                 name: 'one',
-                __updatedAt: new Date(),
+                __updatedAt: now,
               },
             },
           };
@@ -346,14 +347,14 @@ describe('internal', () => {
             ids: [999],
           };
 
-          const result = ReducerGenerator.one(config, state, action);
+          const result = ReducerGenerator.one(config, state, action, now);
           const expected = {
             stateKey: 'state',
             test: {
               999: {
                 id: 1,
                 name: 'one',
-                __updatedAt: new Date(),
+                __updatedAt: now,
               },
             },
           };
@@ -375,7 +376,7 @@ describe('internal', () => {
             ids: [999],
           };
 
-          const result = ReducerGenerator.one(config, state, action);
+          const result = ReducerGenerator.one(config, state, action, now);
           const expected = {
             stateKey: 'state',
             test: {
@@ -383,7 +384,7 @@ describe('internal', () => {
                 id: 1,
                 name: 'one',
                 something: 'whatever',
-                __updatedAt: new Date(),
+                __updatedAt: now,
               },
             },
           };
@@ -404,7 +405,7 @@ describe('internal', () => {
             ids: [999],
           };
 
-          const result = ReducerGenerator.one(config, state, action);
+          const result = ReducerGenerator.one(config, state, action, now);
           const expected = {
             stateKey: 'state',
             test: {
@@ -412,7 +413,7 @@ describe('internal', () => {
                 ...(generateDefaultStateOne(config.subresources, action.resource)),
                 id: 1,
                 name: 'one',
-                __updatedAt: new Date(),
+                __updatedAt: now,
               },
             },
           };
@@ -422,7 +423,77 @@ describe('internal', () => {
       });
     });
 
-    describe('#many', () => { });
+    describe('#many', () => {
+      describe('with simple config', () => {
+        const config = { supports: [MANY], name: 'test', primaryKey: 'id' };
+        const state = { stateKey: 'state', test: {} };
+        const action = {
+          page: {
+            test: [
+              { id: 234, name: '234' },
+              { id: 567, name: '567' },
+              { id: 890, name: '890' },
+            ],
+            pages: 5,
+            results: 100,
+          },
+        };
+
+        const result = ReducerGenerator.many(config, state, action, now);
+
+        it('should return a new state with resources', () => {
+          expect(result).toHaveProperty('test', {
+            234: { id: 234, name: '234', __updatedAt: now },
+            567: { id: 567, name: '567', __updatedAt: now },
+            890: { id: 890, name: '890', __updatedAt: now },
+          });
+        });
+
+        it('should return IDs', () => {
+          expect(result).toHaveProperty('ids', [234, 567, 890]);
+        });
+
+        it.skip('should return sorted IDs', () => { });
+
+        it('should return totalPages', () => {
+          expect(result).toHaveProperty('totalPages', 5);
+        });
+
+        it('should should return totalResults', () => {
+          expect(result).toHaveProperty('totalResults', 100);
+        });
+      });
+
+      describe('with a sort config', () => {
+        const config = {
+          supports: [MANY],
+          name: 'test',
+          primaryKey: 'id',
+          sortFn: (ids) => ids.sort((a, b) => {
+            return b - a;
+          }),
+        };
+        const state = { stateKey: 'state', test: {} };
+        const action = {
+          page: {
+            test: [
+              { id: 234, name: '234' },
+              { id: 567, name: '567' },
+              { id: 890, name: '890' },
+            ],
+            pages: 5,
+            results: 100,
+          },
+        };
+
+        const result = ReducerGenerator.many(config, state, action);
+        it('should return a sorted list', () => {
+          expect(result.ids[0]).toBe(890);
+          expect(result.ids[1]).toBe(567);
+          expect(result.ids[2]).toBe(234);
+        });
+      });
+    });
 
     describe('#del', () => { });
 
