@@ -1,3 +1,6 @@
+
+import '~/typedefs';
+
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
@@ -142,7 +145,7 @@ export function generateDefaultStateFull(config) {
 
 /**
  *
- * @param {Object} subresources
+ * @param {Object.<string, ReduxConfig>} subresources
  * @param {Object} one
  * @returns {Object}
  */
@@ -158,29 +161,43 @@ export function generateDefaultStateOne(subresources = {}, one) {
 }
 
 export class ReducerGenerator {
-  static one(config, oldStateMany, action) {
+  /**
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {OneAction} action
+   * @param {Date} [updatedAt]
+   * @returns {State}
+   */
+  static one(config, prevState, action, updatedAt = new Date()) {
     if (!isPlural(config)) {
-      return { ...oldStateMany, ...action.resource };
+      return { ...prevState, ...action.resource };
     }
 
+    const { name, primaryKey, subresources } = config;
+
     const nonNanActionIds = (action.ids || []).filter(i => !_isNaN(i));
-    const id = nonNanActionIds.length ? nonNanActionIds[action.ids.length - 1] :
-      action.resource[config.primaryKey];
-    const oldStateOne = oldStateMany[config.name][id];
-    const newStateOne = oldStateOne ? action.resource :
-      generateDefaultStateOne(config.subresources, action.resource);
 
-    const combinedStateOne = { ...oldStateOne, ...newStateOne, __updatedAt: new Date() };
+    const id = nonNanActionIds.length
+      ? nonNanActionIds[action.ids.length - 1]
+      : action.resource[primaryKey];
 
-    const newStateMany = {
-      ...oldStateMany,
-      [config.name]: {
-        ...oldStateMany[config.name],
-        [id]: combinedStateOne,
+    const oldStateOne = prevState[name][id];
+
+    const newStateOne = oldStateOne
+      ? action.resource
+      : generateDefaultStateOne(subresources, action.resource);
+
+    return {
+      ...prevState,
+      [name]: {
+        ...prevState[name],
+        [id]: {
+          ...oldStateOne,
+          ...newStateOne,
+          __updatedAt: updatedAt,
+        },
       },
     };
-
-    return newStateMany;
   }
 
   /**
@@ -206,15 +223,22 @@ export class ReducerGenerator {
     return newIDs;
   }
 
-  static many(config, oldState, action) {
-    const { page } = action;
+  /**
+  * @param {ReduxConfig} config
+  * @param {State} prevState
+  * @param {ManyAction} action
+  * @param {Date} [updatedAt]
+  * @returns {State}
+  */
+  static many(config, prevState, action, updatedAt = new Date()) {
+    const { page, dispatch } = action;
 
     const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
         ids: [oneObject[config.primaryKey]],
         resource: oneObject,
-        dispatch: action.dispatch,
-      }), oldState);
+        dispatch,
+      }, updatedAt), prevState);
 
     /* Add to the Array of all IDs */
     let newIDs = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
@@ -223,11 +247,11 @@ export class ReducerGenerator {
     }
 
     /* Add to the Array of IDs for each sort order */
-    let newPageIDs = oldState.pageIDsBy_id;
+    let newPageIDs = prevState.pageIDsBy_id;
     if (page.data) { // don't populate this array for ad-hoc actions that don't include .data
       const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
       newPageIDs = this.coalesceIDs(
-        oldState.pageIDsBy_id, thisPageIds, page.page, page.results);
+        prevState.pageIDsBy_id, thisPageIds, page.page, page.results);
     }
 
     return {
@@ -239,22 +263,47 @@ export class ReducerGenerator {
     };
   }
 
-  static del(config, state, action) {
+  /**
+   *
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {DeleteAction} action
+   * @returns {State}
+   */
+  static del(config, prevState, action) {
     const id = action.ids[action.ids.length - 1];
-    const newMany = omit(state[config.name], id);
+    const newMany = omit(prevState[config.name], id);
     return {
-      ...state,
-      ids: state.ids.filter((_id) => _id !== id),
+      ...prevState,
+      ids: Object.values(newMany).map(({ id }) => id),
       [config.name]: newMany,
     };
   }
 
+  /**
+   *
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {DeleteAction} action
+   * @returns {State}
+   */
   static subresource(config, state, action) {
+    /**
+     * Everything between the first '@' and the first '/'.
+     * @type {string}
+     * @example
+     *  GEN@something.whatever/MANY -> something.whatever
+    */
     let path = action.type.substr(action.type.indexOf('@') + 1);
     path = path.substr(0, path.indexOf('/'));
+
+    /**
+     * @type {Array<string>} - The path split by `.`.
+    */
     const names = path.split('.');
     const { ids } = action;
 
+    /** @type {string|undefined} */
     let name = null;
     let i;
     for (i = 0; i < names.length; i += 1) {
@@ -266,8 +315,13 @@ export class ReducerGenerator {
 
     if (!name) return state;
 
+    /** @type {Array<ReduxConfig>} */
     const keys = Object.keys(config.subresources);
+
+    /** @type {string} */
     let subkey = null;
+
+    /** @type {ReduxConfig|undefined} */
     let subconfig = null;
     for (i = 0; i < keys.length; i += 1) {
       subkey = keys[i];
@@ -281,8 +335,16 @@ export class ReducerGenerator {
       return state;
     }
 
+    /**
+     * The subaction has an IDs of tail(IDs).
+     *
+     * @type {OneAction}
+     */
     const subaction = { ...action, ids: ids.splice(1) };
+
+    /** @type {Resource} */
     const item = state[config.name][ids[0]];
+
     return ReducerGenerator.one(config, state, {
       ids: action.ids,
       // eslint-disable-next-line no-use-before-define
@@ -292,7 +354,6 @@ export class ReducerGenerator {
 
   static reducer(config, state, action) {
     const subTypeMatch = `GEN@${fullyQualified(config)}`;
-
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
         return ReducerGenerator.one(config, state, action);
