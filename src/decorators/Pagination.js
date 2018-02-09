@@ -1,21 +1,20 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import invariant from 'invariant';
+import { connect } from 'react-redux';
+import get from 'lodash/get';
+import compact from 'lodash/compact';
 
+import { RESULTS_PER_PAGE } from '~/constants';
 import Button from 'linode-components/dist/buttons/Button';
 
-export const Pagination = (apiModule) => (Child) => {
-  return class Paginator extends Component {
+export const Pagination = (apiModule, apiStatePath) => (Child) => {
+  class Paginator extends Component {
     constructor(props) {
       super(props);
-      const { dispatch } = props;
-      invariant(dispatch,
-        '`dispatch` is required in Preload. Use connect() and ensure dispatch is available.');
 
       this.state = {
-        pageData: null,
         currentPage: -1,
-        lastPage: -1,
-        fetchedPages: [],
+        fetchAllAttempted: false,
       };
     }
 
@@ -23,24 +22,29 @@ export const Pagination = (apiModule) => (Child) => {
       this.getFirstPage();
     }
 
-    getPage = async () => {
-      const { dispatch } = this.props;
-      const { currentPage } = this.state;
+    componentDidUpdate = () => {
+      const { apiData } = this.props;
 
-      const response = await dispatch(apiModule.page(currentPage));
-      this.setState({
-        // The API indexes pages starting at 1
-        lastPage: response.pages - 1,
-        pageData: response.data,
-      });
+      if (apiData.totalPages > 1 && !this.state.fetchAllAttempted) {
+        this.setState({ fetchAllAttempted: true });
 
-      this.setFetchedPage(currentPage);
+        // fetch in reverse in case the number of pages shrinks while fetching
+        for (let i = apiData.totalPages - 1; i > 0; i--) {
+          this.props.dispatch(apiModule.page(i));
+        }
+      }
     }
 
-    setFetchedPage = (page) => {
-      const newFetchedPages = [...this.state.fetchedPages];
-      newFetchedPages[page] = true;
-      this.setState({ fetchedPages: newFetchedPages });
+    getPage = async (nextPage) => {
+      const { dispatch } = this.props;
+      const pageData = this.currentPageData();
+
+      if (pageData.some((el) => el === undefined)) {
+        await dispatch(apiModule.page(nextPage));
+        this.setState({ currentPage: nextPage });
+        return;
+      }
+      this.setState({ currentPage: nextPage });
     }
 
     getNextPage = () => {
@@ -48,9 +52,7 @@ export const Pagination = (apiModule) => (Child) => {
         return;
       }
 
-      this.setState((state) => ({
-        currentPage: state.currentPage + 1,
-      }), this.getPage);
+      this.getPage(this.state.currentPage + 1);
     }
 
     getPreviousPage = () => {
@@ -58,28 +60,42 @@ export const Pagination = (apiModule) => (Child) => {
         return;
       }
 
-      this.setState((state) => ({
-        currentPage: state.currentPage - 1,
-      }), this.getPage);
+      this.getPage(this.state.currentPage - 1);
     }
 
     getFirstPage = () => {
-      this.setState(() => ({
-        currentPage: 0,
-      }), this.getPage);
+      this.getPage(0);
     }
 
     getLastPage = () => {
-      this.setState(() => ({
-        currentPage: this.state.lastPage,
-      }), this.getPage);
+      const { apiData } = this.props;
+      this.getPage(apiData.totalPages - 1);
+    }
+
+    currentPageData = () => {
+      const { apiData } = this.props;
+      const { currentPage } = this.state;
+
+      const begin = currentPage * RESULTS_PER_PAGE;
+      const end = begin + RESULTS_PER_PAGE;
+      const pageIDs = apiData.ids.slice(begin, end);
+
+      // TODO: get the plural name off the state path with split on '.' last index
+      const pageData = pageIDs.map((id) => apiData[apiStatePath][id]);
+      /**
+       * NB: In the case that an item is deleted from the first page on the
+       * left adjacent to a page that contains null values, one undefined value
+       * will be "pused to the right" onto that page. So, we simply ignore it and
+       * allow the page to shrink temporarily.
+       */
+      return compact(pageData);
     }
 
     renderControls = () => {
       return (
         <div>
           <Button onClick={this.getFirstPage}>
-              First page
+            First page
           </Button>
           <Button onClick={this.getPreviousPage}>
             Previous page
@@ -95,7 +111,7 @@ export const Pagination = (apiModule) => (Child) => {
     }
 
     render() {
-      const { pageData } = this.state;
+      const pageData = this.currentPageData();
       return (
         <div>
           {this.renderControls()}
@@ -104,5 +120,18 @@ export const Pagination = (apiModule) => (Child) => {
         </div>
       );
     }
+  }
+
+  function mapStateToProps(state) {
+    return {
+      apiData: get(state, `api.${apiStatePath}`),
+    };
+  }
+
+  Paginator.propTypes = {
+    dispatch: PropTypes.func,
+    apiData: PropTypes.object,
   };
+
+  return connect(mapStateToProps)(Paginator);
 };

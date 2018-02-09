@@ -25,6 +25,7 @@ import { confirmThenDelete } from '~/utilities';
 
 import { AddMaster, AddSlave } from '../components';
 import { Pagination } from '~/decorators/Pagination';
+import { ComponentPreload as Preload } from '~/decorators/Preload';
 
 const OBJECT_TYPE = 'domains';
 
@@ -46,7 +47,7 @@ export class DomainsList extends Component {
     'domain',
     api.domains.delete,
     OBJECT_TYPE,
-    'domain').bind(this)
+    'domain');
 
   formatStatus(s) {
     if (s === 'has_errors') {
@@ -67,6 +68,7 @@ export class DomainsList extends Component {
     const { groups, sorted: sortedZones } = transform(zones, {
       filterBy: filter,
       filterOn: 'domain',
+      sortByFn: (zone) => zone.id,
     });
 
     return (
@@ -181,7 +183,12 @@ function mapStateToProps(state) {
   };
 }
 
+const preloadRequest = async (dispatch) => {
+  await dispatch(api.domains.page(0));
+};
+
 export default compose(
   connect(mapStateToProps),
-  Pagination(api.domains)
+  Preload(preloadRequest),
+  Pagination(api.domains, 'domains'),
 )(DomainsList);
