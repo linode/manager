@@ -81,7 +81,7 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
 
       const begin = page * RESULTS_PER_PAGE;
       const end = begin + RESULTS_PER_PAGE;
-      const pageIDs = apiData.ids.slice(begin, end);
+      const pageIDs = apiData.pageIDsBy_id.slice(begin, end);
 
       const pageData = pageIDs.map((id) => apiData[this.dataName][id]);
       /**

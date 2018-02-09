@@ -1,5 +1,6 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
+import uniq from 'lodash/uniq';
 
 import { RESULTS_PER_PAGE } from '~/constants';
 
@@ -13,6 +14,11 @@ export const createDefaultState = (name) => ({
   totalPages: -1,
   totalResults: -1,
   ids: [],
+  /**
+   * TODO: Populate one or more pageIDsBy_ arrays dynamically based on page request parameters
+   * given to us through the action. (specifically X-Filter parameters)
+   */
+  pageIDsBy_id: [],
   [name]: {},
 });
 
@@ -196,19 +202,28 @@ export class ReducerGenerator {
 
     const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
+        ids: [oneObject[config.primaryKey]],
         resource: oneObject,
         dispatch: action.dispatch,
       }), oldState);
 
-    const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
-    let newIDs = this.coalesceIds(oldState.ids, thisPageIds, page.page, page.results);
+    /* Add to the Array of all IDs */
+    let newIDs = uniq([
+      ...oldState.ids,
+      ...Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]),
+    ]);
     if (config.sortFn) {
-      newIDs = config.sortFn(thisPageIds, newState[config.name]);
+      newIDs = config.sortFn(newIDs, newState[config.name]);
     }
+
+    /* Add to the Array of IDs for each sort order */
+    const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
+    const newPageIDs = this.coalesceIds(oldState.ids, thisPageIds, page.page, page.results);
 
     return {
       ...newState,
       ids: newIDs,
+      pageIDsBy_id: newPageIDs,
       totalPages: page.pages,
       totalResults: page.results,
     };
