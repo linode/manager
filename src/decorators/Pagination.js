@@ -6,7 +6,6 @@ import compact from 'lodash/compact';
 import isEmpty from 'lodash/isEmpty';
 
 import { RESULTS_PER_PAGE } from '~/constants';
-import Button from 'linode-components/dist/buttons/Button';
 
 export const Pagination = (apiModule, apiStatePath) => (Child) => {
   class Paginator extends Component {
@@ -94,32 +93,22 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       return compact(pageData);
     }
 
-    renderControls = () => {
-      return (
-        <div>
-          <Button onClick={this.getFirstPage}>
-            First page
-          </Button>
-          <Button onClick={this.getPreviousPage}>
-            Previous page
-          </Button>
-          <Button onClick={this.getNextPage}>
-            Next page
-          </Button>
-          <Button onClick={this.getLastPage}>
-            Last page
-          </Button>
-        </div>
-      );
-    }
+    pageControls = () => ({
+      getFirstPage: this.getFirstPage,
+      getPreviousPage: this.getPreviousPage,
+      getNextPage: this.getNextPage,
+      getLastPage: this.getLastPage,
+    })
 
     render() {
       const pageData = this.pageData(this.state.currentPage);
       return (
         <div>
-          {this.renderControls()}
-          <Child page={pageData} {...this.props} />
-          {this.renderControls()}
+          <Child
+            page={pageData}
+            pageControls={this.pageControls()}
+            {...this.props}
+          />
         </div>
       );
     }
