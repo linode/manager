@@ -118,31 +118,34 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       /**
        * NB: In the case that an item is deleted from the first page on the
        * left adjacent to a page that contains null values, one undefined value
-       * will be "pused to the right" onto that page. So, we simply ignore it and
+       * will be "pushed to the right" onto that page. So, we simply ignore it and
        * allow the page to shrink temporarily.
        */
       return compact(pageData);
     }
 
-    pageControls = () => ({
-      getPage: this.getPage,
-      getFirstPage: this.getFirstPage,
-      getPreviousPage: this.getPreviousPage,
-      getNextPage: this.getNextPage,
-      getLastPage: this.getLastPage,
-    })
+    pageControls = () => {
+      const { currentPage } = this.state;
+      const { apiData: { totalPages } } = this.props;
+      return {
+        getPage: this.getPage,
+        getFirstPage: this.getFirstPage,
+        getPreviousPage: this.getPreviousPage,
+        getNextPage: this.getNextPage,
+        getLastPage: this.getLastPage,
+        currentPage: currentPage,
+        totalPages: totalPages,
+      };
+    }
 
     render() {
       const { currentPage } = this.state;
-      const { apiData: { totalPages } } = this.props;
       const pageData = this.pageData(currentPage);
       return (
         <div>
           <Child
             page={pageData}
             pageControls={this.pageControls()}
-            currentPage={currentPage}
-            pageTotal={totalPages}
             {...this.props}
           />
         </div>
