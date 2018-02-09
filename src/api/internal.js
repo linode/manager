@@ -247,9 +247,11 @@ export class ReducerGenerator {
     }
 
     /* Add to the Array of IDs for each sort order */
-    const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
-    const newPageIDs = this.coalesceIDs(
-      prevState.pageIDsBy_id, thisPageIds, page.page, page.results);
+    let newPageIDs = prevState.pageIDsBy_id;
+    if (page.data) { // don't populate this array for ad-hoc actions that don't include .data
+      const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
+      newPageIDs = this.coalesceIDs(prevState.pageIDsBy_id, thisPageIds, page.page, page.results);
+    }
 
     return {
       ...newState,
