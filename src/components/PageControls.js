@@ -5,10 +5,10 @@ export default function PageControls(props) {
   const pageNums = [];
   for (let i = 1; i <= props.totalPages; ++i) {
     pageNums.push(
-      <span className="h3 mr-2">
+      <span key={i} className="h3 mr-2">
         {(i - 1) === props.currentPage ?
-          <span key={i}>{i} </span>
-          : <a className="text-primary" key={i} onClick={() => props.getPage(i - 1)}>{i} </a>
+          <span>{i} </span>
+          : <a className="text-primary" onClick={() => props.getPage(i - 1)}>{i} </a>
         }
       </span>
     );
