@@ -158,6 +158,33 @@ describe('internal', () => {
     });
   });
 
+  describe('ReducerGenerator.coalesceIDs', () => {
+    it('shouldReturn an empty array with empty input', () => {
+      expect(ReducerGenerator.coalesceIDs([], [], 0, 0)).toEqual([]);
+    });
+
+    it('shouldReturn the original array with no newPageIDs', () => {
+      expect(ReducerGenerator.coalesceIDs([1, 2, 3, 4, 5], [], 1, 5)).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it('shouldReturn the pageIDs if replacing page 1', () => {
+      expect(ReducerGenerator.coalesceIDs([1, 2, 3, 4, 5], [4, 5, 6, 7, 8], 1, 5))
+        .toEqual([4, 5, 6, 7, 8]);
+    });
+
+    it('should return a sparse array based on totalResults', () => {
+      expect(ReducerGenerator.coalesceIDs([1, 2, 3, 4, 5], [], 1, 7))
+        .toEqual([1, 2, 3, 4, 5, null, null]);
+    });
+
+    it('should return a sparse array with the page of data inserted', () => {
+      const testIDs = Array.from({ length: 300 }, () => null);
+      const testRes = ReducerGenerator.coalesceIDs(testIDs, [12, 19, 21], 3, 300);
+      const testSlice = testRes.slice(198, 205);
+      expect(testSlice).toEqual([null, null, 12, 19, 21, null, null]);
+    });
+  });
+
   describe('genActions', () => {
     it('generates an action to update one resource', function () {
       const config = testConfigOne;
