@@ -12,6 +12,8 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
     constructor(props) {
       super(props);
 
+      this.dataName = apiStatePath.split('.').slice(-1).pop();
+
       this.state = {
         currentPage: -1,
         fetchAllAttempted: false,
@@ -30,8 +32,7 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
 
         const wait100 = () => new Promise(resolve => setTimeout(resolve, 100));
 
-        // fetch in reverse in case the number of pages shrinks while fetching
-        for (let i = apiData.totalPages - 1; i > 0; i--) {
+        for (let i = 1; i < apiData.totalPages; i++) {
           await wait100();
           this.props.dispatch(apiModule.page(i));
         }
@@ -82,8 +83,7 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       const end = begin + RESULTS_PER_PAGE;
       const pageIDs = apiData.ids.slice(begin, end);
 
-      // TODO: get the plural name off the state path with split on '.' last index
-      const pageData = pageIDs.map((id) => apiData[apiStatePath][id]);
+      const pageData = pageIDs.map((id) => apiData[this.dataName][id]);
       /**
        * NB: In the case that an item is deleted from the first page on the
        * left adjacent to a page that contains null values, one undefined value
