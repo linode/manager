@@ -7,14 +7,12 @@ export function eventAction(action) {
     const state = getState();
 
     if (action === 'seen') {
-      const data = Object.values(state.api.events.events).reduce(
-        (unseen, e) => e.seen ? unseen : [...unseen, { ...e, seen: true }], []) || [];
       // Mark all events seen. Using many to avoid a dispatch per event.
       const page = {
         pages: state.api.events.totalPages,
         results: state.api.events.totalResults,
-        events: data,
-        data: data,
+        events: Object.values(state.api.events.events).reduce(
+          (unseen, e) => e.seen ? unseen : [...unseen, { ...e, seen: true }], []) || [],
       };
       dispatch(actions.many(page));
     } else {
