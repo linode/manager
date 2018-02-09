@@ -3,6 +3,8 @@ import '~/typedefs';
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
+import { RESULTS_PER_PAGE } from '~/constants';
+
 export const ONE = 'ONE';
 export const PUT = 'PUT';
 export const MANY = 'MANY';
@@ -192,6 +194,20 @@ export class ReducerGenerator {
     };
   }
 
+
+  static coalesceIds(oldIDs, newPageIDs, pageNum, totalResults) {
+    const newIDs = Array.from({ length: totalResults }, () => null);
+    for (let i = 0, len = oldIDs.length; i < len; ++i) {
+      newIDs[i] = oldIDs[i];
+    }
+    const start = (pageNum - 1) * RESULTS_PER_PAGE;
+    const end = start + newPageIDs.length;
+    for (let i = start; i < end; ++i) {
+      newIDs[i] = newPageIDs[i - start];
+    }
+    return newIDs;
+  }
+
   /**
    *
    * @param {ReduxConfig} config
@@ -205,16 +221,19 @@ export class ReducerGenerator {
 
     const newState = page[config.name].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
-        ids: [oneObject[config.primaryKey]],
         resource: oneObject,
         dispatch,
       }, updatedAt), prevState);
 
-    const ids = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
+    const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
+    let newIDs = this.coalesceIds(prevState.ids, thisPageIds, page.page, page.results);
+    if (config.sortFn) {
+      newIDs = config.sortFn(thisPageIds, newState[config.name]);
+    }
 
     return {
       ...newState,
-      ids: config.sortFn ? config.sortFn(ids, newState[config.name]) : ids,
+      ids: newIDs,
       totalPages: page.pages,
       totalResults: page.results,
     };
@@ -232,7 +251,7 @@ export class ReducerGenerator {
     const newMany = omit(prevState[config.name], id);
     return {
       ...prevState,
-      ids: Object.values(newMany).map(({ id }) => id),
+      ids: prevState.ids.filter((_id) => _id !== id),
       [config.name]: newMany,
     };
   }
