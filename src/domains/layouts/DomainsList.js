@@ -134,6 +134,7 @@ export class DomainsList extends Component {
               </ListGroup>
             );
           })}
+          <PageControls {...this.props.pageControls} />
         </ListBody>
       </List>
     );
