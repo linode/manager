@@ -188,7 +188,7 @@ export class ReducerGenerator {
    * Fill it with oldIDs in their existing location.
    * Then fill it with newPageIDs at the appropriate location by using pageNum
    *
-   * @param {number[]} oldID An array of all existing IDs
+   * @param {number[]} oldIDs An array of all existing IDs
    * @param {number[]} newPageIDs An array of IDs for the items in the newly fetched page
    * @param {number} pageNum The page at which newPageIDs should reside
    * @param {number} totalResults The new number of total IDs that should exist in the array
