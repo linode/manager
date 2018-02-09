@@ -1,6 +1,5 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
-import uniq from 'lodash/uniq';
 
 import { RESULTS_PER_PAGE } from '~/constants';
 
@@ -208,17 +207,14 @@ export class ReducerGenerator {
       }), oldState);
 
     /* Add to the Array of all IDs */
-    let newIDs = uniq([
-      ...oldState.ids,
-      ...Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]),
-    ]);
+    let newIDs = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
     if (config.sortFn) {
       newIDs = config.sortFn(newIDs, newState[config.name]);
     }
 
     /* Add to the Array of IDs for each sort order */
     const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
-    const newPageIDs = this.coalesceIds(oldState.ids, thisPageIds, page.page, page.results);
+    const newPageIDs = this.coalesceIds(oldState.pageIDsBy_id, thisPageIds, page.page, page.results);
 
     return {
       ...newState,

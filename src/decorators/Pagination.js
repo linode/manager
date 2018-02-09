@@ -15,23 +15,33 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       this.dataName = apiStatePath.split('.').slice(-1).pop();
 
       this.state = {
+        /* 0-indexed page number */
         currentPage: -1,
         fetchAllAttempted: false,
       };
     }
 
+    /**
+     * Always try to load the first page, using the logic in getPage. Note
+     * that if the data is already in Redux this will not result in an API
+     * request.
+     */
     componentWillMount = async () => {
       this.getFirstPage();
     }
 
+    /**
+     * Fetch all pages while the user is viewing their first page. Use a
+     * flag in state to only attempt this once.
+     */
     componentDidUpdate = async () => {
       const { apiData } = this.props;
+      const { fetchAllAttempted } = this.state;
 
-      if (apiData.totalPages > 1 && !this.state.fetchAllAttempted) {
+      if (apiData.totalPages > 1 && !fetchAllAttempted) {
         this.setState({ fetchAllAttempted: true });
 
         const wait100 = () => new Promise(resolve => setTimeout(resolve, 100));
-
         for (let i = 1; i < apiData.totalPages; i++) {
           await wait100();
           this.props.dispatch(apiModule.page(i));
@@ -39,6 +49,11 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       }
     }
 
+    /**
+     * Fetch data for a page if needed, and set the currentPage afterward
+     *
+     * @param {number} nextPage - The page to be fetched, 0-indexed
+     */
     getPage = async (nextPage) => {
       const { dispatch } = this.props;
       const pageData = this.pageData(nextPage);
@@ -51,26 +66,42 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       this.setState({ currentPage: nextPage });
     }
 
+    /**
+     * Get the next page, if the page isn't past the last page
+     */
     getNextPage = () => {
-      if ((this.state.currentPage + 1) > this.state.lastPage) {
+      const { currentPage } = this.state;
+      const { apiData: { totalPages } } = this.props;
+      // NB: currentPage is 0-indexed and totalPages is 1-indexed
+      if ((currentPage + 2) > totalPages) {
         return;
       }
 
-      this.getPage(this.state.currentPage + 1);
+      this.getPage(currentPage + 1);
     }
 
+    /**
+     * Get the previous page, if the page isn't before the first page
+     */
     getPreviousPage = () => {
-      if ((this.state.currentPage - 1) < 0) {
+      const { currentPage } = this.state;
+      if ((currentPage - 1) < 0) {
         return;
       }
 
-      this.getPage(this.state.currentPage - 1);
+      this.getPage(currentPage - 1);
     }
 
+    /**
+     * Get the first page using the logic of getPage
+     */
     getFirstPage = () => {
       this.getPage(0);
     }
 
+    /**
+     * Get the last page using the logic of getPage
+     */
     getLastPage = () => {
       const { apiData } = this.props;
       this.getPage(apiData.totalPages - 1);
@@ -94,6 +125,7 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
     }
 
     pageControls = () => ({
+      getPage: this.getPage,
       getFirstPage: this.getFirstPage,
       getPreviousPage: this.getPreviousPage,
       getNextPage: this.getNextPage,
@@ -101,12 +133,16 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
     })
 
     render() {
-      const pageData = this.pageData(this.state.currentPage);
+      const { currentPage } = this.state;
+      const { apiData: { totalPages } } = this.props;
+      const pageData = this.pageData(currentPage);
       return (
         <div>
           <Child
             page={pageData}
             pageControls={this.pageControls()}
+            currentPage={currentPage}
+            pageTotal={totalPages}
             {...this.props}
           />
         </div>
