@@ -27,6 +27,7 @@ describe('internal', () => {
         totalPages: -1,
         totalResults: -1,
         ids: [],
+        pageIDsBy_id: [],
         whatever: {},
       });
     });

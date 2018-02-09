@@ -21,7 +21,7 @@ import api from '~/api';
 import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
-import PageControls from '~/components/PaginationControls';
+import PageControls from '~/components/PageControls';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddMaster, AddSlave } from '../components';
@@ -98,8 +98,8 @@ export class DomainsList extends Component {
             />
           </div>
         </ListHeader>
+        <PageControls {...this.props.pageControls} />
         <ListBody>
-          <PageControls {...this.props.pageControls} />
           {groups.map((group, index) => {
             return (
               <ListGroup
@@ -134,8 +134,8 @@ export class DomainsList extends Component {
               </ListGroup>
             );
           })}
-          <PageControls {...this.props.pageControls} />
         </ListBody>
+        <PageControls {...this.props.pageControls} />
       </List>
     );
   }
@@ -178,7 +178,6 @@ DomainsList.propTypes = {
   email: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
 };
-
 
 function mapStateToProps(state) {
   return {
