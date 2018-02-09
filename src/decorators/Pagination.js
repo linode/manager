@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import compact from 'lodash/compact';
+import isEmpty from 'lodash/isEmpty';
 
 import { RESULTS_PER_PAGE } from '~/constants';
 import Button from 'linode-components/dist/buttons/Button';
@@ -22,14 +23,17 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       this.getFirstPage();
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate = async () => {
       const { apiData } = this.props;
 
       if (apiData.totalPages > 1 && !this.state.fetchAllAttempted) {
         this.setState({ fetchAllAttempted: true });
 
+        const wait100 = () => new Promise(resolve => setTimeout(resolve, 100));
+
         // fetch in reverse in case the number of pages shrinks while fetching
         for (let i = apiData.totalPages - 1; i > 0; i--) {
+          await wait100();
           this.props.dispatch(apiModule.page(i));
         }
       }
@@ -37,9 +41,9 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
 
     getPage = async (nextPage) => {
       const { dispatch } = this.props;
-      const pageData = this.currentPageData();
+      const pageData = this.pageData(nextPage);
 
-      if (pageData.some((el) => el === undefined)) {
+      if (isEmpty(pageData) || pageData.some((el) => el === undefined)) {
         await dispatch(apiModule.page(nextPage));
         this.setState({ currentPage: nextPage });
         return;
@@ -72,11 +76,10 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
       this.getPage(apiData.totalPages - 1);
     }
 
-    currentPageData = () => {
+    pageData = (page) => {
       const { apiData } = this.props;
-      const { currentPage } = this.state;
 
-      const begin = currentPage * RESULTS_PER_PAGE;
+      const begin = page * RESULTS_PER_PAGE;
       const end = begin + RESULTS_PER_PAGE;
       const pageIDs = apiData.ids.slice(begin, end);
 
@@ -111,7 +114,7 @@ export const Pagination = (apiModule, apiStatePath) => (Child) => {
     }
 
     render() {
-      const pageData = this.currentPageData();
+      const pageData = this.pageData(this.state.currentPage);
       return (
         <div>
           {this.renderControls()}
