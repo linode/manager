@@ -199,8 +199,17 @@ export class ReducerGenerator {
     };
   }
 
-
-  static coalesceIds(oldIDs, newPageIDs, pageNum, totalResults) {
+  /**
+   * Create a new array of size totalResults filled with nulls.
+   * Fill it with oldIDs in their existing location.
+   * Then fill it with newPageIDs at the appropriate location by using pageNum
+   *
+   * @param {number[]} oldID An array of all existing IDs
+   * @param {number[]} newPageIDs An array of IDs for the items in the newly fetched page
+   * @param {number} pageNum The page at which newPageIDs should reside
+   * @param {number} totalResults The new number of total IDs that should exist in the array
+   */
+  static coalesceIDs(oldIDs, newPageIDs, pageNum, totalResults) {
     const newIDs = Array.from({ length: totalResults }, () => null);
     for (let i = 0, len = oldIDs.length; i < len; ++i) {
       newIDs[i] = oldIDs[i];
@@ -239,7 +248,7 @@ export class ReducerGenerator {
 
     /* Add to the Array of IDs for each sort order */
     const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
-    const newPageIDs = this.coalesceIds(
+    const newPageIDs = this.coalesceIDs(
       prevState.pageIDsBy_id, thisPageIds, page.page, page.results);
 
     return {
