@@ -98,7 +98,9 @@ export class DomainsList extends Component {
             />
           </div>
         </ListHeader>
-        <PageControls {...this.props.pageControls} />
+        {this.props.pageControls.totalPages > 1 &&
+          <PageControls {...this.props.pageControls} />
+        }
         <ListBody>
           {groups.map((group, index) => {
             return (
@@ -135,7 +137,6 @@ export class DomainsList extends Component {
             );
           })}
         </ListBody>
-        <PageControls {...this.props.pageControls} />
       </List>
     );
   }
