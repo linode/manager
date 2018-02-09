@@ -12,6 +12,8 @@ export const VERSION = ENV_VERSION;
 
 export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds
 
+export const RESULTS_PER_PAGE = 100;
+
 export const LinodeStates = {
   pending: [
     'booting',
