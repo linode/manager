@@ -3,8 +3,7 @@ const process = require('process');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ExtractCSS = new ExtractTextPlugin('[name]-[hash].css');
-
+const autoprefixer = require('autoprefixer');
 const _package = require('./package.json');
 
 module.exports = {
@@ -24,7 +23,7 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
-    ExtractCSS,
+    new ExtractTextPlugin('[name]-[hash].css'),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
@@ -67,7 +66,7 @@ module.exports = {
           },
           {
             test: /\.s?css$/,
-            use: ExtractCSS.extract({
+            use: ExtractTextPlugin.extract({
               fallback: 'style-loader',
               use: [
                 'css-loader',
@@ -76,7 +75,7 @@ module.exports = {
                   options: {
                     plugins: () => [
                       require('precss'),
-                      require('autoprefixer')
+                      autoprefixer(),
                     ],
                   },
                 },
