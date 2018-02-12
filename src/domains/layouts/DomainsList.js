@@ -21,11 +21,12 @@ import api from '~/api';
 import { transform } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import CreateHelper from '~/components/CreateHelper';
+import PageControls from '~/components/PageControls';
 import { confirmThenDelete } from '~/utilities';
 
 import { AddMaster, AddSlave } from '../components';
+import { Pagination } from '~/decorators/Pagination';
 import { ComponentPreload as Preload } from '~/decorators/Preload';
-
 
 const OBJECT_TYPE = 'domains';
 
@@ -47,7 +48,7 @@ export class DomainsList extends Component {
     'domain',
     api.domains.delete,
     OBJECT_TYPE,
-    'domain').bind(this)
+    'domain');
 
   formatStatus(s) {
     if (s === 'has_errors') {
@@ -68,6 +69,7 @@ export class DomainsList extends Component {
     const { groups, sorted: sortedZones } = transform(zones, {
       filterBy: filter,
       filterOn: 'domain',
+      sortByFn: (zone) => zone.id,
     });
 
     return (
@@ -96,6 +98,9 @@ export class DomainsList extends Component {
             />
           </div>
         </ListHeader>
+        {this.props.pageControls.totalPages > 1 &&
+          <PageControls {...this.props.pageControls} />
+        }
         <ListBody>
           {groups.map((group, index) => {
             return (
@@ -137,7 +142,7 @@ export class DomainsList extends Component {
   }
 
   render() {
-    const { dispatch, email } = this.props;
+    const { dispatch, email, page: domains } = this.props;
 
     const addMaster = () => AddMaster.trigger(dispatch, email);
     const addSlave = () => AddSlave.trigger(dispatch);
@@ -157,8 +162,8 @@ export class DomainsList extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.domains.domains).length ?
-            this.renderZones(this.props.domains.domains) :
+          {domains ?
+            this.renderZones(domains) :
             <CreateHelper label="Domains" onClick={addMaster} linkText="Add a Domain" />}
         </div>
       </div>
@@ -169,24 +174,25 @@ export class DomainsList extends Component {
 DomainsList.propTypes = {
   dispatch: PropTypes.func,
   domains: PropTypes.object,
+  page: PropTypes.array,
+  pageControls: PropTypes.object,
   email: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
 };
 
-
 function mapStateToProps(state) {
   return {
-    domains: state.api.domains,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
     email: state.api.profile.email,
   };
 }
 
 const preloadRequest = async (dispatch) => {
-  await dispatch(api.domains.all());
+  await dispatch(api.domains.page(0));
 };
 
 export default compose(
   connect(mapStateToProps),
-  Preload(preloadRequest)
+  Preload(preloadRequest),
+  Pagination(api.domains, 'domains'),
 )(DomainsList);
