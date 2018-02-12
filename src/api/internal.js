@@ -238,12 +238,30 @@ export class ReducerGenerator {
     };
   }
 
+  /**
+   *
+   * @param {ReduxConfig} config
+   * @param {State} prevState
+   * @param {DeleteAction} action
+   * @returns {State}
+   */
   static subresource(config, state, action) {
+    /**
+     * Everything between the first '@' and the first '/'.
+     * @type {string}
+     * @example
+     *  GEN@something.whatever/MANY -> something.whatever
+    */
     let path = action.type.substr(action.type.indexOf('@') + 1);
     path = path.substr(0, path.indexOf('/'));
+
+    /**
+     * @type {Array<string>} - The path split by `.`.
+    */
     const names = path.split('.');
     const { ids } = action;
 
+    /** @type {string|undefined} */
     let name = null;
     let i;
     for (i = 0; i < names.length; i += 1) {
@@ -255,8 +273,13 @@ export class ReducerGenerator {
 
     if (!name) return state;
 
+    /** @type {Array<ReduxConfig>} */
     const keys = Object.keys(config.subresources);
+
+    /** @type {string} */
     let subkey = null;
+
+    /** @type {ReduxConfig|undefined} */
     let subconfig = null;
     for (i = 0; i < keys.length; i += 1) {
       subkey = keys[i];
@@ -270,8 +293,16 @@ export class ReducerGenerator {
       return state;
     }
 
+    /**
+     * The subaction has an IDs of tail(IDs).
+     *
+     * @type {OneAction}
+     */
     const subaction = { ...action, ids: ids.splice(1) };
+
+    /** @type {Resource} */
     const item = state[config.name][ids[0]];
+
     return ReducerGenerator.one(config, state, {
       ids: action.ids,
       // eslint-disable-next-line no-use-before-define
@@ -281,7 +312,6 @@ export class ReducerGenerator {
 
   static reducer(config, state, action) {
     const subTypeMatch = `GEN@${fullyQualified(config)}`;
-
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
         return ReducerGenerator.one(config, state, action);

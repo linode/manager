@@ -453,7 +453,7 @@ describe('internal', () => {
           expect(result).toHaveProperty('ids', [234, 567, 890]);
         });
 
-        it.skip('should return sorted IDs', () => { });
+        it.skip('should return sorted IDs', () => { })
 
         it('should return totalPages', () => {
           expect(result).toHaveProperty('totalPages', 5);
@@ -528,8 +528,106 @@ describe('internal', () => {
 
     describe('#subresource', () => { });
 
-    describe('#reducer', () => { });
+    describe('#reducer', () => {
+      beforeEach(() => {
+        jest.resetModules();
+      });
 
-    describe('constructor', () => { });
+      describe('when matches ONE', () => {
+        it('should call ReducerGenerator.one', () => {
+          jest.doMock('./internal.js');
+          ReducerGenerator.one = jest.fn();
+
+          const config = { name: 'shenanigans', supports: [] };
+          const state = { state: 'some state' };
+          const action = { type: 'GEN@shenanigans/ONE' };
+
+          ReducerGenerator.reducer(config, state, action);
+          expect(ReducerGenerator.one).toHaveBeenCalledWith(config, state, action);
+        });
+      });
+
+      describe('when matches MANY', () => {
+        it('should call ReducerGenerator.many', () => {
+          jest.doMock('./internal.js');
+          ReducerGenerator.many = jest.fn();
+
+          const config = { name: 'shenanigans', supports: [] };
+          const state = { state: 'some state' };
+          const action = { type: 'GEN@shenanigans/MANY' };
+
+          ReducerGenerator.reducer(config, state, action);
+          expect(ReducerGenerator.many).toHaveBeenLastCalledWith(config, state, action);
+        });
+      });
+
+      describe('when matches DELETE', () => {
+        it('should call ReducerGenerator.delete', () => {
+          jest.doMock('./internal.js');
+          ReducerGenerator.del = jest.fn();
+
+          const config = { name: 'shenanigans', supports: [] };
+          const state = { state: 'some state' };
+          const action = { type: 'GEN@shenanigans/DELETE' };
+
+          ReducerGenerator.reducer(config, state, action);
+          expect(ReducerGenerator.del).toHaveBeenLastCalledWith(config, state, action);
+        });
+      });
+
+      describe('when defaults', () => {
+        describe('and is a subresource', () => {
+          it('should call ReducerGenerator.subresource', () => {
+            jest.doMock('./internal.js');
+            ReducerGenerator.subresource = jest.fn();
+
+            const config = { name: 'whatever', supports: [], parent: { name: 'something' } };
+            const state = { state: 'some state' };
+            const action = { type: 'GEN@something.whatever/' };
+
+            ReducerGenerator.reducer(config, state, action);
+            expect(ReducerGenerator.subresource).toHaveBeenLastCalledWith(config, state, action);
+          });
+        });
+
+        describe('and is not a subresouce', () => {
+          it('should return unmodified state', () => {
+            const config = { name: 'whatever' };
+            const state = { state: 'some state' };
+            const action = { type: 'anything-else-in-the-world' };
+
+            const result = ReducerGenerator.reducer(config, state, action);
+            expect(result).toBe(state);
+          });
+        });
+      });
+    });
+
+    describe('constructor', () => {
+      beforeEach(() => {
+        jest.resetModules();
+      });
+
+      it('should have a class method reducer', () => {
+        const config = { supports: [ONE] };
+        const result = new ReducerGenerator(config);
+
+        expect(result).toBeInstanceOf(ReducerGenerator);
+        expect(result).toHaveProperty('reducer');
+      });
+
+      it('should call ReducerGenerator.reducer when invoked', () => {
+        const config = { supports: [ONE] };
+        const state = { state: 'something... something... state' };
+        const action = { type: 'something-action-y' };
+        jest.doMock('./internal.js');
+        ReducerGenerator.reducer = jest.fn();
+
+        const reducer = new ReducerGenerator(config);
+        reducer.reducer(state, action);
+
+        expect(ReducerGenerator.reducer).toHaveBeenCalledWith(config, state, action);
+      });
+    });
   });
 });
