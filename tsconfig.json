@@ -16,10 +16,6 @@
     "module": "es6",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-        "~/*": [ "./src/*" ]
-    }
+    "moduleResolution": "node"
   }
 }

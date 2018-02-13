@@ -2,7 +2,8 @@ const path = require('path');
 const process = require('process');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 const _package = require('./package.json');
 
 function srcPath(subdir) {
@@ -28,6 +29,7 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
+    new ExtractTextPlugin('[name]-[hash].css'),
     new HtmlWebpackPlugin({
       template: srcPath('index.html'),
     }),
@@ -39,7 +41,9 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
 
     new webpack.HotModuleReplacementPlugin(),
-
+    /**
+     * Since TypeScript has some errors still, this must be disabled until they're all resolved.
+     */
     // new webpack.NoEmitOnErrorsPlugin(),
 
     new webpack.DefinePlugin({
@@ -59,25 +63,53 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.md$/,
-        use: ['ignore-loader'],
-      },
-      {
-        test: /\.json$/,
-        use: ['json-loader'],
-      },
-      {
-        test: /\.s?css$/,
-        use: [
-          'style-loader',
-          'css-loader',
+        oneOf: [
           {
-            loader: 'sass-loader',
-            options: {
-              includePaths: [
-                path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+            test: /\.md$/,
+            use: ['ignore-loader'],
+          },
+          {
+            test: /\.json$/,
+            use: ['json-loader'],
+          },
+          {
+            test: /\.s?css$/,
+            use: ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: [
+                'css-loader',
+                {
+                  loader: 'postcss-loader', // Run post css actions
+                  options: {
+                    plugins: () => [
+                      require('precss'),
+                      autoprefixer(),
+                    ],
+                  },
+                },
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    includePaths: [
+                      path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+                    ],
+                  },
+                },
               ],
-            },
+            }),
+          },
+          {
+            test: /\.jsx?/,
+            loader: require.resolve('babel-loader'),
+            include: [
+              path.resolve(__dirname, 'src'),
+              path.resolve(__dirname, 'node_modules/react-vnc-display'),
+            ],
+          },
+          {
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            use: ['file-loader'],
+            include: path.join(__dirname, 'node_modules'),
           },
         ],
       },

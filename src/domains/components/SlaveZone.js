@@ -14,6 +14,7 @@ import EditSOARecord from '../components/EditSOARecord';
 export function SlaveZone(props) {
   const { domain, dispatch } = props;
 
+  // eslint-disable-next-line camelcase
   const { axfr_ips, master_ips } = domain;
 
   const soaRecord = {
