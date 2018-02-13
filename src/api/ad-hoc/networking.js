@@ -190,8 +190,11 @@ export function getIPs(linodeId) {
 
 export function setShared(linodeId, ips) {
   return async function (dispatch) {
-    const data = { ips: ips.map(({ address }) => address) };
-    await dispatch(fetch.post(`/linode/instances/${linodeId}/ips/sharing`, data));
+    const data = {
+      linode_ip: linodeId,
+      ips: ips.map(({ address }) => address),
+    };
+    await dispatch(fetch.post('/networking/ip-sharing', data));
 
     dispatch(actions.one({ _shared: ips }, linodeId));
   };
