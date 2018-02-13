@@ -1,16 +1,19 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import CodeEditor from 'linode-components/dist/editors/CodeEditor';
+import Loadable from 'react-loadable';
 import Form from 'linode-components/dist/forms/Form';
 import FormGroup from 'linode-components/dist/forms/FormGroup';
 import FormSummary from 'linode-components/dist/forms/FormSummary';
 import SubmitButton from 'linode-components/dist/forms/SubmitButton';
 import Input from 'linode-components/dist/forms/Input';
 import { onChange } from 'linode-components/dist/forms/utilities';
-
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+const CodeEditor = Loadable({
+  loader: () => import('linode-components/dist/editors/CodeEditor'),
+  loading: () => null,
+});
 
 export default class Editor extends Component {
   constructor() {
