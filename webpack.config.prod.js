@@ -4,6 +4,7 @@ const _ = require('./webpack.config.dev.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const _package = require('./package.json');
+const parts = require('./config/webpack.parts');
 
 _.entry = './src/index';
 _.plugins = [
@@ -12,6 +13,8 @@ _.plugins = [
   new HtmlWebpackPlugin({
     template: 'src/index.html',
   }),
+
+  parts.asyncChunkByModuleName('chart.js'),
 
   new webpack.optimize.CommonsChunkPlugin({
     name: 'manifest',
