@@ -30,10 +30,6 @@ export function reduceErrors(errorResponse) {
       key = error.field;
     }
 
-    if (error.field_crumbs) {
-      key += `.${error.field_crumbs}`;
-    }
-
     const list = errors[key] || [];
     list.push(error);
     if (!errors[key]) {
