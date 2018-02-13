@@ -1,12 +1,5 @@
 const webpack = require('webpack');
 
-const asyncChunks = new webpack.optimize.CommonsChunkPlugin({
-  async: true,
-  minChunks: ({ resource }, count) => {
-    return resource && /node_modules/.test(resource) && count > 1;
-  },
-});
-
 const asyncChunkByModuleName = (moduleName) => new webpack.optimize.CommonsChunkPlugin({
   async: true,
   minChunks: ({ resource }, count) => {
@@ -17,7 +10,6 @@ const asyncChunkByModuleName = (moduleName) => new webpack.optimize.CommonsChunk
 const ignoreMomentLocales = new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/);
 
 module.exports = {
-  asyncChunks,
   asyncChunkByModuleName,
   ignoreMomentLocales,
 };
