@@ -12,7 +12,6 @@ script:
     - |
         cat <<EOF > src/secrets.js
         export const clientId = 'placeholder';
-        export const clientSecret = 'placeholder';
         EOF
     - |
         cmphash=$(cat yarn.lock | grep linode-components | grep -o "#[0-9a-f]*" | tr -d "#")
