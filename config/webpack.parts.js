@@ -14,7 +14,10 @@ const asyncChunkByModuleName = (moduleName) => new webpack.optimize.CommonsChunk
   },
 });
 
+const ignoreMomentLocales = new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/);
+
 module.exports = {
   asyncChunks,
   asyncChunkByModuleName,
+  ignoreMomentLocales,
 };

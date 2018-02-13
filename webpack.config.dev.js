@@ -35,6 +35,8 @@ module.exports = {
       name: 'manifest',
     }),
 
+    parts.ignoreMomentLocales,
+
     new webpack.NamedModulesPlugin(),
 
     new webpack.HotModuleReplacementPlugin(),

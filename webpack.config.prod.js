@@ -20,6 +20,8 @@ _.plugins = [
     name: 'manifest',
   }),
 
+  parts.ignoreMomentLocales,
+
   new webpack.HashedModuleIdsPlugin(),
 
   new webpack.DefinePlugin({
