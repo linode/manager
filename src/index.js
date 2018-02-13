@@ -110,7 +110,7 @@ window.handleError = handleError(history);
 store.dispatch(session.initialize);
 
 
-if (ENVIRONMENT === 'production') {
+if (SENTRY_URL) {
   Raven
     .config(SENTRY_URL)
     .install();
