@@ -24,8 +24,13 @@ const envVariables = (environment) => new webpack.DefinePlugin({
   ENV_VERSION: JSON.stringify(p.version),
 });
 
+const manifest = new webpack.optimize.CommonsChunkPlugin({
+  name: 'manifest',
+});
+
 module.exports = {
   asyncChunkByModuleName,
   ignoreMomentLocales,
   envVariables,
+  manifest,
 };

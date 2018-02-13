@@ -33,9 +33,7 @@ module.exports = {
 
     parts.asyncChunkByModuleName('chart.js'),
 
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-    }),
+    parts.manifest,
 
     parts.ignoreMomentLocales,
 
