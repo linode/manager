@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const parts = require('./config/webpack.parts');
+const paths = require('./config/paths');
 
 module.exports = {
   context: __dirname,
@@ -24,8 +25,10 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('[name]-[hash].css'),
+
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      inject: true,
+      template: paths.appHtml,
     }),
 
     parts.asyncChunkByModuleName('chart.js'),
