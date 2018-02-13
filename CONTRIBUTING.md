@@ -26,10 +26,9 @@ The following buzzwords are involved in this project:
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
 client](https://cloud.linode.com/profile/tokens), then create a file at
-`src/secrets.js` with your client ID and client secret set appropriately:
+`src/secrets.js` with your client ID set appropriately:
 
     export const clientId = 'change me';
-    export const clientSecret = 'change me';
 
 Be sure to set your callback URL to something like
 `http://localhost:3000/oauth/callback` when you register your OAuth client.
