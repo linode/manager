@@ -3,7 +3,6 @@ import { BANNER_TYPES } from '~/constants';
 const {
   OUTAGE,
   REBOOT_SCHEDULED,
-  XSA,
   BALANCE_OUTSTANDING,
   TICKET_IMPORTANT,
   TICKET_ABUSE,
@@ -25,17 +24,6 @@ export const testBillingBanner = {
     id: 1235,
     label: 'Please update your billing information.',
   },
-};
-
-export const xsaBanner = {
-  entity: {
-    id: 1234,
-    label: 'my-linode',
-    type: 'linode',
-    url: '/linode/instances/1234',
-  },
-  type: XSA,
-  when: '2017-01-01T00:00:01',
 };
 
 export const outstandingBalanceBanner = {
