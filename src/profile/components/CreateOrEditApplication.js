@@ -67,7 +67,7 @@ export default class CreateOrEditApplication extends Component {
           }) };
         }
       },
-      ({ secret }) => id ? close() :
+      ({ secret }) => id || secret === null ? close() :
         renderSecret('client', 'created', secret, close),
     ]));
   }

@@ -48,9 +48,13 @@ export class MyAPIClientsPage extends Component {
     const groups = [
       { elements: [{ name: 'Edit', action: () =>
         CreateOrEditApplication.trigger(dispatch, editClient) }] },
-      { elements: [{ name: 'Reset Secret', action: () => this.resetAction(editClient) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteClients(editClient) }] },
     ];
+    if (client.secret !== null) {
+      groups.splice(1, 0, {
+        elements: [{ name: 'Reset Secret', action: () => this.resetAction(editClient) }],
+      });
+    }
     return groups;
   }
 
