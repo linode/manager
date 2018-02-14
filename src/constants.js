@@ -14,6 +14,9 @@ export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds
 
 export const RESULTS_PER_PAGE = 100;
 
+export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
+export const OAUTH_TOKEN_REFRESH_INTERVAL = LOGIN_SESSION_LIFETIME_MS / 2;
+
 export const LinodeStates = {
   pending: [
     'booting',
