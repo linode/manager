@@ -154,8 +154,8 @@ export function getIPs(linodeId) {
     });
 
     if (ips.ipv6.link_local) {
-      _ips[ips.ipv6.link_local] = {
-        address: ips.ipv6.link_local,
+      _ips[ips.ipv6.link_local.address] = {
+        address: ips.ipv6.link_local.address,
         type: 'link-local',
         version: 'ipv6',
       };
@@ -190,8 +190,11 @@ export function getIPs(linodeId) {
 
 export function setShared(linodeId, ips) {
   return async function (dispatch) {
-    const data = { ips: ips.map(({ address }) => address) };
-    await dispatch(fetch.post(`/linode/instances/${linodeId}/ips/sharing`, data));
+    const data = {
+      linode_id: linodeId,
+      ips: ips.map(({ address }) => address),
+    };
+    await dispatch(fetch.post('/networking/ip-sharing', data));
 
     dispatch(actions.one({ _shared: ips }, linodeId));
   };
