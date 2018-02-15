@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -16,17 +16,6 @@ describe('linodes/linode/networking/components/AddIP', () => {
   });
 
   const dispatch = sandbox.stub();
-
-  it('should render without error', () => {
-    const wrapper = shallow(
-      <AddIP
-        linode={testLinode}
-        dispatch={dispatch}
-        close={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it.skip('submits data onsubmit and closes modal', async () => {
     const page = mount(

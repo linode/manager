@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -30,19 +30,6 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
     kernels: api.kernels,
     volumes: testLinode._volumes.volumes,
     account: { network_helper: true },
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <EditConfigPage
-        {...props}
-        create
-        params={{ linodeLabel: 'test-linode-1233' }}
-        dispatch={dispatch}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('uses network helper default on create', () => {

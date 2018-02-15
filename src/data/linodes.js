@@ -526,6 +526,42 @@ export const testLinodeWithNoDisks = {
   },
 };
 
+export const testLinodeWithMultipleDisks = {
+  ...createTestLinode(1249),
+  label: 'test-linode-raw',
+  _disks: {
+    totalPages: 1,
+    pagesFetched: [0],
+    totalResults: 2,
+    disks: {
+      12345: {
+        id: 12345,
+        size: 6144,
+        created: '2016-08-09T19:47:11',
+        updated: '2016-08-09T19:47:11',
+        filesystem: 'ext4',
+        label: 'Arch Linux 2015.08 Disk',
+      },
+      12346: {
+        id: 12346,
+        size: 6144,
+        created: '2016-08-09T19:47:11',
+        updated: '2016-08-09T19:47:11',
+        filesystem: 'swap',
+        label: 'Swap Disk',
+      },
+      12347: {
+        id: 12347,
+        size: 6144,
+        created: '2016-08-09T19:47:11',
+        updated: '2016-08-09T19:47:11',
+        filesystem: 'ext4',
+        label: 'Debian 9 Disk',
+      },
+    },
+  },
+};
+
 export const linodes = [
   testLinode,
   testLinode1233,
@@ -544,4 +580,5 @@ export const linodes = [
   testLinode1248,
   testLinodeWithRawDisk,
   testLinodeWithNoDisks,
+  testLinodeWithMultipleDisks,
 ].reduce((object, linode) => ({ ...object, [linode.id]: linode }), {});

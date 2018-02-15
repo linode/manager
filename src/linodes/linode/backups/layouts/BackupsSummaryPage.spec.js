@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -17,17 +17,6 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <BackupsSummaryPage
-        dispatch={dispatch}
-        linode={testLinode1236}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('renders backup blocks with no backups present', () => {

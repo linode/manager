@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
@@ -20,21 +20,6 @@ describe('nodebalancers/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <NodeBalancersList
-          dispatch={dispatch}
-          selectedMap={{}}
-          transfer={{ used: 1, quota: 5 }}
-          nodebalancers={nodebalancers}
-        />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('renders a list of Nodebalancers', () => {
     const page = mount(

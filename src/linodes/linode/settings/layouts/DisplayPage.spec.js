@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -14,17 +14,6 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <DisplayPage
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('makes request to save changes', async () => {

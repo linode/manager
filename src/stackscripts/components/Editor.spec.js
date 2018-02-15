@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -16,17 +16,6 @@ describe('linodes/stackscripts/components/Editor', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <Editor
-        dispatch={dispatch}
-        stackscript={testStackScript}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it.skip('saves stackscript editor', async () => {
     const component = mount(

@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { ListLinodesPage } from './ListLinodes';
 import { api } from '~/data';
@@ -17,21 +17,6 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <ListLinodesPage
-        images={{}}
-        types={{}}
-        dispatch={dispatch}
-        selectedMap={{}}
-        transfer={{ used: 1, quota: 5 }}
-        linodes={linodes.linodes}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it.skip('renders a list of Linodes', () => {
     const page = mount(

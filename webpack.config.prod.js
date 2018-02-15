@@ -1,10 +1,24 @@
 const process = require('process');
 const webpack = require('webpack');
 const _ = require('./webpack.config.dev.js');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const _package = require('./package.json');
 
 _.entry = './src/index';
 _.plugins = [
+  /** Will not work if ExtractTextPlugin is removed from module.ruls */
+  new ExtractTextPlugin('[name]-[hash].css'),
+  new HtmlWebpackPlugin({
+    template: 'src/index.html',
+  }),
+
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'manifest',
+  }),
+
+  new webpack.HashedModuleIdsPlugin(),
+
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify('production'),

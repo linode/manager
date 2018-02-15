@@ -1,9 +1,11 @@
 import invariant from 'invariant';
 import Axios from 'axios';
 import debug from 'debug';
+import { ENVIRONMENT } from '~/constants';
 
 const log = debug('LinodeAPI');
-if (process.env.NODE_ENV !== 'production') {
+
+if (ENVIRONMENT === 'development') {
   Axios.interceptors.request.use((config) => {
     log(`>> [${config.method}] ${config.baseURL}${config.url}`);
     return config;

@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -19,17 +19,6 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <NodeBalancerSettings
-        dispatch={dispatch}
-        nodebalancer={configsNodeBalancer}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it('renders display page', async () => {

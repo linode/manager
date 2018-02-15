@@ -6,21 +6,22 @@ import { compose } from 'redux';
 import { v4 } from 'uuid';
 import { stringify } from 'querystring';
 import { APP_ROOT, LOGIN_ROOT } from '~/constants';
+import { setStorage } from '~/storage';
 import { clientId } from '~/secrets';
 
-const createOAuth = (path, clientId, scope = '*', responseType, redirectUri) => {
+const createOAuth = (path, clientId, scope = '*', responseType, redirectUri, nonce) => {
   const query = {
     client_id: clientId,
     scope,
     response_type: responseType,
     redirect_uri: redirectUri,
-    ...(responseType === 'token') && { state: v4() },
+    ...(responseType === 'token') && { state: nonce },
   };
 
   return `${path}?${stringify(query)}`;
 };
 
-class AuthenticationWrapper extends Component {
+export class AuthenticationWrapper extends Component {
   constructor(props) {
     super(props);
 
@@ -38,6 +39,13 @@ class AuthenticationWrapper extends Component {
     }
 
     if (!isAuthenticated) {
+      return redirectToLogin();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { isAuthenticated, location: { pathname }, redirectToLogin } = nextProps;
+    if (!isAuthenticated && !this.isExcludedRoute(pathname)) {
       return redirectToLogin();
     }
   }
@@ -74,13 +82,16 @@ const mapDispatchToProps = (state, ownProps) => ({
   redirectToLogin() {
     const { location: { pathname, search } } = ownProps;
     const returnURL = `${pathname}${search && `%3F${search}`}`;
+    const nonce = v4();
+    setStorage('authentication/nonce', nonce);
 
     window.location = createOAuth(
       `${LOGIN_ROOT}/oauth/authorize`,
       clientId,
       '*',
-      'code',
-      `${APP_ROOT}/oauth/callback?${returnURL}`
+      'token',
+      `${APP_ROOT}/oauth/callback?returnTo=${returnURL}`,
+      nonce
     );
   },
 });

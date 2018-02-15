@@ -5,10 +5,12 @@ import authenticationMiddleware from '~/middleware/authentication';
 import modalCloser from '~/middleware/modalCloser';
 import reducers from './reducers';
 import createHistory from 'history/createBrowserHistory';
-
+import { ENVIRONMENT } from '~/constants';
 export const history = createHistory();
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = (ENVIRONMENT === 'development')
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+  : compose;
 
 function initStore(history) {
   return createStore(

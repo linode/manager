@@ -11,8 +11,10 @@ import {
 } from '~/test.helpers';
 import { testUser } from '~/data/users';
 
-
-describe('users/user/layouts/EditUserPage', () => {
+/**
+ * This is testing UserForm, not EditUserPage.
+ */
+describe.skip('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -21,13 +23,7 @@ describe('users/user/layouts/EditUserPage', () => {
 
   const dispatch = sandbox.stub();
 
-  // it('should render without error', () => {
-  //   const mockDispatch = jest.fn();
-  //   const wrapper = shallow(<EditUserPage dispatch={mockDispatch} user={testUser} />);
-  //   expect(wrapper).toMatchSnapshot();
-  // });
-
-  it.skip('should commit changes to the API', async () => {
+  it('should commit changes to the API', async () => {
     const page = mount(
       <EditUserPage
         dispatch={dispatch}

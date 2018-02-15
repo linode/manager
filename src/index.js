@@ -13,7 +13,6 @@ import OAuthComponent from '~/layouts/OAuth';
 import Navigation from '~/layouts/Navigation';
 import MiniHeader from '~/layouts/MiniHeader';
 import Footer from '~/layouts/Footer';
-import ClickCapture from '~/components/ClickCapture';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import PageLoader from '~/components/loaders/PageLoader';
 import Logout from '~/components/Logout';
@@ -94,10 +93,7 @@ const Users = Loadable({
   loading: PageLoader,
 });
 
-/**
- * @todo I believe we can just import without defining a variable.
- */
-import styles from '../scss/manager.scss'; // eslint-disable-line no-unused-vars
+import '../scss/manager.scss';
 
 /**
  * Page View Analytics
@@ -114,7 +110,7 @@ window.handleError = handleError(history);
 store.dispatch(session.initialize);
 
 
-if (ENVIRONMENT === 'production') {
+if (SENTRY_URL) {
   Raven
     .config(SENTRY_URL)
     .install();
@@ -124,54 +120,52 @@ if (ENVIRONMENT === 'production') {
 try {
   render(
     <Provider store={store}>
-      <ClickCapture>
-        <ConnectedRouter history={history}>
-          <AuthenticationWrapper>
-            <Switch>
-              <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
-              <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
-              <Route exact path="/oauth/callback" component={OAuthComponent} />
-              <Route exact path="/logout" component={Logout} />
-              <Route
-                render={() => (
-                  <Fragment>
-                    <ChainedDocumentTitle title="Linode Manager" />
-                    <div className="Layout-inner">
-                      <ModalContainer />
-                      <div className="Header">
-                        <MiniHeader />
-                        <Navigation />
-                        <ContextNavigation />
-                      </div>
-                      <div className="main">
-                        <Route render={(matchProps) => <Banners {...matchProps} />} />
-                        <Switch>
-                          <Route path="/linodes" component={Linodes} />
-                          <Route path="/nodebalancers" component={NodeBalancers} />
-                          <Route path="/domains" component={Domains} />
-                          <Route path="/support" component={Support} />
-                          <Route path="/support" component={Support} />
-                          <Route path="/stackscripts" component={StackScripts} />
-                          <Route path="/images" component={Images} />
-                          <Route path="/volumes" component={Volumes} />
-                          <Route path="/billing" component={Billing} />
-                          <Route path="/profile" component={Profile} />
-                          <Route path="/settings" component={Settings} />
-                          <Route path="/users" component={Users} />
-                          <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </div>
+      <ConnectedRouter history={history}>
+        <AuthenticationWrapper>
+          <Switch>
+            <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
+            <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
+            <Route exact path="/oauth/callback" component={OAuthComponent} />
+            <Route exact path="/logout" component={Logout} />
+            <Route
+              render={() => (
+                <Fragment>
+                  <ChainedDocumentTitle title="Linode Manager" />
+                  <div className="Header">
+                    <MiniHeader />
+                    <Navigation />
+                    <ContextNavigation />
+                  </div>
+                  <div className="Layout-inner">
+                    <ModalContainer />
+                    <div className="main">
+                      <Route render={(matchProps) => <Banners {...matchProps} />} />
+                      <Switch>
+                        <Route path="/linodes" component={Linodes} />
+                        <Route path="/nodebalancers" component={NodeBalancers} />
+                        <Route path="/domains" component={Domains} />
+                        <Route path="/support" component={Support} />
+                        <Route path="/support" component={Support} />
+                        <Route path="/stackscripts" component={StackScripts} />
+                        <Route path="/images" component={Images} />
+                        <Route path="/volumes" component={Volumes} />
+                        <Route path="/billing" component={Billing} />
+                        <Route path="/profile" component={Profile} />
+                        <Route path="/settings" component={Settings} />
+                        <Route path="/users" component={Users} />
+                        <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                        <Route component={NotFound} />
+                      </Switch>
                     </div>
-                    <Footer />
-                  </Fragment>
-                )
-                }
-              />
-            </Switch>
-          </AuthenticationWrapper>
-        </ConnectedRouter>
-      </ClickCapture>
+                  </div>
+                  <Footer />
+                </Fragment>
+              )
+              }
+            />
+          </Switch>
+        </AuthenticationWrapper>
+      </ConnectedRouter>
     </Provider>,
     document.getElementById('root')
   );
