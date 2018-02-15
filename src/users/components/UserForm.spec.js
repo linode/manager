@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import UserForm from '~/users/components/UserForm';
+import { UserForm } from '~/users/components/UserForm';
 
 import { testUser } from '~/data/users';
 
@@ -16,24 +16,14 @@ describe('users/layouts/UserForm', () => {
 
   const dispatch = sandbox.stub();
 
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(
-      <UserForm
-        dispatch={mockDispatch}
-        user={testUser}
-      />
-    ).dive();
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders data in UserForm', () => {
     const page = shallow(
       <UserForm
         dispatch={dispatch}
         user={testUser}
+        passwordStrengthCalculator={jest.fn()}
       />
-    ).dive();
+    );
 
     const username = page.find('#username');
     expect(username.props().value).toBe(testUser.username);

@@ -16,22 +16,29 @@ export class GlishControls extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.message !== nextProps.message) {
+    if ((this.props.connected !== nextProps.connected)
+        || (this.props.powered !== nextProps.powered)) {
       this.setState({ overrideMessage: null });
     }
   }
 
   powerOff = () => {
-    if (this.props.linodeId) {
+    const { linodeLabel, linodeAnchor } = this.props;
+    if (this.props.linodeLabel) {
       this.props.powerOffLinode();
-      this.setState({ overrideMessage: 'Linode is powering down' });
+      this.setState({
+        overrideMessage: <span>{linodeAnchor(linodeLabel)} is powering down</span>,
+      });
     }
   }
 
   powerOn = () => {
-    if (this.props.linodeId) {
+    const { linodeLabel, linodeAnchor } = this.props;
+    if (this.props.linodeLabel) {
       this.props.powerOnLinode();
-      this.setState({ overrideMessage: 'Linode is booting up' });
+      this.setState({
+        overrideMessage: <span>{linodeAnchor(linodeLabel)} is booting up</span>,
+      });
     }
   }
 
@@ -40,9 +47,12 @@ export class GlishControls extends Component {
   }
 
   reboot() {
-    if (this.props.linodeId) {
+    const { linodeLabel, linodeAnchor } = this.props;
+    if (this.props.linodeLabel) {
       this.props.rebootLinode();
-      this.setState({ overrideMessage: 'Linode is rebooting' });
+      this.setState({
+        overrideMessage: <span>{linodeAnchor(linodeLabel)} is rebooting</span>,
+      });
     }
   }
 
@@ -83,8 +93,10 @@ export class GlishControls extends Component {
 
 GlishControls.propTypes = {
   connected: PropTypes.bool.isRequired,
+  linodeAnchor: PropTypes.func,
   linodeId: PropTypes.number,
-  message: PropTypes.string.isRequired,
+  linodeLabel: PropTypes.string,
+  message: PropTypes.element.isRequired,
   powered: PropTypes.bool.isRequired,
   powerOffLinode: PropTypes.func.isRequired,
   powerOnLinode: PropTypes.func.isRequired,

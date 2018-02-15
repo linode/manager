@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 import { StaticRouter } from 'react-router-dom';
@@ -23,16 +23,6 @@ describe('users/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('should render without error', () => {
-    const mockDispatch = jest.fn();
-    const wrapper = shallow(
-      <StaticRouter>
-        <IndexPage dispatch={mockDispatch} selectedMap={{}} profile={profile} users={users} />
-      </StaticRouter>
-    );
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('renders a list of Users', () => {
     const page = mount(

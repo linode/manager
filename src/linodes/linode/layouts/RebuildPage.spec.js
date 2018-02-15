@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -17,20 +17,6 @@ describe('linodes/linode/layouts/RebuildPage', () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const wrapper = shallow(
-      <RebuildPage
-        dispatch={dispatch}
-        distributions={api.images.images}
-        linode={testLinode}
-        image={apiTestImage}
-        passwordStrengthCalculator={jest.fn()}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('rebuilds the linode', async () => {

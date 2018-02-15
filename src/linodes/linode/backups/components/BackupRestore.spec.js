@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -20,20 +20,6 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('should render without error', () => {
-    const dispatch = jest.fn();
-    const backup = testLinode._backups.snapshot.current;
-    const wrapper = shallow(
-      <BackupRestore
-        dispatch={dispatch}
-        linode={testLinode}
-        linodes={api.linodes}
-        backup={backup}
-      />
-    );
-    expect(wrapper).toMatchSnapshot();
   });
 
   it.skip('should dispatch a restore request', async () => {

@@ -20,10 +20,6 @@ describe('billing/layouts/InvoicePage', () => {
     />
   );
 
-  it('should render without error', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('renders a table with invoice data', () => {
     expect(wrapper.find('Table').prop('data')).toEqual(items);
   });

@@ -120,26 +120,33 @@ export default class AddImage extends Component {
     return disks.length === 2 && regularCount === 1 && swapCount === 1;
   }
 
-  renderDiskOptions = (disks, disk) => {
+  renderDiskOptions = (disks, currentDisk, fromDisk) => {
     const { rawDisks, swapDisks, diskOptions } = this.disksByType(disks);
+
     const diskField = diskOptions.length ?
       /* UX request:
         If a Linode is not a "Simple Linode" but it only has one option,
         still show the select field!
       */
-      <Select options={diskOptions} value={disk} name="disk" id="disk" onChange={this.onChange} />
+      <Select
+        options={diskOptions} value={currentDisk} name="disk" id="disk" onChange={this.onChange}
+      />
       /* UX request:
-        If a Linode is not a "Simple Linode" but it has no options, e.g. the
-        linode has no disks, or only raw or swap disks, then show a disabled
-        input field. This indicates to the customer that they could choose
-        disks if they modify their Linode's config.
+        Show a disabled input field when creating an image from a disk.
+
+        Also, if a Linode is not a "Simple Linode" but it has no options, e.g. the
+        linode has no disks (or only raw or swap disks) then show a disabled
+        input field with the value "None". This indicates to the customer
+        that they _could_ choose disks if they modify their Linode's config.
       */
-      : <Input name="disk" value="None" disabled />;
+      : <Input name="disk" value={(fromDisk && fromDisk.label) || 'None'} disabled />;
+
     const helpText = (diskOptions.length === 0 && (rawDisks.length > 0 || swapDisks.length > 0)) ?
       <small id="help-raw" className="text-muted">
         Cannot create images from raw disks or swap volumes.
       </small>
       : null;
+
     return (
       <ModalFormGroup label="Disk" id="disk" apiKey="disk">
         {diskField}
@@ -149,8 +156,10 @@ export default class AddImage extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
-    const { label, description, errors, linode, linodes, disk, allDisks, loading } = this.state;
+    const { dispatch, disk: fromDisk } = this.props;
+    const {
+      label, description, errors, linode, linodes,
+      disk: currentDisk, allDisks, loading } = this.state;
     const disks = allDisks[linode] || [];
     const isSimpleLinode = this.isSimpleLinode(disks);
 
@@ -177,7 +186,7 @@ export default class AddImage extends Component {
               </small>
             </ModalFormGroup>
             : null}
-          {(!loading && !isSimpleLinode) && this.renderDiskOptions(disks, disk)}
+          {(!loading && !isSimpleLinode) && this.renderDiskOptions(disks, currentDisk, fromDisk)}
           <ModalFormGroup errors={errors} id="label" label="Label" apiKey="label">
             <Input
               id="label"

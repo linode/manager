@@ -35,7 +35,7 @@ export default class VolumesList extends Component {
     this.state = { filter: '' };
   }
 
-  detachVolumes = () => confirmThenDelete(
+  detachVolumes = confirmThenDelete(
     this.props.dispatch,
     'volume',
     this.removeFromLinodeAndCall(detachVolume),
@@ -43,15 +43,15 @@ export default class VolumesList extends Component {
     undefined,
     'detach',
     'detaching'
-  );
+  ).bind(this);
 
 
-  deleteVolumes = () => confirmThenDelete(
+  deleteVolumes = confirmThenDelete(
     this.props.dispatch,
     'volume',
     this.removeFromLinodeAndCall(api.volumes.delete),
     this.props.objectType
-  );
+  ).bind(this);
 
   removeFromLinodeAndCall(action) {
     return id => async (dispatch, getState) => {
@@ -124,13 +124,15 @@ export default class VolumesList extends Component {
             name: 'Resize',
             action: () => ResizeVolume.trigger(dispatch, record),
           },
-          record.linode_id === null ? {
-            name: 'Attach',
-            action: () => AttachVolume.trigger(dispatch, linodes, record),
-          } : {
-            name: 'Detach',
-            action: () => this.detachVolumes(record),
-          },
+          record.linode_id === null
+            ? {
+              name: 'Attach',
+              action: () => AttachVolume.trigger(dispatch, linodes, record),
+            }
+            : {
+              name: 'Detach',
+              action: () => this.detachVolumes(record),
+            },
         ],
       },
       { elements: [{ name: 'Delete', action: () => this.deleteVolumes(record) }] },
