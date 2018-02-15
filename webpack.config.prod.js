@@ -33,8 +33,6 @@ _.plugins = [
     },
   }),
 
-  parts.asyncChunkByModuleName('chart.js'),
-
   parts.manifest,
 
   parts.ignoreMomentLocales,

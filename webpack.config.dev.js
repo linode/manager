@@ -31,8 +31,6 @@ module.exports = {
       template: paths.appHtml,
     }),
 
-    parts.asyncChunkByModuleName('chart.js'),
-
     parts.manifest,
 
     parts.ignoreMomentLocales,
