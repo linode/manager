@@ -93,10 +93,7 @@ const Users = Loadable({
   loading: PageLoader,
 });
 
-/**
- * @todo I believe we can just import without defining a variable.
- */
-import styles from '../scss/manager.scss'; // eslint-disable-line no-unused-vars
+import '../scss/manager.scss';
 
 /**
  * Page View Analytics
@@ -113,7 +110,7 @@ window.handleError = handleError(history);
 store.dispatch(session.initialize);
 
 
-if (ENVIRONMENT === 'production') {
+if (SENTRY_URL) {
   Raven
     .config(SENTRY_URL)
     .install();

@@ -12,6 +12,8 @@ export const VERSION = ENV_VERSION;
 
 export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds
 
+export const RESULTS_PER_PAGE = 100;
+
 export const LinodeStates = {
   pending: [
     'booting',
@@ -267,8 +269,7 @@ export const BANNER_TYPES = {
   MIGRATION_SCHEDULED: 'migration_scheduled',
   MIGRATION_PENDING: 'migration_pending',
   REBOOT_SCHEDULED: 'reboot_scheduled',
-  XSA: 'xsa',
-  BALANCE_OUTSTANDING: 'balance_outstanding',
+  BALANCE_OUTSTANDING: 'payment_due',
   TICKET_IMPORTANT: 'ticket_important',
   TICKET_ABUSE: 'ticket_abuse',
   LINODE: 'linode',

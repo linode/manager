@@ -3,6 +3,8 @@ import '~/typedefs';
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
 
+import { RESULTS_PER_PAGE } from '~/constants';
+
 export const ONE = 'ONE';
 export const PUT = 'PUT';
 export const MANY = 'MANY';
@@ -13,6 +15,11 @@ export const createDefaultState = (name) => ({
   totalPages: -1,
   totalResults: -1,
   ids: [],
+  /**
+   * TODO: Populate one or more pageIDsBy_ arrays dynamically based on page request parameters
+   * given to us through the action. (specifically X-Filter parameters)
+   */
+  pageIDsBy_id: [],
   [name]: {},
 });
 
@@ -193,13 +200,35 @@ export class ReducerGenerator {
   }
 
   /**
+   * Create a new array of size totalResults filled with nulls.
+   * Fill it with oldIDs in their existing location.
+   * Then fill it with newPageIDs at the appropriate location by using pageNum
    *
-   * @param {ReduxConfig} config
-   * @param {State} prevState
-   * @param {ManyAction} action
-   * @param {Date} [updatedAt]
-   * @returns {State}
+   * @param {number[]} oldIDs An array of all existing IDs
+   * @param {number[]} newPageIDs An array of IDs for the items in the newly fetched page
+   * @param {number} pageNum The page at which newPageIDs should reside
+   * @param {number} totalResults The new number of total IDs that should exist in the array
    */
+  static coalesceIDs(oldIDs, newPageIDs, pageNum, totalResults) {
+    const newIDs = Array.from({ length: totalResults }, () => null);
+    for (let i = 0, len = oldIDs.length; i < len; ++i) {
+      newIDs[i] = oldIDs[i];
+    }
+    const start = (pageNum - 1) * RESULTS_PER_PAGE;
+    const end = start + newPageIDs.length;
+    for (let i = start; i < end; ++i) {
+      newIDs[i] = newPageIDs[i - start];
+    }
+    return newIDs;
+  }
+
+  /**
+  * @param {ReduxConfig} config
+  * @param {State} prevState
+  * @param {ManyAction} action
+  * @param {Date} [updatedAt]
+  * @returns {State}
+  */
   static many(config, prevState, action, updatedAt = new Date()) {
     const { page, dispatch } = action;
 
@@ -210,11 +239,24 @@ export class ReducerGenerator {
         dispatch,
       }, updatedAt), prevState);
 
-    const ids = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
+    /* Add to the Array of all IDs */
+    let newIDs = Object.values(newState[config.name]).map((obj) => obj[config.primaryKey]);
+    if (config.sortFn) {
+      newIDs = config.sortFn(newIDs, newState[config.name]);
+    }
+
+    /* Add to the Array of IDs for each sort order */
+    let newPageIDs = prevState.pageIDsBy_id;
+    if (page.data) { // don't populate this array for ad-hoc actions that don't include .data
+      const thisPageIds = page.data.map((obj) => obj[config.primaryKey]);
+      newPageIDs = this.coalesceIDs(
+        prevState.pageIDsBy_id, thisPageIds, page.page, page.results);
+    }
 
     return {
       ...newState,
-      ids: config.sortFn ? config.sortFn(ids, newState[config.name]) : ids,
+      ids: newIDs,
+      pageIDsBy_id: newPageIDs,
       totalPages: page.pages,
       totalResults: page.results,
     };
@@ -232,7 +274,7 @@ export class ReducerGenerator {
     const newMany = omit(prevState[config.name], id);
     return {
       ...prevState,
-      ids: Object.values(newMany).map(({ id }) => id),
+      ids: prevState.ids.filter((_id) => _id !== id),
       [config.name]: newMany,
     };
   }
