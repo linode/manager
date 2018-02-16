@@ -20,6 +20,7 @@
  * @prop {Object.<string, ReduxConfig>} subresources
  * @prop {Array<Feature>} supports
  * @prop {SortFunction} [sortFn]
+ * @prop {ReduxConfig} [parent]
  *
  *
  * @typedef {Object<string, Object>} Resource
