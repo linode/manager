@@ -554,7 +554,61 @@ describe('internal', () => {
       });
     });
 
-    describe('#subresource', () => { });
+    describe('#subresource', () => {
+      beforeEach(() => {
+        jest.resetModules();
+      });
+
+      it.only('should calls ReducerGenerator.one with...', () => {
+        jest.doMock('./internal.js');
+        ReducerGenerator.one = jest.fn();
+        ReducerGenerator.reducer = jest.fn(() => ({ key: 'value' }));
+
+        const config = {
+          name: 'linodes',
+          supports: [MANY],
+          subresources: {
+            _configs: { name: 'configs' },
+          },
+        };
+
+        const state = {
+          linodes: {
+            1234: {
+              _configs: {},
+            },
+          },
+        };
+
+        const action = {
+          type: 'gen@linodes.configs/ONE',
+          ids: [1234, 5678],
+        };
+
+        ReducerGenerator.subresource(config, state, action);
+
+        expect(ReducerGenerator.one)
+          .toHaveBeenLastCalledWith(
+            config,
+            state, {
+              ids: action.ids,
+              resource: {
+                _configs: { key: 'value' },
+              },
+            });
+
+        expect(ReducerGenerator.reducer)
+          .toHaveBeenLastCalledWith(
+            config.subresources._configs,
+            state.linodes['1234']._configs,
+            { ...action, ids: [5678] }
+          );
+      });
+
+      // it('should call ReducerGenerator.reducer with...', () => {
+
+      // });
+    });
 
     describe('#reducer', () => {
       beforeEach(() => {
