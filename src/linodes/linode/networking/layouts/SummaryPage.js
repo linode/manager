@@ -180,8 +180,6 @@ export class SummaryPage extends Component {
       } else if (ip.type === 'link-local') {
         type = 'Link-Local';
         address = ip.address;
-      } else if (ip.type === 'pool') {
-        address = ip.range;
       }
 
       return { ...ip, type, address };
