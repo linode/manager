@@ -1,4 +1,4 @@
-import { ONE, MANY, DELETE } from '~/api/internal';
+import { ONE, MANY, DELETE } from '~/api/internal.ts';
 
 import { configsNodeBalancer, noGroupNodeBalancer } from '~/data/nodebalancers';
 

@@ -15,8 +15,7 @@ import {
   ReducerGenerator,
 } from './internal';
 
-import { testConfigOne, testConfigMany, testConfigDelete } from '~/data/reduxGen';
-import { resource, page } from '~/data/reduxGen';
+import { testConfigOne, testConfigMany, testConfigDelete, resource, page } from '../data/reduxGen.js';
 
 describe('internal', () => {
   describe('createDefaultState', () => {

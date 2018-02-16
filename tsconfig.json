@@ -1,0 +1,21 @@
+{
+  "exclude": [
+    "coverage",
+    "node_modules",
+    "dist",
+    "stats.json",
+    "assets"
+  ],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "target": "es5",
+    "lib": [ "es2017", "dom" ],
+    "module": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
+  }
+}

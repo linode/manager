@@ -1,7 +1,7 @@
 import {
   addParentRefs, ReducerGenerator, genActions,
   ONE, MANY, DELETE, PUT, POST,
-} from '~/api/internal';
+} from '~/api/internal.ts';
 
 export const config = addParentRefs({
   name: 'users',

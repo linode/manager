@@ -1,7 +1,7 @@
 import {
   addParentRefs, ReducerGenerator, genActions,
   ONE, MANY, PUT, DELETE, POST,
-} from '~/api/internal';
+} from '~/api/internal.ts';
 
 export const config = addParentRefs({
   name: 'linodes',

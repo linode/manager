@@ -1,15 +1,91 @@
 import _isNaN from 'lodash/isNaN';
 import omit from 'lodash/omit';
+import actionCreatorGenerator from './actionCreatorGenerator';
 
-import { RESULTS_PER_PAGE } from '~/constants';
+import { RESULTS_PER_PAGE } from '../constants.js';
 
+/**
+ * If/when other files were converted to TS these consts could be removed in
+ * favor of using the following ENUM.
+ */
 export const ONE = 'ONE';
-export const PUT = 'PUT';
 export const MANY = 'MANY';
+export const PUT = 'PUT';
 export const POST = 'POST';
 export const DELETE = 'DELETE';
 
-export const createDefaultState = (name) => ({
+type State = any;
+
+type Action = Object;
+
+type AsyncAction = any;
+
+type Reducer<S, A> = (state: S, action: A) => S;
+
+type ActionCreator = (...args: Array<any>) => Action | AsyncAction
+
+const enum Features {
+  ONE = 'ONE',
+  MANY = 'MANY',
+  PUT = 'PUT',
+  POST = 'POST',
+  DELETE = 'DELETE'
+}
+
+type Feature = Features.DELETE | Features.MANY | Features.ONE | Features.POST | Features.PUT
+
+type List<T> = {
+  [index: string]: T
+}
+
+interface ReduxConfig {
+  name: string;
+  supports: Array<Feature>;
+  endpoint: Function;
+  subresources?: List<ReduxConfig>;
+  parent?: ReduxConfig;
+
+}
+
+interface ResourceState {
+  totalPages: number;
+  totalResults: number;
+  ids: Array<number>;
+  [index: string]: any;
+};
+
+interface Page {
+  data: Array<Object>;
+  pages: number;
+  results: number;
+  page: number;
+  [index: string]: any;
+};
+
+interface Resource {
+  name: string,
+  parent?: Resource
+}
+
+interface IAction extends Action {
+  type: string
+}
+
+interface OneAction extends IAction {
+  resource: Object,
+  ids: Array<number | string>
+}
+
+interface ManyAction extends IAction {
+  page: Object,
+  ids: Array<number | string>
+}
+
+interface DeleteAction extends IAction {
+  ids: Array<number | string>
+}
+
+export const createDefaultState = (name: string): ResourceState => ({
   totalPages: -1,
   totalResults: -1,
   ids: [],
@@ -21,8 +97,8 @@ export const createDefaultState = (name) => ({
   [name]: {},
 });
 
-export function isPlural(config) {
-  return config.supports.indexOf(MANY) > -1;
+export function isPlural(config: ReduxConfig) {
+  return config.supports.indexOf(Features.MANY) > -1;
 }
 
 /**
@@ -34,7 +110,8 @@ export function isPlural(config) {
  * @param {*} [parent] A parent value to add to the config and any subresources.
  * @returns {Object} The config with parent appended to the config and any subresources.
  */
-export function addParentRefs({ subresources, ...config }, parent) {
+
+export function addParentRefs({ subresources, ...config }: ReduxConfig, parent: ReduxConfig) {
   const ret = { ...config, subresources, parent };
 
   if (subresources) {
@@ -55,7 +132,7 @@ export function addParentRefs({ subresources, ...config }, parent) {
  * @param {Object} resource
  * @returns {String}
  */
-export function fullyQualified(resource) {
+export function fullyQualified(resource: Resource) {
   let path = resource.name;
   let res = resource;
   while (res.parent) {
@@ -65,46 +142,70 @@ export function fullyQualified(resource) {
   return path;
 }
 
+
 /**
  *
- * @param {*} v - The value to be tested.
- * @returns {*} - Either the unchanged value or parsed integer.
  */
-export const parseIntIfActualInt = (v) => isNaN(v) ? v : parseInt(v);
+export const parseIntIfActualInt = (v: any): any => isNaN(v) ? v : parseInt(v);
 
-export const oneActionCreator = (config) => (resource, ...ids) => ({
-  resource,
-  type: `GEN@${fullyQualified(config)}/ONE`,
-  ids: ids.map(parseIntIfActualInt),
-});
+export const oneActionCreator = (config: ReduxConfig): ActionCreator =>
+  (resource: Resource, ...ids: Array<number | string>): OneAction =>
+    ({
+      resource,
+      type: `GEN@${fullyQualified(config)}/${Features.ONE}`,
+      ids: ids.map(parseIntIfActualInt),
+    });
 
-export const manyActionCreator = (config) => (page, ...ids) => ({
-  page,
-  type: `GEN@${fullyQualified(config)}/MANY`,
-  ids: ids.map(parseIntIfActualInt),
-});
+export const manyActionCreator = (config: ReduxConfig): ActionCreator =>
+  (page: Page, ...ids: Array<number | string>): ManyAction =>
+    ({
+      page,
+      type: `GEN@${fullyQualified(config)}/${Features.MANY}`,
+      ids: ids.map(parseIntIfActualInt),
+    });
 
-export const deleteActionCreator = (config) => (...ids) => ({
-  type: `GEN@${fullyQualified(config)}/DELETE`,
-  ids: ids.map(parseIntIfActualInt),
-});
+export const deleteActionCreator = (config: ReduxConfig): ActionCreator =>
+  (...ids: Array<number | string>): Action =>
+    ({
+      type: `GEN@${fullyQualified(config)}/${Features.DELETE}`,
+      ids: ids.map(parseIntIfActualInt),
+    });
 
-export const actionCreatorGenerators = {
-  [ONE]: oneActionCreator,
-  [MANY]: manyActionCreator,
-  [DELETE]: deleteActionCreator,
-};
+/**
+* Get an action creator for a feature.
+*/
+function getActionCreator(feature: Feature) {
+  switch (feature) {
+
+    case Features.ONE:
+      return oneActionCreator;
+
+    case Features.MANY:
+      return manyActionCreator;
+
+    case Features.DELETE:
+      return deleteActionCreator;
+
+    default:
+      return;
+  }
+}
+
+interface ReduxActions {
+  type: string,
+  [index: string]: any,
+}
 
 /**
  * Generates action creators for the provided config.
  */
-export function genActions(config) {
+export function genActions(config: ReduxConfig): ReduxActions {
   const { name, supports, subresources } = config;
-  let actions = {};
+  let actions: ReduxActions = { type: name };
 
   actions = supports
     .reduce((result, feature) => {
-      const actionCreator = actionCreatorGenerators[feature];
+      const actionCreator = getActionCreator(feature);
       const name = feature.toLowerCase();
 
       return (actionCreator)
@@ -118,12 +219,10 @@ export function genActions(config) {
       .reduce((actions, [, subresource]) => {
         return {
           ...actions,
-          [subresource.name]: genActions(subresource, 2),
+          [subresource.name]: genActions(subresource),
         };
       }, actions);
   }
-
-  actions.type = name;
 
   return actions;
 }
@@ -134,7 +233,9 @@ export function genActions(config) {
  * @returns {Object} Either an object containing the default pagination results,
  * or an empty object.
  */
-export function generateDefaultStateFull(config) {
+export function generateDefaultStateFull(
+  config: ReduxConfig
+): ResourceState | Object {
   return isPlural(config)
     ? createDefaultState(config.name)
     : {};
@@ -146,7 +247,10 @@ export function generateDefaultStateFull(config) {
  * @param {Object} one
  * @returns {Object}
  */
-export function generateDefaultStateOne(subresources = {}, one) {
+export function generateDefaultStateOne(
+  subresources: ReduxConfig | Object = {}, 
+  one: Object
+) {
   const result = Object
     .entries(subresources)
     .reduce((result, [key, config]) => ({
@@ -239,7 +343,11 @@ export class ReducerGenerator {
     };
   }
 
-  static del(config, state, action) {
+  static del(
+    config: ReduxConfig,
+    state: State,
+    action: OneAction | ManyAction | DeleteAction
+  ) {
     const id = action.ids[action.ids.length - 1];
     const newMany = omit(state[config.name], id);
     return {

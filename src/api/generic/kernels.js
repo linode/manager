@@ -1,7 +1,7 @@
 import {
   ReducerGenerator, genActions,
   ONE, MANY,
-} from '~/api/internal';
+} from '~/api/internal.ts';
 
 export const config = {
   name: 'kernels',
