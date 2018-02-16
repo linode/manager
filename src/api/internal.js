@@ -1,4 +1,3 @@
-
 import '~/typedefs';
 
 import _isNaN from 'lodash/isNaN';
@@ -48,12 +47,12 @@ export function addParentRefs({ subresources, ...config }, parent) {
  * Return a string  value of the objects name property, and the name of any parent
  * property object, recursively.
  *
- * @param {Object} resource
+ * @param {ReduxConfig} config
  * @returns {String}
  */
-export function fullyQualified(resource) {
-  let path = resource.name;
-  let res = resource;
+export function fullyQualified(config) {
+  let path = config.name;
+  let res = config;
   while (res.parent) {
     res = res.parent;
     path = `${res.name}.${path}`;
