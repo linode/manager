@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { push } from 'react-router-redux';
+import isEmpty from 'lodash/isEmpty';
 import Checkboxes from 'linode-components/dist/forms/Checkboxes';
 import Input from 'linode-components/dist/forms/Input';
 import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
@@ -40,6 +41,13 @@ export default class AddUser extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  componentDidMount() {
+    import('zxcvbn')
+      .then((zxcvbn) => {
+        this.passwordStrengthCalculator = (v) => isEmpty(v) ? null : zxcvbn(v).score;
+      });
+  }
+
   onSubmit = () => {
     const { dispatch } = this.props;
     const data = {
@@ -58,6 +66,8 @@ export default class AddUser extends Component {
   render() {
     const { close } = this.props;
     const { errors, username, email, restricted, password } = this.state;
+    const passwordStrength = this.passwordStrengthCalculator
+      && this.passwordStrengthCalculator(password);
 
     return (
       <FormModalBody
@@ -91,6 +101,7 @@ export default class AddUser extends Component {
               id="password"
               value={password}
               onChange={this.onChange}
+              strength={passwordStrength}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Restricted" errors={errors} id="restricted" apiKey="restricted">

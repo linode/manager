@@ -15,9 +15,10 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/generic/users';
+import withZxcvbn from '~/decorators/withZxcvbn';
 
 
-export default class UserForm extends Component {
+export class UserForm extends Component {
   constructor(props) {
     super(props);
 
@@ -61,8 +62,9 @@ export default class UserForm extends Component {
   }
 
   render() {
-    const { user: { username: oldUsername } } = this.props;
+    const { user: { username: oldUsername }, passwordStrengthCalculator } = this.props;
     const { username, email, restricted, password, loading, errors } = this.state;
+    const passwordStrength = passwordStrengthCalculator(password);
 
     return (
       <Form
@@ -104,6 +106,7 @@ export default class UserForm extends Component {
                 id="password"
                 value={password}
                 onChange={this.onChange}
+                strength={passwordStrength}
               />
               <FormGroupError errors={errors} name="password" className="float-sm-left" />
             </div>
@@ -153,6 +156,7 @@ export default class UserForm extends Component {
 UserForm.propTypes = {
   user: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
 
 UserForm.defaultProps = {
@@ -162,3 +166,4 @@ UserForm.defaultProps = {
     restricted: true,
   },
 };
+export default withZxcvbn(UserForm);

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import isEmpty from 'lodash/isEmpty';
 import Card from 'linode-components/dist/cards/Card';
 import CardHeader from 'linode-components/dist/cards/CardHeader';
 import Form from 'linode-components/dist/forms/Form';
@@ -44,8 +43,7 @@ export class ChangePassword extends Component {
   render() {
     const { password, expires, errors, loading } = this.state;
     const { passwordStrengthCalculator } = this.props;
-    const passwordStrength = (!isEmpty(password) && passwordStrengthCalculator(password).score)
-      || null;
+    const passwordStrength = passwordStrengthCalculator(password);
 
     return (
       <Card header={<CardHeader title="Change password" />}>
