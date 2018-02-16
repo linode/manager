@@ -604,10 +604,6 @@ describe('internal', () => {
             { ...action, ids: [5678] }
           );
       });
-
-      // it('should call ReducerGenerator.reducer with...', () => {
-
-      // });
     });
 
     describe('#reducer', () => {
