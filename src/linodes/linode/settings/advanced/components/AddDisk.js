@@ -11,7 +11,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { DistributionSelect } from '~/linodes/components';
-
+import isEmpty from 'lodash/isEmpty';
 
 export default class AddDisk extends Component {
   static title = 'Add a Disk'
@@ -42,6 +42,13 @@ export default class AddDisk extends Component {
     this.onChange = onChange.bind(this);
   }
 
+  componentDidMount() {
+    import('zxcvbn')
+      .then((zxcvbn) => {
+        this.passwordStrengthCalculator = (v) => isEmpty(v) ? null : zxcvbn(v).score;
+      });
+  }
+
   onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { label, size, image, password, filesystem } = this.state;
@@ -62,6 +69,8 @@ export default class AddDisk extends Component {
   render() {
     const { dispatch, free, images } = this.props;
     const { label, size, image, filesystem, password, errors } = this.state;
+    const passwordStrength = this.passwordStrengthCalculator
+      && this.passwordStrengthCalculator(password);
 
     let minimumStorageSize = 8;
     if (images[image]) {
@@ -116,6 +125,7 @@ export default class AddDisk extends Component {
                 id="password"
                 value={password}
                 onChange={this.onChange}
+                strength={passwordStrength}
               />
             </ModalFormGroup>
           ) : (
