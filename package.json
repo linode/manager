@@ -94,7 +94,7 @@
     "html-webpack-plugin": "^2.30.1",
     "isomorphic-fetch": "^2.2.0",
     "jest": "^22.1.4",
-    "linode-components": "https://github.com/rjstires/linode-react-components#5a32c7f474881645505700072c2e7d5d031d2114",
+    "linode-components": "https://github.com/linode/linode-react-components#v0.0.8",
     "lodash": "^4.16.4",
     "md5": "^2.1.0",
     "moment": "^2.17.1",
