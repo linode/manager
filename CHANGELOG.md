@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.3] - 2018-02-20
+### Added
+- Pagination added to `/domains`
+- Added vendor specific CSS prefixes via PostCSS and Autoprefixer.
+- Glish window now contains a link to the Linode page.
+- Added unit tests for Redux generator functions. (api/internal.js api/external.js).
+### Changed
+- Significant build changes to reduce initial page load.
+- Added asset filename hashes for caching purposes.
+- Moved from the OAuth2 code flow to the implicit flow for security and performance.
+### Removed
+- Removed unnecessary “No VNC” text on Linode detail page Glish button.
+### Fixed
+- Corrected an issue that was forcing a full re-render of the application when clicking session/notifications menu.
+- Corrected an issue preventing a disk label from appearing in the Add Image modal.
+- Corrected an issue which prevented proper redirection on logout.
+- Corrected an issue where notification banners weren’t provided the ID of the Linode they referenced.
+- Corrected an issue preventing users from deleting Volumes.
+
 ## [0.18.2] 2018-01-25
 ### Fixed
 - Prevent notifications from fetching during login and logout
