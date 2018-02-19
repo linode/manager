@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Loadable from 'react-loadable';
 
 import Select from 'linode-components/dist/forms/Select';
 import { onChange } from 'linode-components/dist/forms/utilities';
 
-import LineGraph from './LineGraph';
 
+const LineGraph = Loadable({
+  loader: () => import('./LineGraph'),
+  loading: () => null,
+});
 
 const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
 const IO_UNITS = [' blocks', 'K blocks', 'M blocks'];
@@ -15,10 +19,34 @@ export function convertUnits(value, currentUnit, unitType, fixedNumber = 0) {
   return `${value.toFixed(fixedNumber) / Math.pow(1000, currentUnit)}${unitType[currentUnit]}/s`;
 }
 
+function rgbaFromHex(hex, alpha) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const r = parseInt(result[1], 16);
+  const g = parseInt(result[2], 16);
+  const b = parseInt(result[3], 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+
+function fformatData(x, ys, colors, legends = []) {
+  return {
+    labels: x,
+    datasets: ys.map((y, i) => ({
+      label: legends[i],
+      data: y,
+      pointRadius: 0,
+      fill: false,
+      borderColor: rgbaFromHex(colors[i], 1),
+      backgroundColor: rgbaFromHex(colors[i], 0.3),
+    })),
+  };
+}
+
 function formatData(colors, datasets, legends) {
   const x = datasets[0].map(([x]) => x);
   const ys = datasets.map(dataset => dataset.map(([, y]) => y));
-  return LineGraph.formatData(x, ys, colors, legends);
+  return fformatData(x, ys, colors, legends);
 }
 
 export function makeCPUGraphMetadata(graphData) {
@@ -60,10 +88,14 @@ export function makeNetv4GraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-      [graphData.in, graphData.private_in,
-        graphData.out, graphData.private_out],
-      ['Public IPv4 Inbound', 'Private IPv4 Inbound',
-        'Public IPv4 Outbound', 'Private IPv4 Outbound']),
+      [graphData.in, graphData.private_in, graphData.out, graphData.private_out],
+      [
+        'Public IPv4 Inbound',
+        'Private IPv4 Inbound',
+        'Public IPv4 Outbound',
+        'Private IPv4 Outbound',
+      ]
+    ),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     units: UNITS,
   };
@@ -79,10 +111,14 @@ export function makeNetv6GraphMetadata(graphData) {
       format: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     },
     data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
-      [graphData.in, graphData.private_in,
-        graphData.out, graphData.private_out],
-      ['Public IPv6 Inbound', 'Private IPv6 Inbound',
-        'Public IPv6 Outbound', 'Private IPv6 Outbound']),
+      [graphData.in, graphData.private_in, graphData.out, graphData.private_out],
+      [
+        'Public IPv6 Inbound',
+        'Private IPv6 Inbound',
+        'Public IPv6 Outbound',
+        'Private IPv6 Outbound',
+      ]
+    ),
     tooltipFormat: (v, currentUnit) => convertUnits(v, currentUnit, UNITS),
     units: UNITS,
   };
