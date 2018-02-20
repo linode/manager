@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { withStyles } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
@@ -16,12 +17,6 @@ import PrimaryNav from 'src/components/PrimaryNav';
 const drawerWidth = 250;
 
 const styles = (theme: any): any => ({
-  root: {
-    width: '100%',
-    height: '100%',
-    zIndex: 1,
-    overflow: 'hidden',
-  },
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -83,56 +78,65 @@ class App extends React.Component<any, any> {
     return (
       <React.Fragment>
         <Reboot />
-        <div className={classes.root}>
-          <div className={classes.appFrame}>
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={this.handleDrawerToggle}
-                  className={classes.navIconHide}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="title" color="inherit" noWrap>
-                  Linode Manager
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <Hidden mdUp>
-              <Drawer
-                variant="temporary"
-                open={this.state.drawerOpen}
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-                onClose={this.handleDrawerToggle}
-                ModalProps={{
-                  keepMounted: true, // Better open performance on mobile.
-                }}
+        <div className={classes.appFrame}>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={this.handleDrawerToggle}
+                className={classes.navIconHide}
               >
-                <PrimaryNav />
-              </Drawer>
-            </Hidden>
-            <Hidden smDown implementation="css">
-              <Drawer
-                variant="permanent"
-                open
-                classes={{
-                  paper: classes.drawerPaper,
-                  docked: classes.drawerDocked,
-                }}
-              >
-                <PrimaryNav />
-              </Drawer>
-            </Hidden>
-            <main className={classes.content}>
-              <Typography variant="display1" noWrap>
-                Linode
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" noWrap>
+                Linode Manager
               </Typography>
-            </main>
-          </div>
+            </Toolbar>
+          </AppBar>
+          <Hidden mdUp>
+            <Drawer
+              variant="temporary"
+              open={this.state.drawerOpen}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              onClose={this.handleDrawerToggle}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              <PrimaryNav />
+            </Drawer>
+          </Hidden>
+          <Hidden smDown implementation="css">
+            <Drawer
+              variant="permanent"
+              open
+              classes={{
+                paper: classes.drawerPaper,
+                docked: classes.drawerDocked,
+              }}
+            >
+              <PrimaryNav />
+            </Drawer>
+          </Hidden>
+          <main className={classes.content}>
+            <Typography variant="display1" noWrap>
+              <Switch>
+                <Route exact path="/dashboard" render={() => 'Dashboard'} />
+                <Route exact path="/linodes" render={() => 'Linodes'} />
+                <Route exact path="/volumes" render={() => 'Volumes'} />
+                <Route exact path="/nodebalancers" render={() => 'NodeBalancers'} />
+                <Route exact path="/domains" render={() => 'Domains'} />
+                <Route exact path="/managed" render={() => 'Managed'} />
+                <Route exact path="/longview" render={() => 'LongView'} />
+                <Route exact path="/stackscripts" render={() => 'StackScripts'} />
+                <Route exact path="/images" render={() => 'Images'} />
+                <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+              </Switch>
+            </Typography>
+          </main>
         </div>
       </React.Fragment>
     );
