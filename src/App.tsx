@@ -66,7 +66,7 @@ class App extends React.Component<any, any> {
     drawerOpen: false,
   };
 
-  handleDrawerToggle = () => {
+  toggleMenu = () => {
     this.setState({
       drawerOpen: !this.state.drawerOpen,
     });
@@ -84,7 +84,7 @@ class App extends React.Component<any, any> {
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
-                onClick={this.handleDrawerToggle}
+                onClick={this.toggleMenu}
                 className={classes.navIconHide}
               >
                 <MenuIcon />
@@ -101,12 +101,12 @@ class App extends React.Component<any, any> {
               classes={{
                 paper: classes.drawerPaper,
               }}
-              onClose={this.handleDrawerToggle}
+              onClose={this.toggleMenu}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
               }}
             >
-              <PrimaryNav />
+              <PrimaryNav toggleMenu={this.toggleMenu} />
             </Drawer>
           </Hidden>
           <Hidden smDown implementation="css">
@@ -118,7 +118,7 @@ class App extends React.Component<any, any> {
                 docked: classes.drawerDocked,
               }}
             >
-              <PrimaryNav />
+              <PrimaryNav toggleMenu={this.toggleMenu} />
             </Drawer>
           </Hidden>
           <main className={classes.content}>
