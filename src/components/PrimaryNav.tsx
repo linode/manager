@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -22,18 +23,21 @@ const styles = (theme: any): any => ({
   logoItem: {
     paddingLeft: 16,
   },
+  primaryLink: {
+    textDecoration: 'none',
+  },
 });
 
 const primaryLinks = [
-  { display: 'Dashboard', icon: DashboardIcon, src: '/dashboard' },
-  { display: 'Linodes', icon: StorageIcon, src: '/linodes' },
-  { display: 'Volumes', icon: InboxIcon, src: '/volumes' },
-  { display: 'NodeBalancers', icon: DeviceHubIcon, src: '/nodebalancers' },
-  { display: 'Domains', icon: LanguageIcon, src: '/domains' },
-  { display: 'Managed', icon: BuildIcon, src: '/managed' },
-  { display: 'Longview', icon: InsertChartIcon, src: '/longview' },
-  { display: 'StackScripts', icon: CodeIcon, src: '/stackscripts' },
-  { display: 'Images', icon: InsertPhotoIcon, src: '/images' },
+  { display: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
+  { display: 'Linodes', icon: StorageIcon, href: '/linodes' },
+  { display: 'Volumes', icon: InboxIcon, href: '/volumes' },
+  { display: 'NodeBalancers', icon: DeviceHubIcon, href: '/nodebalancers' },
+  { display: 'Domains', icon: LanguageIcon, href: '/domains' },
+  { display: 'Managed', icon: BuildIcon, href: '/managed' },
+  { display: 'Longview', icon: InsertChartIcon, href: '/longview' },
+  { display: 'StackScripts', icon: CodeIcon, href: '/stackscripts' },
+  { display: 'Images', icon: InsertPhotoIcon, href: '/images' },
 ];
 
 class PrimaryNav extends React.Component<any, any> {
@@ -42,13 +46,17 @@ class PrimaryNav extends React.Component<any, any> {
   };
 
   renderPrimaryLink(PrimaryLink: any) {
+    const { classes } = this.props;
+    
     return (
-      <ListItem button divider>
-        <ListItemIcon>
-          <PrimaryLink.icon />
-        </ListItemIcon>
-        <ListItemText primary={PrimaryLink.display} />
-      </ListItem>
+      <Link to={PrimaryLink.href} className={classes.primaryLink}>
+        <ListItem button divider>
+          <ListItemIcon>
+            <PrimaryLink.icon />
+          </ListItemIcon>
+          <ListItemText primary={PrimaryLink.display} />
+        </ListItem>
+      </Link>
     );
   }
 
@@ -68,9 +76,7 @@ class PrimaryNav extends React.Component<any, any> {
           </Grid>
         </Grid>
         <Divider />
-        {primaryLinks.map(primaryLink =>
-          this.renderPrimaryLink(primaryLink))
-        }
+        {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
       </React.Fragment>
     );
   }
