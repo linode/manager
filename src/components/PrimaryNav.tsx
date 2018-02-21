@@ -67,7 +67,12 @@ class PrimaryNav extends React.Component<Props> {
 
   renderPrimaryLink(PrimaryLink: any) {
     return (
-      <ListItem button divider onClick={() => this.navigate(PrimaryLink.href)}>
+      <ListItem
+        key={PrimaryLink.display}
+        button
+        divider
+        onClick={() => this.navigate(PrimaryLink.href)}
+      >
         <ListItemIcon>
           <PrimaryLink.icon />
         </ListItemIcon>
