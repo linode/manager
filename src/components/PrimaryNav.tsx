@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
+import {
+  withRouter,
+  RouteComponentProps,
+} from 'react-router-dom';
 import { compose } from 'redux';
 
-import { withStyles } from 'material-ui/styles';
+import {
+  withStyles,
+  StyledComponentProps,
+} from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
@@ -18,6 +24,8 @@ import CodeIcon from 'material-ui-icons/Code';
 import InsertPhotoIcon from 'material-ui-icons/InsertPhoto';
 
 import logoPng from 'src/assets/logo/linode-logo-small.png';
+
+import { TodoAny } from 'src/utils';
 
 const styles = (theme: any): any => ({
   headerGrid: theme.mixins.toolbar,
@@ -38,12 +46,16 @@ const primaryLinks = [
   { display: 'Images', icon: InsertPhotoIcon, href: '/images' },
 ];
 
-class PrimaryNav extends React.Component<any, any> {
+type Props = StyledComponentProps & RouteComponentProps<{}> & {
+  toggleMenu: () => void, 
+};
+
+class PrimaryNav extends React.Component<Props> {
   state = {
     drawerOpen: false,
   };
 
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
   }
 
@@ -67,6 +79,10 @@ class PrimaryNav extends React.Component<any, any> {
   render() {
     const { classes } = this.props;
 
+    if (!classes) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -86,7 +102,7 @@ class PrimaryNav extends React.Component<any, any> {
   }
 }
 
-export default compose(
+export default compose<TodoAny, TodoAny, TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
 )(PrimaryNav);
