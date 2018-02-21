@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -23,9 +24,6 @@ const styles = (theme: any): any => ({
   logoItem: {
     paddingLeft: 16,
   },
-  primaryLink: {
-    textDecoration: 'none',
-  },
 });
 
 const primaryLinks = [
@@ -45,18 +43,24 @@ class PrimaryNav extends React.Component<any, any> {
     drawerOpen: false,
   };
 
+  constructor(props: any) {
+    super(props);
+  }
+
+  navigate(href: string) {
+    const { history , toggleMenu } = this.props;
+    history.push(href);
+    toggleMenu();
+  }
+
   renderPrimaryLink(PrimaryLink: any) {
-    const { classes } = this.props;
-    
     return (
-      <Link to={PrimaryLink.href} className={classes.primaryLink}>
-        <ListItem button divider>
-          <ListItemIcon>
-            <PrimaryLink.icon />
-          </ListItemIcon>
-          <ListItemText primary={PrimaryLink.display} />
-        </ListItem>
-      </Link>
+      <ListItem button divider onClick={() => this.navigate(PrimaryLink.href)}>
+        <ListItemIcon>
+          <PrimaryLink.icon />
+        </ListItemIcon>
+        <ListItemText primary={PrimaryLink.display} />
+      </ListItem>
     );
   }
 
@@ -82,4 +86,7 @@ class PrimaryNav extends React.Component<any, any> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(PrimaryNav);
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  withRouter,
+)(PrimaryNav);
