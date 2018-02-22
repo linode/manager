@@ -7,12 +7,15 @@ import { compose } from 'redux';
 
 import {
   withStyles,
-  StyledComponentProps,
+  WithStyles,
+  StyleRules,
+  Theme,
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
+import SvgIcon from 'material-ui/SvgIcon';
 import InboxIcon from 'material-ui-icons/Inbox';
 import DashboardIcon from 'material-ui-icons/Dashboard';
 import StorageIcon from 'material-ui-icons/Storage';
@@ -27,14 +30,13 @@ import logoPng from 'src/assets/logo/linode-logo-small.png';
 
 import { TodoAny } from 'src/utils';
 
-const styles = (theme: any): any => ({
-  headerGrid: theme.mixins.toolbar,
-  logoItem: {
-    paddingLeft: 16,
-  },
-});
+type PrimaryLink = {
+  display: string,
+  icon: typeof SvgIcon,
+  href: string,
+};
 
-const primaryLinks = [
+const primaryLinks: PrimaryLink[] = [
   { display: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
   { display: 'Linodes', icon: StorageIcon, href: '/linodes' },
   { display: 'Volumes', icon: InboxIcon, href: '/volumes' },
@@ -46,9 +48,16 @@ const primaryLinks = [
   { display: 'Images', icon: InsertPhotoIcon, href: '/images' },
 ];
 
-type Props = StyledComponentProps & RouteComponentProps<{}> & {
-  toggleMenu: () => void, 
-};
+const styles = (theme: Theme): StyleRules => ({
+  headerGrid: theme.mixins.toolbar,
+  logoItem: {
+    paddingLeft: 16,
+  },
+});
+
+interface Props extends WithStyles<'headerGrid' | 'logoItem'>, RouteComponentProps<{}> {
+  toggleMenu: () => void;
+}
 
 class PrimaryNav extends React.Component<Props> {
   state = {
@@ -65,7 +74,7 @@ class PrimaryNav extends React.Component<Props> {
     toggleMenu();
   }
 
-  renderPrimaryLink(PrimaryLink: any) {
+  renderPrimaryLink(PrimaryLink: PrimaryLink) {
     return (
       <ListItem
         key={PrimaryLink.display}
@@ -83,10 +92,6 @@ class PrimaryNav extends React.Component<Props> {
 
   render() {
     const { classes } = this.props;
-
-    if (!classes) {
-      return null;
-    }
 
     return (
       <React.Fragment>

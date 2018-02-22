@@ -3,7 +3,9 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import {
   withStyles,
-  StyledComponentProps,
+  WithStyles,
+  StyleRules,
+  Theme,
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
@@ -12,7 +14,7 @@ import { TodoAny } from 'src/utils';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 
-const styles = (theme: TodoAny): TodoAny => ({
+const styles = (theme: Theme): StyleRules => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -32,7 +34,9 @@ const styles = (theme: TodoAny): TodoAny => ({
   },
 });
 
-class App extends React.Component<StyledComponentProps> {
+type Props = WithStyles<'appFrame' | 'content'>;
+
+class App extends React.Component<Props> {
   state = {
     menuOpen: false,
   };
@@ -46,10 +50,6 @@ class App extends React.Component<StyledComponentProps> {
   render() {
     const { menuOpen } = this.state;
     const { classes } = this.props;
-
-    if (!classes) {
-      return null;
-    }
 
     return (
       <React.Fragment>
@@ -79,4 +79,4 @@ class App extends React.Component<StyledComponentProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(App as TodoAny);
+export default withStyles(styles, { withTheme: true })<Props>(App) as TodoAny;

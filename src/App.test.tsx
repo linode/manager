@@ -8,7 +8,7 @@ import App from './App';
 it('renders without crashing', () => {
   mount(
     <StaticRouter location="/" context={{}}>
-      <App key="app"/>
+      <App />
     </StaticRouter>,
   );
 });
