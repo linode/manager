@@ -2,18 +2,19 @@ import * as React from 'react';
 
 import {
   withStyles,
-  StyledComponentProps,
+  WithStyles,
+  Theme,
+  StyleRules,
 } from 'material-ui/styles';
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
 
-import PrimaryNav from 'src/components/PrimaryNav';
-
 import { TodoAny } from 'src/utils';
+import PrimaryNav from 'src/components/PrimaryNav';
 
 export const menuWidth = 250;
 
-const styles = (theme: any): any => ({
+const styles = (theme: Theme): StyleRules => ({
   menuPaper: {
     height: '100%',
     width: menuWidth,
@@ -26,18 +27,14 @@ const styles = (theme: any): any => ({
   },
 });
 
-type Props = StyledComponentProps & {
-  open: boolean, 
-  toggle: () => void,
-};
+interface Props extends WithStyles<'menuPaper' | 'menuDocked'> {
+  open: boolean;
+  toggle: () => void;
+}
 
 class SideMenu extends React.Component<Props> {
   render() {
     const { classes, open, toggle } = this.props;
-
-    if (!classes) {
-      return null;
-    }
 
     return (
       <React.Fragment>
@@ -71,6 +68,4 @@ class SideMenu extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(
-  SideMenu as TodoAny,
-) as TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(SideMenu) as TodoAny;
