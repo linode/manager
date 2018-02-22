@@ -69,6 +69,7 @@ class App extends React.Component<Props> {
                 <Route exact path="/longview" render={() => 'LongView'} />
                 <Route exact path="/stackscripts" render={() => 'StackScripts'} />
                 <Route exact path="/images" render={() => 'Images'} />
+                <Route exact path="/profile" render={() => 'Profile'} />
                 <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
               </Switch>
             </Typography>
