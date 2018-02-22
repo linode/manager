@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import * as Loadable from 'react-loadable';
 
 import {
   withStyles,
@@ -8,11 +9,16 @@ import {
   Theme,
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
-import Typography from 'material-ui/Typography';
 
 import { TodoAny } from 'src/utils';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
+
+
+const ListLinodes = Loadable({
+  loader: () => import('src/features/linodes/ListLinodes'),
+  loading: () => null,
+});
 
 const styles = (theme: Theme): StyleRules => ({
   appFrame: {
@@ -58,10 +64,9 @@ class App extends React.Component<Props> {
           <TopMenu toggleSideMenu={this.toggleMenu} />
           <SideMenu open={menuOpen} toggle={this.toggleMenu} />
           <main className={classes.content}>
-            <Typography variant="display1" noWrap>
               <Switch>
                 <Route exact path="/dashboard" render={() => 'Dashboard'} />
-                <Route exact path="/linodes" render={() => 'Linodes'} />
+              <Route exact path="/linodes" component={ListLinodes} />
                 <Route exact path="/volumes" render={() => 'Volumes'} />
                 <Route exact path="/nodebalancers" render={() => 'NodeBalancers'} />
                 <Route exact path="/domains" render={() => 'Domains'} />
@@ -72,7 +77,6 @@ class App extends React.Component<Props> {
                 <Route exact path="/profile" render={() => 'Profile'} />
                 <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
               </Switch>
-            </Typography>
           </main>
         </div>
       </React.Fragment>
