@@ -21,31 +21,30 @@ export function start(oauthToken = '', scopes = '', expires = '') {
   store.dispatch(setToken(oauthToken, scopes));
 }
 
-export function refresh(dispatch: TodoAny) {
+export function refresh() {
   const authToken = getStorage(AUTH_TOKEN);
   const scopes = getStorage(AUTH_SCOPES);
-  dispatch(setToken(authToken, scopes));
+  store.dispatch(setToken(authToken, scopes));
 }
 
-export function expire(dispatch: TodoAny) {
+export function expire() {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
   setStorage(AUTH_TOKEN, '');
   setStorage(AUTH_SCOPES, '');
   setStorage(AUTH_EXPIRE_DATETIME, '');
-  dispatch(setToken(null, null));
+  store.dispatch(setToken(null, null));
 }
 
 export function initialize(dispatch: TodoAny) {
   const expires = getStorage(AUTH_EXPIRE_DATETIME) || null;
   if (expires && new Date(expires) < new Date()) {
-    // Calling expire makes sure the full expire steps are taken.
-    return dispatch(expire);
+    return expire();
   }
 
   const token = getStorage(AUTH_TOKEN) || null;
   const scopes = getStorage(AUTH_SCOPES) || null;
-  // Calling this makes sure AUTH_EXPIRES is always set.
-  dispatch(start(token, scopes, expires));
+  // Calling this makes sure AUTH_EXPIRE_DATETIME is always set.
+  start(token, scopes, expires);
 }
 
 export function genOAuthEndpoint(redirectUri: string, scope = '*', nonce: string) {
@@ -85,10 +84,10 @@ export function refreshOAuthToken(dispatch: TodoAny) {
     throw new Error('no iframe container for oauth token refresh');
   }
   iframeContainer.appendChild(iframe);
+  // Wait for the iframe to update localStorage, then move it into Redux
+  setTimeout(() => refresh(), 3000);
   // Remove the iframe once it refreshes OAuth token in localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-  // Move the OAuth token from localStorage into Redux
-  dispatch(refresh);
   // Do this again in a little while
   setTimeout(() => dispatch(refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
 }
