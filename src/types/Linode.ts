@@ -1,5 +1,3 @@
-/// <reference path="index.ts" />
-
 namespace Linode {
   export interface Linode {
     id: string | number;
@@ -8,7 +6,7 @@ namespace Linode {
     created: string;
     region: string;
     image: string;
-    group: string;
+    group?: string;
     ipv4: string[];
     ipv6: string;
     label: string;
