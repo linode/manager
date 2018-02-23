@@ -2,19 +2,26 @@ import * as React from 'react';
 
 import {
   withStyles,
-  StyledComponentProps,
+  WithStyles,
+  Theme,
+  StyleRules,
 } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
+
 import IconButton from 'material-ui/IconButton';
 
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { menuWidth } from 'src/components/SideMenu';
+import UserMenu from 'src/components/UserMenu';
 import { TodoAny } from 'src/utils';
 
-const styles = (theme: any): any => ({
+const styles = (theme: Theme): StyleRules => ({
+  flex: {
+    flex: 1,
+  },
   appBar: {
     backgroundColor: '#333',
     position: 'absolute',
@@ -30,17 +37,13 @@ const styles = (theme: any): any => ({
   },
 });
 
-type Props = StyledComponentProps & {
-  toggleSideMenu: () => void, 
-};
+interface Props extends WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'> {
+  toggleSideMenu: () => void;
+}
 
 class TopMenu extends React.Component<Props> {
   render() {
     const { classes, toggleSideMenu } = this.props;
-
-    if (!classes) {
-      return null;
-    }
 
     return (
       <AppBar className={classes.appBar}>
@@ -53,15 +56,16 @@ class TopMenu extends React.Component<Props> {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" noWrap>
+          <Typography variant="title" color="inherit" className={classes.flex}>
             Linode Manager
           </Typography>
+          <UserMenu />
         </Toolbar>
       </AppBar>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(
-  TopMenu as TodoAny,
+export default withStyles(styles, { withTheme: true })<Props>(
+  TopMenu,
 ) as TodoAny;
