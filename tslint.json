@@ -3,7 +3,7 @@
     "rules": {
         "variable-name": false,
         "import-name": false,
-        "strict-boolean-expressions": false,
-        "object-shorthand-properties-first": false
+        "object-shorthand-properties-first": false,
+        "strict-boolean-expressions": false
     }
 }

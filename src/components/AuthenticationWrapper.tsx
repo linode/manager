@@ -23,15 +23,15 @@ export class AuthenticationWrapper extends React.Component<Props> {
     showChildren: false,
   };
 
-  defaultProps = {
+  static defaultProps = {
     isAuthenticated: false,
-  }
+  };
 
   componentWillMount() {
     const { isAuthenticated, location: { pathname }, loginRedirect } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
-      this.setState((prevState) => ({ ...prevState, showChildren: true }));
+      this.setState(prevState => ({ ...prevState, showChildren: true }));
       return;
     }
 
