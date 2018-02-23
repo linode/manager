@@ -12,6 +12,8 @@ import analytics from 'src/analytics';
 
 import 'src/exceptionReporting';
 
+import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
+
 import App from './App';
 import './index.css';
 
@@ -33,7 +35,9 @@ createBrowserHistory().listen(({ pathname }) => {
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <AuthenticationWrapper>
+        <App />
+      </AuthenticationWrapper>
     </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement,
