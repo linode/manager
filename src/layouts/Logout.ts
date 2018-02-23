@@ -12,7 +12,7 @@ export class Logout extends Component {
     const { dispatch } = this.props as TodoAny;
 
     // Drop session info
-    dispatch(session.expire);
+    session.expire();
 
     // Reset state
     dispatch(logout());

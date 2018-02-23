@@ -31,7 +31,7 @@ export class AuthenticationWrapper extends React.Component<Props> {
     const { isAuthenticated, location: { pathname }, loginRedirect } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
-      this.setState(prevState => ({ ...prevState, showChildren: true }));
+      this.setState({ showChildren: true });
       return;
     }
 
@@ -56,9 +56,9 @@ export class AuthenticationWrapper extends React.Component<Props> {
     const { children } = this.props;
     const { showChildren } = this.state;
     return (
-        <React.Fragment>
-            {showChildren && children}
-        </React.Fragment>
+      <React.Fragment>
+        {showChildren && children}
+      </React.Fragment>
     );
   }
 }
