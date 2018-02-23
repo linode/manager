@@ -16,7 +16,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 
 import { menuWidth } from 'src/components/SideMenu';
 import UserMenu from 'src/components/UserMenu';
-import { TodoAny } from 'src/utils';
+
 
 const styles = (theme: Theme): StyleRules => ({
   flex: {

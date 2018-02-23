@@ -1,8 +1,18 @@
 import { createStore } from 'redux';
 import reducers from './reducers';
 
+interface ResourceState<T> {
+  data?: T[];
+}
+
+interface ApiState {
+  linodes?: ResourceState<Linode>;
+  linodeTypes?: ResourceState<LinodeType>;
+  images?: ResourceState<Image>;
+}
+
 export interface AppState {
-  api: any;
+  api: ApiState;
 }
 
 const defaultState: AppState = {

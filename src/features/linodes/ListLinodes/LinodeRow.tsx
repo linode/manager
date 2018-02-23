@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { AppState } from 'src/store';
+import * as copy from 'copy-to-clipboard';
+import { pathOr } from 'ramda';
+
 import {
   withStyles,
   Theme,
   StyledComponentProps,
   StyleRules,
 } from 'material-ui/styles';
-
-
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
@@ -22,81 +22,43 @@ import gb from 'flag-icon-css/flags/4x3/gb.svg';
 import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
-const flagMapping = { us, de, gb, sg, jp };
+import { AppState } from 'src/store';
+
+const flagMap = { us, de, gb, sg, jp };
 
 const styles = (theme: Theme): StyleRules => ({
-  flexText: {},
+  copyIcon: {
+    height: '0.8125rem',
+    width: '0.8125rem',
+    cursor: 'pointer',
+  },
+  inlineItems: {
+    lineHeight: '30px',
+    verticalAlign: 'middle',
+    display: 'inline-flex',
+    margin: '0 3px',
+  },
 });
 
 function titlecase(string: string): string {
-  return string;
+  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
+
 function formatRegion(region: string) {
   const [countryCode, area] = region.split('-');
   return `${countryCode.toUpperCase()} ${titlecase(area)}`;
 }
 
-type TodoAny = any;
-
-interface LinodeAlerts {
-  cpu: number;
-  io: number;
-  network_in: number;
-  network_out: number;
-  transfer_quote: number;
-}
-
-interface LinodeBackups {
-  enabled: boolean;
-  schedule: TodoAny;
-  last_backup: TodoAny;
-  snapshot: TodoAny;
-}
-
-type LinodeStatus = 'offline'
-  | 'booting'
-  | 'running'
-  | 'shutting_down'
-  | 'rebooting'
-  | 'provisioning'
-  | 'deleting'
-  | 'migrating';
-
-type Hypervisor = 'kvm' | 'zen';
-
-interface LinodeSpecs {
-  disk: number;
-  memory: number;
-  vcpus: number;
-  transfer: number;
-}
-
-interface Linode {
-  id: string;
-  alerts: LinodeAlerts;
-  backups: LinodeBackups;
-  created: string;
-  region: string;
-  image: string;
-  group: string;
-  ipv4: string[];
-  ipv6: string;
-  label: string;
-  type: string;
-  status: LinodeStatus;
-  updated: string;
-  hypervisor: Hypervisor;
-  specs: LinodeSpecs;
-}
-
-interface Props extends StyledComponentProps<any> {
+interface Props extends StyledComponentProps<'copyIcon' | 'inlineItems'> {
   linode?: Linode;
-  type?: TodoAny;
-  image?: TodoAny;
+  type?: LinodeType;
+  image?: Image;
 }
 
 interface DefaultProps {
   linode: {};
+  type: {};
+  image: {};
   classes: {};
 }
 
@@ -104,14 +66,16 @@ type PropsWithDefaults = Props & DefaultProps;
 
 const img = (region: string) => {
   const abb = region.substr(0, 2);
-  return flagMapping[abb];
+  return flagMap[abb];
 };
 
-// const output = `Linode ${parseInt(plan.memory) / 1024}G`;
+function clip(value: string): void {
+  console.log('clip', value);
+  copy(value);
+}
 
 function displayLabel(memory?: number, label?: string): string | undefined {
   if (!label || !memory) { return; }
-
   return `${label}, Linode ${memory / 1024}G`;
 }
 
@@ -128,22 +92,50 @@ class LinodeRow extends React.Component<Props> {
     return (
       <TableRow key={linode.id}>
         <TableCell>
-          <span className={classes.flexText}>
-            <Link to="/">{linode.label}</Link>
-          </span>
-          {label && <span className={classes.flexText}>{label}</span>}
+          <div>
+            <div>
+              <Link to={`/linodes/${linode.id}`}>
+                <Typography variant="title">
+                  {linode.label}
+                </Typography>
+              </Link>
+            </div>
+            {label && <div>{label}</div>}
+          </div>
         </TableCell>
         <TableCell>
-          <span className={classes.flexText}>
-            <ContentCopyIcon className={classes.copyIcons} />{linode.ipv4}
-          </span>
-          <span className={classes.flexText}>
-            <ContentCopyIcon className={classes.copyIcons} />{linode.ipv6}
-          </span>
+          <div>
+            <div className={classes.inlineItems}>
+              <ContentCopyIcon
+                className={classes.copyIcon}
+                onClick={() => clip(linode.ipv6)}
+              />
+            </div>
+            <div className={classes.inlineItems}>
+              {linode.ipv4}
+            </div>
+          </div>
+          <div>
+            <div className={classes.inlineItems}>
+              <ContentCopyIcon
+                className={classes.copyIcon}
+                onClick={() => clip(linode.ipv6)}
+              />
+            </div>
+            <div className={classes.inlineItems}>
+              {linode.ipv6}
+            </div>
+          </div>
+
         </TableCell>
         <TableCell>
-          <img src={img(linode.region)} height="15" width="20" role="presentation" />
-          <Typography variant="body2">{formatRegion(linode.region)}</Typography>
+          <img
+            className={classes.inlineItems}
+            src={img(linode.region)} height="15" width="20" role="presentation"
+          />
+          <Typography
+            className={classes.inlineItems}
+            variant="body2">{formatRegion(linode.region)}</Typography>
         </TableCell>
         <TableCell>
 
@@ -153,27 +145,14 @@ class LinodeRow extends React.Component<Props> {
   }
 }
 
-/**
- * @todo Fix any.
- */
 const mapStateToProps = (state: AppState, ownProps: Props) => {
-  const typesCollection = state.api.linodeTypes.data;
-  const imagesCollection = state.api.images.data;
+  const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
+  const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
   const { type, image } = ownProps.linode as Linode;
 
   return {
-    /**
-     * @todo Type Image.
-     */
-    image: imagesCollection
-      .find((i: TodoAny) => i.id === image),
-
-    /**
-     * @todo Type Type.
-     * @see https://gph.is/1aQI2oY
-     */
-    type: typesCollection
-      .find((t: TodoAny) => t.id === type),
+    image: imagesCollection.find((i: Image) => i.id === image),
+    type: typesCollection.find((t: LinodeType) => t.id === type),
   };
 };
 

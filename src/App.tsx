@@ -10,7 +10,6 @@ import {
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
 
-import { TodoAny } from 'src/utils';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 

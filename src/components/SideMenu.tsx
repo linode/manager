@@ -9,7 +9,6 @@ import {
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
 
-import { TodoAny } from 'src/utils';
 import PrimaryNav from 'src/components/PrimaryNav';
 
 export const menuWidth = 250;

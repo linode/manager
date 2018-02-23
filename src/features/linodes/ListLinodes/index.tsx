@@ -104,7 +104,6 @@ class ListLinodes extends React.Component<Props> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* @todo Fix */}
               {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
             </TableBody>
           </Table>

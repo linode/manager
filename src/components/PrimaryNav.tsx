@@ -28,8 +28,6 @@ import InsertPhotoIcon from 'material-ui-icons/InsertPhoto';
 
 import logoPng from 'src/assets/logo/linode-logo-small.png';
 
-import { TodoAny } from 'src/utils';
-
 type PrimaryLink = {
   display: string,
   icon: typeof SvgIcon,

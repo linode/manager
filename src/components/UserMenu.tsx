@@ -15,8 +15,6 @@ import Button from 'material-ui/Button';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 
-import { TodoAny } from 'src/utils';
-
 type MenuLink = {
   display: string,
   href: string,
