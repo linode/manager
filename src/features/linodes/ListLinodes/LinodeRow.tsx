@@ -50,9 +50,9 @@ function formatRegion(region: string) {
 }
 
 interface Props extends StyledComponentProps<'copyIcon' | 'inlineItems'> {
-  linode?: Linode;
-  type?: LinodeType;
-  image?: Image;
+  linode?: Linode.Linode;
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
 }
 
 interface DefaultProps {
@@ -147,11 +147,11 @@ class LinodeRow extends React.Component<Props> {
 const mapStateToProps = (state: AppState, ownProps: Props) => {
   const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
   const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
-  const { type, image } = ownProps.linode as Linode;
+  const { type, image } = ownProps.linode as Linode.Linode;
 
   return {
-    image: imagesCollection.find((i: Image) => i.id === image),
-    type: typesCollection.find((t: LinodeType) => t.id === type),
+    image: imagesCollection.find((i: Linode.Image) => i.id === image),
+    type: typesCollection.find((t: Linode.LinodeType) => t.id === type),
   };
 };
 

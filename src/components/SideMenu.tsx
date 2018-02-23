@@ -67,4 +67,4 @@ class SideMenu extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(SideMenu) as TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(SideMenu) as Linode.TodoAny;

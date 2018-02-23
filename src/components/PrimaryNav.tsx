@@ -110,7 +110,7 @@ class PrimaryNav extends React.Component<Props> {
   }
 }
 
-export default compose<TodoAny, TodoAny, TodoAny>(
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
 )(PrimaryNav);

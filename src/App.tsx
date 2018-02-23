@@ -83,4 +83,4 @@ class App extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(App) as TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(App) as Linode.TodoAny;

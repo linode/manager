@@ -43,11 +43,11 @@ const styles = (theme: Theme): StyleRules => ({
 });
 
 interface Props extends StyledComponentProps<any> {
-  linodes?: Linode[];
+  linodes?: Linode.Linode[];
 }
 
 interface DefaultProps {
-  linodes: Linode[];
+  linodes: Linode.Linode[];
   classes: any;
 }
 

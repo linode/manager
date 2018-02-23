@@ -99,7 +99,7 @@ class UserMenu extends React.Component<Props, State> {
   }
 }
 
-export default compose<TodoAny, TodoAny, TodoAny>(
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
-)(UserMenu) as TodoAny;
+)(UserMenu) as Linode.TodoAny;

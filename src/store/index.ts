@@ -1,14 +1,17 @@
 import { createStore } from 'redux';
 import reducers from './reducers';
 
-interface ResourceState<T> {
+interface ManyResourceState<T> {
   data?: T[];
+  page: number;
+  pages: number;
+  results: number;
 }
 
 interface ApiState {
-  linodes?: ResourceState<Linode>;
-  linodeTypes?: ResourceState<LinodeType>;
-  images?: ResourceState<Image>;
+  linodes?: ManyResourceState<Linode.Linode>;
+  linodeTypes?: ManyResourceState<Linode.LinodeType>;
+  images?: ManyResourceState<Linode.Image>;
 }
 
 export interface AppState {
@@ -18,6 +21,9 @@ export interface AppState {
 const defaultState: AppState = {
   api: {
     linodes: {
+      page: 0,
+      pages: 1,
+      results: 2,
       data: [
         {
           specs: {
@@ -94,6 +100,9 @@ const defaultState: AppState = {
       ],
     },
     linodeTypes: {
+      page: 0,
+      pages: 1,
+      results: 14,
       data: [
         {
           transfer: 2000,
@@ -407,6 +416,9 @@ const defaultState: AppState = {
 
     },
     images: {
+      page: 0,
+      pages: 1,
+      results: 21,
       data: [
         {
           created_by: 'linode',
