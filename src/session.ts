@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import { setToken } from 'src/actions/authentication';
 import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from 'src/constants';
 import { getStorage, setStorage } from 'src/storage';
+import store from 'src/store';
 import { TodoAny } from 'src/utils';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
@@ -11,15 +12,13 @@ const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
 
 export function start(oauthToken = '', scopes = '', expires = '') {
-  return (dispatch: TodoAny) => {
-    // Set these two so we can grab them on subsequent page loads
-    setStorage(AUTH_TOKEN, oauthToken);
-    setStorage(AUTH_SCOPES, scopes);
-    setStorage(AUTH_EXPIRE_DATETIME, expires);
+  // Set these two so we can grab them on subsequent page loads
+  setStorage(AUTH_TOKEN, oauthToken);
+  setStorage(AUTH_SCOPES, scopes);
+  setStorage(AUTH_EXPIRE_DATETIME, expires);
 
-    // Add all to state for this (page load) session
-    dispatch(setToken(oauthToken, scopes));
-  };
+  // Add all to state for this (page load) session
+  store.dispatch(setToken(oauthToken, scopes));
 }
 
 export function refresh(dispatch: TodoAny) {

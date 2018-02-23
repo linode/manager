@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/enzyme": "^3.1.9",
+    "@types/ramda": "^0.25.18",
     "@types/uuid": "^3.4.3",
     "autoprefixer": "7.1.6",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
