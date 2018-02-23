@@ -25,7 +25,7 @@ analytics(GA_ID, isProduction);
  */
 createBrowserHistory().listen(({ pathname }) => {
   /** https://palantir.github.io/tslint/rules/strict-boolean-expressions/ */
-  if (isPathOneOf(['/oauth'], pathname) === false) {
+  if ((window as any).ga && isPathOneOf(['/oauth'], pathname) === false) {
     (window as any).ga('send', 'pageview');
   }
 });
