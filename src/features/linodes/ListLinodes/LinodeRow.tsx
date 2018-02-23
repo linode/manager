@@ -23,6 +23,7 @@ import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 import { AppState } from 'src/store';
+import TagComponent from 'src/components/TagComponent';
 
 const flagMap = { us, de, gb, sg, jp };
 
@@ -88,6 +89,11 @@ class LinodeRow extends React.Component<Props> {
     const { classes, linode, type, image } = this.props as PropsWithDefaults;
     const label = displayLabel(type.memory, image.label);
 
+    /**
+     * @todo We're implementing faux tags utilizing the linode.group.
+    */
+    const tags = [linode.group].filter(Boolean);
+
     return (
       <TableRow key={linode.id}>
         <TableCell>
@@ -101,6 +107,9 @@ class LinodeRow extends React.Component<Props> {
             </div>
             {label && <div>{label}</div>}
           </div>
+        </TableCell>
+        <TableCell>
+          {tags.map((v: string, idx) => <TagComponent key={idx} label={v} />)}
         </TableCell>
         <TableCell>
           <div>

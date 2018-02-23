@@ -98,6 +98,7 @@ class ListLinodes extends React.Component<Props> {
             <TableHead>
               <TableRow>
                 <TableCell>Label</TableCell>
+                <TableCell>Tags</TableCell>
                 <TableCell>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell></TableCell>
