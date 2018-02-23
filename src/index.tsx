@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
@@ -9,6 +10,9 @@ import store from 'src/store';
 import { isProduction, GA_ID } from 'src/constants';
 import analytics from 'src/analytics';
 
+import 'src/exceptionReporting';
+
+import store from './store';
 import App from './App';
 import './index.css';
 
