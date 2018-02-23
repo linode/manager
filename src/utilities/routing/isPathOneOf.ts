@@ -2,10 +2,9 @@ import { matchPath, RouteProps } from 'react-router-dom';
 
 /**
  *
- * @param {Array<string>} paths Haystack.
- * @param {string} pathname Needle.
- * @param {Object} [props] matchPath arguments.
- * @return {Boolean}
+ * @param paths Haystack.
+ * @param pathname Needle.
+ * @param matchPath arguments.
  */
 export default (paths: string[], pathname: string, props?: RouteProps): Boolean => {
   return paths.reduce(
