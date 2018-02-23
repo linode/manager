@@ -12,7 +12,6 @@ import analytics from 'src/analytics';
 
 import 'src/exceptionReporting';
 
-import store from './store';
 import App from './App';
 import './index.css';
 
