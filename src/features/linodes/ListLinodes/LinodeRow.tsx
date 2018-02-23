@@ -70,7 +70,6 @@ const img = (region: string) => {
 };
 
 function clip(value: string): void {
-  console.log('clip', value);
   copy(value);
 }
 
