@@ -42,59 +42,6 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-type TodoAny = any;
-
-interface LinodeAlerts {
-  cpu: number;
-  io: number;
-  network_in: number;
-  network_out: number;
-  transfer_quote: number;
-}
-
-interface LinodeBackups {
-  enabled: boolean;
-  schedule: TodoAny;
-  last_backup: TodoAny;
-  snapshot: TodoAny;
-}
-
-type LinodeStatus = 'offline'
-  | 'booting'
-  | 'running'
-  | 'shutting_down'
-  | 'rebooting'
-  | 'provisioning'
-  | 'deleting'
-  | 'migrating';
-
-type Hypervisor = 'kvm' | 'zen';
-
-interface LinodeSpecs {
-  disk: number;
-  memory: number;
-  vcpus: number;
-  transfer: number;
-}
-
-interface Linode {
-  id: string;
-  alerts: LinodeAlerts;
-  backups: LinodeBackups;
-  created: string;
-  region: string;
-  image: string;
-  group: string;
-  ipv4: string[];
-  ipv6: string;
-  label: string;
-  type: string;
-  status: LinodeStatus;
-  updated: string;
-  hypervisor: Hypervisor;
-  specs: LinodeSpecs;
-}
-
 interface Props extends StyledComponentProps<any> {
   linodes?: Linode[];
 }
@@ -158,7 +105,7 @@ class ListLinodes extends React.Component<Props> {
             </TableHead>
             <TableBody>
               {/* @todo Fix */}
-              {linodes.map(l => <LinodeRow linode={l} />)}
+              {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
             </TableBody>
           </Table>
         </Grid>
