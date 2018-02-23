@@ -13,9 +13,9 @@ import analytics from 'src/analytics';
 import 'src/exceptionReporting';
 
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
-
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import Logout from 'src/layouts/Logout';
+import { initialize as sessionInitialize, initializeSessionRefresh } from './session';
 import App from './App';
 import './index.css';
 
@@ -33,6 +33,9 @@ createBrowserHistory().listen(({ pathname }) => {
     (window as any).ga('send', 'pageview');
   }
 });
+
+sessionInitialize();
+initializeSessionRefresh();
 
 ReactDOM.render(
   <Provider store={store}>

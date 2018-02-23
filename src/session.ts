@@ -5,7 +5,6 @@ import { setToken } from 'src/actions/authentication';
 import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from 'src/constants';
 import { getStorage, setStorage } from 'src/storage';
 import store from 'src/store';
-import { TodoAny } from 'src/utils';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
@@ -35,10 +34,11 @@ export function expire() {
   store.dispatch(setToken(null, null));
 }
 
-export function initialize(dispatch: TodoAny) {
+export function initialize() {
   const expires = getStorage(AUTH_EXPIRE_DATETIME) || null;
   if (expires && new Date(expires) < new Date()) {
-    return expire();
+    expire();
+    return;
   }
 
   const token = getStorage(AUTH_TOKEN) || null;
@@ -70,7 +70,7 @@ export function redirectToLogin(path: string, querystring: string) {
   window.location.href = prepareOAuthEndpoint(redirectUri);
 }
 
-export function refreshOAuthToken(dispatch: TodoAny) {
+export function refreshOAuthToken() {
   /**
    * Open an iframe for two purposes
    * 1. Hits the login service (extends the lifetime of login session)
@@ -84,10 +84,14 @@ export function refreshOAuthToken(dispatch: TodoAny) {
     throw new Error('no iframe container for oauth token refresh');
   }
   iframeContainer.appendChild(iframe);
-  // Wait for the iframe to update localStorage, then move it into Redux
+  // Wait for the iframe to update localStorage, then move the creds into Redux
   setTimeout(() => refresh(), 3000);
-  // Remove the iframe once it refreshes OAuth token in localStorage
+  // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
   // Do this again in a little while
-  setTimeout(() => dispatch(refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
+  setTimeout(() => refreshOAuthToken(), OAUTH_TOKEN_REFRESH_INTERVAL);
+}
+
+export function initializeSessionRefresh() {
+  setTimeout(() => refreshOAuthToken(), OAUTH_TOKEN_REFRESH_INTERVAL);
 }
