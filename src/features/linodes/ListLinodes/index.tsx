@@ -10,14 +10,14 @@ import {
   StyleRulesCallback,
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
+
 import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import TableBody from 'material-ui/Table/TableBody';
 
+import WithDocumentation from 'src/components/WithDocumentation';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
@@ -63,31 +63,16 @@ class ListLinodes extends React.Component<PropsWithStyles> {
   }
 
   render() {
-    const { classes, linodes } = this.props;
-
+    const { linodes } = this.props;
     return (
-      <div className={classes.root}>
-        <Grid container spacing={40}>
-          <Grid item xs={12}>
-            <Typography variant="display1">Linodes</Typography>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Grid container spacing={16}>
-              <Grid item xs={12} md={9} xl={10}>
-                {/* Everything Else */}
-                <Paper elevation={1}>
-                  {linodes.length > 0 ? this.listLinodes() : <ListLinodesEmptyState />}
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={3} xl={2}>
-                {/** Docs */}
-                Documentation...
-          </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
+      <WithDocumentation
+        title="Linodes"
+        docs={[]}
+        render={() =>
+          linodes.length > 0
+            ? this.listLinodes()
+            : <ListLinodesEmptyState />}
+      />
     );
   }
 }
