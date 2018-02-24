@@ -41,7 +41,13 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-type Props = WithStyles<'appFrame' | 'content'>;
+interface Props {}
+
+type PropsWithStyles = Props & WithStyles<'appFrame' | 'content'>;
+
+interface State {
+  menuOpen: Boolean;
+}
 
 /**
  * Temoporary route.
@@ -58,7 +64,7 @@ const TempRoute = (props: any) => {
   />;
 };
 
-class App extends React.Component<Props> {
+class App extends React.Component<PropsWithStyles, State> {
   state = {
     menuOpen: false,
   };
@@ -100,4 +106,4 @@ class App extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(App) as Linode.TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(App);
