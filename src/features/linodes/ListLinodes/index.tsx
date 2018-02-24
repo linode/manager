@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { pathOr } from 'ramda';
 
 import {
   withStyles,
   Theme,
-  StyledComponentProps,
-  StyleRules,
+  WithStyles,
+  StyleRulesCallback,
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
 import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
@@ -19,82 +19,32 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableBody from 'material-ui/Table/TableBody';
 
 import LinodeRow from './LinodeRow';
+import ListLinodesEmptyState from './ListLinodesEmptyState';
 
-const styles = (theme: Theme): StyleRules => ({
+const styles: StyleRulesCallback<'root'> = (theme: Theme) => ({
   root: {
     flexGrow: 1,
   },
-  newLinodeButton: {
-    borderRadius: '4px',
-  },
-  emptyStateContainer: {
-    paddingTop: '25px',
-    paddingBottom: '25px',
-  },
-  emptyStateCopy: {
-    textAlign: 'center',
-  },
-  [theme.breakpoints.up('md')]: {
-    emptyStateContainer: {
-      paddingTop: '50px',
-      paddingBottom: '50px',
-    },
-  },
 });
 
-interface Props extends StyledComponentProps<any> {
-  linodes?: Linode.Linode[];
-}
-
-interface DefaultProps {
+interface Props {
   linodes: Linode.Linode[];
-  classes: any;
 }
 
-type PropsWithDefaults = Props & DefaultProps;
+type PropsWithStyles = Props & WithStyles<'root'>;
 
-
-class ListLinodes extends React.Component<Props> {
-  public static defaultProps = {
+class ListLinodes extends React.Component<PropsWithStyles> {
+  static defaultProps = {
     linodes: [],
-    classes: {},
   };
 
-  emptyState() {
-    const { classes } = this.props as PropsWithDefaults;
-
-    return (
-      <Grid
-        container
-        spacing={24}
-        alignItems="center"
-        direction="column"
-        justify="center"
-        className={classes.emptyStateContainer}
-      >
-        <Grid item xs={12}> Image goes here... </Grid>
-        <Grid item xs={12} lg={10} className={classes.emptyStateCopy}>
-          <Typography variant="body1">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce mollis
-            quis tortor ultrices lobortis. Aliquam rutrum dolor turpis, at
-            molestie purus semper non. Ut finibus bibendum velit.
-        </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="raised" color="primary" className={classes.newLinodeButton}>
-            Add New Linode
-          </Button>
-        </Grid>
-      </Grid>
-    );
-  }
-
   listLinodes() {
-    const { classes, linodes } = this.props as PropsWithDefaults;
+    const { linodes } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Table className={classes.table}>
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Label</TableCell>
@@ -113,7 +63,7 @@ class ListLinodes extends React.Component<Props> {
   }
 
   render() {
-    const { classes, linodes } = this.props as PropsWithDefaults;
+    const { classes, linodes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -127,7 +77,7 @@ class ListLinodes extends React.Component<Props> {
               <Grid item xs={12} md={9} xl={10}>
                 {/* Everything Else */}
                 <Paper elevation={1}>
-                  {linodes.length > 0 ? this.listLinodes() : this.emptyState()}
+                  {linodes.length > 0 ? this.listLinodes() : <ListLinodesEmptyState />}
                 </Paper>
               </Grid>
               <Grid item xs={12} md={3} xl={2}>
@@ -143,10 +93,10 @@ class ListLinodes extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any) => ({
-  linodes: state.api.linodes.data,
+  linodes: pathOr([], ['api', 'linodes', 'data'], state),
 });
 
 export default compose(
-  withStyles(styles, { withTheme: true }),
+  withStyles<'root'>(styles, { withTheme: true }),
   connect<Props>(mapStateToProps),
 )(ListLinodes);

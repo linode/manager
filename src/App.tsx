@@ -5,7 +5,7 @@ import * as Loadable from 'react-loadable';
 import {
   withStyles,
   WithStyles,
-  StyleRules,
+  StyleRulesCallback,
   Theme,
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
@@ -21,7 +21,7 @@ const ListLinodes = Loadable({
   loading: () => null,
 });
 
-const styles = (theme: Theme): StyleRules => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
