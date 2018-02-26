@@ -82,7 +82,7 @@ export class OAuthCallbackPage extends Component<Props> {
     let returnTo = '/';
     if (hashParams['return']
         && hashParams['return'].indexOf('?') > -1) {
-      const returnParams = parseQueryParams(hashParams['return'].split('?')[1]) as TodoAny;
+      const returnParams = parseQueryParams(splitIntoTwo(hashParams['return'], '?')[1]) as TodoAny;
       returnTo = returnParams.returnTo;
     }
 

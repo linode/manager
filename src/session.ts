@@ -66,7 +66,7 @@ export function prepareOAuthEndpoint(redirectUri: string, scope = '*') {
 }
 
 export function redirectToLogin(path: string, querystring: string) {
-  const redirectUri = `${path}${querystring && `%3F${querystring}`}`;
+  const redirectUri = `${path}${querystring && `${querystring}`}`;
   window.location.href = prepareOAuthEndpoint(redirectUri);
 }
 
