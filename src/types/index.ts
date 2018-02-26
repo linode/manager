@@ -6,11 +6,35 @@
 declare module '*.svg';
 declare module '*.png';
 
-
 namespace Linode {
   export type TodoAny = any;
 
+  export type NullableString = string | null;
+
   export type Hypervisor = 'kvm' | 'zen';
+
+  interface ManyResourceState<T> {
+    data?: T[];
+    page: number;
+    pages: number;
+    results: number;
+  }
+  
+  export interface ApiState {
+    linodes?: ManyResourceState<Linode.Linode>;
+    linodeTypes?: ManyResourceState<Linode.LinodeType>;
+    images?: ManyResourceState<Linode.Image>;
+  }
+  
+  interface AuthState {
+    token: NullableString;
+    scopes: NullableString;
+  }
+  
+  export interface AppState {
+    api: ApiState;
+    authentication: AuthState;
+  }
 
   export interface LinodeSpecs {
     disk: number;

@@ -24,10 +24,3 @@ const localStorageMock = (function () { // eslint-disable-line wrap-iife
 })();
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
-/** Window.location mock **/
-locationMock = {
-  href: ''
-};
-
-Object.defineProperty(window, 'location', { value: locationMock });

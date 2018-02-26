@@ -6,7 +6,6 @@ import { isEmpty } from 'ramda';
 
 import * as session from 'src/session';
 import { getStorage, setStorage } from 'src/storage';
-import { TodoAny } from 'src/utils';
 
 /**
  * Splits a string into at most two parts using a separator character.
@@ -42,7 +41,7 @@ export function parseQueryParams(str: string) {
     );
 }
 
-export class OAuthCallbackPage extends Component<TodoAny> {
+export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   checkNonce(nonce: string) {
     const { history } = this.props;
     // nonce should be set and equal to ours otherwise retry auth
@@ -65,7 +64,7 @@ export class OAuthCallbackPage extends Component<TodoAny> {
       scope: scopes,
       expires_in: expiresIn,
       state: nonce,
-    } = hashParams as TodoAny;
+    } = hashParams as Linode.TodoAny;
     if (!accessToken) {
       return redirect('/', history);
     }
@@ -73,7 +72,8 @@ export class OAuthCallbackPage extends Component<TodoAny> {
     let returnTo = '/';
     if (hashParams['return']
         && hashParams['return'].indexOf('?') > -1) {
-      const returnParams = parseQueryParams(splitIntoTwo(hashParams['return'], '?')[1]) as TodoAny;
+      const returnParams =
+        parseQueryParams(splitIntoTwo(hashParams['return'], '?')[1]) as Linode.TodoAny;
       returnTo = returnParams.returnTo;
     }
 
@@ -94,11 +94,11 @@ export class OAuthCallbackPage extends Component<TodoAny> {
   }
 }
 
-const mapDispatchToProps = (dispatch: TodoAny) => ({
+const mapDispatchToProps = (dispatch: Linode.TodoAny) => ({
   startSession(accessToken: string, scopes: string, expireDate: string) {
     session.start(accessToken, scopes, expireDate);
   },
-  redirect(path: string, history: TodoAny) {
+  redirect(path: string, history: Linode.TodoAny) {
     history.push(path);
   },
 });
