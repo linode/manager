@@ -3,14 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { pathOr } from 'ramda';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-
 import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
@@ -21,19 +14,11 @@ import WithDocumentation from 'src/components/WithDocumentation';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
-const styles: StyleRulesCallback<'root'> = (theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-});
-
 interface Props {
   linodes: Linode.Linode[];
 }
 
-type PropsWithStyles = Props & WithStyles<'root'>;
-
-class ListLinodes extends React.Component<PropsWithStyles> {
+class ListLinodes extends React.Component<Props> {
   static defaultProps = {
     linodes: [],
   };
@@ -82,6 +67,5 @@ const mapStateToProps = (state: any) => ({
 });
 
 export default compose(
-  withStyles<'root'>(styles, { withTheme: true }),
   connect<Props>(mapStateToProps),
 )(ListLinodes);

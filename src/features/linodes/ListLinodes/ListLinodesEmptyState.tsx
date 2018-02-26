@@ -10,10 +10,12 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-const styles: StyleRulesCallback = (theme: Theme) => ({
+type CSSClasses = 'root' | 'copy' | 'button';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
-    paddingTop: '25px',
-    paddingBottom: '25px',
+    paddingTop: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
   },
   copy: {
     textAlign: 'center',
@@ -31,7 +33,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 
 interface Props { }
 
-type PropsWithStyles = Props & WithStyles<'root' | 'copy' | 'button'>;
+type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
   render() {

@@ -26,7 +26,9 @@ import { AppState } from 'src/store';
 
 const flagMap = { us, de, gb, sg, jp };
 
-const styles: StyleRulesCallback<'copyIcon' | 'inlineItems'> = (theme: Theme) => ({
+type CSSClasses = 'copyIcon' | 'inlineItems';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   copyIcon: {
     height: '0.8125rem',
     width: '0.8125rem',
@@ -69,7 +71,7 @@ interface Props {
   image: Linode.Image;
 }
 
-type PropsWithStyles = Props & WithStyles<'copyIcon' | 'inlineItems'>;
+type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
@@ -95,7 +97,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             <div className={classes.inlineItems}>
               <ContentCopyIcon
                 className={classes.copyIcon}
-                onClick={() => clip(linode.ipv6)}
+                onClick={() => clip(linode.ipv4[0])}
               />
             </div>
             <div className={classes.inlineItems}>
