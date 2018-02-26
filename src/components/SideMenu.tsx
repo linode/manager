@@ -9,7 +9,6 @@ import {
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
 
-import { TodoAny } from 'src/utils';
 import PrimaryNav from 'src/components/PrimaryNav';
 
 export const menuWidth = 250;
@@ -27,12 +26,14 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-interface Props extends WithStyles<'menuPaper' | 'menuDocked'> {
+interface Props {
   open: boolean;
   toggle: () => void;
 }
 
-class SideMenu extends React.Component<Props> {
+type PropsWithStyles = Props & WithStyles<'menuPaper' | 'menuDocked'>;
+
+class SideMenu extends React.Component<PropsWithStyles> {
   render() {
     const { classes, open, toggle } = this.props;
 
@@ -68,4 +69,4 @@ class SideMenu extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(SideMenu) as TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(SideMenu);

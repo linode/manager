@@ -15,8 +15,6 @@ import Button from 'material-ui/Button';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 
-import { TodoAny } from 'src/utils';
-
 type MenuLink = {
   display: string,
   href: string,
@@ -33,13 +31,15 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-type Props = WithStyles<'leftIcon'> & RouteComponentProps<{}>;
+interface Props {}
+
+type PropsWithStylesAndRoutes = Props & WithStyles<'leftIcon'> & RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
 }
 
-class UserMenu extends React.Component<Props, State> {
+class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   state = {
     anchorEl: undefined,
   };
@@ -101,7 +101,7 @@ class UserMenu extends React.Component<Props, State> {
   }
 }
 
-export default compose<TodoAny, TodoAny, TodoAny>(
+export default compose<Props, Props, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
-)(UserMenu) as TodoAny;
+)(UserMenu);

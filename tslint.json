@@ -2,6 +2,7 @@
     "extends": ["tslint-config-airbnb"],
     "rules": {
         "variable-name": false,
-        "import-name": false
+        "import-name": false,
+        "strict-boolean-expressions": false
     }
 }
