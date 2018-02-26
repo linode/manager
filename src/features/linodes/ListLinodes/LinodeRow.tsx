@@ -75,18 +75,8 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
-  /**
-   * @todo Mock data for review. onClick has reference to LinodeRow context
-   * 
-   */
   actions: Action[] = [
-    {
-      title: 'Launch Console',
-      onClick: (e) => {
-        e.preventDefault();
-        console.log(this.props.linode.label);
-      },
-    },
+    { title: 'Launch Console', onClick: (e) => { e.preventDefault(); } },
     { title: 'Reboot', onClick: (e) => { e.preventDefault(); } },
     { title: 'View Graphs', onClick: (e) => { e.preventDefault(); } },
     { title: 'Resize', onClick: (e) => { e.preventDefault(); } },

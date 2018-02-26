@@ -12,12 +12,14 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'menu' | 'item';
+type CSSClasses = 'item';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  menu: {},
   item: {
-    padding: '8px 16px',
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
   },
 });
 
@@ -64,7 +66,6 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
-          className={classes.menu}
         >
           {actions.map((a, idx) =>
             <MenuItem
