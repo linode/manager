@@ -1,15 +1,18 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 
+import { AppState } from 'src/store/types';
 import { logout } from 'src/actions/authentication';
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
-import { TodoAny } from 'src/utils';
 
+interface Props {
+  dispatch: Dispatch<AppState>;
+}
 
-export class Logout extends Component {
+export class Logout extends Component<Props> {
   componentDidMount() {
-    const { dispatch } = this.props as TodoAny;
+    const { dispatch } = this.props;
 
     // Drop session info
     session.expire();
@@ -17,7 +20,7 @@ export class Logout extends Component {
     // Reset state
     dispatch(logout());
 
-    window.location.href = `${LOGIN_ROOT}/logout`;
+    window.location.assign(`${LOGIN_ROOT}/logout`);
   }
 
   render() {
@@ -25,4 +28,4 @@ export class Logout extends Component {
   }
 }
 
-export default connect()(Logout);
+export default connect()<Props>(Logout);
