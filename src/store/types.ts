@@ -7,7 +7,7 @@ interface ManyResourceState<T> {
   results: number;
 }
 
-interface ApiState {
+export interface ApiState {
   linodes?: ManyResourceState<Linode.Linode>;
   linodeTypes?: ManyResourceState<Linode.LinodeType>;
   images?: ManyResourceState<Linode.Image>;

@@ -22,10 +22,9 @@ import gb from 'flag-icon-css/flags/4x3/gb.svg';
 import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
-import { AppState } from 'src/store';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-
 import TagComponent from 'src/components/TagComponent';
+import { AppState } from 'src/store/types';
 
 const flagMap = { us, de, gb, sg, jp };
 
