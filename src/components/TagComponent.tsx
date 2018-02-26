@@ -4,11 +4,13 @@ import {
   withStyles,
   Theme,
   WithStyles,
-  StyleRules,
+  StyleRulesCallback,
 } from 'material-ui/styles';
 import Chip from 'material-ui/Chip';
 
-const styles = (theme: Theme): StyleRules => ({
+type CSSClasses = 'root';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
     borderRadius: '4px',
     height: '20px',
@@ -20,7 +22,7 @@ interface Props {
   label: string;
 }
 
-type PropsWithStyles = Props & WithStyles<'root'>;
+type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 const TagComponent: React.SFC<PropsWithStyles> = (props) => {
   return (<Chip className={props.classes.root} label={props.label} />);

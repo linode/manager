@@ -5,21 +5,21 @@ import * as Loadable from 'react-loadable';
 import {
   withStyles,
   WithStyles,
-  StyleRules,
+  StyleRulesCallback,
   Theme,
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
+import Typography from 'material-ui/Typography';
 
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
-
 
 const ListLinodes = Loadable({
   loader: () => import('src/features/linodes/ListLinodes'),
   loading: () => null,
 });
 
-const styles = (theme: Theme): StyleRules => ({
+const styles: StyleRulesCallback = (theme: Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -39,9 +39,30 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-type Props = WithStyles<'appFrame' | 'content'>;
+interface Props {}
 
-class App extends React.Component<Props> {
+type PropsWithStyles = Props & WithStyles<'appFrame' | 'content'>;
+
+interface State {
+  menuOpen: Boolean;
+}
+
+/**
+ * Temoporary route.
+ */
+const TempRoute = (props: any) => {
+  const { render, ...rest } = props;
+  return <Route
+    {...rest}
+    render={renderProps => (
+      <Typography variant="display1">
+        {render(renderProps)}
+      </Typography>
+    )}
+  />;
+};
+
+class App extends React.Component<PropsWithStyles, State> {
   state = {
     menuOpen: false,
   };
@@ -63,19 +84,19 @@ class App extends React.Component<Props> {
           <TopMenu toggleSideMenu={this.toggleMenu} />
           <SideMenu open={menuOpen} toggle={this.toggleMenu} />
           <main className={classes.content}>
-              <Switch>
-                <Route exact path="/dashboard" render={() => 'Dashboard'} />
+            <Switch>
+              <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
               <Route exact path="/linodes" component={ListLinodes} />
-                <Route exact path="/volumes" render={() => 'Volumes'} />
-                <Route exact path="/nodebalancers" render={() => 'NodeBalancers'} />
-                <Route exact path="/domains" render={() => 'Domains'} />
-                <Route exact path="/managed" render={() => 'Managed'} />
-                <Route exact path="/longview" render={() => 'LongView'} />
-                <Route exact path="/stackscripts" render={() => 'StackScripts'} />
-                <Route exact path="/images" render={() => 'Images'} />
-                <Route exact path="/profile" render={() => 'Profile'} />
-                <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
-              </Switch>
+              <TempRoute exact path="/volumes" render={() => 'Volumes'} />
+              <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
+              <TempRoute exact path="/domains" render={() => 'Domains'} />
+              <TempRoute exact path="/managed" render={() => 'Managed'} />
+              <TempRoute exact path="/longview" render={() => 'LongView'} />
+              <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
+              <TempRoute exact path="/images" render={() => 'Images'} />
+              <TempRoute exact path="/profile" render={() => 'Profile'} />
+              <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+            </Switch>
           </main>
         </div>
       </React.Fragment>
@@ -83,4 +104,4 @@ class App extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(App) as Linode.TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(App);

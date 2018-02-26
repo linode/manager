@@ -37,11 +37,13 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-interface Props extends WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'> {
+interface Props {
   toggleSideMenu: () => void;
 }
 
-class TopMenu extends React.Component<Props> {
+type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'>;
+
+class TopMenu extends React.Component<PropsWithStyles> {
   render() {
     const { classes, toggleSideMenu } = this.props;
 
@@ -66,6 +68,4 @@ class TopMenu extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(
-  TopMenu,
-) as Linode.TodoAny;
+export default withStyles(styles, { withTheme: true })<Props>(TopMenu);

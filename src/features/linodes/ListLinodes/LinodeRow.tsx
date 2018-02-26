@@ -8,8 +8,8 @@ import { pathOr } from 'ramda';
 import {
   withStyles,
   Theme,
-  StyledComponentProps,
-  StyleRules,
+  WithStyles,
+  StyleRulesCallback,
 } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
@@ -23,11 +23,14 @@ import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 import { AppState } from 'src/store';
+
 import TagComponent from 'src/components/TagComponent';
 
 const flagMap = { us, de, gb, sg, jp };
 
-const styles = (theme: Theme): StyleRules => ({
+type CSSClasses = 'copyIcon' | 'inlineItems';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   copyIcon: {
     height: '0.8125rem',
     width: '0.8125rem',
@@ -50,21 +53,6 @@ function formatRegion(region: string) {
   return `${countryCode.toUpperCase()} ${titlecase(area)}`;
 }
 
-interface Props extends StyledComponentProps<'copyIcon' | 'inlineItems'> {
-  linode?: Linode.Linode;
-  type?: Linode.LinodeType;
-  image?: Linode.Image;
-}
-
-interface DefaultProps {
-  linode: {};
-  type: {};
-  image: {};
-  classes: {};
-}
-
-type PropsWithDefaults = Props & DefaultProps;
-
 const img = (region: string) => {
   const abb = region.substr(0, 2);
   return flagMap[abb];
@@ -79,19 +67,22 @@ function displayLabel(memory?: number, label?: string): string | undefined {
   return `${label}, Linode ${memory / 1024}G`;
 }
 
-class LinodeRow extends React.Component<Props> {
-  static defaultProps = {
-    classes: {},
-    linode: {},
-  };
+interface Props {
+  linode: Linode.Linode;
+  type: Linode.LinodeType;
+  image: Linode.Image;
+}
 
+type PropsWithStyles = Props & WithStyles<CSSClasses>;
+
+class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, linode, type, image } = this.props as PropsWithDefaults;
+    const { classes, linode, type, image } = this.props;
     const label = displayLabel(type.memory, image.label);
 
     /**
-     * @todo We're implementing faux tags utilizing the linode.group.
-    */
+     * @todo Until tags are implemented we're using the group as a faux tag.
+     * */
     const tags = [linode.group].filter(Boolean);
 
     return (
@@ -116,7 +107,7 @@ class LinodeRow extends React.Component<Props> {
             <div className={classes.inlineItems}>
               <ContentCopyIcon
                 className={classes.copyIcon}
-                onClick={() => clip(linode.ipv6)}
+                onClick={() => clip(linode.ipv4[0])}
               />
             </div>
             <div className={classes.inlineItems}>
@@ -164,7 +155,7 @@ const mapStateToProps = (state: AppState, ownProps: Props) => {
   };
 };
 
-export default compose(
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   connect(mapStateToProps),
   withStyles(styles, { withTheme: true }),
 )(LinodeRow);

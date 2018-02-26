@@ -31,13 +31,15 @@ const styles = (theme: Theme): StyleRules => ({
   },
 });
 
-type Props = WithStyles<'leftIcon'> & RouteComponentProps<{}>;
+interface Props {}
+
+type PropsWithStylesAndRoutes = Props & WithStyles<'leftIcon'> & RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
 }
 
-class UserMenu extends React.Component<Props, State> {
+class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   state = {
     anchorEl: undefined,
   };
@@ -99,7 +101,7 @@ class UserMenu extends React.Component<Props, State> {
   }
 }
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+export default compose<Props, Props, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
-)(UserMenu) as Linode.TodoAny;
+)(UserMenu);
