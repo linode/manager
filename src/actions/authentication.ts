@@ -1,12 +1,21 @@
-import { NullableString } from 'src/utils';
-
 export const SET_TOKEN = 'authentication/SET_TOKEN';
 export const LOGOUT = 'authentication/LOGOUT';
 
-export type SetToken = { type: typeof SET_TOKEN, token: NullableString, scopes: NullableString };
+export type SetToken = {
+  type: typeof SET_TOKEN,
+  token: Linode.NullableString,
+  scopes: Linode.NullableString,
+};
 
-export function setToken(token: NullableString, scopes: NullableString): SetToken {
-  return { type: SET_TOKEN, token, scopes };
+export function setToken(
+  token: Linode.NullableString,
+  scopes: Linode.NullableString,
+): SetToken {
+  return {
+    type: SET_TOKEN,
+    token,
+    scopes,
+  };
 }
 
 export type Logout = { type: typeof LOGOUT };

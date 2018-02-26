@@ -1,7 +1,4 @@
-import { TodoAny } from 'src/utils';
-import { ApiState } from 'src/store/types';
-
-const defaultState: ApiState = {
+const defaultState: Linode.ApiState = {
   linodes: {
     page: 0,
     pages: 1,
@@ -658,7 +655,7 @@ const defaultState: ApiState = {
   },
 };
 
-export default function authentication(state = defaultState, action: TodoAny) {
+export default function authentication(state = defaultState, action: Linode.TodoAny) {
   switch (action.type) {
     default:
       return state;

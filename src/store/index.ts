@@ -1,8 +1,7 @@
 import { createStore } from 'redux';
 import reducers from './reducers';
-import { AppState } from './types';
 
-const defaultState: AppState = {
+const defaultState: Linode.AppState = {
   authentication: {
     token: null,
     scopes: null,
@@ -665,7 +664,7 @@ const defaultState: AppState = {
   },
 };
 
-export default createStore<AppState>(
+export default createStore<Linode.AppState>(
   reducers,
   defaultState,
   (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
