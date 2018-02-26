@@ -8,7 +8,7 @@ import { fetch } from '../fetch';
 export function ipv4s(region) {
   return async (dispatch, getState) => {
     const ips = await dispatch(fetch.get(
-      '/networking/ipv4',
+      '/networking/ips',
       undefined,
       { region }));
 
@@ -102,7 +102,7 @@ export function setRDNS(ip, linodeId, rdns) {
   return async function (dispatch, getState) {
     const { address, version } = ip;
     const rawAddress = address.split('/')[0].trim();
-    let _ip = await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
+    let _ip = await dispatch(fetch.put(`/networking/ips/${rawAddress}`,
       { rdns }));
 
     // for ipv4 the response is an object
@@ -200,11 +200,11 @@ export function setShared(linodeId, ips) {
   };
 }
 
-export function deleteIP(ip, linodeId) {
+export function deleteIP(ip) {
   return async function (dispatch, getState) {
-    await dispatch(fetch.delete(`/networking/ipv4/${ip.address}`));
+    await dispatch(fetch.delete(`/networking/ips/${ip.address}`));
 
-    const linode = getState().api.linodes.linodes[linodeId];
+    const linode = getState().api.linodes.linodes[ip.linode_id];
     const _ips = omitBy(linode._ips, (_, key) => key === ip.address);
     dispatch(actions.one({ _ips }, linode.id));
   };
