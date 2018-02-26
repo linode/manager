@@ -8,12 +8,7 @@
       "polyfill": false
     }],
     "transform-class-properties",
-    ["babel-root-import", [{
-      "rootPathSuffix": "src"
-    }, {
-      "rootPathSuffix": "test",
-      "rootPathPrefix": "@",
-    }]]
+    ["babel-root-import", { "rootPathSuffix": "src" }]
   ],
   "env": {
     "development": {

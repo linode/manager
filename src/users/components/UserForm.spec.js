@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import UserForm from '~/users/components/UserForm';
+import { UserForm } from '~/users/components/UserForm';
 
 import { testUser } from '~/data/users';
 
@@ -21,6 +21,7 @@ describe('users/layouts/UserForm', () => {
       <UserForm
         dispatch={dispatch}
         user={testUser}
+        passwordStrengthCalculator={jest.fn()}
       />
     );
 

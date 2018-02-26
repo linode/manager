@@ -21,6 +21,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import ChainedDocumentTitle from '~/components/ChainedDocumentTitle';
 import { DistributionSelect } from '~/linodes/components';
 import { getLinodeByLabel } from '~/utilities';
+import withZxcvbn from '~/decorators/withZxcvbn';
 
 export class RebuildPage extends Component {
   constructor(props) {
@@ -76,8 +77,9 @@ export class RebuildPage extends Component {
   }
 
   render() {
-    const { images, image: currentImage } = this.props;
-    const { image, errors, loading } = this.state;
+    const { images, image: currentImage, passwordStrengthCalculator } = this.props;
+    const { image, errors, loading, password } = this.state;
+    const passwordStrength = passwordStrengthCalculator(password);
 
     return (
       <Card header={<CardHeader title="Rebuild" />}>
@@ -117,9 +119,10 @@ export class RebuildPage extends Component {
               <PasswordInput
                 name="password"
                 id="password"
-                value={this.state.password}
+                value={password}
                 onChange={this.onChange}
                 className="float-sm-left"
+                strength={passwordStrength}
               />
               <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
             </div>
@@ -144,6 +147,7 @@ RebuildPage.propTypes = {
   images: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
   image: PropTypes.object,
+  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
 
 
@@ -160,4 +164,5 @@ function mapStateToProps({ api }, { match: { params: { linodeLabel } } }) {
 
 export default compose(
   connect(mapStateToProps),
+  withZxcvbn,
 )(RebuildPage);

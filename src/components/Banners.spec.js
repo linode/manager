@@ -8,7 +8,6 @@ import {
   abuseBanners,
   outstandingBalanceBanner,
   scheduledRebootBanner,
-  xsaBanner,
   outageBanners,
   globalBanner,
 } from '~/data/banners';
@@ -127,17 +126,6 @@ describe('components/Banners', () => {
     );
 
     expect(wrapper.find('div.warning').length).toBe(1);
-  });
-
-  it('should render a critical for xsa banner', () => {
-    const wrapper = shallow(
-      <Banners
-        banners={[xsaBanner]}
-        linode={linode}
-      />
-    );
-
-    expect(wrapper.find('div.critical').length).toBe(1);
   });
 
   it('should render a critical for outstanding balance banner', () => {
