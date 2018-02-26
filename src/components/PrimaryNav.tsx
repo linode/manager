@@ -28,8 +28,6 @@ import InsertPhotoIcon from 'material-ui-icons/InsertPhoto';
 
 import logoPng from 'src/assets/logo/linode-logo-small.png';
 
-import { TodoAny } from 'src/utils';
-
 type PrimaryLink = {
   display: string,
   icon: typeof SvgIcon,
@@ -112,7 +110,7 @@ class PrimaryNav extends React.Component<Props> {
   }
 }
 
-export default compose<TodoAny, TodoAny, TodoAny>(
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withStyles(styles, { withTheme: true }),
   withRouter,
 )(PrimaryNav);
