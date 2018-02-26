@@ -1,3 +1,5 @@
+import '~/typedefs';
+
 import { DELETE, MANY, ONE, PUT, POST } from './internal';
 import {
   genThunkOne,
@@ -9,14 +11,6 @@ import {
 } from './external';
 
 /**
- * @typedef {Object} ActionCreator
- * @prop {Function} [one]
- * @prop {Function} [page]
- * @prop {Function} [all]
- * @prop {Function} [delete]
- * @prop {Function} [put]
- * @prop {Function} [post]
- *
  * Generates thunks for the provided config.
  *
  * @param { { supports: Array<string>} } config

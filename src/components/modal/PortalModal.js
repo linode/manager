@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component, isValidElement } from 'react';
 import ReactDOM from 'react-dom';
 
-import { ModalShell } from 'linode-components';
-
+import ModalShell from 'linode-components/dist/modals/ModalShell.js';
 
 class PortalModal extends Component {
   constructor(props) {

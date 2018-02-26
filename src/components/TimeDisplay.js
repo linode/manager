@@ -13,6 +13,7 @@ export default function TimeDisplay(props) {
   const aLongTimeFromNow = moment.utc(new Date()).tz(timezone).add(100, 'year');
   const label = utcTime > aLongTimeFromNow ? 'never' : utcTime.fromNow();
 
+
   return (
     <span
       title={utcTime.format('MMM D YYYY h:mm A z')}

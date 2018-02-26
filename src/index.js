@@ -20,7 +20,7 @@ import AuthenticationWrapper from '~/components/AuthenticationWrapper';
 import Banners from '~/components/Banners';
 
 import handleError from '~/handleError';
-import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
+import { GA_ID, ENVIRONMENT, SENTRY_URL, OAUTH_TOKEN_REFRESH_INTERVAL } from '~/constants';
 import { init as initAnalytics } from '~/analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
@@ -108,14 +108,13 @@ history.listen(({ pathname }) => {
 window.handleError = handleError(history);
 
 store.dispatch(session.initialize);
+setTimeout(() => store.dispatch(session.refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
 
-
-if (ENVIRONMENT === 'production') {
+if (SENTRY_URL) {
   Raven
     .config(SENTRY_URL)
     .install();
 }
-
 
 try {
   render(
@@ -126,6 +125,7 @@ try {
             <Route exact path="/linodes/:linodeLabel/glish" component={Glish} />
             <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
             <Route exact path="/oauth/callback" component={OAuthComponent} />
+            <Route exact path="/null" render={() => <span>null route</span>} />
             <Route exact path="/logout" component={Logout} />
             <Route
               render={() => (

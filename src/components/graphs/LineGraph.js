@@ -12,31 +12,7 @@ export function formatGraphTime(time, timezone, format) {
   return moment.utc(time).tz(timezone).format(format);
 }
 
-// Source: http://stackoverflow.com/a/5624139/1507139
-function rgbaFromHex(hex, alpha) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 export default class LineGraph extends Component {
-  static formatData(x, ys, colors, legends = []) {
-    return {
-      labels: x,
-      datasets: ys.map((y, i) => ({
-        label: legends[i],
-        data: y,
-        pointRadius: 0,
-        fill: false,
-        borderColor: rgbaFromHex(colors[i], 1),
-        backgroundColor: rgbaFromHex(colors[i], 0.3),
-      })),
-    };
-  }
-
   componentDidMount() {
     this.renderChart(this.props);
   }

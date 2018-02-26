@@ -7,10 +7,11 @@ describe('components/TimeDisplay', () => {
   it('renders properly', () => {
     const timeIso = '2017-03-30T16:48:10';
     const tDisplay = shallow(<TimeDisplay time={timeIso} />);
-    const timeLong = moment.utc(timeIso, moment.ISO_8601).format('MMM D YYYY h:mm A z');
-    const timeRelative = moment.utc(timeIso, moment.ISO_8601).fromNow();
+    const timeLong = moment.utc(timeIso, moment.ISO_8601).tz('UTC');
+    const timeRelative = timeLong.fromNow();
+    const timeFormatted = timeLong.format('MMM D YYYY h:mm A z');
 
-    expect(tDisplay.html()).toBe(`<span title="${timeLong}">${timeRelative}</span>`);
+    expect(tDisplay.html()).toBe(`<span title="${timeFormatted}">${timeRelative}</span>`);
   });
 });
 

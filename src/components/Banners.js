@@ -15,7 +15,6 @@ const {
   MIGRATION_SCHEDULED,
   MIGRATION_PENDING,
   REBOOT_SCHEDULED,
-  XSA,
   BALANCE_OUTSTANDING,
   TICKET_IMPORTANT,
   TICKET_ABUSE,
@@ -94,18 +93,6 @@ function scheduledReboot(banners, nameEntities) {
   });
 }
 
-function xenSecurityAdvisory(banners, nameEntities) {
-  return banners.map((banner, key) => {
-    const entityName = nameEntities ? banner.entity.label : 'This Linode';
-    const timestamp = banner.when.replace('T', ' ');
-    return (
-      <div className="critical" key={key} >
-        {entityName} is scheduled for an XSA restart at {timestamp}.
-      </div>
-    );
-  });
-}
-
 function outstandingBalance(banners) {
   return (
     banners.map((banner, key) =>
@@ -173,14 +160,6 @@ function renderBanners(banners, linode = {}, nameEntities) {
     banners
   );
 
-  const xenSecurityAdvisoryBanners = filterBy(
-    [
-      banner => banner.type === XSA,
-      banner => nameEntities || (banner.entity.id === linode.id),
-    ],
-    banners
-  );
-
   const outageBanners = filterBy(
     [banner => banner.type === OUTAGE],
     banners
@@ -202,8 +181,6 @@ function renderBanners(banners, linode = {}, nameEntities) {
         migrationBanners, nameEntities)}
       {!isEmpty(scheduledRebootBanners) && scheduledReboot(
         scheduledRebootBanners, nameEntities)}
-      {!isEmpty(xenSecurityAdvisoryBanners) && xenSecurityAdvisory(
-        xenSecurityAdvisoryBanners, nameEntities)}
       {!isEmpty(outageBanners) && outage(outageBanners)}
       {!isEmpty(globalBanners) && globalNotice(globalBanners)}
     </div>

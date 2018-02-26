@@ -3,23 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import { v4 } from 'uuid';
-import { stringify } from 'querystring';
-import { APP_ROOT, LOGIN_ROOT } from '~/constants';
-import { setStorage } from '~/storage';
-import { clientId } from '~/secrets';
 
-const createOAuth = (path, clientId, scope = '*', responseType, redirectUri, nonce) => {
-  const query = {
-    client_id: clientId,
-    scope,
-    response_type: responseType,
-    redirect_uri: redirectUri,
-    ...(responseType === 'token') && { state: nonce },
-  };
-
-  return `${path}?${stringify(query)}`;
-};
+import { redirectToLogin } from '~/session';
 
 export class AuthenticationWrapper extends Component {
   constructor(props) {
@@ -31,7 +16,7 @@ export class AuthenticationWrapper extends Component {
   }
 
   componentWillMount() {
-    const { isAuthenticated, location: { pathname }, redirectToLogin } = this.props;
+    const { isAuthenticated, location: { pathname }, loginRedirect } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
       this.setState((prevState) => ({ ...prevState, showChildren: true }));
@@ -39,14 +24,14 @@ export class AuthenticationWrapper extends Component {
     }
 
     if (!isAuthenticated) {
-      return redirectToLogin();
+      return loginRedirect();
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, location: { pathname }, redirectToLogin } = nextProps;
+    const { isAuthenticated, location: { pathname }, loginRedirect } = nextProps;
     if (!isAuthenticated && !this.isExcludedRoute(pathname)) {
-      return redirectToLogin();
+      return loginRedirect();
     }
   }
 
@@ -64,7 +49,7 @@ export class AuthenticationWrapper extends Component {
 
 AuthenticationWrapper.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  redirectToLogin: PropTypes.func.isRequired,
+  loginRedirect: PropTypes.func.isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }).isRequired,
@@ -79,27 +64,13 @@ AuthenticationWrapper.defaultProps = {
 };
 
 const mapDispatchToProps = (state, ownProps) => ({
-  redirectToLogin() {
-    const { location: { pathname, search } } = ownProps;
-    const returnURL = `${pathname}${search && `%3F${search}`}`;
-    const nonce = v4();
-    setStorage('authentication/nonce', nonce);
-
-    window.location = createOAuth(
-      `${LOGIN_ROOT}/oauth/authorize`,
-      clientId,
-      '*',
-      'token',
-      `${APP_ROOT}/oauth/callback?returnTo=${returnURL}`,
-      nonce
-    );
+  loginRedirect() {
+    const { location: { pathname: path, search: querystring } } = ownProps;
+    redirectToLogin(path, querystring);
   },
 });
 
 const mapStateToProps = (state) => ({
-  /**
-   * Is this all we require to determine if someone is authenticated?
-   */
   isAuthenticated: Boolean(state.authentication.token),
 });
 
