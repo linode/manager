@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.18.3] - 2018-02-20
+## [0.18.3] - 2018-02-26
 ### Added
 - Pagination added to `/domains`
 - Added vendor specific CSS prefixes via PostCSS and Autoprefixer.
 - Glish window now contains a link to the Linode page.
 - Added unit tests for Redux generator functions. (api/internal.js api/external.js).
+- Session keep-alive logic
 ### Changed
 - Significant build changes to reduce initial page load.
 - Added asset filename hashes for caching purposes.
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Corrected an issue which prevented proper redirection on logout.
 - Corrected an issue where notification banners weren’t provided the ID of the Linode they referenced.
 - Corrected an issue preventing users from deleting Volumes.
+- Updated API usage for API changes https://github.com/linode/linode-api-docs/pull/71
 
 ## [0.18.2] 2018-01-25
 ### Fixed
