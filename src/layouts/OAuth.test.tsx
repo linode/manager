@@ -1,16 +1,9 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
 import { isEmpty } from 'ramda';
-import { StaticRouter } from 'react-router-dom';
 
-import { OAuthPage } from 'src/layouts/OAuth';
+import { OAuthCallbackPage, splitIntoTwo, parseQueryParams } from 'src/layouts/OAuth';
 import { TodoAny } from 'src/utils';
-
-jest.mock('../fetch');
-jest.mock('../session');
-jest.mock('react-router-redux', () => ({
-  push: jest.fn(),
-}));
 
 describe('layouts/OAuth', () => {
   const dispatch = jest.fn();
@@ -22,25 +15,23 @@ describe('layouts/OAuth', () => {
 
   it('redirects to / when no code is provided', async () => {
     const redirectMock = jest.fn();
+    const historyMock = { push: jest.fn() };
 
-    const component = shallow(
-      <StaticRouter>
-        <OAuthPage
-          startSession={startSession}
-          redirect={redirectMock}
-          location={{ hash: '#' }}
-        />
-      </StaticRouter>,
+    shallow(
+      <OAuthCallbackPage
+        redirect={redirectMock}
+        startSession={startSession}
+        location={{ hash: '#' }}
+        history={historyMock}
+      />,
     );
-
-    await component.instance().componentDidMount();
-    expect(redirectMock).toBeCalledWith('/');
+    expect(redirectMock).toBeCalledWith('/', historyMock);
   });
 
   it('dispatches a setToken action', async () => {
     const startMock = jest.fn();
 
-    const component = shallow(
+    shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
@@ -49,16 +40,16 @@ describe('layouts/OAuth', () => {
         startSession={startMock}
         checkNonce={() => null}
         redirect={() => null}
+        history={{ push: jest.fn() }}
       />);
-
-    await component.instance().componentDidMount();
     expect(startMock).toBeCalled();
   });
 
   it('supports the return query string option', async () => {
     const redirectMock = jest.fn();
+    const historyMock = { push: jest.fn() };
 
-    const component = shallow(
+    shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
@@ -67,10 +58,9 @@ describe('layouts/OAuth', () => {
         startSession={() => null}
         checkNonce={() => null}
         redirect={redirectMock}
+        history={historyMock}
       />);
-
-    await component.instance().componentDidMount();
-    expect(redirectMock).toBeCalledWith('/asdf');
+    expect(redirectMock).toBeCalledWith('/asdf', historyMock);
   });
 
   describe('splitIntoTwo', () => {
