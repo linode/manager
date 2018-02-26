@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { isEmpty } from 'ramda';
 
 import * as session from 'src/session';
@@ -42,11 +42,7 @@ export function parseQueryParams(str: string) {
     );
 }
 
-interface Props extends RouteComponentProps<{}> {
-  startSession: Function;
-}
-
-export class OAuthCallbackPage extends Component<Props> {
+export class OAuthCallbackPage extends Component<TodoAny> {
   checkNonce(nonce: string) {
     const { history } = this.props;
     // nonce should be set and equal to ours otherwise retry auth
@@ -57,15 +53,10 @@ export class OAuthCallbackPage extends Component<Props> {
     }
   }
 
-  redirect(path: string) {
-    const { history } = this.props;
-    history.push(path);
-  }
-
   componentDidMount() {
-    const { location, startSession } = this.props;
+    const { location, startSession, redirect, history } = this.props;
     if (!location.hash || location.hash.length < 2) {
-      return this.redirect('/');
+      return redirect('/', history);
     }
 
     const hashParams = parseQueryParams(location.hash.substr(1));
@@ -76,7 +67,7 @@ export class OAuthCallbackPage extends Component<Props> {
       state: nonce,
     } = hashParams as TodoAny;
     if (!accessToken) {
-      return this.redirect('/');
+      return redirect('/', history);
     }
 
     let returnTo = '/';
@@ -95,7 +86,7 @@ export class OAuthCallbackPage extends Component<Props> {
     startSession(accessToken, scopes, expireDate.toString());
 
     // redirect to prior page
-    this.redirect(returnTo);
+    redirect(returnTo, history);
   }
 
   render() {
@@ -106,6 +97,9 @@ export class OAuthCallbackPage extends Component<Props> {
 const mapDispatchToProps = (dispatch: TodoAny) => ({
   startSession(accessToken: string, scopes: string, expireDate: string) {
     session.start(accessToken, scopes, expireDate);
+  },
+  redirect(path: string, history: TodoAny) {
+    history.push(path);
   },
 });
 
