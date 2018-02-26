@@ -29,21 +29,21 @@ class ListLinodes extends React.Component<Props> {
   docs = [
     {
       title: 'Lorem Ipsum Dolor',
-      src: 'http://www.google.com',
+      src: 'http://www.linode.com',
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
    Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
    ex elit, quis sed.`,
     },
     {
       title: 'Lorem Ipsum Dolor',
-      src: 'http://www.google.com',
+      src: 'http://www.linode.com',
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
    Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
    ex elit, quis sed.`,
     },
     {
       title: 'Lorem Ipsum Dolor',
-      src: 'http://www.google.com',
+      src: 'http://www.linode.com',
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
    Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
    ex elit, quis sed.`,
