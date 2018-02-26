@@ -13,7 +13,7 @@ import { MONTHLY_IP_COST } from '~/constants';
 
 
 export default class AddIP extends Component {
-  static title = 'Add an IP Address'
+  static title = 'Add an IP Address';
 
   static trigger(dispatch, linode) {
     return dispatch(showModal(AddIP.title, (
