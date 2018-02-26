@@ -93,5 +93,6 @@ export function refreshOAuthToken() {
 }
 
 export function initializeSessionRefresh() {
-  setTimeout(() => refreshOAuthToken(), OAUTH_TOKEN_REFRESH_INTERVAL);
+  // attempt to refresh the OAuth token immediately upon application init
+  setTimeout(() => refreshOAuthToken(), 1000);
 }

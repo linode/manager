@@ -35,7 +35,10 @@ createBrowserHistory().listen(({ pathname }) => {
 });
 
 sessionInitialize();
-initializeSessionRefresh();
+if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
+  initializeSessionRefresh();
+}
+
 
 ReactDOM.render(
   <Provider store={store}>
