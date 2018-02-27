@@ -20,7 +20,7 @@ import AuthenticationWrapper from '~/components/AuthenticationWrapper';
 import Banners from '~/components/Banners';
 
 import handleError from '~/handleError';
-import { GA_ID, ENVIRONMENT, SENTRY_URL, OAUTH_TOKEN_REFRESH_INTERVAL } from '~/constants';
+import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
 import { init as initAnalytics } from '~/analytics';
 import * as session from '~/session';
 import { store, history } from '~/store';
@@ -108,7 +108,10 @@ history.listen(({ pathname }) => {
 window.handleError = handleError(history);
 
 store.dispatch(session.initialize);
-setTimeout(() => store.dispatch(session.refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
+if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
+  store.dispatch(session.refreshOAuthToken);
+}
+session.refreshOAuthOnUserInteraction();
 
 if (SENTRY_URL) {
   Raven
