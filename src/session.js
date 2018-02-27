@@ -2,9 +2,10 @@ import { stringify } from 'querystring';
 import { v4 } from 'uuid';
 
 import { setToken } from '~/actions/authentication';
-import { APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from '~/constants';
+import { APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
+import { store } from '~/store';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
@@ -72,7 +73,7 @@ export function redirectToLogin(path, querystring) {
   window.location = prepareOAuthEndpoint(redirectUri);
 }
 
-export function refreshOAuthToken(dispatch) {
+export function refreshOAuthToken() {
   /**
    * Open an iframe for two purposes
    * 1. Hits the login service (extends the lifetime of login session)
@@ -83,10 +84,26 @@ export function refreshOAuthToken(dispatch) {
   iframe.style.display = 'none';
   const iframeContainer = document.getElementById('session-iframe');
   iframeContainer.appendChild(iframe);
-  // Remove the iframe once it refreshes OAuth token in localStorage
+  // Wait for the iframe to update localStorage, then move the creds into Redux
+  setTimeout(() => store.dispatch(refresh), 3000);
+  // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-  // Move the OAuth token from localStorage into Redux
-  dispatch(refresh);
-  // Do this again in a little while
-  setTimeout(() => dispatch(refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
+}
+
+export function refreshOAuthOnUserInteraction() {
+  let currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+
+  document.addEventListener('mousedown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
+
+  document.addEventListener('keydown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
 }
