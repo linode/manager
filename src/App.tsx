@@ -14,9 +14,17 @@ import Typography from 'material-ui/Typography';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 
-const ListLinodes = Loadable({
-  loader: () => import('src/features/linodes/ListLinodes'),
+import Axios from 'axios';
+const ListLinodes = Loadable.Map({
+  loader: {
+    Component: () => import('src/features/linodes/ListLinodes'),
+    linodes: () => Axios.get(`https://api.dev.linode.com/v4/linode/types`),
+  },
   loading: () => null,
+  render: (loaded, props) => {
+    const Component = loaded.Component.default;
+    return <Component {...props} />;
+  },
 });
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -39,7 +47,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props { }
 
 type PropsWithStyles = Props & WithStyles<'appFrame' | 'content'>;
 
