@@ -2,7 +2,7 @@ import { stringify } from 'querystring';
 import { v4 } from 'uuid';
 
 import { setToken } from 'src/actions/authentication';
-import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from 'src/constants';
+import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'src/constants';
 import { getStorage, setStorage } from 'src/storage';
 import store from 'src/store';
 
@@ -88,11 +88,22 @@ export function refreshOAuthToken() {
   setTimeout(() => refresh(), 3000);
   // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-  // Do this again in a little while
-  setTimeout(() => refreshOAuthToken(), OAUTH_TOKEN_REFRESH_INTERVAL);
 }
 
-export function initializeSessionRefresh() {
-  // attempt to refresh the OAuth token immediately upon application init
-  setTimeout(() => refreshOAuthToken(), 1000);
+export function refreshOAuthOnUserInteraction() {
+  let currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+
+  document.addEventListener('mousedown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
+
+  document.addEventListener('keydown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
 }
