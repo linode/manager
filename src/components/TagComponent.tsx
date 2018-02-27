@@ -8,15 +8,20 @@ import {
 } from 'material-ui/styles';
 import Chip from 'material-ui/Chip';
 
-type CSSClasses = 'root';
+type CSSClasses = 'label' | 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  root: {
-    borderRadius: '4px',
-    height: '20px',
-    marginRight: '7px',
-  },
-});
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
+  return ({
+    label: {
+      paddingLeft: theme.spacing.unit * .5,
+      paddingRight: theme.spacing.unit * .5,
+    },
+    root: {
+      borderRadius: '3px',
+      height: '24px',
+    },
+  });
+};
 
 interface Props {
   label: string;
@@ -25,7 +30,11 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 const TagComponent: React.SFC<PropsWithStyles> = (props) => {
-  return (<Chip className={props.classes.root} label={props.label} />);
+  return <Chip
+    className={props.classes.root}
+    label={props.label}
+    classes={{ label: props.classes.label }}
+  />;
 };
 
 

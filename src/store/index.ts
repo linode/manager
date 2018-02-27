@@ -48,7 +48,7 @@ const defaultState: AppState = {
           hypervisor: 'kvm',
           label: 'test',
           image: 'linode/Ubuntu16.10',
-          group: '',
+          group: 'active',
           region: 'us-east-1a',
           type: 'g5-nanode-1',
           backups: {
@@ -84,7 +84,7 @@ const defaultState: AppState = {
           hypervisor: 'kvm',
           label: 'another-test',
           image: 'linode/Ubuntu16.04LTS',
-          group: '',
+          group: 'inactive',
           region: 'us-east-1a',
           type: 'g5-standard-1',
           backups: {
