@@ -22,9 +22,7 @@ import gb from 'flag-icon-css/flags/4x3/gb.svg';
 import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
-import { AppState } from 'src/store';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-
 import TagComponent from 'src/components/TagComponent';
 
 const flagMap = { us, de, gb, sg, jp };
@@ -155,7 +153,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 }
 
-const mapStateToProps = (state: AppState, ownProps: Props) => {
+const mapStateToProps = (state: Linode.AppState, ownProps: Props) => {
   const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
   const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
   const { type, image } = ownProps.linode as Linode.Linode;

@@ -1,6 +1,9 @@
-/**
- * Stubbed reducer.
- * @param state
- */
+import { combineReducers } from 'redux';
 
-export default (state = { api: {} }) => state;
+import authentication from './authentication';
+import api from './api';
+
+export default combineReducers<Linode.AppState>({
+  authentication,
+  api,
+});

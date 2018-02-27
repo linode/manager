@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import createBrowserHistory from 'history/createBrowserHistory';
 
@@ -12,6 +12,10 @@ import analytics from 'src/analytics';
 
 import 'src/exceptionReporting';
 
+import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
+import OAuthCallbackPage from 'src/layouts/OAuth';
+import Logout from 'src/layouts/Logout';
+import { initialize as sessionInitialize, initializeSessionRefresh } from './session';
 import App from './App';
 import './index.css';
 
@@ -30,10 +34,23 @@ createBrowserHistory().listen(({ pathname }) => {
   }
 });
 
+sessionInitialize();
+if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
+  initializeSessionRefresh();
+}
+
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <AuthenticationWrapper>
+        <Switch>
+          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+          <Route exact path="/null" render={() => <span>null route</span>} />
+          <Route exact path="/logout" component={Logout} />
+          <Route component={App} />
+        </Switch>
+      </AuthenticationWrapper>
     </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement,
