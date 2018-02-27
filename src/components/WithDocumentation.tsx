@@ -4,11 +4,7 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
-interface Doc {
-  title: string;
-  src: string;
-  body: string;
-}
+import DocComponent, { Doc } from './DocComponent';
 
 interface Props {
   title: string;
@@ -16,21 +12,10 @@ interface Props {
   docs: Doc[];
 }
 
-class DocComponent extends React.Component<Doc> {
-  render() {
-    const { src, title, body } = this.props;
-    return (
-      <div>
-        <div><a href={src}>{title}</a></div>
-        <div>{body}</div>
-      </div>
-    );
-  }
-}
-
 export default class WithDocumentation extends React.Component<Props> {
   render() {
     const { title, docs, render, ...rest } = this.props;
+    const len = docs.length;
 
     return (
       <Grid container spacing={40}>
@@ -45,8 +30,8 @@ export default class WithDocumentation extends React.Component<Props> {
               </Paper>
             </Grid>
             <Grid item xs={12} md={3} xl={2}>
-              Documentation
-              {docs.map((doc: Doc, idx) => <DocComponent key={idx} {...doc} />)}
+              <Typography variant="title">Documentation</Typography>
+              {docs.map((doc, idx) => <DocComponent key={idx} {...doc} count={len} />)}
             </Grid>
           </Grid>
         </Grid>
