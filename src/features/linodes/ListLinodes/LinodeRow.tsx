@@ -23,7 +23,7 @@ import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import TagComponent from 'src/components/TagComponent';
+import Tag from 'src/components/Tag';
 
 const flagMap = { us, de, gb, sg, jp };
 
@@ -109,7 +109,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           </div>
         </TableCell>
         <TableCell>
-          {tags.map((v: string, idx) => <TagComponent key={idx} label={v} />)}
+          {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
         <TableCell>
           <div>

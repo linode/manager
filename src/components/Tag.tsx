@@ -29,7 +29,7 @@ interface Props {
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-const TagComponent: React.SFC<PropsWithStyles> = (props) => {
+const Tag: React.SFC<PropsWithStyles> = (props) => {
   return <Chip
     className={props.classes.root}
     label={props.label}
@@ -38,4 +38,4 @@ const TagComponent: React.SFC<PropsWithStyles> = (props) => {
 };
 
 
-export default withStyles(styles, { withTheme: true })<Props>(TagComponent);
+export default withStyles(styles, { withTheme: true })<Props>(Tag);
