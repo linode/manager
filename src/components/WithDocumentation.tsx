@@ -31,7 +31,7 @@ export default class WithDocumentation extends React.Component<Props> {
             </Grid>
             <Grid item xs={12} md={3} xl={2}>
               <Typography variant="title">Documentation</Typography>
-              {docs.map((doc, idx) => <DocComponent key={idx} {...doc} count={len} />)}
+              {docs.map((doc, idx) => <DocComponent key={idx} {...doc} index={idx} count={len} />)}
             </Grid>
           </Grid>
         </Grid>
