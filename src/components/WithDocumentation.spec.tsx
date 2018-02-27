@@ -27,6 +27,7 @@ describe('WithDocumentation', () => {
         docs={[{ title: 'doc title', src: '#', body: 'this is a doc body' }]}
       />,
     );
-    expect(result.find('DocComponent')).toHaveLength(1);
+
+    expect(result.find('WithStyles(DocComponent)')).toHaveLength(1);
   });
 });
