@@ -1,24 +1,11 @@
 import { createStore } from 'redux';
 import reducers from './reducers';
 
-interface ManyResourceState<T> {
-  data?: T[];
-  page: number;
-  pages: number;
-  results: number;
-}
-
-interface ApiState {
-  linodes?: ManyResourceState<Linode.Linode>;
-  linodeTypes?: ManyResourceState<Linode.LinodeType>;
-  images?: ManyResourceState<Linode.Image>;
-}
-
-export interface AppState {
-  api: ApiState;
-}
-
-const defaultState: AppState = {
+const defaultState: Linode.AppState = {
+  authentication: {
+    token: null,
+    scopes: null,
+  },
   api: {
     linodes: {
       page: 0,
@@ -677,7 +664,7 @@ const defaultState: AppState = {
   },
 };
 
-export default createStore<AppState>(
+export default createStore<Linode.AppState>(
   reducers,
   defaultState,
   (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
