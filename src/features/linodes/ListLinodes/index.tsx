@@ -13,14 +13,16 @@ import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Table from 'material-ui/Table';
+import TableBody from 'material-ui/Table/TableBody';
+import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import TableBody from 'material-ui/Table/TableBody';
+
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
 
 import WithDocumentation from 'src/components/WithDocumentation';
+import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
@@ -130,56 +132,54 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
-  linodeCard(linode: Linode.Linode) {
-    return (
-      <Grid item xs={12} md={4}>
-        <Paper elevation={1}>
-          linode.label
-        </Paper>
-      </Grid>
-    );
-  }
-
   linodeGrid() {
     const { linodes } = this.props;
 
     return (
       <Grid container>
-        {linodes.map((l, idx) => this.linodeCard(l))}
+        {linodes.map((l, idx) => <LinodeCard linode={l}/>)}
       </Grid>
     );
   }
 
-  listLinodes() {
+  toggleBox() {
     const { classes } = this.props;
+    const { viewStyle } = this.state;
+    
+    return (
+      <div className={classes.toggleBox}>
+        <Button
+          onClick={() => this.changeViewStyle('list')}
+          className={`
+            ${viewStyle === 'list' && classes.toggleButtonActive}
+            ${classes.toggleButton}
+            ${classes.toggleButtonLeft}`
+          }
+        >
+          <ViewList className={classes.icon}/>
+          List
+        </Button>
+        <Button
+          onClick={() => this.changeViewStyle('grid')}
+          className={`
+            ${viewStyle === 'grid' && classes.toggleButtonActive}
+            ${classes.toggleButton}
+            ${classes.toggleButtonRight}`
+          }
+        >
+          <ViewModule className={classes.icon}/>
+          Grid
+        </Button>
+      </div>
+    );
+  }
+
+  listLinodes() {
     const { viewStyle } = this.state;
 
     return (
       <React.Fragment>
-        <div className={classes.toggleBox}>
-          <Button
-            onClick={() => this.changeViewStyle('list')}
-            className={`
-              ${viewStyle === 'list' && classes.toggleButtonActive}
-              ${classes.toggleButton}
-              ${classes.toggleButtonLeft}`
-            }
-          >
-            <ViewList className={classes.icon}/>
-            List
-          </Button>
-          <Button
-            onClick={() => this.changeViewStyle('grid')}
-            className={`
-              ${viewStyle === 'grid' && classes.toggleButtonActive}
-              ${classes.toggleButton}
-              ${classes.toggleButtonRight}`
-            }
-          >
-            <ViewModule className={classes.icon}/>
-            Grid
-          </Button>
-        </div>
+        {this.toggleBox()}
         {viewStyle === 'list'
           ? this.linodeList()
           : this.linodeGrid()
