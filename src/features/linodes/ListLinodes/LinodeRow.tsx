@@ -25,6 +25,8 @@ import jp from 'flag-icon-css/flags/4x3/jp.svg';
 import { AppState } from 'src/store';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
+import TagComponent from 'src/components/TagComponent';
+
 const flagMap = { us, de, gb, sg, jp };
 
 type CSSClasses = 'copyIcon' | 'inlineItems';
@@ -89,6 +91,11 @@ class LinodeRow extends React.Component<PropsWithStyles> {
     const { classes, linode, type, image } = this.props;
     const label = displayLabel(type.memory, image.label);
 
+    /**
+     * @todo Until tags are implemented we're using the group as a faux tag.
+     * */
+    const tags = [linode.group].filter(Boolean);
+
     return (
       <TableRow key={linode.id}>
         <TableCell>
@@ -102,6 +109,9 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             </div>
             {label && <div>{label}</div>}
           </div>
+        </TableCell>
+        <TableCell>
+          {tags.map((v: string, idx) => <TagComponent key={idx} label={v} />)}
         </TableCell>
         <TableCell>
           <div>

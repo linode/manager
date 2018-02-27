@@ -11,10 +11,8 @@ import {
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
-
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
-
 
 const ListLinodes = Loadable({
   loader: () => import('src/features/linodes/ListLinodes'),

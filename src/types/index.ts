@@ -1,8 +1,3 @@
-/// <reference path="Disk.ts" />
-/// <reference path="Image.ts" />
-/// <reference path="Linode.ts" />
-/// <reference path="LinodeType.ts" />
-
 /**
  * Necessary for ES6 import of svg/png files, else we would have to require() them.
  *
