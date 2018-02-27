@@ -107,21 +107,45 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
     const { linodes } = this.props;
 
     return (
-      <Grid item xs={12}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>IP Addresses</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
-          </TableBody>
-        </Table>
+      <Paper elevation={1}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Label</TableCell>
+                  <TableCell>Tags</TableCell>
+                  <TableCell>IP Addresses</TableCell>
+                  <TableCell>Region</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Grid>
+      </Paper>
+    );
+  }
+
+  linodeCard(linode: Linode.Linode) {
+    return (
+      <Grid item xs={12} md={4}>
+        <Paper elevation={1}>
+          linode.label
+        </Paper>
+      </Grid>
+    );
+  }
+
+  linodeGrid() {
+    const { linodes } = this.props;
+
+    return (
+      <Grid container>
+        {linodes.map((l, idx) => this.linodeCard(l))}
       </Grid>
     );
   }
@@ -131,7 +155,7 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
     const { viewStyle } = this.state;
 
     return (
-      <Grid container>
+      <React.Fragment>
         <div className={classes.toggleBox}>
           <Button
             onClick={() => this.changeViewStyle('list')}
@@ -156,13 +180,11 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
             Grid
           </Button>
         </div>
-        <Paper elevation={1}>
-          {viewStyle === 'list'
-            ? this.linodeList()
-            : null
-          }
-        </Paper>
-      </Grid>
+        {viewStyle === 'list'
+          ? this.linodeList()
+          : this.linodeGrid()
+        }
+      </React.Fragment>
     );
   }
 
