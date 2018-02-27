@@ -23,6 +23,7 @@ import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 import { AppState } from 'src/store';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 const flagMap = { us, de, gb, sg, jp };
 
@@ -74,6 +75,16 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
+  actions: Action[] = [
+    { title: 'Launch Console', onClick: (e) => { e.preventDefault(); } },
+    { title: 'Reboot', onClick: (e) => { e.preventDefault(); } },
+    { title: 'View Graphs', onClick: (e) => { e.preventDefault(); } },
+    { title: 'Resize', onClick: (e) => { e.preventDefault(); } },
+    { title: 'View Backups', onClick: (e) => { e.preventDefault(); } },
+    { title: 'Power On', onClick: (e) => { e.preventDefault(); } },
+    { title: 'Settings', onClick: (e) => { e.preventDefault(); } },
+  ];
+
   render() {
     const { classes, linode, type, image } = this.props;
     const label = displayLabel(type.memory, image.label);
@@ -127,7 +138,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             variant="body2">{formatRegion(linode.region)}</Typography>
         </TableCell>
         <TableCell>
-
+          <ActionMenu actions={this.actions} />
         </TableCell>
       </TableRow >
     );
