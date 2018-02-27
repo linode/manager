@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
 });
 
 interface Props extends Doc {
-  key: number;
+  index: number;
   count: number;
 }
 
@@ -36,7 +36,7 @@ type DocWithStyles = Props & WithStyles<CSSClasses>;
 
 class DocComponent extends React.Component<DocWithStyles> {
   render() {
-    const { classes, src, title, body, key, count } = this.props;
+    const { classes, src, title, body, index, count } = this.props;
 
     return (
       <React.Fragment>
@@ -48,7 +48,7 @@ class DocComponent extends React.Component<DocWithStyles> {
           </div>
           <div className={classes.body}>{body}</div>
         </div>
-        {key !== count && <Divider />}
+        {index + 1 !== count && <Divider />}
       </React.Fragment>
     );
   }
