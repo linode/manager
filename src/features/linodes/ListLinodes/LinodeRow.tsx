@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import * as copy from 'copy-to-clipboard';
-import { pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -68,8 +65,8 @@ function displayLabel(memory?: number, label?: string): string | undefined {
 
 interface Props {
   linode: Linode.Linode;
-  type: Linode.LinodeType;
-  image: Linode.Image;
+  memory?: number;
+  image?: string;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
@@ -86,8 +83,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   ];
 
   render() {
-    const { classes, linode, type, image } = this.props;
-    const label = displayLabel(type.memory, image.label);
+    const { classes, linode, memory, image } = this.props;
+    const label = displayLabel(memory, image);
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
@@ -153,18 +150,4 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState, ownProps: Props) => {
-  const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
-  const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
-  const { type, image } = ownProps.linode as Linode.Linode;
-
-  return {
-    image: imagesCollection.find((i: Linode.Image) => i.id === image),
-    type: typesCollection.find((t: Linode.LinodeType) => t.id === type),
-  };
-};
-
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connect(mapStateToProps),
-  withStyles(styles, { withTheme: true }),
-)(LinodeRow);
+export default withStyles(styles, { withTheme: true })(LinodeRow);

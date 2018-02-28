@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { pathOr } from 'ramda';
+import Axios from 'axios';
+import { path, find } from 'ramda';
 
 import Grid from 'material-ui/Grid';
 import Table from 'material-ui/Table';
@@ -10,17 +9,36 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import TableBody from 'material-ui/Table/TableBody';
 
+import { API_ROOT } from 'src/constants';
+import Preload from 'src/components/AxiosPreloader';
 import WithDocumentation from 'src/components/WithDocumentation';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
-interface Props {
-  linodes: Linode.Linode[];
+interface Props { }
+
+interface PreloadedProps {
+  linodes: Linode.ManyResourceState<Linode.Linode>;
+  images: Linode.ManyResourceState<Linode.Image>;
+  types: Linode.ManyResourceState<Linode.LinodeType>;
 }
 
-class ListLinodes extends React.Component<Props> {
+interface State {
+}
+
+const preload = Preload<Props>({
+  linodes: () => Axios.get(`${API_ROOT}/linode/instances`),
+  types: () => Axios.get(`${API_ROOT}/linode/types`),
+  images: () => Axios.get(`${API_ROOT}/images`),
+});
+
+class ListLinodes extends React.Component<Props & PreloadedProps, State> {
+  state: State = {};
+
   static defaultProps = {
     linodes: [],
+    types: [],
+    images: [],
   };
 
   /**
@@ -51,7 +69,16 @@ class ListLinodes extends React.Component<Props> {
   ];
 
   listLinodes() {
-    const { linodes } = this.props;
+    const {
+      linodes: { data: linodes },
+      types: { data: types },
+      images: { data: images },
+    } = this.props;
+    if (!linodes) { return null; }
+
+    const findInTypes = findIn<Linode.LinodeType>(types);
+
+    const findInImages = findIn<Linode.Image>(images);
 
     return (
       <Grid container>
@@ -67,7 +94,14 @@ class ListLinodes extends React.Component<Props> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
+              {
+                linodes.map((l, idx) => <LinodeRow
+                  key={idx}
+                  linode={l}
+                  memory={path(['memory'], findInTypes(t => t.id === l.type))}
+                  image={path(['label'], findInImages(i => i.id === l.image))}
+                />)
+              }
             </TableBody>
           </Table>
         </Grid>
@@ -76,13 +110,13 @@ class ListLinodes extends React.Component<Props> {
   }
 
   render() {
-    const { linodes } = this.props;
+    const { linodes: { data: linodes } } = this.props;
     return (
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
         render={() =>
-          linodes.length > 0
+          linodes && linodes.length > 0
             ? this.listLinodes()
             : <ListLinodesEmptyState />}
       />
@@ -90,10 +124,10 @@ class ListLinodes extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  linodes: pathOr([], ['api', 'linodes', 'data'], state),
-});
+export default preload(ListLinodes);
 
-export default compose(
-  connect<Props>(mapStateToProps),
-)(ListLinodes);
+function findIn<P>(collection: P[] = []) {
+  return function (pred: (i: P) => boolean): P | undefined {
+    return find(pred, collection);
+  };
+}
