@@ -2,13 +2,15 @@ import { stringify } from 'querystring';
 import { v4 } from 'uuid';
 
 import { setToken } from '~/actions/authentication';
-import { APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from '~/constants';
+import { APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
+import { store } from '~/store';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRES = 'authentication/expires';
+const LATEST_REFRESH = 'authentication/latest-refresh';
 
 export function start(oauthToken = '', scopes = '', expires) {
   return (dispatch) => {
@@ -72,7 +74,18 @@ export function redirectToLogin(path, querystring) {
   window.location = prepareOAuthEndpoint(redirectUri);
 }
 
-export function refreshOAuthToken(dispatch) {
+export function refreshOAuthToken() {
+  /*
+   * This timestamp is for throttling the refresh process itself. It's
+   * heavyweight because it hits localStorage. It's important to do this
+   * because the user may have the app open in multiple tabs. We only do
+   * this comparison once for each refresh attempt.
+   */
+  const latestRefresh = +getStorage(LATEST_REFRESH);
+  if (Date.now() - latestRefresh < (OAUTH_TOKEN_REFRESH_TIMEOUT - 5000)) {
+    return;
+  }
+  setStorage(LATEST_REFRESH, Date.now());
   /**
    * Open an iframe for two purposes
    * 1. Hits the login service (extends the lifetime of login session)
@@ -83,10 +96,32 @@ export function refreshOAuthToken(dispatch) {
   iframe.style.display = 'none';
   const iframeContainer = document.getElementById('session-iframe');
   iframeContainer.appendChild(iframe);
-  // Remove the iframe once it refreshes OAuth token in localStorage
+  // Wait for the iframe to update localStorage, then move the creds into Redux
+  setTimeout(() => store.dispatch(refresh), 3000);
+  // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-  // Move the OAuth token from localStorage into Redux
-  dispatch(refresh);
-  // Do this again in a little while
-  setTimeout(() => dispatch(refreshOAuthToken), OAUTH_TOKEN_REFRESH_INTERVAL);
+}
+
+export function refreshOAuthOnUserInteraction() {
+  /*
+   * This timestamp is for throttling events on this tab. The comparison is
+   * lightweight because it's between integers and doesn't hit localStorage.
+   * This is important because we do this comparison on every mouse and
+   * keyboard event.
+   */
+  let currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+
+  document.addEventListener('mousedown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
+
+  document.addEventListener('keydown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
 }
