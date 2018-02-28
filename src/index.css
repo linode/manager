@@ -19,3 +19,7 @@ body {
 .tac {
   text-align: center;
 }
+
+.dif {
+  display: inline-flex;
+}

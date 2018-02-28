@@ -16,26 +16,13 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-import us from 'flag-icon-css/flags/4x3/us.svg';
-import de from 'flag-icon-css/flags/4x3/de.svg';
-import gb from 'flag-icon-css/flags/4x3/gb.svg';
-import sg from 'flag-icon-css/flags/4x3/sg.svg';
-import jp from 'flag-icon-css/flags/4x3/jp.svg';
-
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
-import { displayLabel } from './presentation';
+import { displayLabel, flagImg, formatRegion } from './presentation';
 
-const flagMap = { us, de, gb, sg, jp };
-
-type CSSClasses = 'copyIcon' | 'inlineItems';
+type CSSClasses = 'inlineItems';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  copyIcon: {
-    height: '0.8125rem',
-    width: '0.8125rem',
-    cursor: 'pointer',
-  },
   inlineItems: {
     lineHeight: '30px',
     verticalAlign: 'middle',
@@ -43,20 +30,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     margin: '0 3px',
   },
 });
-
-function titlecase(string: string): string {
-  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
-}
-
-function formatRegion(region: string) {
-  const [countryCode, area] = region.split('-');
-  return `${countryCode.toUpperCase()} ${titlecase(area)}`;
-}
-
-const img = (region: string) => {
-  const abb = region.substr(0, 2);
-  return flagMap[abb];
-};
 
 function clip(value: string): void {
   copy(value);
@@ -111,7 +84,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <div>
             <div className={classes.inlineItems}>
               <ContentCopyIcon
-                className={classes.copyIcon}
+                className="copyIcon"
                 onClick={() => clip(linode.ipv4[0])}
               />
             </div>
@@ -122,7 +95,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <div>
             <div className={classes.inlineItems}>
               <ContentCopyIcon
-                className={classes.copyIcon}
+                className="copyIcon"
                 onClick={() => clip(linode.ipv6)}
               />
             </div>
@@ -130,16 +103,18 @@ class LinodeRow extends React.Component<PropsWithStyles> {
               {linode.ipv6}
             </div>
           </div>
-
         </TableCell>
         <TableCell>
           <img
             className={classes.inlineItems}
-            src={img(linode.region)} height="15" width="20" role="presentation"
+            src={flagImg(linode.region)} height="15" width="20" role="presentation"
           />
           <Typography
             className={classes.inlineItems}
-            variant="body2">{formatRegion(linode.region)}</Typography>
+            variant="body2"
+          >
+            {formatRegion(linode.region)}
+          </Typography>
         </TableCell>
         <TableCell>
           <ActionMenu actions={this.actions} />
