@@ -30,6 +30,8 @@ import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
+import './linodes.css';
+
 type CSSClasses = 
     'toggleBox'
   | 'toggleButton'

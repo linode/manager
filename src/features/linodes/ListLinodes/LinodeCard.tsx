@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
+import * as copy from 'copy-to-clipboard';
 
 import {
   withStyles,
@@ -15,11 +16,12 @@ import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
 
 import Tag from 'src/components/Tag';
-import { typeLabelLong } from './presentation';
+import { typeLabelLong, flagImg, formatRegion } from './presentation';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -43,7 +45,14 @@ const distroIcons = {
   Ubuntu,
 };
 
-type CSSClasses = 'cardSection' | 'distroIcon' | 'cardActions' | 'button';
+type CSSClasses = 
+  'cardSection'
+  | 'distroIcon'
+  | 'ipAddress'
+  | 'regionIndicator'
+  | 'flagImg'
+  | 'cardActions'
+  | 'button';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   cardSection: {
@@ -52,6 +61,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   distroIcon: {
     marginTop: theme.spacing.unit,
     width: theme.spacing.unit * 3,
+  },
+  ipAddress: {
+    marginRight: theme.spacing.unit,
+  },
+  regionIndicator: {
+    alignItems: 'center',
+  },
+  flagImg: {
+    marginRight: theme.spacing.unit,
   },
   cardActions: {
     padding: 0,
@@ -109,10 +127,40 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               </Grid>
             </div>
             <div className={classes.cardSection}>
-              IP Addresses
+              <div>
+                <Typography variant="body2">
+                  <span className={classes.ipAddress}>{linode.ipv4[0]}</span>
+                  <ContentCopyIcon
+                    className="copyIcon"
+                    onClick={() => copy(linode.ipv4[0])}
+                  />
+                </Typography>
+              </div>
+              <div>
+                <Typography>
+                  <span className={classes.ipAddress}>{linode.ipv6}</span>
+                  <ContentCopyIcon
+                    className="copyIcon"
+                    onClick={() => copy(linode.ipv6)}
+                  />
+                </Typography>
+              </div>
             </div>
             <div className={classes.cardSection}>
-              Region Indicator
+              <div className={`dif ${classes.regionIndicator}`}>
+                <img
+                  className={classes.flagImg}
+                  src={flagImg(linode.region)}
+                  width="20"
+                  height="15"
+                  role="presentation"
+                />
+                <Typography
+                  variant="body2"
+                >
+                  {formatRegion(linode.region)}
+                </Typography>
+              </div>
             </div>
           </CardContent>
           <CardActions className={classes.cardActions}>
