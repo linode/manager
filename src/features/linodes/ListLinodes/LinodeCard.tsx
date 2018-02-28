@@ -52,7 +52,7 @@ class LinodeRow extends React.Component<Props & WithStyles<CSSClasses> > {
     const tags = [linode.group].filter(Boolean);
 
     return (
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>
           <CardHeader
             title={linode.label}
