@@ -24,6 +24,7 @@ import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
+import { displayLabel } from './presentation';
 
 const flagMap = { us, de, gb, sg, jp };
 
@@ -59,11 +60,6 @@ const img = (region: string) => {
 
 function clip(value: string): void {
   copy(value);
-}
-
-function displayLabel(memory?: number, label?: string): string | undefined {
-  if (!label || !memory) { return; }
-  return `${label}, Linode ${memory / 1024}G`;
 }
 
 interface Props {
