@@ -126,7 +126,7 @@ class ListLinodes extends React.Component<CombinedProps> {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
+                {linodes.map(linode => <LinodeRow key={linode.id} linode={linode} />)}
               </TableBody>
             </Table>
           </Grid>
@@ -140,7 +140,7 @@ class ListLinodes extends React.Component<CombinedProps> {
 
     return (
       <Grid container>
-        {linodes.map((l, idx) => <LinodeCard linode={l}/>)}
+        {linodes.map(linode => <LinodeCard key={linode.id} linode={linode}/>)}
       </Grid>
     );
   }

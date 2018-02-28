@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -16,8 +19,29 @@ import Typography from 'material-ui/Typography';
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
 
 import Tag from 'src/components/Tag';
+import { typeLabelLong } from './presentation';
 
+import Arch from 'src/assets/distros/Arch.png';
+import CentOS from 'src/assets/distros/CentOS.png';
+import ContainerLinux from 'src/assets/distros/ContainerLinux.png';
+import Debian from 'src/assets/distros/Debian.png';
+import Fedora from 'src/assets/distros/Fedora.png';
+import Gentoo from 'src/assets/distros/Gentoo.png';
+import OpenSUSE from 'src/assets/distros/OpenSUSE.png';
+import Slackware from 'src/assets/distros/Slackware.png';
 import Ubuntu from 'src/assets/distros/Ubuntu.png';
+
+const distroIcons = {
+  Arch,
+  CentOS,
+  CoreOS: ContainerLinux,
+  Debian,
+  Fedora,
+  Gentoo,
+  openSUSE: OpenSUSE,
+  Slackware,
+  Ubuntu,
+};
 
 type CSSClasses = 'cardSection' | 'distroIcon' | 'cardActions' | 'button';
 
@@ -40,11 +64,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 interface Props {
   linode: Linode.Linode;
+  image: Linode.Image;
+  type: Linode.LinodeType;
 }
 
-class LinodeRow extends React.Component<Props & WithStyles<CSSClasses> > {
+class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   render() {
-    const { classes, linode } = this.props;
+    const { classes, linode, image, type } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
@@ -70,14 +96,14 @@ class LinodeRow extends React.Component<Props & WithStyles<CSSClasses> > {
             <div className={classes.cardSection}>
               <Grid container>
                 <Grid item className="tac" xs={2}>
-                  <img src={Ubuntu} className={classes.distroIcon}/>
+                  <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
                 </Grid>
                 <Grid item xs={9}>
                   <Typography variant="subheading">
-                    Ubuntu 14.04 LTS
+                    {image.label}
                   </Typography>
                   <Typography>
-                    Linode 1G: 1 CPU, 20G Storage, 1G RAM
+                    {typeLabelLong(type.memory, type.disk, type.vcpus)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -103,4 +129,18 @@ class LinodeRow extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(LinodeRow);
+const mapStateToProps = (state: Linode.AppState, ownProps: Props) => {
+  const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
+  const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
+  const { type, image } = ownProps.linode as Linode.Linode;
+
+  return {
+    image: imagesCollection.find((i: Linode.Image) => i.id === image),
+    type: typesCollection.find((t: Linode.LinodeType) => t.id === type),
+  };
+};
+
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+  connect(mapStateToProps),
+  withStyles(styles, { withTheme: true }),
+)(LinodeCard);
