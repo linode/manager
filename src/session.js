@@ -10,6 +10,7 @@ import { store } from '~/store';
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRES = 'authentication/expires';
+const LATEST_REFRESH = 'authentication/latest-refresh';
 
 export function start(oauthToken = '', scopes = '', expires) {
   return (dispatch) => {
@@ -74,6 +75,17 @@ export function redirectToLogin(path, querystring) {
 }
 
 export function refreshOAuthToken() {
+  /*
+   * This timestamp is for throttling the refresh process itself. It's
+   * heavyweight because it hits localStorage. It's important to do this
+   * because the user may have the app open in multiple tabs. We only do
+   * this comparison once for each refresh attempt.
+   */
+  const latestRefresh = +getStorage(LATEST_REFRESH);
+  if (Date.now() - latestRefresh < (OAUTH_TOKEN_REFRESH_TIMEOUT - 5000)) {
+    return;
+  }
+  setStorage(LATEST_REFRESH, Date.now());
   /**
    * Open an iframe for two purposes
    * 1. Hits the login service (extends the lifetime of login session)
@@ -91,6 +103,12 @@ export function refreshOAuthToken() {
 }
 
 export function refreshOAuthOnUserInteraction() {
+  /*
+   * This timestamp is for throttling events on this tab. The comparison is
+   * lightweight because it's between integers and doesn't hit localStorage.
+   * This is important because we do this comparison on every mouse and
+   * keyboard event.
+   */
   let currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
 
   document.addEventListener('mousedown', () => {
