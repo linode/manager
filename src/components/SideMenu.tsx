@@ -11,7 +11,7 @@ import Drawer from 'material-ui/Drawer';
 
 import PrimaryNav from 'src/components/PrimaryNav';
 
-export const menuWidth = 250;
+export const menuWidth = 215;
 
 const styles = (theme: Theme): StyleRules => ({
   menuPaper: {
