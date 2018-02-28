@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import * as Loadable from 'react-loadable';
 
 import {
   withStyles,
@@ -13,18 +12,10 @@ import Typography from 'material-ui/Typography';
 
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
+import DefaultLoader from 'src/components/DefaultLoader';
 
-import Axios from 'axios';
-const ListLinodes = Loadable.Map({
-  loader: {
-    Component: () => import('src/features/linodes/ListLinodes'),
-    linodes: () => Axios.get(`https://api.dev.linode.com/v4/linode/types`),
-  },
-  loading: () => null,
-  render: (loaded, props) => {
-    const Component = loaded.Component.default;
-    return <Component {...props} />;
-  },
+const ListLinodes = DefaultLoader({
+  loader: () => import('src/features/linodes/ListLinodes'),
 });
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
