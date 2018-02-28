@@ -13,7 +13,7 @@ namespace Linode {
 
   export type Hypervisor = 'kvm' | 'zen';
 
-  interface ManyResourceState<T> {
+  export interface ManyResourceState<T> {
     data?: T[];
     page: number;
     pages: number;
