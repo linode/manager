@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import {
+  withRouter,
+  RouteComponentProps,
+} from 'react-router-dom';
 import { compose } from 'redux';
 import { pathOr } from 'ramda';
 
@@ -65,11 +69,9 @@ interface Props {
   linodes: Linode.Linode[];
 }
 
-class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
-  state = {
-    viewStyle: 'list',
-  };
+type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
+class ListLinodes extends React.Component<CombinedProps> {
   static defaultProps = {
     linodes: [],
   };
@@ -102,7 +104,8 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
   ];
 
   changeViewStyle(style: string) {
-    this.setState({ viewStyle: style });
+    const { history } = this.props;
+    history.push(`#${style}`);
   }
 
   linodeList() {
@@ -143,15 +146,14 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   toggleBox() {
-    const { classes } = this.props;
-    const { viewStyle } = this.state;
+    const { classes, location: { hash } } = this.props;
     
     return (
       <div className={classes.toggleBox}>
         <Button
           onClick={() => this.changeViewStyle('list')}
           className={`
-            ${viewStyle === 'list' && classes.toggleButtonActive}
+            ${hash !== '#grid' && classes.toggleButtonActive}
             ${classes.toggleButton}
             ${classes.toggleButtonLeft}`
           }
@@ -162,7 +164,7 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
         <Button
           onClick={() => this.changeViewStyle('grid')}
           className={`
-            ${viewStyle === 'grid' && classes.toggleButtonActive}
+            ${hash === '#grid' && classes.toggleButtonActive}
             ${classes.toggleButton}
             ${classes.toggleButtonRight}`
           }
@@ -175,14 +177,14 @@ class ListLinodes extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   listLinodes() {
-    const { viewStyle } = this.state;
+    const { location: { hash } } = this.props;
 
     return (
       <React.Fragment>
         {this.toggleBox()}
-        {viewStyle === 'list'
-          ? this.linodeList()
-          : this.linodeGrid()
+        {hash === '#grid'
+          ? this.linodeGrid()
+          : this.linodeList()
         }
       </React.Fragment>
     );
@@ -210,4 +212,5 @@ const mapStateToProps = (state: any) => ({
 export default compose(
   connect<Props>(mapStateToProps),
   withStyles(styles, { withTheme: true }),
+  withRouter,
 )(ListLinodes);
