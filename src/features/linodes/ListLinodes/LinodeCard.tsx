@@ -19,6 +19,8 @@ import Typography from 'material-ui/Typography';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
+import CallToAction from 'material-ui-icons/CallToAction';
+import Replay from 'material-ui-icons/Replay';
 
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
@@ -49,11 +51,13 @@ const distroIcons = {
 type CSSClasses = 
   'cardSection'
   | 'distroIcon'
-  | 'ipAddress'
+  | 'rightMargin'
   | 'regionIndicator'
   | 'flagImg'
   | 'cardActions'
-  | 'button';
+  | 'button'
+  | 'consoleButton'
+  | 'rebootButton';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   cardSection: {
@@ -63,7 +67,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     marginTop: theme.spacing.unit,
     width: theme.spacing.unit * 3,
   },
-  ipAddress: {
+  rightMargin: {
     marginRight: theme.spacing.unit,
   },
   regionIndicator: {
@@ -73,11 +77,21 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     marginRight: theme.spacing.unit,
   },
   cardActions: {
+    backgroundColor: '#f9f9f9',
     padding: 0,
   },
   button: {
     height: '100%',
     margin: 0,
+  },
+  consoleButton: {
+    width: '60%',
+    borderColor: 'rgba(0, 0, 0, 0.12)',
+    border: '1px solid',
+    borderWidth: '0 1px 0 0',
+  },
+  rebootButton: {
+    width: '40%',
   },
 });
 
@@ -130,7 +144,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <div className={classes.cardSection}>
               <div>
                 <Typography variant="body2">
-                  <span className={classes.ipAddress}>{linode.ipv4[0]}</span>
+                  <span className={classes.rightMargin}>{linode.ipv4[0]}</span>
                   <ContentCopyIcon
                     className="copyIcon"
                     onClick={() => copy(linode.ipv4[0])}
@@ -139,7 +153,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               </div>
               <div>
                 <Typography>
-                  <span className={classes.ipAddress}>{linode.ipv6}</span>
+                  <span className={classes.rightMargin}>{linode.ipv6}</span>
                   <ContentCopyIcon
                     className="copyIcon"
                     onClick={() => copy(linode.ipv6)}
@@ -151,11 +165,14 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               <RegionIndicator region={linode.region} />
             </div>
           </CardContent>
+          <Divider />
           <CardActions className={classes.cardActions}>
-            <Button className={classes.button}>
+            <Button className={`${classes.button} ${classes.consoleButton}`}>
+              <CallToAction className={classes.rightMargin}/>
               Launch Console
             </Button>
-            <Button className={classes.button}>
+            <Button className={`${classes.button} ${classes.rebootButton}`}>
+              <Replay className={classes.rightMargin}/>
               Reboot
             </Button>
           </CardActions>
