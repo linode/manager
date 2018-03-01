@@ -2,13 +2,14 @@ import { stringify } from 'querystring';
 import { v4 } from 'uuid';
 
 import { setToken } from 'src/actions/authentication';
-import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_INTERVAL } from 'src/constants';
+import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'src/constants';
 import { getStorage, setStorage } from 'src/storage';
 import store from 'src/store';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
 const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
+const LATEST_REFRESH = 'authentication/latest-refresh';
 
 export function start(oauthToken = '', scopes = '', expires = '') {
   // Set these two so we can grab them on subsequent page loads
@@ -71,6 +72,17 @@ export function redirectToLogin(path: string, querystring: string) {
 }
 
 export function refreshOAuthToken() {
+  /*
+   * This timestamp is for throttling the refresh process itself. It's
+   * heavyweight because it hits localStorage. It's important to do this
+   * because the user may have the app open in multiple tabs. We only do
+   * this comparison once for each refresh attempt.
+   */
+  const latestRefresh = +getStorage(LATEST_REFRESH);
+  if (Date.now() - latestRefresh < (OAUTH_TOKEN_REFRESH_TIMEOUT - 5000)) {
+    return;
+  }
+  setStorage(LATEST_REFRESH, Date.now().toString());
   /**
    * Open an iframe for two purposes
    * 1. Hits the login service (extends the lifetime of login session)
@@ -88,11 +100,28 @@ export function refreshOAuthToken() {
   setTimeout(() => refresh(), 3000);
   // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-  // Do this again in a little while
-  setTimeout(() => refreshOAuthToken(), OAUTH_TOKEN_REFRESH_INTERVAL);
 }
 
-export function initializeSessionRefresh() {
-  // attempt to refresh the OAuth token immediately upon application init
-  setTimeout(() => refreshOAuthToken(), 1000);
+export function refreshOAuthOnUserInteraction() {
+  /*
+   * This timestamp is for throttling events on this tab. The comparison is
+   * lightweight because it's between integers and doesn't hit localStorage.
+   * This is important because we do this comparison on every mouse and
+   * keyboard event.
+   */
+  let currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+
+  document.addEventListener('mousedown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
+
+  document.addEventListener('keydown', () => {
+    if (Date.now() >= currentExpiryTime) {
+      refreshOAuthToken();
+      currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
+    }
+  });
 }

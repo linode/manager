@@ -15,7 +15,11 @@ import 'src/exceptionReporting';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import Logout from 'src/layouts/Logout';
-import { initialize as sessionInitialize, initializeSessionRefresh } from './session';
+import {
+  initialize as sessionInitialize,
+  refreshOAuthToken,
+  refreshOAuthOnUserInteraction,
+} from './session';
 import App from './App';
 import './index.css';
 
@@ -36,9 +40,9 @@ createBrowserHistory().listen(({ pathname }) => {
 
 sessionInitialize();
 if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
-  initializeSessionRefresh();
+  refreshOAuthToken();
 }
-
+refreshOAuthOnUserInteraction();
 
 ReactDOM.render(
   <Provider store={store}>
