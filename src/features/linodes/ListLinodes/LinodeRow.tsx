@@ -18,7 +18,8 @@ import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
-import { displayLabel, flagImg, formatRegion } from './presentation';
+import RegionIndicator from './RegionIndicator';
+import { displayLabel } from './presentation';
 
 type CSSClasses = 'inlineItems';
 
@@ -105,16 +106,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           </div>
         </TableCell>
         <TableCell>
-          <img
-            className={classes.inlineItems}
-            src={flagImg(linode.region)} height="15" width="20" role="presentation"
-          />
-          <Typography
-            className={classes.inlineItems}
-            variant="body2"
-          >
-            {formatRegion(linode.region)}
-          </Typography>
+          <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell>
           <ActionMenu actions={this.actions} />
