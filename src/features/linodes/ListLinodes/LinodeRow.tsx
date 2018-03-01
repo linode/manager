@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import * as copy from 'copy-to-clipboard';
 
 import {
   withStyles,
@@ -11,11 +10,11 @@ import {
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
+import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
 import { actions } from './menuActions';
 
@@ -30,10 +29,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   },
 });
 
-function clip(value: string): void {
-  copy(value);
-}
-
 interface Props {
   linode: Linode.Linode;
   type?: Linode.LinodeType;
@@ -44,7 +39,7 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, linode, type, image } = this.props;
+    const { linode, type, image } = this.props;
     const specsLabel = type && image && displayLabel(type.memory, image.label);
 
     /**
@@ -70,28 +65,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
         <TableCell>
-          <div>
-            <div className={classes.inlineItems}>
-              <ContentCopyIcon
-                className="copyIcon"
-                onClick={() => clip(linode.ipv4[0])}
-              />
-            </div>
-            <div className={classes.inlineItems}>
-              {linode.ipv4}
-            </div>
-          </div>
-          <div>
-            <div className={classes.inlineItems}>
-              <ContentCopyIcon
-                className="copyIcon"
-                onClick={() => clip(linode.ipv6)}
-              />
-            </div>
-            <div className={classes.inlineItems}>
-              {linode.ipv6}
-            </div>
-          </div>
+          <IPAddress ips={linode.ipv4} />
+          <IPAddress ips={[linode.ipv6]} />
         </TableCell>
         <TableCell>
           <RegionIndicator region={linode.region} />
