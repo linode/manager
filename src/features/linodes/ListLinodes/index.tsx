@@ -69,6 +69,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 interface Props {
   linodes: Linode.Linode[];
+  images: Linode.Image[];
+  types: Linode.LinodeType[];
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
@@ -111,7 +113,7 @@ class ListLinodes extends React.Component<CombinedProps> {
   }
 
   linodeList() {
-    const { linodes } = this.props;
+    const { linodes, images, types } = this.props;
 
     return (
       <Paper elevation={1}>
@@ -128,7 +130,14 @@ class ListLinodes extends React.Component<CombinedProps> {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {linodes.map(linode => <LinodeRow key={linode.id} linode={linode} />)}
+                {linodes.map(linode => 
+                  <LinodeRow
+                    key={linode.id}
+                    linode={linode}
+                    image={images.find(image => linode.image === image.id)}
+                    type={types.find(type => linode.type === type.id)}
+                  />,
+                )}
               </TableBody>
             </Table>
           </Grid>
@@ -138,11 +147,18 @@ class ListLinodes extends React.Component<CombinedProps> {
   }
 
   linodeGrid() {
-    const { linodes } = this.props;
+    const { linodes, images, types } = this.props;
 
     return (
       <Grid container>
-        {linodes.map(linode => <LinodeCard key={linode.id} linode={linode}/>)}
+        {linodes.map(linode => 
+          <LinodeCard
+            key={linode.id}
+            linode={linode}
+            image={images.find(image => linode.image === image.id)}
+            type={types.find(type => linode.type === type.id)}
+          />,
+        )}
       </Grid>
     );
   }
@@ -209,6 +225,8 @@ class ListLinodes extends React.Component<CombinedProps> {
 
 const mapStateToProps = (state: any) => ({
   linodes: pathOr([], ['api', 'linodes', 'data'], state),
+  types: pathOr([], ['api', 'linodeTypes', 'data'], state),
+  images: pathOr([], ['api', 'images', 'data'], state),
 });
 
 export default compose(
