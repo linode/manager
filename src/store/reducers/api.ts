@@ -1,4 +1,4 @@
-const defaultState: Linode.ApiState = {
+export const defaultState: Linode.ApiState = {
   linodes: {
     page: 0,
     pages: 1,
@@ -27,7 +27,7 @@ const defaultState: Linode.ApiState = {
         hypervisor: 'kvm',
         label: 'test',
         image: 'linode/Ubuntu16.10',
-        group: '',
+        group: 'testgroup',
         region: 'us-east-1a',
         type: 'g5-nanode-1',
         backups: {
@@ -50,6 +50,9 @@ const defaultState: Linode.ApiState = {
         updated: '2018-02-22T16:11:07',
         ipv4: [
           '97.107.143.49',
+          '123.107.143.49',
+          '121.107.143.49',
+          '55.107.123.49',
         ],
         id: 2020755,
         alerts: {
@@ -63,7 +66,7 @@ const defaultState: Linode.ApiState = {
         hypervisor: 'kvm',
         label: 'another-test',
         image: 'linode/Ubuntu16.04LTS',
-        group: '',
+        group: 'anothergroup',
         region: 'us-east-1a',
         type: 'g5-standard-1',
         backups: {
@@ -655,7 +658,7 @@ const defaultState: Linode.ApiState = {
   },
 };
 
-export default function authentication(state = defaultState, action: Linode.TodoAny) {
+export default function api(state = defaultState, action: Linode.TodoAny) {
   switch (action.type) {
     default:
       return state;

@@ -39,6 +39,7 @@ class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses> > {
         />
         <Typography
           variant="body2"
+          noWrap
         >
           {formatRegion(region)}
         </Typography>
