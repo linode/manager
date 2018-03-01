@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { pathOr } from 'ramda';
 import * as copy from 'copy-to-clipboard';
 
 import {
@@ -52,8 +49,6 @@ type CSSClasses =
   'cardSection'
   | 'distroIcon'
   | 'rightMargin'
-  | 'regionIndicator'
-  | 'flagImg'
   | 'cardActions'
   | 'button'
   | 'consoleButton'
@@ -68,12 +63,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     width: theme.spacing.unit * 3,
   },
   rightMargin: {
-    marginRight: theme.spacing.unit,
-  },
-  regionIndicator: {
-    alignItems: 'center',
-  },
-  flagImg: {
     marginRight: theme.spacing.unit,
   },
   cardActions: {
@@ -97,8 +86,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 interface Props {
   linode: Linode.Linode;
-  image: Linode.Image;
-  type: Linode.LinodeType;
+  image?: Linode.Image;
+  type?: Linode.LinodeType;
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -124,21 +113,23 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <div>
               {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
-            <div className={classes.cardSection}>
-              <Grid container>
-                <Grid item className="tac" xs={2}>
-                  <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
+            {image && type &&
+              <div className={classes.cardSection}>
+                <Grid container>
+                  <Grid item className="tac" xs={2}>
+                    <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="subheading">
+                      {image.label}
+                    </Typography>
+                    <Typography>
+                      {typeLabelLong(type.memory, type.disk, type.vcpus)}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="subheading">
-                    {image.label}
-                  </Typography>
-                  <Typography>
-                    {typeLabelLong(type.memory, type.disk, type.vcpus)}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
+              </div>
+            }
             <div className={classes.cardSection}>
               <div>
                 <Typography variant="body2">
@@ -180,18 +171,4 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-const mapStateToProps = (state: Linode.AppState, ownProps: Props) => {
-  const typesCollection = pathOr([], ['api', 'linodeTypes', 'data'], state);
-  const imagesCollection = pathOr([], ['api', 'images', 'data'], state);
-  const { type, image } = ownProps.linode as Linode.Linode;
-
-  return {
-    image: imagesCollection.find((i: Linode.Image) => i.id === image),
-    type: typesCollection.find((t: Linode.LinodeType) => t.id === type),
-  };
-};
-
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  connect(mapStateToProps),
-  withStyles(styles, { withTheme: true }),
-)(LinodeCard);
+export default withStyles(styles, { withTheme: true })(LinodeCard);
