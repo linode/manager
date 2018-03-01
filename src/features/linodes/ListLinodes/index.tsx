@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Axios from 'axios';
 import { path, find } from 'ramda';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import Grid from 'material-ui/Grid';
 import Table from 'material-ui/Table';
@@ -26,9 +28,14 @@ interface PreloadedProps {
 interface State {
 }
 
-const preload = Preload<Props>({
+const mapStateToProps = (state: Linode.AppState) => ({
+  types: state.resources.types && state.resources.types.data,
+});
+
+const connected = connect(mapStateToProps);
+
+const preloaded = Preload<Props>({
   linodes: () => Axios.get(`${API_ROOT}/linode/instances`),
-  types: () => Axios.get(`${API_ROOT}/linode/types`),
   images: () => Axios.get(`${API_ROOT}/images`),
 });
 
@@ -124,7 +131,10 @@ class ListLinodes extends React.Component<Props & PreloadedProps, State> {
   }
 }
 
-export default preload(ListLinodes);
+export default compose(
+  connected,
+  preloaded,
+)(ListLinodes);
 
 function findIn<P>(collection: P[] = []) {
   return function (pred: (i: P) => boolean): P | undefined {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-// import Axios, { AxiosError } from 'axios';
+import Axios from 'axios';
 
 import {
   withStyles,
@@ -13,11 +13,11 @@ import {
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
-// import { API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { request, success, failure } from 'src/store/reducers//things';
+import { request, success, failure } from 'src/store/reducers/resources';
 
 const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
@@ -79,18 +79,29 @@ export class App extends React.Component<FinalProps, State> {
   };
 
   componentDidMount() {
-    const { request } = this.props;
-    request(['regions']);
-    request(['types']);
-    // Axios.get(`${API_ROOT}/linodes/types`)
-    //   .then((response) => {
-    //     console.log('succes', response);
-    //     success(['types'], response.data);
-    //   })
-    //   .catch((error: AxiosError) => {
-    //     console.log('err', error);
-    //     failure(['types'], error);
-    //   });
+    const { request, success, failure } = this.props;
+
+    const promises = [
+      new Promise(() => {
+        request(['types']);
+
+        return Axios.get(`${API_ROOT}/linode/types`)
+          .then((response) => {
+            success(['types'], response.data);
+          })
+          .catch(error => failure(['types'], error));
+      }),
+    ];
+
+    Promise
+      .all(promises)
+      .then((results) => {
+        /**
+         * We don't really need to do anything here. The Redux actions are dispatched
+         * by the individual promises, we have no concept of 'loading'. The consumer of these
+         * cached entities can check their individual status and do what they will with them.
+         */
+      });
   }
 
   toggleMenu = () => {
@@ -129,7 +140,6 @@ export class App extends React.Component<FinalProps, State> {
     );
   }
 }
-
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   {

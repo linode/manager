@@ -1,6 +1,26 @@
-import { SET_TOKEN, SetToken } from 'src/actions/authentication';
+const SET_TOKEN = '@@manager/authentication/SET_TOKEN';
+const LOGOUT = '@@manager/authentication/LOGOUT';
 
-const defaultState = {
+export type SetToken = {
+  type: typeof SET_TOKEN,
+  token: Linode.NullableString,
+  scopes: Linode.NullableString,
+};
+
+export function setToken(
+  token: Linode.NullableString,
+  scopes: Linode.NullableString,
+): SetToken {
+  return {
+    type: SET_TOKEN,
+    token,
+    scopes,
+  };
+}
+
+export type Logout = { type: typeof LOGOUT };
+
+export const defaultState = {
   token: null,
   scopes: null,
 };
@@ -8,7 +28,7 @@ const defaultState = {
 export default function authentication(state = defaultState, action: SetToken) {
   switch (action.type) {
     case SET_TOKEN:
-    
+
       return {
         ...state,
         token: action.token,
@@ -17,4 +37,9 @@ export default function authentication(state = defaultState, action: SetToken) {
     default:
       return state;
   }
+}
+
+// This is used in the root reducer to erase all app state.
+export function logout() {
+  return { type: LOGOUT };
 }
