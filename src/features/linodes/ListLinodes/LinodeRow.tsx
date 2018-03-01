@@ -16,10 +16,11 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import { displayLabel } from './presentation';
+import { actions } from './menuActions';
 
 type CSSClasses = 'inlineItems';
 
@@ -45,16 +46,6 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
-  actions: Action[] = [
-    { title: 'Launch Console', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Reboot', onClick: (e) => { e.preventDefault(); } },
-    { title: 'View Graphs', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Resize', onClick: (e) => { e.preventDefault(); } },
-    { title: 'View Backups', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Power On', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Settings', onClick: (e) => { e.preventDefault(); } },
-  ];
-
   render() {
     const { classes, linode, type, image } = this.props;
     const label = displayLabel(type.memory, image.label);
@@ -109,7 +100,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell>
-          <ActionMenu actions={this.actions} />
+          <ActionMenu actions={actions} />
         </TableCell>
       </TableRow >
     );

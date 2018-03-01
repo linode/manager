@@ -14,17 +14,17 @@ import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-import MoreHoriz from 'material-ui-icons/MoreHoriz';
 import CallToAction from 'material-ui-icons/CallToAction';
 import Replay from 'material-ui-icons/Replay';
 
+import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import { typeLabelLong } from './presentation';
+import { actions } from './menuActions';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -116,9 +116,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardHeader
             title={linode.label}
             action={
-              <IconButton>
-                <MoreHoriz color="primary"/>
-              </IconButton>
+              <ActionMenu actions={actions} />
             }
           />
           {<Divider />}
