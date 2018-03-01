@@ -21,7 +21,8 @@ import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
 
 import Tag from 'src/components/Tag';
-import { typeLabelLong, flagImg, formatRegion } from './presentation';
+import RegionIndicator from './RegionIndicator';
+import { typeLabelLong } from './presentation';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -147,20 +148,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               </div>
             </div>
             <div className={classes.cardSection}>
-              <div className={`dif ${classes.regionIndicator}`}>
-                <img
-                  className={classes.flagImg}
-                  src={flagImg(linode.region)}
-                  width="20"
-                  height="15"
-                  role="presentation"
-                />
-                <Typography
-                  variant="body2"
-                >
-                  {formatRegion(linode.region)}
-                </Typography>
-              </div>
+              <RegionIndicator region={linode.region} />
             </div>
           </CardContent>
           <CardActions className={classes.cardActions}>
