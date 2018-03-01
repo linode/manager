@@ -16,6 +16,7 @@ import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import CallToAction from 'material-ui-icons/CallToAction';
 import Replay from 'material-ui-icons/Replay';
+import CloudCircle from 'material-ui-icons/CloudCircle';
 
 import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
@@ -117,7 +118,10 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               <div className={classes.cardSection}>
                 <Grid container>
                   <Grid item className="tac" xs={2}>
-                    <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
+                    {image.vendor ?
+                      <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
+                      : <CloudCircle className={classes.distroIcon} />
+                    }
                   </Grid>
                   <Grid item xs={9}>
                     <Typography variant="subheading">

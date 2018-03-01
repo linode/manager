@@ -507,7 +507,7 @@ const defaultState: Linode.AppState = {
           created_by: 'linode',
           deprecated: false,
           id: 'linode/Ubuntu16.04LTS',
-          vendor: 'Ubuntu',
+          vendor: null,
           size: 800,
           type: 'manual',
           created: '2016-04-22T18:11:29',
