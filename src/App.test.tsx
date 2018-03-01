@@ -11,8 +11,7 @@ it('renders without crashing', () => {
       <App
         classes={{ appFrame: '', content: '' }}
         request={jest.fn()}
-        success={jest.fn()}
-        failure={jest.fn()}
+        response={jest.fn()}
       />
     </StaticRouter>,
   );

@@ -17,7 +17,7 @@ import { API_ROOT } from 'src/constants';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { request, success, failure } from 'src/store/reducers/resources';
+import { request, response } from 'src/store/reducers/resources';
 
 const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
@@ -48,8 +48,7 @@ interface Props {
 
 interface ConnectedProps {
   request: typeof request;
-  success: typeof success;
-  failure: typeof failure;
+  response: typeof response;
 }
 
 interface State {
@@ -79,17 +78,17 @@ export class App extends React.Component<FinalProps, State> {
   };
 
   componentDidMount() {
-    const { request, success, failure } = this.props;
+    const { request, response } = this.props;
 
     const promises = [
       new Promise(() => {
         request(['types']);
 
         return Axios.get(`${API_ROOT}/linode/types`)
-          .then((response) => {
-            success(['types'], response.data);
+          .then(({ data }) => {
+            response(['types'], data);
           })
-          .catch(error => failure(['types'], error));
+          .catch(error => response(['types'], error));
       }),
     ];
 
@@ -144,8 +143,7 @@ export class App extends React.Component<FinalProps, State> {
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   {
     request,
-    success,
-    failure,
+    response,
   },
   dispatch);
 

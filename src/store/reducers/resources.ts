@@ -1,83 +1,76 @@
-const REQUEST = '@@manager/resources/REQUEST';
-const SUCCESS = '@@manager/resources/SUCCESS';
-const FAILURE = '@@manager/resources/FAILURE';
+import { Action } from 'redux';
+import { compose, ifElse, assocPath, when } from 'ramda';
+
+export const REQUEST = '@@manager/resources/REQUEST';
+export const RESPONSE = '@@manager/resources/RESPONSE';
 
 interface RequestAction {
   type: typeof REQUEST;
   meta: { path: string[] };
 }
 
-interface SuccessAction {
-  type: typeof SUCCESS;
+interface ResponseAction {
+  type: typeof RESPONSE;
   meta: { path: string[] };
   payload: any;
+  error: boolean;
 }
 
-interface FailureAction {
-  type: typeof FAILURE;
-  meta: { path: string[] };
-  error: Error;
-}
+type Actions = RequestAction | ResponseAction;
 
-type Actions = RequestAction | SuccessAction | FailureAction;
+export function oneOfType(action: { type: string }, list: string[]): action is Actions {
+  let i = 0;
+  const len = list.length;
+  const type = action.type;
 
-import { compose, ifElse, assocPath, when } from 'ramda';
-
-function oneOfType(action: Actions, list: string[]): boolean {
-  return list.reduce(
-    (result, type) => result || action.type === type,
-    false,
-  );
+  while (i < len) {
+    if (type === list[i]) {
+      return true;
+    }
+    i += 1;
+  }
+  return false;
 }
 
 export const defaultState = {};
 
 export default (
   state: Linode.ResourcesState = defaultState,
-  action: Actions,
-): Linode.ResourcesState =>
-  when(
-    (/* state */) => oneOfType(action, [REQUEST, SUCCESS, FAILURE]),
-    (state) => {
-      const path = action.meta.path;
-      const setLoading = assocPath([...path, 'loading']);
-      const setData = assocPath([...path, 'data']);
-      const setError = assocPath([...path, 'error']);
+  action: Actions | Action,
+): Linode.ResourcesState => when(
+  () => oneOfType(action, [REQUEST, RESPONSE]),
+  (state) => {
+    const path = (action as Actions).meta.path;
+    const setLoading = assocPath([...path, 'loading']);
+    const setData = assocPath([...path, 'data']);
+    const setError = assocPath([...path, 'error']);
 
-      return compose(
+    return compose(
+      ifElse(
+        () => action.type === REQUEST,
+        setLoading(true),
+        setLoading(false),
+      ),
 
-        ifElse(
-          () => action.type === REQUEST,
-          setLoading(true),
-          setLoading(false),
+      when(
+        () => action.type === RESPONSE,
+        compose(
+          setData((action as ResponseAction).payload),
+          when(() => (action as ResponseAction).error, setError(true)),
         ),
+      ),
+    )(state);
+  },
+)(state);
 
-        when(
-          () => action.type === SUCCESS,
-          setData((action as SuccessAction).payload),
-        ),
-
-        when(
-          () => action.type === FAILURE,
-          setError((action as FailureAction).error),
-        ),
-      )(state);
-    },
-  )(state);
-
-export const request = (path: string[]) => ({
+export const request = (path: string[]): RequestAction => ({
   type: REQUEST,
   meta: { path },
 });
 
-export const success = (path: string[], payload: any) => ({
-  type: SUCCESS,
+export const response = (path: string[], payload: any): ResponseAction => ({
+  type: RESPONSE,
   meta: { path },
   payload,
-});
-
-export const failure = (path: string[], error: Error) => ({
-  type: FAILURE,
-  meta: { path },
-  error,
+  error: payload instanceof Error,
 });
