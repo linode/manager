@@ -8,6 +8,7 @@ const defaultState = {
 export default function authentication(state = defaultState, action: SetToken) {
   switch (action.type) {
     case SET_TOKEN:
+    
       return {
         ...state,
         token: action.token,

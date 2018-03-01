@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+// import Axios, { AxiosError } from 'axios';
 
 import {
   withStyles,
@@ -10,9 +13,11 @@ import {
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
+// import { API_ROOT } from 'src/constants';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
+import { request, success, failure } from 'src/store/reducers//things';
 
 const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
@@ -38,9 +43,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   },
 });
 
-interface Props { }
+interface Props {
+}
 
-type PropsWithStyles = Props & WithStyles<'appFrame' | 'content'>;
+interface ConnectedProps {
+  request: typeof request;
+  success: typeof success;
+  failure: typeof failure;
+}
 
 interface State {
   menuOpen: Boolean;
@@ -61,10 +71,27 @@ const TempRoute = (props: any) => {
   />;
 };
 
-class App extends React.Component<PropsWithStyles, State> {
+type FinalProps = Props & WithStyles<'appFrame' | 'content'> & ConnectedProps;
+
+export class App extends React.Component<FinalProps, State> {
   state = {
     menuOpen: false,
   };
+
+  componentDidMount() {
+    const { request } = this.props;
+    request(['regions']);
+    request(['types']);
+    // Axios.get(`${API_ROOT}/linodes/types`)
+    //   .then((response) => {
+    //     console.log('succes', response);
+    //     success(['types'], response.data);
+    //   })
+    //   .catch((error: AxiosError) => {
+    //     console.log('err', error);
+    //     failure(['types'], error);
+    //   });
+  }
 
   toggleMenu = () => {
     this.setState({
@@ -103,4 +130,17 @@ class App extends React.Component<PropsWithStyles, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(App);
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  {
+    request,
+    success,
+    failure,
+  },
+  dispatch);
+
+export const connected = connect(null, mapDispatchToProps);
+
+export const styled = withStyles(styles, { withTheme: true });
+
+export default connected(styled(App)) as any;
