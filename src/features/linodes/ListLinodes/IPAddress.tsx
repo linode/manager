@@ -12,11 +12,17 @@ import OverflowIPs from './OverflowIPs';
 
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-type CSSClasses =  'root' | 'icon';
+type CSSClasses =  'root' | 'left' | 'right' | 'icon';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
     alignItems: 'center',
+  },
+  left: {
+    marginRight: theme.spacing.unit,
+  },
+  right: {
+    marginLeft: theme.spacing.unit,
   },
   icon: {
     marginRight: theme.spacing.unit,
@@ -28,21 +34,29 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 interface Props {
   ips: string[];
+  copyRight?: boolean;
 }
 
 class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
+  renderCopyIcon() {
+    const { classes, ips, copyRight } = this.props;
+
+    return <ContentCopyIcon
+      className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
+      onClick={() => copy(ips[0])}
+    />;
+  }
+
   render(): React.ReactElement<typeof IPAddress> {
-    const { classes, ips } = this.props;
+    const { classes, ips, copyRight } = this.props;
 
     return (
       <div className={`dif ${classes.root}`}>
-        <ContentCopyIcon
-          className={classes.icon}
-          onClick={() => copy(ips[0])}
-        />
+        {!copyRight && this.renderCopyIcon()}
         <Typography>
           {ips[0]}
         </Typography>
+        {copyRight && this.renderCopyIcon()}
         {ips.length > 1 && 
           <OverflowIPs ips={ips.slice(1)} />
         }
