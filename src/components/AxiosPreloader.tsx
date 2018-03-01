@@ -14,9 +14,6 @@ export interface RequestMap<P> {
 
 export default function preload<P>(requests: RequestMap<P>) {
   return function (Component: React.ComponentType<P & InjectedProps>) {
-    /** */
-
-    /** */
     return class AxiosLoadedComponent extends React.Component<P, State> {
       state = { loading: true };
 
