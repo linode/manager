@@ -13,6 +13,7 @@ import Typography from 'material-ui/Typography';
 
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
+import Footer from 'src/components/Footer';
 
 const ListLinodes = Loadable({
   loader: () => import('src/features/linodes/ListLinodes'),
@@ -97,6 +98,7 @@ class App extends React.Component<PropsWithStyles, State> {
               <TempRoute exact path="/profile" render={() => 'Profile'} />
               <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
             </Switch>
+          <Footer />
           </main>
         </div>
       </React.Fragment>
