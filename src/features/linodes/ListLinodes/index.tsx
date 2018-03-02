@@ -7,60 +7,14 @@ import {
 import { compose } from 'redux';
 import { pathOr } from 'ramda';
 
-import {
-  withStyles,
-  Theme,
-  WithStyles,
-  StyleRulesCallback,
-} from 'material-ui/styles';
-import Button from 'material-ui/Button';
-
+import WithDocumentation from 'src/components/WithDocumentation';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
-import ViewList from 'material-ui-icons/ViewList';
-import ViewModule from 'material-ui-icons/ViewModule';
-
-import WithDocumentation from 'src/components/WithDocumentation';
-
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import ToggleBox from './ToggleBox';
 
 import './linodes.css';
-
-type CSSClasses =
-  'toggleBox'
-  | 'toggleButton'
-  | 'toggleButtonActive'
-  | 'toggleButtonLeft'
-  | 'toggleButtonRight'
-  | 'icon';
-
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  toggleBox: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  toggleButton: {
-    border: '1px solid #333',
-  },
-  toggleButtonActive: {
-    backgroundColor: '#333',
-    color: '#f3f3f3',
-    '&:hover': {
-      backgroundColor: '#333',
-    },
-  },
-  toggleButtonLeft: {
-    borderWidth: '1px 0 1px 1px',
-    borderRadius: '5px 0 0 5px',
-  },
-  toggleButtonRight: {
-    borderWidth: '1px 1px 1px 0',
-    borderRadius: '0 5px 5px 0',
-  },
-  icon: {
-    marginRight: theme.spacing.unit,
-  },
-});
 
 interface Props {
   linodes: Linode.Linode[];
@@ -68,7 +22,7 @@ interface Props {
   types: Linode.LinodeType[];
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 class ListLinodes extends React.Component<CombinedProps> {
   static defaultProps = {
@@ -102,40 +56,9 @@ class ListLinodes extends React.Component<CombinedProps> {
     },
   ];
 
-  changeViewStyle(style: string) {
+  changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
-  }
-
-  toggleBox() {
-    const { classes, location: { hash } } = this.props;
-
-    return (
-      <div className={classes.toggleBox}>
-        <Button
-          onClick={() => this.changeViewStyle('list')}
-          className={`
-            ${hash !== '#grid' && classes.toggleButtonActive}
-            ${classes.toggleButton}
-            ${classes.toggleButtonLeft}`
-          }
-        >
-          <ViewList className={classes.icon} />
-          List
-        </Button>
-        <Button
-          onClick={() => this.changeViewStyle('grid')}
-          className={`
-            ${hash === '#grid' && classes.toggleButtonActive}
-            ${classes.toggleButton}
-            ${classes.toggleButtonRight}`
-          }
-        >
-          <ViewModule className={classes.icon} />
-          Grid
-        </Button>
-      </div>
-    );
   }
 
   listLinodes() {
@@ -143,7 +66,10 @@ class ListLinodes extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        {this.toggleBox()}
+        <ToggleBox
+          handleClick={this.changeViewStyle}
+          status={hash === '#grid' ? 'grid' : 'list'}
+        />
         {hash === '#grid'
           ? <LinodesGridView
             linodes={this.props.linodes}
@@ -183,6 +109,5 @@ const mapStateToProps = (state: any) => ({
 
 export default compose(
   connect<Props>(mapStateToProps),
-  withStyles(styles, { withTheme: true }),
   withRouter,
 )(ListLinodes);
