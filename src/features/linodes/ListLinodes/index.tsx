@@ -14,14 +14,15 @@ import {
   StyleRulesCallback,
 } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
+
 
 import LinodesListView from './LinodesListView';
+import LinodesGridView from './LinodesGridView';
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
 
 import WithDocumentation from 'src/components/WithDocumentation';
-import LinodeCard from './LinodeCard';
+
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
 import './linodes.css';
@@ -106,25 +107,6 @@ class ListLinodes extends React.Component<CombinedProps> {
     history.push(`#${style}`);
   }
 
-
-
-  linodeGrid() {
-    const { linodes, images, types } = this.props;
-
-    return (
-      <Grid container>
-        {linodes.map(linode =>
-          <LinodeCard
-            key={linode.id}
-            linode={linode}
-            image={images.find(image => linode.image === image.id)}
-            type={types.find(type => linode.type === type.id)}
-          />,
-        )}
-      </Grid>
-    );
-  }
-
   toggleBox() {
     const { classes, location: { hash } } = this.props;
 
@@ -163,7 +145,11 @@ class ListLinodes extends React.Component<CombinedProps> {
       <React.Fragment>
         {this.toggleBox()}
         {hash === '#grid'
-          ? this.linodeGrid()
+          ? <LinodesGridView
+            linodes={this.props.linodes}
+            images={this.props.images}
+            types={this.props.types}
+          />
           : <LinodesListView
             linodes={this.props.linodes}
             images={this.props.images}
