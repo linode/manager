@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import {
   withRouter,
   RouteComponentProps,
-  Route,
 } from 'react-router-dom';
-import { compose } from 'redux';
 import { pathOr } from 'ramda';
 
 import WithDocumentation from 'src/components/WithDocumentation';
