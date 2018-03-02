@@ -15,25 +15,19 @@ import {
 } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
 
+import LinodesListView from './LinodesListView';
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
 
 import WithDocumentation from 'src/components/WithDocumentation';
 import LinodeCard from './LinodeCard';
-import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
 import './linodes.css';
 
-type CSSClasses = 
-    'toggleBox'
+type CSSClasses =
+  'toggleBox'
   | 'toggleButton'
   | 'toggleButtonActive'
   | 'toggleButtonLeft'
@@ -112,46 +106,14 @@ class ListLinodes extends React.Component<CombinedProps> {
     history.push(`#${style}`);
   }
 
-  linodeList() {
-    const { linodes, images, types } = this.props;
 
-    return (
-      <Paper elevation={1}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Label</TableCell>
-                  <TableCell>Tags</TableCell>
-                  <TableCell>IP Addresses</TableCell>
-                  <TableCell>Region</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {linodes.map(linode => 
-                  <LinodeRow
-                    key={linode.id}
-                    linode={linode}
-                    image={images.find(image => linode.image === image.id)}
-                    type={types.find(type => linode.type === type.id)}
-                  />,
-                )}
-              </TableBody>
-            </Table>
-          </Grid>
-        </Grid>
-      </Paper>
-    );
-  }
 
   linodeGrid() {
     const { linodes, images, types } = this.props;
 
     return (
       <Grid container>
-        {linodes.map(linode => 
+        {linodes.map(linode =>
           <LinodeCard
             key={linode.id}
             linode={linode}
@@ -165,7 +127,7 @@ class ListLinodes extends React.Component<CombinedProps> {
 
   toggleBox() {
     const { classes, location: { hash } } = this.props;
-    
+
     return (
       <div className={classes.toggleBox}>
         <Button
@@ -176,7 +138,7 @@ class ListLinodes extends React.Component<CombinedProps> {
             ${classes.toggleButtonLeft}`
           }
         >
-          <ViewList className={classes.icon}/>
+          <ViewList className={classes.icon} />
           List
         </Button>
         <Button
@@ -187,7 +149,7 @@ class ListLinodes extends React.Component<CombinedProps> {
             ${classes.toggleButtonRight}`
           }
         >
-          <ViewModule className={classes.icon}/>
+          <ViewModule className={classes.icon} />
           Grid
         </Button>
       </div>
@@ -202,7 +164,11 @@ class ListLinodes extends React.Component<CombinedProps> {
         {this.toggleBox()}
         {hash === '#grid'
           ? this.linodeGrid()
-          : this.linodeList()
+          : <LinodesListView
+            linodes={this.props.linodes}
+            images={this.props.images}
+            types={this.props.types}
+          />
         }
       </React.Fragment>
     );
