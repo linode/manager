@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   withRouter,
   RouteComponentProps,
+  Route,
 } from 'react-router-dom';
 import { compose } from 'redux';
 import { pathOr } from 'ramda';
@@ -24,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class ListLinodes extends React.Component<CombinedProps> {
+export class ListLinodes extends React.Component<CombinedProps> {
   static defaultProps = {
     linodes: [],
   };
@@ -107,7 +108,10 @@ const mapStateToProps = (state: any) => ({
   images: pathOr([], ['api', 'images', 'data'], state),
 });
 
-export default compose(
-  connect<Props>(mapStateToProps),
-  withRouter,
-)(ListLinodes);
+export const RoutedListLinodes = withRouter(ListLinodes);
+
+const ConnectedListLinodes = connect<Props>(mapStateToProps)(
+  RoutedListLinodes,
+);
+
+export default ConnectedListLinodes;
