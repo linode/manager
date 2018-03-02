@@ -1,12 +1,17 @@
 sudo: required
+
 language: node_js
+
 node_js:
   - "8.4.0"
+
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+
 install:
     - yarn
-script:
-    - yarn run lint
-    - yarn test --coverage --maxWorkers=2
-    - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
 
+script:
+      - yarn build
+      - yarn run lint
+      - yarn test --coverage --maxWorkers=2
+      - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
