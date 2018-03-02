@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as copy from 'copy-to-clipboard';
 
 import {
   withStyles,
@@ -12,7 +11,6 @@ import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 import CallToAction from 'material-ui-icons/CallToAction';
 import Replay from 'material-ui-icons/Replay';
@@ -21,6 +19,7 @@ import CloudCircle from 'material-ui-icons/CloudCircle';
 import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
+import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
 import { actions } from './menuActions';
 
@@ -136,22 +135,10 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             }
             <div className={classes.cardSection}>
               <div>
-                <Typography variant="body2">
-                  <span className={classes.rightMargin}>{linode.ipv4[0]}</span>
-                  <ContentCopyIcon
-                    className="copyIcon"
-                    onClick={() => copy(linode.ipv4[0])}
-                  />
-                </Typography>
+                <IPAddress ips={linode.ipv4} copyRight />
               </div>
               <div>
-                <Typography>
-                  <span className={classes.rightMargin}>{linode.ipv6}</span>
-                  <ContentCopyIcon
-                    className="copyIcon"
-                    onClick={() => copy(linode.ipv6)}
-                  />
-                </Typography>
+                <IPAddress ips={[linode.ipv6]} copyRight />
               </div>
             </div>
             <div className={classes.cardSection}>
