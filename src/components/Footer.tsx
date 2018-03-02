@@ -39,7 +39,7 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
     <Grid container className={classes.container}>
       <Grid item xs={12}>
         <a className={classes.link} href="https://developers.linode.com">API Reference</a>
-        <a className={classes.link} href="https://www.linode.com">Customer Feedback</a>
+        <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
       </Grid>
     </Grid>
   );
