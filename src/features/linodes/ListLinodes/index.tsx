@@ -1,24 +1,31 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import {
+  withRouter,
+  RouteComponentProps,
+  Route,
+} from 'react-router-dom';
 import { compose } from 'redux';
 import { pathOr } from 'ramda';
 
-import Grid from 'material-ui/Grid';
-import Table from 'material-ui/Table';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import TableBody from 'material-ui/Table/TableBody';
-
 import WithDocumentation from 'src/components/WithDocumentation';
-import LinodeRow from './LinodeRow';
+
+import LinodesListView from './LinodesListView';
+import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import ToggleBox from './ToggleBox';
+
+import './linodes.css';
 
 interface Props {
   linodes: Linode.Linode[];
+  images: Linode.Image[];
+  types: Linode.LinodeType[];
 }
 
-class ListLinodes extends React.Component<Props> {
+type CombinedProps = Props & RouteComponentProps<{}>;
+
+export class ListLinodes extends React.Component<CombinedProps> {
   static defaultProps = {
     linodes: [],
   };
@@ -50,28 +57,33 @@ class ListLinodes extends React.Component<Props> {
     },
   ];
 
+  changeViewStyle = (style: string) => {
+    const { history } = this.props;
+    history.push(`#${style}`);
+  }
+
   listLinodes() {
-    const { linodes } = this.props;
+    const { location: { hash } } = this.props;
 
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>IP Addresses</TableCell>
-                <TableCell>Region</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {linodes.map((l, idx) => <LinodeRow key={idx} linode={l} />)}
-            </TableBody>
-          </Table>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <ToggleBox
+          handleClick={this.changeViewStyle}
+          status={hash === '#grid' ? 'grid' : 'list'}
+        />
+        {hash === '#grid'
+          ? <LinodesGridView
+            linodes={this.props.linodes}
+            images={this.props.images}
+            types={this.props.types}
+          />
+          : <LinodesListView
+            linodes={this.props.linodes}
+            images={this.props.images}
+            types={this.props.types}
+          />
+        }
+      </React.Fragment>
     );
   }
 
@@ -92,8 +104,14 @@ class ListLinodes extends React.Component<Props> {
 
 const mapStateToProps = (state: any) => ({
   linodes: pathOr([], ['api', 'linodes', 'data'], state),
+  types: pathOr([], ['api', 'linodeTypes', 'data'], state),
+  images: pathOr([], ['api', 'images', 'data'], state),
 });
 
-export default compose(
-  connect<Props>(mapStateToProps),
-)(ListLinodes);
+export const RoutedListLinodes = withRouter(ListLinodes);
+
+const ConnectedListLinodes = connect<Props>(mapStateToProps)(
+  RoutedListLinodes,
+);
+
+export default ConnectedListLinodes;

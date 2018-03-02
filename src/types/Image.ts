@@ -8,7 +8,7 @@ namespace Linode {
     is_public: Boolean;
     size: number;
     created_by: string;
-    vendor: string;
+    vendor: string | null;
     deprecated: Boolean;
   }
 

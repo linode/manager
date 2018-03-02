@@ -14,7 +14,7 @@ describe('ActionMenu', () => {
     const result = mount(<ActionMenu actions={[action, action, action]} />);
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 
-    result.find('Button').simulate('click');
+    result.find('IconButton').simulate('click');
     expect(result.find('WithStyles(MenuItem)')).toHaveLength(3);
   });
 });

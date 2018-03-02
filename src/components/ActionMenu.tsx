@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   withStyles, WithStyles, StyleRulesCallback, Theme,
 } from 'material-ui';
-import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import MoreHoriz from 'material-ui-icons/MoreHoriz';
 
@@ -51,13 +51,13 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
     return actions.length === 1
       ? actions.map((a, idx) => <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
       : (<div>
-        <Button
+        <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
         >
           <MoreHoriz color="primary" />
-        </Button >
+        </IconButton >
         <Menu
           id="action-menu"
           anchorEl={anchorEl}

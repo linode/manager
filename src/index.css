@@ -15,3 +15,11 @@ body {
 #root {
   height: 100%;
 }
+
+.tac {
+  text-align: center;
+}
+
+.dif {
+  display: inline-flex;
+}
