@@ -7,6 +7,7 @@ install:
     - yarn
 script:
     - yarn run lint
+    - yarn build
     - yarn test --coverage --maxWorkers=2
     - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
 
