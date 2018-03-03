@@ -6,10 +6,10 @@ import { CLIENT_ID, APP_ROOT, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'sr
 import { getStorage, setStorage } from 'src/storage';
 import store from 'src/store';
 
-const AUTH_TOKEN = 'authentication/oauth-token';
-const AUTH_SCOPES = 'authentication/scopes';
-const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
-const LATEST_REFRESH = 'authentication/latest-refresh';
+export const AUTH_TOKEN = 'authentication/oauth-token';
+export const AUTH_SCOPES = 'authentication/scopes';
+export const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
+export const LATEST_REFRESH = 'authentication/latest-refresh';
 
 export function start(oauthToken = '', scopes = '', expires = '') {
   // Set these two so we can grab them on subsequent page loads
