@@ -18,6 +18,7 @@ import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
+import Footer from 'src/components/Footer';
 
 const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
@@ -133,6 +134,7 @@ export class App extends React.Component<FinalProps, State> {
               <TempRoute exact path="/profile" render={() => 'Profile'} />
               <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
             </Switch>
+          <Footer />
           </main>
         </div>
       </React.Fragment>

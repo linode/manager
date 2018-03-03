@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import DocComponent, { Doc } from './DocComponent';
@@ -25,9 +24,7 @@ export default class WithDocumentation extends React.Component<Props> {
         <Grid item xs={12}>
           <Grid container spacing={16}>
             <Grid item xs={12} md={9} xl={10}>
-              <Paper elevation={1}>
-                {render(rest)}
-              </Paper>
+              {render(rest)}
             </Grid>
             <Grid item xs={12} md={3} xl={2}>
               <Typography variant="title">Documentation</Typography>

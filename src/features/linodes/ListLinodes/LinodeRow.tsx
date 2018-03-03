@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import * as copy from 'copy-to-clipboard';
 
 import {
   withStyles,
@@ -11,27 +10,17 @@ import {
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-import us from 'flag-icon-css/flags/4x3/us.svg';
-import de from 'flag-icon-css/flags/4x3/de.svg';
-import gb from 'flag-icon-css/flags/4x3/gb.svg';
-import sg from 'flag-icon-css/flags/4x3/sg.svg';
-import jp from 'flag-icon-css/flags/4x3/jp.svg';
+import ActionMenu from 'src/components/ActionMenu';
+import Tag from 'src/components/Tag';
+import RegionIndicator from './RegionIndicator';
+import IPAddress from './IPAddress';
+import { displayLabel } from './presentation';
+import { actions } from './menuActions';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import TagComponent from 'src/components/TagComponent';
-
-const flagMap = { us, de, gb, sg, jp };
-
-type CSSClasses = 'copyIcon' | 'inlineItems';
+type CSSClasses = 'inlineItems';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  copyIcon: {
-    height: '0.8125rem',
-    width: '0.8125rem',
-    cursor: 'pointer',
-  },
   inlineItems: {
     lineHeight: '30px',
     verticalAlign: 'middle',
@@ -40,51 +29,18 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   },
 });
 
-function titlecase(string: string): string {
-  return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
-}
-
-function formatRegion(region: string) {
-  const [countryCode, area] = region.split('-');
-  return `${countryCode.toUpperCase()} ${titlecase(area)}`;
-}
-
-const img = (region: string) => {
-  const abb = region.substr(0, 2);
-  return flagMap[abb];
-};
-
-function clip(value: string): void {
-  copy(value);
-}
-
-function displayLabel(memory?: number, label?: string): string | undefined {
-  if (!label || !memory) { return; }
-  return `${label}, Linode ${memory / 1024}G`;
-}
-
 interface Props {
   linode: Linode.Linode;
-  memory?: number;
-  image?: string;
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
-  actions: Action[] = [
-    { title: 'Launch Console', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Reboot', onClick: (e) => { e.preventDefault(); } },
-    { title: 'View Graphs', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Resize', onClick: (e) => { e.preventDefault(); } },
-    { title: 'View Backups', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Power On', onClick: (e) => { e.preventDefault(); } },
-    { title: 'Settings', onClick: (e) => { e.preventDefault(); } },
-  ];
-
   render() {
-    const { classes, linode, memory, image } = this.props;
-    const label = displayLabel(memory, image);
+    const { linode, type, image } = this.props;
+    const specsLabel = type && image && displayLabel(type.memory, image.label);
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
@@ -102,48 +58,21 @@ class LinodeRow extends React.Component<PropsWithStyles> {
                 </Typography>
               </Link>
             </div>
-            {label && <div>{label}</div>}
+            {specsLabel && <div>{specsLabel}</div>}
           </div>
         </TableCell>
         <TableCell>
-          {tags.map((v: string, idx) => <TagComponent key={idx} label={v} />)}
+          {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
         <TableCell>
-          <div>
-            <div className={classes.inlineItems}>
-              <ContentCopyIcon
-                className={classes.copyIcon}
-                onClick={() => clip(linode.ipv4[0])}
-              />
-            </div>
-            <div className={classes.inlineItems}>
-              {linode.ipv4}
-            </div>
-          </div>
-          <div>
-            <div className={classes.inlineItems}>
-              <ContentCopyIcon
-                className={classes.copyIcon}
-                onClick={() => clip(linode.ipv6)}
-              />
-            </div>
-            <div className={classes.inlineItems}>
-              {linode.ipv6}
-            </div>
-          </div>
-
+          <IPAddress ips={linode.ipv4} />
+          <IPAddress ips={[linode.ipv6]} />
         </TableCell>
         <TableCell>
-          <img
-            className={classes.inlineItems}
-            src={img(linode.region)} height="15" width="20" role="presentation"
-          />
-          <Typography
-            className={classes.inlineItems}
-            variant="body2">{formatRegion(linode.region)}</Typography>
+          <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell>
-          <ActionMenu actions={this.actions} />
+          <ActionMenu actions={actions} />
         </TableCell>
       </TableRow >
     );

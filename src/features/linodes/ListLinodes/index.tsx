@@ -1,21 +1,23 @@
 import * as React from 'react';
 import Axios from 'axios';
-import { path, pathOr, find } from 'ramda';
+import { pathOr } from 'ramda';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-
-import Grid from 'material-ui/Grid';
-import Table from 'material-ui/Table';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import TableCell from 'material-ui/Table/TableCell';
-import TableBody from 'material-ui/Table/TableBody';
 
 import { API_ROOT } from 'src/constants';
 import PromiseLoader from 'src/components/PromiseLoader';
+import {
+  withRouter,
+  RouteComponentProps,
+} from 'react-router-dom';
+
 import WithDocumentation from 'src/components/WithDocumentation';
-import LinodeRow from './LinodeRow';
+
+import LinodesListView from './LinodesListView';
+import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import ToggleBox from './ToggleBox';
+
+import './linodes.css';
 
 interface Props { }
 
@@ -32,20 +34,18 @@ interface State {
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  types: pathOr({}, ['resources', 'types', 'data'], state),
+  types: pathOr({}, ['resources', 'types', 'data', 'data'], state),
 });
-
-const connected = connect(mapStateToProps);
 
 const preloaded = PromiseLoader<Props>({
   linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
-    .then(pathOr({}, ['data'])),
+    .then(pathOr({}, ['data', 'data'])),
 
   images: () => Axios.get(`${API_ROOT}/images`)
-    .then(pathOr({}, ['data'])),
+    .then(pathOr({}, ['data', 'data'])),
 });
 
-type CombinedProps = Props & ConnectedProps & PreloadedProps;
+type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {};
@@ -77,39 +77,33 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     },
   ];
 
+  changeViewStyle = (style: string) => {
+    const { history } = this.props;
+    history.push(`#${style}`);
+  }
+
   listLinodes() {
-    const { linodes, types, images } = this.props;
-
-    const findInTypes = findIn<Linode.LinodeType>(types);
-
-    const findInImages = findIn<Linode.Image>(images);
+    const { linodes, types, images, location: { hash } } = this.props;
 
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Tags</TableCell>
-                <TableCell>IP Addresses</TableCell>
-                <TableCell>Region</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                linodes.map((l, idx) => <LinodeRow
-                  key={idx}
-                  linode={l}
-                  memory={path(['memory'], findInTypes(t => t.id === l.type))}
-                  image={path(['label'], findInImages(i => i.id === l.image))}
-                />)
-              }
-            </TableBody>
-          </Table>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <ToggleBox
+          handleClick={this.changeViewStyle}
+          status={hash === '#grid' ? 'grid' : 'list'}
+        />
+        {hash === '#grid'
+          ? <LinodesGridView
+            linodes={linodes}
+            images={images}
+            types={types}
+          />
+          : <LinodesListView
+            linodes={linodes}
+            images={images}
+            types={types}
+          />
+        }
+      </React.Fragment>
     );
   }
 
@@ -128,13 +122,10 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   }
 }
 
-export default compose(
-  connected,
-  preloaded,
-)(ListLinodes);
+export const RoutedListLinodes = withRouter(ListLinodes);
 
-function findIn<P>(collection: P[] = []) {
-  return function (pred: (i: P) => boolean): P | undefined {
-    return find(pred, collection);
-  };
-}
+const ConnectedListLinodes = connect<Props>(mapStateToProps)(
+  RoutedListLinodes,
+);
+
+export default preloaded(ConnectedListLinodes);
