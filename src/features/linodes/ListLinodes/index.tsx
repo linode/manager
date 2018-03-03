@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Axios from 'axios';
-import { path, find } from 'ramda';
+import { path, pathOr, find } from 'ramda';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -12,41 +12,43 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableBody from 'material-ui/Table/TableBody';
 
 import { API_ROOT } from 'src/constants';
-import Preload from 'src/components/AxiosPreloader';
+import PromiseLoader from 'src/components/PromiseLoader';
 import WithDocumentation from 'src/components/WithDocumentation';
 import LinodeRow from './LinodeRow';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 
 interface Props { }
 
+interface ConnectedProps {
+  types: Linode.LinodeType[];
+}
+
 interface PreloadedProps {
-  linodes: Linode.ManyResourceState<Linode.Linode>;
-  images: Linode.ManyResourceState<Linode.Image>;
-  types: Linode.ManyResourceState<Linode.LinodeType>;
+  linodes: Linode.Linode[];
+  images: Linode.Image[];
 }
 
 interface State {
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
-  types: state.resources.types && state.resources.types.data,
+  types: pathOr({}, ['resources', 'types', 'data'], state),
 });
 
 const connected = connect(mapStateToProps);
 
-const preloaded = Preload<Props>({
-  linodes: () => Axios.get(`${API_ROOT}/linode/instances`),
-  images: () => Axios.get(`${API_ROOT}/images`),
+const preloaded = PromiseLoader<Props>({
+  linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
+    .then(pathOr({}, ['data'])),
+
+  images: () => Axios.get(`${API_ROOT}/images`)
+    .then(pathOr({}, ['data'])),
 });
 
-class ListLinodes extends React.Component<Props & PreloadedProps, State> {
-  state: State = {};
+type CombinedProps = Props & ConnectedProps & PreloadedProps;
 
-  static defaultProps = {
-    linodes: [],
-    types: [],
-    images: [],
-  };
+class ListLinodes extends React.Component<CombinedProps, State> {
+  state: State = {};
 
   /**
   * @todo Test docs for review.
@@ -76,12 +78,7 @@ class ListLinodes extends React.Component<Props & PreloadedProps, State> {
   ];
 
   listLinodes() {
-    const {
-      linodes: { data: linodes },
-      types: { data: types },
-      images: { data: images },
-    } = this.props;
-    if (!linodes) { return null; }
+    const { linodes, types, images } = this.props;
 
     const findInTypes = findIn<Linode.LinodeType>(types);
 
@@ -117,7 +114,7 @@ class ListLinodes extends React.Component<Props & PreloadedProps, State> {
   }
 
   render() {
-    const { linodes: { data: linodes } } = this.props;
+    const { linodes } = this.props;
     return (
       <WithDocumentation
         title="Linodes"

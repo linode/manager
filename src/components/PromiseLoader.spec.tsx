@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import { AxiosResponse } from 'axios';
-import AxiosPreloader from './AxiosPreloader';
+import PromiseLoader from './PromiseLoader';
 
 const mockAxiosResponse = (
   ms: number,
   result?: any,
-) => new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(result), ms));
+) => new Promise(resolve => setTimeout(() => resolve(result), ms));
 
-describe('AxiosPreloaderSpec', () => {
+describe('PromiseLoaderSpec', () => {
   const Component = () => <div id="component"></div>;
-  const response = { data: { name: 'whatever' } };
-  const preloaded = AxiosPreloader({ resource: () => mockAxiosResponse(0, response) });
+  const data = { name: 'whatever' };
+  const preloaded = PromiseLoader({ resource: () => Promise.resolve(data) });
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;
 
@@ -38,7 +37,7 @@ describe('AxiosPreloaderSpec', () => {
     });
 
     it('should inject props onto Component.', async () => {
-      expect(wrapper.props()).toHaveProperty('resource', response.data);
+      expect(wrapper.props()).toHaveProperty('resource', data);
     });
   });
 });
