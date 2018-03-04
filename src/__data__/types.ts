@@ -1,4 +1,4 @@
-export const types = [
+export const types: Linode.LinodeType[] = [
   {
     transfer: 2000,
     network_out: 1000,

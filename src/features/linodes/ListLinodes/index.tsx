@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
 import { API_ROOT } from 'src/constants';
-import PromiseLoader from 'src/components/PromiseLoader';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import {
   withRouter,
   RouteComponentProps,
@@ -26,8 +26,8 @@ interface ConnectedProps {
 }
 
 interface PreloadedProps {
-  linodes: Linode.Linode[];
-  images: Linode.Image[];
+  linodes: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Linode>>;
+  images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
 }
 
 interface State {
@@ -39,10 +39,10 @@ const mapStateToProps = (state: Linode.AppState) => ({
 
 const preloaded = PromiseLoader<Props>({
   linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
-    .then(pathOr({}, ['data', 'data'])),
+    .then(response => response.data),
 
   images: () => Axios.get(`${API_ROOT}/images`)
-    .then(pathOr({}, ['data', 'data'])),
+    .then(response => response.data),
 });
 
 type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
@@ -82,41 +82,56 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     history.push(`#${style}`);
   }
 
-  listLinodes() {
-    const { linodes, types, images, location: { hash } } = this.props;
-
-    return (
-      <React.Fragment>
-        <ToggleBox
-          handleClick={this.changeViewStyle}
-          status={hash === '#grid' ? 'grid' : 'list'}
-        />
-        {hash === '#grid'
-          ? <LinodesGridView
-            linodes={linodes}
-            images={images}
-            types={types}
-          />
-          : <LinodesListView
-            linodes={linodes}
-            images={images}
-            types={types}
-          />
-        }
-      </React.Fragment>
-    );
-  }
-
   render() {
-    const { linodes } = this.props;
+
     return (
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
-        render={() =>
-          linodes && linodes.length > 0
-            ? this.listLinodes()
-            : <ListLinodesEmptyState />}
+        render={() => {
+          const { types, location: { hash } } = this.props;
+          const linodes = pathOr([], ['response', 'data'], this.props.linodes);
+          const images = pathOr([], ['response', 'data'], this.props.images);
+
+          if (this.props.linodes.error) {
+            /** Maybe a fancy error state component? */
+            return (
+              <h3>OMG I COULDNT LOAD YOUR LINODES</h3>
+            );
+          }
+
+          if (this.props.images.error) {
+            /** Maybe a fancy error state component? */
+            return (
+              <h3>OMG I COULDNT LOAD IMAGES </h3>
+            );
+          }
+
+          if (linodes.length === 0) {
+            return <ListLinodesEmptyState />;
+          }
+
+          return (
+            <React.Fragment>
+              <ToggleBox
+                handleClick={this.changeViewStyle}
+                status={hash === '#grid' ? 'grid' : 'list'}
+              />
+              {hash === '#grid'
+                ? <LinodesGridView
+                  linodes={linodes}
+                  images={images}
+                  types={types}
+                />
+                : <LinodesListView
+                  linodes={linodes}
+                  images={images}
+                  types={types}
+                />
+              }
+            </React.Fragment>
+          );
+        }}
       />
     );
   }

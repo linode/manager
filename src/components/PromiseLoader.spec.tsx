@@ -37,7 +37,7 @@ describe('PromiseLoaderSpec', () => {
     });
 
     it('should inject props onto Component.', async () => {
-      expect(wrapper.props()).toHaveProperty('resource', data);
+      expect(wrapper.props()).toHaveProperty('resource', { response: data });
     });
   });
 });
