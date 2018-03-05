@@ -10,6 +10,7 @@ import {
   RouteComponentProps,
 } from 'react-router-dom';
 
+import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
 
 import LinodesListView from './LinodesListView';
@@ -96,14 +97,14 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           if (this.props.linodes.error) {
             /** Maybe a fancy error state component? */
             return (
-              <h3>OMG I COULDNT LOAD YOUR LINODES</h3>
+              <ErrorState errorText="Error loading data" />
             );
           }
 
           if (this.props.images.error) {
             /** Maybe a fancy error state component? */
             return (
-              <h3>OMG I COULDNT LOAD IMAGES </h3>
+              <ErrorState errorText="Error loading data" />
             );
           }
 
