@@ -99,7 +99,7 @@ export function linodeStats(linodeId, year, month) {
   return async (dispatch) => {
     const path = year && month ? `/linode/instances/${linodeId}/stats/${year}/${month}` :
       `/linode/instances/${linodeId}/stats`;
-    const { data: { state: _stats } } = await request.get(path);
+    const { data: { data: _stats } } = await request.get(path);
     dispatch(actions.one({ _stats }, linodeId));
   };
 }
