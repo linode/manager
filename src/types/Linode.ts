@@ -72,6 +72,4 @@ namespace Linode {
     | 'provisioning'
     | 'deleting'
     | 'migrating';
-
-
 }

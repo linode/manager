@@ -1,5 +1,5 @@
 
-import { setToken } from 'src/actions/authentication';
+import { setToken } from 'src/store/reducers/authentication';
 import store from 'src/store';
 
 import {
@@ -19,9 +19,9 @@ store.dispatch = jest.fn();
 describe('session.start', () => {
   it('stores it\'s arguments in localStorage', () => {
     start(testToken1, testScopes, testExpiry);
-    expect(window.localStorage.getItem(AUTH_TOKEN)).toBe(JSON.stringify(testToken1));
-    expect(window.localStorage.getItem(AUTH_SCOPES)).toBe(JSON.stringify(testScopes));
-    expect(window.localStorage.getItem(AUTH_EXPIRE_DATETIME)).toBe(JSON.stringify(testExpiry));
+    expect(window.localStorage.getItem(AUTH_TOKEN)).toBe(testToken1);
+    expect(window.localStorage.getItem(AUTH_SCOPES)).toBe(testScopes);
+    expect(window.localStorage.getItem(AUTH_EXPIRE_DATETIME)).toBe(testExpiry);
   });
 
   it('dispatches setToken with its arguments', () => {
@@ -47,9 +47,9 @@ describe('session.expire', () => {
     window.localStorage.setItem(AUTH_SCOPES, testScopes);
     window.localStorage.setItem(AUTH_EXPIRE_DATETIME, testExpiry);
     expire();
-    expect(window.localStorage.getItem(AUTH_TOKEN)).toBe(JSON.stringify(''));
-    expect(window.localStorage.getItem(AUTH_SCOPES)).toBe(JSON.stringify(''));
-    expect(window.localStorage.getItem(AUTH_EXPIRE_DATETIME)).toBe(JSON.stringify(''));
+    expect(window.localStorage.getItem(AUTH_TOKEN)).toBe('');
+    expect(window.localStorage.getItem(AUTH_SCOPES)).toBe('');
+    expect(window.localStorage.getItem(AUTH_EXPIRE_DATETIME)).toBe('');
   });
 
   it('clears the token from Redux via setToken', () => {

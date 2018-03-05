@@ -1,4 +1,4 @@
-export const images = [
+export const images: Linode.Image[] = [
   {
     created_by: 'linode',
     deprecated: true,

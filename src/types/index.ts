@@ -13,7 +13,7 @@ namespace Linode {
 
   export type Hypervisor = 'kvm' | 'zen';
 
-  interface ManyResourceState<T> {
+  export interface ManyResourceState<T> {
     data?: T[];
     page: number;
     pages: number;
@@ -30,10 +30,14 @@ namespace Linode {
     token: NullableString;
     scopes: NullableString;
   }
+
+  export interface ResourcesState {
+    types?: ManyResourceState<Linode.LinodeType>;
+  }
   
   export interface AppState {
-    api: ApiState;
     authentication: AuthState;
+    resources: ResourcesState;
   }
 
   export interface LinodeSpecs {
