@@ -78,7 +78,7 @@ export default class CreatePersonalAccessToken extends Component {
     }, []).join(',') || ''; // '' allows no scopes. undefined copies current scopes.
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => api.tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
+      () => api.tokens.post({ label, scopes, expiry: SelectExpiration.map(+expiry) }),
       ({ token }) => renderSecret('personal access token', 'created', token, this.props.close),
     ]));
   }
