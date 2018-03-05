@@ -20,6 +20,9 @@ import {
   refreshOAuthToken,
   refreshOAuthOnUserInteraction,
 } from './session';
+
+import 'src/utilities/request';
+
 import App from './App';
 import './index.css';
 

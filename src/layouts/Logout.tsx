@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect, Dispatch } from 'react-redux';
 
-import { logout } from 'src/actions/authentication';
+import { logout } from 'src/store/reducers/authentication';
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
 

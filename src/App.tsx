@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import * as Loadable from 'react-loadable';
+import { connect, Dispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Axios from 'axios';
 
 import {
   withStyles,
@@ -11,13 +13,15 @@ import {
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
+import { API_ROOT } from 'src/constants';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
+import DefaultLoader from 'src/components/DefaultLoader';
+import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/components/Footer';
 
-const ListLinodes = Loadable({
+const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
-  loading: () => null,
 });
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -40,9 +44,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   },
 });
 
-interface Props {}
+interface Props {
+}
 
-type PropsWithStyles = Props & WithStyles<'appFrame' | 'content'>;
+interface ConnectedProps {
+  request: typeof request;
+  response: typeof response;
+}
 
 interface State {
   menuOpen: Boolean;
@@ -63,10 +71,38 @@ const TempRoute = (props: any) => {
   />;
 };
 
-class App extends React.Component<PropsWithStyles, State> {
+type FinalProps = Props & WithStyles<'appFrame' | 'content'> & ConnectedProps;
+
+export class App extends React.Component<FinalProps, State> {
   state = {
     menuOpen: false,
   };
+
+  componentDidMount() {
+    const { request, response } = this.props;
+
+    const promises = [
+      new Promise(() => {
+        request(['types']);
+
+        return Axios.get(`${API_ROOT}/linode/types`)
+          .then(({ data }) => {
+            response(['types'], data);
+          })
+          .catch(error => response(['types'], error));
+      }),
+    ];
+
+    Promise
+      .all(promises)
+      .then((results) => {
+        /**
+         * We don't really need to do anything here. The Redux actions are dispatched
+         * by the individual promises, we have no concept of 'loading'. The consumer of these
+         * cached entities can check their individual status and do what they will with them.
+         */
+      });
+  }
 
   toggleMenu = () => {
     this.setState({
@@ -106,4 +142,15 @@ class App extends React.Component<PropsWithStyles, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(App);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  {
+    request,
+    response,
+  },
+  dispatch);
+
+export const connected = connect(null, mapDispatchToProps);
+
+export const styled = withStyles(styles, { withTheme: true });
+
+export default connected(styled(App)) as any;

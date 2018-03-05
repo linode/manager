@@ -1,4 +1,4 @@
-export const linode1 = {
+export const linode1: Linode.Linode = {
   specs: {
     transfer: 1000,
     memory: 1024,
@@ -37,7 +37,7 @@ export const linode1 = {
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
 };
 
-export const linode2 = {
+export const linode2: Linode.Linode = {
   specs: {
     transfer: 2000,
     memory: 2048,

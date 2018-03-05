@@ -8,5 +8,5 @@ export function getStorage(key: string) {
 }
 
 export function setStorage(key: string, value: string) {
-  return window.localStorage.setItem(key, JSON.stringify(value));
+  return window.localStorage.setItem(key, value);
 }
