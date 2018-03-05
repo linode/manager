@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { pick } from 'ramda';
 import CircleProgress from 'src/components/CircleProgress';
 
 interface State {
@@ -6,8 +7,12 @@ interface State {
   [name: string]: any;
 }
 
-export interface RequestMap<P> {
+export interface PromiseMap<P> {
   [name: string]: (p: P) => Promise<any>;
+}
+
+export interface PromiseOptions {
+  poll?: string[];
 }
 
 export interface PromiseLoaderResponse<T> {
@@ -15,14 +20,16 @@ export interface PromiseLoaderResponse<T> {
   error?: Error;
 }
 
-export default function preload<P>(requests: RequestMap<P>) {
+export default function preload<P>(requests: PromiseMap<P>, options: PromiseOptions = {}) {
   return function (Component: React.ComponentType<P>) {
-    return class AxiosLoadedComponent extends React.Component<P, State> {
+    return class PromiseLoadedComponent extends React.Component<P, State> {
       state = { loading: true };
+
+      pollingInterval: number | null = null;
 
       static displayName = `PromiseLoader(${Component.displayName || Component.name})`;
 
-      componentDidMount() {
+      executePromises(requests: PromiseMap<P>) {
         const promises = Object
           .entries(requests)
           .map(([name, request]) =>
@@ -49,6 +56,22 @@ export default function preload<P>(requests: RequestMap<P>) {
           .catch(([key, error]) => {
             this.setState(prevState => ({ ...prevState, loading: false }));
           });
+      }
+
+      componentDidMount() {
+        this.executePromises(requests);
+        if (options.poll) {
+          const pollRequests = pick(options.poll, requests);
+          this.pollingInterval = window.setInterval(
+            () => this.executePromises(pollRequests), 5000,
+          );
+        }
+      }
+
+      componentWillUnmount() {
+        if (this.pollingInterval) {
+          window.clearInterval(this.pollingInterval);
+        }
       }
 
       render() {

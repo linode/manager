@@ -17,6 +17,7 @@ import Replay from 'material-ui-icons/Replay';
 import CloudCircle from 'material-ui-icons/CloudCircle';
 
 import ActionMenu from 'src/components/ActionMenu';
+import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -91,6 +92,21 @@ interface Props {
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
+  renderTitle() {
+    const { linode } = this.props;
+
+    return (
+      <Grid container>
+        <Grid item xs={1}>
+          <LinodeStatusIndicator status={linode.status} />
+        </Grid>
+        <Grid item xs={11}>
+          {linode.label}
+        </Grid>
+      </Grid>
+    );
+  }
+
   render() {
     const { classes, linode, image, type } = this.props;
 
@@ -103,7 +119,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
       <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>
           <CardHeader
-            title={linode.label}
+            title={this.renderTitle()}
             action={
               <ActionMenu actions={actions} />
             }

@@ -20,8 +20,6 @@ import ToggleBox from './ToggleBox';
 
 import './linodes.css';
 
-interface Props { }
-
 interface ConnectedProps {
   types: Linode.LinodeType[];
 }
@@ -31,26 +29,25 @@ interface PreloadedProps {
   images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
 }
 
-interface State {
-}
-
 const mapStateToProps = (state: Linode.AppState) => ({
   types: pathOr({}, ['resources', 'types', 'data', 'data'], state),
 });
 
-const preloaded = PromiseLoader<Props>({
-  linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
-    .then(response => response.data),
+const preloaded = PromiseLoader<{}>(
+  {
+    linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
+      .then(response => response.data),
 
-  images: () => Axios.get(`${API_ROOT}/images`)
-    .then(response => response.data),
-});
+    images: () => Axios.get(`${API_ROOT}/images`)
+      .then(response => response.data),
+  },
+  {
+    poll: ['linodes'],
+  });
 
-type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
+type CombinedProps = ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
-class ListLinodes extends React.Component<CombinedProps, State> {
-  state: State = {};
-
+class ListLinodes extends React.Component<CombinedProps> {
   /**
   * @todo Test docs for review.
   */
@@ -140,7 +137,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
 export const RoutedListLinodes = withRouter(ListLinodes);
 
-const ConnectedListLinodes = connect<Props>(mapStateToProps)(
+const ConnectedListLinodes = connect(mapStateToProps)(
   RoutedListLinodes,
 );
 
