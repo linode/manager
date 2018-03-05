@@ -65,8 +65,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
         <TableCell>
-          <IPAddress ips={linode.ipv4} />
-          <IPAddress ips={[linode.ipv6]} />
+          <div><IPAddress ips={linode.ipv4} /></div>
+          <div><IPAddress ips={[linode.ipv6]} /></div>
         </TableCell>
         <TableCell>
           <RegionIndicator region={linode.region} />
