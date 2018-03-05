@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.5] - 2018-03-05
+### Fixed
+- fix non-expiring token creation
+- fix stats graphs rendering by correcting destructuring
+- throttle OAuth refresh between tabs
+- Refresh OAuth token only on user interaction
+
 ## [0.18.4] - 2018-02-26
 ### Added
 - Session keep-alive logic
