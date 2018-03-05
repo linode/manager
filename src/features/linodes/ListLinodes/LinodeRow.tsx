@@ -7,11 +7,13 @@ import {
   WithStyles,
   StyleRulesCallback,
 } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
 import ActionMenu from 'src/components/ActionMenu';
+import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -50,16 +52,19 @@ class LinodeRow extends React.Component<PropsWithStyles> {
     return (
       <TableRow key={linode.id}>
         <TableCell>
-          <div>
-            <div>
+          <Grid container alignItems="center">
+            <Grid item xs={2}>
+              <LinodeStatusIndicator status={linode.status} />
+            </Grid>
+            <Grid item xs={10}>
               <Link to={`/linodes/${linode.id}`}>
                 <Typography variant="title">
                   {linode.label}
                 </Typography>
               </Link>
-            </div>
-            {specsLabel && <div>{specsLabel}</div>}
-          </div>
+              {specsLabel && <div>{specsLabel}</div>}
+            </Grid>
+          </Grid>
         </TableCell>
         <TableCell>
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
