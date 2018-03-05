@@ -56,7 +56,8 @@ namespace Linode {
 
   type LinodeBackupType = 'auto' | 'snapshot';
 
-  type LinodeBackupStatus = 'pending'
+  type LinodeBackupStatus =
+      'pending'
     | 'running'
     | 'needsPostProcessing'
     | 'successful'
@@ -64,7 +65,8 @@ namespace Linode {
     | 'userAborted';
 
 
-  type LinodeStatus = 'offline'
+  export type LinodeStatus =
+      'offline'
     | 'booting'
     | 'running'
     | 'shutting_down'
