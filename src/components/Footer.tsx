@@ -14,10 +14,7 @@ type CSSClasses = 'container'
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   container: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    left: 0,
+    flexShrink: 0,
     textAlign: 'center',
     marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 4,
