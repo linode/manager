@@ -4,21 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.18.5] - 2018-03-05
-### Fixed
-- fix non-expiring token creation
-- fix stats graphs rendering by correcting destructuring
-- throttle OAuth refresh between tabs
-- Refresh OAuth token only on user interaction
-
-## [0.18.4] - 2018-02-26
-### Added
-- Session keep-alive logic
-### Fixed
-- Updated API usage for API changes https://github.com/linode/linode-api-docs/pull/71
-- Updated changelog and tags to reflect 0.18.4 distinct from 0.18.3
-
-## [0.18.3] - 2018-02-20 (Unreleased)
+## [0.18.3] - 2018-02-20
 ### Added
 - Pagination added to `/domains`
 - Added vendor specific CSS prefixes via PostCSS and Autoprefixer.
