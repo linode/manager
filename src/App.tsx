@@ -34,6 +34,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   content: {
     backgroundColor: theme.palette.background.default,
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing.unit * 3,
     height: 'calc(100% - 56px)',
     marginTop: 56,
@@ -41,6 +43,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
       height: 'calc(100% - 64px)',
       marginTop: 64,
     },
+  },
+  wrapper: {
+    flex: 1,
   },
 });
 
@@ -71,7 +76,7 @@ const TempRoute = (props: any) => {
   />;
 };
 
-type FinalProps = Props & WithStyles<'appFrame' | 'content'> & ConnectedProps;
+type FinalProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
 
 export class App extends React.Component<FinalProps, State> {
   state = {
@@ -121,19 +126,21 @@ export class App extends React.Component<FinalProps, State> {
           <TopMenu toggleSideMenu={this.toggleMenu} />
           <SideMenu open={menuOpen} toggle={this.toggleMenu} />
           <main className={classes.content}>
-            <Switch>
-              <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
-              <Route exact path="/linodes" component={ListLinodes} />
-              <TempRoute exact path="/volumes" render={() => 'Volumes'} />
-              <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
-              <TempRoute exact path="/domains" render={() => 'Domains'} />
-              <TempRoute exact path="/managed" render={() => 'Managed'} />
-              <TempRoute exact path="/longview" render={() => 'LongView'} />
-              <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
-              <TempRoute exact path="/images" render={() => 'Images'} />
-              <TempRoute exact path="/profile" render={() => 'Profile'} />
-              <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
-            </Switch>
+            <div className={classes.wrapper}>
+              <Switch>
+                <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
+                <Route exact path="/linodes" component={ListLinodes} />
+                <TempRoute exact path="/volumes" render={() => 'Volumes'} />
+                <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
+                <TempRoute exact path="/domains" render={() => 'Domains'} />
+                <TempRoute exact path="/managed" render={() => 'Managed'} />
+                <TempRoute exact path="/longview" render={() => 'LongView'} />
+                <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
+                <TempRoute exact path="/images" render={() => 'Images'} />
+                <TempRoute exact path="/profile" render={() => 'Profile'} />
+                <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+              </Switch>
+            </div>
           <Footer />
           </main>
         </div>
