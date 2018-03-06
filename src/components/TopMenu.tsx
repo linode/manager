@@ -16,15 +16,27 @@ import UserMenu from 'src/components/UserMenu';
 import AddNewMenu from 'src/components/AddNewMenu';
 
 const styles = (theme: Theme): StyleRules => ({
+  root: {
+    color: theme.palette.text.primary,
+  },
   flex: {
     flex: 1,
   },
   appBar: {
-    backgroundColor: '#333',
+    color: theme.palette.text.primary,
+    backgroundColor: 'white',
     position: 'absolute',
     marginLeft: menuWidth,
     [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${menuWidth}px)`,
+    },
+  },
+  toolbar: {
+    [theme.breakpoints.up('sm')]: {
+      minHeight: 72,
+    },
+    [theme.breakpoints.up('md')]: {
+      minHeight: 80,
     },
   },
   navIconHide: {
@@ -38,7 +50,8 @@ interface Props {
   toggleSideMenu: () => void;
 }
 
-type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'>;
+type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon' 
+| 'toolbar'>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
@@ -46,7 +59,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
 
     return (
       <AppBar className={classes.appBar}>
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             color="inherit"
             aria-label="open menu"
