@@ -26,7 +26,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
+                <TableCell>Linode</TableCell>
                 <TableCell>Tags</TableCell>
                 <TableCell>IP Addresses</TableCell>
                 <TableCell>Region</TableCell>
