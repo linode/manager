@@ -9,7 +9,7 @@ it('renders without crashing', () => {
   mount(
     <StaticRouter location="/" context={{}}>
       <App
-        classes={{ appFrame: '', content: '' }}
+        classes={{ appFrame: '', content: '', wrapper: '' }}
         request={jest.fn()}
         response={jest.fn()}
       />
