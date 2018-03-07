@@ -52,7 +52,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
     [theme.breakpoints.up('md')]: {
       height: 'calc(100% - 80px)',
-      minHeight: 80,
+      marginTop: 80,
     },
   },
   wrapper: {
