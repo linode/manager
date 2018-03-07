@@ -13,37 +13,25 @@ import {
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
-import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-
-import SvgIcon from 'material-ui/SvgIcon';
-import InboxIcon from 'material-ui-icons/Inbox';
-import DashboardIcon from 'material-ui-icons/Dashboard';
-import StorageIcon from 'material-ui-icons/Storage';
-import DeviceHubIcon from 'material-ui-icons/DeviceHub';
-import LanguageIcon from 'material-ui-icons/Language';
-import BuildIcon from 'material-ui-icons/Build';
-import InsertChartIcon from 'material-ui-icons/InsertChart';
-import CodeIcon from 'material-ui-icons/Code';
-import InsertPhotoIcon from 'material-ui-icons/InsertPhoto';
+import { ListItem, ListItemText } from 'material-ui/List';
 
 import logoPng from 'src/assets/logo/linode-logo-small.png';
 
 type PrimaryLink = {
   display: string,
-  icon: typeof SvgIcon,
   href: string,
 };
 
 const primaryLinks: PrimaryLink[] = [
-  { display: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
-  { display: 'Linodes', icon: StorageIcon, href: '/linodes' },
-  { display: 'Volumes', icon: InboxIcon, href: '/volumes' },
-  { display: 'NodeBalancers', icon: DeviceHubIcon, href: '/nodebalancers' },
-  { display: 'Domains', icon: LanguageIcon, href: '/domains' },
-  { display: 'Managed', icon: BuildIcon, href: '/managed' },
-  { display: 'Longview', icon: InsertChartIcon, href: '/longview' },
-  { display: 'StackScripts', icon: CodeIcon, href: '/stackscripts' },
-  { display: 'Images', icon: InsertPhotoIcon, href: '/images' },
+  { display: 'Dashboard', href: '/dashboard' },
+  { display: 'Linodes', href: '/linodes' },
+  { display: 'Volumes', href: '/volumes' },
+  { display: 'NodeBalancers', href: '/nodebalancers' },
+  { display: 'Domains', href: '/domains' },
+  { display: 'Managed', href: '/managed' },
+  { display: 'Longview', href: '/longview' },
+  { display: 'StackScripts', href: '/stackscripts' },
+  { display: 'Images', href: '/images' },
 ];
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
@@ -88,9 +76,6 @@ class PrimaryNav extends React.Component<Props> {
         divider
         onClick={() => this.navigate(PrimaryLink.href)}
       >
-        <ListItemIcon>
-          <PrimaryLink.icon />
-        </ListItemIcon>
         <ListItemText primary={PrimaryLink.display} />
       </ListItem>
     );
