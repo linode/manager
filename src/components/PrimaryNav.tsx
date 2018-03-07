@@ -15,7 +15,7 @@ import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 import { ListItem, ListItemText } from 'material-ui/List';
 
-import logoPng from 'src/assets/logo/linode-logo-small.png';
+import logoPng from 'src/assets/logo/logo.png';
 
 type PrimaryLink = {
   display: string,
@@ -108,7 +108,7 @@ class PrimaryNav extends React.Component<Props> {
           spacing={0}
         >
           <Grid item className={classes.logoItem}>
-            <img src={logoPng} />
+            <img width="120" height="48" src={logoPng} />
           </Grid>
         </Grid>
         <Divider />
