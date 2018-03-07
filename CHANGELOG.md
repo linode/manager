@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.20.3] - 2018-03-06
+A new visual design has begun!
+### Added
+- Main navigation
+- User menu
+- "Add New" menu
+- Linodes list view
+- Linodes grid view
+- Documentation sidebar
+- Footer
+- Promise preloader HOC
+- Request/response Redux action creators
+
 ## [0.18.3] - 2018-02-20
 ### Added
 - Pagination added to `/domains`
