@@ -6,6 +6,7 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
+import LinodeTheme from 'src/theme';
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
 
@@ -13,10 +14,11 @@ import PrimaryNav from 'src/components/PrimaryNav';
 
 export const menuWidth = 215;
 
-const styles = (theme: Theme): StyleRules => ({
+const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   menuPaper: {
     height: '100%',
     width: menuWidth,
+    backgroundColor: LinodeTheme.bg.navy,
     [theme.breakpoints.up('md')]: {
       position: 'relative',
     },
