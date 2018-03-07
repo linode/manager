@@ -4,12 +4,13 @@ import {
   withStyles,
   StyleRulesCallback,
   WithStyles,
+  Theme,
 } from 'material-ui';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
 type CSSClasses = 'root' | 'top' | 'bottom' | 'progress';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   progress: {
     margin: theme.spacing.unit * 2,
     maxWidth: '50%',

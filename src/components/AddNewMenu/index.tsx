@@ -13,7 +13,7 @@ import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 
 type CSSClasses = 'root' | 'button' | 'caret';
 
-const styles: StyleRulesCallback = (theme: Theme) => ({
+const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     flex: 1,
   },
