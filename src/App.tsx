@@ -40,8 +40,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
-    width: '100%',
     height: '100%',
+    maxWidth: '1440px',
+    margin: '0 auto',
   },
   content: {
     backgroundColor: theme.palette.background.default,
