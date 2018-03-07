@@ -40,7 +40,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: '0 auto',
   },
   content: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: LinodeTheme.bg.main,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
