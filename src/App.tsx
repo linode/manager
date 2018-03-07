@@ -39,7 +39,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     height: '100%',
   },
   content: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: LinodeTheme.bg.main,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',

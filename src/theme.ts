@@ -4,6 +4,10 @@ const LinodeTheme: Linode.Theme = {
       primary: '#666',
     },
   },
+  bg: {
+    main: '#f4f4f4',
+    navy: '#32363C',
+  },
 };
 
 export default LinodeTheme;
