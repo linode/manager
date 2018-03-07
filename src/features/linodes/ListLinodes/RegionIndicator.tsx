@@ -11,7 +11,7 @@ import { flagImg, formatRegion } from './presentation';
 
 type CSSClasses =  'regionIndicator' | 'flagImg';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   regionIndicator: {
     alignItems: 'center',
   },

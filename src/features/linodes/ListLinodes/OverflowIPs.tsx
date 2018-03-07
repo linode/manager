@@ -12,7 +12,7 @@ import IPAddress from './IPAddress';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
     height: theme.typography.body1.fontSize,
     marginLeft: theme.spacing.unit / 2,

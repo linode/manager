@@ -19,7 +19,7 @@ type CSSClasses =
   | 'buttonRight'
   | 'icon';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 2,
   },

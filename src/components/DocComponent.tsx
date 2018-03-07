@@ -3,6 +3,7 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
+  Theme,
 } from 'material-ui';
 import Divider from 'material-ui/Divider';
 
@@ -16,7 +17,7 @@ export interface Doc {
 
 type CSSClasses = 'root' | 'title' | 'icon' | 'body';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {},
   title: {},
   icon: {

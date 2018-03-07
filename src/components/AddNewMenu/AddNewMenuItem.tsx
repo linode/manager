@@ -11,7 +11,7 @@ import Divider from 'material-ui/Divider';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback = (theme: Theme) => ({
+const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
