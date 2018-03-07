@@ -22,7 +22,7 @@ import { actions } from './menuActions';
 
 type CSSClasses = 'inlineItems';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   inlineItems: {
     lineHeight: '30px',
     verticalAlign: 'middle',

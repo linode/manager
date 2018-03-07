@@ -46,7 +46,7 @@ const primaryLinks: PrimaryLink[] = [
   { display: 'Images', icon: InsertPhotoIcon, href: '/images' },
 ];
 
-const styles = (theme: Theme): StyleRules => ({
+const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   headerGrid: theme.mixins.toolbar,
   logoItem: {
     paddingLeft: 16,

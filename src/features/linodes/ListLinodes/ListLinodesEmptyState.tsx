@@ -12,7 +12,7 @@ import Button from 'material-ui/Button';
 
 type CSSClasses = 'root' | 'copy' | 'button';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     paddingTop: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
