@@ -16,6 +16,7 @@ import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
 import { API_ROOT } from 'src/constants';
+import LinodeTheme from 'src/theme';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -26,17 +27,11 @@ const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
 });
 
-const theme = createMuiTheme({
-  palette: {
-    text: {
-      primary: '#666',
-    },
-  },
-});
+const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
 
 theme.shadows = theme.shadows.fill('none');
 
-const styles: StyleRulesCallback = (theme: Theme) => ({
+const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',

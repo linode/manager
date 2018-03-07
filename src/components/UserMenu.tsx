@@ -25,7 +25,7 @@ const menuLinks: MenuLink[] = [
   { display: 'Log Out', href: '/logout' },
 ];
 
-const styles = (theme: Theme): StyleRules => ({
+const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
     width: '50px',

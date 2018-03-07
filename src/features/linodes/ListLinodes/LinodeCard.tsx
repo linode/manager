@@ -55,7 +55,7 @@ type CSSClasses =
   | 'consoleButton'
   | 'rebootButton';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
     marginTop: theme.spacing.unit * 2,
   },

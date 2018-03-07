@@ -14,7 +14,7 @@ import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
 type CSSClasses =  'root' | 'left' | 'right' | 'icon';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     alignItems: 'center',
   },
