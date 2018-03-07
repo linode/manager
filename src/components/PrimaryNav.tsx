@@ -47,7 +47,15 @@ const primaryLinks: PrimaryLink[] = [
 ];
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
-  headerGrid: theme.mixins.toolbar,
+  headerGrid: {
+    minHeight: 64,
+    [theme.breakpoints.up('sm')]: {
+      minHeight: 72,
+    },
+    [theme.breakpoints.up('md')]: {
+      minHeight: 80,
+    },
+  },
   logoItem: {
     paddingLeft: 16,
   },
