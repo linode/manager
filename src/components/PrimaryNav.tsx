@@ -14,6 +14,7 @@ import {
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 import { ListItem, ListItemText } from 'material-ui/List';
+import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
@@ -50,14 +51,20 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingLeft: 40,
   },
   listItem: {
-    padding: '18px 40px',
+    padding: '16px 40px 16px 34px',
+    borderLeft: '6px solid transparent',
   },
   linkItem: {
-    color: 'white',
+    color: '#C9CACB',
     fontWeight: 700,
   },
   active: {
-    backgroundColor: '#eee',
+    transition: 'border-color .7s ease-in-out',
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    borderLeftColor: LinodeTheme.color.green,
+  },
+  activeLink: {
+    color: 'white',
   },
 });
 
@@ -66,6 +73,7 @@ type ClassNames =
   | 'logoItem'
   | 'listItem'
   | 'active'
+  | 'activeLink'
   | 'linkItem' ;
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
@@ -108,7 +116,10 @@ class PrimaryNav extends React.Component<Props> {
         <ListItemText 
           primary={PrimaryLink.display}
           disableTypography={true}
-          className={classes.linkItem}
+          className={`
+            ${classes.linkItem}
+            ${this.linkIsActive(PrimaryLink.href) && classes.activeLink}
+          `}
         />
       </ListItem>
     );
