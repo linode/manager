@@ -50,8 +50,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingLeft: 40,
   },
   listItem: {
-    paddingLeft: 40,
-    paddingRight: 40,
+    padding: '18px 40px',
+  },
+  linkItem: {
+    color: 'white',
+    fontWeight: 700,
   },
   active: {
     backgroundColor: '#eee',
@@ -62,6 +65,7 @@ type ClassNames =
   'headerGrid'
   | 'logoItem'
   | 'listItem'
+  | 'linkItem'
   | 'active';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
@@ -101,7 +105,11 @@ class PrimaryNav extends React.Component<Props> {
           ${this.linkIsActive(PrimaryLink.href) && classes.active}
         `}
       >
-        <ListItemText primary={PrimaryLink.display} />
+        <ListItemText 
+          primary={PrimaryLink.display}
+          disableTypography={true}
+          className={classes.linkItem}
+        />
       </ListItem>
     );
   }
