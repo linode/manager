@@ -11,7 +11,7 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
-import Button from 'material-ui/Button';
+import ButtonBase from 'material-ui/ButtonBase';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
 
@@ -28,6 +28,8 @@ const menuLinks: MenuLink[] = [
 const styles = (theme: Theme): StyleRules => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
+    width: '50px',
+    height: '50px',
   },
 });
 
@@ -73,13 +75,13 @@ class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
 
     return (
       <React.Fragment>
-        <Button
+        <ButtonBase
           onClick={this.handleMenu}
-          color="inherit"
+          className="baseBtn"
         >
           <AccountCircle className={classes.leftIcon}/>
           jsmith
-        </Button>
+        </ButtonBase>
         <Menu
           anchorEl={anchorEl}
           getContentAnchorEl={undefined}
