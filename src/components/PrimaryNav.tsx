@@ -45,11 +45,16 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     },
   },
   logoItem: {
-    paddingLeft: 16,
+    paddingLeft: 40,
+  },
+  listItem: {
+    paddingLeft: 40,
+    paddingRight: 40,
   },
 });
 
-interface Props extends WithStyles<'headerGrid' | 'logoItem'>, RouteComponentProps<{}> {
+interface Props extends WithStyles<'headerGrid' | 'logoItem' | 
+'listItem'>, RouteComponentProps<{}> {
   toggleMenu: () => void;
 }
 
@@ -69,12 +74,15 @@ class PrimaryNav extends React.Component<Props> {
   }
 
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
+    const { classes } = this.props;
+
     return (
       <ListItem
         key={PrimaryLink.display}
         button
         divider
         onClick={() => this.navigate(PrimaryLink.href)}
+        className={classes.listItem}
       >
         <ListItemText primary={PrimaryLink.display} />
       </ListItem>
