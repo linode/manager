@@ -17,7 +17,7 @@ import { ListItem, ListItemText } from 'material-ui/List';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-import logoPng from 'src/assets/logo/linode-logo-small.png';
+import logoPng from 'src/assets/logo/logo.png';
 
 type PrimaryLink = {
   display: string,
@@ -50,8 +50,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingLeft: 40,
   },
   listItem: {
-    paddingLeft: 40,
-    paddingRight: 40,
+    padding: '18px 40px',
+  },
+  linkItem: {
+    color: 'white',
+    fontWeight: 700,
   },
   active: {
     backgroundColor: '#eee',
@@ -62,7 +65,8 @@ type ClassNames =
   'headerGrid'
   | 'logoItem'
   | 'listItem'
-  | 'active';
+  | 'active'
+  | 'linkItem' ;
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
@@ -101,7 +105,11 @@ class PrimaryNav extends React.Component<Props> {
           ${this.linkIsActive(PrimaryLink.href) && classes.active}
         `}
       >
-        <ListItemText primary={PrimaryLink.display} />
+        <ListItemText 
+          primary={PrimaryLink.display}
+          disableTypography={true}
+          className={classes.linkItem}
+        />
       </ListItem>
     );
   }
@@ -118,7 +126,7 @@ class PrimaryNav extends React.Component<Props> {
           spacing={0}
         >
           <Grid item className={classes.logoItem}>
-            <img src={logoPng} />
+            <img width="120" height="48" src={logoPng} />
           </Grid>
         </Grid>
         <Divider />
