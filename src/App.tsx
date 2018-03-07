@@ -9,6 +9,8 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
+  MuiThemeProvider, 
+  createMuiTheme,
 } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
@@ -23,6 +25,16 @@ import Footer from 'src/components/Footer';
 const ListLinodes = DefaultLoader({
   loader: () => import('src/features/linodes/ListLinodes'),
 });
+
+const theme = createMuiTheme({
+  palette: {
+    text: {
+      primary: '#666',
+    },
+  },
+});
+
+theme.shadows = theme.shadows.fill('none');
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
   appFrame: {
@@ -120,31 +132,33 @@ export class App extends React.Component<FinalProps, State> {
     const { classes } = this.props;
 
     return (
-      <React.Fragment>
-        <Reboot />
-        <div className={classes.appFrame}>
-          <TopMenu toggleSideMenu={this.toggleMenu} />
-          <SideMenu open={menuOpen} toggle={this.toggleMenu} />
-          <main className={classes.content}>
-            <div className={classes.wrapper}>
-              <Switch>
-                <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
-                <Route exact path="/linodes" component={ListLinodes} />
-                <TempRoute exact path="/volumes" render={() => 'Volumes'} />
-                <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
-                <TempRoute exact path="/domains" render={() => 'Domains'} />
-                <TempRoute exact path="/managed" render={() => 'Managed'} />
-                <TempRoute exact path="/longview" render={() => 'LongView'} />
-                <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
-                <TempRoute exact path="/images" render={() => 'Images'} />
-                <TempRoute exact path="/profile" render={() => 'Profile'} />
-                <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
-              </Switch>
-            </div>
-          <Footer />
-          </main>
-        </div>
-      </React.Fragment>
+      <MuiThemeProvider theme={theme}>
+        <React.Fragment>
+          <Reboot />
+          <div className={classes.appFrame}>
+            <TopMenu toggleSideMenu={this.toggleMenu} />
+            <SideMenu open={menuOpen} toggle={this.toggleMenu} />
+            <main className={classes.content}>
+              <div className={classes.wrapper}>
+                <Switch>
+                  <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
+                  <Route exact path="/linodes" component={ListLinodes} />
+                  <TempRoute exact path="/volumes" render={() => 'Volumes'} />
+                  <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
+                  <TempRoute exact path="/domains" render={() => 'Domains'} />
+                  <TempRoute exact path="/managed" render={() => 'Managed'} />
+                  <TempRoute exact path="/longview" render={() => 'LongView'} />
+                  <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
+                  <TempRoute exact path="/images" render={() => 'Images'} />
+                  <TempRoute exact path="/profile" render={() => 'Profile'} />
+                  <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+                </Switch>
+              </div>
+            <Footer />
+            </main>
+          </div>
+        </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 }
