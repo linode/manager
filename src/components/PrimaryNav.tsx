@@ -15,6 +15,8 @@ import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 import { ListItem, ListItemText } from 'material-ui/List';
 
+import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+
 import logoPng from 'src/assets/logo/linode-logo-small.png';
 
 type PrimaryLink = {
@@ -51,10 +53,18 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingLeft: 40,
     paddingRight: 40,
   },
+  active: {
+    backgroundColor: '#eee',
+  },
 });
 
-interface Props extends WithStyles<'headerGrid' | 'logoItem' | 
-'listItem'>, RouteComponentProps<{}> {
+type ClassNames =
+  'headerGrid'
+  | 'logoItem'
+  | 'listItem'
+  | 'active';
+
+interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
 }
 
@@ -73,6 +83,10 @@ class PrimaryNav extends React.Component<Props> {
     toggleMenu();
   }
 
+  linkIsActive(href: string) {
+    return isPathOneOf([href], this.props.location.pathname);
+  }
+
   renderPrimaryLink(PrimaryLink: PrimaryLink) {
     const { classes } = this.props;
 
@@ -82,7 +96,10 @@ class PrimaryNav extends React.Component<Props> {
         button
         divider
         onClick={() => this.navigate(PrimaryLink.href)}
-        className={classes.listItem}
+        className={`
+          ${classes.listItem}
+          ${this.linkIsActive(PrimaryLink.href) && classes.active}
+        `}
       >
         <ListItemText primary={PrimaryLink.display} />
       </ListItem>
