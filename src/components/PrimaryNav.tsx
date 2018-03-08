@@ -17,7 +17,7 @@ import { ListItem, ListItemText } from 'material-ui/List';
 import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import logoPng from 'src/assets/logo/linode-logo-small.png';
+import logoPng from 'src/assets/logo/logo.png';
 
 import './PrimaryNav.css';
 
