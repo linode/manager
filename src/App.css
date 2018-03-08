@@ -1,3 +1,13 @@
+:root {
+  font-size: 1rem;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 .App {
   text-align: center;
 }

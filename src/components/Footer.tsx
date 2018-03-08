@@ -9,15 +9,15 @@ import {
 
 import Grid from 'material-ui/Grid';
 
-type CSSClasses = 'container'
-  | 'link';
+type CSSClasses = 'container' | 'link' | 'gridWrapper';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   container: {
     flexShrink: 0,
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 4,
-    marginBottom: theme.spacing.unit * 4,
+  },
+  gridWrapper: {
+    padding: '20px 0 !important',
   },
   link: {
     marginLeft: theme.spacing.unit * 2,
@@ -34,7 +34,7 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
   return (
     <Grid container className={classes.container}>
-      <Grid item xs={12}>
+      <Grid item xs={12} className={classes.gridWrapper}>
         <a className={classes.link} href="https://developers.linode.com">API Reference</a>
         <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
       </Grid>
