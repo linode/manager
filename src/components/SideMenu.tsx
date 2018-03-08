@@ -19,9 +19,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     height: '100%',
     width: menuWidth,
     backgroundColor: LinodeTheme.bg.navy,
-    [theme.breakpoints.up('md')]: {
-      position: 'relative',
-    },
+    left: 'inherit',
   },
   menuDocked: {
     height: '100%',
