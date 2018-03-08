@@ -40,8 +40,8 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: '0 auto',
   },
   content: {
-    backgroundColor: LinodeTheme.bg.main,
     width: '100%',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     [theme.breakpoints.up('md')]: {
@@ -49,8 +49,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   wrapper: {
+    backgroundColor: LinodeTheme.bg.main,
     flex: 1,
     padding: theme.spacing.unit * 3,
+    marginBottom: -100 + theme.spacing.unit * 3,
+    paddingBottom: 100 + theme.spacing.unit * 3,
   },
 });
 
