@@ -54,6 +54,7 @@ const LinodeTheme: Linode.Theme = {
   color: {
     headline: '#333',
     green: '#00B159',
+    border1: 'rgb(224, 224, 224)',
   },
   bg: {
     main: '#f4f4f4',

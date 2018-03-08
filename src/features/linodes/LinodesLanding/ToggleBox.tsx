@@ -10,39 +10,53 @@ import {
 import Button from 'material-ui/Button';
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
+import LinodeTheme from 'src/theme';
 
 type CSSClasses =
   'root'
   | 'button'
   | 'buttonActive'
   | 'buttonLeft'
-  | 'buttonRight'
-  | 'icon';
+  | 'icon'
+  | 'buttonText';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 2,
   },
   button: {
-    border: '1px solid #333',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: LinodeTheme.color.border1,
+    fontWeight: 700,
+    textTransform: 'inherit',
+    width: 88,
+    padding: '8px 14px 6px',
+    minHeight: 'inherit',
+    fontSize: '1rem',
+    lineHeight: '1.3em',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
   },
   buttonActive: {
-    backgroundColor: '#333',
-    color: '#f3f3f3',
+    backgroundColor: '#fff',
+    fontWeight: 400,
     '&:hover': {
-      backgroundColor: '#333',
+      backgroundColor: 'white',
     },
   },
   buttonLeft: {
     borderWidth: '1px 0 1px 1px',
-    borderRadius: '5px 0 0 5px',
-  },
-  buttonRight: {
-    borderWidth: '1px 1px 1px 0',
-    borderRadius: '0 5px 5px 0',
+    width: 89,
   },
   icon: {
     marginRight: theme.spacing.unit,
+    width: 18,
+    height: 18,
+  },
+  buttonText: {
+    width: 40,
   },
 });
 
@@ -73,18 +87,17 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
         }
       >
         <ViewList className={classes.icon} />
-        List
+        <span className={classes.buttonText}>List</span>
         </Button>
       <Button
         onClick={() => handleClick('grid')}
         className={`
             ${status === 'grid' && classes.buttonActive}
-            ${classes.button}
-            ${classes.buttonRight}`
+            ${classes.button}`
         }
       >
         <ViewModule className={classes.icon} />
-        Grid
+        <span className={classes.buttonText}>Grid</span>
         </Button>
     </div>
   );
