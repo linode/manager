@@ -6,9 +6,19 @@ const LinodeTheme: Linode.Theme = {
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
+    headline: {
+      color: '#333',
+      fontSize: '1.5rem',
+      fontWeight: 700,
+    },
     title: {
-      fontWeight: 500,
+      fontSize: '1.5rem',
+      fontWeight: 700,
       color: '#00B159',
+      lineHeight: '1.35417em',
+    },
+    body1: {
+      fontSize: '1rem',
     },
   },
   color: {
