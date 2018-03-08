@@ -20,6 +20,8 @@ import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
 import logoPng from 'src/assets/logo/logo.png';
 
+import './PrimaryNav.css';
+
 type PrimaryLink = {
   display: string,
   href: string,
