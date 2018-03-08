@@ -15,9 +15,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   container: {
     flexShrink: 0,
     textAlign: 'center',
+    width: '100%',
+    margin: 0,
+    padding: theme.spacing.unit * 3,
   },
   gridWrapper: {
-    padding: '20px 0 !important',
+    padding: '0 !important',
   },
   link: {
     marginLeft: theme.spacing.unit * 2,
