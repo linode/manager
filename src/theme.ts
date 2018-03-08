@@ -4,6 +4,13 @@ const LinodeTheme: Linode.Theme = {
       primary: '#666',
     },
   },
+  typography: {
+    fontFamily: '"Lato", sans-serif',
+    title: {
+      fontWeight: 500,
+      color: '#00B159',
+    },
+  },
   color: {
     green: '#00B159',
   },

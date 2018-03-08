@@ -16,6 +16,7 @@ import Reboot from 'material-ui/Reboot';
 import Typography from 'material-ui/Typography';
 
 import { API_ROOT } from 'src/constants';
+import 'typeface-lato';
 import LinodeTheme from 'src/theme';
 import TopMenu from 'src/components/TopMenu';
 import SideMenu from 'src/components/SideMenu';
