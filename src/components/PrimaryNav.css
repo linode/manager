@@ -1,10 +1,10 @@
 .copyIcon {
-    height: 0.8125rem;
-    width: 0.8125rem;
-    cursor: pointer;
-    vertical-align: middle;
-  }
+  height: 0.8125rem;
+  width: 0.8125rem;
+  cursor: pointer;
+  vertical-align: middle;
+}
 
-  .baseBtn {
+.baseBtn {
 	font-size: 1rem;
 }

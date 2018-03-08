@@ -17,7 +17,6 @@ import { ListItem, ListItemText } from 'material-ui/List';
 import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-
 import logoPng from 'src/assets/logo/logo.png';
 
 import './PrimaryNav.css';
@@ -74,9 +73,9 @@ type ClassNames =
   'headerGrid'
   | 'logoItem'
   | 'listItem'
+  | 'linkItem'
   | 'active'
-  | 'activeLink'
-  | 'linkItem' ;
+  | 'activeLink';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
