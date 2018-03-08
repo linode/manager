@@ -5,9 +5,9 @@ import {
   StyleRulesCallback,
   Theme,
 } from 'material-ui';
-import Divider from 'material-ui/Divider';
 
-import ExitToApp from 'material-ui-icons/ExitToApp';
+import Typography from 'material-ui/Typography';
+import LinodeTheme from 'src/theme';
 
 export interface Doc {
   title: string;
@@ -15,17 +15,26 @@ export interface Doc {
   body: string;
 }
 
-type CSSClasses = 'root' | 'title' | 'icon' | 'body';
+type CSSClasses = 'root' 
+| 'title'
+| 'titleLink' 
+| 'body';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
-  root: {},
-  title: {},
-  icon: {
-    height: '16px',
-    width: '16px',
-    marginLeft: '10px',
+  root: {
+    marginTop: theme.spacing.unit * 2,
   },
-  body: {},
+  title: {},
+  titleLink: {
+    textDecoration: 'none',
+    color: LinodeTheme.color.headline,
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+  },
+  body: {
+    marginTop: theme.spacing.unit,
+  },
 });
 
 interface Props extends Doc {
@@ -42,14 +51,14 @@ class DocComponent extends React.Component<DocWithStyles> {
     return (
       <React.Fragment>
         <div className={classes.root}>
-          <div className={classes.title}>
-            <a href={src}>{title}
-              <ExitToApp className={classes.icon} />
-            </a>
-          </div>
-          <div className={classes.body}>{body}</div>
+          <Typography variant="subheading" className={classes.title}>
+            <a href={src} className={classes.titleLink}>{title}</a>
+          </Typography>
+          <Typography variant="body2" className={classes.body}>
+            {body}
+          </Typography>
         </div>
-        {index + 1 !== count && <Divider />}
+        {index + 1 !== count}
       </React.Fragment>
     );
   }
