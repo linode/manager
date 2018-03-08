@@ -35,32 +35,29 @@ const polling$ = Rx.Observable
       ),
   );
 
-const stream$: Rx.Observable<Linode.Event[]> = Rx.Observable
+const linodeEvents$ = new Rx.Subject();
+
+const stream$: Rx.Observable<void | null> = Rx.Observable
   .merge(initial$, polling$)
   .scan(
-    (acc, value) => {
+    (_, value: Linode.Event[]) => {
       if (value[0]) {
         datestamp = value[0].created;
       }
 
-      return [...value, ...acc];
+      value.reverse().map(linEv => linodeEvents$.next(linEv));
     },
-    [],
+    null,
   );
   
-const exp$ = stream$
-  .publish();
-  
-/** Example of how we'd get the events for the dropdown. */
-exp$
-  .map(d => d.slice(0, 5))
-  .subscribe(
-    (events: Linode.Event[]) => console.log('Events: ', events.map(e => e.id).join(', ')),
-);
+const exp$ = stream$.publish();
 
-/** Example of how we would get the badge count. */
-exp$
-  .map(events => events.reduce((acc, current) => current.seen ? acc : acc + 1, 0))
-  .subscribe((e) => { console.log('Unseen Events:', e); });
+exp$.subscribe(() => null);
 
+// need this drain to get the machine moving
 exp$.connect();
+
+linodeEvents$
+  .subscribe(
+    (event: Linode.Event) => console.log('Event: ', event),
+);
