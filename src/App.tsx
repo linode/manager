@@ -35,8 +35,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
-    width: '100%',
     height: '100%',
+    maxWidth: '1440px',
+    margin: '0 auto',
   },
   content: {
     backgroundColor: LinodeTheme.bg.main,
