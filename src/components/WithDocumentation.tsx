@@ -14,7 +14,6 @@ interface Props {
 export default class WithDocumentation extends React.Component<Props> {
   render() {
     const { title, docs, render, ...rest } = this.props;
-    const len = docs.length;
 
     return (
       <Grid container spacing={40}>
@@ -28,7 +27,7 @@ export default class WithDocumentation extends React.Component<Props> {
             </Grid>
             <Grid item xs={12} md={3} lg={2}>
               <Typography variant="title">Linode Docs</Typography>
-              {docs.map((doc, idx) => <DocComponent key={idx} {...doc} index={idx} count={len} />)}
+              {docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)}
             </Grid>
           </Grid>
         </Grid>
