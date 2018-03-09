@@ -13,6 +13,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 
 import UserMenu from 'src/components/UserMenu';
 import AddNewMenu from 'src/components/AddNewMenu';
+import SearchBar from 'src/components/SearchBar';
 
 const styles = (theme: Theme): StyleRules => ({
   root: {
@@ -65,6 +66,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
             <MenuIcon />
           </IconButton>
           <AddNewMenu />
+          <SearchBar />
           <UserMenu />
         </Toolbar>
       </AppBar>

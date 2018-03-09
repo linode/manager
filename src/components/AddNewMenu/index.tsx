@@ -11,12 +11,9 @@ import Menu from 'material-ui/Menu';
 
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 
-type CSSClasses = 'root' | 'button' | 'caret';
+type CSSClasses = 'button' | 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {
-    flex: 1,
-  },
   button: {
     textTransform: 'unset',
     borderRadius: '4px',
@@ -77,7 +74,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
     const itemsLen = this.items.length;
 
     return (
-      <div className={classes.root}>
+      <div>
         <Button
           variant="raised"
           color="primary"
