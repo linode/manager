@@ -24,6 +24,12 @@ type CSSClasses =
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 2,
+    [theme.breakpoints.up('sm')]: {
+      position: 'absolute',
+      right: theme.spacing.unit,
+      top: theme.spacing.unit,
+      marginBottom: 0,
+    },
   },
   button: {
     borderWidth: 1,
@@ -32,8 +38,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     borderRadius: 0,
     fontWeight: 700,
     textTransform: 'inherit',
-    width: 88,
-    padding: '8px 14px 6px',
+    width: 80,
+    minWidth: 80,
+    padding: '6px 12px 5px',
     minHeight: 'inherit',
     fontSize: '1rem',
     lineHeight: '1.3em',
@@ -60,12 +67,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     borderLeftWidth: 0,
   },
   icon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit / 2,
     width: 18,
     height: 18,
   },
   buttonText: {
-    width: 40,
+    width: 30,
+    position: 'relative',
+    top: -1,
   },
 });
 
