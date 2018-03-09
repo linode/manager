@@ -17,6 +17,7 @@ type CSSClasses =
   | 'button'
   | 'buttonActive'
   | 'buttonLeft'
+  | 'buttonRight'
   | 'icon'
   | 'buttonText';
 
@@ -28,6 +29,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: LinodeTheme.color.border1,
+    borderRadius: 0,
     fontWeight: 700,
     textTransform: 'inherit',
     width: 88,
@@ -35,20 +37,27 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     minHeight: 'inherit',
     fontSize: '1rem',
     lineHeight: '1.3em',
+    color: LinodeTheme.color.grey1,
+    transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:hover': {
-      backgroundColor: 'white',
+      color: LinodeTheme.palette.text.primary,
+      backgroundColor: 'transparent',
     },
   },
   buttonActive: {
-    backgroundColor: '#fff',
+    backgroundColor: LinodeTheme.color.grey1,
     fontWeight: 400,
+    color: 'white',
     '&:hover': {
-      backgroundColor: 'white',
+      backgroundColor: LinodeTheme.color.grey1,
+      color: 'white',
     },
   },
   buttonLeft: {
-    borderWidth: '1px 0 1px 1px',
-    width: 89,
+    borderRightWidth: 0,
+  },
+  buttonRight: {
+    borderLeftWidth: 0,
   },
   icon: {
     marginRight: theme.spacing.unit,
@@ -93,7 +102,8 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
         onClick={() => handleClick('grid')}
         className={`
             ${status === 'grid' && classes.buttonActive}
-            ${classes.button}`
+            ${classes.button}
+            ${classes.buttonRight}`
         }
       >
         <ViewModule className={classes.icon} />
