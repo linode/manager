@@ -1,11 +1,26 @@
 const LinodeTheme: Linode.Theme = {
+  overrides: {
+    MuiButton: {
+      root: {
+        textTransform: 'inherit',
+        borderRadius: 0,
+        fontSize: '1rem',
+        fontWeight: 700,
+        padding: '12px 28px 14px',
+      },
+    },
+  },
   palette: {
+    primary: {
+      main: '#3B85D9',
+    },
     text: {
       primary: '#666',
     },
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
+    fontSize: 16,
     headline: {
       color: '#333',
       fontSize: '1.5rem',
