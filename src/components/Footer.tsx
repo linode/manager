@@ -32,7 +32,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     padding: '0 !important',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginTop: 10,
   },
   link: {
     marginLeft: theme.spacing.unit,
@@ -57,7 +56,7 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
         <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
       </Grid>
       <Grid item xs={12} className={classes.logoWrapper}>
-        <object className="footer-logo" data={footerLogo} width="40" height="40">Linode</object>
+        <img className="footer-logo" src={footerLogo} width="40" height="40" />
       </Grid>
     </Grid>
   );
