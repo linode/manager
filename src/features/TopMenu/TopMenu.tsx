@@ -79,6 +79,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
             <MenuIcon />
           </IconButton>
           <AddNewMenu />
+          <SearchBar />
           <UserMenu />
           <UserNotificationMenu />
         </Toolbar>

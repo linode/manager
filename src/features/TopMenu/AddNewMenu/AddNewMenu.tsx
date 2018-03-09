@@ -21,9 +21,6 @@ import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 type CSSClasses = 'root' | 'menu' | 'button' | 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {
-    flex: 1,
-  },
   button: {
     paddingRight: 22,
     [theme.breakpoints.down('sm')]: {
@@ -99,7 +96,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     const itemsLen = this.items.length;
 
     return (
-      <div className={classes.root}>
+      <div>
         <Button
           variant="raised"
           color="primary"
