@@ -8,6 +8,8 @@ import {
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import Menu from 'material-ui/Menu';
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
+import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 
@@ -18,11 +20,13 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flex: 1,
   },
   button: {
-    textTransform: 'unset',
-    borderRadius: '4px',
+    paddingRight: 22,
   },
   caret: {
-    marginLeft: theme.spacing.unit,
+    position: 'relative',
+    top: 2,
+    left: 2,
+    marginLeft: theme.spacing.unit / 2,
   },
 });
 
@@ -86,10 +90,10 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
           onClick={this.handleClick}
           className={classes.button}
         >
-          Add New {
+          Create {
             anchorEl
-              ? <span className={classes.caret}>&#9660;</span>
-              : <span className={classes.caret}>&#9650;</span>
+              ? <KeyboardArrowUp className={classes.caret}></KeyboardArrowUp>
+              : <KeyboardArrowDown className={classes.caret}></KeyboardArrowDown>
           }
         </Button>
         <Menu
