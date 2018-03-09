@@ -8,20 +8,38 @@ import {
 } from 'material-ui';
 
 import Grid from 'material-ui/Grid';
+import LinodeTheme from 'src/theme';
 
-type CSSClasses = 'container' | 'link' | 'gridWrapper';
+import footerLogo from 'src/assets/logo/logo-footer.svg';
+
+type CSSClasses = 'container' | 'link' | 'navWrapper' | 'logoWrapper';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   container: {
-    flexShrink: 0,
-    textAlign: 'center',
+    width: '100%',
+    backgroundColor: LinodeTheme.bg.main,
+    margin: 0,
+    height: 100,
   },
-  gridWrapper: {
-    padding: '20px 0 !important',
+  navWrapper: {
+    display: 'flex',
+    padding: '0 !important',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoWrapper: {
+    display: 'flex',
+    padding: '0 !important',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   link: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    color: LinodeTheme.palette.text.primary,
+    textDecoration: 'none',
+    fontSize: '90%',
   },
 });
 
@@ -34,9 +52,12 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
   return (
     <Grid container className={classes.container}>
-      <Grid item xs={12} className={classes.gridWrapper}>
+      <Grid item xs={12} className={classes.navWrapper}>
         <a className={classes.link} href="https://developers.linode.com">API Reference</a>
         <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
+      </Grid>
+      <Grid item xs={12} className={classes.logoWrapper}>
+        <object className="footer-logo" data={footerLogo} width="40" height="40">Linode</object>
       </Grid>
     </Grid>
   );
