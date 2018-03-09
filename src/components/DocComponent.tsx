@@ -38,15 +38,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props extends Doc {
-  index: number;
-  count: number;
+  
 }
 
-type DocWithStyles = Props & WithStyles<CSSClasses>;
+type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-class DocComponent extends React.Component<DocWithStyles> {
+class DocComponent extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, src, title, body, index, count } = this.props;
+    const { classes, src, title, body } = this.props;
 
     return (
       <React.Fragment>
@@ -58,7 +57,6 @@ class DocComponent extends React.Component<DocWithStyles> {
             {body}
           </Typography>
         </div>
-        {index + 1 !== count}
       </React.Fragment>
     );
   }
