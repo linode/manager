@@ -41,24 +41,20 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     margin: '0 auto',
   },
   content: {
-    backgroundColor: LinodeTheme.bg.main,
     width: '100%',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing.unit * 3,
-    height: 'calc(100% - 64px)',
-    marginTop: 64,
-    [theme.breakpoints.up('sm')]: {
-      height: 'calc(100% - 72px)',
-      marginTop: 72,
-    },
     [theme.breakpoints.up('md')]: {
-      height: 'calc(100% - 80px)',
-      marginTop: 80,
+      marginLeft: 215,
     },
   },
   wrapper: {
+    backgroundColor: LinodeTheme.bg.main,
     flex: 1,
+    padding: theme.spacing.unit * 3,
+    marginBottom: -100 + theme.spacing.unit * 3,
+    paddingBottom: 100 + theme.spacing.unit * 3,
   },
 });
 
@@ -137,9 +133,9 @@ export class App extends React.Component<FinalProps, State> {
         <React.Fragment>
           <Reboot />
           <div className={classes.appFrame}>
-            <TopMenu toggleSideMenu={this.toggleMenu} />
             <SideMenu open={menuOpen} toggle={this.toggleMenu} />
             <main className={classes.content}>
+              <TopMenu toggleSideMenu={this.toggleMenu} />
               <div className={classes.wrapper}>
                 <Switch>
                   <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />

@@ -11,7 +11,6 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
-import { menuWidth } from 'src/components/SideMenu';
 import UserMenu from 'src/components/UserMenu';
 import AddNewMenu from 'src/components/AddNewMenu';
 
@@ -25,11 +24,7 @@ const styles = (theme: Theme): StyleRules => ({
   appBar: {
     color: theme.palette.text.primary,
     backgroundColor: 'white',
-    position: 'absolute',
-    marginLeft: menuWidth,
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${menuWidth}px)`,
-    },
+    position: 'relative',
   },
   toolbar: {
     minHeight: 64,
