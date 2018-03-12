@@ -54,9 +54,18 @@ namespace Linode {
     hourly: number;
   }
 
+  export interface EventEntity {
+    id: number;
+    label: string;
+    type: string;
+    url: string;
+  }
+
   export interface Event {
     id: number;
     seen: Boolean;
     created: string;
+    percent_complete: number | null;
+    entity: EventEntity;
   }
 }
