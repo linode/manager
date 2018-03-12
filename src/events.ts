@@ -3,27 +3,33 @@ import { API_ROOT } from 'src/constants';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 
-function createDatestamp() {
-  return moment().utc().format('YYYY-MM-DDTHH:mm:ss');
+const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
+
+function createInitialDatestamp() {
+  return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-const linodeEvents$ = new Rx.Subject();
+export const linodeEvents$ = new Rx.Subject();
 
-let datestamp = createDatestamp();
-let pollIDs: number[] = [];
+let filterDatestamp = createInitialDatestamp();
+const pollIDs: { [key: string]: boolean} = {};
 
-/*
- * Until we can filter on IDs, we can't use this logic
+const initialPollInterval = 1000;
+let currentPollIntervalMultiplier = 1;
+let eventRequestDeadline = Date.now();
+
+export function resetEventsPolling() {
+  eventRequestDeadline = Date.now() + initialPollInterval;
+  currentPollIntervalMultiplier = 1;
+}
+
 function generateInFilter(keyName: string, arr: any[]) {
   return {
     '+or': arr.map(el => ({ [keyName]: el })),
   };
 }
-*/
 
-function generatePollingFilter() {
-  /*
-   * Until we can filter on IDs, we can't use this logic
+function generatePollingFilter(datestamp: string, pollIDs: string[]) {
   return pollIDs.length ?
     {
       '+or': [
@@ -31,69 +37,68 @@ function generatePollingFilter() {
         generateInFilter('id', pollIDs),
       ],
     }
-    : { created: { '+gt': datestamp } };
-  */
-  return { created: { '+gt': datestamp } };
+    : { 
+      created: { '+gt': datestamp },
+    };
 }
 
 type EventResponse = AxiosResponse<Linode.ManyResourceState<Linode.Event>>;
 
-const initial$ = Rx.Observable
-  .defer(() =>
-    Rx.Observable
-      .fromPromise(
-        Axios.get(`${API_ROOT}/account/events`)
-          .then(
-            (response: EventResponse) => response.data.data,
-          ),
-  ));
+function requestEvents() {
+  Axios.get(
+    `${API_ROOT}/account/events`,
+    { headers: { 'X-Filter': JSON.stringify(
+      generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
+    ) } })
+  .then((response: EventResponse) => response.data.data)
+  .then((data) => {
+    /*
+     * Events come back in reverse chronological order, so we update our
+     * datestamp with the latest Event that we've seen. We need to perform
+     * a date comparison here because we also might get back some old events
+     * from IDs that we're polling for.
+     */
+    if (data[0]) {
+      const newDatestamp = moment(data[0].created);
+      const currentDatestamp = moment(filterDatestamp);
+      if (newDatestamp > currentDatestamp) {
+        filterDatestamp = newDatestamp.format(dateFormat);
+      }
+    }
 
-const polling$ = Rx.Observable
-  .interval(2000)
-  .flatMap(() =>
-    Rx.Observable
-      .fromPromise(
-        Axios.get(
-          `${API_ROOT}/account/events`,
-          { headers: { 'X-Filter': JSON.stringify(
-            generatePollingFilter(),
-          ) } })
-        .then((response: EventResponse) => response.data.data),
-      ),
-  );
-
-
-const stream$: Rx.Observable<void | null> = Rx.Observable
-  .merge(initial$, polling$)
-  .scan(
-    (_, value: Linode.Event[]) => {
-      if (value[0]) {
-        datestamp = value[0].created;
+    data.reverse().map((linodeEvent) => {
+      // if an Event completes it is removed from pollIDs
+      if (linodeEvent.percent_complete === 100
+          && pollIDs[linodeEvent.id]) {
+        delete pollIDs[linodeEvent.id];
       }
 
-      value.reverse().map((linEv) => {
-        // if an Event completes it is removed from pollIDs
-        if (linEv.percent_complete === 100 && pollIDs.includes(linEv.id)) {
-          pollIDs = pollIDs.filter(id => id !== linEv.id);
-        }
+      // we poll for Event IDs that have not yet been completed
+      if (linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100) {
+        // when we have an "incomplete event" poll at the initial polling rate
+        resetEventsPolling();
+        pollIDs[linodeEvent.id] = true;
+      }
 
-        // we poll for Event IDs that have not yet been completed
-        if (linEv.percent_complete !== null && linEv.percent_complete < 100) {
-          pollIDs.push(linEv.id);
-        }
+      linodeEvents$.next(linodeEvent);
+    });
+  });
+}
 
-        linodeEvents$.next(linEv);
-      });
-    },
-    null,
-  );
-  
-const exp$ = stream$.publish();
+setInterval(
+  () => {
+    if (Date.now() > eventRequestDeadline) {
+      requestEvents();
 
-exp$.subscribe(() => null);
-
-// need this drain to get the machine moving
-exp$.connect();
+      eventRequestDeadline = 
+        Date.now() + initialPollInterval * currentPollIntervalMultiplier;
+      /* double the polling interval with each poll up to 16x */
+      currentPollIntervalMultiplier = Math.min(currentPollIntervalMultiplier * 2, 16);
+    }
+  },
+  /* the following is the Nyquist rate for the minimum polling interval */
+  (initialPollInterval / 2 - 1),
+);
 
 linodeEvents$
   .subscribe(
