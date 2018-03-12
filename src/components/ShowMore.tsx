@@ -8,19 +8,32 @@ import {
 import Chip from 'material-ui/Chip';
 import Popover from 'material-ui/Popover';
 
+import LinodeTheme from 'src/theme';
+
 type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   chip: {
-    height: theme.typography.body1.fontSize,
+    height: 20,
     marginLeft: theme.spacing.unit / 2,
+    backgroundColor: LinodeTheme.bg.lightBlue,
+    borderRadius: 4,
+    fontWeight: 700,
+    '&:hover, &.active': {
+      backgroundColor: LinodeTheme.palette.primary.main,
+      color: 'white',
+    },
+    '&:focus': {
+      backgroundColor: LinodeTheme.bg.lightBlue,
+    },
   },
   label: {
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
+    paddingLeft: 6,
+    paddingRight: 6,
   },
   popover: {
     padding: theme.spacing.unit * 2,
+    boxShadow: '0 0 5px #ddd',
   },
 });
 
@@ -32,14 +45,18 @@ interface Props<T> {
 class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   state = {
     anchorEl: undefined,
+    classes: this.props.classes.chip,
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ 
+      anchorEl: event.currentTarget, 
+      classes: this.props.classes.chip + ' active',
+    });
   }
 
   handleClose = () => {
-    this.setState({ anchorEl: undefined });
+    this.setState({ anchorEl: undefined, classes: this.props.classes.chip });
   }
 
   render() {
@@ -49,7 +66,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
     return (
       <React.Fragment>
         <Chip
-          className={classes.chip}
+          className={this.state.classes}
           label={`+${items.length}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
@@ -60,7 +77,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
           anchorOrigin={{
-            vertical: 18,
+            vertical: 28,
             horizontal: 'left',
           }}
           transformOrigin={{

@@ -8,6 +8,7 @@ import {
 import Typography from 'material-ui/Typography';
 import * as copy from 'copy-to-clipboard';
 
+import LinodeTheme from 'src/theme';
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
@@ -19,9 +20,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   row: {
     display: 'flex',
+    alignItems: 'center',
   },
   left: {
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
   },
   right: {
     marginLeft: theme.spacing.unit,
@@ -31,6 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: '0.8125rem',
     width: '0.8125rem',
     cursor: 'pointer',
+    color: LinodeTheme.palette.primary.main,
   },
 });
 
@@ -53,11 +56,11 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-      {!copyRight && this.renderCopyIcon(ip)}
-      <Typography>
-        {ip}
-      </Typography>
-      {copyRight && this.renderCopyIcon(ip)}
+        <Typography>
+          {ip}
+        </Typography>
+        {!copyRight && this.renderCopyIcon(ip)}
+        {copyRight && this.renderCopyIcon(ip)}
       </div>
     );
   }
