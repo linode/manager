@@ -83,6 +83,10 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     history.push(`#${style}`);
   }
 
+  componentDidMount() {
+    
+  }
+
   render() {
 
     return (
