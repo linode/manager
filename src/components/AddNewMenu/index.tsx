@@ -56,7 +56,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
       onClick: (e) => {
         e.preventDefault();
       },
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      body: `High performance SSD Linux servers for all of your infrastructure needs`,
       icon: linodeIcon,
     },
     {
@@ -64,7 +64,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
       onClick: (e) => {
         e.preventDefault();
       },
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      body: `Block storage service allows you to attach additional storage to your Linode`,
       icon: volumeIcon,
     },
     {
@@ -72,7 +72,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
       onClick: (e) => {
         e.preventDefault();
       },
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      body: `Ensure your valuable applications and services are highly-available`,
       icon: nodebalancerIcon,
     },
   ];
