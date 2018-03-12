@@ -18,6 +18,7 @@ interface Props {}
 interface State {
   searchText: string;
   searchElement?: HTMLElement;
+  lastFetch: Date;
 }
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
@@ -68,7 +69,7 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 
   handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ searchText: e.target.value }); 
+    this.setState({ searchText: e.target.value });
   }
 
   render() {
@@ -76,12 +77,12 @@ class SearchBar extends React.Component<FinalProps, State> {
 
     return (
       <React.Fragment>
-        <div 
+        <div
           id="search-bar"
           ref="searchBar"
           className={classes.root}
         >
-          <Search 
+          <Search
             className={classes.icon}
             fontSize
           />
@@ -110,4 +111,3 @@ class SearchBar extends React.Component<FinalProps, State> {
 }
 
 export default withStyles(styles, { withTheme: true })<Props>(SearchBar);
-
