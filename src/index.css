@@ -24,3 +24,13 @@ html {
 .footer-logo {
   opacity: .5;
 }
+
+.ovds {
+  box-shadow: 0 0 5px #ddd !important;
+}
+
+.ovds.ab {
+  position: absolute;
+  outline: 0;
+  padding: 0;
+}
