@@ -18,8 +18,7 @@ type CSSClasses =
   | 'buttonActive'
   | 'buttonLeft'
   | 'buttonRight'
-  | 'icon'
-  | 'buttonText';
+  | 'icon';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -40,41 +39,37 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     textTransform: 'inherit',
     width: 80,
     minWidth: 80,
-    padding: '6px 12px 5px',
+    padding: '6px 14px 5px 12px',
     minHeight: 'inherit',
     fontSize: '1rem',
     lineHeight: '1.3em',
-    color: LinodeTheme.color.grey1,
-    transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    color: LinodeTheme.palette.text.primary,
+    transition: 'background-color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:hover': {
-      color: LinodeTheme.palette.text.primary,
       backgroundColor: 'transparent',
+      '& $icon': {
+        opacity: 1,
+      },
     },
   },
   buttonActive: {
-    backgroundColor: LinodeTheme.color.grey1,
-    fontWeight: 400,
-    color: 'white',
+    backgroundColor: 'white',
     '&:hover': {
-      backgroundColor: LinodeTheme.color.grey1,
-      color: 'white',
+      backgroundColor: 'white',
     },
   },
   buttonLeft: {
-    borderRightWidth: 0,
+    width: 79,
   },
   buttonRight: {
     borderLeftWidth: 0,
   },
   icon: {
-    marginRight: theme.spacing.unit / 2,
+    marginRight: 6,
     width: 18,
     height: 18,
-  },
-  buttonText: {
-    width: 30,
-    position: 'relative',
-    top: -1,
+    opacity: .4,
+    transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   },
 });
 
@@ -105,7 +100,7 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
         }
       >
         <ViewList className={classes.icon} />
-        <span className={classes.buttonText}>List</span>
+        List
         </Button>
       <Button
         onClick={() => handleClick('grid')}
@@ -116,7 +111,7 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
         }
       >
         <ViewModule className={classes.icon} />
-        <span className={classes.buttonText}>Grid</span>
+        Grid
         </Button>
     </div>
   );
