@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Axios from 'axios';
+import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
@@ -10,6 +11,7 @@ import {
   RouteComponentProps,
 } from 'react-router-dom';
 
+import { linodeEvents$ } from 'src/events';
 import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
 
@@ -32,6 +34,7 @@ interface PreloadedProps {
 }
 
 interface State {
+  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
@@ -49,7 +52,9 @@ const preloaded = PromiseLoader<Props>({
 type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
-  state: State = {};
+  state: State = {
+    linodes: pathOr([], ['response', 'data'], this.props.linodes),
+  };
 
   /**
   * @todo Test docs for review.
@@ -78,20 +83,44 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     },
   ];
 
+  componentDidMount() {
+    const mountTime = moment();
+
+    linodeEvents$
+    .filter((linodeEvent) => {
+      return (
+        moment(linodeEvent.created + 'Z') > mountTime
+        && linodeEvent.entity !== null
+        && linodeEvent.entity.type === 'linode'
+      );
+    })
+    .subscribe((linodeEvent) => {
+      Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
+        .then(response => response.data)
+        .then(linode => this.setState((prevState) => {
+          const targetIndex = prevState.linodes.findIndex(
+            _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
+          const updatedLinodes = [...prevState.linodes];
+          updatedLinodes[targetIndex] = linode;
+          updatedLinodes[targetIndex].recentEvent = linodeEvent;
+          return { linodes: updatedLinodes };
+        }));
+    });
+  }
+
   changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
   }
 
   render() {
-
     return (
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
         render={() => {
           const { types, location: { hash } } = this.props;
-          const linodes = pathOr([], ['response', 'data'], this.props.linodes);
+          const { linodes } = this.state;
           const images = pathOr([], ['response', 'data'], this.props.images);
 
           if (this.props.linodes.error) {

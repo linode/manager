@@ -26,6 +26,7 @@ import 'src/utilities/request';
 import App from './App';
 import './index.css';
 
+import './events';
 /**
  * Initialize Analytics.
  */
