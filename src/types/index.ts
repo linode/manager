@@ -66,6 +66,6 @@ namespace Linode {
     seen: Boolean;
     created: string;
     percent_complete: number | null;
-    entity: EventEntity;
+    entity: EventEntity | null;
   }
 }

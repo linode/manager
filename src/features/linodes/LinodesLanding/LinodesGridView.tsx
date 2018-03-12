@@ -5,7 +5,7 @@ import Grid from 'material-ui/Grid';
 import LinodeCard from './LinodeCard';
 
 interface Props {
-  linodes: Linode.Linode[];
+  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
 }
