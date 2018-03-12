@@ -10,6 +10,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
+        icon="an icon"
         onClick={jest.fn()}
       />);
   });
@@ -21,6 +22,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
+        icon="an icon"
         onClick={jest.fn()}
       />);
 
@@ -34,6 +36,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
+        icon="an icon"
         onClick={jest.fn()}
       />);
 

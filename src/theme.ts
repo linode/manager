@@ -1,11 +1,31 @@
 const LinodeTheme: Linode.Theme = {
+  overrides: {
+    MuiButton: {
+      root: {
+        textTransform: 'inherit',
+        borderRadius: 0,
+        fontSize: '1rem',
+        fontWeight: 700,
+        padding: '12px 28px 14px',
+      },
+    },
+    Popover: {
+      root: {
+        borderRadius: 0,
+      },
+    },
+  },
   palette: {
+    primary: {
+      main: '#3B85D9',
+    },
     text: {
       primary: '#666',
     },
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
+    fontSize: 16,
     headline: {
       color: '#333',
       fontSize: '1.5rem',
@@ -37,6 +57,7 @@ const LinodeTheme: Linode.Theme = {
   },
   bg: {
     main: '#f4f4f4',
+    offWhite: '#fbfbfb',
     navy: '#32363C',
   },
 };
