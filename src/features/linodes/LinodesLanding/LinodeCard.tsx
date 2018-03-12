@@ -22,6 +22,7 @@ import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
+import CircleProgress from 'src/components/CircleProgress';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -52,7 +53,8 @@ type CSSClasses =
   | 'cardActions'
   | 'button'
   | 'consoleButton'
-  | 'rebootButton';
+  | 'rebootButton'
+  | 'statusText';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
@@ -82,6 +84,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   rebootButton: {
     width: '40%',
   },
+  statusText: {
+    textAlign: 'center',
+    textTransform: 'capitalize',
+  },
 });
 
 interface Props {
@@ -89,6 +95,10 @@ interface Props {
   image?: Linode.Image;
   type?: Linode.LinodeType;
   actions: Action[];
+  /**
+   * @prop loading - Pass a number for definite loading, 'true' for indefinite loading.
+   */
+  loading?: Boolean | number;
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -107,14 +117,76 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
-  render() {
-    const { classes, linode, image, type, actions } = this.props;
+  /**
+   * <LinodeCard loading="true" indefinite="true" loadingProgress=75 />
+   */
+  _loadingState = () => {
+    const { loading, linode, classes } = this.props;
+    
+    return (
+      <CardContent>
+        <Grid container>
+          <Grid item xs={12}>
+            <CircleProgress value={loading} />
+          </Grid>
+          <Grid item xs={12} className={classes.statusText}>
+          <Typography>{linode.status}</Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    );
+  }
 
+  _loadedState = () => {
+
+    const { classes, linode, image, type } = this.props;
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
      * */
     const tags = [linode.group].filter(Boolean);
 
+    return (
+      <CardContent>
+      <div>
+        {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
+      </div>
+      {image && type &&
+        <div className={classes.cardSection}>
+          <Grid container>
+            <Grid item className="tac" xs={2}>
+              {image.vendor ?
+                <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
+                : <CloudCircle className={classes.distroIcon} />
+              }
+            </Grid>
+            <Grid item xs={9}>
+              <Typography variant="subheading">
+                {image.label}
+              </Typography>
+              <Typography>
+                {typeLabelLong(type.memory, type.disk, type.vcpus)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      }
+      <div className={classes.cardSection}>
+        <div>
+          <IPAddress ips={linode.ipv4} copyRight />
+        </div>
+        <div>
+          <IPAddress ips={[linode.ipv6]} copyRight />
+        </div>
+      </div>
+      <div className={classes.cardSection}>
+        <RegionIndicator region={linode.region} />
+      </div>
+    </CardContent>
+    );
+  }
+  
+  render() {
+    const { classes, actions, loading } = this.props;
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>
@@ -125,42 +197,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             }
           />
           {<Divider />}
-          <CardContent>
-            <div>
-              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
-            </div>
-            {image && type &&
-              <div className={classes.cardSection}>
-                <Grid container>
-                  <Grid item className="tac" xs={2}>
-                    {image.vendor ?
-                      <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
-                      : <CloudCircle className={classes.distroIcon} />
-                    }
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="subheading">
-                      {image.label}
-                    </Typography>
-                    <Typography>
-                      {typeLabelLong(type.memory, type.disk, type.vcpus)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </div>
-            }
-            <div className={classes.cardSection}>
-              <div>
-                <IPAddress ips={linode.ipv4} copyRight />
-              </div>
-              <div>
-                <IPAddress ips={[linode.ipv6]} copyRight />
-              </div>
-            </div>
-            <div className={classes.cardSection}>
-              <RegionIndicator region={linode.region} />
-            </div>
-          </CardContent>
+          { loading ? this._loadingState() : this._loadedState() }
           <Divider />
           <CardActions className={classes.cardActions}>
             <Button className={`${classes.button} ${classes.consoleButton}`}>
