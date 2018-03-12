@@ -7,16 +7,13 @@ import {
 } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 
-import { flagImg, formatRegion } from './presentation';
+import { formatRegion } from './presentation';
 
-type CSSClasses =  'regionIndicator' | 'flagImg';
+type CSSClasses =  'regionIndicator';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   regionIndicator: {
     alignItems: 'center',
-  },
-  flagImg: {
-    marginRight: theme.spacing.unit,
   },
 });
 
@@ -30,13 +27,6 @@ class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses> > {
 
     return (
       <div className={`dif ${classes.regionIndicator}`}>
-        <img
-          className={classes.flagImg}
-          src={flagImg(region)}
-          width="20"
-          height="15"
-          role="presentation"
-        />
         <Typography
           variant="body2"
           noWrap
