@@ -12,12 +12,19 @@ import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
+import linodeIcon from 'src/assets/addnewmenu/linode.svg';
+import volumeIcon from 'src/assets/addnewmenu/volume.svg';
+import nodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 
-type CSSClasses = 'root' | 'button' | 'caret';
+
+type CSSClasses = 'root' | 'menu' | 'button' | 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     flex: 1,
+  },
+  menu: {
+    padding: 0,
   },
   button: {
     paddingRight: 22,
@@ -50,6 +57,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
         e.preventDefault();
       },
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      icon: linodeIcon,
     },
     {
       title: 'Volume',
@@ -57,6 +65,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
         e.preventDefault();
       },
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      icon: volumeIcon,
     },
     {
       title: 'NodeBalancer',
@@ -64,6 +73,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
         e.preventDefault();
       },
       body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      icon: nodebalancerIcon,
     },
   ];
 
@@ -102,9 +112,10 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
-          anchorOrigin={{ vertical: 50, horizontal: 'left' }}
+          PaperProps={{ square: true, className: 'ovds ab' }}
+          anchorOrigin={{ vertical: 65, horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          PaperProps={{ square: true }}
+          MenuListProps={{ className: classes.menu }}
         >
           {this.items.map((i, idx) =>
             <AddNewMenuItem

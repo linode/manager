@@ -57,6 +57,7 @@ const LinodeTheme: Linode.Theme = {
   },
   bg: {
     main: '#f4f4f4',
+    offWhite: '#fbfbfb',
     navy: '#32363C',
   },
 };
