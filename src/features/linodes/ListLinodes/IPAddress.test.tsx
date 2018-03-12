@@ -9,6 +9,7 @@ describe('IPAddress', () => {
         ips={['8.8.8.8']}
       />,
     );
+
     const rendered = result.find('IPAddress');
     const ipText = result.find('Typography').text();
 
@@ -16,25 +17,15 @@ describe('IPAddress', () => {
     expect(ipText).toBe('8.8.8.8');
   });
 
-  it('should render an Overflow component with more than 1 address', () => {
+  it('should render ShowMore with props.items = IPs', () => {
     const result = mount(
       <IPAddress
         ips={['8.8.8.8', '8.8.4.4']}
       />,
     );
-    const overflow = result.find('OverflowIPs');
+    const showmore = result.find('ShowMore');
 
-    expect(overflow).toHaveLength(1);
-  });
-
-  it('should render only one icon', () => {
-    const result = mount(
-      <IPAddress
-        ips={['8.8.8.8', '8.8.4.4']}
-      />,
-    );
-    const icon = result.find('SvgIcon');
-
-    expect(icon).toHaveLength(1);
+    expect(showmore.exists()).toBe(true);
+    expect(showmore.prop('items')).toEqual(['8.8.4.4']);
   });
 });

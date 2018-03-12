@@ -8,18 +8,22 @@ import {
 import Typography from 'material-ui/Typography';
 import * as copy from 'copy-to-clipboard';
 
-import OverflowIPs from './OverflowIPs';
-
+import LinodeTheme from 'src/theme';
+import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-type CSSClasses =  'root' | 'left' | 'right' | 'icon';
+type CSSClasses =  'root' | 'left' | 'right' | 'icon' | 'row';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     alignItems: 'center',
   },
+  row: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   left: {
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
   },
   right: {
     marginLeft: theme.spacing.unit,
@@ -29,6 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: '0.8125rem',
     width: '0.8125rem',
     cursor: 'pointer',
+    color: LinodeTheme.palette.primary.main,
   },
 });
 
@@ -38,27 +43,40 @@ interface Props {
 }
 
 class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
-  renderCopyIcon() {
-    const { classes, ips, copyRight } = this.props;
+  renderCopyIcon = (ip: string) => {
+    const { classes, copyRight } = this.props;
 
     return <ContentCopyIcon
       className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
-      onClick={() => copy(ips[0])}
+      onClick={() => copy(ip)}
     />;
   }
 
-  render(): React.ReactElement<typeof IPAddress> {
+  renderIP = (ip: string, copyRight?: Boolean, key?: number) => {
+    const { classes } = this.props;
+    return (
+      <div key={key} className={classes.row}>
+        <Typography>
+          {ip}
+        </Typography>
+        {!copyRight && this.renderCopyIcon(ip)}
+        {copyRight && this.renderCopyIcon(ip)}
+      </div>
+    );
+  }
+
+  render() {
     const { classes, ips, copyRight } = this.props;
 
     return (
       <div className={`dif ${classes.root}`}>
-        {!copyRight && this.renderCopyIcon()}
-        <Typography>
-          {ips[0]}
-        </Typography>
-        {copyRight && this.renderCopyIcon()}
-        {ips.length > 1 && 
-          <OverflowIPs ips={ips.slice(1)} />
+        { this.renderIP(ips[0], copyRight) }
+        {
+          ips.length > 1 && <ShowMore
+            items={ips.splice(1)}
+            render={(ips: string[]) => {
+              return ips.map((ip, idx) => this.renderIP(ip, copyRight, idx));
+            }} />
         }
       </div>
     );
