@@ -44,7 +44,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '1rem',
     lineHeight: '1.3em',
     color: LinodeTheme.palette.text.primary,
-    transition: 'background-color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:hover': {
       backgroundColor: 'transparent',
       '& $icon': {
