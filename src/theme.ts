@@ -9,6 +9,11 @@ const LinodeTheme: Linode.Theme = {
         padding: '12px 28px 14px',
       },
     },
+    Popover: {
+      root: {
+        borderRadius: 0,
+      },
+    },
   },
   palette: {
     primary: {

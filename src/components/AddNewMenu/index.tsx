@@ -102,8 +102,9 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
-          anchorOrigin={{ vertical: 40, horizontal: 'left' }}
+          anchorOrigin={{ vertical: 50, horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          PaperProps={{ square: true }}
         >
           {this.items.map((i, idx) =>
             <AddNewMenuItem
