@@ -38,10 +38,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   titleLink: {
     textDecoration: 'none',
     color: 'black',
-    fontSize: '1.1rem',
+    fontSize: '1.18rem',
   },
   body: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: 3,
+    fontSize: '.9rem',
     lineHeight: '1.1rem',
   },
 });
