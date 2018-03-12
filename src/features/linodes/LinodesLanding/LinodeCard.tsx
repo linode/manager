@@ -86,7 +86,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  linode: Linode.Linode;
+  linode: (Linode.Linode & { recentEvent?: Linode.Event });
   image?: Linode.Image;
   type?: Linode.LinodeType;
 }

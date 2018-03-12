@@ -11,7 +11,7 @@ import TableRow from 'material-ui/Table/TableRow';
 import LinodeRow from './LinodeRow';
 
 interface Props {
-  linodes: Linode.Linode[];
+  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
 }

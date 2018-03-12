@@ -9,7 +9,7 @@ function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-export const linodeEvents$ = new Rx.Subject();
+export const linodeEvents$ = new Rx.Subject<Linode.Event>();
 
 let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean} = {};
@@ -98,9 +98,4 @@ setInterval(
   },
   /* the following is the Nyquist rate for the minimum polling interval */
   (initialPollInterval / 2 - 1),
-);
-
-linodeEvents$
-  .subscribe(
-    (event: Linode.Event) => console.log('Event: ', event),
 );
