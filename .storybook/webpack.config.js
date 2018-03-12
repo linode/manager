@@ -1,5 +1,6 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
+const includePath = path.resolve(__dirname, '..');
 
 const paths = require('../config/paths');
 // you can use this file to add your custom webpack plugins, loaders and anything you like.
@@ -25,6 +26,26 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        include: includePath,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: false,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|svg)$/,
+        include: includePath,
+        use: 'url-loader'
+      },
       {
         test: /\.tsx?$/,
         include: paths.appSrc,
