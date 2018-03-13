@@ -7,6 +7,9 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '1rem',
         fontWeight: 700,
         padding: '12px 28px 14px',
+        '&:hover, &:focus': {
+          backgroundColor: '#fff',
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
