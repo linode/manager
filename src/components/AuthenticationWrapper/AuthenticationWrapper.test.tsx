@@ -2,7 +2,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
 
-import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper';
+import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 describe('AuthenticationWrapper', () => {
   const mockRedirect = jest.fn();

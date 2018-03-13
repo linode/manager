@@ -13,7 +13,7 @@ import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
