@@ -15,21 +15,21 @@ let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean} = {};
 
 const initialPollInterval = 1000;
-let currentPollIntervalMultiplier = 1;
-let eventRequestDeadline = Date.now();
+export let eventRequestDeadline = Date.now();
+export let currentPollIntervalMultiplier = 1;
 
 export function resetEventsPolling() {
   eventRequestDeadline = Date.now() + initialPollInterval;
   currentPollIntervalMultiplier = 1;
 }
 
-function generateInFilter(keyName: string, arr: any[]) {
+export function generateInFilter(keyName: string, arr: any[]) {
   return {
     '+or': arr.map(el => ({ [keyName]: el })),
   };
 }
 
-function generatePollingFilter(datestamp: string, pollIDs: string[]) {
+export function generatePollingFilter(datestamp: string, pollIDs: string[]) {
   return pollIDs.length ?
     {
       '+or': [
@@ -44,7 +44,7 @@ function generatePollingFilter(datestamp: string, pollIDs: string[]) {
 
 type EventResponse = AxiosResponse<Linode.ManyResourceState<Linode.Event>>;
 
-function requestEvents() {
+export function requestEvents() {
   Axios.get(
     `${API_ROOT}/account/events`,
     { headers: { 'X-Filter': JSON.stringify(
