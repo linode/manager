@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Grid from 'material-ui/Grid';
 
-import  { Action } from 'src/components/ActionMenu';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import LinodeCard from './LinodeCard';
 
