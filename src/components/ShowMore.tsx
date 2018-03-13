@@ -79,11 +79,11 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 28,
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
         >
           {render(items)}
