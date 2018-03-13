@@ -17,7 +17,7 @@ interface Props {
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, images, types } = props;
+  const { linodes, types } = props;
 
   return (
     <Paper elevation={1}>

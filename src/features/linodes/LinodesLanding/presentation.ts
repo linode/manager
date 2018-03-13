@@ -3,7 +3,7 @@ import Axios from 'axios';
 import { API_ROOT } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 
-import { Action } from 'src/components/ActionMenu';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 
 function titlecase(string: string): string {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
