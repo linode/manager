@@ -54,6 +54,7 @@ const genActionMenuItems = (push: Function) => (linode: Linode.Linode): Action[]
     {
       title: 'Launch Console',
       onClick: (e) => {
+        push(`/linodes/${linode.id}/glish`);
         e.preventDefault();
       },
     },
