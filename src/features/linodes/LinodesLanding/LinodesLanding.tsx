@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Axios from 'axios';
 import * as moment from 'moment';
-import { pathOr, clone } from 'ramda';
+import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
 import { connect } from 'react-redux';
 
 import { API_ROOT } from 'src/constants';
@@ -142,13 +142,31 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             return <ListLinodesEmptyState />;
           }
 
+          const displayGrid: 'grid' | 'list' = compose(
+            ifElse(
+              compose(isEmpty, prop('hash')),
+              /* is empty */
+              ifElse(
+                compose(gte(3), prop('length')),
+                () => 'grid',
+                () => 'list',
+              ),
+              /* is not empty */
+              ifElse(
+                propEq('hash', '#grid'),
+                () => 'grid',
+                () => 'list',
+              ),
+            ),
+          )({ hash, length: linodes.length });
+
           return (
             <React.Fragment>
               <ToggleBox
                 handleClick={this.changeViewStyle}
-                status={hash === '#grid' ? 'grid' : 'list'}
+                status={displayGrid}
               />
-              {hash === '#grid'
+              {displayGrid === 'grid'
                 ? <LinodesGridView
                   linodes={linodes}
                   images={images}
