@@ -12,14 +12,12 @@ import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
-import ActionMenu from 'src/components/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
-import { actions } from './menuActions';
-
 type CSSClasses = 'inlineItems';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -35,13 +33,14 @@ interface Props {
   linode: Linode.Linode;
   type?: Linode.LinodeType;
   image?: Linode.Image;
+  actions: Action[];
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { linode, type, image } = this.props;
+    const { linode, type, image, actions } = this.props;
     const specsLabel = type && image && displayLabel(type.memory, image.label);
 
     /**
