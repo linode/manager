@@ -17,12 +17,11 @@ import Replay from 'material-ui-icons/Replay';
 import CloudCircle from 'material-ui-icons/CloudCircle';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
-import ActionMenu from 'src/components/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
-import { actions } from './menuActions';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -89,6 +88,7 @@ interface Props {
   linode: Linode.Linode;
   image?: Linode.Image;
   type?: Linode.LinodeType;
+  actions: Action[];
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -108,7 +108,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, linode, image, type } = this.props;
+    const { classes, linode, image, type, actions } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
