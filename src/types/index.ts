@@ -16,7 +16,7 @@ namespace Linode {
   export type Hypervisor = 'kvm' | 'zen';
 
   export interface ManyResourceState<T> {
-    data?: T[];
+    data: T[];
     page: number;
     pages: number;
     results: number;
@@ -52,5 +52,20 @@ namespace Linode {
   export interface PriceObject {
     monthly: number;
     hourly: number;
+  }
+
+  export interface EventEntity {
+    id: number;
+    label: string;
+    type: string;
+    url: string;
+  }
+
+  export interface Event {
+    id: number;
+    seen: Boolean;
+    created: string;
+    percent_complete: number | null;
+    entity: EventEntity | null;
   }
 }
