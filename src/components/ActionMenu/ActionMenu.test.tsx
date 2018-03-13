@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import ActionMenu from './ActionMenu';
 
@@ -8,17 +9,25 @@ describe('ActionMenu', () => {
     return [action];
   };
   const createActionsMany = (push: Function, closeMenu: Function) => {
-    return [action];
+    return [action, action, action];
   };
 
   it('should render a link when provided one action.', () => {
-    const result = mount(<ActionMenu createActions={createActionsOne} />);
+    const result = mount(
+      <StaticRouter>
+        <ActionMenu createActions={createActionsOne} />
+      </StaticRouter>,
+    );
     expect(result.find('a')).toHaveLength(1);
   });
   
   it('should render a menu when provided many actions.', () => {
-    const result = mount(<ActionMenu createActions={createActionsMany}/>);
-    expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
+    const result = mount(
+      <StaticRouter>
+        <ActionMenu createActions={createActionsMany}/>
+      </StaticRouter>,
+    );
+    expect(result.find('withRouter(ActionMenu)')).toHaveLength(1);
 
     result.find('IconButton').simulate('click');
     expect(result.find('WithStyles(MenuItem)')).toHaveLength(3);

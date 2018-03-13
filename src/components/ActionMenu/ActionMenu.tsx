@@ -70,14 +70,9 @@ class ActionMenu extends React.Component<FinalProps, State> {
     if (typeof actions === 'undefined') { return null; }
 
     return actions.length === 1
-<<<<<<< HEAD
-      ? actions.map((a, idx) => <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
-      : (<div className={classes.buttonWrapper}>
-=======
       ? (actions as Action[]).map((a, idx) =>
           <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
       : (<div>
->>>>>>> 2165a2eb... refactor menu action generation to allow menu close
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"
