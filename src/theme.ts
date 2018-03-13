@@ -67,6 +67,7 @@ const LinodeTheme: Linode.Theme = {
     text: {
       primary: '#666',
     },
+    divider: '#f4f4f4',
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
