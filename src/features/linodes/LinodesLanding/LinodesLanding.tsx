@@ -74,6 +74,7 @@ const genActionMenuItems = (push: Function) => (linode: Linode.Linode): Action[]
     {
       title: 'Resize',
       onClick: (e) => {
+        push(`/linodes/${linode.id}/resize`);
         e.preventDefault();
       },
     },
