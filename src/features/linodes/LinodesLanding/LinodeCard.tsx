@@ -12,8 +12,6 @@ import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import CallToAction from 'material-ui-icons/CallToAction';
-import Replay from 'material-ui-icons/Replay';
 import CloudCircle from 'material-ui-icons/CloudCircle';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
@@ -47,6 +45,7 @@ const distroIcons = {
 
 type CSSClasses = 
   'cardSection'
+  | 'cardHeader'
   | 'distroIcon'
   | 'rightMargin'
   | 'cardActions'
@@ -57,6 +56,10 @@ type CSSClasses =
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
     marginTop: theme.spacing.unit * 2,
+  },
+  cardHeader: {
+    fontWeight: 700,
+    color: 'black',
   },
   distroIcon: {
     marginTop: theme.spacing.unit,
@@ -93,14 +96,14 @@ interface Props {
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   renderTitle() {
-    const { linode } = this.props;
+    const { linode, classes } = this.props;
 
     return (
       <Grid container>
-        <Grid item xs={1}>
+        <Grid item className={'py0'}>
           <LinodeStatusIndicator status={linode.status} />
         </Grid>
-        <Grid item xs={11}>
+        <Grid item alignItems="center" className={classes.cardHeader + ' py0'}>
           {linode.label}
         </Grid>
       </Grid>
@@ -119,7 +122,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
       <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>
           <CardHeader
-            title={this.renderTitle()}
+            subheader={this.renderTitle()}
             action={
               <ActionMenu actions={actions} />
             }
@@ -164,11 +167,9 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <Divider />
           <CardActions className={classes.cardActions}>
             <Button className={`${classes.button} ${classes.consoleButton}`}>
-              <CallToAction className={classes.rightMargin}/>
               Launch Console
             </Button>
             <Button className={`${classes.button} ${classes.rebootButton}`}>
-              <Replay className={classes.rightMargin}/>
               Reboot
             </Button>
           </CardActions>

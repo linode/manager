@@ -12,7 +12,6 @@ import {
   Theme,
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import Divider from 'material-ui/Divider';
 import { ListItem, ListItemText } from 'material-ui/List';
 import LinodeTheme from 'src/theme';
 
@@ -40,6 +39,7 @@ const primaryLinks: PrimaryLink[] = [
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   headerGrid: {
+    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
     minHeight: 64,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
@@ -53,6 +53,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   listItem: {
     padding: '16px 40px 16px 34px',
+    borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
   },
   linkItem: {
@@ -141,7 +142,6 @@ class PrimaryNav extends React.Component<Props> {
             <img width="120" height="48" src={logoPng} />
           </Grid>
         </Grid>
-        <Divider />
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
       </React.Fragment>
     );
