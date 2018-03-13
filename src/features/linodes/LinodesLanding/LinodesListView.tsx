@@ -20,7 +20,7 @@ interface Props {
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, images, types, createActions } = props;
+  const { linodes, types, createActions } = props;
 
   return (
     <Paper elevation={1}>
@@ -41,7 +41,6 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                 <LinodeRow
                   key={linode.id}
                   linode={linode}
-                  image={images.find(image => linode.image === image.id)}
                   type={types.find(type => linode.type === type.id)}
                   actions={createActions(linode)}
                 />,

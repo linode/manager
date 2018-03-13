@@ -19,8 +19,8 @@ export function typeLabel(memory?: number) {
   return `Linode ${memory / 1024}G`;
 }
 
-export function displayLabel(memory?: number, label?: string): string | undefined {
-  if (!label || !memory) { return; }
-  return `${label}, ${typeLabel(memory)}`;
+export function displayLabel(memory?: number): string | undefined {
+  if (!memory) { return; }
+  return `${typeLabel(memory)}`;
 }
 
