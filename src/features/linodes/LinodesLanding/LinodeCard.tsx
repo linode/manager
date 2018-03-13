@@ -13,11 +13,11 @@ import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
-import { typeLabelLong } from './presentation';
+import { typeLabelLong, createLinodeActions } from './presentation';
 
 type CSSClasses = 
   'cardSection'
@@ -86,7 +86,6 @@ interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   image?: Linode.Image;
   type?: Linode.LinodeType;
-  actions: Action[];
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -106,7 +105,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, linode, image, type, actions } = this.props;
+    const { classes, linode, image, type } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
@@ -119,7 +118,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <ActionMenu actions={actions} />
+              <ActionMenu createActions={createLinodeActions(linode)} />
             }
           />
           {<Divider />}
