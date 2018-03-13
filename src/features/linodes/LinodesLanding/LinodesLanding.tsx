@@ -66,6 +66,7 @@ const genActionMenuItems = (push: Function) => (linode: Linode.Linode): Action[]
     {
       title: 'View Graphs',
       onClick: (e) => {
+        push(`/linodes/${linode.id}/summary`);
         e.preventDefault();
       },
     },
