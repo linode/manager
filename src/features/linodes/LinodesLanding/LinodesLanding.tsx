@@ -5,7 +5,7 @@ import { pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
 import { API_ROOT } from 'src/constants';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import {
   withRouter,
   RouteComponentProps,
@@ -14,7 +14,7 @@ import {
 import { linodeEvents$ } from 'src/events';
 import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
-import  { Action } from 'src/components/ActionMenu';
+import  { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
