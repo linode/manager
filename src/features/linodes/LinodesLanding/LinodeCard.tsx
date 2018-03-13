@@ -21,7 +21,9 @@ import { typeLabelLong } from './presentation';
 
 type CSSClasses = 
   'cardSection'
+  | 'flexContainer'
   | 'cardHeader'
+  | 'cardContent'
   | 'distroIcon'
   | 'rightMargin'
   | 'cardActions'
@@ -37,9 +39,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '90%',
     color: LinodeTheme.palette.text.primary,
   },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
   cardHeader: {
     fontWeight: 700,
     color: 'black',
+  },
+  cardContent: {
+    flex: 1,
   },
   distroIcon: {
     marginTop: theme.spacing.unit,
@@ -55,15 +65,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   button: {
     height: '100%',
     margin: 0,
+    borderTop: '1px solid ' + LinodeTheme.palette.divider,
   },
   consoleButton: {
-    width: '60%',
-    borderColor: 'rgba(0, 0, 0, 0.12)',
-    border: '1px solid',
-    borderWidth: '0 1px 0 0',
+    width: '50%',
+    borderColor: theme.pale,
+    borderRight: '1px solid ' + LinodeTheme.palette.divider,
   },
   rebootButton: {
-    width: '40%',
+    width: '50%',
   },
 });
 
@@ -99,8 +109,8 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const tags = [linode.group].filter(Boolean);
 
     return (
-      <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Card>
+      <Grid item xs={12} sm={6} lg={4}>
+        <Card className={classes.flexContainer}>
           <CardHeader
             subheader={this.renderTitle()}
             action={
@@ -108,7 +118,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             }
           />
           {<Divider />}
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <div>
               {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
@@ -123,24 +133,21 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             </div>
             }
             <div className={classes.cardSection}>
-              <div>
-                <IPAddress ips={linode.ipv4} copyRight />
-              </div>
-              <div>
-                <IPAddress ips={[linode.ipv6]} copyRight />
-              </div>
+              <IPAddress ips={linode.ipv4} copyRight />
+            </div>
+            <div className={classes.cardSection}>
+              <IPAddress ips={[linode.ipv6]} copyRight />
             </div>
             <div className={classes.cardSection}>
               <RegionIndicator region={linode.region} />
             </div>
           </CardContent>
-          <Divider />
           <CardActions className={classes.cardActions}>
             <Button className={`${classes.button} ${classes.consoleButton}`}>
-              Launch Console
+              <span className="btnLink">Launch Console</span>
             </Button>
             <Button className={`${classes.button} ${classes.rebootButton}`}>
-              Reboot
+              <span className="btnLink">Reboot</span>
             </Button>
           </CardActions>
         </Card>
