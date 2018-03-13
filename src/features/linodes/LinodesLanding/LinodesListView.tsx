@@ -8,19 +8,16 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import { Action } from 'src/components/ActionMenu/ActionMenu';
-
 import LinodeRow from './LinodeRow';
 
 interface Props {
   linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
-  createActions: (l: Linode.Linode) => Action[];
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types, createActions } = props;
+  const { linodes, images, types } = props;
 
   return (
     <Paper elevation={1}>
@@ -42,7 +39,6 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   key={linode.id}
                   linode={linode}
                   type={types.find(type => linode.type === type.id)}
-                  actions={createActions(linode)}
                 />,
               )}
             </TableBody>

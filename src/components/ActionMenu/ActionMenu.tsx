@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import {
   withStyles, WithStyles, StyleRulesCallback, Theme,
@@ -31,17 +32,28 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  actions: Action[];
+  createActions: (push: Function, closeMenu: Function) => Action[];
 }
 
 interface State {
+  actions?: Action[];
   anchorEl?: Linode.TodoAny;
 }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type FinalProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
-class ActionMenu extends React.Component<PropsWithStyles, State> {
-  state = { anchorEl: undefined };
+class ActionMenu extends React.Component<FinalProps, State> {
+  state = {
+    actions: [],
+    anchorEl: undefined,
+  };
+
+  componentDidMount() {
+    const { createActions, history } = this.props;
+    this.setState({
+      actions: createActions(history.push, this.handleClose),
+    });
+  }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -52,12 +64,20 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
   }
 
   render() {
-    const { actions, classes } = this.props;
-    const { anchorEl } = this.state;
+    const { classes  } = this.props;
+    const { actions, anchorEl  } = this.state;
+
+    if (typeof actions === 'undefined') { return null; }
 
     return actions.length === 1
+<<<<<<< HEAD
       ? actions.map((a, idx) => <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
       : (<div className={classes.buttonWrapper}>
+=======
+      ? (actions as Action[]).map((a, idx) =>
+          <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
+      : (<div>
+>>>>>>> 2165a2eb... refactor menu action generation to allow menu close
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"
@@ -75,7 +95,7 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          {actions.map((a, idx) =>
+          {(actions as Action[]).map((a, idx) =>
             <MenuItem
               key={idx}
               onClick={a.onClick}
@@ -87,4 +107,6 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(ActionMenu);
+export const RoutedActionMenu = withRouter(ActionMenu);
+
+export default withStyles(styles, { withTheme: true })<Props>(RoutedActionMenu);

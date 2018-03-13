@@ -13,7 +13,6 @@ describe('LinodesGridView', () => {
           linodes={linodes as Linode.Linode[]}
           images={images as Linode.Image[]}
           types={types as Linode.LinodeType[]}
-          createActions={jest.fn(() => ([]))}
         />
       </StaticRouter>,
     );
