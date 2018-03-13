@@ -7,6 +7,7 @@ import {
 } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import * as copy from 'copy-to-clipboard';
+import { tail } from 'ramda';
 
 import LinodeTheme from 'src/theme';
 import ShowMore from 'src/components/ShowMore';
@@ -73,7 +74,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
         { this.renderIP(ips[0], copyRight) }
         {
           ips.length > 1 && <ShowMore
-            items={ips.splice(1)}
+            items={tail(ips)}
             render={(ips: string[]) => {
               return ips.map((ip, idx) => this.renderIP(ip, copyRight, idx));
             }} />
