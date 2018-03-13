@@ -78,6 +78,7 @@ const genActionMenuItems = (push: Function) => (linode: Linode.Linode): Action[]
     {
       title: 'View Backups',
       onClick: (e) => {
+        push(`/linodes/${linode.id}/backups`);
         e.preventDefault();
       },
     },
