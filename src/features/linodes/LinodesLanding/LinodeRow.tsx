@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  linode: Linode.Linode;
+  linode: (Linode.Linode & { recentEvent?: Linode.Event });
   type?: Linode.LinodeType;
   image?: Linode.Image;
   actions: Action[];

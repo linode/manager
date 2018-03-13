@@ -7,7 +7,7 @@ import  { Action } from 'src/components/ActionMenu';
 import LinodeCard from './LinodeCard';
 
 interface Props {
-  linodes: Linode.Linode[];
+  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
   createActions: (l: Linode.Linode) => Action[];
