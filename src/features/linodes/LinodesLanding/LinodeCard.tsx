@@ -63,6 +63,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: 0,
   },
   button: {
+    padding: '12px 12px 14px',
     height: '100%',
     margin: 0,
     borderTop: '1px solid ' + LinodeTheme.palette.divider,
