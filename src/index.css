@@ -64,3 +64,15 @@ html {
   font-weight: 400;
   font-size: 90%;
 }
+.t-table thead {
+  background-color: #FBFBFB;
+  border-bottom: 1px solid #f4f4f4;
+}
+
+.t-table th {
+  font-size: .9rem;
+}
+
+.t-table td {
+  font-size: .9rem;
+}

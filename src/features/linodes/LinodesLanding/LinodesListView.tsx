@@ -25,8 +25,8 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
   return (
     <Paper elevation={1}>
       <Grid container>
-        <Grid item xs={12}>
-          <Table>
+        <Grid item xs={12} className="py0">
+          <Table className="t-table">
             <TableHead>
               <TableRow>
                 <TableCell>Linode</TableCell>

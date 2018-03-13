@@ -72,6 +72,14 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
       },
     },
+    MuiTableCell: {
+      root: {
+        padding: '8px !important',
+      },
+      body: {
+        fontSize: '1rem',
+      },
+    },
   },
   palette: {
     primary: {
