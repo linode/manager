@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter } from 'react-router-dom';
-import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { RoutedListLinodes } from './LinodesLanding';
 import {
   linodes as mockLinodes,

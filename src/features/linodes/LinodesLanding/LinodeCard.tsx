@@ -17,7 +17,7 @@ import Replay from 'material-ui-icons/Replay';
 import CloudCircle from 'material-ui-icons/CloudCircle';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';

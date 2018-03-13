@@ -8,7 +8,7 @@ import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
-import  { Action } from 'src/components/ActionMenu';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import LinodeRow from './LinodeRow';
 
