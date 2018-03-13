@@ -32,7 +32,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   type?: Linode.LinodeType;
-  image?: Linode.Image;
   actions: Action[];
 }
 
@@ -40,8 +39,8 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { linode, type, image, actions } = this.props;
-    const specsLabel = type && image && displayLabel(type.memory, image.label);
+    const { linode, type, actions } = this.props;
+    const specsLabel = type && displayLabel(type.memory);
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
