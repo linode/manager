@@ -13,7 +13,7 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
+import LinodeStatusIndicator from './LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';

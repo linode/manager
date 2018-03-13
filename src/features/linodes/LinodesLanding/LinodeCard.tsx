@@ -16,13 +16,14 @@ import CallToAction from 'material-ui-icons/CallToAction';
 import Replay from 'material-ui-icons/Replay';
 import CloudCircle from 'material-ui-icons/CloudCircle';
 
-import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
+import LinodeStatusIndicator from './LinodeStatusIndicator';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
 import CircleProgress from 'src/components/CircleProgress';
+import transitionStatus from './linodeTransitionStatus';
 
 import Arch from 'src/assets/distros/Arch.png';
 import CentOS from 'src/assets/distros/CentOS.png';
@@ -54,7 +55,7 @@ type CSSClasses =
   | 'button'
   | 'consoleButton'
   | 'rebootButton'
-  | 'statusText';
+    | 'statusText';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
@@ -95,10 +96,6 @@ interface Props {
   image?: Linode.Image;
   type?: Linode.LinodeType;
   actions: Action[];
-  /**
-   * @prop loading - Pass a number for definite loading, 'true' for indefinite loading.
-   */
-  loading?: Boolean | number;
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -121,16 +118,20 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
    * <LinodeCard loading="true" indefinite="true" loadingProgress=75 />
    */
   _loadingState = () => {
-    const { loading, linode, classes } = this.props;
-    
+    const { linode, classes } = this.props;
+
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
+    ? Math.max(linode.recentEvent.percent_complete, 1)
+    : true;
+
     return (
       <CardContent>
         <Grid container>
           <Grid item xs={12}>
-            <CircleProgress value={loading} />
+            <CircleProgress value={value} />
           </Grid>
           <Grid item xs={12} className={classes.statusText}>
-          <Typography>{linode.status}</Typography>
+          <Typography>{linode.status.replace('_', ' ')}</Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -186,7 +187,9 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
   
   render() {
-    const { classes, actions, loading } = this.props;
+    const { classes, actions } = this.props;
+    const loading = transitionStatus.includes(this.props.linode.status);
+
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>

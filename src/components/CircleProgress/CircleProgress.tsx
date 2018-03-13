@@ -33,7 +33,7 @@ interface Props {
 }
 
 const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
-  const variant = typeof props.value === 'number' ? 'determinate' : 'indeterminate';
+  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
   return (
     <div className={props.classes.root}>
