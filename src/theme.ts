@@ -8,6 +8,49 @@ const LinodeTheme: Linode.Theme = {
         fontWeight: 700,
         padding: '12px 28px 14px',
       },
+      raisedPrimary: {
+        '&:hover, &:focus': {
+          backgroundColor: '#5F99EA',
+        },
+        '&:active': {
+          backgroundColor: '#3566AE',
+        },
+        '&$disabled': {
+          color: 'white',
+        },
+      },
+      raisedSecondary: {
+        backgroundColor: 'transparent',
+        color: '#3B85D9',
+        border: '1px solid #3B85D9',
+        '&:hover, &:focus': {
+          backgroundColor: 'transparent',
+          color: '#5F99EA',
+          borderColor: '#5F99EA',
+        },
+        '&:active': {
+          backgroundColor: 'transparent',
+          color: '#3566AE',
+          borderColor: '#3566AE',
+        },
+        '&$disabled': {
+          borderColor: '#C9CACB',
+          backgroundColor: 'transparent',
+          color: '#C9CACB',
+        },
+        '&.destructive': {
+          borderColor: '#C44742',
+          color: '#C44742',
+          '&:hover, &:focus': {
+            color: '#DF6560',
+            borderColor: '#DF6560',
+          },
+          '&:active': {
+            color: '#963530',
+            borderColor: '#963530',
+          },
+        },
+      },
     },
     Popover: {
       root: {
@@ -18,6 +61,8 @@ const LinodeTheme: Linode.Theme = {
   palette: {
     primary: {
       main: '#3B85D9',
+      light: '#5F99EA',
+      dark: '#3566AE',
     },
     text: {
       primary: '#666',
