@@ -34,6 +34,7 @@ type CSSClasses =
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
     marginBottom: theme.spacing.unit,
+    paddingTop: theme.spacing.unit,
     paddingLeft: 5,
     paddingRight: 5,
     fontSize: '90%',
@@ -135,8 +136,6 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             }
             <div className={classes.cardSection}>
               <IPAddress ips={linode.ipv4} copyRight />
-            </div>
-            <div className={classes.cardSection}>
               <IPAddress ips={[linode.ipv6]} copyRight />
             </div>
             <div className={classes.cardSection}>
