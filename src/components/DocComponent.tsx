@@ -37,9 +37,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props extends Doc {
-  
-}
+interface Props extends Doc {}
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 

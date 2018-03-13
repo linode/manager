@@ -10,6 +10,7 @@ import {
 import Button from 'material-ui/Button';
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
+import LinodeTheme from 'src/theme';
 
 type CSSClasses =
   'root'
@@ -22,27 +23,52 @@ type CSSClasses =
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     marginBottom: theme.spacing.unit * 2,
+    [theme.breakpoints.up('sm')]: {
+      position: 'absolute',
+      right: theme.spacing.unit,
+      top: theme.spacing.unit,
+      marginBottom: 0,
+    },
   },
   button: {
-    border: '1px solid #333',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: LinodeTheme.color.border1,
+    borderRadius: 0,
+    fontWeight: 700,
+    textTransform: 'inherit',
+    width: 80,
+    minWidth: 80,
+    padding: '6px 14px 5px 12px',
+    minHeight: 'inherit',
+    fontSize: '1rem',
+    lineHeight: '1.3em',
+    color: LinodeTheme.palette.text.primary,
+    '&:hover': {
+      backgroundColor: 'transparent',
+      '& $icon': {
+        opacity: 1,
+      },
+    },
   },
   buttonActive: {
-    backgroundColor: '#333',
-    color: '#f3f3f3',
+    backgroundColor: 'white',
     '&:hover': {
-      backgroundColor: '#333',
+      backgroundColor: 'white',
     },
   },
   buttonLeft: {
-    borderWidth: '1px 0 1px 1px',
-    borderRadius: '5px 0 0 5px',
+    width: 79,
   },
   buttonRight: {
-    borderWidth: '1px 1px 1px 0',
-    borderRadius: '0 5px 5px 0',
+    borderLeftWidth: 0,
   },
   icon: {
-    marginRight: theme.spacing.unit,
+    marginRight: 6,
+    width: 18,
+    height: 18,
+    opacity: .4,
+    transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   },
 });
 
