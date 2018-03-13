@@ -10,9 +10,7 @@ import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
-
-import CloudCircle from 'material-ui-icons/CloudCircle';
+import LinodeTheme from 'src/theme';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
@@ -20,28 +18,6 @@ import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
-
-import Arch from 'src/assets/distros/Arch.png';
-import CentOS from 'src/assets/distros/CentOS.png';
-import ContainerLinux from 'src/assets/distros/ContainerLinux.png';
-import Debian from 'src/assets/distros/Debian.png';
-import Fedora from 'src/assets/distros/Fedora.png';
-import Gentoo from 'src/assets/distros/Gentoo.png';
-import OpenSUSE from 'src/assets/distros/OpenSUSE.png';
-import Slackware from 'src/assets/distros/Slackware.png';
-import Ubuntu from 'src/assets/distros/Ubuntu.png';
-
-const distroIcons = {
-  Arch,
-  CentOS,
-  CoreOS: ContainerLinux,
-  Debian,
-  Fedora,
-  Gentoo,
-  openSUSE: OpenSUSE,
-  Slackware,
-  Ubuntu,
-};
 
 type CSSClasses = 
   'cardSection'
@@ -55,7 +31,11 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
-    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit,
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontSize: '90%',
+    color: LinodeTheme.palette.text.primary,
   },
   cardHeader: {
     fontWeight: 700,
@@ -133,24 +113,14 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
             {image && type &&
+            <div>
               <div className={classes.cardSection}>
-                <Grid container>
-                  <Grid item className="tac" xs={2}>
-                    {image.vendor ?
-                      <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
-                      : <CloudCircle className={classes.distroIcon} />
-                    }
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="subheading">
-                      {image.label}
-                    </Typography>
-                    <Typography>
-                      {typeLabelLong(type.memory, type.disk, type.vcpus)}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                {image.label}
               </div>
+              <div className={classes.cardSection}>
+                {typeLabelLong(type.memory, type.disk, type.vcpus)}
+              </div>
+            </div>
             }
             <div className={classes.cardSection}>
               <div>
