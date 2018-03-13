@@ -41,7 +41,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     color: LinodeTheme.palette.primary.main,
   },
   ip: {
-    overflowX: 'scroll',
+    fontSize: 14,
   },
 });
 
