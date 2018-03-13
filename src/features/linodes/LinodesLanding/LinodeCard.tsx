@@ -99,11 +99,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const { linode, classes } = this.props;
 
     return (
-      <Grid container>
+      <Grid container alignItems="center">
         <Grid item className={'py0'}>
           <LinodeStatusIndicator status={linode.status} />
         </Grid>
-        <Grid item alignItems="center" className={classes.cardHeader + ' py0'}>
+        <Grid item className={classes.cardHeader + ' py0'}>
           {linode.label}
         </Grid>
       </Grid>
