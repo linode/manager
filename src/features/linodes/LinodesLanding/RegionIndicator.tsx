@@ -5,7 +5,6 @@ import {
   WithStyles,
   StyleRulesCallback,
 } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
 
 import { formatRegion } from './presentation';
 
@@ -27,12 +26,7 @@ class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses> > {
 
     return (
       <div className={`dif ${classes.regionIndicator}`}>
-        <Typography
-          variant="body2"
-          noWrap
-        >
-          {formatRegion(region)}
-        </Typography>
+        {formatRegion(region)}
       </div>
     );
   }

@@ -7,6 +7,9 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '1rem',
         fontWeight: 700,
         padding: '12px 28px 14px',
+        '&:hover, &:focus': {
+          backgroundColor: '#fff',
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {
@@ -57,6 +60,18 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
       },
     },
+    MuiChip: {
+      root: {
+        backgroundColor: '#eee',
+        height: 20,
+        borderRadius: 4,
+        color: '#555',
+      },
+      label: {
+        paddingLeft: 4,
+        paddingRight: 4,
+      },
+    },
   },
   palette: {
     primary: {
@@ -67,6 +82,7 @@ const LinodeTheme: Linode.Theme = {
     text: {
       primary: '#666',
     },
+    divider: '#f4f4f4',
   },
   typography: {
     fontFamily: '"Lato", sans-serif',

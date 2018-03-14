@@ -25,6 +25,30 @@ html {
   opacity: .5;
 }
 
+/* Reusable Classes */
+.p0 {
+  padding: 0 !important;
+}
+.m0 {
+  margin: 0 !important;
+}
+.px0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.py0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.mx0 {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.my0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
 .ovds {
   box-shadow: 0 0 5px #ddd !important;
 }
@@ -33,4 +57,10 @@ html {
   position: absolute;
   outline: 0;
   padding: 0;
+}
+
+.btnLink {
+  color: #5F99EA;
+  font-weight: 400;
+  font-size: 90%;
 }
