@@ -47,19 +47,20 @@ class ActionMenu extends React.Component<FinalProps, State> {
     anchorEl: undefined,
   };
 
-  generateActions() {
-    const { createActions } = this.props;
+  generateActions(createActions: Linode.TodoAny) {
     this.setState({
       actions: createActions(this.handleClose),
     });
   }
 
   componentDidMount() {
-    this.generateActions();
+    const { createActions } = this.props;
+    this.generateActions(createActions);
   }
 
-  componentWillReceiveProps() {
-    this.generateActions();
+  componentWillReceiveProps(nextProps: Props) {
+    const { createActions } = nextProps;
+    this.generateActions(createActions);
   }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
