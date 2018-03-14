@@ -12,12 +12,12 @@ import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
+import LinodeActionMenu from './LinodeActionMenu';
 
 type ClassNames = 'linodeCell'
 | 'tagsCell'
@@ -60,19 +60,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   type?: Linode.LinodeType;
-  actions: Action[];
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, linode, type, actions } = this.props;
+    const { linode, type, classes } = this.props;
     const specsLabel = type && displayLabel(type.memory);
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
-     * */
+     **/
     const tags = [linode.group].filter(Boolean);
 
     return (
@@ -104,8 +103,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         <TableCell className={classes.regionCell}>
           <RegionIndicator region={linode.region} />
         </TableCell>
-        <TableCell className={classes.actionCell}>
-          <ActionMenu actions={actions} />
+        <TableCell>
+          <LinodeActionMenu linode={linode} />
         </TableCell>
       </TableRow >
     );
