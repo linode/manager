@@ -48,7 +48,6 @@ html {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-
 .ovds {
   box-shadow: 0 0 5px #ddd !important;
 }
@@ -63,17 +62,4 @@ html {
   color: #5F99EA;
   font-weight: 400;
   font-size: 90%;
-}
-.t-table thead {
-  background-color: #FBFBFB;
-}
-
-.t-table th {
-  font-size: .9rem;
-  border-bottom: 1px solid #f4f4f4;
-}
-
-.t-table td {
-  font-size: .9rem;
-  border-bottom: 1px solid #f4f4f4;
 }

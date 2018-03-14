@@ -72,12 +72,21 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
       },
     },
+    MuiTableHead: {
+      root: {
+        backgroundColor: '#fbfbfb',
+      },
+    },
     MuiTableCell: {
       root: {
-        padding: '18px !important',
+        padding: '18px',
+        borderBottom: '1px solid #f4f4f4',
+      },
+      head: {
+        fontSize: '.9rem',
       },
       body: {
-        fontSize: '1rem',
+        fontSize: '.9rem',
       },
     },
   },
