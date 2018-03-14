@@ -12,12 +12,12 @@ import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
-import ActionMenu from 'src/components/ActionMenu';
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
-import { displayLabel, createLinodeActions } from './presentation';
+import { displayLabel } from './presentation';
+import LinodeActionMenu from './LinodeActionMenu';
 type CSSClasses = 'inlineItems';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -74,7 +74,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell>
-          <ActionMenu createActions={createLinodeActions(linode)}/>
+          <LinodeActionMenu linode={linode} />
         </TableCell>
       </TableRow >
     );

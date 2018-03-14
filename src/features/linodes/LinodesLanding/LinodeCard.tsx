@@ -13,11 +13,11 @@ import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
-import ActionMenu from 'src/components/ActionMenu';
 import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
-import { typeLabelLong, createLinodeActions } from './presentation';
+import LinodeActionMenu from './LinodeActionMenu';
+import { typeLabelLong } from './presentation';
 
 type CSSClasses = 
   'cardSection'
@@ -118,7 +118,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <ActionMenu createActions={createLinodeActions(linode)} />
+              <LinodeActionMenu linode={linode} />
             }
           />
           {<Divider />}

@@ -5,10 +5,10 @@ import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {
   const action = { title: 'whatever', onClick: () => undefined };
-  const createActionsOne = (push: Function, closeMenu: Function) => {
+  const createActionsOne = (closeMenu: Function) => {
     return [action];
   };
-  const createActionsMany = (push: Function, closeMenu: Function) => {
+  const createActionsMany = (closeMenu: Function) => {
     return [action, action, action];
   };
 
@@ -27,7 +27,7 @@ describe('ActionMenu', () => {
         <ActionMenu createActions={createActionsMany}/>
       </StaticRouter>,
     );
-    expect(result.find('withRouter(ActionMenu)')).toHaveLength(1);
+    expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 
     result.find('IconButton').simulate('click');
     expect(result.find('WithStyles(MenuItem)')).toHaveLength(3);
