@@ -232,6 +232,7 @@ const LinodeTheme: Linode.Theme = {
     headline: '#333',
     grey1: '#ABADAF',
     red: '#CA0813',
+    grey2: '#E7E7E7',
     green: '#00B159',
     border1: '#ABADAF',
   },
