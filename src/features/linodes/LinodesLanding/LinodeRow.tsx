@@ -18,16 +18,44 @@ import Tag from 'src/components/Tag';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
-type CSSClasses = 'inlineItems';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
-  inlineItems: {
-    lineHeight: '30px',
-    verticalAlign: 'middle',
-    display: 'inline-flex',
-    margin: '0 3px',
-  },
-});
+type ClassNames = 'linodeCell'
+| 'tagsCell'
+| 'ipCell'
+| 'ipCellInner'
+| 'regionCell'
+| 'actionCell';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
+  return ({
+    linodeCell: {
+      width: '30%',
+    },
+    tagsCell: {
+      width: '15%',
+    },
+    ipCell: {
+      width: '30%',
+    },
+    regionCell: {
+      width: '15%',
+    },
+    actionCell: {
+      width: '10%',
+    },
+    ipCellInner: {
+      maxWidth: 100,
+      display: 'block',
+      overflow: 'auto',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 200,
+      },
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: 300,
+      },
+    },
+  });
+};
 
 interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
@@ -35,11 +63,11 @@ interface Props {
   actions: Action[];
 }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { linode, type, actions } = this.props;
+    const { classes, linode, type, actions } = this.props;
     const specsLabel = type && displayLabel(type.memory);
 
     /**
@@ -49,12 +77,12 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableRow key={linode.id}>
-        <TableCell>
+        <TableCell className={classes.linodeCell}>
           <Grid container alignItems="center">
-            <Grid item xs={2}>
+            <Grid item className="py0">
               <LinodeStatusIndicator status={linode.status} />
             </Grid>
-            <Grid item xs={10}>
+            <Grid item className="py0">
               <Link to={`/linodes/${linode.id}`}>
                 <Typography variant="title">
                   {linode.label}
@@ -64,17 +92,19 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             </Grid>
           </Grid>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.tagsCell}>
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
-        <TableCell>
-          <IPAddress ips={linode.ipv4} />
-          <IPAddress ips={[linode.ipv6]} />
+        <TableCell className={classes.ipCell}>
+          <div className={classes.ipCellInner}>
+            <IPAddress ips={linode.ipv4} />
+            <IPAddress ips={[linode.ipv6]} />
+          </div>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.regionCell}>
           <RegionIndicator region={linode.region} />
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <ActionMenu actions={actions} />
         </TableCell>
       </TableRow >
