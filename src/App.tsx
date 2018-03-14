@@ -12,7 +12,7 @@ import {
   MuiThemeProvider, 
   createMuiTheme,
 } from 'material-ui/styles';
-import Reboot from 'material-ui/Reboot';
+import CssBaseline from 'material-ui/CssBaseline';
 import Typography from 'material-ui/Typography';
 
 import { API_ROOT } from 'src/constants';
@@ -131,7 +131,7 @@ export class App extends React.Component<FinalProps, State> {
     return (
       <MuiThemeProvider theme={theme}>
         <React.Fragment>
-          <Reboot />
+          <CssBaseline />
           <div className={classes.appFrame}>
             <SideMenu open={menuOpen} toggle={this.toggleMenu} />
             <main className={classes.content}>
