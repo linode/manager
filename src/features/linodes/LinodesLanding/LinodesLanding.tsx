@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Axios from 'axios';
 import * as moment from 'moment';
-import { pathOr } from 'ramda';
+import { pathOr, clone } from 'ramda';
 import { connect } from 'react-redux';
 
 import { API_ROOT } from 'src/constants';
@@ -101,7 +101,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         .then(linode => this.setState((prevState) => {
           const targetIndex = prevState.linodes.findIndex(
             _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
-          const updatedLinodes = [...prevState.linodes];
+          const updatedLinodes = clone(prevState.linodes);
           updatedLinodes[targetIndex] = linode;
           updatedLinodes[targetIndex].recentEvent = linodeEvent;
           return { linodes: updatedLinodes };

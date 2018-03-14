@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import {
   withStyles, WithStyles, StyleRulesCallback, Theme,
@@ -32,7 +31,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  createActions: (push: Function, closeMenu: Function) => Action[];
+  createActions: (closeMenu: Function) => Action[];
 }
 
 interface State {
@@ -40,7 +39,7 @@ interface State {
   anchorEl?: Linode.TodoAny;
 }
 
-type FinalProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type FinalProps = Props & WithStyles<CSSClasses>;
 
 class ActionMenu extends React.Component<FinalProps, State> {
   state = {
@@ -49,9 +48,9 @@ class ActionMenu extends React.Component<FinalProps, State> {
   };
 
   generateActions() {
-    const { createActions, history } = this.props;
+    const { createActions } = this.props;
     this.setState({
-      actions: createActions(history.push, this.handleClose),
+      actions: createActions(this.handleClose),
     });
   }
 
@@ -110,6 +109,4 @@ class ActionMenu extends React.Component<FinalProps, State> {
   }
 }
 
-export const RoutedActionMenu = withRouter(ActionMenu);
-
-export default withStyles(styles, { withTheme: true })<Props>(RoutedActionMenu);
+export default withStyles(styles, { withTheme: true })<Props>(ActionMenu);
