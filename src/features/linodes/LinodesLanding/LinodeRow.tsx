@@ -13,8 +13,9 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
+
+import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';

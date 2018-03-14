@@ -7,18 +7,11 @@ import {
 } from 'material-ui';
 import Cached from 'material-ui-icons/Cached';
 
+import transitionStatus from './linodeTransitionStatus';
+
 interface Props {
   status: Linode.LinodeStatus;
 }
-
-const LinodeTransitionStatus = [
-  'booting',
-  'shutting_down',
-  'rebooting',
-  'provisioning',
-  'deleting',
-  'migrating',
-];
 
 type CSSClasses = 'dot' | 'green' | 'red' | 'transition';
 
@@ -52,7 +45,7 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
           &#x25CF;
         </span>
       }
-      {LinodeTransitionStatus.includes(props.status) &&
+      {transitionStatus.includes(props.status) &&
         <span className={`${props.classes.transition}`}>
           <Cached fontSize />
         </span>
