@@ -143,7 +143,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               </div>
               }         
             </div>
-            <div>
+            <div className={classes.cardSection}>
               {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
           </CardContent>
