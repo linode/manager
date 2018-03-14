@@ -74,7 +74,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiTableCell: {
       root: {
-        padding: '8px !important',
+        padding: '18px !important',
       },
       body: {
         fontSize: '1rem',

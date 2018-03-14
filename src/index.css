@@ -66,13 +66,14 @@ html {
 }
 .t-table thead {
   background-color: #FBFBFB;
-  border-bottom: 1px solid #f4f4f4;
 }
 
 .t-table th {
   font-size: .9rem;
+  border-bottom: 1px solid #f4f4f4;
 }
 
 .t-table td {
   font-size: .9rem;
+  border-bottom: 1px solid #f4f4f4;
 }
