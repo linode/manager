@@ -84,7 +84,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             </Grid>
             <Grid item className="py0">
               <Link to={`/linodes/${linode.id}`}>
-                <Typography variant="title">
+                <Typography variant="subheading">
                   {linode.label}
                 </Typography>
               </Link>
