@@ -21,6 +21,10 @@ html {
   display: inline-flex;
 }
 
+a {
+  text-decoration: none;
+}
+
 .footer-logo {
   opacity: .5;
 }
@@ -48,7 +52,6 @@ html {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-
 .ovds {
   box-shadow: 0 0 5px #ddd !important;
 }
