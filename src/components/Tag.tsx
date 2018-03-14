@@ -13,12 +13,10 @@ type CSSClasses = 'label' | 'root';
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
   return ({
     label: {
-      paddingLeft: theme.spacing.unit * .5,
-      paddingRight: theme.spacing.unit * .5,
+      
     },
     root: {
-      borderRadius: '3px',
-      height: '24px',
+      
     },
   });
 };

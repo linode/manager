@@ -17,7 +17,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: 20,
     marginLeft: theme.spacing.unit / 2,
     backgroundColor: LinodeTheme.bg.lightBlue,
-    borderRadius: 4,
     fontWeight: 500,
     '&:hover, &.active': {
       backgroundColor: LinodeTheme.palette.primary.main,

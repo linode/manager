@@ -60,6 +60,18 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
       },
     },
+    MuiChip: {
+      root: {
+        backgroundColor: '#eee',
+        height: 20,
+        borderRadius: 4,
+        color: '#555',
+      },
+      label: {
+        paddingLeft: 4,
+        paddingRight: 4,
+      },
+    },
   },
   palette: {
     primary: {
