@@ -14,7 +14,7 @@ describe('ActionMenu', () => {
 
   it('should render a link when provided one action.', () => {
     const result = mount(
-      <StaticRouter>
+      <StaticRouter context={{}}>
         <ActionMenu createActions={createActionsOne} />
       </StaticRouter>,
     );
@@ -23,7 +23,7 @@ describe('ActionMenu', () => {
   
   it('should render a menu when provided many actions.', () => {
     const result = mount(
-      <StaticRouter>
+      <StaticRouter context={{}}>
         <ActionMenu createActions={createActionsMany}/>
       </StaticRouter>,
     );
