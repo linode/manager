@@ -72,6 +72,11 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
       },
     },
+    MuiCircularProgress: {
+      circle: {
+        strokeLinecap: 'inherit',
+      },
+    },
   },
   palette: {
     primary: {
