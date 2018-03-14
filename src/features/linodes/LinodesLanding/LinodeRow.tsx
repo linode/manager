@@ -19,11 +19,32 @@ import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
 
-type ClassNames = 'ipCell';
+type ClassNames = 'linodeCell'
+| 'tagsCell'
+| 'ipCell'
+| 'ipCellInner'
+| 'smIP'
+| 'regionCell'
+| 'actionCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
+    linodeCell: {
+      width: '30%',
+    },
+    tagsCell: {
+      width: '15%',
+    },
     ipCell: {
+      width: '30%',
+    },
+    regionCell: {
+      width: '15%',
+    },
+    actionCell: {
+      width: '10%',
+    },
+    ipCellInner: {
       maxWidth: 100,
       display: 'block',
       overflow: 'auto',
@@ -33,6 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       [theme.breakpoints.up('lg')]: {
         maxWidth: 300,
       },
+    },
+    smIP: {
+      fontSize: '14px',
     },
   });
 };
@@ -57,7 +81,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
     return (
       <TableRow key={linode.id}>
-        <TableCell>
+        <TableCell className={classes.linodeCell}>
           <Grid container alignItems="center">
             <Grid item className="py0">
               <LinodeStatusIndicator status={linode.status} />
@@ -72,19 +96,21 @@ class LinodeRow extends React.Component<PropsWithStyles> {
             </Grid>
           </Grid>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.tagsCell}>
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
-        <TableCell>
-          <div className={classes.ipCell}>
+        <TableCell className={classes.ipCell}>
+          <div className={classes.ipCellInner}>
             <IPAddress ips={linode.ipv4} />
-            <IPAddress ips={[linode.ipv6]} />
+            <span className={classes.smIP}>
+              <IPAddress ips={[linode.ipv6]} />
+            </span>
           </div>
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.regionCell}>
           <RegionIndicator region={linode.region} />
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <ActionMenu actions={actions} />
         </TableCell>
       </TableRow >
