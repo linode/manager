@@ -48,11 +48,19 @@ class ActionMenu extends React.Component<FinalProps, State> {
     anchorEl: undefined,
   };
 
-  componentDidMount() {
+  generateActions() {
     const { createActions, history } = this.props;
     this.setState({
       actions: createActions(history.push, this.handleClose),
     });
+  }
+
+  componentDidMount() {
+    this.generateActions();
+  }
+
+  componentWillReceiveProps() {
+    this.generateActions();
   }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
