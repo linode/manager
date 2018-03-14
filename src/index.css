@@ -21,6 +21,10 @@ html {
   display: inline-flex;
 }
 
+a {
+  text-decoration: none;
+}
+
 .footer-logo {
   opacity: .5;
 }
