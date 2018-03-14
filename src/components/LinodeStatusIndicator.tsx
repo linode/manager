@@ -28,7 +28,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     userSelect: 'none',
   },
   transition: {
-    fontSize: '1.0rem',
     marginLeft: -1,
   },
   green: {
@@ -54,7 +53,7 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
       }
       {LinodeTransitionStatus.includes(props.status) &&
         <span className={`${props.classes.transition}`}>
-          <Cached fontSize />
+          <Cached style={{ fontSize: '1.0rem' }} />
         </span>
       }
     </React.Fragment>
