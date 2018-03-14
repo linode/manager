@@ -75,7 +75,7 @@ describe('PaginationControls', () => {
       />,
     );
 
-    wrapper.find('PageButton').first().find('div').simulate('click');
+    wrapper.find('PageButton').first().find('button').simulate('click');
 
     expect(mockClickHandler).toHaveBeenCalled();
   });

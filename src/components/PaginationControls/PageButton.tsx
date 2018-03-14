@@ -1,11 +1,26 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import { withStyles, Theme, StyleRulesCallback, WithStyles } from 'material-ui';
+import { withStyles, Theme, StyleRulesCallback, WithStyles, Button } from 'material-ui';
+import LinodeTheme from '../../../src/theme';
 
 type CSSClasses = 'root' | 'first' | 'last'| 'active';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  root: {},
+  root: {
+    backgroundColor: LinodeTheme.bg.offWhite,
+    color: theme.palette.primary.main,
+    border: '1px solid ' + `${LinodeTheme.color.grey2}`,
+    borderRight: 0,
+    padding: theme.spacing.unit * 2,
+    minWidth: 58,
+    '&.active': {
+      backgroundColor: LinodeTheme.bg.main,
+      color: 'black',
+    },
+    '&:last-child': {
+      borderRight: '1px solid ' + `${LinodeTheme.color.grey2}`,
+    },
+  },
   active: {},
   first: {},
   last: {},
@@ -38,15 +53,15 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   });
 
   if (first) {
-    return <div className={classes.first} onClick={onClick}>First</div>;
+    return <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}>First</Button>;
   }
 
   if (last) {
-    return <div className={classes.last} onClick={onClick}>Last</div>;
+    return <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}>Last</Button>;
   }
 
   return (
-    <div className={rootClasses} onClick={onClick}>{page}</div>
+    <Button className={rootClasses} onClick={onClick}>{page}</Button>
   );
 });
 
