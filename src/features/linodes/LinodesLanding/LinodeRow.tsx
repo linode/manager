@@ -23,7 +23,6 @@ type ClassNames = 'linodeCell'
 | 'tagsCell'
 | 'ipCell'
 | 'ipCellInner'
-| 'smIP'
 | 'regionCell'
 | 'actionCell';
 
@@ -55,9 +54,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
         maxWidth: 300,
       },
     },
-    smIP: {
-      fontSize: '14px',
-    },
   });
 };
 
@@ -71,7 +67,7 @@ type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
   render() {
-    const { linode, type, actions } = this.props;
+    const { classes, linode, type, actions } = this.props;
     const specsLabel = type && displayLabel(type.memory);
 
     /**
@@ -102,9 +98,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         <TableCell className={classes.ipCell}>
           <div className={classes.ipCellInner}>
             <IPAddress ips={linode.ipv4} />
-            <span className={classes.smIP}>
-              <IPAddress ips={[linode.ipv6]} />
-            </span>
+            <IPAddress ips={[linode.ipv6]} />
           </div>
         </TableCell>
         <TableCell className={classes.regionCell}>
