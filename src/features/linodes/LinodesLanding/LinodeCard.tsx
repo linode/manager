@@ -10,11 +10,7 @@ import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
-
-import CallToAction from 'material-ui-icons/CallToAction';
-import Replay from 'material-ui-icons/Replay';
-import CloudCircle from 'material-ui-icons/CloudCircle';
+import LinodeTheme from 'src/theme';
 
 import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -23,30 +19,11 @@ import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { typeLabelLong } from './presentation';
 
-import Arch from 'src/assets/distros/Arch.png';
-import CentOS from 'src/assets/distros/CentOS.png';
-import ContainerLinux from 'src/assets/distros/ContainerLinux.png';
-import Debian from 'src/assets/distros/Debian.png';
-import Fedora from 'src/assets/distros/Fedora.png';
-import Gentoo from 'src/assets/distros/Gentoo.png';
-import OpenSUSE from 'src/assets/distros/OpenSUSE.png';
-import Slackware from 'src/assets/distros/Slackware.png';
-import Ubuntu from 'src/assets/distros/Ubuntu.png';
-
-const distroIcons = {
-  Arch,
-  CentOS,
-  CoreOS: ContainerLinux,
-  Debian,
-  Fedora,
-  Gentoo,
-  openSUSE: OpenSUSE,
-  Slackware,
-  Ubuntu,
-};
-
 type CSSClasses = 
   'cardSection'
+  | 'flexContainer'
+  | 'cardHeader'
+  | 'cardContent'
   | 'distroIcon'
   | 'rightMargin'
   | 'cardActions'
@@ -56,7 +33,27 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
-    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit,
+    paddingTop: theme.spacing.unit,
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontSize: '90%',
+    color: LinodeTheme.palette.text.primary,
+  },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  cardHeader: {
+    fontWeight: 700,
+    color: 'black',
+  },
+  cardContent: {
+    flex: 1,
+    [theme.breakpoints.up('md')]: {
+      minHeight: 213,
+    },
   },
   distroIcon: {
     marginTop: theme.spacing.unit,
@@ -70,17 +67,18 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: 0,
   },
   button: {
+    padding: '12px 12px 14px',
     height: '100%',
     margin: 0,
+    borderTop: '1px solid ' + LinodeTheme.palette.divider,
   },
   consoleButton: {
-    width: '60%',
-    borderColor: 'rgba(0, 0, 0, 0.12)',
-    border: '1px solid',
-    borderWidth: '0 1px 0 0',
+    width: '50%',
+    borderColor: theme.pale,
+    borderRight: '1px solid ' + LinodeTheme.palette.divider,
   },
   rebootButton: {
-    width: '40%',
+    width: '50%',
   },
 });
 
@@ -93,14 +91,14 @@ interface Props {
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   renderTitle() {
-    const { linode } = this.props;
+    const { linode, classes } = this.props;
 
     return (
-      <Grid container>
-        <Grid item xs={1}>
+      <Grid container alignItems="center">
+        <Grid item className={'py0'}>
           <LinodeStatusIndicator status={linode.status} />
         </Grid>
-        <Grid item xs={11}>
+        <Grid item className={classes.cardHeader + ' py0'}>
           {linode.label}
         </Grid>
       </Grid>
@@ -116,60 +114,45 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const tags = [linode.group].filter(Boolean);
 
     return (
-      <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Card>
+      <Grid item xs={12} sm={6} lg={4}>
+        <Card className={classes.flexContainer}>
           <CardHeader
-            title={this.renderTitle()}
+            subheader={this.renderTitle()}
             action={
               <ActionMenu actions={actions} />
             }
           />
           {<Divider />}
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <div>
-              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
-            </div>
-            {image && type &&
+              {image && type &&
               <div className={classes.cardSection}>
-                <Grid container>
-                  <Grid item className="tac" xs={2}>
-                    {image.vendor ?
-                      <img src={distroIcons[image.vendor]} className={classes.distroIcon}/>
-                      : <CloudCircle className={classes.distroIcon} />
-                    }
-                  </Grid>
-                  <Grid item xs={9}>
-                    <Typography variant="subheading">
-                      {image.label}
-                    </Typography>
-                    <Typography>
-                      {typeLabelLong(type.memory, type.disk, type.vcpus)}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                {typeLabelLong(type.memory, type.disk, type.vcpus)}
               </div>
-            }
-            <div className={classes.cardSection}>
-              <div>
+              }
+              <div className={classes.cardSection}>
+                <RegionIndicator region={linode.region} />
+              </div>
+              <div className={classes.cardSection}>
                 <IPAddress ips={linode.ipv4} copyRight />
-              </div>
-              <div>
                 <IPAddress ips={[linode.ipv6]} copyRight />
               </div>
+              {image && type &&
+              <div className={classes.cardSection}>
+                {image.label}
+              </div>
+              }         
             </div>
             <div className={classes.cardSection}>
-              <RegionIndicator region={linode.region} />
+              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
           </CardContent>
-          <Divider />
           <CardActions className={classes.cardActions}>
             <Button className={`${classes.button} ${classes.consoleButton}`}>
-              <CallToAction className={classes.rightMargin}/>
-              Launch Console
+              <span className="btnLink">Launch Console</span>
             </Button>
             <Button className={`${classes.button} ${classes.rebootButton}`}>
-              <Replay className={classes.rightMargin}/>
-              Reboot
+              <span className="btnLink">Reboot</span>
             </Button>
           </CardActions>
         </Card>

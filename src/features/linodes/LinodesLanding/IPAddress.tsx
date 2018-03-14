@@ -13,7 +13,12 @@ import LinodeTheme from 'src/theme';
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-type CSSClasses =  'root' | 'left' | 'right' | 'icon' | 'row';
+type CSSClasses =  'root' 
+| 'left' 
+| 'right' 
+| 'icon' 
+| 'row'
+| 'ip';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -36,6 +41,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     cursor: 'pointer',
     color: LinodeTheme.palette.primary.main,
   },
+  ip: {
+    fontSize: 14,
+  },
 });
 
 interface Props {
@@ -57,7 +65,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <Typography>
+        <Typography className={classes.ip}>
           {ip}
         </Typography>
         {!copyRight && this.renderCopyIcon(ip)}

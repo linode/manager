@@ -12,7 +12,7 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'item';
+type CSSClasses = 'item' | 'buttonWrapper' | 'button';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   item: {
@@ -20,6 +20,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingRight: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
+    marginTop: '0 !important',
+  },
+  buttonWrapper: {
+    marginTop: theme.spacing.unit,
+  },
+  button: {
+    height: 30,
   },
 });
 
@@ -50,11 +57,12 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
 
     return actions.length === 1
       ? actions.map((a, idx) => <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
-      : (<div>
+      : (<div className={classes.buttonWrapper}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
+          className={classes.button}
         >
           <MoreHoriz color="primary" />
         </IconButton >
