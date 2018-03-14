@@ -51,6 +51,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   cardContent: {
     flex: 1,
+    [theme.breakpoints.up('md')]: {
+      minHeight: 213,
+    },
   },
   distroIcon: {
     marginTop: theme.spacing.unit,
@@ -122,24 +125,26 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           {<Divider />}
           <CardContent className={classes.cardContent}>
             <div>
-              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
-            </div>
-            {image && type &&
-            <div>
-              <div className={classes.cardSection}>
-                {image.label}
-              </div>
+              {image && type &&
               <div className={classes.cardSection}>
                 {typeLabelLong(type.memory, type.disk, type.vcpus)}
               </div>
+              }
+              <div className={classes.cardSection}>
+                <RegionIndicator region={linode.region} />
+              </div>
+              <div className={classes.cardSection}>
+                <IPAddress ips={linode.ipv4} copyRight />
+                <IPAddress ips={[linode.ipv6]} copyRight />
+              </div>
+              {image && type &&
+              <div className={classes.cardSection}>
+                {image.label}
+              </div>
+              }         
             </div>
-            }
-            <div className={classes.cardSection}>
-              <IPAddress ips={linode.ipv4} copyRight />
-              <IPAddress ips={[linode.ipv6]} copyRight />
-            </div>
-            <div className={classes.cardSection}>
-              <RegionIndicator region={linode.region} />
+            <div>
+              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
             </div>
           </CardContent>
           <CardActions className={classes.cardActions}>
