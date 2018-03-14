@@ -28,11 +28,22 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-const CircleProgressComponent = (props: WithStyles<CSSClasses>) => {
+interface Props {
+  value?: Boolean | number;
+}
+
+const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
+  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
+  const value = typeof props.value === 'number' ? props.value : 0;
   return (
     <div className={props.classes.root}>
       <div className={props.classes.top} />
-      <CircularProgress className={props.classes.progress} size={100} />
+      <CircularProgress
+        className={props.classes.progress}
+        size={100}
+        value={value}
+        variant={variant}
+      />
       <div className={props.classes.bottom} />
     </div>
   );
@@ -40,4 +51,4 @@ const CircleProgressComponent = (props: WithStyles<CSSClasses>) => {
 
 const decorate = withStyles(styles, { withTheme: true });
 
-export default decorate<{}>(CircleProgressComponent);
+export default decorate<Props>(CircleProgressComponent);
