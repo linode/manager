@@ -11,8 +11,12 @@ import CircularProgress from 'material-ui/Progress/CircularProgress';
 type CSSClasses = 'root' | 'top' | 'progress';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+
   progress: {
     position: 'relative',
+    '& $circle': {
+      transition: 'stroke-dasharray .5s linear, stroke-dashoffset .5s linear',
+    },
   },
 
   top: {
