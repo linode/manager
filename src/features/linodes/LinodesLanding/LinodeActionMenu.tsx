@@ -13,10 +13,10 @@ interface Props {
 type FinalProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<FinalProps> {
-  createLinodeActions() {
+  createLinodeActions = () => {
     const { linode, history: { push } } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return function (closeMenu: Function): Action[] {
       const actions = [
         {
           title: 'Launch Console',
