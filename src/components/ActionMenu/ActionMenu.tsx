@@ -31,17 +31,37 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  actions: Action[];
+  createActions: (closeMenu: Function) => Action[];
 }
 
 interface State {
+  actions?: Action[];
   anchorEl?: Linode.TodoAny;
 }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type FinalProps = Props & WithStyles<CSSClasses>;
 
-class ActionMenu extends React.Component<PropsWithStyles, State> {
-  state = { anchorEl: undefined };
+class ActionMenu extends React.Component<FinalProps, State> {
+  state = {
+    actions: [],
+    anchorEl: undefined,
+  };
+
+  generateActions(createActions: Linode.TodoAny) {
+    this.setState({
+      actions: createActions(this.handleClose),
+    });
+  }
+
+  componentDidMount() {
+    const { createActions } = this.props;
+    this.generateActions(createActions);
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    const { createActions } = nextProps;
+    this.generateActions(createActions);
+  }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -52,12 +72,15 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
   }
 
   render() {
-    const { actions, classes } = this.props;
-    const { anchorEl } = this.state;
+    const { classes  } = this.props;
+    const { actions, anchorEl  } = this.state;
+
+    if (typeof actions === 'undefined') { return null; }
 
     return actions.length === 1
-      ? actions.map((a, idx) => <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
-      : (<div className={classes.buttonWrapper}>
+      ? (actions as Action[]).map((a, idx) =>
+          <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
+      : (<div>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"
@@ -75,7 +98,7 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          {actions.map((a, idx) =>
+          {(actions as Action[]).map((a, idx) =>
             <MenuItem
               key={idx}
               onClick={a.onClick}
@@ -87,4 +110,4 @@ class ActionMenu extends React.Component<PropsWithStyles, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(ActionMenu);
+export default withStyles(styles, { withTheme: true })<Props>(ActionMenu);

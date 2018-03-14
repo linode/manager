@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Axios from 'axios';
 import * as moment from 'moment';
-import { pathOr } from 'ramda';
+import { pathOr, clone } from 'ramda';
 import { connect } from 'react-redux';
 
 import { API_ROOT } from 'src/constants';
@@ -14,7 +14,6 @@ import {
 import { linodeEvents$ } from 'src/events';
 import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
-import  { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
@@ -52,57 +51,6 @@ const preloaded = PromiseLoader<Props>({
 
 type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
-const genActionMenuItems = (push: Function) => (linode: Linode.Linode): Action[] => {
-  return [
-    {
-      title: 'Launch Console',
-      onClick: (e) => {
-        push(`/linodes/${linode.id}/glish`);
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'Reboot',
-      onClick: (e) => {
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'View Graphs',
-      onClick: (e) => {
-        push(`/linodes/${linode.id}/summary`);
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'Resize',
-      onClick: (e) => {
-        push(`/linodes/${linode.id}/resize`);
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'View Backups',
-      onClick: (e) => {
-        push(`/linodes/${linode.id}/backups`);
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'Power On',
-      onClick: (e) => {
-        e.preventDefault();
-      },
-    },
-    {
-      title: 'Settings',
-      onClick: (e) => {
-        push(`/linodes/${linode.id}/settings`);
-        e.preventDefault();
-      },
-    },
-  ];
-};
 
 class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -153,7 +101,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         .then(linode => this.setState((prevState) => {
           const targetIndex = prevState.linodes.findIndex(
             _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
-          const updatedLinodes = [...prevState.linodes];
+          const updatedLinodes = clone(prevState.linodes);
           updatedLinodes[targetIndex] = linode;
           updatedLinodes[targetIndex].recentEvent = linodeEvent;
           return { linodes: updatedLinodes };
@@ -175,7 +123,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           const { types, location: { hash } } = this.props;
           const { linodes } = this.state;
           const images = pathOr([], ['response', 'data'], this.props.images);
-          const createActions = genActionMenuItems(this.props.history.push);
 
           if (this.props.linodes.error) {
             /** Maybe a fancy error state component? */
@@ -206,13 +153,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                   linodes={linodes}
                   images={images}
                   types={types}
-                  createActions={createActions}
                 />
                 : <LinodesListView
                   linodes={linodes}
                   images={images}
                   types={types}
-                  createActions={createActions}
                 />
               }
             </React.Fragment>

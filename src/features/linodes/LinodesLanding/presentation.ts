@@ -23,4 +23,3 @@ export function displayLabel(memory?: number): string | undefined {
   if (!memory) { return; }
   return `${typeLabel(memory)}`;
 }
-
