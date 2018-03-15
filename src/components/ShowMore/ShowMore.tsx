@@ -49,8 +49,8 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ 
-      anchorEl: event.currentTarget, 
+    this.setState({
+      anchorEl: event.currentTarget,
       classes: this.props.classes.chip + ' active',
     });
   }

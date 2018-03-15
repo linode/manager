@@ -37,7 +37,7 @@ export function generatePollingFilter(datestamp: string, pollIDs: string[]) {
         generateInFilter('id', pollIDs),
       ],
     }
-    : { 
+    : {
       created: { '+gt': datestamp },
     };
 }
@@ -90,7 +90,7 @@ setInterval(
     if (Date.now() > eventRequestDeadline) {
       requestEvents();
 
-      eventRequestDeadline = 
+      eventRequestDeadline =
         Date.now() + initialPollInterval * currentPollIntervalMultiplier;
       /* double the polling interval with each poll up to 16x */
       currentPollIntervalMultiplier = Math.min(currentPollIntervalMultiplier * 2, 16);

@@ -13,10 +13,10 @@ import LinodeTheme from 'src/theme';
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
-type CSSClasses =  'root' 
-| 'left' 
-| 'right' 
-| 'icon' 
+type CSSClasses =  'root'
+| 'left'
+| 'right'
+| 'icon'
 | 'row'
 | 'ip';
 

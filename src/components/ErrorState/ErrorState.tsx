@@ -31,10 +31,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   return (
-    <Grid 
+    <Grid
       container
       className={props.classes.root}
-      justify="center" 
+      justify="center"
       alignItems="center"
     >
       <Grid item>

@@ -13,7 +13,7 @@ describe('AuthenticationWrapper', () => {
   });
 
   it('redirects when logged out and hitting /linodes', () => {
-    const location = { 
+    const location = {
       pathname: '/linodes',
       search: '',
     };
@@ -55,7 +55,7 @@ describe('AuthenticationWrapper', () => {
   });
 
   it('doesn\'t redirect when authenticated', () => {
-    const location = { 
+    const location = {
       pathname: '/linodes',
       search: '',
     };

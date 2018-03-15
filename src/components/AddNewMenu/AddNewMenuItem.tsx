@@ -10,8 +10,8 @@ import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import LinodeTheme from 'src/theme';
 
-type CSSClasses = 'root' 
-| 'content' 
+type CSSClasses = 'root'
+| 'content'
 | 'titleLink'
 | 'body';
 
