@@ -3,7 +3,7 @@ import createBreakpoints from 'material-ui/styles/createBreakpoints';
 const breakpoints = createBreakpoints({});
 
 const LinodeTheme: Linode.Theme = {
-  breakpoints: breakpoints,
+  breakpoints: { breakpoints },
   overrides: {
     MuiButton: {
       root: {
