@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  MuiThemeProvider, 
+  MuiThemeProvider,
   createMuiTheme,
 } from 'material-ui/styles';
 import LinodeTheme from '../theme';

@@ -21,13 +21,13 @@ namespace Linode {
     pages: number;
     results: number;
   }
-  
+
   export interface ApiState {
     linodes?: ManyResourceState<Linode.Linode>;
     linodeTypes?: ManyResourceState<Linode.LinodeType>;
     images?: ManyResourceState<Linode.Image>;
   }
-  
+
   interface AuthState {
     token: NullableString;
     scopes: NullableString;
@@ -36,7 +36,7 @@ namespace Linode {
   export interface ResourcesState {
     types?: ManyResourceState<Linode.LinodeType>;
   }
-  
+
   export interface AppState {
     authentication: AuthState;
     resources: ResourcesState;

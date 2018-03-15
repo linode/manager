@@ -115,7 +115,7 @@ class PrimaryNav extends React.Component<Props> {
           ${this.linkIsActive(PrimaryLink.href) && classes.active}
         `}
       >
-        <ListItemText 
+        <ListItemText
           primary={PrimaryLink.display}
           disableTypography={true}
           className={`

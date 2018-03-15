@@ -19,7 +19,7 @@ describe('events module', () => {
       expect(currentPollIntervalMultiplier).toBe(1);
     });
   });
-  
+
   describe('generateInFilter', () => {
     it('generates a filter from an array of values', () => {
       const res = generateInFilter('id', [12, 21, 32]);
@@ -41,7 +41,7 @@ describe('events module', () => {
       expect(res).toEqual({ created: { '+gt': '1970-01-01T00:00:00' } });
     });
   });
-  
+
   describe('requestEvents', () => {
     it('executes without error using a mock response', () => {
       Axios.get = jest.fn(() => new Promise((resolve) => {

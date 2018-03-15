@@ -15,9 +15,9 @@ export interface Doc {
   body: string;
 }
 
-type CSSClasses = 'root' 
+type CSSClasses = 'root'
 | 'title'
-| 'titleLink' 
+| 'titleLink'
 | 'body';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({

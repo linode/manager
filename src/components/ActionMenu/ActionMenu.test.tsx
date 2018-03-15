@@ -20,7 +20,7 @@ describe('ActionMenu', () => {
     );
     expect(result.find('a')).toHaveLength(1);
   });
-  
+
   it('should render a menu when provided many actions.', () => {
     const result = mount(
       <StaticRouter context={{}}>

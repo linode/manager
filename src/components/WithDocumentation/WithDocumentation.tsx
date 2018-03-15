@@ -31,7 +31,7 @@ interface Props {
   docs: Doc[];
 }
 
-type PropsWithStyles = Props & WithStyles<'listContainer' 
+type PropsWithStyles = Props & WithStyles<'listContainer'
 | 'titleContainer'
 | 'docContainer' >;
 

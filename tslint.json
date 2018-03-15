@@ -2,6 +2,7 @@
     "extends": ["tslint-config-airbnb"],
     "rules": {
         "no-console": true,
+        "no-trailing-whitespace": true,
         "variable-name": false,
         "import-name": false,
         "object-shorthand-properties-first": false,

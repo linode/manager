@@ -11,7 +11,7 @@ describe('WithDocumentation', () => {
         docs={[]}
       />,
     );
-    
+
     const rendered = result.find('#something');
     const DOMtitle = result.find('[data-test-id="title"]').at(0).text();
 
