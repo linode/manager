@@ -142,21 +142,19 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             return <ListLinodesEmptyState />;
           }
 
-          const displayGrid: 'grid' | 'list' = compose(
+          const displayGrid: 'grid' | 'list' = ifElse(
+            compose(isEmpty, prop('hash')),
+            /* is empty */
             ifElse(
-              compose(isEmpty, prop('hash')),
-              /* is empty */
-              ifElse(
-                compose(gte(3), prop('length')),
-                () => 'grid',
-                () => 'list',
-              ),
-              /* is not empty */
-              ifElse(
-                propEq('hash', '#grid'),
-                () => 'grid',
-                () => 'list',
-              ),
+              compose(gte(3), prop('length')),
+              () => 'grid',
+              () => 'list',
+            ),
+            /* is not empty */
+            ifElse(
+              propEq('hash', '#grid'),
+              () => 'grid',
+              () => 'list',
             ),
           )({ hash, length: linodes.length });
 
