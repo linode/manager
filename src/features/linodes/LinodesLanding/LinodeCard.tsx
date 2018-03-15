@@ -57,7 +57,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardContent: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      minHeight: 213,
+      minHeight: 230,
     },
   },
   distroIcon: {
@@ -86,7 +86,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     width: '50%',
   },
   loadingStatusText: {
+    fontSize: '1.1rem',
+    color: '#444',
     textTransform: 'capitalize',
+    position: 'relative',
+    top: - theme.spacing.unit * 2,
   },
 });
 
@@ -121,13 +125,15 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     : true;
 
     return (
-      <CardContent>
+      <CardContent className={classes.cardContent}>
         <Grid container>
           <Grid item xs={12}>
             <CircleProgress value={value} />
           </Grid>
-          <Grid item xs={12} className={classes.loadingStatusText}>
-          <Typography>{linode.status.replace('_', ' ')}</Typography>
+          <Grid item xs={12}>
+            <Typography align="center" className={classes.loadingStatusText}>
+              {linode.status.replace('_', ' ')}
+            </Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -161,7 +167,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         <div className={classes.cardSection}>
           {image.label}
         </div>
-        }         
+        }      
       </div>
       <div className={classes.cardSection}>
         {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
