@@ -3,13 +3,15 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import Tag from './Tag';
+import ThemeDecorator from '../../utilities/storybookDecorators';
 
 storiesOf('Tags', module)
+  .addDecorator(ThemeDecorator)
   .add('primary', () => (
     <Tag label="tag" />
   ))
-  .add('light', () => (
-    <Tag label="tag" variant="light" />
+  .add('white', () => (
+    <Tag label="tag" variant="white" />
   ))
   .add('gray', () => (
     <Tag label="tag" variant="gray" />
@@ -35,9 +37,6 @@ storiesOf('Tags', module)
   .add('lightYellow', () => (
     <Tag label="tag" variant="lightYellow" />
   ))
-  .add('white', () => (
-    <Tag label="tag" variant="white" />
-  ))
   .add('editable', () => (
-    <Tag label="tag" onDelete={action('click')} />
+    <Tag label="delete-tag" onDelete={action('click')} />
   ));
