@@ -72,13 +72,10 @@ const LinodeTheme: Linode.Theme = {
         paddingRight: 4,
       },
       deleteIcon: {
-        color: '#666',
-        width: 10,
-        height: 10,
-        border: '1px solid #999',
-        borderRadius: '50%',
-        marginLeft: 3,
-        padding: '0 0 0 1px',
+        color: '#aaa',
+        width: 20,
+        height: 20,
+        marginLeft: 2,
       },
     },
     MuiTableHead: {
