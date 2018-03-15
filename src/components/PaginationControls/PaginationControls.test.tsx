@@ -26,7 +26,7 @@ describe('PaginationControls', () => {
     expect(nextPage.exists()).toBeTruthy();
   });
   
-  it('should render a left arrow when not on first page', () => {
+  it('it should not render a left arrow when on first page', () => {
     const wrapper = mount(
       <PaginationControls
         onClickHandler={jest.fn()}
@@ -39,7 +39,7 @@ describe('PaginationControls', () => {
     expect(prevPage.exists()).toBeFalsy();
   });
   
-  it('should render a right arrow when not on last page', () => {
+  it('it should not render a right arrow when on last page', () => {
     const wrapper = mount(
       <PaginationControls
         onClickHandler={jest.fn()}
