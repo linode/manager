@@ -13,19 +13,22 @@ import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
 import Tag from 'src/components/Tag';
+import LinearProgress from 'src/components/LinearProgress';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from './presentation';
 import LinodeActionMenu from './LinodeActionMenu';
+import transitionStatus from './linodeTransitionStatus';
 
 type ClassNames = 'linodeCell'
 | 'tagsCell'
 | 'ipCell'
 | 'ipCellInner'
 | 'regionCell'
-| 'actionCell';
+| 'actionCell'
+| 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
@@ -59,6 +62,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
         maxWidth: 300,
       },
     },
+    status: {
+      textTransform: 'capitalize',
+      marginBottom: theme.spacing.unit,
+      color: '#555',
+      fontSize: '.92rem',
+    },
   });
 };
 
@@ -70,32 +79,59 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
-  render() {
-    const { linode, type, classes } = this.props;
+  headCell = () => {
+    const { type, linode, classes } = this.props;
     const specsLabel = type && displayLabel(type.memory);
+    
+    return(
+      <TableCell className={classes.linodeCell}>
+        <Grid container alignItems="center">
+          <Grid item className="py0">
+            <LinodeStatusIndicator status={linode.status} />
+          </Grid>
+          <Grid item className="py0">
+            <Link to={`/linodes/${linode.id}`}>
+              <Typography variant="subheading">
+                {linode.label}
+              </Typography>
+            </Link>
+            {specsLabel && <div>{specsLabel}</div>}
+          </Grid>
+        </Grid>
+      </TableCell>
+    );
+  }
+  
+  loadingState = () => {
+    const { linode, classes } = this.props;
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
+      ? Math.max(linode.recentEvent.percent_complete, 1)
+      : true;
+
+    return(
+      <TableRow key={linode.id}>
+        {this.headCell()}
+        <TableCell colSpan={4}>
+        { typeof value === 'number' &&
+          <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
+        }
+          <LinearProgress value={value} />
+        </TableCell>
+      </TableRow>
+    );
+  }
+
+  loadedState = () => {
+    const { linode, classes } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
      **/
     const tags = [linode.group].filter(Boolean);
 
-    return (
+    return(
       <TableRow key={linode.id}>
-        <TableCell className={classes.linodeCell}>
-          <Grid container alignItems="center">
-            <Grid item className="py0">
-              <LinodeStatusIndicator status={linode.status} />
-            </Grid>
-            <Grid item className="py0">
-              <Link to={`/linodes/${linode.id}`}>
-                <Typography variant="subheading">
-                  {linode.label}
-                </Typography>
-              </Link>
-              {specsLabel && <div>{specsLabel}</div>}
-            </Grid>
-          </Grid>
-        </TableCell>
+        {this.headCell()}
         <TableCell className={classes.tagsCell}>
           {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
         </TableCell>
@@ -111,8 +147,16 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         <TableCell className={classes.actionCell}>
           <LinodeActionMenu linode={linode} />
         </TableCell>
-      </TableRow >
+    </TableRow>
     );
+  }
+
+  render() {
+    const loading = transitionStatus.includes(this.props.linode.status);
+
+    return loading
+      ? this.loadingState()
+      : this.loadedState();
   }
 }
 

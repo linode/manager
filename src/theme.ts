@@ -97,6 +97,11 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiLinearProgress: {
+      root: {
+        height: 4,
+      },
+    },
   },
   palette: {
     primary: {
