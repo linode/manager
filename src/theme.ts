@@ -67,7 +67,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiChip: {
       root: {
-        backgroundColor: '#eee',
+        backgroundColor: '#f4f4f4',
         height: 20,
         borderRadius: 4,
         color: '#555',
@@ -75,6 +75,12 @@ const LinodeTheme: Linode.Theme = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
+      },
+      deleteIcon: {
+        color: '#aaa',
+        width: 20,
+        height: 20,
+        marginLeft: 2,
       },
     },
     MuiTableHead: {
