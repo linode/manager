@@ -43,13 +43,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     actionCell: {
       width: '10%',
+      textAlign: 'right',
+      '& button': {
+        width: 30,
+      },
     },
     ipCellInner: {
       maxWidth: 100,
       display: 'block',
       overflow: 'auto',
       [theme.breakpoints.up('md')]: {
-        maxWidth: 200,
+        maxWidth: 170,
       },
       [theme.breakpoints.up('lg')]: {
         maxWidth: 300,
@@ -104,7 +108,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         <TableCell className={classes.regionCell}>
           <RegionIndicator region={linode.region} />
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.actionCell}>
           <LinodeActionMenu linode={linode} />
         </TableCell>
       </TableRow >
