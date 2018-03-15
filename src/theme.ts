@@ -81,6 +81,9 @@ const LinodeTheme: Linode.Theme = {
       root: {
         padding: '18px',
         borderBottom: '1px solid #f4f4f4',
+        '&:last-child': {
+          paddingRight: 18,
+        },
       },
       head: {
         fontSize: '.9rem',
