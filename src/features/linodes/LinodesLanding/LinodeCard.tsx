@@ -56,7 +56,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   cardContent: {
     flex: 1,
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('sm')]: {
       minHeight: 230,
     },
   },
