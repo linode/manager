@@ -1,4 +1,9 @@
+import createBreakpoints from 'material-ui/styles/createBreakpoints';
+
+const breakpoints = createBreakpoints({});
+
 const LinodeTheme: Linode.Theme = {
+  breakpoints: breakpoints,
   overrides: {
     MuiButton: {
       root: {
@@ -95,6 +100,45 @@ const LinodeTheme: Linode.Theme = {
     MuiCircularProgress: {
       circle: {
         strokeLinecap: 'inherit',
+      },
+    },
+    MuiAppBar: {
+      colorDefault: {
+        backgroundColor: 'inherit',
+      },
+    },
+    MuiTabs: {
+      scroller: {
+        boxShadow: 'inset 0 -1px 0 #C5C6C8',
+      },
+    },
+    MuiTab: {
+      root: {
+        color: '#C5C6C8',
+        minWidth: 50,
+        textTransform: 'inherit',
+        fontWeight: 400,
+        [breakpoints.up('md')]: {
+          minWidth: 75,
+        },
+      },
+      textColorPrimarySelected: {
+        color: '#32363C',
+        fontWeight: 700,
+      },
+      labelContainer: {
+        paddingLeft: 9,
+        paddingRight: 9,
+        [breakpoints.up('md')]: {
+          paddingLeft: 18,
+          paddingRight: 18,
+        },
+      },
+    },
+    MuiTabIndicator: {
+      root: {
+        bottom: 0,
+        backgroundColor: '#3B85D9',
       },
     },
   },
