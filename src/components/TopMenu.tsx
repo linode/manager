@@ -46,7 +46,7 @@ interface Props {
   toggleSideMenu: () => void;
 }
 
-type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon' 
+type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'
 | 'toolbar'>;
 
 class TopMenu extends React.Component<PropsWithStyles> {

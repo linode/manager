@@ -26,10 +26,10 @@ type CSSClasses = 'label' | 'root' | Variants;
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
   return ({
     label: {
-      
+
     },
     root: {
-      
+
     },
     white: {
       backgroundColor: 'white',

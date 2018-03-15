@@ -9,7 +9,7 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
-  MuiThemeProvider, 
+  MuiThemeProvider,
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';

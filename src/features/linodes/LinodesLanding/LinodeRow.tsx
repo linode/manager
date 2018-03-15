@@ -82,7 +82,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   headCell = () => {
     const { type, linode, classes } = this.props;
     const specsLabel = type && displayLabel(type.memory);
-    
+
     return(
       <TableCell className={classes.linodeCell}>
         <Grid container alignItems="center">
@@ -101,7 +101,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       </TableCell>
     );
   }
-  
+
   loadingState = () => {
     const { linode, classes } = this.props;
     const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
