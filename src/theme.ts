@@ -89,6 +89,11 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '.9rem',
       },
     },
+    MuiCircularProgress: {
+      circle: {
+        strokeLinecap: 'inherit',
+      },
+    },
   },
   palette: {
     primary: {
