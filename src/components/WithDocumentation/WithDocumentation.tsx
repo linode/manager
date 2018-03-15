@@ -43,13 +43,13 @@ class WithDocumentation extends React.Component<PropsWithStyles>  {
       <Grid container spacing={40}>
         <Grid item xs={12}>
           <Grid container spacing={16}>
-            <Grid item xs={12} md={9} lg={10} className={classes.listContainer}>
+            <Grid item xs={12} md={12} lg={10} className={classes.listContainer}>
               <Grid item xs={12} className={classes.titleContainer}>
                 <Typography variant="headline" data-test-id="title">{title}</Typography>
               </Grid>
               {render(rest)}
             </Grid>
-            <Grid item xs={12} md={3} lg={2} className={classes.docContainer}>
+            <Grid item xs={12} md={12} lg={2} className={classes.docContainer}>
               <Typography variant="title">Linode Docs</Typography>
               {docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)}
             </Grid>
