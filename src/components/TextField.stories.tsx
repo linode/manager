@@ -38,7 +38,7 @@ storiesOf('TextField', module)
     <TextField
       label="Input Label"
       placeholder="Normal State"
-      error
+      error="test"
     >
       Normal State
     </TextField>

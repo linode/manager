@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
-  error?: Boolean;
+  errorText?: string;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses> & TextFieldProps;
