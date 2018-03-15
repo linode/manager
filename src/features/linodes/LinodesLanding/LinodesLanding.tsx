@@ -4,6 +4,8 @@ import * as moment from 'moment';
 import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
 import { connect } from 'react-redux';
 
+import Hidden from 'material-ui/Hidden';
+
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import {
@@ -114,6 +116,34 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     history.push(`#${style}`);
   }
 
+  renderListView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+    types: Linode.LinodeType[],
+  ) => {
+    return (
+      <LinodesListView
+        linodes={linodes}
+        images={images}
+        types={types}
+      />
+    );
+  }
+
+  renderGridView = (
+    linodes: Linode.Linode[],
+    images: Linode.Image[],
+    types: Linode.LinodeType[],
+  ) => {
+    return (
+      <LinodesGridView
+        linodes={linodes}
+        images={images}
+        types={types}
+      />
+    );
+  }
+
   render() {
     return (
       <WithDocumentation
@@ -160,22 +190,19 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
           return (
             <React.Fragment>
-              <ToggleBox
-                handleClick={this.changeViewStyle}
-                status={displayGrid}
-              />
-              {displayGrid === 'grid'
-                ? <LinodesGridView
-                  linodes={linodes}
-                  images={images}
-                  types={types}
+              <Hidden mdUp>
+                {this.renderGridView(linodes, images, types)}
+              </Hidden>
+              <Hidden smDown>
+                <ToggleBox
+                  handleClick={this.changeViewStyle}
+                  status={displayGrid}
                 />
-                : <LinodesListView
-                  linodes={linodes}
-                  images={images}
-                  types={types}
-                />
-              }
+                {displayGrid === 'grid'
+                  ? this.renderGridView(linodes, images, types)
+                  : this.renderListView(linodes, images, types)
+                }
+              </Hidden>
             </React.Fragment>
           );
         }}

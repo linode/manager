@@ -53,9 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       display: 'block',
       overflow: 'auto',
       [theme.breakpoints.up('md')]: {
-        maxWidth: 170,
-      },
-      [theme.breakpoints.up('lg')]: {
         maxWidth: 300,
       },
     },
