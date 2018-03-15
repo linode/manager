@@ -17,8 +17,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     padding: theme.spacing.unit,
     minWidth: 40,
     minHeight: 40,
-    '& $svg': {
-      fontSize: 23,
+    '& svg': {
+      fontSize: 22,
     },
     '&.active': {
       backgroundColor: LinodeTheme.bg.main,
