@@ -162,9 +162,9 @@ const LinodeTheme: Linode.Theme = {
       fontWeight: 700,
     },
     title: {
-      fontSize: '1.5rem',
+      fontSize: '1.125rem',
       fontWeight: 700,
-      color: '#00B159',
+      color: '#32363C',
       lineHeight: '1.35417em',
     },
     subheading: {

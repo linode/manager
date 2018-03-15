@@ -4,8 +4,9 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/s
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
+import Paper from 'material-ui/Paper';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'inner' | 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -13,6 +14,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
     backgroundColor: theme.palette.background.paper,
+  },
+  inner: {
+    padding: theme.spacing.unit * 3,
+  },
+  copy: {
+    color: '#606469',
+    fontSize: '0.875rem',
+    marginTop: theme.spacing.unit,
   },
 });
 
@@ -42,25 +51,25 @@ class TabbedPanel extends React.Component<CombinedProps> {
     const render = tabs[value].render;
 
     return (
-      <div className={classes.root}>
-        <div>{header}</div>
-        {copy && <div>{copy}</div>}
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            scrollable
-            scrollButtons="auto"
-          >
-          { tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />) }
-          </Tabs>
-        </AppBar>
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            { render(rest) }
-        </Typography>
-      </div>
+      <Paper className={classes.root}>
+        <div className={classes.inner}>
+          <Typography component="div" variant="title">{header}</Typography>
+          {copy && <Typography component="div" className={classes.copy}>{copy}</Typography>}
+          <AppBar position="static" color="default">
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+            >
+            { tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />) }
+            </Tabs>
+          </AppBar>
+          <Typography component="div" style={{ padding: 8 * 3 }}>
+              { render(rest) }
+          </Typography>
+        </div>
+      </Paper>
     );
   }
 }
