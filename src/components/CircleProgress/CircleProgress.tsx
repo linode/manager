@@ -8,36 +8,62 @@ import {
 } from 'material-ui';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 
-type CSSClasses = 'root' | 'top' | 'bottom' | 'progress';
+type CSSClasses = 'root' | 'top' | 'progress';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+
   progress: {
-    margin: theme.spacing.unit * 2,
-    maxWidth: '50%',
+    position: 'relative',
+    '& $circle': {
+      transition: 'stroke-dasharray .5s linear, stroke-dashoffset .5s linear',
+    },
   },
 
-  top: { alignSelf: 'flex-start' },
-
-  bottom: { alignSelf: 'flex-end' },
+  top: {
+    width: 120,
+    height: 120,
+    borderRadius: '50%',
+    border: '1px solid #999',
+    position: 'absolute',
+    left: 0,
+    top: 15,
+    right: 0,
+    margin: '0 auto',
+  },
 
   root: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    position: 'relative',
+    width: 150,
+    height: 150,
+    margin: '0 auto',
+    flex: 1,
   },
 });
 
-const CircleProgressComponent = (props: WithStyles<CSSClasses>) => {
+interface Props {
+  value?: Boolean | number;
+}
+
+const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
+  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
+  const value = typeof props.value === 'number' ? props.value : 0;
   return (
     <div className={props.classes.root}>
       <div className={props.classes.top} />
-      <CircularProgress className={props.classes.progress} size={100} />
-      <div className={props.classes.bottom} />
+      <CircularProgress
+        className={props.classes.progress}
+        size={150}
+        value={value}
+        variant={variant}
+        thickness={2}
+      />
     </div>
   );
 };
 
 const decorate = withStyles(styles, { withTheme: true });
 
-export default decorate<{}>(CircleProgressComponent);
+export default decorate<Props>(CircleProgressComponent);

@@ -11,13 +11,17 @@ import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
+import Typography from 'material-ui/Typography';
 
-import LinodeStatusIndicator from 'src/components/LinodeStatusIndicator';
 import Tag from 'src/components/Tag';
+import CircleProgress from 'src/components/CircleProgress';
+
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import { typeLabelLong } from './presentation';
+import transitionStatus from './linodeTransitionStatus';
+import LinodeStatusIndicator from './LinodeStatusIndicator';
 
 type CSSClasses = 
   'cardSection'
@@ -29,7 +33,8 @@ type CSSClasses =
   | 'cardActions'
   | 'button'
   | 'consoleButton'
-  | 'rebootButton';
+  | 'rebootButton'
+  | 'loadingStatusText';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
@@ -52,7 +57,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardContent: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      minHeight: 213,
+      minHeight: 230,
     },
   },
   distroIcon: {
@@ -80,6 +85,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   rebootButton: {
     width: '50%',
   },
+  loadingStatusText: {
+    fontSize: '1.1rem',
+    color: '#444',
+    textTransform: 'capitalize',
+    position: 'relative',
+    top: - theme.spacing.unit * 2,
+  },
 });
 
 interface Props {
@@ -104,13 +116,69 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
-  render() {
-    const { classes, linode, image, type } = this.props;
+
+  loadingState = () => {
+    const { linode, classes } = this.props;
+
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
+    ? Math.max(linode.recentEvent.percent_complete, 1)
+    : true;
+
+    return (
+      <CardContent className={classes.cardContent}>
+        <Grid container>
+          <Grid item xs={12}>
+            <CircleProgress value={value} />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography align="center" className={classes.loadingStatusText}>
+              {linode.status.replace('_', ' ')}
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    );
+  }
+
+  loadedState = () => {
+    const { classes, image, type, linode } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
      * */
     const tags = [linode.group].filter(Boolean);
+
+    return (
+      <CardContent className={classes.cardContent}>
+      <div>
+        {image && type &&
+        <div className={classes.cardSection}>
+          {typeLabelLong(type.memory, type.disk, type.vcpus)}
+        </div>
+        }
+        <div className={classes.cardSection}>
+          <RegionIndicator region={linode.region} />
+        </div>
+        <div className={classes.cardSection}>
+          <IPAddress ips={linode.ipv4} copyRight />
+          <IPAddress ips={[linode.ipv6]} copyRight />
+        </div>
+        {image && type &&
+        <div className={classes.cardSection}>
+          {image.label}
+        </div>
+        }      
+      </div>
+      <div className={classes.cardSection}>
+        {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
+      </div>
+    </CardContent>
+    );
+  }
+
+  render() {
+    const { classes, linode } = this.props;
+    const loading = transitionStatus.includes(linode.status);
 
     return (
       <Grid item xs={12} sm={6} lg={4}>
@@ -122,30 +190,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             }
           />
           {<Divider />}
-          <CardContent className={classes.cardContent}>
-            <div>
-              {image && type &&
-              <div className={classes.cardSection}>
-                {typeLabelLong(type.memory, type.disk, type.vcpus)}
-              </div>
-              }
-              <div className={classes.cardSection}>
-                <RegionIndicator region={linode.region} />
-              </div>
-              <div className={classes.cardSection}>
-                <IPAddress ips={linode.ipv4} copyRight />
-                <IPAddress ips={[linode.ipv6]} copyRight />
-              </div>
-              {image && type &&
-              <div className={classes.cardSection}>
-                {image.label}
-              </div>
-              }         
-            </div>
-            <div className={classes.cardSection}>
-              {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
-            </div>
-          </CardContent>
+          { loading ? this.loadingState() : this.loadedState() }
           <CardActions className={classes.cardActions}>
             <Button className={`${classes.button} ${classes.consoleButton}`}>
               <span className="btnLink">Launch Console</span>
