@@ -27,9 +27,10 @@ storiesOf('TextField', module)
   <MuiThemeProvider theme={theme}>
     <TextField
       label="Input Label"
-      placeholder="Normal State"
+      placeholder="Active State"
+      autoFocus
     >
-      Normal State
+      Active State
     </TextField>
   </MuiThemeProvider>
 ))
@@ -37,10 +38,32 @@ storiesOf('TextField', module)
   <MuiThemeProvider theme={theme}>
     <TextField
       label="Input Label"
-      placeholder="Normal State"
-      error="test"
+      placeholder="Error State"
+      errorText="This input needs further attention"
     >
-      Normal State
+      Error State
+    </TextField>
+  </MuiThemeProvider>
+))
+.add('Affirmative', () => (
+  <MuiThemeProvider theme={theme}>
+    <TextField
+      label="Input Label"
+      placeholder="Affirmative State"
+      affirmative
+    >
+      Affirmative State
+    </TextField>
+  </MuiThemeProvider>
+))
+.add('Disabled', () => (
+  <MuiThemeProvider theme={theme}>
+    <TextField
+      label="Input Label"
+      placeholder="Disabled State"
+      disabled
+    >
+      Disabled State
     </TextField>
   </MuiThemeProvider>
 ))

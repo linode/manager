@@ -1,38 +1,31 @@
 import * as React from 'react';
 
-import {
-  withStyles,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
-} from 'material-ui';
-
 import TextField, { TextFieldProps } from 'material-ui/TextField';
-
-type CSSClasses = 'root';
-
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
-  root: {
-  },
-});
-
-const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   errorText?: string;
+  affirmative?: Boolean;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & TextFieldProps;
+type CombinedProps = Props & TextFieldProps;
 
 const LinodeTextField: React.StatelessComponent<CombinedProps> = (props) => {
   const finalProps = { ...props };
 
-  if (props.error) {
+  if (props.errorText) {
+    finalProps.error = true;
+    finalProps.helperText = props.errorText;
+  }
 
+  if (props.affirmative) {
+    finalProps.InputProps = {
+      className: 'affirmative',
+    };
   }
 
   return (
     <TextField
+      {...finalProps}
       InputLabelProps={{
         ...finalProps.InputLabelProps,
         shrink: true,
@@ -41,11 +34,10 @@ const LinodeTextField: React.StatelessComponent<CombinedProps> = (props) => {
         ...finalProps.InputProps,
         disableUnderline: true,
       }}
-      {...finalProps}
     >
       {props.children}
     </TextField>
   );
 };
 
-export default styled(LinodeTextField);
+export default LinodeTextField;

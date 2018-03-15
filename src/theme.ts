@@ -55,6 +55,13 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiInput: {
+      root: {
+        '&.affirmative': {
+          border: '1px solid green',
+        },
+      },
+    },
     Popover: {
       root: {
         borderRadius: 0,
