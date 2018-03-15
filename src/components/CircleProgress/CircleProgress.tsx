@@ -14,7 +14,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
   progress: {
     position: 'relative',
-    '& $circle': {
+    '& circle': {
       transition: 'stroke-dasharray .5s linear, stroke-dashoffset .5s linear',
     },
   },
