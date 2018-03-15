@@ -3,6 +3,9 @@ import * as classnames from 'classnames';
 import { withStyles, Theme, StyleRulesCallback, WithStyles, Button } from 'material-ui';
 import LinodeTheme from '../../../src/theme';
 
+import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
+import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
+
 type CSSClasses = 'root' | 'first' | 'last'| 'active';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
@@ -53,11 +56,11 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   });
 
   if (first) {
-    return <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}>First</Button>;
+    return <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}><KeyboardArrowLeft /></Button>;
   }
 
   if (last) {
-    return <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}>Last</Button>;
+    return <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}><KeyboardArrowRight /></Button>;
   }
 
   return (
