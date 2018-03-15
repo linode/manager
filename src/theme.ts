@@ -58,8 +58,24 @@ const LinodeTheme: Linode.Theme = {
     MuiInput: {
       root: {
         '&.affirmative': {
-          border: '1px solid green',
+          borderColor: 'green',
         },
+      },
+      input: {
+        border: '1px solid #ccc',
+        padding: '12px 12px 13px',
+        fontSize: '.9rem',
+        '&:focus': {
+          borderColor: '#666',
+        },
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: '#666',
+      },
+      focused: {
+        color: '#666',
       },
     },
     Popover: {
