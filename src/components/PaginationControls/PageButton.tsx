@@ -56,11 +56,19 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   });
 
   if (first) {
-    return <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}><KeyboardArrowLeft /></Button>;
+    return (
+    <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}>
+      <KeyboardArrowLeft />
+    </Button>
+    );
   }
 
   if (last) {
-    return <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}><KeyboardArrowRight /></Button>;
+    return (
+    <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}>
+      <KeyboardArrowRight />
+    </Button>
+    );
   }
 
   return (
