@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { API_ROOT } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { rebootLinode } from './powerActions';
 
 interface Props {
   linode: Linode.Linode;
@@ -28,10 +29,7 @@ class LinodeActionMenu extends React.Component<FinalProps> {
         {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            Axios.post(`${API_ROOT}/linode/instances/${linode.id}/reboot`)
-            .then((response) => {
-              resetEventsPolling();
-            });
+            rebootLinode(`${linode.id}`);
             closeMenu();
             // TODO, catch errors and show them with a snackbar
           },
@@ -75,7 +73,6 @@ class LinodeActionMenu extends React.Component<FinalProps> {
               resetEventsPolling();
             });
             closeMenu();
-            // TODO, catch errors and show them with a snackbar
           },
         });
       }
