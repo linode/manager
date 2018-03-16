@@ -92,9 +92,10 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     linodeEvents$
     .filter((linodeEvent) => {
       return (
-        moment(linodeEvent.created + 'Z') > mountTime
-        && linodeEvent.entity !== null
-        && linodeEvent.entity.type === 'linode'
+        (linodeEvent.entity !== null
+        && linodeEvent.entity.type === 'linode')
+        && (moment(linodeEvent.created + 'Z') > mountTime
+        || linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100)
       );
     })
     .subscribe((linodeEvent) => {
