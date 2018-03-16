@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { compose } from 'redux';
 
 import {
   withStyles,
@@ -43,9 +45,12 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
-class AddNewMenu extends React.Component<PropsWithStyles, State> {
+const styled = withStyles(styles, { withTheme: true });
+
+
+class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
   };
@@ -54,6 +59,8 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
     {
       title: 'Linode',
       onClick: (e) => {
+        this.props.history.push('/linodes/create');
+        this.handleClose();
         e.preventDefault();
       },
       body: `High performance SSD Linux servers for all of your infrastructure needs`,
@@ -62,6 +69,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
     {
       title: 'Volume',
       onClick: (e) => {
+        this.handleClose();
         e.preventDefault();
       },
       body: `Block storage service allows you to attach additional storage to your Linode`,
@@ -70,6 +78,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
     {
       title: 'NodeBalancer',
       onClick: (e) => {
+        this.handleClose();
         e.preventDefault();
       },
       body: `Ensure your valuable applications and services are highly-available`,
@@ -130,5 +139,9 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
     );
   }
 }
+export const styledComponent = styled(AddNewMenu);
 
-export default withStyles(styles, { withTheme: true })<Props>(AddNewMenu);
+export default compose(
+  withRouter,
+  styled,
+)(AddNewMenu);
