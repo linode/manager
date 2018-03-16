@@ -12,18 +12,23 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'item' | 'buttonWrapper' | 'button';
+type CSSClasses = 'item' | 'button';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   item: {
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    marginTop: '0 !important',
-  },
-  buttonWrapper: {
-    marginTop: theme.spacing.unit,
+    paddingTop: theme.spacing.unit * 1.5,
+    paddingBottom: theme.spacing.unit * 1.5,
+    fontWeight: 400,
+    fontSize: '.9rem',
+    color: theme.palette.primary.main,
+    transition: `${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
+    ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
   },
   button: {
     marginTop: theme.spacing.unit,

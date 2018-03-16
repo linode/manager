@@ -5,6 +5,11 @@ const breakpoints = createBreakpoints({});
 const LinodeTheme: Linode.Theme = {
   breakpoints: { breakpoints },
   overrides: {
+    MuiAppBar: {
+      colorDefault: {
+        backgroundColor: 'inherit',
+      },
+    },
     MuiButton: {
       root: {
         textTransform: 'inherit',
@@ -60,6 +65,29 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiChip: {
+      root: {
+        backgroundColor: '#f4f4f4',
+        height: 20,
+        borderRadius: 4,
+        color: '#555',
+      },
+      label: {
+        paddingLeft: 4,
+        paddingRight: 4,
+      },
+      deleteIcon: {
+        color: '#aaa',
+        width: 20,
+        height: 20,
+        marginLeft: 2,
+      },
+    },
+    MuiCircularProgress: {
+      circle: {
+        strokeLinecap: 'inherit',
+      },
+    },
     MuiInput: {
       root: {
         '&.affirmative [type="text"]': {
@@ -101,62 +129,20 @@ const LinodeTheme: Linode.Theme = {
         color: '#CA0813',
       },
     },
-    Popover: {
-      root: {
+    MuiList: {
+      padding: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    },
+    MuiPopover: {
+      paper: {
+        boxShadow: '0 0 5px #ddd',
         borderRadius: 0,
-      },
-    },
-    MuiChip: {
-      root: {
-        backgroundColor: '#f4f4f4',
-        height: 20,
-        borderRadius: 4,
-        color: '#555',
-      },
-      label: {
-        paddingLeft: 4,
-        paddingRight: 4,
-      },
-      deleteIcon: {
-        color: '#aaa',
-        width: 20,
-        height: 20,
-        marginLeft: 2,
-      },
-    },
-    MuiTableHead: {
-      root: {
-        backgroundColor: '#fbfbfb',
-      },
-    },
-    MuiTableCell: {
-      root: {
-        padding: '18px',
-        borderBottom: '1px solid #f4f4f4',
-        '&:last-child': {
-          paddingRight: 18,
+        minWidth: 200,
+        [breakpoints.up('lg')]: {
+          minWidth: 250,
         },
-      },
-      head: {
-        fontSize: '.9rem',
-      },
-      body: {
-        fontSize: '.9rem',
-      },
-    },
-    MuiCircularProgress: {
-      circle: {
-        strokeLinecap: 'inherit',
-      },
-    },
-    MuiAppBar: {
-      colorDefault: {
-        backgroundColor: 'inherit',
-      },
-    },
-    MuiTabs: {
-      scroller: {
-        boxShadow: 'inset 0 -1px 0 #C5C6C8',
       },
     },
     MuiTab: {
@@ -186,6 +172,36 @@ const LinodeTheme: Linode.Theme = {
       root: {
         bottom: 0,
         backgroundColor: '#3B85D9',
+      },
+    },
+    MuiTableCell: {
+      root: {
+        padding: '18px',
+        borderBottom: '1px solid #f4f4f4',
+        '&:last-child': {
+          paddingRight: 18,
+        },
+      },
+      head: {
+        fontSize: '.9rem',
+      },
+      body: {
+        fontSize: '.9rem',
+      },
+    },
+    MuiTableHead: {
+      root: {
+        backgroundColor: '#fbfbfb',
+      },
+    },
+    MuiTabs: {
+      scroller: {
+        boxShadow: 'inset 0 -1px 0 #C5C6C8',
+      },
+    },
+    Popover: {
+      root: {
+        borderRadius: 0,
       },
     },
   },

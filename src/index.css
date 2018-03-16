@@ -52,16 +52,6 @@ a {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-.ovds {
-  box-shadow: 0 0 5px #ddd !important;
-}
-
-.ovds.ab {
-  position: absolute;
-  outline: 0;
-  padding: 0;
-}
-
 .btnLink {
   color: #5F99EA;
   font-weight: 400;
