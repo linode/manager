@@ -9,6 +9,7 @@ import {
 import CheckCircle from 'material-ui-icons/CheckCircle';
 
 import Grid from 'material-ui/Grid';
+import LinodeTheme from '../../../src/theme';
 
 type CSSClasses =
 'root'
@@ -20,19 +21,12 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
-    backgroundColor: '#fbfbfb',
-    maxWidth: '290px',
-    minHeight: '64px',
-    border: '1px solid #333',
-    '&:hover': {
-      backgroundColor: '#f4f4f4',
-    },
+    marginBottom: theme.spacing.unit * 2,
+    maxWidth: 300,
+    minWidth: 225,
   },
   icon: {
-    '& svg': {
-      fontSize: '32px',
-    },
-    '& span': {
+    '& svg, & span': {
       fontSize: '32px',
     },
     '& img': {
@@ -48,6 +42,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     fontSize: '0.8em',
   },
   innerGrid: {
+    width: '100%',
+    minHeight: 70,
+    backgroundColor: LinodeTheme.bg.offWhite,
+    padding: theme.spacing.unit * 2,
+    border: '1px solid ' + `${LinodeTheme.bg.main}`,
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+    },
   },
   flex: {
     flex: 1,
@@ -75,7 +77,11 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   } = props;
 
   return (
-    <div className={classes.root}>
+    <Grid
+      item
+      xs={4}
+      className={classes.root}
+    >
       <Grid
         container
         alignItems="center"
@@ -104,7 +110,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
         }
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
