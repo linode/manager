@@ -10,7 +10,7 @@ import CheckCircle from 'material-ui-icons/CheckCircle';
 
 import Grid from 'material-ui/Grid';
 
-type CSSClasses = 
+type CSSClasses =
 'root'
 | 'icon'
 | 'flex'
@@ -42,7 +42,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   },
   heading: {
     fontWeight: 700,
-    fontSize: '1em', 
+    fontSize: '1em',
   },
   subheading: {
     fontSize: '0.8em',
@@ -87,7 +87,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
         <Grid item className={classes.flex}>
           <div className={classes.heading}>
-            {heading} 
+            {heading}
           </div>
           {subheadings.map((subheading) => {
             return (
