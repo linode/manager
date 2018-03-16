@@ -6,24 +6,29 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import CheckCircle from 'material-ui-icons/CheckCircle';
 
 import Grid from 'material-ui/Grid';
 
 type CSSClasses = 
 'root'
 | 'icon'
+| 'flex'
 | 'heading'
 | 'innerGrid'
 | 'subheading';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
+    backgroundColor: '#fbfbfb',
     maxWidth: '290px',
     minHeight: '64px',
     border: '1px solid #333',
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+    },
   },
   icon: {
-    padding: '0 !important',
     '& svg': {
       fontSize: '32px',
     },
@@ -43,7 +48,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     fontSize: '0.8em',
   },
   innerGrid: {
-    margin: theme.spacing.unit * 2,
+  },
+  flex: {
+    flex: 1,
   },
 });
 
@@ -53,6 +60,7 @@ interface Props {
   renderIcon: () => JSX.Element;
   heading: string;
   subheadings: string[];
+  checked?: Boolean;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -63,15 +71,21 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
     heading,
     subheadings,
     classes,
+    checked,
   } = props;
 
   return (
     <div className={classes.root}>
-      <Grid container className={classes.innerGrid}>
-        <Grid item xs={2} className={classes.icon}>
+      <Grid
+        container
+        alignItems="center"
+        className={classes.innerGrid}
+      >
+        <Grid item className={classes.icon}>
           {renderIcon()}
         </Grid>
-        <Grid item xs={10} className="p0">
+
+        <Grid item className={classes.flex}>
           <div className={classes.heading}>
             {heading} 
           </div>
@@ -83,6 +97,12 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
             );
           })}
         </Grid>
+
+        {checked &&
+          <Grid item>
+            <CheckCircle />
+          </Grid>
+        }
       </Grid>
     </div>
   );
