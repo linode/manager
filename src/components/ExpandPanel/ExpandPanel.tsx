@@ -64,27 +64,25 @@ class ExpandPanel extends React.Component<FinalProps, State> {
     const { open } = this.state;
 
     return (
-      <React.Fragment>
-        <div className={classes.root}>
-          <div className={classes.header} onClick={this.handleNameClick}>
-            {open
-              ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
-              : <KeyboardArrowRight className={classes.caret}  />
-            }
-            {name}
-          </div>
-          <Collapse in={open}>
-            {open
-              ? (
-                <div className={classes.panel}>
-                  {children}
-                </div>
-              )
-              : null
-            }
-          </Collapse>
+      <div className={classes.root}>
+        <div className={classes.header} onClick={this.handleNameClick}>
+          {open
+            ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
+            : <KeyboardArrowRight className={classes.caret}  />
+          }
+          {name}
         </div>
-      </React.Fragment>
+        <Collapse in={open}>
+          {open
+            ? (
+              <div className={classes.panel}>
+                {children}
+              </div>
+            )
+            : null
+          }
+        </Collapse>
+      </div>
     );
   }
 }
