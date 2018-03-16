@@ -36,7 +36,7 @@ const styled = withStyles<CSSClasses>(styles, { withTheme: true });
 
 interface Props {
   active?: boolean;
-  page?: number; 
+  page?: number;
   first?: boolean;
   last?: boolean;
   onClick: () => void;

@@ -8,7 +8,7 @@ const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find('PageButton[f
 const getLastPageButton = (wrapper: ReactWrapper) => wrapper.find('PageButton[last]');
 
 describe('PaginationControls', () => {
-  
+
   const mockPages = Array.from(Array(7), (x, idx) => idx + 1);
 
   it('should render a left and right arrow', () => {
@@ -27,7 +27,7 @@ describe('PaginationControls', () => {
     expect(prevPage.exists()).toBeTruthy();
     expect(nextPage.exists()).toBeTruthy();
   });
-  
+
   it('should render a disabled previous button when at first page.', () => {
     const wrapper = mount(
       <PaginationControls
@@ -41,7 +41,7 @@ describe('PaginationControls', () => {
     const prevPage = getFirstPageButton(wrapper);
     expect(prevPage.prop('disabled')).toBeTruthy();
   });
-  
+
   it('should render a disabled next button when at last page.', () => {
     const wrapper = mount(
       <PaginationControls
@@ -55,7 +55,7 @@ describe('PaginationControls', () => {
     const nextPage = getLastPageButton(wrapper);
     expect(nextPage.prop('disabled')).toBeTruthy();
   });
-  
+
   it('should invoke onClickHandler when clicked', () => {
     const mockClickHandler = jest.fn();
 
