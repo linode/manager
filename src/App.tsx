@@ -24,8 +24,8 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/components/Footer';
 
-const LinodesLanding = DefaultLoader({
-  loader: () => import('src/features/linodes/LinodesLanding'),
+const LinodesRoutes = DefaultLoader({
+  loader: () => import('src/features/linodes'),
 });
 
 const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
@@ -138,7 +138,7 @@ export class App extends React.Component<FinalProps, State> {
               <div className={classes.wrapper}>
                 <Switch>
                   <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
-                  <Route exact path="/linodes" component={LinodesLanding} />
+                  <Route path="/linodes" component={LinodesRoutes} />
                   <TempRoute exact path="/volumes" render={() => 'Volumes'} />
                   <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
                   <TempRoute exact path="/domains" render={() => 'Domains'} />
