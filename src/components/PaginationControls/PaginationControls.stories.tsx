@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import PaginationControls from './PaginationControls';
 
 import {
-  MuiThemeProvider, 
+  MuiThemeProvider,
   createMuiTheme,
 } from 'material-ui/styles';
 import LinodeTheme from '../../../src/theme';
