@@ -32,8 +32,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '.75rem',
   },
   popover: {
+    minWidth: 175,
     padding: theme.spacing.unit * 2,
-    boxShadow: '0 0 5px #ddd',
   },
 });
 
