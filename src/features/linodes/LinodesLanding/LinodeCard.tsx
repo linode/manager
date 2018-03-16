@@ -19,6 +19,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
+import { rebootLinode } from './powerActions';
 import { typeLabelLong } from './presentation';
 import transitionStatus from './linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
@@ -195,7 +196,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button className={`${classes.button} ${classes.consoleButton}`}>
               <span className="btnLink">Launch Console</span>
             </Button>
-            <Button className={`${classes.button} ${classes.rebootButton}`}>
+            <Button
+              className={`${classes.button}
+              ${classes.rebootButton}`}
+              onClick={() => rebootLinode(`${linode.id}`)}
+            >
               <span className="btnLink">Reboot</span>
             </Button>
           </CardActions>
