@@ -3548,6 +3548,10 @@ follow-redirects@^1.3.0:
   dependencies:
     debug "^3.1.0"
 
+font-logos@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/font-logos/-/font-logos-0.10.0.tgz#c79db4565b30d9407d5279b5d9dab010d5cc4e87"
+
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
