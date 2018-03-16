@@ -9,32 +9,34 @@ import de from 'flag-icon-css/flags/4x3/de.svg';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
 import SelectionCard from './SelectionCard';
+import Grid from 'material-ui/Grid';
 
 storiesOf('SelectionCard', module)
 .addDecorator(ThemeDecorator)
 .add('Default with SvgIcon', () => (
   <React.Fragment>
-    <SelectionCard
-      renderIcon={() => {
-        return <InsertPhoto />;
-      }}
-      heading="Photos"
-      subheadings={[
-        'Use a photo',
-        'Select up to 3',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      renderIcon={() => {
-        return <Alarm />;
-      }}
-      heading="Alarm"
-      subheadings={[
-        'Set an alarm',
-        'Choose the time and alarm sound',
-      ]}
-    />
+    <Grid container wrap="wrap">
+      <SelectionCard
+        renderIcon={() => {
+          return <InsertPhoto />;
+        }}
+        heading="Photos"
+        subheadings={[
+          'Use a photo',
+          'Select up to 3',
+        ]}
+      />
+      <SelectionCard
+        renderIcon={() => {
+          return <Alarm />;
+        }}
+        heading="Alarm"
+        subheadings={[
+          'Set an alarm',
+          'Choose the time and alarm sound',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 .add('Default with img', () => (
