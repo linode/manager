@@ -57,8 +57,18 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiInput: {
       root: {
-        '&.affirmative': {
-          borderColor: 'green',
+        '&.affirmative [type="text"]': {
+          borderColor: '#00B159',
+        },
+      },
+      error: {
+        '& [type="text"]': {
+          borderColor: '#CA0813',
+        },
+      },
+      disabled: {
+        '& [type="text"]': {
+          borderColor: '#f4f4f4',
         },
       },
       input: {
@@ -76,6 +86,14 @@ const LinodeTheme: Linode.Theme = {
       },
       focused: {
         color: '#666',
+      },
+      error: {
+        color: '#CA0813',
+      },
+    },
+    MuiFormHelperText: {
+      error: {
+        color: '#CA0813',
       },
     },
     Popover: {
@@ -163,6 +181,7 @@ const LinodeTheme: Linode.Theme = {
   color: {
     headline: '#333',
     grey1: '#ABADAF',
+    red: '#CA0813',
     green: '#00B159',
     border1: '#ABADAF',
   },
