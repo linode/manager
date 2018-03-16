@@ -11,7 +11,6 @@ type CSSClasses = 'root' | 'first' | 'last'| 'active';
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
     backgroundColor: LinodeTheme.bg.offWhite,
-    color: theme.palette.primary.main,
     border: '1px solid ' + `${LinodeTheme.color.grey2}`,
     borderRight: 0,
     padding: theme.spacing.unit,
@@ -36,11 +35,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 const styled = withStyles<CSSClasses>(styles, { withTheme: true });
 
 interface Props {
-  active?: Boolean;
+  active?: boolean;
   page?: number; 
-  first?: Boolean;
-  last?: Boolean;
+  first?: boolean;
+  last?: boolean;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((props) => {
@@ -51,6 +51,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
     first,
     last,
     onClick,
+    disabled,
   } = props;
 
   const rootClasses = classnames({
@@ -61,7 +62,12 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
 
   if (first) {
     return (
-    <Button className={`${rootClasses} ${classes.first}` } onClick={onClick}>
+    <Button
+      className={`${rootClasses}
+      ${classes.first}` }
+      onClick={onClick}
+      disabled={disabled}
+    >
       <KeyboardArrowLeft />
     </Button>
     );
@@ -69,7 +75,12 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
 
   if (last) {
     return (
-    <Button className={`${rootClasses} ${classes.last}` } onClick={onClick}>
+    <Button
+      className={`${rootClasses}
+      ${classes.last}` }
+      onClick={onClick}
+      disabled={disabled}
+    >
       <KeyboardArrowRight />
     </Button>
     );
