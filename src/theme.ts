@@ -60,6 +60,47 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiInput: {
+      root: {
+        '&.affirmative [type="text"]': {
+          borderColor: '#00B159',
+        },
+      },
+      error: {
+        '& [type="text"]': {
+          borderColor: '#CA0813',
+        },
+      },
+      disabled: {
+        '& [type="text"]': {
+          borderColor: '#f4f4f4',
+        },
+      },
+      input: {
+        border: '1px solid #ccc',
+        padding: '12px 12px 13px',
+        fontSize: '.9rem',
+        '&:focus': {
+          borderColor: '#666',
+        },
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: '#666',
+      },
+      focused: {
+        color: '#666',
+      },
+      error: {
+        color: '#CA0813',
+      },
+    },
+    MuiFormHelperText: {
+      error: {
+        color: '#CA0813',
+      },
+    },
     Popover: {
       root: {
         borderRadius: 0,
@@ -190,6 +231,7 @@ const LinodeTheme: Linode.Theme = {
   color: {
     headline: '#333',
     grey1: '#ABADAF',
+    red: '#CA0813',
     green: '#00B159',
     border1: '#ABADAF',
   },

@@ -29,7 +29,6 @@ const LinodesLanding = DefaultLoader({
 });
 
 const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
-
 theme.shadows = theme.shadows.fill('none');
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
