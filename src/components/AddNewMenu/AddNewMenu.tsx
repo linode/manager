@@ -24,7 +24,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flex: 1,
   },
   menu: {
-    padding: 0,
+    // padding: 0,
   },
   button: {
     paddingRight: 22,
@@ -112,7 +112,7 @@ class AddNewMenu extends React.Component<PropsWithStyles, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
-          PaperProps={{ square: true, className: 'ovds ab' }}
+          PaperProps={{ square: true }}
           anchorOrigin={{ vertical: 65, horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           MenuListProps={{ className: classes.menu }}
