@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Axios from 'axios';
 
 import {
   withStyles,
@@ -15,6 +16,8 @@ import Typography from 'material-ui/Typography';
 
 import Tag from 'src/components/Tag';
 import CircleProgress from 'src/components/CircleProgress';
+import { API_ROOT } from 'src/constants';
+import { resetEventsPolling } from 'src/events';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -176,6 +179,13 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
+  rebootLinode = () => {
+    Axios.post(`${API_ROOT}/linode/instances/${this.props.linode.id}/reboot`)
+    .then((response) => {
+      resetEventsPolling();
+    });
+  }
+
   render() {
     const { classes, linode } = this.props;
     const loading = transitionStatus.includes(linode.status);
@@ -195,7 +205,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button className={`${classes.button} ${classes.consoleButton}`}>
               <span className="btnLink">Launch Console</span>
             </Button>
-            <Button className={`${classes.button} ${classes.rebootButton}`}>
+            <Button
+              className={`${classes.button}
+              ${classes.rebootButton}`}
+              onClick={this.rebootLinode}
+            >
               <span className="btnLink">Reboot</span>
             </Button>
           </CardActions>
