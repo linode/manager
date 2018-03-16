@@ -9,17 +9,29 @@ import {
 import Collapse from 'material-ui/transitions/Collapse';
 
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
-import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 
-type CSSClasses = 'root' | 'panel' | 'header';
+type CSSClasses = 'root' | 'panel' | 'header' | 'caret' ;
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
-    flex: 1,
+    padding: `${theme.spacing.unit}px 0`,
   },
   header: {
     cursor: 'pointer',
     userSelect: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    fontWeight: 700,
+  },
+  caret: {
+    color: theme.palette.primary.main,
+    marginRight: theme.spacing.unit,
+    fontSize: '26px',
+    transition: 'transform .1s ease-in-out',
+    '&.rotate': {
+      transition: 'transform .3s ease-in-out',
+      transform: 'rotate(90deg)',
+    },
   },
   panel: {
     padding: theme.spacing.unit,
@@ -42,7 +54,9 @@ class ExpandPanel extends React.Component<FinalProps, State> {
   };
 
   handleNameClick = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({ 
+      open: !this.state.open, 
+    });
   }
 
   render() {
@@ -54,8 +68,8 @@ class ExpandPanel extends React.Component<FinalProps, State> {
         <div className={classes.root}>
           <div className={classes.header} onClick={this.handleNameClick}>
             {open 
-              ? <KeyboardArrowDown />
-              : <KeyboardArrowRight />
+              ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
+              : <KeyboardArrowRight className={classes.caret}  />
             }
             {name}
           </div>
