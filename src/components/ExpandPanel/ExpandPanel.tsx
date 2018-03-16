@@ -54,8 +54,8 @@ class ExpandPanel extends React.Component<FinalProps, State> {
   };
 
   handleNameClick = () => {
-    this.setState({ 
-      open: !this.state.open, 
+    this.setState({
+      open: !this.state.open,
     });
   }
 
@@ -67,7 +67,7 @@ class ExpandPanel extends React.Component<FinalProps, State> {
       <React.Fragment>
         <div className={classes.root}>
           <div className={classes.header} onClick={this.handleNameClick}>
-            {open 
+            {open
               ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
               : <KeyboardArrowRight className={classes.caret}  />
             }
