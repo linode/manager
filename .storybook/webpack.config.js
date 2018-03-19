@@ -42,9 +42,13 @@ module.exports = {
         ],
       },
       {
-        test: /\.(woff|woff2|eot|ttf|svg)$/,
+        test: /\.(woff|woff2|eot|ttf)$/,
         include: includePath,
         use: 'url-loader'
+      },
+      {
+        test: /\.svg$/,
+        loader: ['svgr/webpack'],
       },
       {
         test: /\.tsx?$/,
