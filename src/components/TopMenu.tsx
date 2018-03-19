@@ -25,6 +25,7 @@ const styles = (theme: Theme): StyleRules => ({
     color: theme.palette.text.primary,
     backgroundColor: 'white',
     position: 'relative',
+    paddingRight: '0 !important',
   },
   toolbar: {
     minHeight: 64,
