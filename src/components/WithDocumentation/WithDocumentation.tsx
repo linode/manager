@@ -8,6 +8,7 @@ import {
 } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
+import LinodeTheme from 'src/theme';
 
 import DocComponent, { Doc } from './DocComponent';
 
@@ -17,6 +18,10 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   listContainer: {
     position: 'relative',
+  },
+  sidebarTitle: {
+    fontSize: '1.5rem',
+    color: LinodeTheme.color.green,
   },
   docContainer: {
     [theme.breakpoints.up('md')]: {
@@ -33,6 +38,7 @@ interface Props {
 
 type PropsWithStyles = Props & WithStyles<'listContainer'
 | 'titleContainer'
+| 'sidebarTitle'
 | 'docContainer' >;
 
 class WithDocumentation extends React.Component<PropsWithStyles>  {
@@ -50,7 +56,7 @@ class WithDocumentation extends React.Component<PropsWithStyles>  {
               {render(rest)}
             </Grid>
             <Grid item xs={12} md={12} lg={2} className={classes.docContainer}>
-              <Typography variant="title">Linode Docs</Typography>
+              <Typography variant="title" className={classes.sidebarTitle}>Linode Docs</Typography>
               {docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)}
             </Grid>
           </Grid>
