@@ -72,7 +72,7 @@ class ExpandPanel extends React.Component<FinalProps, State> {
           }
           {name}
         </div>
-        <Collapse in={open}>
+        <Collapse in={open} className={open ? 'panel' : ''}>
           {open
             ? (
               <div className={classes.panel}>

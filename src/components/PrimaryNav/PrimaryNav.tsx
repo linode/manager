@@ -57,6 +57,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
+    '&:hover': {
+      borderLeftColor: 'rgba(0, 0, 0, 0.08)',
+    },
   },
   linkItem: {
     color: '#C9CACB',
@@ -66,16 +69,31 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: 'border-color .7s ease-in-out',
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
     borderLeftColor: LinodeTheme.color.green,
+    '&:hover': {
+      borderLeftColor: LinodeTheme.color.green,
+    },
   },
   activeLink: {
     color: 'white',
   },
   sublinkPanel: {
     color: '#C9CACB',
+    padding: '16px 40px 0 34px',
+    fontSize: '.9rem',
+    '& svg': {
+      color: 'white',
+      fontSize: '20px',
+      margin: '3px 2px 4px 0',
+    },
+    '& .panel': {
+      margin: '5px 0 0 15px',
+    },
   },
   sublink: {
+    padding: '4px 0',
     color: '#C9CACB',
     display: 'block',
+    fontSize: '.8rem',
   },
 });
 
