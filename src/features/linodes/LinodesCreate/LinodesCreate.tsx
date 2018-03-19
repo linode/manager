@@ -45,9 +45,7 @@ class LinodeCreate extends React.Component<FinalProps, State> {
   tabs = [
     {
       title: 'Create from Image',
-      render: () => {
-        return () => this.renderCreateFromImage();
-      },
+      render: this.renderCreateFromImage,
     },
   ];
 
