@@ -65,14 +65,14 @@ class ExpandPanel extends React.Component<FinalProps, State> {
 
     return (
       <div className={classes.root}>
-        <div className={classes.header} onClick={this.handleNameClick}>
+        <div className={`${classes.header} ${open ? 'hOpen' : '' }`} onClick={this.handleNameClick}>
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
           }
           {name}
         </div>
-        <Collapse in={open} className={open ? 'panel' : ''}>
+        <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
               <div className={classes.panel}>
