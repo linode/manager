@@ -91,7 +91,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
-  renderIcon: () => JSX.Element;
+  renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: string[];
   checked?: Boolean;
@@ -118,10 +118,11 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         alignItems="center"
         className={classes.innerGrid}
       >
-        <Grid item className={classes.icon}>
-          {renderIcon()}
-        </Grid>
-
+        {renderIcon &&
+          <Grid item className={classes.icon}>
+            {renderIcon()}
+          </Grid>
+        }
         <Grid item className={classes.flex}>
           <div className={classes.heading}>
             {heading}

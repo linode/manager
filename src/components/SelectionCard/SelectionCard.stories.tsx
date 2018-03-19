@@ -99,6 +99,33 @@ storiesOf('SelectionCard', module)
     </Grid>
   </React.Fragment>
 ))
+.add('Default with no Icon', () => (
+  <React.Fragment>
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        heading="Linode 1GB"
+        subheadings={[
+          '$5/mo ($0.0075/hr)',
+          '1 CPU, 20G Storage, 1G Ram',
+        ]}
+      />
+      <SelectionCard
+        heading="Linode 8GB"
+        subheadings={[
+          '$40/mo ($0.06/hr)',
+          '4 CPU, 96G Storage, 8G Ram',
+        ]}
+      />
+      <SelectionCard
+        heading="Linode 64GB"
+        subheadings={[
+          '$640/mo ($0.96/hr)',
+          '20 CPU, 1536G Storage, 80G Ram',
+        ]}
+      />
+    </Grid>
+  </React.Fragment>
+))
 .add('Checked with SvgIcon', () => (
   <React.Fragment>
     <Grid container wrap="wrap" className="m0">
@@ -176,6 +203,36 @@ storiesOf('SelectionCard', module)
         heading="Devuan Linix"
         subheadings={[
           'It\'s Debian with a sane init system!',
+        ]}
+      />
+    </Grid>
+  </React.Fragment>
+))
+.add('Checked with no Icon', () => (
+  <React.Fragment>
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        checked
+        heading="Linode 1GB"
+        subheadings={[
+          '$5/mo ($0.0075/hr)',
+          '1 CPU, 20G Storage, 1G Ram',
+        ]}
+      />
+      <SelectionCard
+        checked
+        heading="Linode 8GB"
+        subheadings={[
+          '$40/mo ($0.06/hr)',
+          '4 CPU, 96G Storage, 8G Ram',
+        ]}
+      />
+      <SelectionCard
+        checked
+        heading="Linode 64GB"
+        subheadings={[
+          '$640/mo ($0.96/hr)',
+          '20 CPU, 1536G Storage, 80G Ram',
         ]}
       />
     </Grid>
