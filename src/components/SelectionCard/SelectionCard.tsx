@@ -21,13 +21,42 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit,
     maxWidth: 300,
-    minWidth: 225,
+    minWidth: 200,
+    backgroundColor: LinodeTheme.bg.offWhite,
+    padding: theme.spacing.unit * 2,
+    border: '1px solid ' + `${LinodeTheme.bg.main}`,
+    transition: `${'background-color .3s ease-in-out, '}
+    ${'border-color .3s ease-in-out'}`,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '32%',
+      marginRight: '1%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      '&:last-child': {
+        width: '33%',
+        marginRight: 0,
+      },
+    },
+    '&:hover': {
+      cursor: 'pointer',
+      backgroundColor: '#f4f4f4',
+      borderColor: '#C9CACB',
+    },
+    '& .selected': {
+      '& $svg': {
+        color: theme.palette.primary.main,
+        borderColor: theme.palette.primary.main,
+      },
+    },
   },
   icon: {
     '& svg, & span': {
       fontSize: '32px',
+      color: '#939598',
     },
     '& img': {
       maxheight: '32px',
@@ -44,12 +73,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   innerGrid: {
     width: '100%',
     minHeight: 70,
-    backgroundColor: LinodeTheme.bg.offWhite,
-    padding: theme.spacing.unit * 2,
-    border: '1px solid ' + `${LinodeTheme.bg.main}`,
-    '&:hover': {
-      backgroundColor: '#f4f4f4',
-    },
   },
   flex: {
     flex: 1,
@@ -79,7 +102,6 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid
       item
-      xs={4}
       className={classes.root}
     >
       <Grid

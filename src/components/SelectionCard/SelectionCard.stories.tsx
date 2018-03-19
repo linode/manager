@@ -15,7 +15,7 @@ storiesOf('SelectionCard', module)
 .addDecorator(ThemeDecorator)
 .add('Default with SvgIcon', () => (
   <React.Fragment>
-    <Grid container wrap="wrap">
+    <Grid container wrap="wrap" className="m0">
       <SelectionCard
         renderIcon={() => {
           return <InsertPhoto />;
@@ -41,129 +41,144 @@ storiesOf('SelectionCard', module)
 ))
 .add('Default with img', () => (
   <React.Fragment>
-    <SelectionCard
-      renderIcon={() => {
-        return <img src={us} />;
-      }}
-      heading="United States"
-      subheadings={[
-        'The United States of America',
-        '\'Mericaaaaa, oh yeah!',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      renderIcon={() => {
-        return <img src={de} />;
-      }}
-      heading="Germany"
-      subheadings={[
-        'Germany',
-        'Willkommen in Deutschland!',
-      ]}
-    />
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        renderIcon={() => {
+          return <img src={us} />;
+        }}
+        heading="United States"
+        subheadings={[
+          'The United States of America',
+          '\'Mericaaaaa, oh yeah!',
+        ]}
+      />
+      <br /><br />
+      <SelectionCard
+        renderIcon={() => {
+          return <img src={de} />;
+        }}
+        heading="Germany"
+        subheadings={[
+          'Germany',
+          'Willkommen in Deutschland!',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 .add('Default with font Icon', () => (
   <React.Fragment>
-    <SelectionCard
-      renderIcon={() => {
-        return <span className="fl-archlinux"/>;
-      }}
-      heading="Arch Linix"
-      subheadings={[
-        'Almost as difficult to use as Gentoo!',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      renderIcon={() => {
-        return <span className="fl-devuan"/>;
-      }}
-      heading="Devuan Linix"
-      subheadings={[
-        'It\'s Debian with a sane init system!',
-      ]}
-    />
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        renderIcon={() => {
+          return <span className="fl-archlinux"/>;
+        }}
+        heading="Arch Linix"
+        subheadings={[
+          'Almost as difficult to use as Gentoo!',
+        ]}
+      />
+      <SelectionCard
+        renderIcon={() => {
+          return <span className="fl-devuan"/>;
+        }}
+        heading="Devuan Linix"
+        subheadings={[
+          'It\'s Debian with a sane init system!',
+        ]}
+      />
+      <SelectionCard
+        renderIcon={() => {
+          return <span className="fl-coreos"/>;
+        }}
+        heading="CoreOs"
+        subheadings={[
+          'Container Linux',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 .add('Checked with SvgIcon', () => (
   <React.Fragment>
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <InsertPhoto />;
-      }}
-      heading="Photos"
-      subheadings={[
-        'Use a photo',
-        'Select up to 3',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <Alarm />;
-      }}
-      heading="Alarm"
-      subheadings={[
-        'Set an alarm',
-        'Choose the time and alarm sound',
-      ]}
-    />
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <InsertPhoto />;
+        }}
+        heading="Photos"
+        subheadings={[
+          'Use a photo',
+          'Select up to 3',
+        ]}
+      />
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <Alarm />;
+        }}
+        heading="Alarm"
+        subheadings={[
+          'Set an alarm',
+          'Choose the time and alarm sound',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 .add('Checked with img', () => (
   <React.Fragment>
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <img src={us} />;
-      }}
-      heading="United States"
-      subheadings={[
-        'The United States of America',
-        '\'Mericaaaaa, oh yeah!',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <img src={de} />;
-      }}
-      heading="Germany"
-      subheadings={[
-        'Germany',
-        'Willkommen in Deutschland!',
-      ]}
-    />
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <img src={us} />;
+        }}
+        heading="United States"
+        subheadings={[
+          'The United States of America',
+          '\'Mericaaaaa, oh yeah!',
+        ]}
+      />
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <img src={de} />;
+        }}
+        heading="Germany"
+        subheadings={[
+          'Germany',
+          'Willkommen in Deutschland!',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 .add('Checked with font Icon', () => (
   <React.Fragment>
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <span className="fl-archlinux"/>;
-      }}
-      heading="Arch Linix"
-      subheadings={[
-        'Almost as difficult to use as Gentoo!',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <span className="fl-devuan"/>;
-      }}
-      heading="Devuan Linix"
-      subheadings={[
-        'It\'s Debian with a sane init system!',
-      ]}
-    />
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <span className="fl-archlinux"/>;
+        }}
+        heading="Arch Linix"
+        subheadings={[
+          'Almost as difficult to use as Gentoo!',
+        ]}
+      />
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <span className="fl-devuan"/>;
+        }}
+        heading="Devuan Linix"
+        subheadings={[
+          'It\'s Debian with a sane init system!',
+        ]}
+      />
+    </Grid>
   </React.Fragment>
 ))
 ;
