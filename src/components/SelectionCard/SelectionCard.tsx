@@ -73,9 +73,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   heading: {
     fontWeight: 700,
     fontSize: '1em',
+    color: LinodeTheme.color.headline,
   },
   subheading: {
     fontSize: '0.8em',
+    color: theme.palette.text.primary,
   },
   innerGrid: {
     width: '100%',
