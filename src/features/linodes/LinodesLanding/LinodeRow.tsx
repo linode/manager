@@ -22,7 +22,8 @@ import { displayLabel } from './presentation';
 import LinodeActionMenu from './LinodeActionMenu';
 import transitionStatus from './linodeTransitionStatus';
 
-type ClassNames = 'linodeCell'
+type ClassNames = 'bodyRow'
+| 'linodeCell'
 | 'tagsCell'
 | 'ipCell'
 | 'ipCellInner'
@@ -32,6 +33,9 @@ type ClassNames = 'linodeCell'
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
+    bodyRow: {
+      height: 77,
+    },
     linodeCell: {
       width: '30%',
     },
@@ -106,7 +110,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       : true;
 
     return(
-      <TableRow key={linode.id}>
+      <TableRow key={linode.id} className={classes.bodyRow}>
         {this.headCell()}
         <TableCell colSpan={4}>
         { typeof value === 'number' &&
