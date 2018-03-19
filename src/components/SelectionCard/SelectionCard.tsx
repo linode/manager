@@ -14,6 +14,7 @@ import LinodeTheme from '../../../src/theme';
 type CSSClasses =
 'root'
 | 'icon'
+| 'checked'
 | 'flex'
 | 'heading'
 | 'innerGrid'
@@ -46,10 +47,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       backgroundColor: '#f4f4f4',
       borderColor: '#C9CACB',
     },
-    '& .selected': {
-      '& $svg': {
+    '&.selected': {
+      borderColor: theme.palette.primary.main,
+      '& $svg, & span': {
         color: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
       },
     },
   },
@@ -61,6 +62,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     '& img': {
       maxheight: '32px',
       maxWidth: '32px',
+    },
+  },
+  checked: {
+    '& svg': {
+      fontSize: '20px',
+      color: theme.palette.primary.main,
     },
   },
   heading: {
@@ -102,7 +109,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid
       item
-      className={classes.root}
+      className={`${classes.root} ${checked ? 'selected' : ''}`}
     >
       <Grid
         container
@@ -127,7 +134,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
 
         {checked &&
-          <Grid item>
+          <Grid item className={`${classes.icon} + ${classes.checked}`}>
             <CheckCircle />
           </Grid>
         }
