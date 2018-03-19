@@ -183,7 +183,7 @@ class PrimaryNav extends React.Component<Props> {
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link className={classes.sublink} to="/contact">Contact &amp; Billing</Link>
+          <Link className={classes.sublink} to="/billing">Account &amp; Billing</Link>
           <Link className={classes.sublink} to="/users">Users</Link>
         </ExpandPanel>
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Support">
