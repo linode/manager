@@ -10,7 +10,7 @@ import {
 import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
 
-import footerLogo from 'src/assets/logo/logo-footer.svg';
+import FooterLogo from 'src/assets/logo/logo-footer.svg';
 
 type CSSClasses = 'container' | 'link' | 'navWrapper' | 'logoWrapper';
 
@@ -56,7 +56,7 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
         <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
       </Grid>
       <Grid item xs={12} className={classes.logoWrapper}>
-        <img className="footer-logo" src={footerLogo} width="40" height="40" />
+        <FooterLogo width="40" height="40" />
       </Grid>
     </Grid>
   );

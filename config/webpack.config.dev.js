@@ -141,6 +141,10 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          {
+            test: [/\.svg$/,],
+            loader: ['svgr/webpack'],
+          },
           // Compile .tsx?
           {
             test: /\.(ts|tsx)$/,

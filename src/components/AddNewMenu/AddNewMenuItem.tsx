@@ -51,7 +51,7 @@ export interface MenuItem {
   title: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   body: string;
-  icon: string;
+  ItemIcon: React.ComponentClass<any>;
 }
 
 interface Props extends MenuItem {
@@ -67,12 +67,12 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const { classes, title, onClick, body, icon, index, count } = this.props;
+    const { classes, title, onClick, body, ItemIcon, index, count } = this.props;
 
     return (
       <React.Fragment>
         <div onClick={onClick} className={classes.root}>
-          <img src={icon} width="50" height="50" />
+          <ItemIcon width="50" height="50" />
           <div className={classes.content}>
             <Typography variant="subheading">
               <a href="#" className={classes.titleLink}>{title}</a>

@@ -14,10 +14,9 @@ import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
-import linodeIcon from 'src/assets/addnewmenu/linode.svg';
-import volumeIcon from 'src/assets/addnewmenu/volume.svg';
-import nodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 
 type CSSClasses = 'root' | 'menu' | 'button' | 'caret';
 
@@ -64,7 +63,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         e.preventDefault();
       },
       body: `High performance SSD Linux servers for all of your infrastructure needs`,
-      icon: linodeIcon,
+      ItemIcon: LinodeIcon,
     },
     {
       title: 'Volume',
@@ -73,7 +72,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         e.preventDefault();
       },
       body: `Block storage service allows you to attach additional storage to your Linode`,
-      icon: volumeIcon,
+      ItemIcon: VolumeIcon,
     },
     {
       title: 'NodeBalancer',
@@ -82,7 +81,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         e.preventDefault();
       },
       body: `Ensure your valuable applications and services are highly-available`,
-      icon: nodebalancerIcon,
+      ItemIcon: NodebalancerIcon,
     },
   ];
 

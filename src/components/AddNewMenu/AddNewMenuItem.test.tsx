@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AddNewMenuItem from './AddNewMenuItem';
 import { shallow } from 'enzyme';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 
 describe('AddNewMenuItem', () => {
   it('should render without error', () => {
@@ -10,7 +11,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
-        icon="an icon"
+        ItemIcon={LinodeIcon}
         onClick={jest.fn()}
       />);
   });
@@ -22,7 +23,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
-        icon="an icon"
+        ItemIcon={LinodeIcon}
         onClick={jest.fn()}
       />);
 
@@ -36,7 +37,7 @@ describe('AddNewMenuItem', () => {
         count={1}
         title="shenanigans"
         body="These be the stories of shennanigans."
-        icon="an icon"
+        ItemIcon={LinodeIcon}
         onClick={jest.fn()}
       />);
 
