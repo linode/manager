@@ -6,7 +6,7 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import CheckCircle from 'material-ui-icons/CheckCircle';
+import Check from 'material-ui-icons/Check';
 
 import Grid from 'material-ui/Grid';
 import LinodeTheme from '../../../src/theme';
@@ -66,7 +66,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   },
   checked: {
     '& svg': {
-      fontSize: '20px',
+      borderRadius: '16px',
+      border: '1px solid',
+      borderColor: theme.palette.primary.main,
+      fontSize: '16px',
       color: theme.palette.primary.main,
     },
   },
@@ -137,8 +140,8 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
 
         {checked &&
-          <Grid item className={`${classes.icon} + ${classes.checked}`}>
-            <CheckCircle />
+          <Grid item className={`${classes.icon} ${classes.checked}`}>
+            <Check />
           </Grid>
         }
       </Grid>
