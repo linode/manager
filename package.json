@@ -115,6 +115,7 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
     ],
     "moduleNameMapper": {
+      "\\.svg$": "<rootDir>/src/components/NullComponent",
       "^react-native$": "react-native-web",
       "^src/(.*)": "<rootDir>/src/$1"
     },
