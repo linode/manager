@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import 'font-logos/assets/font-logos.css';
 
 import createBrowserHistory from 'history/createBrowserHistory';
 
