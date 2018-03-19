@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   withRouter,
   RouteComponentProps,
+  Link,
 } from 'react-router-dom';
 import { compose } from 'redux';
 
@@ -17,6 +18,7 @@ import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import logoPng from 'src/assets/logo/logo.png';
+import ExpandPanel from 'src/components/ExpandPanel';
 
 import './PrimaryNav.css';
 
@@ -55,6 +57,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
+    '&:hover': {
+      borderLeftColor: 'rgba(0, 0, 0, 0.08)',
+    },
   },
   linkItem: {
     color: '#C9CACB',
@@ -64,9 +69,41 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: 'border-color .7s ease-in-out',
     backgroundColor: 'rgba(0, 0, 0, 0.08)',
     borderLeftColor: LinodeTheme.color.green,
+    '&:hover': {
+      borderLeftColor: LinodeTheme.color.green,
+    },
   },
   activeLink: {
     color: 'white',
+  },
+  sublinkPanel: {
+    color: '#C9CACB',
+    padding: '16px 40px 0 34px',
+    fontSize: '.9rem',
+    transition: 'color .3s ease-in-out',
+    '& svg': {
+      color: 'white',
+      fontSize: '20px',
+      margin: '3px 2px 4px 0',
+    },
+    '&:hover, &:focus': {
+      color: 'white',
+    },
+    '& .hOpen': {
+      color: 'white',
+    },
+    '& .pOpen': {
+      margin: '5px 0 0 14px',
+    },
+  },
+  sublink: {
+    padding: '4px 0',
+    color: 'white',
+    display: 'block',
+    fontSize: '.8rem',
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -76,7 +113,9 @@ type ClassNames =
   | 'listItem'
   | 'linkItem'
   | 'active'
-  | 'activeLink';
+  | 'activeLink'
+  | 'sublink'
+  | 'sublinkPanel';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
@@ -143,6 +182,20 @@ class PrimaryNav extends React.Component<Props> {
           </Grid>
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
+        <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Account">
+          <Link className={classes.sublink} to="/billing">Account &amp; Billing</Link>
+          <Link className={classes.sublink} to="/users">Users</Link>
+        </ExpandPanel>
+        <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Support">
+          <Link className={classes.sublink} to="/documentation">Documentation</Link>
+          <a
+            className={classes.sublink}
+            href="//www.linode.com/community/questions"
+          >
+            Community Forum
+          </a>
+          <Link className={classes.sublink} to="/support">Support Tickets</Link>
+        </ExpandPanel>
       </React.Fragment>
     );
   }
