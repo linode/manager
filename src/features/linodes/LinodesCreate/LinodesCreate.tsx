@@ -16,6 +16,7 @@ import Grid from 'material-ui/Grid';
 
 import { API_ROOT } from 'src/constants';
 import TabbedPanel from 'src/components/TabbedPanel';
+import ExpandPanel from 'src/components/ExpandPanel';
 import SelectionCard from 'src/components/SelectionCard';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
@@ -50,7 +51,7 @@ type FinalProps = Props & WithStyles<Styles> & PreloadedProps;
 
 interface State {
   selectedTab: number;
-  selectedImageID: number | null;
+  selectedImageID: string | null;
 }
 
 const preloaded = PromiseLoader<Props>({
@@ -66,6 +67,10 @@ class LinodeCreate extends React.Component<FinalProps, State> {
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ selectedTab: value });
+  }
+
+  handleImageClick = (event: React.MouseEvent<HTMLElement>, imageID: string) => {
+    this.setState({ selectedImageID: imageID });
   }
 
   renderCreateFromImage = () => {
@@ -112,6 +117,8 @@ class LinodeCreate extends React.Component<FinalProps, State> {
                   {sortedFirstImagesByVendor.length
                   && sortedFirstImagesByVendor.map((image: Linode.Image) => (
                     <SelectionCard
+                      checked={image.id === this.state.selectedImageID}
+                      onClick={e => this.handleImageClick(e, image.id)}
                       renderIcon={() => {
                         return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                       }}
@@ -120,11 +127,13 @@ class LinodeCreate extends React.Component<FinalProps, State> {
                     />
                   ))}
                 </Grid>
-                <ExpansionPanel name="Show Older Images">
+                <ExpandPanel name="Show Older Images">
                   <Grid container>
                     {sortedRestImagesByVendor.length
                     && sortedRestImagesByVendor.map((image: Linode.Image) => (
                       <SelectionCard
+                        checked={image.id === this.state.selectedImageID}
+                        onClick={e => this.handleImageClick(e, image.id)}
                         renderIcon={() => {
                           return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                         }}
@@ -133,7 +142,7 @@ class LinodeCreate extends React.Component<FinalProps, State> {
                       />
                     ))}
                   </Grid>
-                </ExpansionPanel>
+                </ExpandPanel>
               </React.Fragment>
             ),
           },
@@ -143,6 +152,11 @@ class LinodeCreate extends React.Component<FinalProps, State> {
               <Grid container>
                 {privateImages.length && privateImages.map((image: Linode.Image) => (
                   <SelectionCard
+                    checked={image.id === this.state.selectedImageID}
+                    onClick={e => this.handleImageClick(e, image.id)}
+                    renderIcon={() => {
+                      return <span className="fl-tux" />;
+                    }}
                     heading={(image.label as string)}
                     subheadings={[(image.description as string)]}
                   />
