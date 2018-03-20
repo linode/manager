@@ -10,6 +10,7 @@ import {
 import Check from 'material-ui-icons/Check';
 import Tooltip from 'material-ui/Tooltip';
 import Grid from 'material-ui/Grid';
+import Fade from 'material-ui/transitions/Fade';
 import LinodeTheme from '../../../src/theme';
 
 type CSSClasses =
@@ -49,11 +50,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       backgroundColor: '#f4f4f4',
       borderColor: '#C9CACB',
     },
-    '&.selected': {
+    '&.checked': {
       borderColor: theme.palette.primary.main,
       '& $svg, & span': {
         color: theme.palette.primary.main,
       },
+    },
+    '& .w100': {
+      width: '100%',
     },
   },
   icon: {
@@ -120,7 +124,7 @@ const WithTooltip: React.StatelessComponent<{
 
   // For some reason a ternary explodes TS and I can't figure it out.
   return (title)
-    ? (<Tooltip title={title}>{ render() }</Tooltip>)
+    ? (<Tooltip title={title} className="w100">{ render() }</Tooltip>)
     : render();
 };
 
@@ -177,9 +181,11 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
               </Grid>
 
               {checked &&
+              <Fade in={checked}>
                 <Grid item className={`${classes.icon} ${classes.checked}`}>
                   <Check />
                 </Grid>
+              </Fade>
               }
             </Grid>
           )}
