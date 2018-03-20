@@ -14,6 +14,7 @@ import {
 import ButtonBase from 'material-ui/ButtonBase';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import AccountCircle from 'material-ui-icons/AccountCircle';
+import LinodeTheme from 'src/theme';
 
 type MenuLink = {
   display: string,
@@ -25,17 +26,29 @@ const menuLinks: MenuLink[] = [
   { display: 'Log Out', href: '/logout' },
 ];
 
+type CSSClasses =
+'leftIcon'
+| 'menuItem';
+
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
     width: '50px',
     height: '50px',
   },
+  menuItem: {
+    fontSize: '.9rem',
+    fontWeight: 400,
+    '&:hover': {
+      backgroundColor: LinodeTheme.bg.offWhite,
+      color: theme.palette.primary.main,
+    },
+  },
 });
 
 interface Props {}
 
-type PropsWithStylesAndRoutes = Props & WithStyles<'leftIcon'> & RouteComponentProps<{}>;
+type PropsWithStylesAndRoutes = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
@@ -61,8 +74,12 @@ class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 
   renderMenuLink(menuLink: MenuLink) {
+    const { classes } = this.props;
     return (
-      <MenuItem key={menuLink.display} onClick={() => this.navigate(menuLink.href)}>
+      <MenuItem
+        key={menuLink.display}
+        className={classes.menuItem}
+        onClick={() => this.navigate(menuLink.href)}>
         {menuLink.display}
       </MenuItem>
     );
