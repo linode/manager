@@ -9,6 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import Popover from 'material-ui/Popover';
 import HelpOutline from 'material-ui-icons/HelpOutline';
+import LinodeTheme from '../../../src/theme';
 
 interface Props {
   text: string;
@@ -20,11 +21,21 @@ interface State {
   anchorReference: string;
 }
 
-type ClassNames = 'typography';
+type ClassNames = 'root' | 'helpIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  typography: {
-    padding: theme.spacing.unit,
+  root: {
+    '& .helpPaper': {
+      padding: theme.spacing.unit * 2,
+      backgroundColor: LinodeTheme.bg.offWhite,
+      '&::after': {
+        content: 'poo',
+        display: 'block',
+      },
+    },
+  },
+  helpIcon: {
+    color: LinodeTheme.palette.primary.main,
   },
 });
 
@@ -63,7 +74,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <IconButton onClick={this.handleClickButton}>
-          <HelpOutline />
+          <HelpOutline className={classes.helpIcon} />
         </IconButton>
         <Popover
           open={this.state.open}
@@ -71,8 +82,10 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           onClose={this.handleClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          className={classes.root}
+          classes={{paper: 'helpPaper'}}
         >
-          <Typography className={classes.typography}>{ text }</Typography>
+          <Typography>{ text }</Typography>
         </Popover>
       </React.Fragment>
     );
