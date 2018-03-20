@@ -16,26 +16,15 @@ class InteractiveIconTextLink extends React.Component {
       <IconTextLink
         SideIcon={AddCircleOutline}
         onClick={this.handleClick}
-        text="Hide This Text"
+        text="Add an object"
       />
     );
   }
 }
 
-storiesOf('HideShowText', module)
+storiesOf('IconTextLink', module)
 .addDecorator(ThemeDecorator)
 .add('Interactive', () => (
-  <InteractiveHideShow />
-))
-.add('Shown', () => (
-  <HideShowText
-    text="Hide This Text"
-  />
-))
-.add('Hidden', () => (
-  <HideShowText
-    hidden
-    text="Hide This Text"
-  />
+  <InteractiveIconTextLink />
 ))
 ;

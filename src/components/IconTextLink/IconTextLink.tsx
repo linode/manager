@@ -7,7 +7,7 @@ import {
   WithStyles,
   Theme,
 } from 'material-ui';
-import { SvgIconProps } from 'material-ui/SvgIcon';
+import SvgIcon from 'material-ui/SvgIcon';
 
 type CSSClasses = 'root' | 'text';
 
@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  SideIcon: React.ComponentClass<SvgIconProps>;
+  SideIcon: typeof SvgIcon;
   text: string;
   to?: string;
   onClick?: () => void;
