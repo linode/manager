@@ -117,17 +117,14 @@ export interface Props {
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
+interface WithTooltipProps {
+  title? : string;
+  render: () => JSX.Element;
+}
 
-const WithTooltip: React.StatelessComponent<{
-  title? : string; render: () => JSX.Element;
-}> = ({ title, render }) => {
-
-  // For some reason a ternary explodes TS and I can't figure it out.
-  return (title)
-    ? (<Tooltip title={title} className="w100">{ render() }</Tooltip>)
-    : render();
-};
-
+const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render }) => (title)
+  ? (<Tooltip title={title} className="w100">{ render() }</Tooltip>)
+  : render();
 
 const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
