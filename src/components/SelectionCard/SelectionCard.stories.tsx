@@ -5,6 +5,7 @@ import InsertPhoto from 'material-ui-icons/InsertPhoto';
 import Alarm from 'material-ui-icons/Alarm';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
+import FR from 'flag-icon-css/flags/4x3/fr.svg';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
@@ -116,7 +117,7 @@ storiesOf('SelectionCard', module)
     <Grid container wrap="wrap" className="m0">
       <SelectionCard
         renderIcon={() => {
-          return <US height="36" width="36" viewBox="0 0 1000 1000"/>;
+          return <US width="32" height="24" viewBox="0 0 720 480" />;
         }}
         heading="United States"
         subheadings={[
@@ -127,12 +128,22 @@ storiesOf('SelectionCard', module)
       <br /><br />
       <SelectionCard
         renderIcon={() => {
-          return <DE />;
+          return <DE width="32" height="24" viewBox="0 0 640 480" />;
         }}
         heading="Germany"
         subheadings={[
           'Germany',
           'Willkommen in Deutschland!',
+        ]}
+      />
+      <SelectionCard
+        renderIcon={() => {
+          return <FR width="32" height="24" viewBox="0 0 640 480" />;
+        }}
+        heading="France"
+        subheadings={[
+          'France',
+          'Don\'t host there',
         ]}
       />
     </Grid>
@@ -226,7 +237,7 @@ storiesOf('SelectionCard', module)
       <SelectionCard
         checked
         renderIcon={() => {
-          return <US />;
+          return <US width="32" height="24" viewBox="0 0 720 480" />;
         }}
         heading="United States"
         subheadings={[
@@ -237,7 +248,7 @@ storiesOf('SelectionCard', module)
       <SelectionCard
         checked
         renderIcon={() => {
-          return <DE />;
+          return <DE width="32" height="24" viewBox="0 0 640 480" />;
         }}
         heading="Germany"
         subheadings={[
