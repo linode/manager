@@ -3,8 +3,9 @@ import { storiesOf } from '@storybook/react';
 
 import InsertPhoto from 'material-ui-icons/InsertPhoto';
 import Alarm from 'material-ui-icons/Alarm';
-import us from 'flag-icon-css/flags/4x3/us.svg';
-import de from 'flag-icon-css/flags/4x3/de.svg';
+import US from 'flag-icon-css/flags/4x3/us.svg';
+import DE from 'flag-icon-css/flags/4x3/de.svg';
+import FR from 'flag-icon-css/flags/4x3/fr.svg';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
@@ -111,30 +112,42 @@ storiesOf('SelectionCard', module)
     />
   </Grid>
 ))
-.add('Default with img', () => (
-  <Grid container wrap="wrap" className="m0">
-    <SelectionCard
-      renderIcon={() => {
-        return <img src={us} />;
-      }}
-      heading="United States"
-      subheadings={[
-        'The United States of America',
-        '\'Mericaaaaa, oh yeah!',
-      ]}
-    />
-    <br /><br />
-    <SelectionCard
-      renderIcon={() => {
-        return <img src={de} />;
-      }}
-      heading="Germany"
-      subheadings={[
-        'Germany',
-        'Willkommen in Deutschland!',
-      ]}
-    />
-  </Grid>
+.add('Default with plain SVG', () => (
+  <React.Fragment>
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        renderIcon={() => {
+          return <US width="32" height="24" viewBox="0 0 720 480" />;
+        }}
+        heading="United States"
+        subheadings={[
+          'The United States of America',
+          '\'Mericaaaaa, oh yeah!',
+        ]}
+      />
+      <br /><br />
+      <SelectionCard
+        renderIcon={() => {
+          return <DE width="32" height="24" viewBox="0 0 640 480" />;
+        }}
+        heading="Germany"
+        subheadings={[
+          'Germany',
+          'Willkommen in Deutschland!',
+        ]}
+      />
+      <SelectionCard
+        renderIcon={() => {
+          return <FR width="32" height="24" viewBox="0 0 640 480" />;
+        }}
+        heading="France"
+        subheadings={[
+          'France',
+          'Don\'t host there',
+        ]}
+      />
+    </Grid>
+  </React.Fragment>
 ))
 .add('Default with font Icon', () => (
   <Grid container wrap="wrap" className="m0">
@@ -218,31 +231,33 @@ storiesOf('SelectionCard', module)
     />
   </Grid>
 ))
-.add('Checked with img', () => (
-  <Grid container wrap="wrap" className="m0">
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <img src={us} />;
-      }}
-      heading="United States"
-      subheadings={[
-        'The United States of America',
-        '\'Mericaaaaa, oh yeah!',
-      ]}
-    />
-    <SelectionCard
-      checked
-      renderIcon={() => {
-        return <img src={de} />;
-      }}
-      heading="Germany"
-      subheadings={[
-        'Germany',
-        'Willkommen in Deutschland!',
-      ]}
-    />
-  </Grid>
+.add('Checked with plain SVG', () => (
+  <React.Fragment>
+    <Grid container wrap="wrap" className="m0">
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <US width="32" height="24" viewBox="0 0 720 480" />;
+        }}
+        heading="United States"
+        subheadings={[
+          'The United States of America',
+          '\'Mericaaaaa, oh yeah!',
+        ]}
+      />
+      <SelectionCard
+        checked
+        renderIcon={() => {
+          return <DE width="32" height="24" viewBox="0 0 640 480" />;
+        }}
+        heading="Germany"
+        subheadings={[
+          'Germany',
+          'Willkommen in Deutschland!',
+        ]}
+      />
+    </Grid>
+  </React.Fragment>
 ))
 .add('Checked with font Icon', () => (
   <Grid container wrap="wrap" className="m0">

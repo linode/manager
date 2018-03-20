@@ -11,10 +11,10 @@
                 <g id="nodebalancer" transform="translate(0.000000, 180.000000)">
                     <g id="icon" transform="translate(16.000000, 20.000000)">
                         <g id="Oval-2">
-                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1"></use>
-                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23"></circle>
+                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
                         </g>
-                        <g id="Group-13" transform="translate(12.000000, 11.000000)" stroke="#939598" stroke-linejoin="round">
+                        <g id="Group-13" transform="translate(12.000000, 11.000000)" stroke="#939598" stroke-linejoin="round" class="insidePath">
                             <path d="M11.9791667,6.72916667 L11.9791667,20.2708333" id="Stroke-2697" stroke-linecap="square"></path>
                             <path d="M3.125,20.2708333 C3.125,16.8197917 5.92291667,14.0208333 9.375,14.0208333 L15.625,14.0208333 C19.0760417,14.0208333 21.875,16.8197917 21.875,20.2708333" id="Stroke-2698" stroke-linecap="square"></path>
                             <polygon id="Stroke-2699" points="14.8541667 6.52083333 8.85416667 6.52083333 8.85416667 0.520833333 14.8541667 0.520833333"></polygon>

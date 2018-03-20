@@ -25,10 +25,6 @@ a {
   text-decoration: none;
 }
 
-.footer-logo {
-  opacity: .5;
-}
-
 /* Reusable Classes */
 .p0 {
   padding: 0 !important;
