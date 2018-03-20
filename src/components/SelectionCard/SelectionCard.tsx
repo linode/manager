@@ -141,7 +141,6 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
       <Grid
-        onClick={onClick}
         item
         className={
           classNames({

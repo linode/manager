@@ -1,7 +1,20 @@
 import * as React from 'react';
-
 import * as moment from 'moment';
-import { flatten, tail, groupBy } from 'ramda';
+import {
+  compose,
+  filter,
+  flatten,
+  groupBy,
+  head,
+  map,
+  prop,
+  propSatisfies,
+  reverse,
+  sortBy,
+  startsWith,
+  tail,
+  values,
+} from 'ramda';
 
 import Grid from 'material-ui/Grid';
 
@@ -27,37 +40,47 @@ interface Props {
   handleSelection: (event: React.MouseEvent<HTMLElement>, imageID: string) => void;
 }
 
+const sortByVendor = sortBy(prop('vendor'));
+
+const sortCreatedDESC = compose(
+  reverse,
+  sortBy(
+    compose(
+      created => moment(created).format('x'),
+      prop('created'),
+    ),
+  ),
+);
+
+const groupByVendor = groupBy(prop('vendor'));
+
+export const getPublicImages = compose<any, any, any, any, any, any, any>(
+  sortByVendor,
+  values,
+  map(head),
+  groupByVendor,
+  sortCreatedDESC,
+  filter(propSatisfies(startsWith('linode'), 'id')),
+);
+
+export const getOlderPublicImages = compose<any, any, any, any, any, any>(
+  sortByVendor,
+  compose(flatten, values, map(tail)),
+  groupByVendor,
+  sortCreatedDESC,
+  filter(propSatisfies(startsWith('linode'), 'id')),
+);
+
+export const getMyImages = compose<any, any, any>(
+  sortCreatedDESC,
+  filter(propSatisfies(startsWith('private'), 'id')),
+);
+
 const CreateFromImage: React.StatelessComponent<Props> = (props) => {
   const { images } = props;
-
-  const publicImages = images.filter(
-    (image: Linode.Image) => image.id.startsWith('linode'));
-  const publicImagesByVendor = groupBy<Linode.Image>(
-    image => (image.vendor as string))(publicImages);
-  const firstImagesByVendor = Object.keys(publicImagesByVendor).map(vendor => (
-    (publicImagesByVendor[vendor] as Linode.Image[]).sort(
-      (imageA, imageB) => {
-        return (moment(imageB.created).diff(moment(imageA.created)));
-      })[0]));
-  const sortedFirstImagesByVendor = (firstImagesByVendor as Linode.Image[]).sort(
-    (imageA, imageB) => {
-      return Number(
-        (imageA.vendor as string).toLowerCase() > (imageB.vendor as string).toLowerCase());
-    });
-
-  const restImagesByVendor = flatten<Linode.Image>(
-    Object.keys(publicImagesByVendor).map(vendor => tail(
-      (publicImagesByVendor[vendor] as Linode.Image[]).sort(
-        (imageA, imageB) => {
-          return (moment(imageB.created).diff(moment(imageA.created)));
-        }))));
-  const sortedRestImagesByVendor = (restImagesByVendor as Linode.Image[]).sort(
-    (imageA, imageB) => {
-      return Number(
-        (imageA.vendor as string).toLowerCase() > (imageB.vendor as string).toLowerCase());
-    });
-
-  const privateImages = images.filter((image: Linode.Image) => image.id.startsWith('private'));
+  const publicImages = getPublicImages(images);
+  const olderPublicImages = getOlderPublicImages(images);
+  const myImages = getMyImages(images);
 
   return (
     <TabbedPanel
@@ -68,8 +91,8 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
           render: () => (
             <React.Fragment>
               <Grid container>
-                {sortedFirstImagesByVendor.length
-                && sortedFirstImagesByVendor.map((image: Linode.Image, idx) => (
+                {publicImages.length
+                && publicImages.map((image: Linode.Image, idx: number) => (
                   <SelectionCard
                     key={idx}
                     checked={image.id === String(props.selectedImageID)}
@@ -84,8 +107,8 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
               </Grid>
               <ExpandPanel name="Show Older Images">
                 <Grid container>
-                  {sortedRestImagesByVendor.length
-                  && sortedRestImagesByVendor.map((image: Linode.Image, idx) => (
+                  {olderPublicImages.length
+                  && olderPublicImages.map((image: Linode.Image, idx: number) => (
                     <SelectionCard
                       key={idx}
                       checked={image.id === String(props.selectedImageID)}
@@ -106,18 +129,16 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
           title: 'My Images',
           render: () => (
             <Grid container>
-              {privateImages.length && privateImages.map((image: Linode.Image, idx) => (
+              { myImages && myImages.map((image: Linode.Image, idx: number) => (
                 <SelectionCard
                   key={idx}
                   checked={image.id === String(props.selectedImageID)}
                   onClick={e => props.handleSelection(e, image.id)}
-                  renderIcon={() => {
-                    return <span className="fl-tux" />;
-                  }}
+                  renderIcon={() => <span className="fl-tux" /> }
                   heading={(image.label as string)}
                   subheadings={[(image.description as string)]}
                 />
-              ))}
+              )) }
             </Grid>
           ),
         },
