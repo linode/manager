@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import * as classNames from 'classnames';
 
 import {
   withStyles,
@@ -9,42 +9,61 @@ import {
 } from 'material-ui';
 import SvgIcon from 'material-ui/SvgIcon';
 
-type CSSClasses = 'root' | 'text';
+type CSSClasses = 'root' | 'active' | 'disabled';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     display: 'inline-block',
+    cursor: 'pointer',
+    color: theme.palette.primary.main,
+    '&:hover': {
+      color: '#4997f4',
+    },
   },
-  text: {
-
+  active: {
+    color: '#1f64b6',
+  },
+  disabled: {
+    color: '#939598',
+    pointerEvents: 'none',
   },
 });
 
 interface Props {
   SideIcon: typeof SvgIcon;
   text: string;
-  to?: string;
-  onClick?: () => void;
+  onClick: () => void;
+  active?: Boolean;
+  disabled?: Boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
-  const { SideIcon, classes, text, to, onClick } = props;
+  const {
+    SideIcon,
+    classes,
+    text,
+    onClick,
+    active,
+    disabled,
+  } = props;
 
   return (
-    <div className={classes.root}>
+    <div
+      className={
+        classNames({
+          [classes.root]: true,
+          [classes.disabled]: disabled === true,
+          [classes.active]: active === true,
+        })
+      }
+      onClick={onClick}
+    >
       <SideIcon />
-      {to &&
-        <Link to={to} className={classes.text}>
-          {text}
-        </Link>
-      }
-      {onClick &&
-        <span onClick={onClick} className={classes.text}>
-          {text}
-        </span>
-      }
+      <span>
+        {text}
+      </span>
     </div>
   );
 };

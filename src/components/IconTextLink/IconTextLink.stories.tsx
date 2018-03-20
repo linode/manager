@@ -7,17 +7,32 @@ import ThemeDecorator from '../../utilities/storybookDecorators';
 import IconTextLink from './IconTextLink';
 
 class InteractiveIconTextLink extends React.Component {
+  state = {
+    active: false,
+  };
+
   handleClick = () => {
     alert('thanks for clicking!');
+    this.setState({ active: true });
   }
 
   render() {
     return (
-      <IconTextLink
-        SideIcon={AddCircleOutline}
-        onClick={this.handleClick}
-        text="Add an object"
-      />
+      <React.Fragment>
+        <IconTextLink
+          active={this.state.active}
+          SideIcon={AddCircleOutline}
+          onClick={this.handleClick}
+          text="Add an object"
+        />
+        <br /><br />
+        <IconTextLink
+          disabled
+          SideIcon={AddCircleOutline}
+          onClick={this.handleClick}
+          text="Add an object"
+        />
+      </React.Fragment>
     );
   }
 }
