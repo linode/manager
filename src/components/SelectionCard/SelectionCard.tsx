@@ -83,8 +83,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     cursor: 'pointer',
   },
   disabled: {
-    opacity: .40,
     cursor: 'not-allowed',
+    '& $innerGrid': {
+      opacity: .4,
+    },
   },
   heading: {
     fontWeight: 700,
