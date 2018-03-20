@@ -10,9 +10,13 @@ import {
 import Grid from 'material-ui/Grid';
 import LinodeTheme from 'src/theme';
 
-import footerLogo from 'src/assets/logo/logo-footer.svg';
+import FooterLogo from 'src/assets/logo/logo-footer.svg';
 
-type CSSClasses = 'container' | 'link' | 'navWrapper' | 'logoWrapper';
+type CSSClasses = 'container'
+| 'link'
+| 'navWrapper'
+| 'logoWrapper'
+| 'logo';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   container: {
@@ -23,15 +27,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   },
   navWrapper: {
     display: 'flex',
-    padding: '0 !important',
+    paddingBottom: '0 !important',
     alignItems: 'center',
     justifyContent: 'center',
   },
   logoWrapper: {
     display: 'flex',
-    padding: '0 !important',
     alignItems: 'flex-start',
     justifyContent: 'center',
+  },
+  logo: {
+    opacity: .5,
   },
   link: {
     marginLeft: theme.spacing.unit,
@@ -39,6 +45,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     color: LinodeTheme.palette.text.primary,
     textDecoration: 'none',
     fontSize: '90%',
+    '&:hover, &:focus': {
+      color: 'black',
+    },
   },
 });
 
@@ -56,7 +65,7 @@ const Footer: React.StatelessComponent<CombinedProps> = ({ classes }) => {
         <a className={classes.link} href="mailto:feedback@linode.com">Customer Feedback</a>
       </Grid>
       <Grid item xs={12} className={classes.logoWrapper}>
-        <img className="footer-logo" src={footerLogo} width="40" height="40" />
+        <FooterLogo width="40" height="40" className={classes.logo} />
       </Grid>
     </Grid>
   );

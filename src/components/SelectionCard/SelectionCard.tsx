@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     },
     '&.checked': {
       borderColor: theme.palette.primary.main,
-      '& $svg, & span': {
+      '& span': {
         color: theme.palette.primary.main,
       },
     },
@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       color: '#939598',
     },
     '& img': {
-      maxheight: '32px',
+      maxHeight: '32px',
       maxWidth: '32px',
     },
   },

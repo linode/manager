@@ -16,6 +16,11 @@ type CSSClasses = 'root'
 | 'body';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
@@ -25,8 +30,23 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+    transition: 'background-color .2s ease-in-out',
     '&:hover': {
       backgroundColor: LinodeTheme.bg.offWhite,
+      '& .circle': {
+        fill: theme.palette.primary.main,
+        transition: 'fill .2s ease-in-out .4s',
+      },
+      '& .outerCircle': {
+        stroke: '#2967B1',
+        strokeDasharray: 1000,
+        strokeDashoffset: 1000,
+        animation: 'dash 3s linear forwards',
+      },
+      '& .insidePath *': {
+        transition: 'fill .2s ease-in-out .4s, stroke .2s ease-in-out .4s',
+        stroke: 'white',
+      },
     },
   },
   content: {
@@ -51,7 +71,7 @@ export interface MenuItem {
   title: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   body: string;
-  icon: string;
+  ItemIcon: React.ComponentClass<any>;
 }
 
 interface Props extends MenuItem {
@@ -67,12 +87,12 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const { classes, title, onClick, body, icon, index, count } = this.props;
+    const { classes, title, onClick, body, ItemIcon, index, count } = this.props;
 
     return (
       <React.Fragment>
         <div onClick={onClick} className={classes.root}>
-          <img src={icon} width="50" height="50" />
+          <ItemIcon width="50" height="50" />
           <div className={classes.content}>
             <Typography variant="subheading">
               <a href="#" className={classes.titleLink}>{title}</a>

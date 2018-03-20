@@ -11,10 +11,10 @@
                 <g id="linode-:-hover">
                     <g id="icon" transform="translate(16.000000, 20.000000)">
                         <g id="Oval-2">
-                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1"></use>
-                            <circle cx="24" cy="24" r="24"></circle>
+                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
                         </g>
-                        <g id="Group-11" transform="translate(12.000000, 12.000000)">
+                        <g id="Group-11" transform="translate(12.000000, 12.000000)" class="insidePath">
                             <polygon id="Stroke-3208" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="23.5 11.5 0.5 11.5 0.5 5.5 23.5 5.5"></polygon>
                             <polyline id="Stroke-3209" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="0.5 5.5 6.5 0.5 17.5 0.5 23.5 5.5"></polyline>
                             <path d="M14,9 C13.724,9 13.5,8.775 13.5,8.5 C13.5,8.223 13.724,8 14,8 C14.276,8 14.5,8.223 14.5,8.5 C14.5,8.775 14.276,9 14,9 Z" id="Stroke-3210" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
