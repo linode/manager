@@ -83,7 +83,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           className={classes.root}
-          classes={{paper: 'helpPaper'}}
+          classes={{ paper: 'helpPaper' }}
         >
           <Typography>{ text }</Typography>
         </Popover>
