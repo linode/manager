@@ -16,6 +16,11 @@ type CSSClasses = 'root'
 | 'body';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
@@ -25,8 +30,23 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+    transition: 'background-color .2s ease-in-out',
     '&:hover': {
       backgroundColor: LinodeTheme.bg.offWhite,
+      '& .circle': {
+        fill: theme.palette.primary.main,
+        transition: 'fill .2s ease-in-out .4s',
+      },
+      '& .outerCircle': {
+        stroke: '#2967B1',
+        strokeDasharray: 1000,
+        strokeDashoffset: 1000,
+        animation: 'dash 3s linear forwards',
+      },
+      '& .insidePath *': {
+        transition: 'fill .2s ease-in-out .4s, stroke .2s ease-in-out .4s',
+        stroke: 'white',
+      },
     },
   },
   content: {
