@@ -45,6 +45,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     color: LinodeTheme.palette.text.primary,
     textDecoration: 'none',
     fontSize: '90%',
+    '&:hover, &:focus': {
+      color: 'black',
+    },
   },
 });
 
