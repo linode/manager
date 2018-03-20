@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 
 import {
   withStyles,
@@ -7,8 +8,9 @@ import {
   WithStyles,
 } from 'material-ui';
 import Check from 'material-ui-icons/Check';
-
+import Tooltip from 'material-ui/Tooltip';
 import Grid from 'material-ui/Grid';
+import Fade from 'material-ui/transitions/Fade';
 import LinodeTheme from '../../../src/theme';
 
 type CSSClasses =
@@ -18,7 +20,9 @@ type CSSClasses =
 | 'flex'
 | 'heading'
 | 'innerGrid'
-| 'subheading';
+| 'subheading'
+| 'disabled'
+| 'showCursor';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
@@ -43,15 +47,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       },
     },
     '&:hover': {
-      cursor: 'pointer',
       backgroundColor: '#f4f4f4',
       borderColor: '#C9CACB',
     },
-    '&.selected': {
+    '&.checked': {
       borderColor: theme.palette.primary.main,
       '& $svg, & span': {
         color: theme.palette.primary.main,
       },
+    },
+    '& .w100': {
+      width: '100%',
     },
   },
   icon: {
@@ -73,6 +79,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  showCursor: {
+    cursor: 'pointer',
+  },
+  disabled: {
+    opacity: .40,
+    cursor: 'not-allowed',
+  },
   heading: {
     fontWeight: 700,
     fontSize: '1em',
@@ -93,14 +106,25 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface Props {
+export interface Props {
   renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: string[];
-  checked?: Boolean;
+  checked?: boolean;
+  disabled?: boolean;
+  tooltip?: string;
+  onClick?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
+interface WithTooltipProps {
+  title? : string;
+  render: () => JSX.Element;
+}
+
+const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render }) => (title)
+  ? (<Tooltip title={title} className="w100">{ render() }</Tooltip>)
+  : render();
 
 const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -109,44 +133,62 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
     subheadings,
     classes,
     checked,
+    disabled,
+    tooltip,
+    onClick,
   } = props;
 
   return (
-    <Grid
-      item
-      className={`${classes.root} ${checked ? 'selected' : ''}`}
-    >
       <Grid
-        container
-        alignItems="center"
-        className={classes.innerGrid}
+        item
+        className={
+          classNames({
+            [classes.root]: true,
+            checked: checked === true,
+            [classes.disabled]: disabled === true,
+            [classes.showCursor]: onClick && !disabled,
+          })
+        }
+        { ...((onClick && !disabled) && { onClick }) }
       >
-        {renderIcon &&
-          <Grid item className={classes.icon}>
-            {renderIcon()}
-          </Grid>
-        }
-        <Grid item className={classes.flex}>
-          <div className={classes.heading}>
-            {heading}
-          </div>
-          {subheadings.map((subheading) => {
-            return (
-              <div className={classes.subheading}>
-                {subheading}
-              </div>
-            );
-          })}
-        </Grid>
+        <WithTooltip
+          title={tooltip}
+          render={() => (
+            <Grid
+              container
+              alignItems="center"
+              className={classes.innerGrid}
+            >
+              {renderIcon &&
+                <Grid item className={classes.icon}>
+                  {renderIcon()}
+                </Grid>
+              }
+              <Grid item className={classes.flex}>
+                <div className={classes.heading}>
+                  {heading}
+                </div>
+                {subheadings.map((subheading, idx) => {
+                  return (
+                    <div key={idx} className={classes.subheading}>
+                      {subheading}
+                    </div>
+                  );
+                })}
+              </Grid>
 
-        {checked &&
-          <Grid item className={`${classes.icon} ${classes.checked}`}>
-            <Check />
-          </Grid>
-        }
+              {checked &&
+              <Fade in={checked}>
+                <Grid item className={`${classes.icon} ${classes.checked}`}>
+                  <Check />
+                </Grid>
+              </Fade>
+              }
+            </Grid>
+          )}
+        />
       </Grid>
-    </Grid>
   );
 };
 
-export default styled(SelectionCard);
+export default styled<Props>(SelectionCard);
