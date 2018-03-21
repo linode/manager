@@ -99,6 +99,9 @@ const LinodeTheme: Linode.Theme = {
           marginLeft: 8,
           cursor: 'pointer',
           color: '#3B85D9',
+          '&:hover': {
+            color: '#5E9AEA',
+          },
         },
         '&.affirmative': {
           borderColor: '#00B159',
