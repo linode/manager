@@ -34,6 +34,7 @@ const LinodeTextField: React.StatelessComponent<CombinedProps> = (props) => {
         ...finalProps.InputProps,
         disableUnderline: true,
       }}
+      fullWidth
     >
       {props.children}
     </TextField>

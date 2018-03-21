@@ -91,27 +91,35 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiInput: {
       root: {
-        '&.affirmative [type="text"]': {
+        maxWidth: 415,
+        border: '1px solid #ccc',
+        alignItems: 'center',
+        '& svg': {
+          fontSize: 18,
+          marginLeft: 8,
+          cursor: 'pointer',
+          color: '#3B85D9',
+        },
+        '&.affirmative': {
           borderColor: '#00B159',
         },
       },
+      focused: {
+        borderColor: '#666',
+      },
       error: {
-        '& [type="text"]': {
-          borderColor: '#CA0813',
-        },
+        borderColor: '#CA0813',
       },
       disabled: {
-        '& [type="text"]': {
-          borderColor: '#f4f4f4',
-        },
+        borderColor: '#f4f4f4',
       },
       input: {
-        border: '1px solid #ccc',
         padding: '12px 12px 13px',
         fontSize: '.9rem',
-        '&:focus': {
-          borderColor: '#666',
-        },
+        boxSizing: 'border-box',
+      },
+      inputType: {
+        height: 'auto',
       },
     },
     MuiFormLabel: {
