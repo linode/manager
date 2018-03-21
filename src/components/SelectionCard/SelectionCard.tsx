@@ -108,14 +108,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
+
 export interface Props {
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: string[];
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
-  onClick?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;

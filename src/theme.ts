@@ -246,7 +246,7 @@ const LinodeTheme: Linode.Theme = {
     },
   },
   color: {
-    headline: '#333',
+    headline: '#32363C',
     grey1: '#ABADAF',
     red: '#CA0813',
     grey2: '#E7E7E7',
