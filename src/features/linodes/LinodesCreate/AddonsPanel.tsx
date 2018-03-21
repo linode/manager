@@ -38,71 +38,75 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class AddonsPanel extends React.Component<CombinedProps> {
   render() {
     const { classes, handleChange } = this.props;
+    const setBackups = handleChange('backups');
+    const setPrivateIP = handleChange('privateIP');
+
     return (
       <Paper className={classes.root}>
-      <div className={classes.inner}>
-        <Typography component="div" variant="title">Optional Add-ons</Typography>
-        <Grid container>
-          <Grid xs={1}item>
-            <input
-              type="checkbox"
-              onChange={e => handleChange('backups')(e, !this.props.backups)}
-            />
-          </Grid>
-          <Grid xs={11}item>
-            <Grid container>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={1}>
-                  <Typography variant="title">
-                    Backups
-                  </Typography>
-                  </Grid>
-                  <Grid item xs={11}>
-                    <Typography variant="caption">
-                      $2.50 per month
+        <div className={classes.inner}>
+          <Typography component="div" variant="title">Optional Add-ons</Typography>
+          <Grid container>
+            <Grid xs={1}item>
+              <input
+                type="checkbox"
+                onChange={e => setBackups(e, !this.props.backups)}
+              />
+            </Grid>
+            <Grid xs={11}item>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item xs={1}>
+                    <Typography variant="title">
+                      Backups
                     </Typography>
+                    </Grid>
+                    <Grid item xs={11}>
+                      <Typography variant="caption">
+                        $2.50 per month
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2">
-                  Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                  day old backup, and an 8-14 day old backup. Plans are priced according to you
-                  Linode plan selected above.
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container>
-          <Grid xs={1}item>
-            <input
-              type="checkbox"
-              onChange={e => handleChange('privateIP')(e, !this.props.backups)}
-            />
-          </Grid>
-          <Grid xs={11}item>
-            <Grid container>
-              <Grid item xs={12}>
-                <Grid container>
-                  <Grid item xs={12}>
-                  <Typography variant="title">
-                    Private IP (Free!)
+                <Grid item xs={12}>
+                  <Typography variant="body2">
+                    Three backup slots are executed and rotated automatically: a daily backup, a 2-7
+                    day old backup, and an 8-14 day old backup. Plans are priced according to you
+                    Linode plan selected above.
                   </Typography>
-                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2">
-                We need copy! We need copy! We need copy! We need copy! We need copy! We need copy!
-                We need copy! We need copy! We need copy! We need copy! We need copy! We need copy!
-                </Typography>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </div>
+          <Grid container>
+            <Grid xs={1}item>
+              <input
+                type="checkbox"
+                onChange={e => setPrivateIP(e, !this.props.privateIP)}
+              />
+            </Grid>
+            <Grid xs={11}item>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                    <Typography variant="title">
+                      Private IP (Free!)
+                    </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="body2">
+                  We need copy! We need copy! We need copy! We need copy! We need copy! We need
+                  copy! We need copy! We need copy! We need copy! We need copy! We need copy! We
+                  need copy!
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </div>
     </Paper>
     );
   }

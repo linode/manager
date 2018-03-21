@@ -26,7 +26,7 @@ interface ExtendedRegion extends Linode.Region {
 
 interface Props {
   regions: ExtendedRegion[];
-  handleSelection: (event: React.MouseEvent<HTMLElement>, imageID: string) => void;
+  handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
   selectedID: string | null;
 }
 
@@ -44,7 +44,7 @@ const renderCard = (selectedID: string|null, handleSelection: Function) =>
       <SelectionCard
         key={idx}
         checked={region.id === String(selectedID)}
-        onClick={e => handleSelection(e, region.id)}
+        onClick={e => handleSelection('selectedRegionID')(e, region.id)}
         renderIcon={() => flags[region.country]()}
         heading={(region.country.toUpperCase())}
         subheadings={[region.display]}

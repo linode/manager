@@ -28,14 +28,17 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   label: string | null;
-  handleLabelChange: (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
+  handleChange: (key: string) =>
+    (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class InfoPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleLabelChange } = this.props;
+    const { classes, handleChange } = this.props;
+    const setLabel = handleChange('label');
+
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
@@ -43,7 +46,7 @@ class InfoPanel extends React.Component<CombinedProps> {
         <TextField
           label="Linode Label"
           placeholder="Enter a Label"
-          onChange={e => handleLabelChange(e, e.target.value)}
+          onChange={e => setLabel(e, e.target.value)}
         />
       </div>
     </Paper>

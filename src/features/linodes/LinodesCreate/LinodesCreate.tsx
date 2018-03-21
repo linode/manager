@@ -120,8 +120,8 @@ class LinodeCreate extends React.Component<FinalProps, State> {
     this.setState({ selectedTab: value });
   }
 
-  handleSelection = (prop: string) => (event: ChangeEvents, imageID: string) => {
-    this.setState(() => ({ [prop]: imageID }), () => console.log(this.state));
+  updateStateFor = (key: string) => (event: ChangeEvents, value: string) => {
+    this.setState(() => ({ [key]: value }), () => { console.log(this.state); });
   }
 
   tabs = [
@@ -132,31 +132,31 @@ class LinodeCreate extends React.Component<FinalProps, State> {
           <React.Fragment>
             <SelectImagePanel
               images={pathOr([], ['response', 'data'], this.props.images)}
-              handleSelection={this.handleSelection('selectedImageID')}
+              handleSelection={this.updateStateFor}
               selectedImageID={this.state.selectedImageID}
               />
             <SelectRegionPanel
               regions={pathOr([], ['response', 'data'], this.props.regions)}
-              handleSelection={this.handleSelection('selectedRegionID')}
+              handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
               types={pathOr([], ['response', 'data'], this.props.types)}
-              handleSelection={this.handleSelection('selectedTypeID')}
+              handleSelection={this.updateStateFor}
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
               label={this.state.label}
-              handleLabelChange={this.handleSelection('label')}
+              handleChange={this.updateStateFor}
             />
             <PasswordPanel
               password={this.state.password}
-              handlePasswordChange={this.handleSelection('password')}
+              handleChange={this.updateStateFor}
             />
             <AddonsPanel
               backups={this.state.backups}
               privateIP={this.state.privateIP}
-              handleChange={this.handleSelection}
+              handleChange={this.updateStateFor}
             />
           </React.Fragment>
         );
