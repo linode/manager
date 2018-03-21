@@ -20,16 +20,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
   },
   block: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#C9CACB',
     height: '4px',
-    width: 0,
-    transition: 'width .5s ease-in-out .2s, backgroundColor .5s ease-in-out',
+    transition: 'background-color .5s ease-in-out',
   },
-  0 : { width: '100% !important', backgroundColor: '#BF332B !important' },
-  1 : { width: '100% !important', backgroundColor: '#BF332B !important' },
-  2 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
-  3 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
-  4 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
+  0 : { backgroundColor: '#BF332B !important' },
+  1 : { backgroundColor: '#BF332B !important' },
+  2 : { backgroundColor: '#4EAD62 !important' },
+  3 : { backgroundColor: '#4EAD62 !important' },
+  4 : { backgroundColor: '#4EAD62 !important' },
 });
 
 const styled = withStyles<ClassNames>(styles, { withTheme: true });

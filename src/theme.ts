@@ -93,9 +93,19 @@ const LinodeTheme: Linode.Theme = {
       root: {
         maxWidth: 415,
         border: '1px solid #ccc',
+        alignItems: 'center',
+        '& svg': {
+          fontSize: 18,
+          marginLeft: 8,
+          cursor: 'pointer',
+          color: '#3B85D9',
+        },
         '&.affirmative': {
           borderColor: '#00B159',
         },
+      },
+      focused: {
+        borderColor: '#666',
       },
       error: {
         borderColor: '#CA0813',
@@ -107,9 +117,9 @@ const LinodeTheme: Linode.Theme = {
         padding: '12px 12px 13px',
         fontSize: '.9rem',
         boxSizing: 'border-box',
-        '&:focus': {
-          borderColor: '#666',
-        },
+      },
+      inputType: {
+        height: 'auto',
       },
     },
     MuiFormLabel: {
