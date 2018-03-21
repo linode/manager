@@ -34,7 +34,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       width: 18,
       height: 18,
       position: 'absolute',
-      fontWeight: 700,
     },
     '&:hover': {
       borderColor: '#3683dc',
