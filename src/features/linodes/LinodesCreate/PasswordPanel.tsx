@@ -5,7 +5,7 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
-import TextField from '../../../components/TextField';
+import PasswordInput from '../../../components/PasswordInput';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
@@ -42,8 +42,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
       <Paper className={classes.root}>
       <div className={classes.inner}>
         <Typography component="div" variant="title">Password</Typography>
-        <TextField
-          type="password"
+        <PasswordInput
           label="Root Password"
           placeholder="Enter a password."
           onChange={e => setPassword(e, e.target.value) }

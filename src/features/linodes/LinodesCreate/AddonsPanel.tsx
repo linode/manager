@@ -6,6 +6,8 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
+import CheckBox from '../../../components/CheckBox';
+
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -29,7 +31,7 @@ interface Props {
   backups: boolean;
   privateIP: boolean;
   handleChange: (key: string) =>
-    (e: React.ChangeEvent<HTMLInputElement>, value: any) =>
+    (e: React.ChangeEvent<Linode.TodoAny>, value: any) =>
       void;
 }
 
@@ -47,9 +49,9 @@ class AddonsPanel extends React.Component<CombinedProps> {
           <Typography component="div" variant="title">Optional Add-ons</Typography>
           <Grid container>
             <Grid xs={1}item>
-              <input
-                type="checkbox"
-                onChange={e => setBackups(e, !this.props.backups)}
+              <CheckBox
+                checked={this.props.backups}
+                onClick={e => setBackups(e, !this.props.backups)}
               />
             </Grid>
             <Grid xs={11}item>
@@ -80,9 +82,9 @@ class AddonsPanel extends React.Component<CombinedProps> {
           </Grid>
           <Grid container>
             <Grid xs={1}item>
-              <input
-                type="checkbox"
-                onChange={e => setPrivateIP(e, !this.props.privateIP)}
+              <CheckBox
+                checked={this.props.privateIP}
+                onClick={e => setPrivateIP(e, !this.props.privateIP)}
               />
             </Grid>
             <Grid xs={11}item>

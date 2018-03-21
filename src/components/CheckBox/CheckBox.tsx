@@ -10,12 +10,11 @@ import {
 import Check from 'material-ui-icons/Check';
 
 type CSSClasses =
-'root'
-| 'checked'
-| 'disabled'
-| 'warning'
-| 'error'
-;
+  'root'
+  | 'checked'
+  | 'disabled'
+  | 'warning'
+  | 'error';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -87,7 +86,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
   variant?: 'warning' | 'error';
   checked: Boolean;
   disabled?: Boolean;

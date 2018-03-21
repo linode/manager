@@ -26,6 +26,8 @@ class HideShowText extends React.Component<FinalProps, State> {
 
     return (
       <TextField
+        label={this.props.label}
+        placeholder={this.props.placeholder}
         onChange={this.props.onChange}
         type={hidden ? 'password' : 'text'}
         InputProps={{

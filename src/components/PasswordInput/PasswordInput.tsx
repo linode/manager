@@ -16,6 +16,8 @@ import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 interface Props {
+  label?: string;
+  placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -60,6 +62,8 @@ class PasswordInput extends React.Component<FinalProps, State> {
       <Grid container className={classes.container}>
         <Grid item xs={12}>
           <HideShowText
+            label={this.props.label}
+            placeholder={this.props.placeholder}
             value={this.props.value}
             onChange={this.handleChange}
             fullWidth
