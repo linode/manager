@@ -35,12 +35,16 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class InfoPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { classes, handleLabelChange } = this.props;
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
         <Typography component="div" variant="title">Label</Typography>
-        <TextField label="Linode Label" placeholder="Enter a Label" />
+        <TextField
+          label="Linode Label"
+          placeholder="Enter a Label"
+          onChange={e => handleLabelChange(e, e.target.value)}
+        />
       </div>
     </Paper>
     );

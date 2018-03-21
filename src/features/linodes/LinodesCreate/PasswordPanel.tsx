@@ -35,12 +35,17 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { classes, handlePasswordChange } = this.props;
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
         <Typography component="div" variant="title">Password</Typography>
-        <TextField type="password" label="Root Password" placeholder="Enter a password." />
+        <TextField
+          type="password"
+          label="Root Password"
+          placeholder="Enter a password."
+          onChange={e => handlePasswordChange(e, e.target.value) }
+        />
       </div>
     </Paper>
     );
