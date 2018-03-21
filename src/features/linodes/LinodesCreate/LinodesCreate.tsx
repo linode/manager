@@ -21,6 +21,7 @@ import SelectPlanPanel from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
+import { typeLabelLong, typeLabel } from '../LinodesLanding/presentation';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
@@ -65,14 +66,19 @@ const preloaded = PromiseLoader<Props>({
       return {
         ...response,
         data: response.data.map((type) => {
-          const { memory, vcpus, disk, price: { monthly, hourly } } = type;
-          const mem = memory / 1024;
+          const {
+            memory,
+            vcpus,
+            disk,
+            price: { monthly, hourly },
+          } = type;
+
           return ({
             ...type,
-            heading: `Linode ${ mem }G`,
+            heading: typeLabel(memory),
             subHeadings: [
               `$${monthly}/mo ($${hourly}/hr)`,
-              `${vcpus} CPU(s), ${ Math.floor(disk / 1000) }GB Storage, ${mem}G RAM`,
+              typeLabelLong(memory, disk, vcpus),
             ],
           });
         }),
