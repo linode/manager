@@ -106,9 +106,11 @@ const LinodeTheme: Linode.Theme = {
         },
       },
       input: {
+        maxWidth: 415,
         border: '1px solid #ccc',
         padding: '12px 12px 13px',
         fontSize: '.9rem',
+        boxSizing: 'border-box',
         '&:focus': {
           borderColor: '#666',
         },

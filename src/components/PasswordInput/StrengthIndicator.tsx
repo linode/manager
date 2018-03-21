@@ -17,18 +17,19 @@ type ClassNames = 'root' | 'block' | '0' | '1' | '2' | '3' | '4';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    width: '100%',
+    maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
   },
   block: {
+    backgroundColor: 'transparent',
     height: '4px',
-    width: '91px',
-    marginRight: theme.spacing.unit / 2,
+    width: 0,
+    transition: 'width .5s ease-in-out .2s, backgroundColor .5s ease-in-out',
   },
-  0 : { backgroundColor: '#CF1E1E' },
-  1 : { backgroundColor: '#CF1E1E' },
-  2 : { backgroundColor: '#FFD000' },
-  3 : { backgroundColor: '#00B159' },
-  4 : { backgroundColor: '#00B159' },
+  0 : { width: '100% !important', backgroundColor: '#BF332B !important' },
+  1 : { width: '100% !important', backgroundColor: '#BF332B !important' },
+  2 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
+  3 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
+  4 : { width: '100% !important', backgroundColor: '#4EAD62 !important' },
 });
 
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
@@ -38,18 +39,20 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, strength } = props;
   return (
-    <Grid container className={classes.root}>
+    <Grid container spacing={8} className={classes.root}>
       {
         Array
           .from(Array(4))
           .map((v, idx) => (
             <Grid item
               key={idx}
-              className={classNames({
-                [classes.block]: true,
-                [classes[strength]]: idx <= strength,
-              })}
-            />
+              xs={3}
+            >
+            <div className={classNames({
+              [classes.block]: true,
+              [classes[strength]]: idx <= strength,
+            })}></div>
+            </Grid>
           ))
       }
     </Grid>

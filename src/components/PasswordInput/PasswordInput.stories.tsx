@@ -7,4 +7,9 @@ import PasswordInput from './PasswordInput';
 
 storiesOf('Password Input', module)
 .addDecorator(ThemeDecorator)
-.add('Example', () => (<PasswordInput />));
+.add('Example', () => (
+    <div>
+        <PasswordInput />
+        <p>Some text underneath</p>
+    </div>
+));
