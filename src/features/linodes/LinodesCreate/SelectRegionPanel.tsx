@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
-import UK from 'flag-icon-css/flags/4x3/gb-eng.svg';
+import UK from 'flag-icon-css/flags/4x3/gb.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 
 const flags = {
