@@ -18,6 +18,9 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import SelectImagePanel from './SelectImagePanel';
 import SelectRegionPanel from './SelectRegionPanel';
 import SelectPlanPanel from './SelectPlanPanel';
+import LabelAndTagsPanel from './LabelAndTagsPanel';
+
+type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
 type Styles =
   'root';
@@ -43,6 +46,7 @@ interface State {
   selectedImageID: string | null;
   selectedRegionID: string | null;
   selectedTypeID: string | null;
+  label: string | null;
   [index: string]: any;
 }
 
@@ -101,13 +105,14 @@ class LinodeCreate extends React.Component<FinalProps, State> {
     selectedImageID: null,
     selectedRegionID: null,
     selectedTypeID: null,
+    label: null,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ selectedTab: value });
   }
 
-  handleSelection = (prop: string) => (event: React.MouseEvent<HTMLElement>, imageID: string) => {
+  handleSelection = (prop: string) => (event: ChangeEvents, imageID: string) => {
     this.setState(() => ({ [prop]: imageID }), () => console.log(this.state));
   }
 
@@ -131,6 +136,10 @@ class LinodeCreate extends React.Component<FinalProps, State> {
               types={pathOr([], ['response', 'data'], this.props.types)}
               handleSelection={this.handleSelection('selectedTypeID')}
               selectedID={this.state.selectedTypeID}
+            />
+            <LabelAndTagsPanel
+              label={this.state.label}
+              handleLabelChange={this.handleSelection('label')}
             />
           </React.Fragment>
         );
