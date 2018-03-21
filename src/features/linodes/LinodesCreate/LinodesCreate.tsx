@@ -15,7 +15,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import { API_ROOT } from 'src/constants';
 
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import CreateFromImage from './CreateFromImage';
+import SelectImagePanel from './SelectImagePanel';
 
 type Styles =
   'root';
@@ -65,7 +65,7 @@ class LinodeCreate extends React.Component<FinalProps, State> {
       render: () => {
         const images  = pathOr([], ['response', 'data'], this.props.images);
 
-        return <CreateFromImage
+        return <SelectImagePanel
           images={images}
           handleSelection={this.handleImageClick}
           selectedImageID={this.state.selectedImageID}
