@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as zxcvbn from 'zxcvbn';
-import { isEmpty, isNil } from 'ramda';
+import { isEmpty } from 'ramda';
 
 import  {
   withStyles,
@@ -66,11 +66,9 @@ class PasswordInput extends React.Component<FinalProps, State> {
           />
         </Grid>
       {
-        !isNil(strength)
-          &&
-          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator strength={strength} />
-          </Grid>
+        <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+          <StrengthIndicator strength={strength} />
+        </Grid>
       }
       </Grid>
     );
