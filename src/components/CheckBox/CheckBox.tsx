@@ -19,7 +19,9 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    display: 'inline-block',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     cursor: 'pointer',
     boxSizing: 'border-box',
     height: '26px',
@@ -27,6 +29,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     border: '1px solid #C9CACB;',
     backgroundColor: '#fff',
     color: '#fff',
+    transition: 'border .2s ease-in-out, background-color .2s ease-in-out',
+    '& svg': {
+      width: 18,
+      height: 18,
+      position: 'absolute',
+      fontWeight: 700,
+    },
     '&:hover': {
       borderColor: '#3683dc',
     },
