@@ -8,13 +8,16 @@ import  {
   StyleRulesCallback,
   Theme,
 } from 'material-ui';
+import { TextFieldProps } from 'material-ui/TextField';
 
 import Grid from 'material-ui/Grid';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 
-import TextField from '../TextField';
+import HideShowText from './HideShowText';
 
-interface Props {}
+interface Props {
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 interface State {
   strength: null | 0 | 1 | 2 | 3 | 4;
@@ -35,14 +38,15 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-type FinalProps = Props & WithStyles<ClassNames>;
+type FinalProps = Props & WithStyles<ClassNames> & TextFieldProps;
 
 class PasswordInput extends React.Component<FinalProps, State> {
   state = { strength: null };
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
+    this.props.onChange && this.props.onChange(e);
 
+    const value = e.currentTarget.value;
     this.setState({
       strength: isEmpty(value) ? null :  zxcvbn(value).score,
     });
@@ -55,7 +59,11 @@ class PasswordInput extends React.Component<FinalProps, State> {
     return (
       <Grid container className={classes.container}>
         <Grid item xs={12}>
-          <TextField onChange={this.handleChange} fullWidth />
+          <HideShowText
+            value={this.props.value}
+            onChange={this.handleChange}
+            fullWidth
+          />
         </Grid>
       {
         !isNil(strength)

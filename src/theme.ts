@@ -91,23 +91,19 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiInput: {
       root: {
-        '&.affirmative [type="text"]': {
+        maxWidth: 415,
+        border: '1px solid #ccc',
+        '&.affirmative': {
           borderColor: '#00B159',
         },
       },
       error: {
-        '& [type="text"]': {
-          borderColor: '#CA0813',
-        },
+        borderColor: '#CA0813',
       },
       disabled: {
-        '& [type="text"]': {
-          borderColor: '#f4f4f4',
-        },
+        borderColor: '#f4f4f4',
       },
       input: {
-        maxWidth: 415,
-        border: '1px solid #ccc',
         padding: '12px 12px 13px',
         fontSize: '.9rem',
         boxSizing: 'border-box',
