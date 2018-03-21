@@ -16,7 +16,8 @@ import { API_ROOT } from 'src/constants';
 
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SelectImagePanel from './SelectImagePanel';
-import SelectRegionPanel from 'src/features/linodes/LinodesCreate/SelectRegionPanel';
+import SelectRegionPanel from './SelectRegionPanel';
+import SelectPlanPanel from './SelectPlanPanel';
 
 type Styles =
   'root';
@@ -32,6 +33,7 @@ interface Props {
 interface PreloadedProps {
   images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
   regions: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Region>>;
+  types: PromiseLoaderResponse<Linode.ManyResourceState<Linode.LinodeType>>;
 }
 
 type FinalProps = Props & WithStyles<Styles> & PreloadedProps;
@@ -40,12 +42,33 @@ interface State {
   selectedTab: number;
   selectedImageID: string | null;
   selectedRegionID: string | null;
+  selectedTypeID: string | null;
   [index: string]: any;
 }
 
 const preloaded = PromiseLoader<Props>({
   images: () => Axios.get(`${API_ROOT}/images`)
     .then(response => response.data),
+
+  types: () => Axios.get(`${API_ROOT}/linode/types`)
+    .then(response => response.data)
+    .then((response: Linode.ManyResourceState<Linode.LinodeType>) => {
+      return {
+        ...response,
+        data: response.data.map((type) => {
+          const { memory, vcpus, disk, price: { monthly, hourly } } = type;
+          const mem = memory / 1024;
+          return ({
+            ...type,
+            heading: `Linode ${ mem }G`,
+            subHeadings: [
+              `$${monthly}/mo ($${hourly}/hr)`,
+              `${vcpus} CPU(s), ${ Math.floor(disk / 1000) }GB Storage, ${mem}G RAM`,
+            ],
+          });
+        }),
+      };
+    }),
 
   regions: () => Axios.get(`${API_ROOT}/regions`)
     .then(response => response.data)
@@ -77,6 +100,7 @@ class LinodeCreate extends React.Component<FinalProps, State> {
     selectedTab: 0,
     selectedImageID: null,
     selectedRegionID: null,
+    selectedTypeID: null,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -84,7 +108,7 @@ class LinodeCreate extends React.Component<FinalProps, State> {
   }
 
   handleSelection = (prop: string) => (event: React.MouseEvent<HTMLElement>, imageID: string) => {
-    this.setState(() => ({ [prop]: imageID }));
+    this.setState(() => ({ [prop]: imageID }), () => console.log(this.state));
   }
 
   tabs = [
@@ -102,6 +126,11 @@ class LinodeCreate extends React.Component<FinalProps, State> {
               regions={pathOr([], ['response', 'data'], this.props.regions)}
               handleSelection={this.handleSelection('selectedRegionID')}
               selectedID={this.state.selectedRegionID}
+            />
+            <SelectPlanPanel
+              types={pathOr([], ['response', 'data'], this.props.types)}
+              handleSelection={this.handleSelection('selectedTypeID')}
+              selectedID={this.state.selectedTypeID}
             />
           </React.Fragment>
         );
