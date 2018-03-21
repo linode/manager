@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { TextFieldProps } from 'material-ui/TextField';
 
-import RemoveRedEye from 'material-ui-icons/RemoveRedEye';
+import Visibility from 'material-ui-icons/Visibility';
+import VisibilityOff from 'material-ui-icons/VisibilityOff';
 import TextField from '../TextField';
 
 interface State {
@@ -13,7 +14,7 @@ type FinalProps = TextFieldProps;
 
 class HideShowText extends React.Component<FinalProps, State> {
   state = {
-    hidden: false,
+    hidden: true,
   };
 
   toggleHidden = () => {
@@ -28,7 +29,9 @@ class HideShowText extends React.Component<FinalProps, State> {
         onChange={this.props.onChange}
         type={hidden ? 'password' : 'text'}
         InputProps={{
-          startAdornment: <RemoveRedEye onClick={this.toggleHidden}/>,
+          startAdornment: hidden
+            ? <Visibility onClick={this.toggleHidden}/>
+            : <VisibilityOff onClick={this.toggleHidden}/>,
         }}
       />
     );
