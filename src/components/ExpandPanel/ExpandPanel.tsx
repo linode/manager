@@ -49,9 +49,9 @@ interface State {
   open: boolean;
 }
 
-type FinalProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class ExpandPanel extends React.Component<FinalProps, State> {
+class ExpandPanel extends React.Component<CombinedProps, State> {
   state = {
     open: false,
   };

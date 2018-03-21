@@ -41,7 +41,7 @@ interface PreloadedProps {
   types: PromiseLoaderResponse<Linode.ManyResourceState<Linode.LinodeType>>;
 }
 
-type FinalProps = Props & WithStyles<Styles> & PreloadedProps;
+type CombinedProps = Props & WithStyles<Styles> & PreloadedProps;
 
 interface State {
   selectedTab: number;
@@ -104,7 +104,7 @@ const preloaded = PromiseLoader<Props>({
     }),
 });
 
-class LinodeCreate extends React.Component<FinalProps, State> {
+class LinodeCreate extends React.Component<CombinedProps, State> {
   state = {
     selectedTab: 0,
     selectedImageID: null,
