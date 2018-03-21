@@ -11,13 +11,11 @@ import Check from 'material-ui-icons/Check';
 
 type CSSClasses =
 'root'
-| 'defaultChecked'
-| 'warning'
-| 'warningChecked'
-| 'error'
-| 'errorChecked'
+| 'checked'
 | 'disabled'
-| 'disabledChecked';
+| 'warning'
+| 'error'
+;
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -41,41 +39,42 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       backgroundColor: '#fff',
     },
   },
-  disabled: {
-    backgroundColor: '#f4f4f4',
-    pointerEvents: 'none',
-  },
-  disabledChecked: {
-    backgroundColor: '#C9CACB',
-  },
-  defaultChecked: {
+  checked: {
     borderColor: '#3683dc',
     backgroundColor: '#3683dc',
     '&:hover': {
       backgroundColor: '#3683dc',
     },
+    '&$disabled': {
+      backgroundColor: '#C9CACB !important',
+    },
+    '&$warning': {
+      borderColor: '#ffd322',
+      backgroundColor: '#ffd322',
+      '&:hover': {
+        backgroundColor: '#ffd322 !important',
+      },
+    },
+    '&$error': {
+      borderColor: '#cf1f1f',
+      backgroundColor: '#cf1f1f',
+      '&:hover': {
+        backgroundColor: '#cf1f1f !important',
+      },
+    },
+  },
+  disabled: {
+    backgroundColor: '#f4f4f4 !important',
+    borderColor: '#C9CACB !important',
+    pointerEvents: 'none',
   },
   warning: {
     borderColor: '#ffd322',
     backgroundColor: '#fef5bf',
   },
-  warningChecked: {
-    borderColor: '#ffd322',
-    backgroundColor: '#ffd322',
-    '&:hover': {
-      backgroundColor: '#ffd322 !important',
-    },
-  },
   error: {
     borderColor: '#cf1f1f',
     backgroundColor: '#f3c8c7',
-  },
-  errorChecked: {
-    borderColor: '#cf1f1f',
-    backgroundColor: '#cf1f1f',
-    '&:hover': {
-      backgroundColor: '#cf1f1f !important',
-    },
   },
 });
 
@@ -99,29 +98,10 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
 
   const classnames = classNames({
     [classes.root]: true,
-    [classes.disabled]:
-      disabled === true,
-    [classes.disabledChecked]:
-      checked === true
-      && disabled === true,
-    [classes.defaultChecked]:
-      checked === true
-      && disabled !== true
-      && !(variant === 'warning' || variant === 'error'),
-    [classes.warning]:
-      disabled !== true
-      && variant === 'warning',
-    [classes.warningChecked]:
-      checked === true
-      && disabled !== true
-      && variant === 'warning',
-    [classes.error]:
-      disabled !== true
-      && variant === 'error',
-    [classes.errorChecked]:
-      checked === true
-      && disabled !== true
-      && variant === 'error',
+    [classes.disabled]: disabled === true,
+    [classes.checked]: checked === true,
+    [classes.warning]: variant === 'warning',
+    [classes.error]: variant === 'error',
   });
 
   return (
