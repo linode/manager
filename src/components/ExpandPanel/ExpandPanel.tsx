@@ -9,6 +9,8 @@ import {
 import Collapse from 'material-ui/transitions/Collapse';
 
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
+import LinodeTheme from '../../../src/theme';
+
 
 type CSSClasses = 'root' | 'panel' | 'header' | 'caret' ;
 
@@ -22,11 +24,12 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     display: 'flex',
     alignItems: 'center',
     fontWeight: 700,
+    color: LinodeTheme.color.headline,
   },
   caret: {
     color: theme.palette.primary.main,
-    marginRight: theme.spacing.unit,
-    fontSize: '26px',
+    marginRight: theme.spacing.unit / 2,
+    fontSize: 28,
     transition: 'transform .1s ease-in-out',
     '&.rotate': {
       transition: 'transform .3s ease-in-out',
@@ -70,7 +73,7 @@ class ExpandPanel extends React.Component<FinalProps, State> {
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
           }
-          {name}
+          <span>{name}</span>
         </div>
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open

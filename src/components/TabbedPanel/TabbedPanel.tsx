@@ -6,7 +6,11 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 
-type ClassNames = 'root' | 'inner' | 'copy';
+type ClassNames = 'root'
+| 'inner'
+| 'copy'
+| 'tabs'
+| 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -22,6 +26,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     color: '#606469',
     fontSize: '0.875rem',
     marginTop: theme.spacing.unit,
+  },
+  tabs: {
+    margin: `${theme.spacing.unit}px 0`,
+  },
+  panelBody: {
+    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`,
   },
 });
 
@@ -61,11 +71,12 @@ class TabbedPanel extends React.Component<CombinedProps> {
               onChange={this.handleChange}
               indicatorColor="primary"
               textColor="primary"
+              className={classes.tabs}
             >
             { tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />) }
             </Tabs>
           </AppBar>
-          <Typography component="div" style={{ padding: 8 * 3 }}>
+          <Typography component="div" className={classes.panelBody}>
               { render(rest) }
           </Typography>
         </div>
