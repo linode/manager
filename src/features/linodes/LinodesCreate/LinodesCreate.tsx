@@ -121,7 +121,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   updateStateFor = (key: string) => (event: ChangeEvents, value: string) => {
-    this.setState(() => ({ [key]: value }), () => { console.log(this.state); });
+    this.setState(() => ({ [key]: value }));
   }
 
   tabs = [
