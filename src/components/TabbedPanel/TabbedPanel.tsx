@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface Tab {
+export interface Tab {
   title: string;
   render: (props: any) => JSX.Element;
 }

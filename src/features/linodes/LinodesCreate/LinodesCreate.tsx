@@ -16,6 +16,7 @@ import { API_ROOT } from 'src/constants';
 
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SelectImagePanel from './SelectImagePanel';
+import SelectRegionPanel from 'src/features/linodes/LinodesCreate/SelectRegionPanel';
 
 type Styles =
   'root';
@@ -30,6 +31,7 @@ interface Props {
 
 interface PreloadedProps {
   images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
+  regions: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Region>>;
 }
 
 type FinalProps = Props & WithStyles<Styles> & PreloadedProps;
@@ -37,39 +39,72 @@ type FinalProps = Props & WithStyles<Styles> & PreloadedProps;
 interface State {
   selectedTab: number;
   selectedImageID: string | null;
+  selectedRegionID: string | null;
+  [index: string]: any;
 }
 
 const preloaded = PromiseLoader<Props>({
   images: () => Axios.get(`${API_ROOT}/images`)
     .then(response => response.data),
+
+  regions: () => Axios.get(`${API_ROOT}/regions`)
+    .then(response => response.data)
+    .then((response) => {
+      const display = {
+        'us-east-1a': 'Newark, NJ',
+        'us-south-1a': 'Dallas, TX',
+        'us-west-1a': 'Fremont, CA',
+        'us-southeast-1a': 'Atlanta, GA',
+        'eu-central-1a': 'Frankfurt, DE',
+        'eu-west-1a': 'London, UK',
+        'ap-northeast-1a': 'Tokyo',
+        'ap-northeast-1b': 'Tokyo 2, JP',
+        'ap-south-1a': 'Singapore, SG',
+      };
+
+      return {
+        ...response,
+        data: response.data.map((region: Linode.Region) => ({
+          ...region,
+          display: display[region.id],
+        })),
+      };
+    }),
 });
 
 class LinodeCreate extends React.Component<FinalProps, State> {
   state = {
     selectedTab: 0,
     selectedImageID: null,
+    selectedRegionID: null,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ selectedTab: value });
   }
 
-  handleImageClick = (event: React.MouseEvent<HTMLElement>, imageID: string) => {
-
-    this.setState({ selectedImageID: imageID });
+  handleSelection = (prop: string) => (event: React.MouseEvent<HTMLElement>, imageID: string) => {
+    this.setState(() => ({ [prop]: imageID }));
   }
 
   tabs = [
     {
       title: 'Create from Image',
       render: () => {
-        const images  = pathOr([], ['response', 'data'], this.props.images);
-
-        return <SelectImagePanel
-          images={images}
-          handleSelection={this.handleImageClick}
-          selectedImageID={this.state.selectedImageID}
-        />;
+        return (
+          <React.Fragment>
+            <SelectImagePanel
+              images={pathOr([], ['response', 'data'], this.props.images)}
+              handleSelection={this.handleSelection('selectedImageID')}
+              selectedImageID={this.state.selectedImageID}
+              />
+            <SelectRegionPanel
+              regions={pathOr([], ['response', 'data'], this.props.regions)}
+              handleSelection={this.handleSelection('selectedRegionID')}
+              selectedID={this.state.selectedRegionID}
+            />
+          </React.Fragment>
+        );
       },
     },
   ];
