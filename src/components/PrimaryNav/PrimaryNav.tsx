@@ -77,23 +77,28 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: 'white',
   },
   sublinkPanel: {
-    color: '#C9CACB',
     padding: '16px 40px 0 34px',
     fontSize: '.9rem',
     transition: 'color .3s ease-in-out',
+    '& span': {
+      color: '#C9CACB',
+    },
     '& svg': {
-      color: 'white',
+      color: '#C9CACB',
       fontSize: '20px',
-      margin: '3px 2px 4px 0',
+      margin: '4px 2px 4px 0',
     },
-    '&:hover, &:focus': {
+    '&:hover, &:focus, & .hOpen': {
       color: 'white',
-    },
-    '& .hOpen': {
-      color: 'white',
+      '& span, & svg': {
+        color: 'white',
+      },
     },
     '& .pOpen': {
       margin: '5px 0 0 14px',
+    },
+    '&:last-child': {
+      paddingBottom: theme.spacing.unit * 3,
     },
   },
   sublink: {
