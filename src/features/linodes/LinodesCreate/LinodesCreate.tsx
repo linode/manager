@@ -19,7 +19,8 @@ import SelectImagePanel from './SelectImagePanel';
 import SelectRegionPanel from './SelectRegionPanel';
 import SelectPlanPanel from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
-import PasswordPanel from 'src/features/linodes/LinodesCreate/PasswordPanel';
+import PasswordPanel from './PasswordPanel';
+import AddonsPanel from './AddonsPanel';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
@@ -49,6 +50,8 @@ interface State {
   selectedTypeID: string | null;
   label: string | null;
   password: string | null;
+  backups: boolean;
+  privateIP: boolean;
   [index: string]: any;
 }
 
@@ -109,6 +112,8 @@ class LinodeCreate extends React.Component<FinalProps, State> {
     selectedTypeID: null,
     label: null,
     password: null,
+    backups: false,
+    privateIP: false,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -147,6 +152,11 @@ class LinodeCreate extends React.Component<FinalProps, State> {
             <PasswordPanel
               password={this.state.password}
               handlePasswordChange={this.handleSelection('password')}
+            />
+            <AddonsPanel
+              backups={this.state.backups}
+              privateIP={this.state.privateIP}
+              handleChange={this.handleSelection}
             />
           </React.Fragment>
         );
