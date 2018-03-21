@@ -9,7 +9,7 @@ import {
 import Collapse from 'material-ui/transitions/Collapse';
 
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
-import LinodeTheme from 'src/theme';
+import LinodeTheme from '../../../src/theme';
 
 
 type CSSClasses = 'root' | 'panel' | 'header' | 'caret' ;
