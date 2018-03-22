@@ -9,15 +9,20 @@ import {
 } from 'material-ui';
 import SvgIcon from 'material-ui/SvgIcon';
 
-type CSSClasses = 'root' | 'active' | 'disabled';
+type CSSClasses = 'root' | 'active' | 'disabled' | 'icon';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    display: 'inline-block',
+    display: 'flex',
+    alignItems: 'flex-start',
     cursor: 'pointer',
     color: theme.palette.primary.main,
-    '&:hover': {
-      color: '#4997f4',
+    transition: 'color 225ms ease-in-out',
+    '&:hover, &:hover $icon': {
+      color: theme.palette.primary.light,
+    },
+    '&:hover $icon': {
+      borderColor: theme.palette.primary.light,
     },
   },
   active: {
@@ -26,15 +31,25 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   disabled: {
     color: '#939598',
     pointerEvents: 'none',
+    '& $icon': {
+      color: '#939598',
+      borderColor: '#939598',
+    },
+  },
+  icon: {
+    fontSize: 18,
+    marginRight: 5,
+    color: theme.palette.primary.main,
   },
 });
 
 interface Props {
-  SideIcon: typeof SvgIcon;
+  SideIcon: typeof SvgIcon | React.ComponentClass;
   text: string;
   onClick: () => void;
   active?: Boolean;
   disabled?: Boolean;
+  title: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -47,10 +62,11 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
     onClick,
     active,
     disabled,
+    title,
   } = props;
 
   return (
-    <div
+    <a
       className={
         classNames({
           [classes.root]: true,
@@ -58,13 +74,14 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
           [classes.active]: active === true,
         })
       }
+      title={title}
       onClick={onClick}
     >
-      <SideIcon />
+      <SideIcon className={classes.icon} />
       <span>
         {text}
       </span>
-    </div>
+    </a>
   );
 };
 

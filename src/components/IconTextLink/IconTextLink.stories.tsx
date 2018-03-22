@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import AddCircleOutline from 'material-ui-icons/AddCircleOutline';
+import PlusSquare from '../../../src/assets/icons/plus-square.svg';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import IconTextLink from './IconTextLink';
@@ -21,16 +21,18 @@ class InteractiveIconTextLink extends React.Component {
       <React.Fragment>
         <IconTextLink
           active={this.state.active}
-          SideIcon={AddCircleOutline}
+          SideIcon={PlusSquare}
           onClick={this.handleClick}
           text="Add an object"
+          title="Link title"
         />
         <br /><br />
         <IconTextLink
           disabled
-          SideIcon={AddCircleOutline}
+          SideIcon={PlusSquare}
           onClick={this.handleClick}
           text="Add an object"
+          title="Link title"
         />
       </React.Fragment>
     );
