@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Axios from 'axios';
 import { pathOr } from 'ramda';
+import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import {
   withStyles,
@@ -8,6 +9,7 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -22,6 +24,7 @@ import LabelAndTagsPanel from './LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
 import { typeLabelLong, typeLabel } from '../LinodesLanding/presentation';
+import CheckoutBar from './CheckoutBar';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
@@ -175,20 +178,39 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     const tabRender = this.tabs[selectedTab].render;
 
     return (
-      <React.Fragment>
+      <StickyContainer>
         <Typography variant="headline">Create New Linode</Typography>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={selectedTab}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-          {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
-          </Tabs>
-        </AppBar>
-        {tabRender()}
-      </React.Fragment>
+        <Grid container>
+          <Grid item md={12} lg={10} >
+            <AppBar position="static" color="default">
+              <Tabs
+                value={selectedTab}
+                onChange={this.handleTabChange}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+              {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
+              </Tabs>
+            </AppBar>
+            {tabRender()}
+          </Grid>
+          <Grid item md={12} lg={2}>
+            <Sticky>
+              {
+                (props: StickyProps) => {
+                  const combinedProps = {
+                    ...props,
+                    onDeploy: () => console.log('hello from sticky: ', this.state.selectedImageID),
+                  };
+                  return (
+                    <CheckoutBar {...combinedProps} />
+                  );
+                }
+              }
+            </Sticky>
+          </Grid>
+        </Grid>
+      </StickyContainer>
     );
   }
 }
