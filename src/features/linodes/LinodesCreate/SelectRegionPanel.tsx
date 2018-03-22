@@ -20,7 +20,7 @@ import TabbedPanel from '../../../components/TabbedPanel';
 import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
 import SelectionCard from '../../../components/SelectionCard';
 
-interface ExtendedRegion extends Linode.Region {
+export interface ExtendedRegion extends Linode.Region {
   display: string;
 }
 
