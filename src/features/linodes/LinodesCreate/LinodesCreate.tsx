@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Axios from 'axios';
-import { pathOr } from 'ramda';
+import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import {
   withStyles,
@@ -8,22 +8,27 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
+import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { API_ROOT } from 'src/constants';
 
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import PromiseLoader from 'src/components/PromiseLoader';
 import SelectImagePanel from './SelectImagePanel';
-import SelectRegionPanel from './SelectRegionPanel';
-import SelectPlanPanel from './SelectPlanPanel';
+import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
+import SelectPlanPanel, { ExtendedType } from './SelectPlanPanel';
 import LabelAndTagsPanel from './LabelAndTagsPanel';
 import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
-import { typeLabelLong, typeLabel } from '../LinodesLanding/presentation';
+import { typeLabelDetails, typeLabel } from '../presentation';
+import CheckoutBar from './CheckoutBar';
 
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
+
+type Info = { name: string, details: string } | undefined;
+type TypeInfo = { name: string, details: string, monthly: number } | undefined;
 
 type Styles =
   'root';
@@ -37,9 +42,9 @@ interface Props {
 }
 
 interface PreloadedProps {
-  images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
-  regions: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Region>>;
-  types: PromiseLoaderResponse<Linode.ManyResourceState<Linode.LinodeType>>;
+  images: { response: Linode.Image[] };
+  regions: { response: ExtendedRegion[] };
+  types: { response: ExtendedType[] };
 }
 
 type CombinedProps = Props & WithStyles<Styles> & PreloadedProps;
@@ -58,31 +63,31 @@ interface State {
 
 const preloaded = PromiseLoader<Props>({
   images: () => Axios.get(`${API_ROOT}/images`)
-    .then(response => response.data),
+    .then(response => response.data)
+    .then((data: Linode.ManyResourceState<Linode.Image>) => {
+      return data.data.map(image => image) || [];
+    }),
 
   types: () => Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data)
-    .then((response: Linode.ManyResourceState<Linode.LinodeType>) => {
-      return {
-        ...response,
-        data: response.data.map((type) => {
-          const {
-            memory,
-            vcpus,
-            disk,
-            price: { monthly, hourly },
-          } = type;
+    .then((data: Linode.ManyResourceState<Linode.LinodeType>) => {
+      return data.data.map((type) => {
+        const {
+          memory,
+          vcpus,
+          disk,
+          price: { monthly, hourly },
+        } = type;
 
-          return ({
-            ...type,
-            heading: typeLabel(memory),
-            subHeadings: [
-              `$${monthly}/mo ($${hourly}/hr)`,
-              typeLabelLong(memory, disk, vcpus),
-            ],
-          });
-        }),
-      };
+        return ({
+          ...type,
+          heading: typeLabel(memory),
+          subHeadings: [
+            `$${monthly}/mo ($${hourly}/hr)`,
+            typeLabelDetails(memory, disk, vcpus),
+          ],
+        });
+      }) || [];
     }),
 
   regions: () => Axios.get(`${API_ROOT}/regions`)
@@ -100,13 +105,10 @@ const preloaded = PromiseLoader<Props>({
         'ap-south-1a': 'Singapore, SG',
       };
 
-      return {
-        ...response,
-        data: response.data.map((region: Linode.Region) => ({
-          ...region,
-          display: display[region.id],
-        })),
-      };
+      return response.data.map((region: Linode.Region) => ({
+        ...region,
+        display: display[region.id],
+      })) || [];
     }),
 });
 
@@ -137,17 +139,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
         return (
           <React.Fragment>
             <SelectImagePanel
-              images={pathOr([], ['response', 'data'], this.props.images)}
+              images={this.props.images.response}
               handleSelection={this.updateStateFor}
               selectedImageID={this.state.selectedImageID}
               />
             <SelectRegionPanel
-              regions={pathOr([], ['response', 'data'], this.props.regions)}
+              regions={this.props.regions.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
-              types={pathOr([], ['response', 'data'], this.props.types)}
+              types={this.props.types.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedTypeID}
             />
@@ -170,25 +172,117 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     },
   ];
 
+  onDeploy = () => {
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedTypeID,
+      label,
+      password,
+      backups,
+      privateIP,
+    } = this.state;
+    if (
+      selectedImageID !== null
+      && selectedRegionID !== null
+      && selectedTypeID !== null
+      && label !== null
+      && password !== null
+      && backups !== null
+      && privateIP !== null
+    ) {
+      console.log(`Ready for deployment!
+selectedImageID: ${selectedImageID},
+selectedRegionID: ${selectedRegionID},
+selectedTypeID: ${selectedTypeID},
+label: ${label},
+password: ${password},
+backups: ${backups},
+privateIP: ${privateIP}`);
+    } else {
+      console.log('Not ready for deployment. Make sure to provide a selection for all options');
+    }
+  }
+
+  getImageInfo = (image: Linode.Image | undefined): Info => {
+    return image && {
+      name: `${image.vendor}`,
+      details: `${image.label}`,
+    };
+  }
+
+  getTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
+    return type && {
+      name: `${typeLabel(type.memory)}`,
+      details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
+      monthly: type.price.monthly,
+    };
+  }
+
+  getRegionName = (region: ExtendedRegion | undefined): string | undefined => {
+    return region && region.display;
+  }
+
   render() {
-    const { selectedTab } = this.state;
+    const {
+      selectedTab,
+      label,
+      backups,
+      selectedImageID,
+      selectedTypeID,
+      selectedRegionID,
+    } = this.state;
+
+    const imageInfo = this.getImageInfo(this.props.images.response.find(
+      image => image.id === selectedImageID));
+
+    const typeInfo = this.getTypeInfo(this.props.types.response.find(
+      type => type.id === selectedTypeID));
+
+    const regionName = this.getRegionName(this.props.regions.response.find(
+      region => region.id === selectedRegionID));
+
     const tabRender = this.tabs[selectedTab].render;
 
     return (
-      <React.Fragment>
+      <StickyContainer>
         <Typography variant="headline">Create New Linode</Typography>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={selectedTab}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-          >
-          {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
-          </Tabs>
-        </AppBar>
-        {tabRender()}
-      </React.Fragment>
+        <Grid container>
+          <Grid item md={12} lg={10} >
+            <AppBar position="static" color="default">
+              <Tabs
+                value={selectedTab}
+                onChange={this.handleTabChange}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+              {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
+              </Tabs>
+            </AppBar>
+            {tabRender()}
+          </Grid>
+          <Grid item md={12} lg={2}>
+            <Sticky>
+              {
+                (props: StickyProps) => {
+                  const combinedProps = {
+                    ...props,
+                    label,
+                    imageInfo,
+                    typeInfo,
+                    regionName,
+                    backups,
+                    onDeploy: this.onDeploy,
+                  };
+                  return (
+                    <CheckoutBar {...combinedProps} />
+                  );
+                }
+              }
+            </Sticky>
+          </Grid>
+        </Grid>
+      </StickyContainer>
     );
   }
 }

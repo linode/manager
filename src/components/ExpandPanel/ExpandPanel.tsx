@@ -17,6 +17,7 @@ type CSSClasses = 'root' | 'header' | 'caret' ;
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {},
   header: {
+    marginBottom: theme.spacing.unit,
     cursor: 'pointer',
     userSelect: 'none',
     display: 'flex',
