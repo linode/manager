@@ -5,6 +5,7 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
+import Divider from 'material-ui/Divider';
 
 import CheckBox from '../../../components/CheckBox';
 
@@ -84,6 +85,11 @@ class AddonsPanel extends React.Component<CombinedProps> {
                   </Typography>
                 </Grid>
               </Grid>
+            </Grid>
+          </Grid>
+          <Grid container className={classes.option} style={{ marginBottom: 8 }}>
+            <Grid item xs={12}>
+              <Divider />
             </Grid>
           </Grid>
           <Grid container className={classes.option} style={{ marginBottom: 8 }}>
