@@ -12,14 +12,11 @@ import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LinodeTheme from '../../../src/theme';
 
 
-type CSSClasses = 'root' | 'panel' | 'header' | 'caret' ;
+type CSSClasses = 'root' | 'header' | 'caret' ;
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {
-    padding: `${theme.spacing.unit}px 0`,
-  },
+  root: {},
   header: {
-    marginBottom: theme.spacing.unit,
     cursor: 'pointer',
     userSelect: 'none',
     display: 'flex',
@@ -76,7 +73,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
-              <div className={classes.panel}>
+              <div>
                 {children}
               </div>
             )
