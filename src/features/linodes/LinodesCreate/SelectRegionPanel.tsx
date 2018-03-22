@@ -9,7 +9,7 @@ import DE from 'flag-icon-css/flags/4x3/de.svg';
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480"/>,
   sg: () => <SG width="32" height="24" viewBox="0 0 640 480"/>,
-  jp: () => <JP width="32" height="24" viewBox="0 0 640 480"/>,
+  jp: () => <JP width="32" height="24" viewBox="0 0 640 480" style={{ backgroundColor: '#fff' }} />,
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480"/>,
   de: () => <DE width="32" height="24" viewBox="0 0 720 480"/>,
 };

@@ -8,7 +8,7 @@ import Grid from 'material-ui/Grid';
 
 import CheckBox from '../../../components/CheckBox';
 
-type ClassNames = 'root' | 'flex' | 'dFlex' | 'option' | 'inner' | 'panelBody';
+type ClassNames = 'root' | 'flex' | 'option' | 'inner' | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -19,9 +19,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   flex: {
     flex: 1,
-  },
-  dFlex: {
-    display: 'flex',
   },
   option: {
     marginTop: theme.spacing.unit * 3,
@@ -67,13 +64,13 @@ class AddonsPanel extends React.Component<CombinedProps> {
               <Grid container>
                 <Grid item xs={12}>
                   <Grid container>
-                    <Grid item alignItems={'flex-end'}>
+                    <Grid item>
                     <Typography variant="subheading">
                       Backups
                     </Typography>
                     </Grid>
-                    <Grid item alignItems={'flex-end'} className={classes.dFlex}>
-                      <Typography variant="caption">
+                    <Grid item>
+                      <Typography variant="caption" style={{ lineHeight: '20px' }}>
                         $2.50 per month
                       </Typography>
                     </Grid>
