@@ -13,7 +13,8 @@ import LinodeTheme from 'src/theme';
 type CSSClasses = 'root'
 | 'content'
 | 'titleLink'
-| 'body';
+| 'body'
+| 'iconWrapper';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   '@keyframes dash': {
@@ -35,19 +36,23 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       backgroundColor: LinodeTheme.bg.offWhite,
       '& .circle': {
         fill: theme.palette.primary.main,
-        transition: 'fill .2s ease-in-out .4s',
+        transition: 'fill .2s ease-in-out .2s',
       },
       '& .outerCircle': {
         stroke: '#2967B1',
         strokeDasharray: 1000,
         strokeDashoffset: 1000,
-        animation: 'dash 3s linear forwards',
+        animation: 'dash 2s linear forwards',
       },
       '& .insidePath *': {
-        transition: 'fill .2s ease-in-out .4s, stroke .2s ease-in-out .4s',
+        transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
         stroke: 'white',
       },
     },
+  },
+  iconWrapper: {
+    width: 49,
+    height: 49,
   },
   content: {
     display: 'flex',
@@ -92,7 +97,9 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
     return (
       <React.Fragment>
         <div onClick={onClick} className={classes.root}>
-          <ItemIcon width="50" height="50" />
+          <div className={classes.iconWrapper}>
+            <ItemIcon />
+          </div>
           <div className={classes.content}>
             <Typography variant="subheading">
               <a href="#" className={classes.titleLink}>{title}</a>
