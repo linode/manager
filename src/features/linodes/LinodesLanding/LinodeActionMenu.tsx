@@ -11,9 +11,9 @@ interface Props {
   linode: Linode.Linode;
 }
 
-type FinalProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeActionMenu extends React.Component<FinalProps> {
+class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const { linode, history: { push } } = this.props;
 

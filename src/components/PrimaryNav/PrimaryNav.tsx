@@ -86,7 +86,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     '& svg': {
       color: '#C9CACB',
       fontSize: '20px',
-      margin: '4px 2px 4px 0',
+      margin: '5px 2px 4px 0',
     },
     '&:hover, &:focus, & .hOpen': {
       color: 'white',
@@ -102,7 +102,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     },
   },
   sublink: {
-    padding: '4px 0',
+    padding: '4px 0 4px 8px',
     color: 'white',
     display: 'block',
     fontSize: '.8rem',
