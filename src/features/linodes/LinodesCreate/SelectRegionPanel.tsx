@@ -66,7 +66,7 @@ class SelectRegionPanel extends React.Component<Props> {
         render: () => {
 
           return (
-            <Grid container>
+            <Grid container spacing={8}>
             { na.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
@@ -79,7 +79,7 @@ class SelectRegionPanel extends React.Component<Props> {
         title: 'Europe',
         render: () => {
           return (
-            <Grid container>
+            <Grid container spacing={8}>
               { eu.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );

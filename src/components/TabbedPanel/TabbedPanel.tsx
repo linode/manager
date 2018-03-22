@@ -63,7 +63,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
-          <Typography component="div" variant="title">{header}</Typography>
+          <Typography variant="title">{header}</Typography>
           {copy && <Typography component="div" className={classes.copy}>{copy}</Typography>}
           <AppBar position="static" color="default">
             <Tabs

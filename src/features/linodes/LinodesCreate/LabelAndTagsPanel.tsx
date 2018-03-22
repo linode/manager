@@ -42,7 +42,7 @@ class InfoPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
-        <Typography component="div" variant="title">Label</Typography>
+        <Typography variant="title">Label</Typography>
         <TextField
           label="Linode Label"
           placeholder="Enter a Label"

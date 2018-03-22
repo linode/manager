@@ -54,7 +54,7 @@ class SelectRegionPanel extends React.Component<Props> {
         render: () => {
 
           return (
-            <Grid container>
+            <Grid container spacing={8}>
             { nanodes.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
@@ -67,7 +67,7 @@ class SelectRegionPanel extends React.Component<Props> {
         title: 'Standard',
         render: () => {
           return (
-            <Grid container>
+            <Grid container spacing={8}>
               { standards.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );
@@ -80,7 +80,7 @@ class SelectRegionPanel extends React.Component<Props> {
         title: 'High Memory',
         render: () => {
           return (
-            <Grid container>
+            <Grid container spacing={8}>
               { highmem.map(renderCard(this.props.selectedID, this.props.handleSelection))}
             </Grid>
           );

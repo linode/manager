@@ -94,6 +94,7 @@ const LinodeTheme: Linode.Theme = {
         maxWidth: 415,
         border: '1px solid #ccc',
         alignItems: 'center',
+        transition: 'border-color 225ms ease-in-out',
         '& svg': {
           fontSize: 18,
           marginLeft: 8,
@@ -122,12 +123,18 @@ const LinodeTheme: Linode.Theme = {
         height: 'auto',
       },
     },
+    MuiFormControl: {
+      root: {
+        marginTop: 16,
+      },
+    },
     MuiFormLabel: {
       root: {
-        color: '#666',
+        color: '#555',
+        fontWeight: 700,
       },
       focused: {
-        color: '#666',
+        color: '#555',
       },
       error: {
         color: '#CA0813',
