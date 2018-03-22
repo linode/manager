@@ -107,7 +107,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                 ))}
               </Grid>
               <ExpandPanel name="Show Older Images">
-                <Grid container spacing={8}>
+                <Grid container spacing={8} style={{ marginTop: 16 }}>
                   {olderPublicImages.length
                   && olderPublicImages.map((image: Linode.Image, idx: number) => (
                     <SelectionCard

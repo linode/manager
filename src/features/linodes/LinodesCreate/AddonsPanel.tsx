@@ -5,17 +5,24 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
+import Divider from 'material-ui/Divider';
 
 import CheckBox from '../../../components/CheckBox';
 
-type ClassNames = 'root' | 'inner' | 'panelBody';
+type ClassNames = 'root' | 'flex' | 'option' | 'inner' | 'panelBody';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 2,
     backgroundColor: theme.palette.background.paper,
+  },
+  flex: {
+    flex: 1,
+  },
+  option: {
+    marginTop: theme.spacing.unit * 3,
   },
   inner: {
     padding: theme.spacing.unit * 3,
@@ -46,32 +53,32 @@ class AddonsPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
-          <Typography component="div" variant="title">Optional Add-ons</Typography>
-          <Grid container>
-            <Grid xs={1}item>
+          <Typography variant="title">Optional Add-ons</Typography>
+          <Grid container className={classes.option}>
+            <Grid item>
               <CheckBox
                 checked={this.props.backups}
                 onClick={e => setBackups(e, !this.props.backups)}
               />
             </Grid>
-            <Grid xs={11}item>
+            <Grid item className={classes.flex}>
               <Grid container>
                 <Grid item xs={12}>
                   <Grid container>
-                    <Grid item xs={1}>
-                    <Typography variant="title">
+                    <Grid item>
+                    <Typography variant="subheading">
                       Backups
                     </Typography>
                     </Grid>
-                    <Grid item xs={11}>
-                      <Typography variant="caption">
+                    <Grid item>
+                      <Typography variant="caption" style={{ lineHeight: '20px' }}>
                         $2.50 per month
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="body2">
+                <Grid item xs={12} className="py0">
+                  <Typography variant="caption">
                     Three backup slots are executed and rotated automatically: a daily backup, a 2-7
                     day old backup, and an 8-14 day old backup. Plans are priced according to you
                     Linode plan selected above.
@@ -80,26 +87,31 @@ class AddonsPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid xs={1}item>
+          <Grid container className={classes.option} style={{ marginBottom: 8 }}>
+            <Grid item xs={12}>
+              <Divider />
+            </Grid>
+          </Grid>
+          <Grid container className={classes.option} style={{ marginBottom: 8 }}>
+            <Grid item>
               <CheckBox
                 checked={this.props.privateIP}
                 onClick={e => setPrivateIP(e, !this.props.privateIP)}
               />
             </Grid>
-            <Grid xs={11}item>
+            <Grid item className={classes.flex}>
               <Grid container>
                 <Grid item xs={12}>
                   <Grid container>
                     <Grid item xs={12}>
-                    <Typography variant="title">
+                    <Typography variant="subheading">
                       Private IP (Free!)
                     </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="body2">
+                <Grid item xs={12} className="py0">
+                  <Typography variant="caption">
                   We need copy! We need copy! We need copy! We need copy! We need copy! We need
                   copy! We need copy! We need copy! We need copy! We need copy! We need copy! We
                   need copy!

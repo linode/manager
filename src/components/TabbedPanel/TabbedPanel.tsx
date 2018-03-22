@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     margin: `${theme.spacing.unit}px 0`,
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`,
+    padding: `${theme.spacing.unit * 3}px 0 0`,
   },
 });
 
