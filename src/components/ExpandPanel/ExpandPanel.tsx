@@ -19,6 +19,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: `${theme.spacing.unit}px 0`,
   },
   header: {
+    marginBottom: theme.spacing.unit,
     cursor: 'pointer',
     userSelect: 'none',
     display: 'flex',
@@ -35,9 +36,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       transition: 'transform .3s ease-in-out',
       transform: 'rotate(90deg)',
     },
-  },
-  panel: {
-    padding: theme.spacing.unit,
   },
 });
 
