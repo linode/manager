@@ -259,6 +259,10 @@ const LinodeTheme: Linode.Theme = {
       fontSize: '.78rem',
       lineHeight: '1.3em',
     },
+    caption: {
+      fontSize: '.9rem',
+      lineHeight: '1.1em',
+    },
   },
   color: {
     headline: '#32363C',
