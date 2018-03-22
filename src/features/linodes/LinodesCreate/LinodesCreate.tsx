@@ -173,8 +173,43 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     },
   ];
 
+  onDeploy = () => {
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedTypeID,
+      label,
+      password,
+      backups,
+      privateIP,
+    } = this.state;
+    if (
+      selectedImageID !== null
+      && selectedRegionID !== null
+      && selectedTypeID !== null
+      && label !== null
+      && password !== null
+      && backups !== null
+      && privateIP !== null
+    ) {
+      console.log(`Ready for deployment!
+selectedImageID: ${selectedImageID},
+selectedRegionID: ${selectedRegionID},
+selectedTypeID: ${selectedTypeID},
+label: ${label},
+password: ${password},
+backups: ${backups},
+privateIP: ${privateIP}`);
+    } else {
+      console.log('Not ready for deployment. Make sure to provide a selection for all options');
+    }
+  }
+
   render() {
     const { selectedTab } = this.state;
+    const {
+      label,
+    } = this.state;
     const tabRender = this.tabs[selectedTab].render;
 
     return (
@@ -200,7 +235,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 (props: StickyProps) => {
                   const combinedProps = {
                     ...props,
-                    onDeploy: () => console.log('hello from sticky: ', this.state.selectedImageID),
+                    label,
+                    onDeploy: this.onDeploy,
                   };
                   return (
                     <CheckoutBar {...combinedProps} />
