@@ -48,9 +48,9 @@ interface State {
   anchorEl?: Linode.TodoAny;
 }
 
-type FinalProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class ActionMenu extends React.Component<FinalProps, State> {
+class ActionMenu extends React.Component<CombinedProps, State> {
   state = {
     actions: [],
     anchorEl: undefined,

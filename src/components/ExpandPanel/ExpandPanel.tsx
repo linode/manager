@@ -12,12 +12,10 @@ import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LinodeTheme from '../../../src/theme';
 
 
-type CSSClasses = 'root' | 'panel' | 'header' | 'caret' ;
+type CSSClasses = 'root' | 'header' | 'caret' ;
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {
-    padding: `${theme.spacing.unit}px 0`,
-  },
+  root: {},
   header: {
     cursor: 'pointer',
     userSelect: 'none',
@@ -36,9 +34,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       transform: 'rotate(90deg)',
     },
   },
-  panel: {
-    padding: theme.spacing.unit,
-  },
 });
 
 interface Props {
@@ -49,9 +44,9 @@ interface State {
   open: boolean;
 }
 
-type FinalProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class ExpandPanel extends React.Component<FinalProps, State> {
+class ExpandPanel extends React.Component<CombinedProps, State> {
   state = {
     open: false,
   };
@@ -78,7 +73,7 @@ class ExpandPanel extends React.Component<FinalProps, State> {
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
-              <div className={classes.panel}>
+              <div>
                 {children}
               </div>
             )

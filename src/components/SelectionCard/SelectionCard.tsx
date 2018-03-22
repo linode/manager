@@ -25,32 +25,22 @@ type CSSClasses =
 | 'showCursor';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
-    marginBottom: theme.spacing.unit,
-    maxWidth: 300,
+    marginBottom: theme.spacing.unit * 2,
     minWidth: 200,
-    backgroundColor: LinodeTheme.bg.offWhite,
     padding: theme.spacing.unit * 2,
-    border: '1px solid ' + `${LinodeTheme.bg.main}`,
-    transition: `${'background-color .3s ease-in-out, '}
-    ${'border-color .3s ease-in-out'}`,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '32%',
-      marginRight: '1%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      '&:last-child': {
-        width: '33%',
-        marginRight: 0,
-      },
-    },
-    '&:hover': {
-      backgroundColor: '#f4f4f4',
-      borderColor: '#C9CACB',
-    },
-    '&.checked': {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    '&.checked $innerGrid': {
       borderColor: theme.palette.primary.main,
       '& span': {
         color: theme.palette.primary.main,
@@ -59,6 +49,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     '& .w100': {
       width: '100%',
     },
+    '& [class^="fl-"]': {
+      transition: 'color 225ms ease-in-out',
+    },
+
   },
   icon: {
     '& svg, & span': {
@@ -71,6 +65,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     },
   },
   checked: {
+    display: 'flex',
+    animation: 'fadeIn 225ms ease-in-out forwards',
     '& svg': {
       borderRadius: '16px',
       border: '1px solid',
@@ -100,9 +96,22 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   innerGrid: {
     width: '100%',
     minHeight: 70,
+    backgroundColor: LinodeTheme.bg.offWhite,
+    border: '1px solid ' + `${LinodeTheme.bg.main}`,
+    transition: `${'background-color 225ms ease-in-out, '}
+    ${'border-color 225ms ease-in-out'}`,
+    '&:hover': {
+      backgroundColor: '#f4f4f4',
+      borderColor: '#C9CACB',
+    },
   },
   flex: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    '&> div': {
+      lineHeight: 1.3,
+    },
   },
 });
 
@@ -144,6 +153,9 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
   return (
       <Grid
         item
+        xs={12}
+        sm={6}
+        md={4}
         className={
           classNames({
             [classes.root]: true,
@@ -182,7 +194,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
               {checked &&
               <Fade in={checked}>
-                <Grid item className={`${classes.icon} ${classes.checked}`}>
+                <Grid item alignItems={'center'} className={`${classes.icon} ${classes.checked}`}>
                   <Check />
                 </Grid>
               </Fade>

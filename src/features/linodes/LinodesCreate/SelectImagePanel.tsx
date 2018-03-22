@@ -37,7 +37,7 @@ const distroIcons = {
 interface Props {
   images: Linode.Image[];
   selectedImageID: string | null;
-  handleSelection: (event: React.MouseEvent<HTMLElement>, imageID: string) => void;
+  handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
 }
 
 const sortByVendor = sortBy(prop('vendor'));
@@ -81,6 +81,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
+  const handleSelection = props.handleSelection('selectedImageID');
 
   return (
     <TabbedPanel
@@ -90,13 +91,13 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
           title: 'Public Images',
           render: () => (
             <React.Fragment>
-              <Grid container style={{ padding: '0 8px', marginBottom: 4 }}>
+              <Grid container spacing={8} style={{ marginBottom: 4 }}>
                 {publicImages.length
                 && publicImages.map((image: Linode.Image, idx: number) => (
                   <SelectionCard
                     key={idx}
                     checked={image.id === String(props.selectedImageID)}
-                    onClick={e => props.handleSelection(e, image.id)}
+                    onClick={e => handleSelection(e, image.id)}
                     renderIcon={() => {
                       return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                     }}
@@ -106,13 +107,13 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                 ))}
               </Grid>
               <ExpandPanel name="Show Older Images">
-                <Grid container style={{ padding: '8px 0' }}>
+                <Grid container spacing={8} style={{ marginTop: 16 }}>
                   {olderPublicImages.length
                   && olderPublicImages.map((image: Linode.Image, idx: number) => (
                     <SelectionCard
                       key={idx}
                       checked={image.id === String(props.selectedImageID)}
-                      onClick={e => props.handleSelection(e, image.id)}
+                      onClick={e => handleSelection(e, image.id)}
                       renderIcon={() => {
                         return <span className={`fl-${distroIcons[(image.vendor as string)]}`} />;
                       }}
@@ -133,7 +134,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                 <SelectionCard
                   key={idx}
                   checked={image.id === String(props.selectedImageID)}
-                  onClick={e => props.handleSelection(e, image.id)}
+                  onClick={e => handleSelection(e, image.id)}
                   renderIcon={() => <span className="fl-tux" /> }
                   heading={(image.label as string)}
                   subheadings={[(image.description as string)]}

@@ -84,9 +84,9 @@ const TempRoute = (props: any) => {
   />;
 };
 
-type FinalProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
+type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
 
-export class App extends React.Component<FinalProps, State> {
+export class App extends React.Component<CombinedProps, State> {
   state = {
     menuOpen: false,
   };
