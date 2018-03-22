@@ -20,7 +20,7 @@ import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import { rebootLinode } from './powerActions';
-import { typeLabelLong } from './presentation';
+import { typeLabelLong } from '../presentation';
 import transitionStatus from './linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
