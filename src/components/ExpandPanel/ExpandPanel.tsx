@@ -8,7 +8,7 @@ import {
 } from 'material-ui';
 import Collapse from 'material-ui/transitions/Collapse';
 
-import { ListItem, ListItemText } from 'material-ui/List';
+import { ListItem } from 'material-ui/List';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LinodeTheme from '../../../src/theme';
 
@@ -71,8 +71,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         button
         onClick={this.handleNameClick}
         disableRipple>
-        <ListItemText
-          disableTypography={true}
+        <div
           className={`${classes.header} ${open ? 'hOpen' : '' }`}
           >
           {open
@@ -80,7 +79,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
             : <KeyboardArrowRight className={classes.caret}  />
           }
           <span>{name}</span>
-        </ListItemText>
+        </div>
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
