@@ -154,6 +154,11 @@ const LinodeTheme: Linode.Theme = {
         paddingBottom: 0,
       },
     },
+    MuiMenuItem: {
+      root: {
+        height: 'auto',
+      },
+    },
     MuiPopover: {
       paper: {
         boxShadow: '0 0 5px #ddd',
