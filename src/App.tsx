@@ -104,6 +104,15 @@ export class App extends React.Component<CombinedProps, State> {
           })
           .catch(error => response(['types'], error));
       }),
+      new Promise(() => {
+        request(['profile']);
+
+        return Axios.get(`${API_ROOT}/profile`)
+          .then(({ data }) => {
+            response(['profile'], data);
+          })
+          .catch(error => response(['profile'], error));
+      }),
     ];
 
     Promise
