@@ -12,16 +12,44 @@ import Button from 'material-ui/Button';
 
 import LinodeTheme from 'src/theme';
 
-type ClassNames = 'root' | 'sidebarTitle' | 'price' | 'per';
+type ClassNames = 'root'
+| 'checkoutSection'
+| 'noBorder'
+| 'sidebarTitle'
+| 'detail'
+| 'price'
+| 'per';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
     minHeight: '24px',
     minWidth: '24px',
   },
+  checkoutSection: {
+    opacity: 0,
+    padding: `${theme.spacing.unit * 2}px 0`,
+    borderTop: `1px solid ${LinodeTheme.color.border2}`,
+    animation: 'fadeIn 225ms linear forwards',
+  },
+  noBorder: {
+    border: 0,
+  },
   sidebarTitle: {
     fontSize: '1.5rem',
     color: LinodeTheme.color.green,
+  },
+  detail: {
+    fontSize: '.8rem',
+    color: LinodeTheme.color.headline,
+    lineHeight: '1.5em',
   },
   price: {
     fontSize: '1.5rem',
@@ -40,6 +68,7 @@ interface Props {
   typeInfo: { name: string, details: string, monthly: number } | undefined;
   regionName: string | undefined;
   backups: boolean;
+  isSticky?: boolean;
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
@@ -60,6 +89,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
        * props are available, see https://github.com/captivationsoftware/react-sticky
        **/
       style,
+      isSticky,
       classes,
       onDeploy,
       label,
@@ -69,70 +99,90 @@ class CheckoutBar extends React.Component<CombinedProps> {
       regionName,
     } = this.props;
 
+    let finalStyle;
+    if (isSticky) {
+      finalStyle = {
+        ...style,
+        paddingTop: 24,
+      };
+    }
+
     return (
-      <div className={classes.root} style={style}>
+      <div className={classes.root} style={finalStyle}>
         <Typography variant="title" className={classes.sidebarTitle}>
           {label || 'Linode'} Summary
         </Typography>
 
         {imageInfo &&
           <React.Fragment>
-            <Typography variant="title">
-              {imageInfo.name}
-            </Typography>
-            <Typography>
-              {imageInfo.details}
-            </Typography>
+            <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+              <Typography variant="subheading">
+                {imageInfo.name}
+              </Typography>
+              <Typography className={classes.detail}>
+                {imageInfo.details}
+              </Typography>
+            </div>
           </React.Fragment>
         }
 
         {regionName &&
           <React.Fragment>
-            <Divider />
-            <Typography variant="title">
-              {regionName && regionName}
-            </Typography>
+            <div className={classes.checkoutSection}>
+              <Typography variant="subheading">
+                {regionName && regionName}
+              </Typography>
+            </div>
           </React.Fragment>
         }
 
         {typeInfo &&
           <React.Fragment>
-            <Divider />
-            <Typography variant="title">
-              {typeInfo.name}
-            </Typography>
-            <Typography>
-              {typeInfo.details}
-            </Typography>
+            <div className={classes.checkoutSection}>
+              <Divider />
+              <Typography variant="subheading">
+                {typeInfo.name}
+              </Typography>
+              <Typography className={classes.detail}>
+                {typeInfo.details}
+              </Typography>
+            </div>
           </React.Fragment>
         }
 
         {backups &&
           <React.Fragment>
-            <Divider />
-            <Typography variant="title">
-              Backups Enabled
-            </Typography>
-            <Typography>
-              $2.50/mo
-            </Typography>
+            <div className={classes.checkoutSection}>
+              <Divider />
+              <Typography variant="subheading">
+                Backups Enabled
+              </Typography>
+              <Typography className={classes.detail}>
+                $2.50/mo
+              </Typography>
+            </div>
           </React.Fragment>
         }
 
-        <Typography variant="title" className={classes.price}>
-          {this.formatPrice()}
-        </Typography>
-        <Typography variant="title" className={classes.per}>
-          /mo
-        </Typography>
+        <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+          <Typography variant="subheading" className={classes.price}>
+            {this.formatPrice()}
+          </Typography>
+          <Typography variant="subheading" className={classes.per}>
+            &nbsp;/mo
+          </Typography>
+        </div>
 
-        <Button
-          variant="raised"
-          color="primary"
-          onClick={onDeploy}
-        >
-          Deploy Linode
-        </Button>
+        <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+          <Button
+            variant="raised"
+            color="primary"
+            fullWidth
+            onClick={onDeploy}
+          >
+            Deploy Linode
+          </Button>
+        </div>
 
       </div>
     );
