@@ -18,9 +18,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
-    padding: '12px',
-    border: '1px solid black',
-    backgroundColor: '#fff',
   },
   sidebarTitle: {
     fontSize: '1.5rem',
