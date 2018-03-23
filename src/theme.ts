@@ -164,6 +164,19 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiSelect: {
+      root: {},
+      selectMenu: {
+        minHeight: 38,
+        padding: '9px 32px 7px 10px',
+        borderColor: '#e7e7e7',
+        color: '#666',
+        backgroundColor: '#fff',
+        '&:focus': {
+          backgroundColor: '#fff',
+        },
+      },
+    },
     MuiTab: {
       root: {
         color: '#C5C6C8',
@@ -269,12 +282,13 @@ const LinodeTheme: Linode.Theme = {
   },
   color: {
     headline: '#32363C',
-    grey1: '#ABADAF',
     red: '#CA0813',
     grey2: '#E7E7E7',
     green: '#00B159',
     border1: '#ABADAF',
     border2: '#C5C6C8',
+    grey1: '#abadaf',
+    grey3: '#ccc',
   },
   bg: {
     main: '#f4f4f4',
