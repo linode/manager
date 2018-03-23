@@ -159,7 +159,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
     Axios.get(`${API_ROOT}/linode/instances`, {
       params: {
-        page: Math.min(lastPage, page),
+        page: Math.min(Math.floor(lastPage), page),
         page_size: pageSize,
       },
     })
