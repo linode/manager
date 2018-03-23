@@ -75,7 +75,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: 'white',
   },
   sublinkPanel: {
-    padding: '16px 40px 0 34px',
     fontSize: '.9rem',
     transition: 'color .3s ease-in-out',
     '& span': {
@@ -94,9 +93,6 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     },
     '& .pOpen': {
       margin: '5px 0 0 14px',
-    },
-    '&:last-child': {
-      paddingBottom: theme.spacing.unit * 3,
     },
   },
   sublink: {

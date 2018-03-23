@@ -8,6 +8,7 @@ import {
 } from 'material-ui';
 import Collapse from 'material-ui/transitions/Collapse';
 
+import { ListItem, ListItemText } from 'material-ui/List';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LinodeTheme from '../../../src/theme';
 
@@ -15,7 +16,10 @@ import LinodeTheme from '../../../src/theme';
 type CSSClasses = 'root' | 'header' | 'caret' ;
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
   header: {
     cursor: 'pointer',
     userSelect: 'none',
@@ -62,14 +66,21 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
     const { open } = this.state;
 
     return (
-      <div className={classes.root}>
-        <div className={`${classes.header} ${open ? 'hOpen' : '' }`} onClick={this.handleNameClick}>
+      <ListItem
+        className={classes.root}
+        button
+        onClick={this.handleNameClick}
+        disableRipple>
+        <ListItemText
+          disableTypography={true}
+          className={`${classes.header} ${open ? 'hOpen' : '' }`}
+          >
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
           }
           <span>{name}</span>
-        </div>
+        </ListItemText>
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
@@ -80,7 +91,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
             : null
           }
         </Collapse>
-      </div>
+      </ListItem>
     );
   }
 }
