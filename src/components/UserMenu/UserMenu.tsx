@@ -1,9 +1,13 @@
 import * as React from 'react';
+import Axios from 'axios';
 import {
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { pathOr } from 'ramda';
+import * as md5 from 'md5';
 
 import {
   withStyles,
@@ -35,6 +39,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     marginRight: theme.spacing.unit,
     width: '50px',
     height: '50px',
+    borderRadius: '50px',
   },
   menuItem: {
     fontSize: '.9rem',
@@ -46,17 +51,25 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-interface Props {}
+const mapStateToProps = (state: Linode.AppState) => ({
+  profile: pathOr({}, ['resources', 'profile', 'data'], state),
+});
+
+interface Props {
+  profile: Linode.Profile;
+}
 
 type PropsWithStylesAndRoutes = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
+  gravatarUrl: string | undefined;
 }
 
-class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
+export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   state = {
     anchorEl: undefined,
+    gravatarUrl: undefined,
   };
 
   handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,8 +98,40 @@ class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     );
   }
 
-  render() {
+  getEmailHash(email: string) {
+    return email && md5(email.trim().toLowerCase());
+  }
+
+  getGravatarUrl(profile: Linode.Profile) {
+    if (!profile.email) { return; }
+    const url = `https://gravatar.com/avatar/${this.getEmailHash(profile.email)}?d=404`;
+    const instance = Axios.create();
+    return instance.get(url)
+      .then((response) => {
+        this.setState({ gravatarUrl: response.config.url });
+      })
+      .catch((error) => {
+        this.setState({ gravatarUrl: 'not found' });
+      });
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    nextProps.profile &&
+      this.getGravatarUrl(nextProps.profile);
+  }
+
+  renderAvatar() {
     const { classes } = this.props;
+    const { gravatarUrl } = this.state;
+    if (!gravatarUrl) { return null; }
+    return (gravatarUrl !== 'not found'
+      ? <img src={gravatarUrl} className={classes.leftIcon} />
+      : <AccountCircle className={classes.leftIcon} />
+    );
+  }
+
+  render() {
+    const { profile } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -96,8 +141,12 @@ class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           onClick={this.handleMenu}
           className="baseBtn"
         >
-          <AccountCircle className={classes.leftIcon}/>
-          jsmith
+          {profile.username &&
+            <React.Fragment>
+              {this.renderAvatar()}
+              {profile.username && profile.username}
+            </React.Fragment>
+          }
         </ButtonBase>
         <Menu
           anchorEl={anchorEl}
@@ -120,7 +169,8 @@ class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 }
 
-export default compose<Props, Props, Linode.TodoAny>(
+export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+  connect<Props>(mapStateToProps),
   withStyles(styles, { withTheme: true }),
   withRouter,
 )(UserMenu);
