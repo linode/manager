@@ -188,7 +188,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       backups,
       // privateIP, /* This requires a separate API call! */
     } = this.state;
-<<<<<<< HEAD
 
     Axios.post(`${API_ROOT}/linode/instances`, {
       region: selectedRegionID,
@@ -205,28 +204,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     .catch((error) => {
       console.log('Linode Creation Errors: ', error.response.errors);
     });
-=======
-    if (
-      selectedImageID !== null
-      && selectedRegionID !== null
-      && selectedTypeID !== null
-      && label !== null
-      && password !== null
-      && backups !== null
-      && privateIP !== null
-    ) {
-//       console.log(`Ready for deployment!
-// selectedImageID: ${selectedImageID},
-// selectedRegionID: ${selectedRegionID},
-// selectedTypeID: ${selectedTypeID},
-// label: ${label},
-// password: ${password},
-// backups: ${backups},
-// privateIP: ${privateIP}`);
-    } else {
-      // console.log('Not ready for deployment. Make sure to provide a selection for all options');
-    }
->>>>>>> fe86c929... layout modifications
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
