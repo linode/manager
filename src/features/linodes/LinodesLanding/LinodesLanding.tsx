@@ -155,7 +155,14 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   getLinodes = (page = 1, pageSize = 25) => {
-    Axios.get(`${API_ROOT}/linode/instances`, { params: { page, page_size: pageSize } })
+    const lastPage = this.state.results / pageSize;
+
+    Axios.get(`${API_ROOT}/linode/instances`, {
+      params: {
+        page: Math.min(lastPage, page),
+        page_size: pageSize,
+      },
+    })
     .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
     .then((response) => {
       this.setState(prevResults => ({
@@ -170,7 +177,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   handlePageSelection = (page: number) => {
-    this.getLinodes(page, this.state.pageSize);
+    this.getLinodes(Math.min(page), this.state.pageSize);
   }
 
   handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
