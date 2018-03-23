@@ -96,19 +96,19 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
 
     return (
       <React.Fragment>
-        <div onClick={onClick} className={classes.root}>
+        <li onClick={onClick} className={classes.root}>
           <div className={classes.iconWrapper}>
             <ItemIcon />
           </div>
           <div className={classes.content}>
             <Typography variant="subheading">
-              <a href="#" className={classes.titleLink}>{title}</a>
+              <a href="#" title={title} className={classes.titleLink}>{title}</a>
             </Typography>
             <Typography variant="body1" className={classes.body}>
               {body}
             </Typography>
           </div>
-        </div>
+        </li>
         {index + 1 !== count && <Divider />}
       </React.Fragment>
     );
