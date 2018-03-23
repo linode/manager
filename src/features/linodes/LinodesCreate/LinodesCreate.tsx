@@ -266,7 +266,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             {tabRender()}
           </Grid>
           <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <Sticky>
+            <Sticky
+              topOffset={-24}>
               {
                 (props: StickyProps) => {
                   const combinedProps = {
