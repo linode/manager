@@ -205,6 +205,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     })
     .then((response) => {
       history.push('/linodes');
+    })
+    .catch((error) => {
+      // we need to do something with these errors
     });
   }
 
