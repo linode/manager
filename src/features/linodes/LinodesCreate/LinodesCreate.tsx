@@ -31,10 +31,16 @@ type Info = { name: string, details: string } | undefined;
 type TypeInfo = { name: string, details: string, monthly: number } | undefined;
 
 type Styles =
-  'root';
+'root'
+| 'main'
+| 'sidebar';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
+  },
+  main: {
+  },
+  sidebar: {
   },
 });
 
@@ -182,6 +188,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       backups,
       // privateIP, /* This requires a separate API call! */
     } = this.state;
+<<<<<<< HEAD
 
     Axios.post(`${API_ROOT}/linode/instances`, {
       region: selectedRegionID,
@@ -198,6 +205,28 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     .catch((error) => {
       console.log('Linode Creation Errors: ', error.response.errors);
     });
+=======
+    if (
+      selectedImageID !== null
+      && selectedRegionID !== null
+      && selectedTypeID !== null
+      && label !== null
+      && password !== null
+      && backups !== null
+      && privateIP !== null
+    ) {
+//       console.log(`Ready for deployment!
+// selectedImageID: ${selectedImageID},
+// selectedRegionID: ${selectedRegionID},
+// selectedTypeID: ${selectedTypeID},
+// label: ${label},
+// password: ${password},
+// backups: ${backups},
+// privateIP: ${privateIP}`);
+    } else {
+      // console.log('Not ready for deployment. Make sure to provide a selection for all options');
+    }
+>>>>>>> fe86c929... layout modifications
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
@@ -229,6 +258,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       selectedRegionID,
     } = this.state;
 
+    const { classes } = this.props;
+
     const imageInfo = this.getImageInfo(this.props.images.response.find(
       image => image.id === selectedImageID));
 
@@ -242,9 +273,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
     return (
       <StickyContainer>
-        <Typography variant="headline">Create New Linode</Typography>
         <Grid container>
-          <Grid item md={12} lg={10} >
+          <Grid item className={`${classes.main} mlMain`}>
+            <Typography variant="headline">Create New Linode</Typography>
             <AppBar position="static" color="default">
               <Tabs
                 value={selectedTab}
@@ -257,7 +288,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             </AppBar>
             {tabRender()}
           </Grid>
-          <Grid item md={12} lg={2}>
+          <Grid item className={`${classes.sidebar} mlSidebar`}>
             <Sticky>
               {
                 (props: StickyProps) => {

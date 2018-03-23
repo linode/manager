@@ -26,6 +26,25 @@ a {
 }
 
 /* Reusable Classes */
+.mlMain {
+  width: 100%;
+  flex-basis: 100%
+}
+.mlSidebar {
+  width: 100%;
+  max-width: 100%;
+}
+@media (min-width: 1280px) {
+  .mlMain {
+    max-width: 78.8%;
+    flex-basis: 78.8%
+  }
+  .mlSidebar {
+    max-width: 21.2%;
+    max-width: 21.2%;
+    padding-left: 24px !important;
+  }
+}
 .p0 {
   padding: 0 !important;
 }
