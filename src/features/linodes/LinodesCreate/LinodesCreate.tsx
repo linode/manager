@@ -1,5 +1,9 @@
 import * as React from 'react';
 import Axios from 'axios';
+import {
+  withRouter,
+  RouteComponentProps,
+}from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import {
@@ -53,7 +57,7 @@ interface PreloadedProps {
   types: { response: ExtendedType[] };
 }
 
-type CombinedProps = Props & WithStyles<Styles> & PreloadedProps;
+type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponentProps<{}>;
 
 interface State {
   selectedTab: number;
@@ -179,6 +183,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
   ];
 
   onDeploy = () => {
+    const { history } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -199,10 +204,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       booted: true,
     })
     .then((response) => {
-      console.log('Succesful Linode Creation: ', response.data);
-    })
-    .catch((error) => {
-      console.log('Linode Creation Errors: ', error.response.errors);
+      history.push('/linodes');
     });
   }
 
@@ -295,4 +297,4 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true })<Props>(LinodeCreate);
 
-export default preloaded(styled);
+export default preloaded(withRouter(styled as Linode.TodoAny));
