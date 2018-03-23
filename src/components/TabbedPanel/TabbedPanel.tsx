@@ -44,12 +44,13 @@ interface Props {
   copy?: string;
   tabs: Tab[];
   [index: string]: any;
+  initTab?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TabbedPanel extends React.Component<CombinedProps> {
-  state = { value: 0 };
+  state = { value: this.props.initTab || 0 };
 
   handleChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ value });

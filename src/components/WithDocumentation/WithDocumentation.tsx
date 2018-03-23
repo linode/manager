@@ -23,11 +23,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     fontSize: '1.5rem',
     color: LinodeTheme.color.green,
   },
-  docContainer: {
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit * 2 + 'px !important',
-    },
-  },
+  // docContainer: {
+  //   [theme.breakpoints.up('md')]: {
+  //     paddingLeft: theme.spacing.unit * 2 + 'px !important',
+  //   },
+  // },
 });
 
 interface Props {
@@ -48,14 +48,14 @@ class WithDocumentation extends React.Component<PropsWithStyles>  {
     return (
       <Grid container spacing={40}>
         <Grid item xs={12}>
-          <Grid container spacing={16}>
-            <Grid item xs={12} md={12} lg={10} className={classes.listContainer}>
+          <Grid container>
+            <Grid item className={`${classes.listContainer} mlMain`}>
               <Grid item xs={12} className={classes.titleContainer}>
                 <Typography variant="headline" data-test-id="title">{title}</Typography>
               </Grid>
               {render(rest)}
             </Grid>
-            <Grid item xs={12} md={12} lg={2} className={classes.docContainer}>
+            <Grid item className="mlSidebar">
               <Typography variant="title" className={classes.sidebarTitle}>Linode Docs</Typography>
               {docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)}
             </Grid>

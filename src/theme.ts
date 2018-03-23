@@ -274,6 +274,7 @@ const LinodeTheme: Linode.Theme = {
     grey2: '#E7E7E7',
     green: '#00B159',
     border1: '#ABADAF',
+    border2: '#C5C6C8',
   },
   bg: {
     main: '#f4f4f4',

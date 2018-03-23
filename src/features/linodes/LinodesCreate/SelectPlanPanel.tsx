@@ -7,7 +7,7 @@ import TabbedPanel from '../../../components/TabbedPanel';
 import { Tab } from '../../../components/TabbedPanel/TabbedPanel';
 import SelectionCard from '../../../components/SelectionCard';
 
-interface ExtendedType extends Linode.LinodeType {
+export interface ExtendedType extends Linode.LinodeType {
   heading: string;
   subHeadings: [string, string];
 }
@@ -38,7 +38,7 @@ const renderCard = (selectedID: string|null, handleSelection: Function) =>
       />
     );
 
-class SelectRegionPanel extends React.Component<Props> {
+class SelectPlanPanel extends React.Component<Props> {
 
   createTabs = () => {
     const { types } = this.props;
@@ -96,9 +96,10 @@ class SelectRegionPanel extends React.Component<Props> {
       <TabbedPanel
         header="Linode Plan"
         tabs={this.createTabs()}
+        initTab={1}
       />
     );
   }
 }
 
-export default SelectRegionPanel;
+export default SelectPlanPanel;

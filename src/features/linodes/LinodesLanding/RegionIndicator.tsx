@@ -6,7 +6,7 @@ import {
   StyleRulesCallback,
 } from 'material-ui/styles';
 
-import { formatRegion } from './presentation';
+import { formatRegion } from '../presentation';
 
 type CSSClasses =  'regionIndicator';
 
