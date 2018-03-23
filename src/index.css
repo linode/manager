@@ -28,11 +28,11 @@ a {
 /* Reusable Classes */
 .mlMain {
   width: 100%;
-  flex-basis: 100%
+  flex-basis: 100%;
 }
 .mlSidebar {
   width: 100%;
-  max-width: 100%;
+  flex-basis: 100%
 }
 @media (min-width: 1280px) {
   .mlMain {
