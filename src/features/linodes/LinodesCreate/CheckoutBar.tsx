@@ -32,6 +32,13 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
+    [theme.breakpoints.down('md')]: {
+      position: 'relative !important',
+      left: '0 !important',
+      bottom: '0 !important',
+      background: '#fff',
+      padding: theme.spacing.unit * 2,
+    },
   },
   checkoutSection: {
     opacity: 0,
