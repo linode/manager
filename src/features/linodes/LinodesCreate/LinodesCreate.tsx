@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import {
   withRouter,
   RouteComponentProps,
@@ -59,6 +59,11 @@ interface PreloadedProps {
 
 type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponentProps<{}>;
 
+interface ApiFieldError {
+  field: string;
+  reason: string;
+}
+
 interface State {
   selectedTab: number;
   selectedImageID: string | null;
@@ -68,6 +73,7 @@ interface State {
   password: string | null;
   backups: boolean;
   privateIP: boolean;
+  errors?: ApiFieldError[];
   [index: string]: any;
 }
 
@@ -122,6 +128,22 @@ const preloaded = PromiseLoader<Props>({
     }),
 });
 
+const errorMessages = {
+  type: 'A plan selection is required.',
+  region: 'A region selection is required.',
+  image: 'An image selection is required.',
+  root_pass: 'A password is required.',
+};
+
+let getErrorFor: (field: string, arr?: ApiFieldError[]) => undefined | string;
+getErrorFor = (field, arr = []) => {
+  const err = arr.find(e => e.field === field);
+  if (!err) {
+    return;
+  }
+  return errorMessages[err.field] || err.reason;
+};
+
 class LinodeCreate extends React.Component<CombinedProps, State> {
   state = {
     selectedTab: 0,
@@ -132,6 +154,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     password: null,
     backups: false,
     privateIP: false,
+    errors: undefined,
   };
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -154,11 +177,13 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               selectedImageID={this.state.selectedImageID}
               />
             <SelectRegionPanel
+              error={getErrorFor('region', this.state.errors)}
               regions={this.props.regions.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedRegionID}
             />
             <SelectPlanPanel
+              error={getErrorFor('type', this.state.errors)}
               types={this.props.types.response}
               handleSelection={this.updateStateFor}
               selectedID={this.state.selectedTypeID}
@@ -168,6 +193,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               handleChange={this.updateStateFor}
             />
             <PasswordPanel
+              error={getErrorFor('root_pass', this.state.errors)}
               password={this.state.password}
               handleChange={this.updateStateFor}
             />
@@ -206,7 +232,10 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     .then((response) => {
       history.push('/linodes');
     })
-    .catch((error) => {
+    .catch((error: AxiosError) => {
+      this.setState(() => ({
+        errors: error.response && error.response.data && error.response.data.errors,
+      }));
       // we need to do something with these errors
     });
   }
