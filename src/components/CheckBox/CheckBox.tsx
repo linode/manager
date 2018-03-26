@@ -7,7 +7,8 @@ import {
   WithStyles,
   Theme,
 } from 'material-ui';
-import Check from 'material-ui-icons/Check';
+import Checkbox from 'material-ui/Checkbox';
+// import Check from 'material-ui-icons/Check';
 
 type CSSClasses =
   'root'
@@ -76,48 +77,49 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     pointerEvents: 'none',
   },
   warning: {
-    borderColor: '#ffd322',
-    backgroundColor: '#fef5bf',
+    color: '#ffd322',
+    // backgroundColor: '#fef5bf',
   },
   error: {
-    borderColor: '#cf1f1f',
-    backgroundColor: '#f3c8c7',
+    color: '#cf1f1f',
+    // backgroundColor: '#f3c8c7',
   },
 });
 
 interface Props {
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
   variant?: 'warning' | 'error';
-  checked: Boolean;
-  disabled?: Boolean;
+  checked: boolean;
+  disabled?: boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const {
-    classes,
     onClick,
+    classes,
     variant,
     checked,
     disabled,
   } = props;
 
   const classnames = classNames({
-    [classes.root]: true,
-    [classes.disabled]: disabled === true,
-    [classes.checked]: checked === true,
+    // [classes.root]: true,
+    // [classes.disabled]: disabled === true,
+    // [classes.checked]: checked === true,
     [classes.warning]: variant === 'warning',
     [classes.error]: variant === 'error',
   });
 
   return (
-    <div
+    <Checkbox
       className={classnames}
-      onClick={onClick}
+      onChange={onClick}
+      checked={checked}
+      disabled={disabled}
     >
-      {checked && <Check />}
-    </div>
+    </Checkbox>
   );
 };
 
