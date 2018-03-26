@@ -28,7 +28,7 @@ import PasswordPanel from './PasswordPanel';
 import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, typeLabel } from '../presentation';
 import CheckoutBar from './CheckoutBar';
-
+import { resetEventsPolling } from 'src/events';
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
 type Info = { name: string, details: string } | undefined;
@@ -230,6 +230,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       booted: true,
     })
     .then((response) => {
+      resetEventsPolling();
       history.push('/linodes');
     })
     .catch((error: AxiosError) => {

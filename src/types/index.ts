@@ -68,5 +68,6 @@ namespace Linode {
     status: 'scheduled' | 'started' | 'finished' | 'failed' | 'notification';
     percent_complete: number | null;
     entity: EventEntity | null;
+    action: string;
   }
 }
