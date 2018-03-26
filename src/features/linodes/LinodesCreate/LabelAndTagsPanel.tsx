@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import TextField from '../../../components/TextField';
+import Notice from '../../../components/Notice';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
@@ -27,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
+  error?: string;
   label: string | null;
   handleChange: (key: string) =>
     (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
@@ -36,12 +38,13 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class InfoPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange } = this.props;
+    const { classes, error, handleChange } = this.props;
     const setLabel = handleChange('label');
 
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
+        { error && <Notice text={error} error /> }
         <Typography variant="title">Label</Typography>
         <TextField
           label="Linode Label"

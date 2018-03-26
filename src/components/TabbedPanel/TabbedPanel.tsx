@@ -6,6 +6,8 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 
+import Notice from '../Notice';
+
 type ClassNames = 'root'
 | 'inner'
 | 'copy'
@@ -41,6 +43,7 @@ export interface Tab {
 }
 interface Props {
   header: string;
+  error?: string;
   copy?: string;
   tabs: Tab[];
   [index: string]: any;
@@ -57,13 +60,14 @@ class TabbedPanel extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { classes, header, tabs, copy, ...rest } = this.props;
+    const { classes, header, tabs, copy, error, ...rest } = this.props;
     const { value } = this.state;
     const render = tabs[value].render;
 
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
+          { error && <Notice text={error} error /> }
           <Typography variant="title">{header}</Typography>
           {copy && <Typography component="div" className={classes.copy}>{copy}</Typography>}
           <AppBar position="static" color="default">

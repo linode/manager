@@ -26,6 +26,7 @@ export interface ExtendedRegion extends Linode.Region {
 
 interface Props {
   regions: ExtendedRegion[];
+  error?: string;
   handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
   selectedID: string | null;
 }
@@ -106,6 +107,7 @@ class SelectRegionPanel extends React.Component<Props> {
   render() {
     return (
       <TabbedPanel
+        error={this.props.error}
         header="Region"
         copy="Determine the best location for your Linode."
         tabs={this.createTabs()}

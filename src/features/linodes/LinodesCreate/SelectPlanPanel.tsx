@@ -14,6 +14,7 @@ export interface ExtendedType extends Linode.LinodeType {
 
 interface Props {
   types: ExtendedType[];
+  error?: string;
   handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
   selectedID: string | null;
 }
@@ -94,6 +95,7 @@ class SelectPlanPanel extends React.Component<Props> {
   render() {
     return (
       <TabbedPanel
+        error={this.props.error}
         header="Linode Plan"
         tabs={this.createTabs()}
         initTab={1}
