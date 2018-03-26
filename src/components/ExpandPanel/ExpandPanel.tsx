@@ -75,9 +75,14 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         className={classes.root}
         button
         onClick={this.handleNameClick}
-        disableRipple>
+        disableRipple
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : 'false'}
+        role="menu"
+        >
         <div
           className={`${classes.header} ${open ? 'hOpen' : '' }`}
+          role="none"
           >
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
@@ -88,7 +93,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
-              <div>
+              <div role="none">
                 {children}
               </div>
             )
