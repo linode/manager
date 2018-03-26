@@ -128,20 +128,19 @@ const preloaded = PromiseLoader<Props>({
     }),
 });
 
-const errorMessages = {
-  type: 'A plan selection is required.',
-  region: 'A region selection is required.',
-  image: 'An image selection is required.',
-  root_pass: 'A password is required.',
+const errorResources = {
+  type: 'A plan selection',
+  region: 'A region selection',
+  label: 'A label',
+  root_pass: 'A root password',
 };
 
-let getErrorFor: (field: string, arr?: ApiFieldError[]) => undefined | string;
-getErrorFor = (field, arr = []) => {
+const getErrorFor = (field: string, arr: ApiFieldError[] = []): undefined | string => {
   const err = arr.find(e => e.field === field);
   if (!err) {
     return;
   }
-  return errorMessages[err.field] || err.reason;
+  return err.reason.replace(err.field, errorResources[err.field]);
 };
 
 class LinodeCreate extends React.Component<CombinedProps, State> {
@@ -189,6 +188,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
+              error={getErrorFor('label', this.state.errors)}
               label={this.state.label}
               handleChange={this.updateStateFor}
             />
@@ -236,7 +236,6 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       this.setState(() => ({
         errors: error.response && error.response.data && error.response.data.errors,
       }));
-      // we need to do something with these errors
     });
   }
 

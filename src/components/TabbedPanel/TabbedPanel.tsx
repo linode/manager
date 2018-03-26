@@ -5,7 +5,8 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import Notice from './Notice';
+
+import Notice from '../Notice';
 
 type ClassNames = 'root'
 | 'inner'
@@ -66,8 +67,8 @@ class TabbedPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
+          { error && <Notice text={error} error /> }
           <Typography variant="title">{header}</Typography>
-          {error && <Notice error message={error} />}
           {copy && <Typography component="div" className={classes.copy}>{copy}</Typography>}
           <AppBar position="static" color="default">
             <Tabs
