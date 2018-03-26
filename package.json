@@ -2,7 +2,9 @@
   "name": "voldemort",
   "version": "0.20.3",
   "private": true,
-  "engines": { "node" : ">=8.0.0<9.0.0" },
+  "engines": {
+    "node": ">= 8.0.0 <9.0.0"
+  },
   "dependencies": {
     "@types/md5": "^2.1.32",
     "autoprefixer": "7.1.6",
@@ -69,7 +71,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
-    "e2e": "./node_modules/.bin/wdio wdio.conf.js"
+    "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js"
   },
   "pre-commit": [
     "lint",
@@ -95,6 +97,7 @@
     "@types/uuid": "^3.4.3",
     "@types/zxcvbn": "^4.4.0",
     "babel-core": "^6.26.0",
+    "babel-register": "^6.26.0",
     "selenium-standalone": "6.12.0",
     "svgr": "^1.9.0",
     "tslint-config-airbnb": "^5.6.0",
