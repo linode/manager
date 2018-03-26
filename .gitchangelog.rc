@@ -1,0 +1,191 @@
+## gitchangelog.rc
+## ---------------
+##
+## This file is a configuration for gitchangelog, found here:
+##
+## https://github.com/vaab/gitchangelog
+##
+## This is a tool for generating changelogs from the output of a git log
+## statement.  This configuration file controls how the config file is
+## generated.
+##
+## Expected Commit Message Format
+## ------------------------------
+##
+## ===============================
+## [tag?] [commit message subject]
+##
+## <commit message body text?>
+## * [changelog information]
+## <commit message body text>
+## ===============================
+##
+## In the above example, [tag] is optional and one of:
+## 
+##  * brk: for breaking changes
+##  * new: for new features
+##  * bug: for bug fixes
+##  * ref: for refactors
+##
+## The bracketed text in the tag is optional.  Tags should be applied to indicate
+## that a commit should appear in the changelog, and should reflect which section
+## of the changelog the commit should appear under.
+## 
+## If a tag is present, the [commit message subject] will appear as a bullet
+## point in the resulting changelog, in the section indicated by [tag].  This
+## should summarize the change.
+## 
+## In many (maybe most) cases, more information is required to describe a change
+## than will fit in a commit subject.  This should be included in the body of the
+## commit message, as indicated by [changelog information] above.  These lines
+## must start with an astrisk followed by a single whitespace (* ) with any amount
+## of whitespace before the astrisk.  All levels of indentation will be collapsed
+## into subbullets of the [commit message subject] bullet point.
+##
+## Example Commit Message
+## ----------------------
+##
+## ===================================================
+## new: adds a cool new feature
+##
+## ABC-123 #done
+##
+##  * Adds GET /cool/feature endpoint
+##  * Represents a collection of cool features
+## ===================================================
+##
+## Example Output
+## --------------
+##
+## Features:
+##
+##  * Adds a cool new feature
+##    * Adds GET /cool/feature
+##    * Represents a collection of cool features
+##
+## Generating a Changelog
+## ----------------------
+##
+## To generate a changelog for all commits, simply run gitchangelog:
+##
+##     gitchangelog
+##
+## To generate a changelog to a specific tag, run gitchangelog like so:
+##
+##     gitchangelog ...<tag>
+##
+## To generate a changelog between two tags, run gitchangelog like so:
+##
+##     gitchangelog <tag-1>...<tag-2>
+##
+## All of these will output the changelog to the terminal.
+##
+## About This File
+## ---------------
+##
+## This configuration file should live at the root of the project using it, and
+## despite its (required) filename, is a python script that is called by the
+## gitchangelog program to grab settings and functions used to generate the
+## changelog.  This file depends on .gitchangelog.tpl, which must live alongside
+## it, and is expected to be a mustache template file controlling how the
+## changelog is outputted.  This file _should_ be tracked by git.
+import re
+from itertools import filterfalse
+
+## Section Regexps
+##
+## This defines what is looked for in the subject of a commit to decide where,
+## if anywhere, the commit is added to the changelog.
+##
+## This setup defines the follow groups:
+##  * Breaking - subject starts with brk:
+##  * Features - subject starts with new:
+##  * Refactors - subject starts with ref:
+##  * Bugfixes - subject starts with bug:
+section_regexps = [
+    ('Added', [
+        r'^add:',
+    ]),
+    ('Removed', [
+        r'^rm:'
+    ]),
+    ('Changed', [
+        r'^chg:'
+    ]),
+    ('Fixed', [
+        r'^fix:'
+    ]),
+]
+
+## Body Processing
+##
+## Commit message bodies are mostly ignored, but if you want bullet points nested
+## under your commit message subject, include them like so:
+##
+##      * This will appear under the title
+##
+## These should be used to add specific details about what you changed, if the
+## change was big enough that the single-line message can't convey it all
+## adequately.  Don't be shy with these - details are important.
+@TextProc
+def only_bullets(s):
+    """
+    Given the commit body, removes any lines that don't match vaguely this
+    format:
+
+        * Does a thing
+
+    For example, if given a commit message like this:
+
+        new: Adds support for something
+
+        This is for https://jira.linode.com/browser/ARB-123
+
+        * Adds GET /some/thing
+        * Adds GET /some/thing/:id
+
+    this will return:
+
+        * Adds GET /some/thing
+        * Adds GET /some/thing/:id
+    """
+    lines = s.split('\n')
+    lines = filterfalse(
+            lambda c: not re.search(r'^ *\* ', c),
+            lines
+        )
+    lines = [l.split('*', 1)[1].strip() for l in lines if l]
+    lines = '\n * '.join(lines)
+    if lines:
+        lines = ' * '+lines
+    return lines
+
+body_process = only_bullets
+
+## Subject Processing
+##
+## Commit message subjects are left wholly intact, except that the grouping tag
+## is removed (since it is used as metadata) and the first word is capitalized.
+## A commit message subject like this:
+##
+##     ref moved permissions logic into user object
+##
+## becomes this instead:
+## 
+##     Moved permissions logic into user object
+##
+## That message will appear in the "Refacotrs" group, preserving the original
+## intention of the tag.
+@TextProc
+def strip_flag(s):
+    """
+    This function is used to strip the flag from the commit summary before adding
+    it to the changelog.  All commits summaries considered will have a tag if
+    they matched the section regexes, so we will assume that the first word can
+    be removed.
+    """
+    return ' '.join(s.split(' ')[1:])
+
+subject_process = strip_flag |  ucfirst
+
+output_engine = mustache(".gitchangelog.tpl")
