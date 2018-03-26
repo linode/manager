@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import PasswordInput from '../../../components/PasswordInput';
+import Notice from '../../../components/Notice';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
@@ -42,8 +43,8 @@ class PasswordPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
+        { error && <Notice text={error} error /> }
         <Typography component="div" variant="title">Password</Typography>
-        { error && error }
         <PasswordInput
           label="Root Password"
           placeholder="Enter a password."
