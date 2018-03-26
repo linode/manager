@@ -19,6 +19,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    paddingLeft: 0,
+    paddingRight: 0,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   header: {
     cursor: 'pointer',

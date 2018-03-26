@@ -75,15 +75,22 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: 'white',
   },
   sublinkPanel: {
+    paddingLeft: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 4,
     fontSize: '.9rem',
-    transition: 'color .3s ease-in-out',
+    transition: 'color 225ms ease-in-out, background-color 225ms ease-in-out',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    },
     '& span': {
       color: '#C9CACB',
+      transition: 'color 225ms ease-in-out',
     },
     '& svg': {
       color: '#C9CACB',
       fontSize: '20px',
       margin: '5px 2px 4px 0',
+      transition: 'color 225ms ease-in-out',
     },
     '&:hover, &:focus, & .hOpen': {
       color: 'white',
