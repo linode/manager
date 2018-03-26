@@ -3,7 +3,7 @@ import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
 import { connect } from 'react-redux';
-
+import { Subscription } from 'rxjs/Rx';
 import Hidden from 'material-ui/Hidden';
 
 import { API_ROOT } from 'src/constants';
@@ -60,6 +60,8 @@ type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentPro
 
 
 class ListLinodes extends React.Component<CombinedProps, State> {
+  subscription: Subscription;
+
   state: State = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
     page: pathOr(-1, ['response', 'page'], this.props.linodes),
@@ -94,32 +96,52 @@ class ListLinodes extends React.Component<CombinedProps, State> {
    ex elit, quis sed.`,
     },
   ];
+  componentWillUnmount() {
+    this.subscription.unsubscribe();
+  }
 
   componentDidMount() {
-    const mountTime = moment();
+    const mountTime = moment().subtract(5, 'seconds');
+    this.subscription = linodeEvents$
+      .filter((linodeEvent) => {
 
-    linodeEvents$
-    .filter((linodeEvent) => {
-      return (
-        (linodeEvent.entity !== null
-        && linodeEvent.status === 'started'
-        && linodeEvent.entity.type === 'linode')
-        && (moment(linodeEvent.created + 'Z') > mountTime
-        || linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100)
-      );
-    })
-    .subscribe((linodeEvent) => {
-      Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
-        .then(response => response.data)
-        .then(linode => this.setState((prevState) => {
-          const targetIndex = prevState.linodes.findIndex(
-            _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
-          const updatedLinodes = clone(prevState.linodes);
-          updatedLinodes[targetIndex] = linode;
-          updatedLinodes[targetIndex].recentEvent = linodeEvent;
-          return { linodes: updatedLinodes };
-        }));
-    });
+        const actionWhitelist = [
+          'linode_boot',
+          'linode_reboot',
+          'linode_shutdown',
+        ];
+
+        const statusWhitelist = [
+          'started',
+          'finished',
+          'scheduled',
+        ];
+
+        const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
+        const createdAfterMountTime = moment(linodeEvent.created + 'Z') > mountTime;
+        const isPendingCompletion = linodeEvent.percent_complete !== null
+          && linodeEvent.percent_complete < 100;
+
+        const result = isLinodeEvent
+          && statusWhitelist.includes(linodeEvent.status)
+          && actionWhitelist.includes(linodeEvent.action)
+          && (createdAfterMountTime || isPendingCompletion);
+
+          return result;
+      })
+      .do(console.log)
+      .subscribe((linodeEvent) => {
+        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
+          .then(response => response.data)
+          .then(linode => this.setState((prevState) => {
+            const targetIndex = prevState.linodes.findIndex(
+              _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
+            const updatedLinodes = clone(prevState.linodes);
+            updatedLinodes[targetIndex] = linode;
+            updatedLinodes[targetIndex].recentEvent = linodeEvent;
+            return { linodes: updatedLinodes };
+          }));
+      });
   }
 
   changeViewStyle = (style: string) => {
@@ -164,17 +186,17 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         page_size: pageSize,
       },
     })
-    .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
-    .then((response) => {
-      this.setState(prevResults => ({
-        ...prevResults,
-        linodes: pathOr([], ['data'], response),
-        page: pathOr(0, ['page'], response),
-        pages: pathOr(0, ['pages'], response),
-        results: pathOr(0, ['results'], response),
-        pageSize,
-      }));
-    });
+      .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
+      .then((response) => {
+        this.setState(prevResults => ({
+          ...prevResults,
+          linodes: pathOr([], ['data'], response),
+          page: pathOr(0, ['page'], response),
+          pages: pathOr(0, ['pages'], response),
+          results: pathOr(0, ['results'], response),
+          pageSize,
+        }));
+      });
   }
 
   handlePageSelection = (page: number) => {
