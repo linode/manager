@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 
 import PasswordInput from '../../../components/PasswordInput';
+import Notice from '../../../components/Notice';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
@@ -28,6 +29,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   password: string | null;
+  error?: string;
   handleChange: (key: string) => (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
 }
 
@@ -35,12 +37,13 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
-    const { classes, handleChange } = this.props;
+    const { classes, handleChange, error } = this.props;
     const setPassword = handleChange('password');
 
     return (
       <Paper className={classes.root}>
       <div className={classes.inner}>
+        { error && <Notice text={error} error /> }
         <Typography component="div" variant="title">Password</Typography>
         <PasswordInput
           label="Root Password"
