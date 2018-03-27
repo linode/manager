@@ -83,3 +83,7 @@ typings/
 
 # custom files
 restart-manager.sh
+errorShots/*.png
+e2e/test-results/*.xml
+localStorage.json
+
