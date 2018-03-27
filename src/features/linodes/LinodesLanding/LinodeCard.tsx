@@ -199,7 +199,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(`${linode.id}`)}
+              onClick={() => rebootLinode(linode.id, linode.label)}
             >
               <span className="btnLink">Reboot</span>
             </Button>
