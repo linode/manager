@@ -59,6 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     top: 2,
   },
   caption: {
+    marginTop: -8,
     paddingLeft: 39,
     [theme.breakpoints.up('md')]: {
       paddingLeft: 55,
