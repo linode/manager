@@ -32,7 +32,12 @@ import { resetEventsPolling } from 'src/events';
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
 type Info = { name: string, details: string } | undefined;
-type TypeInfo = { name: string, details: string, monthly: number } | undefined;
+export type TypeInfo = {
+  name: string,
+  details: string,
+  monthly: number,
+  backupsMonthly: number | null,
+} | undefined;
 
 type Styles =
 'root'
@@ -164,6 +169,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     this.setState(() => ({ [key]: value }));
   }
 
+  getBackupsMonthlyPrice(): number | null {
+    const { selectedTypeID } = this.state;
+    if (!selectedTypeID || !this.props.types.response) { return null; }
+    const type = this.props.types.response.find(type => type.id === selectedTypeID);
+    if (!type) { return null; }
+    return type.addons.backups.price.monthly;
+  }
+
   tabs = [
     {
       title: 'Create from Image',
@@ -199,6 +212,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             />
             <AddonsPanel
               backups={this.state.backups}
+              backupsMonthly={this.getBackupsMonthlyPrice()}
               privateIP={this.state.privateIP}
               handleChange={this.updateStateFor}
             />
@@ -252,6 +266,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       name: `${typeLabel(type.memory)}`,
       details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
       monthly: type.price.monthly,
+      backupsMonthly: this.getBackupsMonthlyPrice(),
     };
   }
 
