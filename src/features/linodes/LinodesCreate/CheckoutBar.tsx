@@ -85,8 +85,17 @@ class CheckoutBar extends React.Component<CombinedProps> {
   formatPrice() {
     const { typeInfo, backups } = this.props;
     let totalPrice = typeInfo && typeInfo.monthly || 0;
-    totalPrice += backups && 2.50 || 0;
+    totalPrice += backups && typeInfo && typeInfo.backupsMonthly || 0;
     return `$${totalPrice.toFixed(2)}`;
+  }
+
+  renderBackupsPrice() {
+    const { classes, typeInfo } = this.props;
+    return typeInfo && typeInfo.backupsMonthly && (
+      <Typography className={classes.detail}>
+        {`$${typeInfo.backupsMonthly.toFixed(2)}`}/mo
+      </Typography>
+    );
   }
 
   render() {
@@ -165,9 +174,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
               <Typography variant="subheading">
                 Backups Enabled
               </Typography>
-              <Typography className={classes.detail}>
-                $2.50/mo
-              </Typography>
+              {this.renderBackupsPrice()}
             </div>
           </React.Fragment>
         }
