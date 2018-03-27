@@ -115,6 +115,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           'started',
           'finished',
           'scheduled',
+          'failed',
         ];
 
         const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
