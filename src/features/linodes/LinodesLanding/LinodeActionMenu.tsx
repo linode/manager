@@ -26,7 +26,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            rebootLinode(linode);
+            rebootLinode(linode.id, linode.label);
             closeMenu();
           },
         },
@@ -64,7 +64,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power On',
           onClick: (e) => {
-            powerOnLinode(linode);
+            powerOnLinode(linode.id, linode.label);
             closeMenu();
           },
         });
@@ -74,7 +74,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power Off',
           onClick: (e) => {
-            powerOffLinode(linode);
+            powerOffLinode(linode.id, linode.label);
             closeMenu();
           },
         });
