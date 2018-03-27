@@ -1,5 +1,5 @@
-const { constants } = require('../constants');
-const { existsSync, writeFileSync, statSync } = require('fs');
+import { constants } from '../constants';
+import { existsSync, writeFileSync, statSync } from 'fs';
 
 /*
 * Navigates to baseUrl, inputs username and password
@@ -8,15 +8,15 @@ const { existsSync, writeFileSync, statSync } = require('fs');
 * @param { String } password
 * @returns {null} returns nothing
 */
-exports.login = (username, password) => {
-	browser.url(constants.routes.dashboard);
-	browser.setValue('#username', username);
-	browser.setValue('#password', password);
-	browser.click('.btn-primary');
-	if (browser.isExisting('.Modal')) {
-		browser.click('.btn-primary');
-	}
-	browser.waitForVisible('.App-wrapper-3');
+export const login = (username, password) => {
+    browser.url(constants.routes.dashboard);
+    browser.setValue('#username', username);
+    browser.setValue('#password', password);
+    browser.click('.btn-primary');
+    if (browser.isExisting('.Modal')) {
+        browser.click('.btn-primary');
+    }
+    browser.waitForVisible('.App-wrapper-3');
 }
 
 /*
@@ -24,22 +24,22 @@ exports.login = (username, password) => {
 * and write them out to a file for use in other tests
 * @returns { String } stringified local storage object
 */
-exports.getTokenIfNeeded = (user, pass) => {
-	const tokenPath = './localStorage.json';
-	const tokenExists = existsSync(tokenPath);
-	const expirationDate = new Date().getHours() + 2 // Current Time + 2 hours;
-	const getNewToken = tokenExists ? new Date(statSync(tokenPath).mtime).getHours() > expirationDate: true;
+export const getTokenIfNeeded = (user, pass) => {
+    const tokenPath = './localStorage.json';
+    const tokenExists = existsSync(tokenPath);
+    const expirationDate = new Date().getHours() + 2 // Current Time + 2 hours;
+    const getNewToken = tokenExists ? new Date(statSync(tokenPath).mtime).getHours() > expirationDate: true;
 
-	if (getNewToken) {
-		exports.login(user, pass);
-		browser.waitForVisible('.App-wrapper-3');
-		const localStorageObj = browser.execute(function() {
-			return JSON.stringify(localStorage);
-		});
-		writeFileSync(tokenPath, localStorageObj.value);
-		// Now reload the browser in a clean state
-		browser.reload();
-	}
+    if (getNewToken) {
+        exports.login(user, pass);
+        browser.waitForVisible('.App-wrapper-3');
+        const localStorageObj = browser.execute(function() {
+            return JSON.stringify(localStorage);
+        });
+        writeFileSync(tokenPath, localStorageObj.value);
+        // Now reload the browser in a clean state
+        browser.reload();
+    }
 }
 
 /*
@@ -48,19 +48,19 @@ exports.getTokenIfNeeded = (user, pass) => {
 * Navigate back to the homepage to be logged in
 * @returns {Null} returns nothing
 */
-exports.loadToken = () => {
-	const tokenPath = '../../localStorage.json';
-	const localStorageObj = require(tokenPath);
-	const keys = Object.keys(localStorageObj);
+export const loadToken = () => {
+    const tokenPath = '../../localStorage.json';
+    const localStorageObj = require(tokenPath);
+    const keys = Object.keys(localStorageObj);
 
-	const storageObj = keys.map(key => {
-		return { [key]: localStorageObj[key] }
-	});
-	browser.url('/null');
-	browser.execute(function(storageObj) {
-		storageObj.forEach(item => {
-			localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
-		});
-	}, storageObj);
-	browser.url(constants.routes.dashboard);
+    const storageObj = keys.map(key => {
+        return { [key]: localStorageObj[key] }
+    });
+    browser.url('/null');
+    browser.execute(function(storageObj) {
+        storageObj.forEach(item => {
+            localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
+        });
+    }, storageObj);
+    browser.url(constants.routes.dashboard);
 }
