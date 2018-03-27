@@ -20,11 +20,8 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    // height: 26,
-    // width: 26,
     color: '#ccc',
     transition: 'color .2s ease-in-out, background-color .2s ease-in-out',
-    // borderRadius: 0,
     '&:hover': {
       color: theme.palette.primary.main,
       fill: '#fff',
