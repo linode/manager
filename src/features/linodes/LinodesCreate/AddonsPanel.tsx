@@ -8,8 +8,18 @@ import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider';
 
 import CheckBox from '../../../components/CheckBox';
+import { FormControlLabel } from 'material-ui/Form';
 
-type ClassNames = 'root' | 'flex' | 'option' | 'inner' | 'panelBody';
+import LinodeTheme from 'src/theme';
+
+type ClassNames = 'root'
+| 'flex'
+| 'option'
+| 'inner'
+| 'panelBody'
+| 'label'
+| 'subLabel'
+| 'caption';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -23,12 +33,36 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   option: {
     marginTop: theme.spacing.unit * 3,
+    '&:last-child': {
+      marginBottom: theme.spacing.unit,
+    },
   },
   inner: {
     padding: theme.spacing.unit * 3,
   },
   panelBody: {
     padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`,
+  },
+  label: {
+    '& span:last-child': {
+      color: LinodeTheme.color.headline,
+      fontWeight: 700,
+      lineHeight: '1.2em',
+      [theme.breakpoints.up('md')]: {
+        marginLeft: 16,
+      },
+    },
+  },
+  subLabel: {
+    display: 'inline',
+    position: 'relative',
+    top: 2,
+  },
+  caption: {
+    paddingLeft: 39,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: 55,
+    },
   },
 });
 
@@ -47,9 +81,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AddonsPanel extends React.Component<CombinedProps> {
   renderBackupsPrice() {
+    const { classes } = this.props;
+
     return this.props.backupsMonthly && (
       <Grid item>
-        <Typography variant="caption" style={{ lineHeight: '20px' }}>
+        <Typography variant="caption" className={classes.subLabel}>
           {`$${this.props.backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
@@ -66,64 +102,50 @@ class AddonsPanel extends React.Component<CombinedProps> {
         <div className={classes.inner}>
           <Typography variant="title">Optional Add-ons</Typography>
           <Grid container className={classes.option}>
-            <Grid item>
-              <CheckBox
-                checked={this.props.backups}
-                onClick={e => setBackups(e, !this.props.backups)}
+            <Grid item xs={12} className="py0">
+              <FormControlLabel
+                className={classes.label}
+                control={
+                  <CheckBox
+                    checked={this.props.backups}
+                    onClick={e => setBackups(e, !this.props.backups)}
+                  />
+                }
+                label="Backups"
               />
+              {this.renderBackupsPrice()}
             </Grid>
-            <Grid item className={classes.flex}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Grid container>
-                    <Grid item>
-                    <Typography variant="subheading">
-                      Backups
-                    </Typography>
-                    </Grid>
-                    {this.renderBackupsPrice()}
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} className="py0">
-                  <Typography variant="caption">
-                    Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                    day old backup, and an 8-14 day old backup. Plans are priced according to you
-                    Linode plan selected above.
-                  </Typography>
-                </Grid>
-              </Grid>
+            <Grid item xs={12} className="py0">
+              <Typography variant="caption" className={classes.caption}>
+                Three backup slots are executed and rotated automatically: a daily backup, a 2-7
+                day old backup, and an 8-14 day old backup. Plans are priced according to you
+                Linode plan selected above.
+              </Typography>
             </Grid>
           </Grid>
-          <Grid container className={classes.option} style={{ marginBottom: 8 }}>
+          <Grid container className={classes.option}>
             <Grid item xs={12}>
               <Divider />
             </Grid>
           </Grid>
-          <Grid container className={classes.option} style={{ marginBottom: 8 }}>
-            <Grid item>
-              <CheckBox
-                checked={this.props.privateIP}
-                onClick={e => setPrivateIP(e, !this.props.privateIP)}
+          <Grid container className={classes.option}>
+            <Grid item xs={12} className="py0">
+              <FormControlLabel
+                className={classes.label}
+                control={
+                  <CheckBox
+                    checked={this.props.privateIP}
+                    onClick={e => setPrivateIP(e, !this.props.privateIP)}
+                  />
+                }
+                label="Private IP (Free!)"
               />
-            </Grid>
-            <Grid item className={classes.flex}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                    <Typography variant="subheading">
-                      Private IP (Free!)
-                    </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} className="py0">
-                  <Typography variant="caption">
+              <Grid item xs={12} className="py0">
+                <Typography variant="caption" className={classes.caption}>
                   We need copy! We need copy! We need copy! We need copy! We need copy! We need
                   copy! We need copy! We need copy! We need copy! We need copy! We need copy! We
                   need copy!
-                  </Typography>
-                </Grid>
+                </Typography>
               </Grid>
             </Grid>
           </Grid>

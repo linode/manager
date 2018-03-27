@@ -20,14 +20,14 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    height: 26,
-    width: 26,
+    // height: 26,
+    // width: 26,
     color: '#ccc',
     transition: 'color .2s ease-in-out, background-color .2s ease-in-out',
-    borderRadius: 0,
+    // borderRadius: 0,
     '&:hover': {
       color: theme.palette.primary.main,
-      backgroundColor: '#fff',
+      fill: '#fff',
     },
     '&:hover$warning': {
       color: '#ffd322',
@@ -39,35 +39,35 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   checked: {
     color: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: '#3683dc',
+      fill: '#3683dc',
     },
     '&$disabled': {
-      backgroundColor: '#C9CACB !important',
+      fill: '#C9CACB !important',
     },
     '&$warning': {
-      backgroundColor: '#ffd322',
+      fill: '#ffd322',
       '&:hover': {
-        backgroundColor: '#ffd322 !important',
+        fill: '#ffd322 !important',
       },
     },
     '&$error': {
-      backgroundColor: '#cf1f1f',
+      fill: '#cf1f1f',
       '&:hover': {
-        backgroundColor: '#cf1f1f !important',
+        fill: '#cf1f1f !important',
       },
     },
   },
   warning: {
     color: '#ffd322',
-    backgroundColor: '#fef5bf',
+    fill: '#fef5bf',
   },
   error: {
-    backgroundColor: '#f3c8c7',
+    fill: '#f3c8c7',
     color: '#cf1f1f',
   },
   disabled: {
     color: '#ccc !important',
-    backgroundColor: '#f4f4f4 !important',
+    fill: '#f4f4f4 !important',
     pointerEvents: 'none',
   },
 });
