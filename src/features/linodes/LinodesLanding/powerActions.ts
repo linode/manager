@@ -30,26 +30,35 @@ export const genEvent = (
   } as Linode.Event;
 };
 
-export const rebootLinode = (linode: Linode.Linode) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linode.id}/reboot`)
+export const rebootLinode = (
+  linodeID: string | number,
+  linodeLabel: string,
+) => {
+  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/reboot`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_reboot', linode.id, linode.label));
+    linodeEvents$.next(genEvent('linode_reboot', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };
 
-export const powerOffLinode = (linode: Linode.Linode) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linode.id}/shutdown`)
+export const powerOffLinode = (
+  linodeID: string | number,
+  linodeLabel: string,
+) => {
+  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/shutdown`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_shutdown', linode.id, linode.label));
+    linodeEvents$.next(genEvent('linode_shutdown', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };
 
-export const powerOnLinode = (linode: Linode.Linode) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linode.id}/boot`)
+export const powerOnLinode = (
+  linodeID: string | number,
+  linodeLabel: string,
+) => {
+  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/boot`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_boot', linode.id, linode.label));
+    linodeEvents$.next(genEvent('linode_boot', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };
