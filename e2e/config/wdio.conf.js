@@ -1,4 +1,5 @@
 const { login, getLocalStorage } = require('../utils/common');
+const { browserCommands } = require('./custom-commands');
 
 // Get username and password from env variables
 const username = process.env.username;
@@ -178,6 +179,11 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: function (capabilities, specs) {
+        // Require Babel-Register to use ES6 in jasmine specs
+        require('babel-register');
+
+        // Load up our custom commands
+        browserCommands();
         // Get login credentials and save
         login(username, password);
         getLocalStorage();
