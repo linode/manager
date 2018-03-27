@@ -11,6 +11,7 @@ import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 
 import LinodeTheme from 'src/theme';
+import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
 type ClassNames = 'root'
 | 'checkoutSection'
@@ -72,7 +73,7 @@ interface Props {
   onDeploy: () => void;
   label: string | null;
   imageInfo: { name: string, details: string } | undefined;
-  typeInfo: { name: string, details: string, monthly: number } | undefined;
+  typeInfo: TypeInfo | undefined;
   regionName: string | undefined;
   backups: boolean;
   isSticky?: boolean;
@@ -84,8 +85,17 @@ class CheckoutBar extends React.Component<CombinedProps> {
   formatPrice() {
     const { typeInfo, backups } = this.props;
     let totalPrice = typeInfo && typeInfo.monthly || 0;
-    totalPrice += backups && 2.50 || 0;
+    totalPrice += backups && typeInfo && typeInfo.backupsMonthly || 0;
     return `$${totalPrice.toFixed(2)}`;
+  }
+
+  renderBackupsPrice() {
+    const { classes, typeInfo } = this.props;
+    return typeInfo && typeInfo.backupsMonthly && (
+      <Typography className={classes.detail}>
+        {`$${typeInfo.backupsMonthly.toFixed(2)}`}/mo
+      </Typography>
+    );
   }
 
   render() {
@@ -164,9 +174,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
               <Typography variant="subheading">
                 Backups Enabled
               </Typography>
-              <Typography className={classes.detail}>
-                $2.50/mo
-              </Typography>
+              {this.renderBackupsPrice()}
             </div>
           </React.Fragment>
         }
