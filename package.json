@@ -1,12 +1,11 @@
 {
   "name": "voldemort",
-  "version": "0.20.3",
+  "version": "0.21.0",
   "private": true,
   "engines": {
     "node": ">= 8.0.0 <9.0.0"
   },
   "dependencies": {
-    "@types/md5": "^2.1.32",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
@@ -45,6 +44,7 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-sticky": "^6.0.1",
     "redux": "^3.7.2",
     "rxjs": "^5.5.6",
     "source-map-loader": "^0.2.1",
@@ -96,6 +96,8 @@
     "@types/storybook__react": "^3.0.7",
     "@types/uuid": "^3.4.3",
     "@types/zxcvbn": "^4.4.0",
+    "@types/md5": "^2.1.32",
+    "@types/react-sticky": "^5.0.6",
     "babel-core": "^6.26.0",
     "babel-register": "^6.26.0",
     "eslint": "4.19.1",

@@ -36,6 +36,7 @@ const distroIcons = {
 
 interface Props {
   images: Linode.Image[];
+  error?: string;
   selectedImageID: string | null;
   handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
 }
@@ -77,7 +78,7 @@ export const getMyImages = compose<any, any, any>(
 );
 
 const CreateFromImage: React.StatelessComponent<Props> = (props) => {
-  const { images } = props;
+  const { images, error } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
@@ -85,6 +86,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
 
   return (
     <TabbedPanel
+      error={error}
       header="Select Image Type"
       tabs={[
         {

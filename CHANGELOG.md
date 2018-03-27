@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.21.0] - 2018-03-26
+### Added
+- A variety of style and appearance updates
+- Linode Logo as scaleable SVG
+- Use Lato as our sitewide font
+- Use Axios interceptor to redirect to login on 401
+- Storybook for component development in isolation
+- Abstract ShowMore component for IPs and Tags
+- Event polling with backoff using RxJS Observable and Subject
+- Linode menu power actions function as expected
+- Grid view when user as <= 3 Linodes
+- Grid view when user is on mobile
+- loading state to Linode Row
+- loading state to Linode Card
+- TabbedPanel abstraction
+- Linodes Pagination
+- Import SVGs as React Components
+- SelectionCard component
+- Linux Distro icon font font-logos
+- Password Input Component
+- CheckoutBar sidebar during Linode Creation
+- Linode Creation from Image
+- Linode Creation Validation
+- Notice Component
+### Fixed
+- Shifting of user menu when popover menus are used
+
 ## [0.20.3] - 2018-03-06
 A new visual design has begun!
 ### Added

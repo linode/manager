@@ -1,9 +1,9 @@
 import * as React from 'react';
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
 import { connect } from 'react-redux';
-
+import { Subscription } from 'rxjs/Rx';
 import Hidden from 'material-ui/Hidden';
 
 import { API_ROOT } from 'src/constants';
@@ -20,6 +20,7 @@ import WithDocumentation from 'src/components/WithDocumentation';
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
+import PaginationFooter from '../../../components/PaginationFooter';
 import ToggleBox from './ToggleBox';
 
 import './linodes.css';
@@ -37,6 +38,10 @@ interface PreloadedProps {
 
 interface State {
   linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
+  page: number;
+  pages: number;
+  results: number;
+  pageSize: number;
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
@@ -44,7 +49,7 @@ const mapStateToProps = (state: Linode.AppState) => ({
 });
 
 const preloaded = PromiseLoader<Props>({
-  linodes: () => Axios.get(`${API_ROOT}/linode/instances`)
+  linodes: () => Axios.get(`${API_ROOT}/linode/instances`, { params: { page_size: 25 } })
     .then(response => response.data),
 
   images: () => Axios.get(`${API_ROOT}/images`)
@@ -55,8 +60,14 @@ type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentPro
 
 
 class ListLinodes extends React.Component<CombinedProps, State> {
+  subscription: Subscription;
+
   state: State = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
+    page: pathOr(-1, ['response', 'page'], this.props.linodes),
+    pages: pathOr(-1, ['response', 'pages'], this.props.linodes),
+    results: pathOr(0, ['response', 'results'], this.props.linodes),
+    pageSize: 25,
   };
 
   /**
@@ -85,31 +96,53 @@ class ListLinodes extends React.Component<CombinedProps, State> {
    ex elit, quis sed.`,
     },
   ];
+  componentWillUnmount() {
+    this.subscription.unsubscribe();
+  }
 
   componentDidMount() {
-    const mountTime = moment();
+    const mountTime = moment().subtract(5, 'seconds');
+    this.subscription = linodeEvents$
+      .filter((linodeEvent) => {
 
-    linodeEvents$
-    .filter((linodeEvent) => {
-      return (
-        (linodeEvent.entity !== null
-        && linodeEvent.entity.type === 'linode')
-        && (moment(linodeEvent.created + 'Z') > mountTime
-        || linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100)
-      );
-    })
-    .subscribe((linodeEvent) => {
-      Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
-        .then(response => response.data)
-        .then(linode => this.setState((prevState) => {
-          const targetIndex = prevState.linodes.findIndex(
-            _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
-          const updatedLinodes = clone(prevState.linodes);
-          updatedLinodes[targetIndex] = linode;
-          updatedLinodes[targetIndex].recentEvent = linodeEvent;
-          return { linodes: updatedLinodes };
-        }));
-    });
+        const actionWhitelist = [
+          'linode_boot',
+          'linode_reboot',
+          'linode_shutdown',
+        ];
+
+        const statusWhitelist = [
+          'started',
+          'finished',
+          'scheduled',
+          'failed',
+        ];
+
+        const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
+        const createdAfterMountTime = moment(linodeEvent.created + 'Z') > mountTime;
+        const isPendingCompletion = linodeEvent.percent_complete !== null
+          && linodeEvent.percent_complete < 100;
+
+        const result = isLinodeEvent
+          && statusWhitelist.includes(linodeEvent.status)
+          && actionWhitelist.includes(linodeEvent.action)
+          && (createdAfterMountTime || isPendingCompletion);
+
+          return result;
+      })
+      .do(console.log)
+      .subscribe((linodeEvent) => {
+        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
+          .then(response => response.data)
+          .then(linode => this.setState((prevState) => {
+            const targetIndex = prevState.linodes.findIndex(
+              _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
+            const updatedLinodes = clone(prevState.linodes);
+            updatedLinodes[targetIndex] = linode;
+            updatedLinodes[targetIndex].recentEvent = linodeEvent;
+            return { linodes: updatedLinodes };
+          }));
+      });
   }
 
   changeViewStyle = (style: string) => {
@@ -143,6 +176,36 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         types={types}
       />
     );
+  }
+
+  getLinodes = (page = 1, pageSize = 25) => {
+    const lastPage = Math.ceil(this.state.results / pageSize);
+
+    Axios.get(`${API_ROOT}/linode/instances`, {
+      params: {
+        page: Math.min(lastPage, page),
+        page_size: pageSize,
+      },
+    })
+      .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
+      .then((response) => {
+        this.setState(prevResults => ({
+          ...prevResults,
+          linodes: pathOr([], ['data'], response),
+          page: pathOr(0, ['page'], response),
+          pages: pathOr(0, ['pages'], response),
+          results: pathOr(0, ['results'], response),
+          pageSize,
+        }));
+      });
+  }
+
+  handlePageSelection = (page: number) => {
+    this.getLinodes(Math.min(page), this.state.pageSize);
+  }
+
+  handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
   render() {
@@ -204,6 +267,16 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                   : this.renderListView(linodes, images, types)
                 }
               </Hidden>
+              {
+                this.state.results > 25 &&
+                <PaginationFooter
+                  handlePageChange={this.handlePageSelection}
+                  handleSizeChange={this.handlePageSizeChange}
+                  pageSize={this.state.pageSize}
+                  pages={this.state.pages}
+                  page={this.state.page}
+                />
+              }
             </React.Fragment>
           );
         }}

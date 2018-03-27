@@ -11,7 +11,7 @@ type CSSClasses = 'root' | 'first' | 'last'| 'active';
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   root: {
     backgroundColor: LinodeTheme.bg.offWhite,
-    border: '1px solid ' + `${LinodeTheme.color.grey2}`,
+    border: '1px solid ' + `${LinodeTheme.color.grey3}`,
     borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       color: 'black',
     },
     '&:last-child': {
-      borderRight: '1px solid ' + `${LinodeTheme.color.grey2}`,
+      borderRight: '1px solid ' + `${LinodeTheme.color.grey3}`,
     },
   },
   active: {},

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { compose } from 'redux';
 
 import {
   withStyles,
@@ -9,6 +11,7 @@ import {
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
+
 
 type CSSClasses = 'root' | 'copy' | 'button';
 
@@ -33,7 +36,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 
 interface Props { }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type PropsWithStyles = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
   render() {
@@ -57,7 +60,12 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="raised" color="primary" className={classes.button}>
+          <Button
+            variant="raised"
+            color="primary"
+            className={classes.button}
+            onClick={() => this.props.history.push('/linodes/create')}
+          >
             Add New Linode
           </Button>
         </Grid>
@@ -65,5 +73,9 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
     );
   }
 }
+const enhanced = compose(
+  withRouter,
+  withStyles(styles, { withTheme: true }),
+);
 
-export default withStyles(styles, { withTheme: true })<Props>(ListLinodesEmptyState);
+export default enhanced(ListLinodesEmptyState);
