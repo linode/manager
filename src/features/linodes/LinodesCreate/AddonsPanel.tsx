@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`,
   },
   label: {
-    '& span:last-child': {
+    '& > span:last-child': {
       color: LinodeTheme.color.headline,
       fontWeight: 700,
       lineHeight: '1.2em',
