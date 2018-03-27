@@ -1,4 +1,4 @@
-const { login, getLocalStorage } = require('../utils/common');
+const { login, getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
 
 // Get username and password from env variables
@@ -184,9 +184,7 @@ exports.config = {
 
         // Load up our custom commands
         browserCommands();
-        // Get login credentials and save
-        login(username, password);
-        getLocalStorage();
+        getTokenIfNeeded();
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -200,8 +198,10 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
      */
-    // beforeSuite: function (suite) {
-    // },
+    beforeSuite: function (suite) {
+        // Load our token into localStorage before the suite starts
+        loadToken();
+    },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details
