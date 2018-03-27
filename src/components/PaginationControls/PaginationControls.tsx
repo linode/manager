@@ -5,7 +5,7 @@ import PageButton from './PageButton';
 
 interface Props {
   onClickHandler: (page?: number) => void;
-  pages: number[];
+  pages: number[] | number;
   range: number;
   currentPage: number;
   first?: Boolean;
@@ -13,7 +13,10 @@ interface Props {
 }
 
 const PaginationControls: React.StatelessComponent<Props> = (props) => {
-  const { onClickHandler, pages, currentPage } = props;
+  const { onClickHandler, pages: pagesProp, currentPage } = props;
+  const pages = Array.isArray(pagesProp)
+    ? pagesProp
+    : Array.from(Array(pagesProp), (v, idx) => idx + 1);
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === pages.length;
   const indexOf = pages.indexOf(currentPage);

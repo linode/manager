@@ -89,7 +89,9 @@ export function refreshOAuthToken() {
    * 2. Refreshes our OAuth token in localStorage
    */
   const iframe = document.createElement('iframe');
-  iframe.src = prepareOAuthEndpoint('/null');
+  /* bounce through the implicit flow back to a blank page that uses the
+     AuthenticationWrapper */
+  iframe.src = prepareOAuthEndpoint('/nullauth');
   iframe.style.display = 'none';
   const iframeContainer = document.getElementById('session-iframe');
   if (!iframeContainer) {

@@ -36,6 +36,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   backups: boolean;
+  backupsMonthly: number | null;
   privateIP: boolean;
   handleChange: (key: string) =>
     (e: React.ChangeEvent<Linode.TodoAny>, value: any) =>
@@ -45,6 +46,16 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AddonsPanel extends React.Component<CombinedProps> {
+  renderBackupsPrice() {
+    return this.props.backupsMonthly && (
+      <Grid item>
+        <Typography variant="caption" style={{ lineHeight: '20px' }}>
+          {`$${this.props.backupsMonthly.toFixed(2)}`} per month
+        </Typography>
+      </Grid>
+    );
+  }
+
   render() {
     const { classes, handleChange } = this.props;
     const setBackups = handleChange('backups');
@@ -70,11 +81,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                       Backups
                     </Typography>
                     </Grid>
-                    <Grid item>
-                      <Typography variant="caption" style={{ lineHeight: '20px' }}>
-                        $2.50 per month
-                      </Typography>
-                    </Grid>
+                    {this.renderBackupsPrice()}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} className="py0">

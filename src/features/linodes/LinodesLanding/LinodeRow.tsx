@@ -18,7 +18,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
-import { displayLabel } from './presentation';
+import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
 import transitionStatus from './linodeTransitionStatus';
 

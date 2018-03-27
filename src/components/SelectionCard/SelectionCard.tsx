@@ -194,7 +194,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
 
               {checked &&
               <Fade in={checked}>
-                <Grid item alignItems={'center'} className={`${classes.icon} ${classes.checked}`}>
+                <Grid item className={`${classes.icon} ${classes.checked}`}>
                   <Check />
                 </Grid>
               </Fade>
