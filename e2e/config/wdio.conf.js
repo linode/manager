@@ -1,3 +1,5 @@
+// Require Babel-Register to use ES6 in jasmine specs
+require('babel-register');
 const { getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
 
@@ -180,7 +182,7 @@ exports.config = {
      */
     before: function (capabilities, specs) {
         // Require Babel-Register to use ES6 in jasmine specs
-        require('babel-register');
+        // require('babel-register');
 
         // Load up our custom commands
         browserCommands();

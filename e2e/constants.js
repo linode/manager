@@ -1,4 +1,4 @@
-exports.constants = {
+export const constants = {
 	testAccounts: {
 
 	},
