@@ -20,12 +20,8 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxSizing: 'border-box',
-    height: 25,
-    width: 25,
+    height: 26,
+    width: 26,
     color: '#ccc',
     transition: 'color .2s ease-in-out, background-color .2s ease-in-out',
     borderRadius: 0,
@@ -97,7 +93,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const classnames = classNames({
     [classes.root]: true,
     [classes.disabled]: disabled === true,
-    [classes.checked]: checked === true,
+    [classes.checked]: checked,
     [classes.warning]: variant === 'warning',
     [classes.error]: variant === 'error',
   });
