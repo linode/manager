@@ -189,6 +189,50 @@ mentioning that you can reproduce it. Otherwise, go ahead and open an issue
 with as much detail as you can provide (for example: node version, operating
 system, browser, device, etc.). Thanks!
 
+## Generating the changelog
+
+We use `gitchangelog` to generate our changelog
+
+### Commit message format
+
+To get a commit message into the changelog, use one of the following prefixes.
+
+Added:
+
+`add: <commit message>`
+
+Removed:
+
+`rm: <commit message>`
+
+Changed:
+
+`chg: <commit message>`
+
+Fixed:
+
+`fix: <commit message>`
+
+### Installing `gitchangelog`
+
+Get a Python 3 installation with pip. On a Mac
+
+`brew install python` (Python 3 is now the default)
+
+Then
+
+`pip3 install gitchangelog`
+
+`pip3 install pystache`
+
+### Generating the changelog
+
+To generate the changelog since a given tag:
+
+`gitchangelog ...v0.21.0`
+
+With the literal `...` and `v0.21.0` being the tag
+
 ### References
 - http://nvie.com/posts/a-successful-git-branching-model/
 - http://keepachangelog.com/en/0.3.0/
