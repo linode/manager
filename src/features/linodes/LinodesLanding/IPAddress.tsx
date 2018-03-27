@@ -18,9 +18,23 @@ type CSSClasses =  'root'
 | 'right'
 | 'icon'
 | 'row'
-| 'ip';
+| 'ip'
+| 'ipLink'
+| 'copied';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+  '@keyframes popUp': {
+    from: {
+      opacity: 0,
+      top: -10,
+      transform: 'scale(.1)',
+    },
+    to: {
+      opacity: 1,
+      top: -35,
+      transform: 'scale(1)',
+    },
+  },
   root: {
     alignItems: 'center',
   },
@@ -36,13 +50,36 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   icon: {
     marginRight: theme.spacing.unit,
-    height: '0.8125rem',
-    width: '0.8125rem',
-    cursor: 'pointer',
-    color: LinodeTheme.palette.primary.main,
+    height: 18,
+    width: 18,
+    padding: 3,
+    transition: 'backgroundColor 225ms ease-in-out, color 225ms ease-in-out',
+    borderRadius: 2,
   },
   ip: {
     fontSize: 14,
+  },
+  ipLink: {
+    color: LinodeTheme.palette.primary.main,
+    position: 'relative',
+    display: 'inline-block',
+    '&:hover': {
+      color: theme.palette.primary.light,
+    },
+    '&:focus $icon': {
+      backgroundColor: theme.palette.primary.light,
+      color: 'white',
+    },
+  },
+  copied: {
+    fontSize: '.85rem',
+    left: -12,
+    color: LinodeTheme.palette.primary.light,
+    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
+    position: 'absolute',
+    boxShadow: '0 0 5px #ddd',
+    transition: 'opacity .5s ease-in-out',
+    animation: 'popUp 200ms ease-in-out forwards',
   },
 });
 
@@ -51,14 +88,44 @@ interface Props {
   copyRight?: boolean;
 }
 
-class IPAddress extends React.Component<Props & WithStyles<CSSClasses> > {
+class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
+  state = {
+    copied: false,
+  };
+
+  copiedTimeout: number | null = null;
+
+  componentWillUnmount() {
+    if (this.copiedTimeout !== null) {
+      window.clearTimeout(this.copiedTimeout);
+    }
+  }
+
+  clickIcon = () => {
+    this.setState({
+      copied: true,
+    });
+    window.setTimeout(() => this.setState({ copied: false }), 1500);
+  }
+
   renderCopyIcon = (ip: string) => {
     const { classes, copyRight } = this.props;
+    const { copied } = this.state;
 
-    return <ContentCopyIcon
-      className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
-      onClick={() => copy(ip)}
-    />;
+    return (
+      <a
+        href="javascript:void(0);"
+        className={classes.ipLink}
+        title={ip}
+        onClick={this.clickIcon}
+      >
+        {copied && <span className={classes.copied}>copied</span>}
+        <ContentCopyIcon
+          className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
+          onClick={() => copy(ip)}
+        />
+      </a>
+    );
   }
 
   renderIP = (ip: string, copyRight?: Boolean, key?: number) => {
