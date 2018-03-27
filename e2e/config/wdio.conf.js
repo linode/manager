@@ -1,4 +1,4 @@
-const { login, getTokenIfNeeded, loadToken } = require('../utils/common');
+const { getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
 
 // Get username and password from env variables
@@ -184,7 +184,7 @@ exports.config = {
 
         // Load up our custom commands
         browserCommands();
-        getTokenIfNeeded();
+        getTokenIfNeeded(username, password);
     },
     /**
      * Runs before a WebdriverIO command gets executed.
