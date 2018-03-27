@@ -131,6 +131,11 @@ const LinodeTheme: Linode.Theme = {
         marginTop: 16,
       },
     },
+    MuiFormControlLabel: {
+      root: {
+        marginLeft: -10,
+      },
+    },
     MuiFormLabel: {
       root: {
         color: '#555',

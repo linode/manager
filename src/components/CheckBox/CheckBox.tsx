@@ -7,7 +7,9 @@ import {
   WithStyles,
   Theme,
 } from 'material-ui';
-import Check from 'material-ui-icons/Check';
+import Checkbox from 'material-ui/Checkbox';
+import CheckboxIcon from '../../assets/icons/checkbox.svg';
+import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
 
 type CSSClasses =
   'root'
@@ -18,86 +20,68 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    boxSizing: 'border-box',
-    height: '26px',
-    width: '26px',
-    border: '1px solid #C9CACB;',
-    backgroundColor: '#fff',
-    color: '#fff',
-    transition: 'border .2s ease-in-out, background-color .2s ease-in-out',
-    '& svg': {
-      width: 18,
-      height: 18,
-      position: 'absolute',
-    },
+    color: '#ccc',
+    transition: 'color .2s ease-in-out, background-color .2s ease-in-out',
     '&:hover': {
-      borderColor: '#3683dc',
+      color: theme.palette.primary.main,
+      fill: '#fff',
     },
     '&:hover$warning': {
-      borderColor: '#ffd322',
-      backgroundColor: '#fff',
+      color: '#ffd322',
     },
     '&:hover$error': {
-      borderColor: '#cf1f1f',
-      backgroundColor: '#fff',
+      color: '#cf1f1f',
     },
   },
   checked: {
-    borderColor: '#3683dc',
-    backgroundColor: '#3683dc',
+    color: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: '#3683dc',
+      fill: '#3683dc',
     },
     '&$disabled': {
-      backgroundColor: '#C9CACB !important',
+      fill: '#C9CACB !important',
     },
     '&$warning': {
-      borderColor: '#ffd322',
-      backgroundColor: '#ffd322',
+      fill: '#ffd322',
       '&:hover': {
-        backgroundColor: '#ffd322 !important',
+        fill: '#ffd322 !important',
       },
     },
     '&$error': {
-      borderColor: '#cf1f1f',
-      backgroundColor: '#cf1f1f',
+      fill: '#cf1f1f',
       '&:hover': {
-        backgroundColor: '#cf1f1f !important',
+        fill: '#cf1f1f !important',
       },
     },
   },
-  disabled: {
-    backgroundColor: '#f4f4f4 !important',
-    borderColor: '#C9CACB !important',
-    pointerEvents: 'none',
-  },
   warning: {
-    borderColor: '#ffd322',
-    backgroundColor: '#fef5bf',
+    color: '#ffd322',
+    fill: '#fef5bf',
   },
   error: {
-    borderColor: '#cf1f1f',
-    backgroundColor: '#f3c8c7',
+    fill: '#f3c8c7',
+    color: '#cf1f1f',
+  },
+  disabled: {
+    color: '#ccc !important',
+    fill: '#f4f4f4 !important',
+    pointerEvents: 'none',
   },
 });
 
 interface Props {
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
   variant?: 'warning' | 'error';
-  checked: Boolean;
-  disabled?: Boolean;
+  checked: boolean;
+  disabled?: boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const {
-    classes,
     onClick,
+    classes,
     variant,
     checked,
     disabled,
@@ -106,18 +90,21 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const classnames = classNames({
     [classes.root]: true,
     [classes.disabled]: disabled === true,
-    [classes.checked]: checked === true,
+    [classes.checked]: checked,
     [classes.warning]: variant === 'warning',
     [classes.error]: variant === 'error',
   });
 
   return (
-    <div
+    <Checkbox
       className={classnames}
-      onClick={onClick}
+      onChange={onClick}
+      checked={checked}
+      disabled={disabled}
+      icon={<CheckboxIcon />}
+      checkedIcon={<CheckboxCheckedIcon />}
     >
-      {checked && <Check />}
-    </div>
+    </Checkbox>
   );
 };
 
