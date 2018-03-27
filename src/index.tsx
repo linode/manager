@@ -52,14 +52,21 @@ refreshOAuthOnUserInteraction();
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <AuthenticationWrapper>
-        <Switch>
-          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-          <Route exact path="/null" render={() => <span>null route</span>} />
-          <Route exact path="/logout" component={Logout} />
-          <Route component={App} />
-        </Switch>
-      </AuthenticationWrapper>
+      <Switch>
+        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+        <Route exact path="/null" render={() => <span>null route</span>} />
+        <Route render={() =>
+          <AuthenticationWrapper>
+            <Switch>
+              <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+              {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+              <Route exact path="/nullauth" render={() => <span>null auth route</span>} />
+              <Route exact path="/logout" component={Logout} />
+              <Route component={App} />
+            </Switch>
+          </AuthenticationWrapper>
+        }/>
+      </Switch>
     </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement,
