@@ -101,11 +101,12 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     }
   }
 
-  clickIcon = () => {
+  clickIcon = (ip: string) => {
     this.setState({
       copied: true,
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
+    copy(ip);
   }
 
   renderCopyIcon = (ip: string) => {
@@ -114,15 +115,14 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
     return (
       <a
-        href="javascript:void(0);"
+        aria-label="Copy IP address"
         className={classes.ipLink}
         title={ip}
-        onClick={this.clickIcon}
+        onClick={() => this.clickIcon(ip)}
       >
         {copied && <span className={classes.copied}>copied</span>}
         <ContentCopyIcon
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
-          onClick={() => copy(ip)}
         />
       </a>
     );
@@ -135,7 +135,6 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         <Typography className={classes.ip}>
           {ip}
         </Typography>
-        {!copyRight && this.renderCopyIcon(ip)}
         {copyRight && this.renderCopyIcon(ip)}
       </div>
     );
