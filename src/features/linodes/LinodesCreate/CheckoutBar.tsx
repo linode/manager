@@ -11,6 +11,7 @@ import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 
 import LinodeTheme from 'src/theme';
+import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
 type ClassNames = 'root'
 | 'checkoutSection'
@@ -72,7 +73,7 @@ interface Props {
   onDeploy: () => void;
   label: string | null;
   imageInfo: { name: string, details: string } | undefined;
-  typeInfo: { name: string, details: string, monthly: number } | undefined;
+  typeInfo: TypeInfo | undefined;
   regionName: string | undefined;
   backups: boolean;
   isSticky?: boolean;
