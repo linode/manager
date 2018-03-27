@@ -1,11 +1,8 @@
 import * as React from 'react';
-import Axios from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-import { API_ROOT } from 'src/constants';
-import { resetEventsPolling } from 'src/events';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import { rebootLinode } from './powerActions';
+import { rebootLinode, powerOffLinode, powerOnLinode } from './powerActions';
 
 interface Props {
   linode: Linode.Linode;
@@ -29,9 +26,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            rebootLinode(`${linode.id}`);
+            rebootLinode(linode.id, linode.label);
             closeMenu();
-            // TODO, catch errors and show them with a snackbar
           },
         },
         {
@@ -68,10 +64,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power On',
           onClick: (e) => {
-            Axios.post(`${API_ROOT}/linode/instances/${linode.id}/boot`)
-            .then((response) => {
-              resetEventsPolling();
-            });
+            powerOnLinode(linode.id, linode.label);
             closeMenu();
           },
         });
@@ -81,12 +74,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power Off',
           onClick: (e) => {
-            Axios.post(`${API_ROOT}/linode/instances/${linode.id}/shutdown`)
-            .then((response) => {
-              resetEventsPolling();
-            });
+            powerOffLinode(linode.id, linode.label);
             closeMenu();
-            // TODO, catch errors and show them with a snackbar
           },
         });
       }
