@@ -21,8 +21,12 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     alignItems: 'flex-start',
     paddingLeft: 0,
     paddingRight: 0,
-    '&:hover': {
+    backgroundColor: 'transparent',
+    '&:hover, &:focus': {
       backgroundColor: 'transparent',
+      '& $caret, & $header': {
+        color: theme.palette.primary.light,
+      },
     },
   },
   header: {
@@ -32,6 +36,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     alignItems: 'center',
     fontWeight: 700,
     color: LinodeTheme.color.headline,
+    transition: 'color 225ms ease-in-out',
   },
   caret: {
     color: theme.palette.primary.main,
