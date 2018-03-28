@@ -7,7 +7,7 @@ import {
   WithStyles,
   Theme,
 } from 'material-ui';
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox, { CheckboxProps } from 'material-ui/Checkbox';
 import CheckboxIcon from '../../assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
 
@@ -69,40 +69,29 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
-  onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
+interface Props extends CheckboxProps {
   variant?: 'warning' | 'error';
-  checked: boolean;
-  disabled?: boolean;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
-  const {
-    onClick,
-    classes,
-    variant,
-    checked,
-    disabled,
-  } = props;
+  const { classes, ...rest } = props;
 
   const classnames = classNames({
     [classes.root]: true,
-    [classes.disabled]: disabled === true,
-    [classes.checked]: checked,
-    [classes.warning]: variant === 'warning',
-    [classes.error]: variant === 'error',
+    [classes.disabled]: props.disabled === true,
+    [classes.checked]: Boolean(props.checked),
+    [classes.warning]: props.variant === 'warning',
+    [classes.error]: props.variant === 'error',
   });
 
   return (
     <Checkbox
       className={classnames}
-      onChange={onClick}
-      checked={checked}
-      disabled={disabled}
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
+      { ...rest }
     >
     </Checkbox>
   );
