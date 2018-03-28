@@ -96,7 +96,7 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
 
     return (
       <React.Fragment>
-        <div onClick={onClick} className={classes.root}>
+        <div data-qa-menu-item={title} onClick={onClick} className={classes.root}>
           <div className={classes.iconWrapper}>
             <ItemIcon />
           </div>
