@@ -8,12 +8,12 @@ const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 
 
 // Get username and password from env variables
-const username = process.env.username;
-const password = process.env.pass;
+const username = argv.u;
+const password = argv.p;
 
 
 exports.config = {
-    
+
     //
     // ==================
     // Specify Test Files
