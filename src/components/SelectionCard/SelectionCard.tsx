@@ -40,11 +40,16 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
+    outline: 0,
     '&.checked $innerGrid': {
       borderColor: theme.palette.primary.main,
       '& span': {
         color: theme.palette.primary.main,
       },
+    },
+    '&:focus $innerGrid': {
+      borderColor: theme.palette.primary.main,
+      backgroundColor: '#f4f4f4',
     },
     '& .w100': {
       width: '100%',
@@ -156,6 +161,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         xs={12}
         sm={6}
         md={4}
+        tabIndex={0}
         className={
           classNames({
             [classes.root]: true,

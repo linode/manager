@@ -82,7 +82,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingRight: theme.spacing.unit * 4,
     fontSize: '.9rem',
     transition: 'color 225ms ease-in-out, background-color 225ms ease-in-out',
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: 'rgba(0, 0, 0, 0.08)',
     },
     '& span': {
@@ -98,7 +98,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     '&:hover, &:focus, & .hOpen': {
       color: 'white',
       '& span, & svg': {
-        color: 'white',
+        color: 'white !important',
       },
     },
     '& .pOpen': {
