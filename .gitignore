@@ -83,7 +83,9 @@ typings/
 
 # custom files
 restart-manager.sh
-errorShots/*.png
+
+# E2E Test Temporary Files
+e2e/errorShots/*.png
 e2e/test-results/*.xml
 localStorage.json
-
+e2e/drivers
