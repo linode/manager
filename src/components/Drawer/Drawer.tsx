@@ -22,7 +22,12 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   const { title, classes, ...rest } = props;
 
   return (
-    <Drawer anchor="right" {...rest} classes={{ paper: classes.paper }}>
+    <Drawer
+      anchor="right"
+      {...rest}
+      classes={{ paper: classes.paper }}
+      ModalProps={{ BackdropProps: { invisible: true } }}
+      >
       <Grid container>
         <Grid item xs={11}>{title}</Grid>
         <Grid item xs={2}>
