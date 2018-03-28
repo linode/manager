@@ -1,5 +1,6 @@
 module.exports = {
   baseURL: 'https://selenium-release.storage.googleapis.com',
+  basePath: './e2e/drivers',
   version: '3.4.0',
   drivers: {
     chrome: {

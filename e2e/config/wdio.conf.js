@@ -2,6 +2,10 @@
 require('babel-register');
 const { getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
+const { browserConf } = require('./browser-config');
+const { argv } = require('yargs');
+const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
+
 
 // Get username and password from env variables
 const username = process.env.username;
@@ -48,14 +52,7 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
-        // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-        // grid with only 5 firefox instances available you can make sure that not more than
-        // 5 instances get started at a time.
-        maxInstances: 2,
-        //
-        browserName: 'chrome'
-    }],
+    capabilities: [selectedBrowser],
     //
     // ===================
     // Test Configurations
@@ -81,7 +78,7 @@ exports.config = {
     bail: 0,
     //
     // Saves a screenshot to a given path if a command fails.
-    // screenshotPath: './errorShots/',
+    // screenshotPath: './e2e/errorShots/',
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
