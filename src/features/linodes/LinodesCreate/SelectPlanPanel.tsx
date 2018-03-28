@@ -15,7 +15,8 @@ export interface ExtendedType extends Linode.LinodeType {
 interface Props {
   types: ExtendedType[];
   error?: string;
-  handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
+  handleSelection: (key: string) =>
+    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
   selectedID: string | null;
 }
 
