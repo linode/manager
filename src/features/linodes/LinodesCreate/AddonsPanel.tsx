@@ -109,7 +109,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.backups}
-                    onClick={e => setBackups(e, !this.props.backups)}
+                    onChange={e => setBackups(e, !this.props.backups)}
                   />
                 }
                 label="Backups"
@@ -136,7 +136,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={this.props.privateIP}
-                    onClick={e => setPrivateIP(e, !this.props.privateIP)}
+                    onChange={e => setPrivateIP(e, !this.props.privateIP)}
                   />
                 }
                 label="Private IP (Free!)"

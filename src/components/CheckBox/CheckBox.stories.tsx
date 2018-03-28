@@ -21,58 +21,58 @@ class InteractiveCheckboxes extends React.Component {
         <CheckBox
           disabled
           checked={false}
-          onClick={() => this.handleClick('checkedDefault')}
+          onChange={() => this.handleClick('checkedDefault')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           disabled
           checked={true}
-          onClick={() => this.handleClick('checkedDefault')}
+          onChange={() => this.handleClick('checkedDefault')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           checked={this.state.checkedDefault}
-          onClick={() => this.handleClick('checkedDefault')}
+          onChange={() => this.handleClick('checkedDefault')}
         />
         <br /><br />
         <CheckBox
           variant="warning"
           disabled
           checked={false}
-          onClick={() => this.handleClick('checkedWarning')}
+          onChange={() => this.handleClick('checkedWarning')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           disabled
           variant="warning"
           checked={true}
-          onClick={() => this.handleClick('checkedDefault')}
+          onChange={() => this.handleClick('checkedDefault')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           variant="warning"
           checked={this.state.checkedWarning}
-          onClick={() => this.handleClick('checkedWarning')}
+          onChange={() => this.handleClick('checkedWarning')}
         />
         <br /><br />
         <CheckBox
           variant="error"
           disabled
           checked={false}
-          onClick={() => this.handleClick('checkedError')}
+          onChange={() => this.handleClick('checkedError')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           disabled
           variant="error"
           checked={true}
-          onClick={() => this.handleClick('checkedDefault')}
+          onChange={() => this.handleClick('checkedDefault')}
         />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           variant="error"
           checked={this.state.checkedError}
-          onClick={() => this.handleClick('checkedError')}
+          onChange={() => this.handleClick('checkedError')}
         />
       </React.Fragment>
     );
