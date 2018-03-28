@@ -57,15 +57,24 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   warning: {
     color: '#ffd322',
     fill: '#fef5bf',
+    '& .defaultFill': {
+      fill: '#fff5bf',
+    },
   },
   error: {
     fill: '#f3c8c7',
     color: '#cf1f1f',
+    '& .defaultFill': {
+      fill: '#f3c7c7',
+    },
   },
   disabled: {
     color: '#ccc !important',
     fill: '#f4f4f4 !important',
     pointerEvents: 'none',
+    '& .defaultFill': {
+      fill: '#f4f4f4',
+    },
   },
 });
 
