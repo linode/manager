@@ -2,6 +2,9 @@
   "name": "voldemort",
   "version": "0.21.0",
   "private": true,
+  "engines": {
+    "node": ">= 8.0.0 <9.0.0"
+  },
   "dependencies": {
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
@@ -66,7 +69,9 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
+    "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js"
   },
   "pre-commit": [
     "lint",
@@ -80,6 +85,7 @@
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.1.9",
     "@types/jest": "^22.1.3",
+    "@types/md5": "^2.1.32",
     "@types/node": "^9.4.6",
     "@types/ramda": "^0.25.18",
     "@types/react": "^16.0.38",
@@ -87,16 +93,23 @@
     "@types/react-loadable": "^5.3.3",
     "@types/react-redux": "^5.0.15",
     "@types/react-router-dom": "^4.2.2",
+    "@types/react-sticky": "^5.0.6",
     "@types/storybook__addon-actions": "^3.0.3",
     "@types/storybook__react": "^3.0.7",
     "@types/uuid": "^3.4.3",
     "@types/zxcvbn": "^4.4.0",
-    "@types/md5": "^2.1.32",
-    "@types/react-sticky": "^5.0.6",
     "babel-core": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "eslint": "4.19.1",
+    "selenium-standalone": "^6.13.0",
     "svgr": "^1.9.0",
     "tslint-config-airbnb": "^5.6.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "wdio-dot-reporter": "0.0.9",
+    "wdio-jasmine-framework": "0.3.2",
+    "wdio-junit-reporter": "0.4.2",
+    "webdriverio": "4.12.0",
+    "yargs": "11.0.0"
   },
   "jest": {
     "collectCoverageFrom": [
