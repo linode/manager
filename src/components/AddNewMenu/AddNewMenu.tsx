@@ -24,9 +24,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
     flex: 1,
   },
-  menu: {
-    // padding: 0,
-  },
   button: {
     paddingRight: 22,
   },
