@@ -55,8 +55,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
-    '&:hover': {
+    '&:hover, &:focus': {
       borderLeftColor: 'rgba(0, 0, 0, 0.08)',
+      '& $linkItem': {
+        color: 'white',
+      },
     },
   },
   linkItem: {
@@ -109,6 +112,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     fontSize: '.8rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
+      outline: 0,
     },
   },
 });
@@ -189,23 +193,36 @@ class PrimaryNav extends React.Component<Props> {
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link className={classes.sublink} to="/billing" role="menuitem" tabIndex={-1}>
+          <Link
+            className={classes.sublink}
+            to="/billing"
+            role="menuitem">
             Account &amp; Billing
           </Link>
-          <Link className={classes.sublink} to="/users" role="menuitem" tabIndex={-1}>
+          <Link
+            className={classes.sublink}
+            to="/users"
+            role="menuitem">
             Users
           </Link>
         </ExpandPanel>
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Support">
-          <Link className={classes.sublink} to="/documentation" tabIndex={-1}>Documentation</Link>
-            <a
-              className={classes.sublink}
-              href="//www.linode.com/community/questions"
-              role="menuitem"
-            >
-              Community Forum
-            </a>
-          <Link className={classes.sublink} to="/support" role="menuitem" tabIndex={-1}>
+          <Link
+            className={classes.sublink}
+            to="/documentation"
+            role="menuitem">
+            Documentation
+          </Link>
+          <a
+            className={classes.sublink}
+            href="//www.linode.com/community/questions"
+            role="menuitem">
+            Community Forum
+          </a>
+          <Link
+            className={classes.sublink}
+            to="/support"
+            role="menuitem">
             Support Tickets
           </Link>
         </ExpandPanel>
