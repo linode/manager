@@ -5,12 +5,14 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/s
 import ExpansionPanel, {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
+  ExpansionPanelProps,
   ExpansionPanelSummaryProps,
   ExpansionPanelDetailsProps,
 } from 'material-ui/ExpansionPanel';
 
 import Typography, { TypographyProps } from 'material-ui/Typography';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import AddIcon from 'material-ui-icons/Add';
+import RemoveIcon from 'material-ui-icons/Remove';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
   root: {
@@ -24,8 +26,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 
 type ClassNames = 'heading';
 
-interface Props {
+interface Props extends ExpansionPanelProps {
   heading: string;
+  actions?: (props: ExpansionPanelProps) => JSX.Element;
   summaryProps?: ExpansionPanelSummaryProps;
   headingProps?: TypographyProps;
   detailProps?: ExpansionPanelDetailsProps;
@@ -37,6 +40,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
   state = { open: true };
 
   handleClick = (e: React.MouseEvent<any>) => {
+    console.log(this.state.open);
     this.setState({ open: !open });
   }
 
@@ -46,6 +50,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       summaryProps,
       detailProps,
       headingProps,
+      actions,
       ...expansionPanelProps,
     } = this.props;
 
@@ -53,7 +58,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       <ExpansionPanel {...expansionPanelProps}>
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={open ? <ExpandMoreIcon /> : <ExpandMoreIcon />}
+          expandIcon={this.state.open ? <AddIcon /> : <RemoveIcon />}
           {...summaryProps}
         >
           <Typography className={classes.heading} {...headingProps}>
@@ -63,6 +68,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
         <ExpansionPanelDetails {...detailProps}>
           {this.props.children}
         </ExpansionPanelDetails>
+        { actions && actions(expansionPanelProps) }
       </ExpansionPanel>
     );
   }
