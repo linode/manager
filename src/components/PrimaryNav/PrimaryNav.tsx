@@ -18,7 +18,7 @@ import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import logoPng from 'src/assets/logo/logo.png';
-import ExpandPanel from 'src/components/ExpandPanel';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
 type PrimaryLink = {
   display: string,
@@ -192,40 +192,20 @@ class PrimaryNav extends React.Component<Props> {
           </Grid>
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-        <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link
-            className={classes.sublink}
-            to="/billing"
-            role="menuitem">
-            Account &amp; Billing
-          </Link>
-          <Link
-            className={classes.sublink}
-            to="/users"
-            role="menuitem">
-            Users
-          </Link>
-        </ExpandPanel>
-        <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Support">
-          <Link
-            className={classes.sublink}
-            to="/documentation"
-            role="menuitem">
-            Documentation
-          </Link>
+        <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Account">
+          <Link className={classes.sublink} to="/billing">Account &amp; Billing</Link>
+          <Link className={classes.sublink} to="/users">Users</Link>
+        </ShowMoreExpansion>
+        <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Support">
+          <Link className={classes.sublink} to="/documentation">Documentation</Link>
           <a
             className={classes.sublink}
             href="//www.linode.com/community/questions"
             role="menuitem">
             Community Forum
           </a>
-          <Link
-            className={classes.sublink}
-            to="/support"
-            role="menuitem">
-            Support Tickets
-          </Link>
-        </ExpandPanel>
+          <Link className={classes.sublink} to="/support">Support Tickets</Link>
+        </ShowMoreExpansion>
       </React.Fragment>
     );
   }
