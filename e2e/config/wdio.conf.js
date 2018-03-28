@@ -1,4 +1,5 @@
 // Require Babel-Register to use ES6 in jasmine specs
+require('dotenv').config();
 require('babel-register');
 const { getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
@@ -8,8 +9,8 @@ const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 
 
 // Get username and password from cli args
-const username = argv.u;
-const password = argv.p;
+const username = process.env.MANAGER_USER;
+const password = process.env.MANAGER_PASS;
 
 
 exports.config = {
