@@ -8,6 +8,8 @@ import {
   Theme,
 } from 'material-ui';
 import Radio, { RadioProps } from 'material-ui/Radio';
+import RadioIcon from '../../assets/icons/radio.svg';
+import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 
 type CSSClasses =
   'root'
@@ -85,7 +87,12 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = (props) => {
   });
 
   return (
-    <Radio className={classnames} {...rest} />
+    <Radio
+      className={classnames}
+      {...rest}
+      icon={<RadioIcon />}
+      checkedIcon={<RadioIconRadioed />}
+    />
   );
 };
 
