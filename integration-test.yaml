@@ -1,0 +1,47 @@
+version: '3.1'
+services: 
+  selenium-hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome
+    depends_on:
+      - selenium-hub
+    volumes:
+      - /dev/shm:/dev/shm # Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium-hub
+      - HUB_PORT_4444_TCP_PORT=4444
+  manager-storybook:
+    container_name: manager_storybook
+    ports:
+      - "6006:6006"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: yarn storybook
+    volumes:
+      - ./:/src
+    depends_on:
+      - chrome
+  manager-e2e:
+    container_name: manager_e2e
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: yarn e2e
+    volumes:
+      - ./:/src
+    depends_on:
+      - manager-storybook
+  manager-local:
+    container_name: manager_local
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: yarn start
+    volumes:
+      - ./:/src
