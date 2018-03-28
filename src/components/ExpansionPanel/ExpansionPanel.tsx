@@ -40,7 +40,6 @@ class EExpansionPanel extends React.Component<CombinedProps> {
   state = { open: true };
 
   handleClick = (e: React.MouseEvent<any>) => {
-    console.log(this.state.open);
     this.setState({ open: !open });
   }
 
