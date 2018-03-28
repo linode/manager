@@ -8,7 +8,7 @@ import Button from 'material-ui/Button';
 class Example extends React.Component {
   state = { open: false };
 
-  toggleDrawer = v => (e) => {
+  toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
   }
 
