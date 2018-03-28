@@ -27,7 +27,8 @@ export interface ExtendedRegion extends Linode.Region {
 interface Props {
   regions: ExtendedRegion[];
   error?: string;
-  handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
+  handleSelection: (key: string) =>
+    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
   selectedID: string | null;
 }
 
