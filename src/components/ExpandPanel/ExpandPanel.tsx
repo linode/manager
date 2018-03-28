@@ -80,10 +80,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         aria-expanded={open ? 'true' : 'false'}
         role="menu"
         >
-        <div
-          className={`${classes.header} ${open ? 'hOpen' : '' }`}
-          role="none"
-          >
+        <div className={`${classes.header} ${open ? 'hOpen' : '' }`}>
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
@@ -93,7 +90,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
         <Collapse in={open} className={open ? 'pOpen' : ''}>
           {open
             ? (
-              <div role="none">
+              <div>
                 {children}
               </div>
             )
