@@ -102,7 +102,14 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
           </div>
           <div className={classes.content}>
             <Typography variant="subheading">
-              <a href="#" title={title} className={classes.titleLink}>{title}</a>
+              <a
+                href="javascript:void(0)"
+                onClick={onClick}
+                title={title}
+                className={classes.titleLink}
+              >
+                {title}
+              </a>
             </Typography>
             <Typography variant="body1" className={classes.body}>
               {body}
