@@ -95,12 +95,48 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiExpansionPanel: {},
+    MuiExpansionPanelActions: {
+      root: {
+        justifyContent: 'flex-start',
+        backgroundColor: 'white',
+      },
+    },
+    MuiExpansionPanelDetails: {
+      root: {
+        padding: 16,
+        backgroundColor: 'white',
+      },
+    },
     MuiExpansionPanelSummary: {
+      root: {
+        padding: '0 16px',
+        backgroundColor: 'white',
+        '&:hover, &:focus': {
+          backgroundColor: 'white',
+          '& h3': {
+            color: '#5F99EA',
+          },
+        },
+      },
       expanded: {
         minHeight: 48,
       },
       contentExpanded: {
         margin: '12px 0',
+      },
+      expandIcon: {
+        transition: 'color 225ms ease-in-out',
+        top: 0,
+        right: 0,
+        transform: 'none',
+        color: '#3B85D9',
+        '& svg': {
+          width: 22,
+          height: 22,
+        },
+      },
+      expandIconExpanded: {
+        transform: 'none',
       },
     },
     MuiInput: {
@@ -266,6 +302,11 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
       },
     },
+    Notice: {
+      root: {
+        marginTop: 0,
+      },
+    },
   },
   palette: {
     primary: {
@@ -321,11 +362,11 @@ const LinodeTheme: Linode.Theme = {
   color: {
     headline: '#32363C',
     red: '#CA0813',
-    grey2: '#E7E7E7',
     green: '#00B159',
     border1: '#ABADAF',
     border2: '#C5C6C8',
     grey1: '#abadaf',
+    grey2: '#E7E7E7',
     grey3: '#ccc',
   },
   bg: {

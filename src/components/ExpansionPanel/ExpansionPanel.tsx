@@ -30,12 +30,44 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       flexGrow: 1,
     },
     heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
+      transition: theme.transitions.create(['color']),
     },
-    success: { backgroundColor: status.success },
-    warning: { backgroundColor: status.warning },
-    error: { backgroundColor: status.error },
+    success: {
+      backgroundColor: status.success,
+      '&:hover, &:focus': {
+        backgroundColor: status.successDark,
+        '& h3, & svg': {
+          color: 'white',
+        },
+      },
+      '& svg': {
+        color: theme.palette.text.primary,
+      },
+    },
+    warning: {
+      backgroundColor: status.warning,
+      '&:hover, &:focus': {
+        backgroundColor: status.warningDark,
+        '& h3': {
+          color: theme.color.headline,
+        },
+      },
+      '& svg': {
+        color: theme.palette.text.primary,
+      },
+    },
+    error: {
+      backgroundColor: status.error,
+      '&:hover, &:focus': {
+        backgroundColor: status.errorDark,
+        '& h3, & svg': {
+          color: 'white',
+        },
+      },
+      '& svg': {
+        color: theme.palette.text.primary,
+      },
+    },
   };
 };
 
@@ -84,7 +116,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
             [classes.error]: Boolean(this.props.error),
           })}
         >
-          <Typography className={classes.heading} {...headingProps}>
+          <Typography className={classes.heading} {...headingProps} variant="subheading">
             {this.props.heading}
           </Typography>
         </ExpansionPanelSummary>
