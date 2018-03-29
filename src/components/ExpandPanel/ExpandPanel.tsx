@@ -8,6 +8,7 @@ import {
 } from 'material-ui';
 import Collapse from 'material-ui/transitions/Collapse';
 
+import { ListItem } from 'material-ui/List';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 import LinodeTheme from '../../../src/theme';
 
@@ -15,7 +16,19 @@ import LinodeTheme from '../../../src/theme';
 type CSSClasses = 'root' | 'header' | 'caret' ;
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {},
+  root: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingLeft: 0,
+    paddingRight: 0,
+    backgroundColor: 'transparent',
+    '&:hover, &:focus': {
+      backgroundColor: 'transparent',
+      '& $caret, & $header': {
+        color: theme.palette.primary.light,
+      },
+    },
+  },
   header: {
     cursor: 'pointer',
     userSelect: 'none',
@@ -23,6 +36,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     alignItems: 'center',
     fontWeight: 700,
     color: LinodeTheme.color.headline,
+    transition: 'color 225ms ease-in-out',
   },
   caret: {
     color: theme.palette.primary.main,
@@ -62,8 +76,16 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
     const { open } = this.state;
 
     return (
-      <div className={classes.root}>
-        <div className={`${classes.header} ${open ? 'hOpen' : '' }`} onClick={this.handleNameClick}>
+      <ListItem
+        className={classes.root}
+        button
+        onClick={this.handleNameClick}
+        disableRipple
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : 'false'}
+        role="menu"
+        >
+        <div className={`${classes.header} ${open ? 'hOpen' : '' }`}>
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
@@ -80,7 +102,7 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
             : null
           }
         </Collapse>
-      </div>
+      </ListItem>
     );
   }
 }

@@ -20,8 +20,6 @@ import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import logoPng from 'src/assets/logo/logo.png';
 import ExpandPanel from 'src/components/ExpandPanel';
 
-import './PrimaryNav.css';
-
 type PrimaryLink = {
   display: string,
   href: string,
@@ -57,8 +55,11 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
-    '&:hover': {
+    '&:hover, &:focus': {
       borderLeftColor: 'rgba(0, 0, 0, 0.08)',
+      '& $linkItem': {
+        color: 'white',
+      },
     },
   },
   linkItem: {
@@ -77,28 +78,31 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: 'white',
   },
   sublinkPanel: {
-    padding: '16px 40px 0 34px',
+    paddingLeft: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 4,
     fontSize: '.9rem',
-    transition: 'color .3s ease-in-out',
+    transition: 'color 225ms ease-in-out, background-color 225ms ease-in-out',
+    '&:hover, &:focus': {
+      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    },
     '& span': {
       color: '#C9CACB',
+      transition: 'color 225ms ease-in-out',
     },
     '& svg': {
       color: '#C9CACB',
       fontSize: '20px',
       margin: '5px 2px 4px 0',
+      transition: 'color 225ms ease-in-out',
     },
     '&:hover, &:focus, & .hOpen': {
       color: 'white',
       '& span, & svg': {
-        color: 'white',
+        color: 'white !important',
       },
     },
     '& .pOpen': {
       margin: '5px 0 0 14px',
-    },
-    '&:last-child': {
-      paddingBottom: theme.spacing.unit * 3,
     },
   },
   sublink: {
@@ -108,6 +112,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     fontSize: '.8rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
+      outline: 0,
     },
   },
 });
@@ -188,18 +193,38 @@ class PrimaryNav extends React.Component<Props> {
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link className={classes.sublink} to="/billing">Account &amp; Billing</Link>
-          <Link className={classes.sublink} to="/users">Users</Link>
+          <Link
+            className={classes.sublink}
+            to="/billing"
+            role="menuitem">
+            Account &amp; Billing
+          </Link>
+          <Link
+            className={classes.sublink}
+            to="/users"
+            role="menuitem">
+            Users
+          </Link>
         </ExpandPanel>
         <ExpandPanel classes={{ root: classes.sublinkPanel }} name="Support">
-          <Link className={classes.sublink} to="/documentation">Documentation</Link>
+          <Link
+            className={classes.sublink}
+            to="/documentation"
+            role="menuitem">
+            Documentation
+          </Link>
           <a
             className={classes.sublink}
             href="//www.linode.com/community/questions"
-          >
+            role="menuitem">
             Community Forum
           </a>
-          <Link className={classes.sublink} to="/support">Support Tickets</Link>
+          <Link
+            className={classes.sublink}
+            to="/support"
+            role="menuitem">
+            Support Tickets
+          </Link>
         </ExpandPanel>
       </React.Fragment>
     );

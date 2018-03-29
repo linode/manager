@@ -66,6 +66,11 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiButtonBase: {
+      root: {
+        fontSize: '1rem',
+      },
+    },
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',

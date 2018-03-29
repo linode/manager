@@ -40,11 +40,16 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
+    outline: 0,
     '&.checked $innerGrid': {
       borderColor: theme.palette.primary.main,
       '& span': {
         color: theme.palette.primary.main,
       },
+    },
+    '&:focus $innerGrid': {
+      borderColor: theme.palette.primary.main,
+      backgroundColor: '#f4f4f4',
     },
     '& .w100': {
       width: '100%',
@@ -119,7 +124,8 @@ const styled = withStyles(styles, { withTheme: true });
 
 
 export interface Props {
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
+  onKeyPress?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: string[];
@@ -156,6 +162,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         xs={12}
         sm={6}
         md={4}
+        tabIndex={0}
         className={
           classNames({
             [classes.root]: true,
@@ -164,7 +171,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
             [classes.showCursor]: onClick && !disabled,
           })
         }
-        { ...((onClick && !disabled) && { onClick }) }
+        { ...((onClick && !disabled) && { onClick, onKeyPress: onClick }) }
       >
         <WithTooltip
           title={tooltip}
