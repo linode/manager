@@ -265,7 +265,7 @@ export const DISTRIBUTION_DISPLAY_ORDER = [
 
 export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';
 
-export const AVAILABLE_VOLUME_REGIONS = ['us-east-1a', 'us-west-1a'];
+export const AVAILABLE_VOLUME_REGIONS = ['us-east-1a', 'us-west-1a', 'us-south-1a'];
 
 export const BANNER_TYPES = {
   OUTAGE: 'outage',

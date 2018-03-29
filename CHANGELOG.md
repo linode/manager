@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.18.6] - 2018-03-29
+### Changed
+- enable block storage volume support in us-south-1a (Dallas)
+
 ## [0.18.5] - 2018-03-05
 ### Fixed
 - fix non-expiring token creation
