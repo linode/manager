@@ -34,7 +34,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
-  const { title, classes, ...rest } = props;
+  const { title, classes, children, ...rest } = props;
 
   return (
     <Drawer
@@ -60,6 +60,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </Button>
         </Grid>
       </Grid>
+      {children}
     </Drawer>
   );
 };
