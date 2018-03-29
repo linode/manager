@@ -12,7 +12,4 @@ WORKDIR /src
 # Install Deps
 RUN yarn
 
-EXPOSE 6006
-EXPOSE 3000
-
 ENTRYPOINT ["yarn"]

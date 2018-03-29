@@ -50,17 +50,21 @@ export const getTokenIfNeeded = (user, pass) => {
 */
 export const loadToken = () => {
     const tokenPath = '../../localStorage.json';
-    const localStorageObj = require(tokenPath);
-    const keys = Object.keys(localStorageObj);
+    try {
+        const localStorageObj = require(tokenPath);
+        const keys = Object.keys(localStorageObj);
 
-    const storageObj = keys.map(key => {
-        return { [key]: localStorageObj[key] }
-    });
-    browser.url('/null');
-    browser.execute(function(storageObj) {
-        storageObj.forEach(item => {
-            localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
+        const storageObj = keys.map(key => {
+            return { [key]: localStorageObj[key] }
         });
-    }, storageObj);
-    browser.url(constants.routes.dashboard);
+        browser.url('/null');
+        browser.execute(function(storageObj) {
+            storageObj.forEach(item => {
+                localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
+            });
+        }, storageObj);
+        browser.url(constants.routes.dashboard);
+    } catch (err) {
+        console.log(`${err} \n ensure that your local manager environment is running!`);
+    }
 }
