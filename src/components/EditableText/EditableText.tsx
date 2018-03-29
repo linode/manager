@@ -5,17 +5,37 @@ import { TextFieldProps } from 'material-ui/TextField';
 import  { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui';
 import ClickAwayListener from 'material-ui/utils/ClickAwayListener';
 import ModeEdit from 'material-ui-icons/ModeEdit';
-
+import Save from 'material-ui-icons/Check';
+import Close from 'material-ui-icons/Close';
 import TextField from '../TextField';
 
-type ClassNames = 'root' | 'editIcon' | 'textField';
+type ClassNames = 'root'
+| 'container'
+| 'textField'
+| 'icon'
+| 'edit'
+| 'save'
+| 'close';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   root: {
   },
-  editIcon: {
+  container: {
+    display: 'inline-flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   textField: {
+    margin: 0,
+  },
+  icon: {
+    fontSize: 22,
+  },
+  edit: {
+  },
+  save: {
+  },
+  close: {
   },
 });
 
@@ -69,24 +89,36 @@ class EditableText extends React.Component<FinalProps, State> {
         ? (
           <React.Fragment>
             <span className={classes.root}>{text}</span>
-            <ModeEdit onClick={this.toggleEditing} />
+            <ModeEdit
+              className={classes.icon}
+              onClick={this.toggleEditing}
+            />
           </React.Fragment>
         )
         : (
           <ClickAwayListener
             onClickAway={this.cancelEditing}
           >
-            <TextField
-              className={classes.textField}
-              type="text"
-              onChange={this.onChange}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') { this.finishEditing(text); }
-                if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
-              }}
-              value={text}
-              {...rest}
-            />
+            <div className={classes.container}>
+              <TextField
+                className={classes.textField}
+                type="text"
+                onChange={this.onChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') { this.finishEditing(text); }
+                  if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
+                }}
+                value={text}
+                {...rest}
+              />
+              <Save
+                className={`${classes.icon} ${classes.save}`}
+              />
+              <Close
+                className={`${classes.icon} ${classes.close}`}
+                onClick={this.cancelEditing}
+              />
+            </div>
           </ClickAwayListener>
         )
     );
