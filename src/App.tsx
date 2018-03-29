@@ -28,6 +28,10 @@ const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
 });
 
+const Profile = DefaultLoader({
+  loader: () => import('src/features/profile'),
+});
+
 const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
 theme.shadows = theme.shadows.fill('none');
 
@@ -155,7 +159,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <TempRoute exact path="/longview" render={() => 'LongView'} />
                   <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
                   <TempRoute exact path="/images" render={() => 'Images'} />
-                  <TempRoute exact path="/profile" render={() => 'Profile'} />
+                  <TempRoute path="/profile" component={Profile} />
                   <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
                 </Switch>
               </div>
