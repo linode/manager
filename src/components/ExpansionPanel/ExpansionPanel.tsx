@@ -53,10 +53,10 @@ interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: true };
+  state = { open: false };
 
   handleClick = (e: React.MouseEvent<any>) => {
-    this.setState({ open: !open });
+    this.setState({ open: !this.state.open });
   }
 
   render() {
@@ -76,7 +76,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       <ExpansionPanel {...expansionPanelProps}>
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <AddIcon /> : <RemoveIcon />}
+          expandIcon={this.state.open ? <RemoveIcon /> : <AddIcon />}
           {...summaryProps}
           className={classNames({
             [classes.success]: Boolean(this.props.success),
