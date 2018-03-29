@@ -137,10 +137,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
 
     return (
       <React.Fragment>
-        <ButtonBase
-          onClick={this.handleMenu}
-          className="baseBtn"
-        >
+        <ButtonBase onClick={this.handleMenu}>
           {profile.username &&
             <React.Fragment>
               {this.renderAvatar()}

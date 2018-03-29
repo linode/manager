@@ -38,7 +38,8 @@ interface Props {
   images: Linode.Image[];
   error?: string;
   selectedImageID: string | null;
-  handleSelection: (key: string) => (event: React.MouseEvent<HTMLElement>, value: string) => void;
+  handleSelection: (key: string) =>
+    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
 }
 
 const sortByVendor = sortBy(prop('vendor'));
