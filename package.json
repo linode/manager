@@ -64,6 +64,9 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
+    "docker:e2e": "docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e",
+    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run --name manager-local -p 3000:3000 manager start",
+    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run --name storybook-local -p 6006:6006 storybook storybook",
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
