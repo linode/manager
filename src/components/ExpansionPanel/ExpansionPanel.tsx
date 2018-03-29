@@ -13,8 +13,8 @@ import ExpansionPanel, {
 import Typography, { TypographyProps } from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 
-import AddIcon from 'material-ui-icons/Add';
-import RemoveIcon from 'material-ui-icons/Remove';
+import OpenIcon from '../../assets/icons/plus-square.svg';
+import CloseIcon from '../../assets/icons/minus-square.svg';
 
 import Notice from '../Notice';
 
@@ -76,7 +76,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       <ExpansionPanel {...expansionPanelProps}>
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <AddIcon /> : <RemoveIcon />}
+          expandIcon={this.state.open ? <OpenIcon /> : <CloseIcon />}
           {...summaryProps}
           className={classNames({
             [classes.success]: Boolean(this.props.success),

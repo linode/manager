@@ -94,6 +94,15 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiExpansionPanel: {},
+    MuiExpansionPanelSummary: {
+      expanded: {
+        minHeight: 48,
+      },
+      contentExpanded: {
+        margin: '12px 0',
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,
