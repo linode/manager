@@ -1,5 +1,6 @@
 import { constants } from '../constants';
 import { existsSync, writeFileSync, statSync } from 'fs';
+import moment from 'moment';
 
 /*
 * Navigates to baseUrl, inputs username and password
@@ -27,8 +28,8 @@ export const login = (username, password) => {
 export const getTokenIfNeeded = (user, pass) => {
     const tokenPath = './localStorage.json';
     const tokenExists = existsSync(tokenPath);
-    const expirationDate = new Date().getHours() + 2 // Current Time + 2 hours;
-    const getNewToken = tokenExists ? new Date(statSync(tokenPath).mtime).getHours() > expirationDate: true;
+    const expirationDate = moment().add('2', 'hours').format();
+    const getNewToken = tokenExists ? moment(new Date(statSync(tokenPath).mtime)).format() > expirationDate: true;
 
     if (getNewToken) {
         exports.login(user, pass);
