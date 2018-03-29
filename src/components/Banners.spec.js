@@ -150,7 +150,7 @@ describe('components/Banners', () => {
     );
 
     expect(banner.find('.Banner')).toHaveLength(1);
-    const expected = expect.stringMatching('us-east-1a, us-south-1a');
+    const expected = expect.stringMatching('us-east, us-central');
     expect(banner.find('.Banner > div').text()).toEqual(expected);
   });
 
