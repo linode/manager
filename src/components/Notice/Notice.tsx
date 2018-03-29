@@ -17,8 +17,6 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
       paddingRight: spacing.unit * 3,
       paddingTop: spacing.unit * 2,
       paddingBottom: spacing.unit * 2,
-      /* TODO: remove this negative margin and apply to consuming Panel components */
-      marginTop: spacing.unit * -1,
       marginBottom: spacing.unit * 1 + 2,
     },
     error: {
