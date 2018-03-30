@@ -1,5 +1,6 @@
-import { constants } from '../constants';
-import { existsSync, writeFileSync, statSync } from 'fs';
+const moment = require('moment');
+const { existsSync, statSync, writeFileSync } = require('fs');
+const { constants } = require('../constants');
 
 /*
 * Navigates to baseUrl, inputs username and password
@@ -8,7 +9,7 @@ import { existsSync, writeFileSync, statSync } from 'fs';
 * @param { String } password
 * @returns {null} returns nothing
 */
-export const login = (username, password) => {
+exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
     browser.setValue('#username', username);
     browser.setValue('#password', password);
@@ -24,11 +25,18 @@ export const login = (username, password) => {
 * and write them out to a file for use in other tests
 * @returns { String } stringified local storage object
 */
-export const getTokenIfNeeded = (user, pass) => {
+exports.getTokenIfNeeded = (user, pass) => {
+    let expirationTime, currentTime;
     const tokenPath = './localStorage.json';
     const tokenExists = existsSync(tokenPath);
-    const expirationDate = new Date().getHours() + 2 // Current Time + 2 hours;
-    const getNewToken = tokenExists ? new Date(statSync(tokenPath).mtime).getHours() > expirationDate: true;
+
+    if (tokenExists)  {
+        const lastModifiedTime = new Date(statSync(tokenPath).mtime);
+        expirationTime = moment(lastModifiedTime).add('2', 'hours').format();
+        currentTime = moment().format();
+    }
+    
+    const getNewToken = tokenExists ? expirationTime < currentTime : true;
 
     if (getNewToken) {
         exports.login(user, pass);
@@ -48,7 +56,7 @@ export const getTokenIfNeeded = (user, pass) => {
 * Navigate back to the homepage to be logged in
 * @returns {Null} returns nothing
 */
-export const loadToken = () => {
+exports.loadToken = () => {
     const tokenPath = '../../localStorage.json';
     try {
         const localStorageObj = require(tokenPath);

@@ -1,4 +1,4 @@
-export const browserCommands = () => {
+exports.browserCommands = () => {
     /* Overwrite the native getText function
     * Get text from specified selector and ensure padding whitespace is removed
     * @param {String} the selector to look for on the DOM
