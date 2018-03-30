@@ -1,4 +1,4 @@
-export const browserCommands = () => {
+exports.browserCommands = () => {
     /* Overwrite the native getText function
     * Get text from specified selector and ensure padding whitespace is removed
     * @param {String} the selector to look for on the DOM
@@ -16,4 +16,18 @@ export const browserCommands = () => {
             return text;
         }
     }
+
+    browser.addCommand('jsClick', function(elementToClick) {
+        browser.execute(function(elementToClick) {
+            document.querySelector(elementToClick).click();
+        }, elementToClick);
+    });
+
+
+    browser.addCommand('jsClickAll', function(elementsToClick) {
+        browser.execute(function(elementsToClick) {
+            var els = document.querySelectorAll(elementsToClick);
+            els.forEach(e => e.click());
+        }, elementsToClick);
+    });
 }
