@@ -22,7 +22,7 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
   linodesInRegion.forEach(linode => {
     if (linode.id !== testLinode.id) {
       const publicIPv4s = Object.values(linode._ips).filter(
-        ip => ip.type === 'public' && ip.version === 'ipv4');
+        ip => ip.public && ip.type === 'ipv4');
 
       publicIPv4s.forEach(ip => {
         allIps[ip.address] = ip;
@@ -58,7 +58,7 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
     );
 
     const someIP = Object.values(linodesInRegion[0]._ips).filter(
-      ({ version, type }) => type === 'public' && version === 'ipv4')[0];
+      ({ type, public }) => public && type === 'ipv4')[0];
     page.instance().setState({ checked: { [someIP.address]: true } });
 
     dispatch.reset();
@@ -66,7 +66,7 @@ describe('linodes/linode/networking/layouts/IPSharingPage', () => {
 
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/networking/ip-sharing', {
+      ([fn]) => expectRequest(fn, '/networking/ipv4/share', {
         method: 'POST',
         body: { linode_id: testLinode.id, ips: [someIP.address] },
       }),
