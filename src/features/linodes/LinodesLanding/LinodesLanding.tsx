@@ -130,7 +130,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
           return result;
       })
-      .do(console.log)
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
           .then(response => response.data)

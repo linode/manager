@@ -103,7 +103,6 @@
     "@types/uuid": "^3.4.3",
     "@types/zxcvbn": "^4.4.0",
     "babel-core": "^6.26.0",
-    "babel-register": "^6.26.0",
     "eslint": "4.19.1",
     "selenium-standalone": "^6.13.0",
     "svgr": "^1.9.0",

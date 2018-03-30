@@ -1,6 +1,6 @@
-const { constants } = require('../constants');
-const { existsSync, writeFileSync, statSync } = require('fs');
 const moment = require('moment');
+const { existsSync, statSync, writeFileSync } = require('fs');
+const { constants } = require('../constants');
 
 /*
 * Navigates to baseUrl, inputs username and password
@@ -26,11 +26,17 @@ exports.login = (username, password) => {
 * @returns { String } stringified local storage object
 */
 exports.getTokenIfNeeded = (user, pass) => {
+    let expirationTime, currentTime;
     const tokenPath = './localStorage.json';
     const tokenExists = existsSync(tokenPath);
-    const currentDate = moment(new Date(statSync(tokenPath).mtime)).format();
-    const expirationDate = moment().add('2', 'hours').format();
-    const getNewToken = tokenExists ? currentDate < expirationDate : true;
+
+    if (tokenExists)  {
+        const lastModifiedTime = new Date(statSync(tokenPath).mtime);
+        expirationTime = moment(lastModifiedTime).add('2', 'hours').format();
+        currentTime = moment().format();
+    }
+    
+    const getNewToken = tokenExists ? expirationTime < currentTime : true;
 
     if (getNewToken) {
         exports.login(user, pass);

@@ -94,6 +94,56 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiExpansionPanel: {},
+    MuiExpansionPanelActions: {
+      root: {
+        justifyContent: 'flex-start',
+        backgroundColor: 'white',
+      },
+    },
+    MuiExpansionPanelDetails: {
+      root: {
+        padding: 16,
+        backgroundColor: 'white',
+      },
+    },
+    MuiExpansionPanelSummary: {
+      root: {
+        padding: '0 16px',
+        backgroundColor: 'white',
+        '&:hover, &:focus': {
+          backgroundColor: 'white',
+          '& h3': {
+            color: '#5F99EA',
+          },
+        },
+      },
+      expanded: {
+        minHeight: 48,
+      },
+      contentExpanded: {
+        margin: '12px 0',
+      },
+      expandIcon: {
+        transition: 'color 225ms ease-in-out',
+        top: 0,
+        right: 0,
+        transform: 'none',
+        color: '#3B85D9',
+        '& svg': {
+          width: 22,
+          height: 22,
+        },
+      },
+      expandIconExpanded: {
+        transform: 'none',
+      },
+    },
+    MuiDrawer: {
+      paper: {
+        boxShadow: '0 0 5px #ddd',
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,
@@ -162,6 +212,12 @@ const LinodeTheme: Linode.Theme = {
       padding: {
         paddingTop: 0,
         paddingBottom: 0,
+      },
+    },
+    MuiListItemText: {
+      secondary: {
+        marginTop: 4,
+        lineHeight: '1.2em',
       },
     },
     MuiMenuItem: {
@@ -251,6 +307,11 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
       },
     },
+    Notice: {
+      root: {
+        marginTop: 0,
+      },
+    },
   },
   palette: {
     primary: {
@@ -262,6 +323,14 @@ const LinodeTheme: Linode.Theme = {
       primary: '#666',
     },
     divider: '#f4f4f4',
+    status: {
+      success: '#d7e3EF',
+      successDark: '#3682dd',
+      warning: '#fdf4da',
+      warningDark: '#ffd002',
+      error: '#f8dedf',
+      errorDark: '#970d0d',
+    },
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
@@ -298,11 +367,11 @@ const LinodeTheme: Linode.Theme = {
   color: {
     headline: '#32363C',
     red: '#CA0813',
-    grey2: '#E7E7E7',
     green: '#00B159',
     border1: '#ABADAF',
     border2: '#C5C6C8',
     grey1: '#abadaf',
+    grey2: '#E7E7E7',
     grey3: '#ccc',
   },
   bg: {
