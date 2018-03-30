@@ -91,7 +91,7 @@ export class IPSharingPage extends Component {
       .filter((linode) => linode.id !== thisLinode.id)
       .map(function (linode) {
         const shareableIps = Object.values(linode._ips).filter(
-          ip => ip.type === 'public' && ip.version === 'ipv4');
+          ip => ip.public && ip.type === 'ipv4');
 
         return shareableIps.map((ip) => {
           return { ip: ip, linode: linode };
