@@ -193,18 +193,43 @@ class PrimaryNav extends React.Component<Props> {
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
         <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Account">
-          <Link className={classes.sublink} to="/billing">Account &amp; Billing</Link>
-          <Link className={classes.sublink} to="/users">Users</Link>
+          <Link
+            className={classes.sublink}
+            to="/billing"
+            role="menuitem"
+          >
+            Account &amp; Billing
+          </Link>
+          <Link
+            className={classes.sublink}
+            to="/users"
+            role="menuitem"
+          >
+            Users
+          </Link>
         </ShowMoreExpansion>
         <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Support">
-          <Link className={classes.sublink} to="/documentation">Documentation</Link>
+          <Link
+            className={classes.sublink}
+            to="/documentation"
+            role="menuitem"
+          >
+            Documentation
+          </Link>
           <a
             className={classes.sublink}
             href="//www.linode.com/community/questions"
-            role="menuitem">
+            role="menuitem"
+          >
             Community Forum
           </a>
-          <Link className={classes.sublink} to="/support">Support Tickets</Link>
+          <Link
+            className={classes.sublink}
+            to="/support"
+            role="menuitem"
+          >
+            Support Tickets
+          </Link>
         </ShowMoreExpansion>
       </React.Fragment>
     );

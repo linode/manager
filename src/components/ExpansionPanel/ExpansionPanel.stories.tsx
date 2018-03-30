@@ -5,7 +5,7 @@ import Button from 'material-ui/Button';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ExpansionPanel from './ExpansionPanel';
-import ActionsPanel from './ActionsPanel';
+import ActionsPanel from '../ActionsPanel';
 
 storiesOf('ExpansionPanel', module)
 .addDecorator(ThemeDecorator)
