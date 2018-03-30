@@ -92,6 +92,7 @@ export class UserForm extends Component {
               id="email"
               value={email}
               onChange={this.onChange}
+              readOnly
               className="float-sm-left"
             />
             <FormGroupError errors={errors} name="email" className="float-sm-left" />
