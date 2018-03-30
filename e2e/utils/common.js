@@ -36,7 +36,7 @@ exports.getTokenIfNeeded = (user, pass) => {
         currentTime = moment().format();
     }
     
-    const getNewToken = tokenExists ? expirationTime > currentTime : true;
+    const getNewToken = tokenExists ? expirationTime < currentTime : true;
 
     if (getNewToken) {
         exports.login(user, pass);
