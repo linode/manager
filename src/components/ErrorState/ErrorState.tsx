@@ -39,9 +39,9 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
     >
       <Grid item>
         <div className={props.classes.iconContainer}>
-          <ErrorOutline className={props.classes.icon}/>
+          <ErrorOutline className={props.classes.icon} data-qa-error-icon/>
         </div>
-        <Typography variant="subheading">
+        <Typography variant="subheading" data-qa-error-msg>
           {props.errorText}
         </Typography>
       </Grid>

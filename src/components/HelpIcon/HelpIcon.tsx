@@ -73,7 +73,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
     const { classes, text } = this.props;
     return (
       <React.Fragment>
-        <IconButton onClick={this.handleClickButton}>
+        <IconButton onClick={this.handleClickButton} data-qa-help-button>
           <HelpOutline className={classes.helpIcon} />
         </IconButton>
         <Popover
@@ -85,7 +85,7 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           className={classes.root}
           classes={{ paper: 'helpPaper' }}
         >
-          <Typography>{ text }</Typography>
+          <Typography data-qa-popover-text>{ text }</Typography>
         </Popover>
       </React.Fragment>
     );
