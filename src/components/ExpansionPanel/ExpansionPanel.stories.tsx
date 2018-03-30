@@ -15,7 +15,7 @@ storiesOf('ExpansionPanel', module)
       <p>Customer service!</p>
     </ExpansionPanel>
     <ExpansionPanel heading="Why is Linode the best?">
-    <p>Customer service!</p>
+      <p>Customer service!</p>
     </ExpansionPanel>
   </div>
 ))
