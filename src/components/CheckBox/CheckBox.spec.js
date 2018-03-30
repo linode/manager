@@ -1,5 +1,5 @@
 const { constants } = require('../../../e2e/constants');
-const { previewFocus } = require('../../../e2e/utils/storybook');
+const { waitForFocus } = require('../../../e2e/utils/storybook');
 
 describe('Checkbox Component Suite', () => {
     beforeAll(() => {
@@ -19,7 +19,7 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should display checkboxes on interactive story', () => {
-        previewFocus();
+        waitForFocus('[data-qa-checked]');
         const checkboxes = $$('[data-qa-checked]'); 
         checkboxes.forEach(e => expect(e.isVisible()).toBe(true));
     });
@@ -27,8 +27,7 @@ describe('Checkbox Component Suite', () => {
     it('should check on click', () => {
         browser.jsClickAll('[data-qa-checked] input');
 
-        previewFocus();
-        previewFocus();
+        waitForFocus('[data-qa-checked]');
 
         const updatedCheckboxValues = $$('[data-qa-checked]');
         const boxValues = updatedCheckboxValues.map(e => e.getAttribute('data-qa-checked') == 'true');
@@ -40,8 +39,7 @@ describe('Checkbox Component Suite', () => {
     it('should uncheck on click', () => {
         browser.jsClickAll('[data-qa-checked] input');
 
-        previewFocus();
-        previewFocus();
+        waitForFocus('[data-qa-checked]');
         const updatedCheckboxValues = $$('[data-qa-checked]');
         const boxValues = 
             updatedCheckboxValues
@@ -50,8 +48,7 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should display disabled boxes', () => {
-        previewFocus();
-        previewFocus();
+        waitForFocus('[data-qa-checked]');
 
         const boxes = $$('[data-qa-checked]');
         const numberDisabledBoxes = boxes.map(e => e.getAttribute('class').includes('disabled'));
@@ -60,8 +57,7 @@ describe('Checkbox Component Suite', () => {
 
 
     it('should display different variants of checkboxes', () => {
-        previewFocus();
-        previewFocus();
+        waitForFocus('[data-qa-checked]');
 
         const checkboxes = $$('[data-qa-checked]');
         const variants = checkboxes.map(e => e.getAttribute('variant'));
