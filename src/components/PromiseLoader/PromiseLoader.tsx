@@ -6,7 +6,7 @@ interface State {
   [name: string]: any;
 }
 
-export interface RequestMap<P> {
+export interface TableRow<P> {
   [name: string]: (p: P) => Promise<any>;
 }
 
@@ -15,7 +15,7 @@ export interface PromiseLoaderResponse<T> {
   error?: Error;
 }
 
-export default function preload<P>(requests: RequestMap<P>) {
+export default function preload<P>(requests: TableRow<P>) {
   return function (Component: React.ComponentType<P>) {
     return class AxiosLoadedComponent extends React.Component<P, State> {
       state = { loading: true };
