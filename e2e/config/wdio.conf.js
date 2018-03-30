@@ -8,7 +8,6 @@ const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
 
-
 exports.config = {
     // Selenium Host/Port
     host: process.env.DOCKER ? 'selenium-hub' : 'localhost',
