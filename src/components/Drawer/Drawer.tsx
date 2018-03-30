@@ -10,12 +10,27 @@ interface Props extends DrawerProps {
   title: string;
 }
 
-type ClassNames = 'drawer' | 'button';
+type ClassNames = 'drawer'
+| 'button'
+| 'drawerHeader'
+| 'drawerContent';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
   paper: {
-    minWidth: '480px',
+    width: 300,
     padding: theme.spacing.unit * 4,
+    [theme.breakpoints.up('md')]: {
+      width: 400,
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: 480,
+    },
+  },
+  drawerHeader: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  drawerContent: {
+    marginBottom: theme.spacing.unit * 2,
   },
   button: {
     minWidth: 'auto',
@@ -43,7 +58,11 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       classes={{ paper: classes.paper }}
       ModalProps={{ BackdropProps: { invisible: true } }}
       >
-      <Grid container justify="space-between" alignItems="center">
+      <Grid
+        container
+        justify="space-between"
+        alignItems="center"
+        className={classes.drawerHeader}>
         <Grid item>
           <Typography variant="title">
             {title}
