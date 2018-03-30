@@ -35,7 +35,7 @@ class Example extends React.Component<any, State> {
     const { selected } = this.state;
 
     return (
-      <FormControl>
+    <FormControl fullWidth>
       <InputLabel htmlFor="awesomeness" disableAnimation shrink={true} error={this.state.error}>
         Awesomness
       </InputLabel>
