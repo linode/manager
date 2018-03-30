@@ -14,6 +14,8 @@ import TableRow from 'material-ui/Table/TableRow';
 
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import Drawer from 'src/components/Drawer';
+
 import APITokenMenu from './APITokenMenu';
 
 type ClassNames = 'headline';
@@ -40,10 +42,18 @@ interface Props {
 }
 
 interface State {
+  viewDrawerOpen: boolean;
+  viewingToken: Linode.Token | null;
 }
+
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class APITokens extends React.Component<CombinedProps, State> {
+  state = {
+    viewDrawerOpen: false,
+    viewingToken: null,
+  };
+
   renderTokenTable(
     title: string,
     type: string,
@@ -91,7 +101,11 @@ class APITokens extends React.Component<CombinedProps, State> {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <APITokenMenu />
+                    <APITokenMenu
+                      openViewDrawer={() => {
+                        this.openViewDrawer(token);
+                      }}
+                    />
                   </TableCell>
                 </TableRow>,
               )}
@@ -115,11 +129,21 @@ class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
+  openViewDrawer = (token: Linode.Token) => {
+    this.setState({ viewingToken: token });
+    this.setState({ viewDrawerOpen: true });
+  }
+
+  toggleViewDrawer = () => {
+    this.setState({ viewDrawerOpen: !this.state.viewDrawerOpen });
+  }
+
   render() {
     const appTokens = this.formatDates(
       pathOr([], ['response', 'data'], this.props.appTokens));
     const pats = this.formatDates(
       pathOr([], ['response', 'data'], this.props.pats));
+    const { viewDrawerOpen, viewingToken } = this.state;
 
     return (
       <React.Fragment>
@@ -133,6 +157,13 @@ class APITokens extends React.Component<CombinedProps, State> {
           'Personal Access Token',
           pats,
         )}
+        <Drawer
+          title={(viewingToken && (viewingToken as Linode.Token).label) || ''}
+          open={viewDrawerOpen}
+          onClose={this.toggleViewDrawer}
+        >
+          This API Token has access to your:
+        </Drawer>
       </React.Fragment>
     );
   }
