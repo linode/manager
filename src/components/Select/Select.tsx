@@ -43,6 +43,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
 
   const inputProps: InputProps = {
     disableUnderline: true,
+    fullWidth: true,
   };
 
   const c = classNames({
@@ -52,11 +53,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
 
   return (
     <Select
-      className={c}
+      autoWidth
+      className={`${c} cSelect`}
       MenuProps={menuProps}
       input={<Input {...inputProps} />}
       {...props}
-    >{ children }</Select>
+    >
+      {children}
+    </Select>
   );
 };
 

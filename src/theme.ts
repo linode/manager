@@ -197,6 +197,21 @@ const LinodeTheme: Linode.Theme = {
           backgroundColor: '#fff',
         },
       },
+      select: {
+        '&[aria-pressed="true"] + input + $icon': {
+          transform: 'scale(1.5)',
+          color: '#333',
+        },
+      },
+      icon: {
+        marginTop: -5,
+        width: 32,
+        height: 32,
+        fill: 'none',
+        stroke: '#999',
+        clipPath: 'inset(45% 0 0 0)',
+        transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+      },
     },
     MuiTab: {
       root: {
