@@ -9,7 +9,7 @@ import {
 import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import LinodeTheme from 'src/theme';
 import Typography from 'material-ui/Typography';
 
