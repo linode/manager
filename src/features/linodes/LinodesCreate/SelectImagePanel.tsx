@@ -19,7 +19,7 @@ import {
 import Grid from 'material-ui/Grid';
 
 import TabbedPanel from 'src/components/TabbedPanel';
-import ExpandPanel from 'src/components/ExpandPanel';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import SelectionCard from 'src/components/SelectionCard';
 
 const distroIcons = {
@@ -109,7 +109,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                   />
                 ))}
               </Grid>
-              <ExpandPanel name="Show Older Images">
+              <ShowMoreExpansion name="Show Older Images">
                 <Grid container spacing={8} style={{ marginTop: 16 }}>
                   {olderPublicImages.length
                   && olderPublicImages.map((image: Linode.Image, idx: number) => (
@@ -125,7 +125,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
                     />
                   ))}
                 </Grid>
-              </ExpandPanel>
+              </ShowMoreExpansion>
             </React.Fragment>
           ),
         },
