@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
+import Button from 'material-ui/Button';
+
+import ActionsPanel from '../ActionsPanel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Drawer from './Drawer';
-import Button from 'material-ui/Button';
 import TextField from '../TextField';
 
 class Example extends React.Component {
@@ -25,18 +27,10 @@ class Example extends React.Component {
             label="Input Some Text"
             placeholder="This is a placeholder"
           />
-          <Button
-            variant="raised"
-            color="primary"
-            onClick={this.toggleDrawer(true)}
-          >
-            Save
-          </Button>
-          <Button
-            onClick={this.toggleDrawer(true)}
-          >
-            Cancel
-          </Button>
+          <ActionsPanel>
+            <Button variant="raised" color="primary">Save</Button>
+            <Button>Cancel</Button>
+          </ActionsPanel>
         </Drawer>
       </React.Fragment>
     );
