@@ -164,6 +164,12 @@ const LinodeTheme: Linode.Theme = {
         paddingBottom: 0,
       },
     },
+    MuiListItemText: {
+      secondary: {
+        marginTop: 4,
+        lineHeight: '1.2em',
+      },
+    },
     MuiMenuItem: {
       root: {
         height: 'auto',
@@ -262,6 +268,14 @@ const LinodeTheme: Linode.Theme = {
       primary: '#666',
     },
     divider: '#f4f4f4',
+    status: {
+      success: '#d7e3EF',
+      successDark: '#3682dd',
+      warning: '#fdf4da',
+      warningDark: '#ffd002',
+      error: '#f8dedf',
+      errorDark: '#970d0d',
+    },
   },
   typography: {
     fontFamily: '"Lato", sans-serif',
