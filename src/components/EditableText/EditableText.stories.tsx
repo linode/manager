@@ -8,9 +8,18 @@ import EditableText from './EditableText';
 
 storiesOf('Editable Text', module)
 .addDecorator(ThemeDecorator)
-.add('Example', () => (
+.add('Headline & Title', () => (
+  <div>
     <EditableText
+        variant="headline"
         text="Edit me!"
         onEdit={action('edit-text')}
     />
+    <br /><br />
+    <EditableText
+        variant="title"
+        text="Edit me!"
+        onEdit={action('edit-text')}
+    />
+  </div>
 ));
