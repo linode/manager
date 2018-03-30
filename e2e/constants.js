@@ -1,8 +1,9 @@
-export const constants = {
+exports.constants = {
 	testAccounts: {
 
 	},
 	routes: {
+		storybook: 'http://localhost:6006',
 		dashboard: '/',
 		linodes: '/linodes',
 		volumes: '/volumes',

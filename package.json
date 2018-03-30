@@ -72,6 +72,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "storybook": "start-storybook -p 6006",
+    "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js"

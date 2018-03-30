@@ -1,4 +1,4 @@
-export const browserConf = {
+exports.browserConf = {
     chrome: {
         browserName: 'chrome',
         maxInstances: 5,

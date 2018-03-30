@@ -1,6 +1,6 @@
-import { constants } from '../constants';
-import { existsSync, writeFileSync, statSync } from 'fs';
-import moment from 'moment';
+const { constants } = require('../constants');
+const { existsSync, writeFileSync, statSync } = require('fs');
+const moment = require('moment');
 
 /*
 * Navigates to baseUrl, inputs username and password
@@ -9,7 +9,7 @@ import moment from 'moment';
 * @param { String } password
 * @returns {null} returns nothing
 */
-export const login = (username, password) => {
+exports.login = (username, password) => {
     browser.url(constants.routes.dashboard);
     browser.setValue('#username', username);
     browser.setValue('#password', password);
@@ -25,11 +25,12 @@ export const login = (username, password) => {
 * and write them out to a file for use in other tests
 * @returns { String } stringified local storage object
 */
-export const getTokenIfNeeded = (user, pass) => {
+exports.getTokenIfNeeded = (user, pass) => {
     const tokenPath = './localStorage.json';
     const tokenExists = existsSync(tokenPath);
+    const currentDate = moment(new Date(statSync(tokenPath).mtime)).format();
     const expirationDate = moment().add('2', 'hours').format();
-    const getNewToken = tokenExists ? moment(new Date(statSync(tokenPath).mtime)).format() > expirationDate: true;
+    const getNewToken = tokenExists ? currentDate < expirationDate : true;
 
     if (getNewToken) {
         exports.login(user, pass);
@@ -49,7 +50,7 @@ export const getTokenIfNeeded = (user, pass) => {
 * Navigate back to the homepage to be logged in
 * @returns {Null} returns nothing
 */
-export const loadToken = () => {
+exports.loadToken = () => {
     const tokenPath = '../../localStorage.json';
     try {
         const localStorageObj = require(tokenPath);
