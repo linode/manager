@@ -55,7 +55,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   edit: {
-    animation: 'fadeIn 500ms ease-in-out',
   },
   textField: {
     margin: 0,
@@ -136,7 +135,7 @@ class EditableText extends React.Component<FinalProps, State> {
   }
 
   render() {
-    const { classes, ...rest } = this.props;
+    const { classes, onEdit, ...rest } = this.props;
     const { editing, text } = this.state;
 
     return (
@@ -146,6 +145,7 @@ class EditableText extends React.Component<FinalProps, State> {
               <React.Fragment>
                 <Typography
                   className={classes.root}
+                  onClick={this.toggleEditing}
                   {...rest}
                 >
                   {text}
@@ -159,43 +159,51 @@ class EditableText extends React.Component<FinalProps, State> {
               </React.Fragment>
             </div>
           )
-          : (
-            <div className={`${classes.container} ${classes.edit}`}>
-              <ClickAwayListener
-                onClickAway={this.cancelEditing}
-              >
-              <TextField
-                className={classes.textField}
-                type="text"
-                onChange={this.onChange}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') { this.finishEditing(text); }
-                  if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
-                }}
-                value={text}
-                {...rest}
-                InputProps={{ className: classes.inputRoot }}
-                inputProps={{
-                  className: classnames({
-                    [classes.headline]: this.props.variant === 'headline',
-                    [classes.title]: this.props.variant === 'title',
-                    [classes.input]: true,
-                  }),
-                }}
-              />
-              <Button className={classes.button}>
-                <Save
-                  className={`${classes.icon} ${classes.save}`}
+        : (
+            <ClickAwayListener
+              onClickAway={this.cancelEditing}
+              mouseEvent="onMouseDown"
+            >
+              <div className={`${classes.container} ${classes.edit}`}>
+                <TextField
+                  className={classes.textField}
+                  type="text"
+                  onChange={this.onChange}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') { this.finishEditing(text); }
+                    if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
+                  }}
+                  value={text}
+                  {...rest}
+                  InputProps={{ className: classes.inputRoot }}
+                  inputProps={{
+                    className: classnames({
+                      [classes.headline]: this.props.variant === 'headline',
+                      [classes.title]: this.props.variant === 'title',
+                      [classes.input]: true,
+                    }),
+                  }}
                 />
-              </Button>
-              <Button className={classes.button}>
-                <Close
-                  className={`${classes.icon} ${classes.close}`}
-                  onClick={this.cancelEditing}
+                <Button
+                  className={classes.button}
+                  onClick={() => {
+                    this.finishEditing(text);
+                  }}
+                >
+                  <Save
+                    className={`${classes.icon} ${classes.save}`}
                   />
-              </Button>
-            </ClickAwayListener>
-          </div>
+                </Button>
+                <Button
+                  className={classes.button}
+                  onClick={this.cancelEditing}
+                >
+                  <Close
+                    className={`${classes.icon} ${classes.close}`}
+                  />
+                </Button>
+              </div>
+          </ClickAwayListener>
         )
     );
   }
