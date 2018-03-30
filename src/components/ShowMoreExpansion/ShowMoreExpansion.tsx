@@ -60,7 +60,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class ExpandPanel extends React.Component<CombinedProps, State> {
+class ShowMoreExpansion extends React.Component<CombinedProps, State> {
   state = {
     open: false,
   };
@@ -107,4 +107,4 @@ class ExpandPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(ExpandPanel);
+export default withStyles(styles, { withTheme: true })<Props>(ShowMoreExpansion);

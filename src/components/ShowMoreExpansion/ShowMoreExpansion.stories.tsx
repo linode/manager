@@ -4,12 +4,12 @@ import { storiesOf } from '@storybook/react';
 import Typography from 'material-ui/Typography';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
-import ExpandPanel from './ExpandPanel';
+import ShowMoreExpansion from './ShowMoreExpansion';
 
-storiesOf('Expand Panel', module)
+storiesOf('ShowMoreExpansion', module)
 .addDecorator(ThemeDecorator)
 .add('default', () => (
-  <ExpandPanel name="Show Older Images">
+  <ShowMoreExpansion name="Show Older Images">
     <Typography>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
       eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -20,5 +20,5 @@ storiesOf('Expand Panel', module)
       Excepteur sint occaecat cupidatat non proident,
       sunt in culpa qui officia deserunt mollit anim id est laborum.
     </Typography>
-  </ExpandPanel>
+  </ShowMoreExpansion>
 ));
