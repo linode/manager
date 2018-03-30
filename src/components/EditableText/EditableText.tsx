@@ -1,8 +1,11 @@
 import * as React from 'react';
+import * as classnames from 'classnames';
 
 import { TextFieldProps } from 'material-ui/TextField';
+import Typography, { TypographyProps } from 'material-ui/Typography';
 
 import  { withStyles, WithStyles, StyleRulesCallback, Theme } from 'material-ui';
+import Button from 'material-ui/Button';
 import ClickAwayListener from 'material-ui/utils/ClickAwayListener';
 import ModeEdit from 'material-ui-icons/ModeEdit';
 import Save from 'material-ui-icons/Check';
@@ -11,31 +14,81 @@ import TextField from '../TextField';
 
 type ClassNames = 'root'
 | 'container'
-| 'textField'
-| 'icon'
+| 'initial'
 | 'edit'
+| 'textField'
+| 'inputRoot'
+| 'input'
+| 'button'
+| 'icon'
 | 'save'
-| 'close';
+| 'close'
+| 'headline'
+| 'title';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
+    padding: '12px 12px 12px 0',
+    display: 'inline-block',
+    borderBottom: '2px dotted transparent',
+    color: theme.palette.primary.main,
   },
   container: {
     display: 'inline-flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  initial: {
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
+      '& $icon': {
+        color: theme.palette.primary.light,
+      },
+    },
+  },
+  edit: {
+    animation: 'fadeIn 500ms ease-in-out',
+  },
   textField: {
     margin: 0,
   },
-  icon: {
-    fontSize: 22,
+  inputRoot: {
+    border: 0,
+    borderBottom: '2px dotted #333',
   },
-  edit: {
+  button: {
+    minWidth: 'auto',
+    padding: 0,
+    background: 'transparent !important',
+  },
+  icon: {
+    fontSize: 20,
+    padding: 10,
+    color: theme.palette.text.primary,
+    '&:hover, &:focus': {
+      color: theme.palette.primary.light,
+    },
   },
   save: {
   },
   close: {
+  },
+  input: {
+    padding: '12px 12px 12px 0',
+  },
+  headline: {
+    ...theme.typography.headline,
+  },
+  title: {
+    ...theme.typography.title,
   },
 });
 
@@ -50,7 +103,9 @@ interface State {
   editing: Boolean;
 }
 
-type FinalProps = Props & WithStyles<ClassNames> & TextFieldProps;
+type PassThroughProps = Props & TextFieldProps & TypographyProps;
+
+type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
 class EditableText extends React.Component<FinalProps, State> {
   state = {
@@ -87,19 +142,28 @@ class EditableText extends React.Component<FinalProps, State> {
     return (
       !editing
         ? (
-          <React.Fragment>
-            <span className={classes.root}>{text}</span>
-            <ModeEdit
-              className={classes.icon}
-              onClick={this.toggleEditing}
-            />
-          </React.Fragment>
-        )
-        : (
-          <ClickAwayListener
-            onClickAway={this.cancelEditing}
-          >
-            <div className={classes.container}>
+            <div className={`${classes.container} ${classes.initial}`}>
+              <React.Fragment>
+                <Typography
+                  className={classes.root}
+                  {...rest}
+                >
+                  {text}
+                </Typography>
+                <Button className={classes.button}>
+                  <ModeEdit
+                    className={classes.icon}
+                    onClick={this.toggleEditing}
+                  />
+                </Button>
+              </React.Fragment>
+            </div>
+          )
+          : (
+            <div className={`${classes.container} ${classes.edit}`}>
+              <ClickAwayListener
+                onClickAway={this.cancelEditing}
+              >
               <TextField
                 className={classes.textField}
                 type="text"
@@ -110,19 +174,31 @@ class EditableText extends React.Component<FinalProps, State> {
                 }}
                 value={text}
                 {...rest}
+                InputProps={{ className: classes.inputRoot }}
+                inputProps={{
+                  className: classnames({
+                    [classes.headline]: this.props.variant === 'headline',
+                    [classes.title]: this.props.variant === 'title',
+                    [classes.input]: true,
+                  }),
+                }}
               />
-              <Save
-                className={`${classes.icon} ${classes.save}`}
-              />
-              <Close
-                className={`${classes.icon} ${classes.close}`}
-                onClick={this.cancelEditing}
-              />
-            </div>
-          </ClickAwayListener>
+              <Button className={classes.button}>
+                <Save
+                  className={`${classes.icon} ${classes.save}`}
+                />
+              </Button>
+              <Button className={classes.button}>
+                <Close
+                  className={`${classes.icon} ${classes.close}`}
+                  onClick={this.cancelEditing}
+                  />
+              </Button>
+            </ClickAwayListener>
+          </div>
         )
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(EditableText);
+export default withStyles(styles, { withTheme: true })<PassThroughProps>(EditableText);
