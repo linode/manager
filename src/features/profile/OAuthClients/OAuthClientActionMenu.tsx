@@ -8,6 +8,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 interface Props {
   id: string;
   onDelete: () => void;
+  onReset: () => void;
 }
 
 type CombinedProps = Props;
@@ -15,6 +16,7 @@ type CombinedProps = Props;
 class OAuthClientActionMenu extends React.Component<CombinedProps> {
   state = {
     confirmDeleteOpen: false,
+    confirmResetOpen: false,
   };
 
   toggleConfirmDelete = (v: Boolean) => this.setState({ confirmDeleteOpen: v });
@@ -37,8 +39,30 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
     );
   }
 
+  toggleConfirmReset = (v: Boolean) => this.setState({ confirmResetOpen: v });
+
+  resetDialogActions = () => {
+    return (
+      <React.Fragment>
+        <Button onClick={() => this.toggleConfirmReset(false)}>No</Button>
+        <Button
+          variant="raised"
+          color="secondary"
+          className="destructive"
+          onClick={() => {
+            this.toggleConfirmReset(false);
+            this.props.onReset();
+          }}>
+          Yes
+        </Button>
+      </React.Fragment>
+    );
+  }
+
+  toggleCreateDrawer = (v: Boolean) => this.setState({ createDrawerOpen: v });
+
+
   createLinodeActions = () => {
-    // const { id } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -51,7 +75,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Reset Secret',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
+            this.toggleConfirmReset(true);
           },
         },
         {
@@ -77,6 +101,14 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClose={() => this.toggleConfirmDelete(false)}
         >
         Are you sure you want to permanently delete this OAuth client?
+        </ConfirmationDialog>
+        <ConfirmationDialog
+          title="Confirm Reset"
+          open={this.state.confirmResetOpen}
+          actions={this.resetDialogActions}
+          onClose={() => this.toggleConfirmReset(false)}
+        >
+        Are you sure you want to permanently reset the secret of this OAuth client?
         </ConfirmationDialog>
       </React.Fragment>
     );

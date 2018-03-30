@@ -62,6 +62,11 @@ class OAuthClients extends React.Component<CombinedProps, State> {
       .then(() => this.request());
   }
 
+  onReset = (id: string) => {
+    Axios.post(`${apiPath}/${id}/reset-secret`)
+      .then(() => this.request());
+  }
+
   renderRows = () => {
     const { data: { response } } = this.props;
 
@@ -74,6 +79,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         <TableCell>
           <ActionMenu
             onDelete={() => this.onDelete(id)}
+            onReset={() => this.onReset(id)}
             id={id} />
           </TableCell>
       </TableRow>
