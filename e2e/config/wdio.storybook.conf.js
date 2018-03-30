@@ -11,5 +11,4 @@ exports.config = merge(wdioMaster.config, {
     beforeSuite: function(suite) {
         // Do nothing before suites
     }
-
 });

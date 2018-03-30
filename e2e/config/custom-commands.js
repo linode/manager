@@ -17,6 +17,12 @@ exports.browserCommands = () => {
         }
     }
 
+    /*
+    * Executes a Javascript Click event via the browser console. 
+    * Useful when an element is not clickable via browser.click()
+    * @param { String } elementToClick Selector to execute click event on
+    * @returns { undefined } Returns nothing
+    */
     browser.addCommand('jsClick', function(elementToClick) {
         browser.execute(function(elementToClick) {
             document.querySelector(elementToClick).click();
@@ -24,6 +30,11 @@ exports.browserCommands = () => {
     });
 
 
+    /* Executes a Javascript click event via the browser console
+    *  on all elements matching the given selector name
+    * Useful when the element is not clickable via browser.click()
+    * @param { String } elementsToClick Selector displayed multiple times to click on
+    */
     browser.addCommand('jsClickAll', function(elementsToClick) {
         browser.execute(function(elementsToClick) {
             var els = document.querySelectorAll(elementsToClick);
