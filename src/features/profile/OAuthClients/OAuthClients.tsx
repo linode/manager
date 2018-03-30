@@ -15,6 +15,8 @@ import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import { API_ROOT } from 'src/constants';
 import ActionMenu from './OAuthClientActionMenu';
 
+const apiPath = `${API_ROOT}/account/oauth-clients`;
+
 interface OAuthClient {
   id: string;
   label: string;
@@ -43,9 +45,22 @@ interface State { }
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class OAuthClients extends React.Component<CombinedProps, State> {
+  state = { data: this.props.data };
+
   static defaultProps = {
     data: [],
   };
+
+  request = () => {
+    Axios.get(apiPath)
+      .then(response => response.data.data)
+      .then(data => this.setState({ data }));
+  }
+
+  onDelete = (id: string) => {
+    Axios.delete(`${apiPath}/${id}`)
+      .then(() => this.request());
+  }
 
   renderRows = () => {
     const { data: { response } } = this.props;
@@ -56,36 +71,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         <TableCell>{isPublic ? 'Public' : 'Private'}</TableCell>
         <TableCell>{id}</TableCell>
         <TableCell>{redirect_uri}</TableCell>
-        <TableCell><ActionMenu id={id} /></TableCell>
+        <TableCell>
+          <ActionMenu
+            onDelete={() => this.onDelete(id)}
+            id={id} />
+          </TableCell>
       </TableRow>
     ));
-  }
-
-  confirmResetDialog = () => {
-    return (
-      <Dialog
-        open={this.state.open}
-        onClose={this.handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
-    </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
-            Disagree
-    </Button>
-          <Button onClick={this.handleClose} color="primary" autoFocus>
-            Agree
-    </Button>
-        </DialogActions>
-      </Dialog>
-    );
   }
 
   render() {
@@ -112,7 +104,6 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        {this.confirmResetDialog(); }
       </React.Fragment>
     );
   }
@@ -121,7 +112,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const preloaded = Preload({
-  data: () => Axios.get(`${API_ROOT}/account/oauth-clients`)
+  data: () => Axios.get(apiPath)
     .then(response => response.data.data),
 });
 
