@@ -134,8 +134,9 @@ class APITokens extends React.Component<CombinedProps, State> {
     this.setState({ viewDrawerOpen: true });
   }
 
-  toggleViewDrawer = () => {
-    this.setState({ viewDrawerOpen: !this.state.viewDrawerOpen });
+  closeViewDrawer = () => {
+    this.setState({ viewingToken: null });
+    this.setState({ viewDrawerOpen: false });
   }
 
   render() {
@@ -160,7 +161,7 @@ class APITokens extends React.Component<CombinedProps, State> {
         <Drawer
           title={(viewingToken && (viewingToken as Linode.Token).label) || ''}
           open={viewDrawerOpen}
-          onClose={this.toggleViewDrawer}
+          onClose={this.closeViewDrawer}
         >
           This API Token has access to your:
         </Drawer>
