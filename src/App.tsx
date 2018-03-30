@@ -159,7 +159,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <TempRoute exact path="/longview" render={() => 'LongView'} />
                   <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
                   <TempRoute exact path="/images" render={() => 'Images'} />
-                  <TempRoute path="/profile" component={Profile} />
+                  <Route path="/profile" component={Profile} />
                   <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
                 </Switch>
               </div>
