@@ -139,6 +139,11 @@ const LinodeTheme: Linode.Theme = {
         transform: 'none',
       },
     },
+    MuiDrawer: {
+      paper: {
+        boxShadow: '0 0 5px #ddd',
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,
