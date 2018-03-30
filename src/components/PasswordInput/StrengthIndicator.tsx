@@ -8,7 +8,7 @@ import  {
   StyleRulesCallback,
   Theme,
 } from 'material-ui';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 interface Props {
   strength: null | 0 | 1 | 2 | 3 | 4;

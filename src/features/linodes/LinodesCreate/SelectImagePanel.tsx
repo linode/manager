@@ -16,7 +16,7 @@ import {
   values,
 } from 'ramda';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import TabbedPanel from 'src/components/TabbedPanel';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';

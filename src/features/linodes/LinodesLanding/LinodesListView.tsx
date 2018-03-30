@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Paper from 'material-ui/Paper';
 import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
