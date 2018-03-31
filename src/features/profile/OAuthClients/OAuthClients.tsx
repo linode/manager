@@ -10,10 +10,14 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
-import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
+import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import IconTextLink from 'src/components/IconTextLink';
+
+import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { API_ROOT } from 'src/constants';
 import ActionMenu from './OAuthClientActionMenu';
+import OAuthCreationDrawer from './OAuthCreationDrawer';
 
 const apiPath = `${API_ROOT}/account/oauth-clients`;
 
@@ -39,38 +43,89 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   data: PromiseLoaderResponse<OAuthClient[]>;
 }
+interface Create {
+  label?: string;
+  redirect_uri?: string;
+  public: boolean;
+}
 
-interface State { }
+interface State {
+  data: OAuthClient[];
+  createDrawerOpen: boolean;
+  create: Create;
+  createErrors?: Linode.ApiFieldError[];
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class OAuthClients extends React.Component<CombinedProps, State> {
-  state = { data: this.props.data };
+  static defaultState = {
+    createDrawerOpen: false,
+    createErrors: undefined,
+    create: {
+      label: undefined,
+      redirect_uri: undefined,
+      public: false,
+    },
+  };
+
+  state = {
+    data: this.props.data.response,
+    ...OAuthClients.defaultState,
+  };
 
   static defaultProps = {
     data: [],
   };
 
-  request = () => {
+  reset = () => {
+    this.setState({ ...OAuthClients.defaultState });
+  }
+
+  setCreate = (fn: (v: Create) => Create): void => {
+    this.setState(prevState => ({
+      ...prevState,
+      create: fn(prevState.create),
+    }));
+  }
+
+  requestClients = () => {
     Axios.get(apiPath)
       .then(response => response.data.data)
       .then(data => this.setState({ data }));
   }
 
-  onDelete = (id: string) => {
+  deleteClient = (id: string) => {
     Axios.delete(`${apiPath}/${id}`)
-      .then(() => this.request());
+      .then(() => this.requestClients());
   }
 
-  onReset = (id: string) => {
-    Axios.post(`${apiPath}/${id}/reset-secret`)
-      .then(() => this.request());
+  resetSecret = (id: string) => {
+    Axios.post(`${apiPath}/${id}/reset-secret`);
   }
+
+  createClient = () => {
+    Axios.post(apiPath, this.state.create)
+      .then(() => {
+        this.setCreate(() => ({
+          label: undefined,
+          redirect_uri: undefined,
+          public: false,
+        }));
+        this.toggleCreateDrawer(false);
+      })
+      .then(() => this.requestClients())
+      .catch(error => this.setState({
+        createErrors: error.response && error.response.data && error.response.data.errors,
+      }));
+  }
+
+  toggleCreateDrawer = (v: boolean) => this.setState({ createDrawerOpen: v });
 
   renderRows = () => {
-    const { data: { response } } = this.props;
+    const { data } = this.state;
 
-    return response.map(({ id, label, redirect_uri, public: isPublic, status }) => (
+    return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow key={id}>
         <TableCell>{label}</TableCell>
         <TableCell>{isPublic ? 'Public' : 'Private'}</TableCell>
@@ -78,10 +133,10 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         <TableCell>{redirect_uri}</TableCell>
         <TableCell>
           <ActionMenu
-            onDelete={() => this.onDelete(id)}
-            onReset={() => this.onReset(id)}
+            onDelete={() => this.deleteClient(id)}
+            onReset={() => this.resetSecret(id)}
             id={id} />
-          </TableCell>
+        </TableCell>
       </TableRow>
     ));
   }
@@ -110,6 +165,21 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
+        <IconTextLink
+          SideIcon={PlusSquare}
+          onClick={() => this.toggleCreateDrawer(true)}
+          text="Add an object"
+          title="Link title"
+        />
+        <OAuthCreationDrawer
+          open={this.state.createDrawerOpen}
+          errors={this.state.createErrors}
+          public={this.state.create.public}
+          onClose={() => { this.toggleCreateDrawer(false); this.reset(); }}
+          onCancel={() => { this.toggleCreateDrawer(false); this.reset(); }}
+          onChange={(key, value) => this.setCreate(create => ({ ...create, [key]: value }))}
+          onSubmit={() => this.createClient()}
+        />
       </React.Fragment>
     );
   }

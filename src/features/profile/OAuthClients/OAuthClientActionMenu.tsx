@@ -4,6 +4,7 @@ import Button from 'material-ui/Button';
 
 import ActionMenu, { Action } from '../../../components/ActionMenu/ActionMenu';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Drawer from 'src/components/Drawer';
 
 interface Props {
   id: string;
@@ -17,6 +18,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   state = {
     confirmDeleteOpen: false,
     confirmResetOpen: false,
+    createDrawerOpen: false,
   };
 
   toggleConfirmDelete = (v: Boolean) => this.setState({ confirmDeleteOpen: v });
@@ -59,7 +61,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
     );
   }
 
-  toggleCreateDrawer = (v: Boolean) => this.setState({ createDrawerOpen: v });
+
 
 
   createLinodeActions = () => {
@@ -69,18 +71,21 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
+            closeMenu();
+            // this.toggleEditDrawer(true);
           },
         },
         {
           title: 'Reset Secret',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
+            closeMenu();
             this.toggleConfirmReset(true);
           },
         },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
+            closeMenu();
             this.toggleConfirmDelete(true);
           },
         },
@@ -110,6 +115,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
         >
         Are you sure you want to permanently reset the secret of this OAuth client?
         </ConfirmationDialog>
+        <Drawer title="Do something."><h1>We're doin it!</h1></Drawer>
       </React.Fragment>
     );
   }
