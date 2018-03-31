@@ -9,6 +9,8 @@ import {
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Button from 'material-ui/Button';
 import Drawer from 'src/components/Drawer';
+import ActionsPanel from 'src/components/ActionsPanel';
+
 import TextField from 'src/components/TextField';
 import CheckBox from 'src/components/CheckBox';
 
@@ -49,7 +51,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         errorText={hasErrorFor('label')}
         label="Label"
         onChange={e => onChange('label', e.target.value)}
-        />
+      />
       <TextField
         label="Callback URL"
         errorText={hasErrorFor('redirect_uri')}
@@ -64,8 +66,10 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
           />
         }
       />
-      <Button onClick={() => onCancel()}>Cancel</Button>
-      <Button onClick={() => onSubmit()}>Submit</Button>
+      <ActionsPanel>
+        <Button onClick={() => onCancel()}>Cancel</Button>
+        <Button variant="raised" color="primary" onClick={() => onSubmit()}>Submit</Button>
+      </ActionsPanel>
     </Drawer>
   );
 };
