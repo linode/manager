@@ -6,7 +6,6 @@ import ThemeDecorator from '../../utilities/storybookDecorators';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
-import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 
 interface State {
@@ -62,11 +61,10 @@ class Example extends React.Component<any, State> {
 storiesOf('Select', module)
   .addDecorator(ThemeDecorator)
   .add('Example', () => (
-    <Grid container>
-      <Grid item xs={3} style={{ margin: '0 auto' }}>
-      <Example />
-      <Divider />
-      <Example selected={1000} disabled />
+    <Grid container style={{ padding: 16 }}>
+      <Grid item xs={12}>
+        <Example />
+        <Example selected={1000} disabled />
       </Grid>
     </Grid>
 ));
