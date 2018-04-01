@@ -173,6 +173,18 @@ const LinodeTheme: Linode.Theme = {
     MuiMenuItem: {
       root: {
         height: 'auto',
+        fontWeight: 400,
+        fontSize: '.9rem',
+        color: '#666',
+        '&:hover, &:focus': {
+          backgroundColor: 'white',
+        },
+        '& em': {
+          fontStyle: 'normal !important',
+        },
+      },
+      selected: {
+        backgroundColor: 'white !important',
       },
     },
     MuiPopover: {
@@ -190,17 +202,19 @@ const LinodeTheme: Linode.Theme = {
       selectMenu: {
         minHeight: 38,
         padding: '9px 32px 7px 10px',
-        borderColor: '#e7e7e7',
         color: '#666',
         backgroundColor: '#fff',
         '&:focus': {
           backgroundColor: '#fff',
+          borderColor: 'pink',
         },
       },
       select: {
-        '&[aria-pressed="true"] + input + $icon': {
-          transform: 'scale(1.5)',
-          color: '#333',
+        '&[aria-pressed="true"]': {
+          '&+ input + $icon': {
+            transform: 'scale(1.25)',
+            stroke: '#666',
+          },
         },
       },
       icon: {
