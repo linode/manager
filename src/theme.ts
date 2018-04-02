@@ -150,7 +150,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#555',
       },
       error: {
-        color: '#CA0813',
+        color: '#555',
       },
     },
     MuiFormHelperText: {
@@ -227,6 +227,11 @@ const LinodeTheme: Linode.Theme = {
         stroke: '#999',
         clipPath: 'inset(45% 0 0 0)',
         transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+      },
+      disabled: {
+        '&+ input + $icon': {
+          opacity: '.5',
+        },
       },
     },
     MuiTab: {
