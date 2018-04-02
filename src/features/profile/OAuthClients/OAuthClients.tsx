@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Axios from 'axios';
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Paper from 'material-ui/Paper';
@@ -18,7 +18,7 @@ import IconTextLink from 'src/components/IconTextLink';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { API_ROOT } from 'src/constants';
 import ActionMenu from './OAuthClientActionMenu';
-import OAuthCreationDrawer from './OAuthCreationDrawer';
+import OAuthFormDrawer from './OAuthFormDrawer';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Notice from 'src/components/Notice';
 
@@ -46,33 +46,48 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   data: PromiseLoaderResponse<OAuthClient[]>;
 }
-interface Create {
-  label?: string;
-  redirect_uri?: string;
-  public: boolean;
+
+interface FormState {
+  edit: boolean;
+  open: boolean;
+  errors?: Linode.ApiFieldError[];
+  id?: string;
+  values: {
+    label?: string;
+    redirect_uri?: string;
+    public: boolean;
+  };
+}
+
+interface SecretState {
+  open: boolean;
+  value?: string;
 }
 
 interface State {
   data: OAuthClient[];
-  createDrawerOpen: boolean;
-  secretDisplay: boolean;
-  secret?: string;
-  create: Create;
-  createErrors?: Linode.ApiFieldError[];
+  secret?: SecretState;
+  form: FormState;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
-    createDrawerOpen: false,
-    secretDisplay: false,
-    secret: undefined,
-    createErrors: undefined,
-    create: {
-      label: undefined,
-      redirect_uri: undefined,
-      public: false,
+    secret: {
+      open: false,
+      value: undefined,
+    },
+    form: {
+      id: undefined,
+      open: false,
+      edit: false,
+      errors: undefined,
+      values: {
+        label: undefined,
+        redirect_uri: undefined,
+        public: false,
+      },
     },
   };
 
@@ -89,11 +104,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     this.setState({ ...OAuthClients.defaultState });
   }
 
-  setCreate = (fn: (v: Create) => Create): void => {
-    this.setState(prevState => ({
-      ...prevState,
-      create: fn(prevState.create),
-    }));
+  setForm = (fn: (v: FormState) => FormState): void => {
+    this.setState(prevState => ({ ...prevState, form: fn(prevState.form) }));
   }
 
   requestClients = () => {
@@ -110,33 +122,68 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   resetSecret = (id: string) => {
     Axios.post(`${apiPath}/${id}/reset-secret`)
       .then(({ data: { secret } }) => {
-        this.setState({ secretDisplay: true, secret });
+        this.setState({ secret: { open: true, value: secret } });
       });
   }
 
+  startEdit = (id: string, label: string, redirect_uri: string, isPublic: boolean) => {
+    this.setState({
+      form: {
+        edit: true,
+        open: true,
+        id,
+        values: { label, redirect_uri, public: isPublic },
+      },
+    });
+  }
+
   createClient = () => {
-    Axios.post(apiPath, this.state.create)
+    const { form: { values } } = this.state;
+    Axios.post(apiPath, values)
       .then((response) => {
         this.setState({
-          secret: response.data.secret,
-          secretDisplay: true,
-          createDrawerOpen: false,
-          create: {
-            label: undefined,
-            redirect_uri: undefined,
-            public: false,
+          secret: { value: response.data.secret, open: true },
+          form: {
+            open: false,
+            edit: false,
+            values: {
+              label: undefined,
+              redirect_uri: undefined,
+              public: false,
+            },
           },
         });
       })
       .then((response) => {
         this.requestClients();
       })
-      .catch(error => this.setState({
-        createErrors: error.response && error.response.data && error.response.data.errors,
-      }));
+      .catch((errResponse) => {
+        this.setForm(form => ({
+          ...form,
+          errors: path(['response', 'data', 'errors'], errResponse),
+        }));
+      });
   }
 
-  toggleCreateDrawer = (v: boolean) => this.setState({ createDrawerOpen: v });
+  editClient = () => {
+    const { form: { id, values } } = this.state;
+
+    Axios.put(`${apiPath}/${id}`, values)
+      .then((response) => {
+        this.reset();
+      })
+      .then((response) => {
+        this.requestClients();
+      })
+      .catch((errResponse) => {
+        this.setForm(form => ({
+          ...form,
+          errors: path(['response', 'data', 'errors'], errResponse),
+        }));
+      });
+  }
+
+  toggleCreateDrawer = (v: boolean) => this.setForm(form => ({ ...form, open: v }));
 
   renderRows = () => {
     const { data } = this.state;
@@ -151,6 +198,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           <ActionMenu
             onDelete={() => this.deleteClient(id)}
             onReset={() => this.resetSecret(id)}
+            onEdit={() => this.startEdit(id, label, redirect_uri, isPublic)}
             id={id} />
         </TableCell>
       </TableRow>
@@ -194,27 +242,31 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => this.setState({ secretDisplay: false, secret: undefined })}
+              onClick={() => this.reset() }
             >
-            OK
+              OK
             </Button>}
-          open={this.state.secretDisplay}
-          onClose={() => this.setState({ secretDisplay: false, secret: undefined })}
+          open={this.state.secret.open}
+          onClose={() => this.reset() }
         >
           <Typography variant="body1">
             {`Here is your client secret! Store it securely, as it won't be shown again.`}
           </Typography>
-          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.secret!} />
+          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.secret.value!} />
         </ConfirmationDialog>
 
-        <OAuthCreationDrawer
-          open={this.state.createDrawerOpen}
-          errors={this.state.createErrors}
-          public={this.state.create.public}
-          onClose={() => { this.toggleCreateDrawer(false); this.reset(); }}
-          onCancel={() => { this.toggleCreateDrawer(false); this.reset(); }}
-          onChange={(key, value) => this.setCreate(create => ({ ...create, [key]: value }))}
-          onSubmit={() => this.createClient()}
+        <OAuthFormDrawer
+          edit={this.state.form.edit}
+          open={this.state.form.open}
+          errors={this.state.form.errors}
+          public={this.state.form.values.public}
+          label={this.state.form.values.label}
+          redirect_uri={this.state.form.values.redirect_uri}
+          onClose={() => { this.reset(); }}
+          onCancel={() => { this.reset(); }}
+          onChange={(key, value) =>
+            this.setForm(form => ({ ...form, values: { ...form.values, [key]: value } }))}
+          onSubmit={() => this.state.form.edit ? this.editClient() : this.createClient()}
         />
       </React.Fragment>
     );

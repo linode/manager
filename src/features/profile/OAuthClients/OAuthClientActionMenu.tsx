@@ -10,6 +10,7 @@ interface Props {
   id: string;
   onDelete: () => void;
   onReset: () => void;
+  onEdit: () => void;
 }
 
 type CombinedProps = Props;
@@ -61,9 +62,6 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
     );
   }
 
-
-
-
   createLinodeActions = () => {
 
     return (closeMenu: Function): Action[] => {
@@ -71,8 +69,8 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
+            this.props.onEdit();
             closeMenu();
-            // this.toggleEditDrawer(true);
           },
         },
         {

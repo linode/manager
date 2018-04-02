@@ -22,8 +22,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   open: boolean;
+  label?: string;
+  redirect_uri?: string;
   public: boolean;
   errors?: { field: string, reason: string }[];
+  edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;
   onCancel: () => void;
@@ -34,8 +37,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   const {
+    label,
+    redirect_uri,
     open,
     public: isPublic,
+    edit,
     errors,
     onClose,
     onCancel,
@@ -48,30 +54,39 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
   return (
     <Drawer title="Create OAuth Client" open={open} onClose={onClose}>
       <TextField
+        value={label || ''}
         errorText={hasErrorFor('label')}
         label="Label"
         onChange={e => onChange('label', e.target.value)}
       />
       <TextField
+        value={redirect_uri || ''}
         label="Callback URL"
         errorText={hasErrorFor('redirect_uri')}
         onChange={e => onChange('redirect_uri', e.target.value)}
       />
-      <FormControlLabel
-        label="Public"
-        control={
-          <CheckBox
-            onChange={() => onChange('checkbox', !isPublic)}
-            value="public"
-          />
-        }
-      />
+        <FormControlLabel
+          label="Public"
+          control={
+            <CheckBox
+              onChange={() => onChange('public', !isPublic)}
+              checked={isPublic}
+              disabled={edit}
+            />
+          }
+        />
       <ActionsPanel>
         <Button onClick={() => onCancel()}>Cancel</Button>
         <Button variant="raised" color="primary" onClick={() => onSubmit()}>Submit</Button>
       </ActionsPanel>
     </Drawer>
   );
+};
+
+OAuthCreationDrawer.defaultProps = {
+  label: '',
+  redirect_uri: '',
+  errors: [],
 };
 
 const styled = withStyles(styles, { withTheme: true });
