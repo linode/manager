@@ -54,9 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   subLabel: {
-    display: 'inline',
+    display: 'inline-block',
     position: 'relative',
-    top: 2,
+    top: 3,
   },
   caption: {
     marginTop: -8,
@@ -85,8 +85,8 @@ class AddonsPanel extends React.Component<CombinedProps> {
     const { classes } = this.props;
 
     return this.props.backupsMonthly && (
-      <Grid item>
-        <Typography variant="caption" className={classes.subLabel}>
+      <Grid item className={classes.subLabel}>
+        <Typography variant="caption">
           {`$${this.props.backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>

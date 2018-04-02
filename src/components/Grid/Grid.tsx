@@ -5,7 +5,7 @@ const WrappedGrid: React.StatelessComponent<GridProps> = (props) => {
   const updatedProps: GridProps = {
     ...props,
     /** re: https://github.com/mui-org/material-ui/pull/10768 */
-    ...(props.container && { spacing: 16 }),
+    ...((props.container && !props.spacing) && { spacing: 16 }),
   };
 
   return (
