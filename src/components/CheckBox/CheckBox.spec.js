@@ -20,17 +20,17 @@ describe('Checkbox Component Suite', () => {
 
     it('should display checkboxes on interactive story', () => {
         previewFocus();
-        const checkboxes = $$('[data-qa-checked]'); 
+        const checkboxes = $$('[data-qa-checkbox]'); 
         checkboxes.forEach(e => expect(e.isVisible()).toBe(true));
     });
 
     it('should check on click', () => {
-        browser.jsClickAll('[data-qa-checked] input');
+        browser.jsClickAll('[data-qa-checkbox] input');
 
         previewFocus();
         previewFocus();
 
-        const updatedCheckboxValues = $$('[data-qa-checked]');
+        const updatedCheckboxValues = $$('[data-qa-checkbox]');
         const boxValues = updatedCheckboxValues.map(e => e.getAttribute('data-qa-checked') == 'true');
         
         expect(boxValues).toContain(true);
@@ -38,11 +38,11 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should uncheck on click', () => {
-        browser.jsClickAll('[data-qa-checked] input');
+        browser.jsClickAll('[data-qa-checkbox] input');
 
         previewFocus();
         previewFocus();
-        const updatedCheckboxValues = $$('[data-qa-checked]');
+        const updatedCheckboxValues = $$('[data-qa-checkbox]');
         const boxValues = 
             updatedCheckboxValues
                 .map(e => e.getAttribute('data-qa-checked') == false)
@@ -53,7 +53,7 @@ describe('Checkbox Component Suite', () => {
         previewFocus();
         previewFocus();
 
-        const boxes = $$('[data-qa-checked]');
+        const boxes = $$('[data-qa-checkbox]');
         const numberDisabledBoxes = boxes.map(e => e.getAttribute('class').includes('disabled'));
         expect(numberDisabledBoxes).toContain(true);
     });
@@ -63,7 +63,7 @@ describe('Checkbox Component Suite', () => {
         previewFocus();
         previewFocus();
 
-        const checkboxes = $$('[data-qa-checked]');
+        const checkboxes = $$('[data-qa-checkbox]');
         const variants = checkboxes.map(e => e.getAttribute('variant'));
         expect(variants).toContain('warning');
         expect(variants).toContain('error');
