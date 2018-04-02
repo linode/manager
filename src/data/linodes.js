@@ -184,7 +184,7 @@ function createTestLinode(id) {
           linode_id: null,
           status: 'active',
           created: '2017-08-08T13:55:16',
-          region: 'us-east-1a',
+          region: 'us-east',
           updated: '2017-08-08T04:00:00',
           size: 20,
         },
