@@ -11,8 +11,8 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
-import UserMenu from 'src/components/UserMenu';
-import AddNewMenu from 'src/components/AddNewMenu';
+import UserMenu from './UserMenu';
+import AddNewMenu from './AddNewMenu';
 
 const styles = (theme: Theme): StyleRules => ({
   root: {
