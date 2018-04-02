@@ -25,15 +25,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       borderColor: '#bbb',
     },
   },
-  menu: {},
+  menu: {
+    border: '1px solid #bbb',
+  },
   dropDown: {
     boxShadow: 'none',
     position: 'absolute',
     width: '100%',
-    maxWidth: 415,
-    border: '1px solid #bbb',
-    marginLeft: -1,
+    maxWidth: 417,
+    overflowY: 'auto',
+    overflowX: 'hidden',
     background: LinodeTheme.bg.offWhite,
+    left: '16px !important',
+    [theme.breakpoints.down('sm')]: {
+      width: 'calc(100% - 30px)',
+    },
   },
   inputError: {
     borderColor: LinodeTheme.color.red,
