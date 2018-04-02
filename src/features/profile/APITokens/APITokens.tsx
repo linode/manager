@@ -135,7 +135,6 @@ class APITokens extends React.Component<CombinedProps, State> {
   }
 
   closeDrawer = () => {
-    this.setState({ activeToken: null });
     this.setState({ drawerOpen: false });
   }
 

@@ -6,11 +6,22 @@ import {
   WithStyles,
 } from 'material-ui';
 import Drawer from 'src/components/Drawer';
+import Table from 'material-ui/Table';
+import TableBody from 'material-ui/Table/TableBody';
+import TableCell from 'material-ui/Table/TableCell';
+import TableHead from 'material-ui/Table/TableHead';
+import TableRow from 'material-ui/Table/TableRow';
+import Button from 'material-ui/Button';
 
-type ClassNames = 'root';
+import Radio from 'src/components/Radio';
+import ActionsPanel from 'src/components/ActionsPanel';
+
+type ClassNames = 'permsTable';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  permsTable: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
 interface Props {
@@ -73,6 +84,9 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
       'volumes',
     ];
 
+    if (scopes === '*') {
+      return perms.map(perm => [perm, 2] as Permission);
+    }
 
     const scopeMap = scopes.split(',').reduce(
       (map, scopeStr) => {
@@ -120,21 +134,82 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
     return permTuples;
   }
 
+  permNameMap = {
+    account: 'Account',
+    domains: 'Domains',
+    events: 'Events',
+    images: 'Images',
+    ips: 'IPs',
+    linodes: 'Linodes',
+    longview: 'Longview',
+    nodebalancers: 'NodeBalancers',
+    stackscripts: 'StackScripts',
+    volumes: 'Volumes',
+  };
+
   render() {
-    const { activeToken, drawerOpen, closeDrawer } = this.props;
+    const { activeToken, drawerOpen, closeDrawer, classes } = this.props;
 
     return (
       <Drawer
-        title={(activeToken && activeToken.label) || ''}
+        title={activeToken && activeToken.label || ''}
         open={drawerOpen}
         onClose={closeDrawer}
       >
         This application has access to your:
-        {activeToken && this.scopesToPermTuples(activeToken.scopes).map(
-          (scopeTup) => {
-            return <div key={scopeTup[0]}>{scopeTup}</div>;
-          },
-        )}
+        <Table className={classes.permsTable}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Access</TableCell>
+              <TableCell>None</TableCell>
+              <TableCell>Read Only</TableCell>
+              <TableCell>Read/Write</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {activeToken && this.scopesToPermTuples(activeToken.scopes).map(
+              (scopeTup) => {
+                return (
+                  <TableRow>
+                    <TableCell>
+                      {this.permNameMap[scopeTup[0]]}
+                    </TableCell>
+                    <TableCell>
+                      <Radio
+                        name={scopeTup[0]}
+                        disabled={scopeTup[1] !== 0}
+                        checked={scopeTup[1] === 0}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Radio
+                        name={scopeTup[0]}
+                        disabled={scopeTup[1] !== 1}
+                        checked={scopeTup[1] === 1}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Radio
+                        name={scopeTup[0]}
+                        disabled={scopeTup[1] !== 2}
+                        checked={scopeTup[1] === 2}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              },
+            )}
+          </TableBody>
+        </Table>
+        <ActionsPanel>
+          <Button
+            variant="raised"
+            color="primary"
+            onClick={() => closeDrawer()}
+          >
+            Done
+          </Button>
+        </ActionsPanel>
       </Drawer>
     );
   }
