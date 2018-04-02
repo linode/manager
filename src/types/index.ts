@@ -69,6 +69,7 @@ namespace Linode {
     percent_complete: number | null;
     entity: EventEntity | null;
     action: string;
+    username: string;
   }
 
   export interface ApiFieldError {

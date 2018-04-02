@@ -4,6 +4,9 @@
         "no-console": {
             "severity": "warning"
         },
+        "align": {
+          "severity": "warning"
+        },
         "no-trailing-whitespace": true,
         "variable-name": false,
         "import-name": false,

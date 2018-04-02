@@ -13,7 +13,7 @@ import {
   RouteComponentProps,
 } from 'react-router-dom';
 
-import { linodeEvents$ } from 'src/events';
+import { events$ } from 'src/events';
 import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
 
@@ -102,7 +102,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const mountTime = moment().subtract(5, 'seconds');
-    this.subscription = linodeEvents$
+    this.subscription = events$
       .filter((linodeEvent) => {
 
         const actionWhitelist = [

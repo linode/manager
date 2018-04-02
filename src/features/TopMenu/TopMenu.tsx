@@ -13,6 +13,13 @@ import MenuIcon from 'material-ui-icons/Menu';
 
 import UserMenu from './UserMenu';
 import AddNewMenu from './AddNewMenu';
+import UserNotificationMenu from './UserNotificationMenu';
+
+type ClassNames = 'appBar'
+  | 'navIconHide'
+  | 'flex'
+  | 'leftIcon'
+  | 'toolbar';
 
 const styles = (theme: Theme): StyleRules => ({
   root: {
@@ -47,8 +54,7 @@ interface Props {
   toggleSideMenu: () => void;
 }
 
-type PropsWithStyles = Props & WithStyles<'appBar' | 'navIconHide' | 'flex' | 'leftIcon'
-| 'toolbar'>;
+type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
@@ -67,6 +73,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
           </IconButton>
           <AddNewMenu />
           <UserMenu />
+          <UserNotificationMenu />
         </Toolbar>
       </AppBar>
     );
