@@ -10,6 +10,7 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
+import Button from 'material-ui/Button';
 
 import Preload, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import IconTextLink from 'src/components/IconTextLink';
@@ -18,6 +19,8 @@ import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { API_ROOT } from 'src/constants';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthCreationDrawer from './OAuthCreationDrawer';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Notice from 'src/components/Notice';
 
 const apiPath = `${API_ROOT}/account/oauth-clients`;
 
@@ -52,6 +55,8 @@ interface Create {
 interface State {
   data: OAuthClient[];
   createDrawerOpen: boolean;
+  secretDisplay: boolean;
+  secret?: string;
   create: Create;
   createErrors?: Linode.ApiFieldError[];
 }
@@ -61,6 +66,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
     createDrawerOpen: false,
+    secretDisplay: false,
+    secret: undefined,
     createErrors: undefined,
     create: {
       label: undefined,
@@ -101,20 +108,29 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   }
 
   resetSecret = (id: string) => {
-    Axios.post(`${apiPath}/${id}/reset-secret`);
+    Axios.post(`${apiPath}/${id}/reset-secret`)
+      .then(({ data: { secret } }) => {
+        this.setState({ secretDisplay: true, secret });
+      });
   }
 
   createClient = () => {
     Axios.post(apiPath, this.state.create)
-      .then(() => {
-        this.setCreate(() => ({
-          label: undefined,
-          redirect_uri: undefined,
-          public: false,
-        }));
-        this.toggleCreateDrawer(false);
+      .then((response) => {
+        this.setState({
+          secret: response.data.secret,
+          secretDisplay: true,
+          createDrawerOpen: false,
+          create: {
+            label: undefined,
+            redirect_uri: undefined,
+            public: false,
+          },
+        });
       })
-      .then(() => this.requestClients())
+      .then((response) => {
+        this.requestClients();
+      })
       .catch(error => this.setState({
         createErrors: error.response && error.response.data && error.response.data.errors,
       }));
@@ -168,9 +184,29 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         <IconTextLink
           SideIcon={PlusSquare}
           onClick={() => this.toggleCreateDrawer(true)}
-          text="Add an object"
+          text="Create an OAuth Client"
           title="Link title"
         />
+
+        <ConfirmationDialog
+          title="Client Secret"
+          actions={() =>
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={() => this.setState({ secretDisplay: false, secret: undefined })}
+            >
+            OK
+            </Button>}
+          open={this.state.secretDisplay}
+          onClose={() => this.setState({ secretDisplay: false, secret: undefined })}
+        >
+          <Typography variant="body1">
+            {`Here is your client secret! Store it securely, as it won't be shown again.`}
+          </Typography>
+          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.secret!} />
+        </ConfirmationDialog>
+
         <OAuthCreationDrawer
           open={this.state.createDrawerOpen}
           errors={this.state.createErrors}

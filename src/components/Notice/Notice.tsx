@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+import Typography, { TypographyProps } from 'material-ui/Typography';
 
 type ClassNames = 'root'
   | 'error'
@@ -35,16 +36,17 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 };
 
 interface Props {
+  text: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
-  text: string;
+  typeProps?: TypographyProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Notice: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, text, error, warning, success } = props;
+  const { classes, text, error, warning, success, typeProps } = props;
 
   return (
     <div className={classNames({
@@ -53,7 +55,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       [classes.success]: success,
       [classes.root]: true,
     })}>
-      {text}
+      <Typography {...typeProps}>{text}</Typography>
     </div>
   );
 };
