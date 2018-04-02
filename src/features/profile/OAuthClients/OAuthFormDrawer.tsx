@@ -6,6 +6,7 @@ import {
   WithStyles,
 } from 'material-ui';
 
+import FormControl from 'material-ui/Form/FormControl';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Button from 'material-ui/Button';
 import Drawer from 'src/components/Drawer';
@@ -65,6 +66,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         errorText={hasErrorFor('redirect_uri')}
         onChange={e => onChange('redirect_uri', e.target.value)}
       />
+      <FormControl>
         <FormControlLabel
           label="Public"
           control={
@@ -75,9 +77,10 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
             />
           }
         />
+      </FormControl>
       <ActionsPanel>
-        <Button onClick={() => onCancel()}>Cancel</Button>
         <Button variant="raised" color="primary" onClick={() => onSubmit()}>Submit</Button>
+        <Button onClick={() => onCancel()}>Cancel</Button>
       </ActionsPanel>
     </Drawer>
   );

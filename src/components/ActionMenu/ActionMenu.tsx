@@ -36,7 +36,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   button: {
-    marginTop: theme.spacing.unit,
     height: 30,
     '& svg': {
       fontSize: '28px',

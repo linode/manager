@@ -99,6 +99,13 @@ const LinodeTheme: Linode.Theme = {
       root: {
         justifyContent: 'flex-start',
         backgroundColor: 'white',
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
+      action: {
+        '&:first-child': {
+          marginLeft: 0,
+        },
       },
     },
     MuiExpansionPanelDetails: {
