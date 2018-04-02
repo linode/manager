@@ -200,7 +200,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#555',
       },
       error: {
-        color: '#CA0813',
+        color: '#555',
       },
     },
     MuiFormHelperText: {
@@ -223,6 +223,20 @@ const LinodeTheme: Linode.Theme = {
     MuiMenuItem: {
       root: {
         height: 'auto',
+        fontWeight: 400,
+        fontSize: '.9rem',
+        whiteSpace: 'initial',
+        textOverflow: 'initial',
+        color: '#666',
+        '&:hover, &:focus': {
+          backgroundColor: 'white',
+        },
+        '& em': {
+          fontStyle: 'normal !important',
+        },
+      },
+      selected: {
+        backgroundColor: 'white !important',
       },
     },
     MuiPopover: {
@@ -240,11 +254,33 @@ const LinodeTheme: Linode.Theme = {
       selectMenu: {
         minHeight: 38,
         padding: '9px 32px 7px 10px',
-        borderColor: '#e7e7e7',
         color: '#666',
         backgroundColor: '#fff',
         '&:focus': {
           backgroundColor: '#fff',
+          borderColor: 'pink',
+        },
+      },
+      select: {
+        '&[aria-pressed="true"]': {
+          '&+ input + $icon': {
+            transform: 'scale(1.25)',
+            stroke: '#666',
+          },
+        },
+      },
+      icon: {
+        marginTop: -5,
+        width: 32,
+        height: 32,
+        fill: 'none',
+        stroke: '#999',
+        clipPath: 'inset(45% 0 0 0)',
+        transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+      },
+      disabled: {
+        '&+ input + $icon': {
+          opacity: '.5',
         },
       },
     },
