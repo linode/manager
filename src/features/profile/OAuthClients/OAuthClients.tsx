@@ -37,10 +37,7 @@ type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  title: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-  },
+  title: {},
 });
 
 interface Props {
@@ -210,7 +207,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography className={classes.title} component="div" variant="headline">
+        <Typography className={classes.title} variant="title">
           OAuth Clients
         </Typography>
         <Paper>
