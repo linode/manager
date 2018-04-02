@@ -277,6 +277,9 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#3B85D9',
       },
     },
+    MuiTable: {
+      root: {},
+    },
     MuiTableCell: {
       root: {
         padding: '18px',

@@ -12,9 +12,14 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'item' | 'button';
+type CSSClasses = 'root' | 'item' | 'button';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   item: {
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
@@ -89,7 +94,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
     return actions.length === 1
       ? (actions as Action[]).map((a, idx) =>
           <a href="#" key={idx} onClick={e => a.onClick(e)}>{a.title}</a>)
-      : (<div>
+      : (<div className={classes.root}>
         <IconButton
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-haspopup="true"

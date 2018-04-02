@@ -37,7 +37,9 @@ type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  title: {},
+  title: {
+    margin: `${theme.spacing.unit * 3}px 0`,
+  },
 });
 
 interface Props {
