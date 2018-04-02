@@ -329,7 +329,7 @@ const LinodeTheme: Linode.Theme = {
       warning: '#fdf4da',
       warningDark: '#ffd002',
       error: '#f8dedf',
-      errorDark: '#970d0d',
+      errorDark: '#cd2227',
     },
   },
   typography: {
