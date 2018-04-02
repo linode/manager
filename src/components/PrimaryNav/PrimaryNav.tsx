@@ -41,6 +41,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   headerGrid: {
     borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
     minHeight: 64,
+    width: '100%',
     margin: 0,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
