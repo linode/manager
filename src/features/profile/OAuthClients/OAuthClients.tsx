@@ -262,7 +262,6 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           label={this.state.form.values.label}
           redirect_uri={this.state.form.values.redirect_uri}
           onClose={() => { this.reset(); }}
-          onCancel={() => { this.reset(); }}
           onChange={(key, value) =>
             this.setForm(form => ({ ...form, values: { ...form.values, [key]: value } }))}
           onSubmit={() => this.state.form.edit ? this.editClient() : this.createClient()}

@@ -14,7 +14,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 
 import TextField from 'src/components/TextField';
 import CheckBox from 'src/components/CheckBox';
-
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -30,7 +30,6 @@ interface Props {
   edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  onCancel: () => void;
   onChange: (key: string, value: string | boolean) => void;
 }
 
@@ -45,12 +44,16 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
     edit,
     errors,
     onClose,
-    onCancel,
     onChange,
     onSubmit,
   } = props;
 
-  const hasErrorFor = getErrors(errors);
+  const errorResources = {
+    label: 'A label',
+    redirect_uri: 'A callback URL',
+  };
+
+  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
   return (
     <Drawer title="Create OAuth Client" open={open} onClose={onClose}>
@@ -80,7 +83,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
       </FormControl>
       <ActionsPanel>
         <Button variant="raised" color="primary" onClick={() => onSubmit()}>Submit</Button>
-        <Button onClick={() => onCancel()}>Cancel</Button>
+        <Button onClick={() => onClose()}>Cancel</Button>
       </ActionsPanel>
     </Drawer>
   );
@@ -95,17 +98,3 @@ OAuthCreationDrawer.defaultProps = {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled<Props>(OAuthCreationDrawer);
-
-const errorResources = {
-  label: 'A label',
-  redirect_uri: 'A callback URL',
-};
-
-const getErrors = (arr: Linode.ApiFieldError[] = []) => (field: string): undefined | string => {
-
-  const err = arr.find(e => e.field === field);
-  if (!err) {
-    return;
-  }
-  return err.reason.replace(err.field, errorResources[err.field]);
-};
