@@ -60,16 +60,6 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
       delete: 2,
     };
 
-    const scopeMap = scopes.split(',').reduce(
-      (map, scopeStr) => {
-        const scopeTuple = scopeStr.split(':');
-        scopeTuple[1] = levelMap[scopeTuple[1]];
-        map[scopeTuple[0]] = scopeTuple[1];
-        return map;
-      },
-      {},
-    );
-
     const perms = [
       'account',
       'domains',
@@ -83,9 +73,45 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
       'volumes',
     ];
 
+
+    const scopeMap = scopes.split(',').reduce(
+      (map, scopeStr) => {
+        const scopeTuple = scopeStr.split(':');
+        scopeTuple[1] = levelMap[scopeTuple[1]];
+        map[scopeTuple[0]] = scopeTuple[1];
+        return map;
+      },
+      {},
+    );
+
+    const equivalentPerms = {
+      account: [
+        'tokens',
+        'clients',
+        'users',
+        'tickets',
+        'managed',
+      ],
+    };
+
+    /* TODO: Remove this logic once the API starts doing the deprecation mapping for us */
+    const combinedScopeMap = Object.keys(equivalentPerms).reduce(
+      (map: { [perm: string]: number }, perm: string) => {
+        const maxLevel = equivalentPerms[perm].reduce(
+          (level: number, eqPerm: string) => {
+            return Math.max(level, map[eqPerm] || 0);
+          },
+          map[perm] || 0,
+        );
+        map[perm] = maxLevel;
+        return map;
+      },
+      scopeMap,
+    );
+
     const permTuples = perms.reduce(
       (tups: Permission[], permName: string): Permission[] => {
-        const tup = [permName, scopeMap[permName] || 0] as Permission;
+        const tup = [permName, combinedScopeMap[permName] || 0] as Permission;
         return [...tups, tup];
       },
       [],
