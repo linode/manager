@@ -100,7 +100,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
       className={classnames}
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
-      data-qa-checked={props.checked}
+      data-qa-checkbox={props.checked}
       { ...rest }
     >
     </Checkbox>
