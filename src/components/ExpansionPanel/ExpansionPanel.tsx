@@ -18,7 +18,8 @@ import CloseIcon from '../../assets/icons/minus-square.svg';
 
 import Notice from '../Notice';
 
-type ClassNames = 'heading'
+type ClassNames = 'root'
+  | 'heading'
   | 'success'
   | 'warning'
   | 'error';
@@ -27,7 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   const { palette: { status } } = theme;
   return {
     root: {
-      flexGrow: 1,
+      '& .notice': {
+        marginTop: 0,
+      },
     },
     heading: {
       transition: theme.transitions.create(['color']),
@@ -105,7 +108,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
     const notice = success || warning || error || null;
 
     return (
-      <ExpansionPanel {...expansionPanelProps}>
+      <ExpansionPanel {...expansionPanelProps} className={classes.root}>
         <ExpansionPanelSummary
           onClick={this.handleClick}
           expandIcon={this.state.open ? <OpenIcon /> : <CloseIcon />}
