@@ -11,9 +11,10 @@ import Checkbox, { CheckboxProps } from 'material-ui/Checkbox';
 import CheckboxIcon from '../../assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
 
+import LinodeTheme from '../../../src/theme';
+
 type CSSClasses =
   'root'
-  | 'checked'
   | 'disabled'
   | 'warning'
   | 'error';
@@ -21,10 +22,16 @@ type CSSClasses =
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
     color: '#ccc',
-    transition: 'color .2s ease-in-out, background-color .2s ease-in-out',
+    transition: theme.transitions.create(['color']),
+    '& .defaultFill': {
+      transition: theme.transitions.create(['fill']),
+    },
     '&:hover': {
       color: theme.palette.primary.main,
-      fill: '#fff',
+      fill: 'white',
+      '& .defaultFill': {
+        fill: 'white',
+      },
     },
     '&:hover$warning': {
       color: '#ffd322',
@@ -33,39 +40,16 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
       color: '#cf1f1f',
     },
   },
-  checked: {
-    color: theme.palette.primary.main,
-    '&:hover': {
-      fill: '#3683dc',
-    },
-    '&$disabled': {
-      fill: '#C9CACB !important',
-    },
-    '&$warning': {
-      fill: '#ffd322',
-      '&:hover': {
-        fill: '#ffd322 !important',
-      },
-    },
-    '&$error': {
-      fill: '#cf1f1f',
-      '&:hover': {
-        fill: '#cf1f1f !important',
-      },
-    },
-  },
   warning: {
-    color: '#ffd322',
-    fill: '#fef5bf',
+    color: LinodeTheme.palette.status.warningDark,
     '& .defaultFill': {
-      fill: '#fff5bf',
+      fill: LinodeTheme.palette.status.warning,
     },
   },
   error: {
-    fill: '#f3c8c7',
-    color: '#cf1f1f',
+    color: LinodeTheme.palette.status.errorDark,
     '& .defaultFill': {
-      fill: '#f3c7c7',
+      fill: LinodeTheme.palette.status.error,
     },
   },
   disabled: {
@@ -90,7 +74,6 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const classnames = classNames({
     [classes.root]: true,
     [classes.disabled]: props.disabled === true,
-    [classes.checked]: Boolean(props.checked),
     [classes.warning]: props.variant === 'warning',
     [classes.error]: props.variant === 'error',
   });
