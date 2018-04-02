@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     color: theme.palette.primary.main,
     transition: `${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
     ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
     },
