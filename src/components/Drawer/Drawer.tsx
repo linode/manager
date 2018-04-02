@@ -28,7 +28,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     '& .actionPanel': {
       paddingLeft: 0,
       paddingRight: 0,
-      marginLeft: -7,
+      marginLeft: -8,
     },
   },
   drawerHeader: {

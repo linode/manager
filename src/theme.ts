@@ -210,7 +210,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControlLabel: {
       root: {
-        marginLeft: -10,
+        marginLeft: -11,
       },
     },
     MuiFormLabel: {
