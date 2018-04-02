@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import LinodeCard from './LinodeCard';
 

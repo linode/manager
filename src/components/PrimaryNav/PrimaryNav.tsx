@@ -12,7 +12,7 @@ import {
   StyleRules,
   Theme,
 } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import { ListItem, ListItemText } from 'material-ui/List';
 import LinodeTheme from 'src/theme';
 

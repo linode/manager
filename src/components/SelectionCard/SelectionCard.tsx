@@ -9,7 +9,7 @@ import {
 } from 'material-ui';
 import Check from 'material-ui-icons/Check';
 import Tooltip from 'material-ui/Tooltip';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Fade from 'material-ui/transitions/Fade';
 import LinodeTheme from '../../../src/theme';
 
