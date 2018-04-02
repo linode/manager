@@ -131,11 +131,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           return result;
       })
       .subscribe((linodeEvent) => {
-        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.EventEntity).id}`)
+        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
           .then(linode => this.setState((prevState) => {
             const targetIndex = prevState.linodes.findIndex(
-              _linode => _linode.id === (linodeEvent.entity as Linode.EventEntity).id);
+              _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
             const updatedLinodes = clone(prevState.linodes);
             updatedLinodes[targetIndex] = linode;
             updatedLinodes[targetIndex].recentEvent = linodeEvent;

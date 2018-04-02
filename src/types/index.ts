@@ -54,7 +54,15 @@ namespace Linode {
     hourly: number;
   }
 
-  export interface EventEntity {
+  export interface Notification {
+    label: string;
+    type: any;
+    entity: Entity;
+    when: string;
+    summary: string;
+  }
+
+  export interface Entity {
     id: number;
     label: string;
     type: string;
@@ -67,7 +75,7 @@ namespace Linode {
     created: string;
     status: 'scheduled' | 'started' | 'finished' | 'failed' | 'notification';
     percent_complete: number | null;
-    entity: EventEntity | null;
+    entity: Entity | null;
     action: string;
     username: string;
   }
