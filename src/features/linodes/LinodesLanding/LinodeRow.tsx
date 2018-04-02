@@ -7,7 +7,7 @@ import {
   WithStyles,
   StyleRulesCallback,
 } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';

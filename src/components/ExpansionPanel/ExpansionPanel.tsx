@@ -11,7 +11,7 @@ import ExpansionPanel, {
   ExpansionPanelDetailsProps,
 } from 'material-ui/ExpansionPanel';
 import Typography, { TypographyProps } from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import OpenIcon from '../../assets/icons/plus-square.svg';
 import CloseIcon from '../../assets/icons/minus-square.svg';

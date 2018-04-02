@@ -4,7 +4,7 @@ import { withStyles, StyleRulesCallback, WithStyles, Theme } from 'material-ui';
 
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Divider from 'material-ui/Divider';
 
 import CheckBox from '../../../components/CheckBox';
