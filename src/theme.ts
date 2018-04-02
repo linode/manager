@@ -175,6 +175,8 @@ const LinodeTheme: Linode.Theme = {
         height: 'auto',
         fontWeight: 400,
         fontSize: '.9rem',
+        whiteSpace: 'initial',
+        textOverflow: 'initial',
         color: '#666',
         '&:hover, &:focus': {
           backgroundColor: 'white',
