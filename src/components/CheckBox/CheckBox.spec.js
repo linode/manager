@@ -25,7 +25,7 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should check on click', () => {
-        const initialChecked = $$('[data-qa-checked="true"]').length;
+        const initialChecked = $$('[data-qa-checked="true"]');
         const enabledCheckboxes = $$('[data-qa-checked]').filter(e => !e.getAttribute('class').includes('disabled'));
         enabledCheckboxes.forEach(e => e.click());
 
@@ -34,7 +34,7 @@ describe('Checkbox Component Suite', () => {
 
         const updatedCheckboxValues = $$('[data-qa-checked="true"]');
         
-        expect(updatedCheckboxValues.length).toBe(initialChecked + enabledCheckboxes.length);
+        expect(updatedCheckboxValues.length).toBe(initialChecked.length + enabledCheckboxes.length);
     });
 
     it('should uncheck on click', () => {
@@ -45,7 +45,7 @@ describe('Checkbox Component Suite', () => {
         previewFocus();
         previewFocus();
         const updatedCheckboxValues = $$('[data-qa-checked="true"]').filter(e => !e.getAttribute('class').includes('disabled'));
-        
+
         expect(updatedCheckboxValues).toEqual([]);
     });
 
