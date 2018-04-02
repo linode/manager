@@ -24,10 +24,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+export type DrawerMode = 'view' | 'edit' | 'create';
+
 interface Props {
   activeToken: Linode.Token | null;
   drawerOpen: boolean;
   closeDrawer: () => void;
+  drawerMode: DrawerMode;
 }
 
 interface State {}
@@ -147,60 +150,78 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
     volumes: 'Volumes',
   };
 
+  renderPermsTable() {
+    const { classes, activeToken, drawerMode } = this.props;
+    return (
+      <Table className={classes.permsTable}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Access</TableCell>
+            <TableCell>None</TableCell>
+            <TableCell>Read Only</TableCell>
+            <TableCell>Read/Write</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {activeToken && this.scopesToPermTuples(activeToken.scopes).map(
+            (scopeTup) => {
+              return (
+                <TableRow>
+                  <TableCell>
+                    {this.permNameMap[scopeTup[0]]}
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={scopeTup[0]}
+                      disabled={drawerMode === 'view' && scopeTup[1] !== 0}
+                      checked={scopeTup[1] === 0}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={scopeTup[0]}
+                      disabled={drawerMode === 'view' && scopeTup[1] !== 1}
+                      checked={scopeTup[1] === 1}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Radio
+                      name={scopeTup[0]}
+                      disabled={drawerMode === 'view' && scopeTup[1] !== 2}
+                      checked={scopeTup[1] === 2}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            },
+          )}
+        </TableBody>
+      </Table>
+    );
+  }
+
   render() {
-    const { activeToken, drawerOpen, closeDrawer, classes } = this.props;
+    const {
+      activeToken,
+      drawerOpen,
+      closeDrawer,
+      drawerMode,
+    } = this.props;
 
     return (
       <Drawer
-        title={activeToken && activeToken.label || ''}
+        title={
+          activeToken && activeToken.label
+          || drawerMode === 'create' && 'Add a Personal Access Token'
+          || ''
+        }
         open={drawerOpen}
         onClose={closeDrawer}
       >
-        This application has access to your:
-        <Table className={classes.permsTable}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Access</TableCell>
-              <TableCell>None</TableCell>
-              <TableCell>Read Only</TableCell>
-              <TableCell>Read/Write</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {activeToken && this.scopesToPermTuples(activeToken.scopes).map(
-              (scopeTup) => {
-                return (
-                  <TableRow>
-                    <TableCell>
-                      {this.permNameMap[scopeTup[0]]}
-                    </TableCell>
-                    <TableCell>
-                      <Radio
-                        name={scopeTup[0]}
-                        disabled={scopeTup[1] !== 0}
-                        checked={scopeTup[1] === 0}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Radio
-                        name={scopeTup[0]}
-                        disabled={scopeTup[1] !== 1}
-                        checked={scopeTup[1] === 1}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Radio
-                        name={scopeTup[0]}
-                        disabled={scopeTup[1] !== 2}
-                        checked={scopeTup[1] === 2}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              },
-            )}
-          </TableBody>
-        </Table>
+        {drawerMode === 'view' &&
+          'This application has access to your:'
+        }
+        {this.renderPermsTable()}
         <ActionsPanel>
           <Button
             variant="raised"

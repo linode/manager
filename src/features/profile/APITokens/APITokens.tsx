@@ -14,9 +14,10 @@ import TableRow from 'material-ui/Table/TableRow';
 
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import IconTextLink from 'src/components/IconTextLink';
 
 import APITokenMenu from './APITokenMenu';
-import APITokenDrawer from './APITokenDrawer';
+import APITokenDrawer, { DrawerMode } from './APITokenDrawer';
 
 type ClassNames = 'headline';
 
@@ -44,6 +45,7 @@ interface Props {
 interface State {
   drawerOpen: boolean;
   activeToken: Linode.Token | null;
+  drawerMode: DrawerMode;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -51,6 +53,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class APITokens extends React.Component<CombinedProps, State> {
   state = {
     drawerOpen: false,
+    drawerMode: 'view' as DrawerMode,
     activeToken: null,
   };
 
@@ -66,6 +69,14 @@ class APITokens extends React.Component<CombinedProps, State> {
         <Typography variant="headline" className={classes.headline}>
           {title}
         </Typography>
+        {type === 'Personal Access Token' &&
+          <IconTextLink
+            SideIcon={PlusSquare}
+            onClick={() => this.toggleCreateDrawer(true)}
+            text="Create an OAuth Client"
+            title="Link title"
+          />
+        }
         <Paper>
           <Table>
             <TableHead>
@@ -139,7 +150,7 @@ class APITokens extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { drawerOpen, activeToken } = this.state;
+    const { drawerOpen, activeToken, drawerMode } = this.state;
     const appTokens = this.formatDates(
       pathOr([], ['response', 'data'], this.props.appTokens));
     const pats = this.formatDates(
@@ -160,6 +171,7 @@ class APITokens extends React.Component<CombinedProps, State> {
         <APITokenDrawer
           activeToken={activeToken}
           drawerOpen={drawerOpen}
+          drawerMode={drawerMode}
           closeDrawer={this.closeDrawer}
         />
       </React.Fragment>
