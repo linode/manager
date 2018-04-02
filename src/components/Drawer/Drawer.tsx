@@ -25,6 +25,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     [theme.breakpoints.up('lg')]: {
       width: 480,
     },
+    '& .actionPanel': {
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginLeft: -8,
+    },
   },
   drawerHeader: {
     marginBottom: theme.spacing.unit * 2,
