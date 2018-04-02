@@ -52,6 +52,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     '&[class*="focused"]': {
       borderColor: LinodeTheme.color.green,
     },
+    '& + p': {
+      color: LinodeTheme.color.green,
+    },
   },
 });
 
