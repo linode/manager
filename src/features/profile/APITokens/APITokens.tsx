@@ -14,9 +14,9 @@ import TableRow from 'material-ui/Table/TableRow';
 
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import Drawer from 'src/components/Drawer';
 
 import APITokenMenu from './APITokenMenu';
+import APITokenDrawer from './APITokenDrawer';
 
 type ClassNames = 'headline';
 
@@ -42,16 +42,16 @@ interface Props {
 }
 
 interface State {
-  viewDrawerOpen: boolean;
-  viewingToken: Linode.Token | null;
+  drawerOpen: boolean;
+  activeToken: Linode.Token | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class APITokens extends React.Component<CombinedProps, State> {
   state = {
-    viewDrawerOpen: false,
-    viewingToken: null,
+    drawerOpen: false,
+    activeToken: null,
   };
 
   renderTokenTable(
@@ -103,7 +103,7 @@ class APITokens extends React.Component<CombinedProps, State> {
                   <TableCell>
                     <APITokenMenu
                       openViewDrawer={() => {
-                        this.openViewDrawer(token);
+                        this.openDrawer(token);
                       }}
                     />
                   </TableCell>
@@ -129,22 +129,22 @@ class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
-  openViewDrawer = (token: Linode.Token) => {
-    this.setState({ viewingToken: token });
-    this.setState({ viewDrawerOpen: true });
+  openDrawer = (token: Linode.Token) => {
+    this.setState({ activeToken: token });
+    this.setState({ drawerOpen: true });
   }
 
-  closeViewDrawer = () => {
-    this.setState({ viewingToken: null });
-    this.setState({ viewDrawerOpen: false });
+  closeDrawer = () => {
+    this.setState({ activeToken: null });
+    this.setState({ drawerOpen: false });
   }
 
   render() {
+    const { drawerOpen, activeToken } = this.state;
     const appTokens = this.formatDates(
       pathOr([], ['response', 'data'], this.props.appTokens));
     const pats = this.formatDates(
       pathOr([], ['response', 'data'], this.props.pats));
-    const { viewDrawerOpen, viewingToken } = this.state;
 
     return (
       <React.Fragment>
@@ -158,13 +158,11 @@ class APITokens extends React.Component<CombinedProps, State> {
           'Personal Access Token',
           pats,
         )}
-        <Drawer
-          title={(viewingToken && (viewingToken as Linode.Token).label) || ''}
-          open={viewDrawerOpen}
-          onClose={this.closeViewDrawer}
-        >
-          This API Token has access to your:
-        </Drawer>
+        <APITokenDrawer
+          activeToken={activeToken}
+          drawerOpen={drawerOpen}
+          closeDrawer={this.closeDrawer}
+        />
       </React.Fragment>
     );
   }
