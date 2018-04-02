@@ -10,6 +10,11 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'inherit',
       },
     },
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      },
+    },
     MuiButton: {
       root: {
         textTransform: 'inherit',
@@ -94,19 +99,34 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiDialog: {
+      paper: {
+        boxShadow: '0 0 5px #bbb',
+        maxWidth: '768px !important',
+      },
+    },
+    MuiDialogActions: {
+      root: {
+        margin: 0,
+        padding: '0 24px 24px 24px',
+        justifyContent: 'flex-start',
+      },
+      action: {
+        margin: 0,
+      },
+    },
+    MuiDrawer: {
+      paper: {
+        boxShadow: '0 0 5px #bbb',
+      },
+    },
     MuiExpansionPanel: {},
     MuiExpansionPanelActions: {
       root: {
         justifyContent: 'flex-start',
         backgroundColor: 'white',
-        paddingLeft: 0,
-        paddingRight: 0,
       },
-      action: {
-        '&:first-child': {
-          marginLeft: 0,
-        },
-      },
+      action: {},
     },
     MuiExpansionPanelDetails: {
       root: {
@@ -144,11 +164,6 @@ const LinodeTheme: Linode.Theme = {
       },
       expandIconExpanded: {
         transform: 'none',
-      },
-    },
-    MuiDrawer: {
-      paper: {
-        boxShadow: '0 0 5px #ddd',
       },
     },
     MuiInput: {
