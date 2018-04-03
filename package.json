@@ -65,8 +65,8 @@
   },
   "scripts": {
     "docker:e2e": "docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e",
-    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run --rm -p 3000:3000 -v $(pwd)/src:/src/src manager start",
-    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run --rm -p 6006:6006 -v $(pwd)/src:/src/src storybook storybook",
+    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/src:/src/src manager start",
+    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/src:/src/src storybook storybook",
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
