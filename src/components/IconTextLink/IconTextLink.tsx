@@ -76,6 +76,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
       }
       title={title}
       onClick={onClick}
+      data-qa-icon-text-link={title}
     >
       <SideIcon className={classes.icon} />
       <span>
