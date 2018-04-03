@@ -24,8 +24,6 @@ namespace Linode {
 
   export type Token = {
     id: number,
-    client: TodoAny, /* TODO: use OAuthClient type */
-    type: 'client_token' | 'personal_access_token',
     scopes: string,
     label: string,
     created: string,
