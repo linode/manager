@@ -32,7 +32,7 @@ The following buzzwords are involved in this project:
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
 client](https://cloud.linode.com/profile/tokens), then create a file in the base
-of hte manager repository entitled `.env` with your client ID and client secret set appropriately:
+of the manager repository entitled `.env` with your client ID and client secret set appropriately:
 
     REACT_APP_CLIENT_ID='CHANGE_ME'
     REACT_APP_LOGIN_ROOT='https://login.linode.com'
