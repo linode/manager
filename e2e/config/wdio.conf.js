@@ -1,6 +1,6 @@
 require('dotenv').config();
-const { argv } = require('yargs');
 
+const { argv } = require('yargs');
 const { getTokenIfNeeded, loadToken } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
