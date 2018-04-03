@@ -1,12 +1,11 @@
 # Testing Linode Manager
 
-Testing the Linode Manager can be done by utilizing orchestrated docker containers
-(docker-compose) or locally by running selenium & node.JS alongside the local development environment.
+End-to-end Testing of the Linode Manager can be done locally by running Selenium & WebdriverIO tests
+alongside the local development environment, or by running multiple containers via docker-compose.
 
 The Manager application has a suite of automated browser tests that live in the `e2e/specs`
 directory. These browser tests are written in Node.js using the [WebdriverIO](https://webdriver.io)
-selenium language bindings framework. The configuration files for the WDIO test runner can be found
-in `e2e/config`.
+selenium framework. The configuration files for the WDIO test runner can be found in `e2e/config`.
 
 
 ##### Dependencies
