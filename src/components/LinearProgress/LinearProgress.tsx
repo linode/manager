@@ -28,6 +28,7 @@ const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props)
       <LinearProgress
         value={value}
         variant={variant}
+        data-qa-linear-progress
       />
     </div>
   );
