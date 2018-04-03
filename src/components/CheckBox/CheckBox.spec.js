@@ -3,7 +3,7 @@ const { waitForFocus } = require('../../../e2e/utils/storybook');
 
 describe('Checkbox Component Suite', () => {
     beforeAll(() => {
-        browser.url('/');
+        browser.url(constants.routes.storybook);
         browser.waitForVisible('html body div#root div div div.SplitPane.vertical div.Pane.vertical.Pane1 div div div div a h3');
     });
 
