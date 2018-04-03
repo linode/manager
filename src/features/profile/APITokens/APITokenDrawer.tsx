@@ -258,16 +258,19 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
             </Button>
           }
           {(mode === 'create' || mode === 'edit') &&
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={mode as string === 'create'
-                ? () => onCreate(this.state.scopes)
-                : () => onEdit()
-              }
-            >
-              {mode as string === 'create' ? 'Submit' : 'Save'}
-            </Button>
+            [
+              <Button
+                variant="raised"
+                color="primary"
+                onClick={mode as string === 'create'
+                  ? () => onCreate(this.state.scopes)
+                  : () => onEdit()
+                }
+              >
+                {mode as string === 'create' ? 'Submit' : 'Save'}
+              </Button>,
+              <Button onClick={() => closeDrawer()}>Cancel</Button>,
+            ]
           }
         </ActionsPanel>
       </Drawer>
