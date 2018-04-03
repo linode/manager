@@ -1,15 +1,15 @@
 version: '3.1'
 services: 
   selenium-hub:
-    image: selenium/hub
+    image: selenium/hub:3.11.0-bismuth
     ports:
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome
+    image: selenium/node-chrome:3.11.0-bismuth
     depends_on:
       - selenium-hub
     volumes:
-      - /dev/shm:/dev/shm # Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+      - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
     environment:
       - HUB_PORT_4444_TCP_ADDR=selenium-hub
       - HUB_PORT_4444_TCP_PORT=4444
@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e:all"]
     depends_on:
       - manager-storybook
       - manager-local
