@@ -4,7 +4,7 @@ import {
   withStyles,
   WithStyles,
   Theme,
-  StyleRules,
+  StyleRulesCallback,
 } from 'material-ui/styles';
 import LinodeTheme from 'src/theme';
 import Hidden from 'material-ui/Hidden';
@@ -14,12 +14,15 @@ import PrimaryNav from 'src/components/PrimaryNav';
 
 export const menuWidth = 215;
 
-const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+type CSSClasses = 'menuPaper' | 'menuDocked';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   menuPaper: {
     height: '100%',
     width: menuWidth,
     backgroundColor: LinodeTheme.bg.navy,
     left: 'inherit',
+    boxShadow: 'none',
   },
   menuDocked: {
     height: '100%',
@@ -31,9 +34,9 @@ interface Props {
   toggle: () => void;
 }
 
-type PropsWithStyles = Props & WithStyles<'menuPaper' | 'menuDocked'>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class SideMenu extends React.Component<PropsWithStyles> {
+class SideMenu extends React.Component<CombinedProps> {
   render() {
     const { classes, open, toggle } = this.props;
 
