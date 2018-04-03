@@ -166,10 +166,12 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ## Testing
-This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking.
+This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking. 
+
+End-to-end tests are written using WebdriverIO. More documentation on running these tests can be found in the testing [docs](/TESTING.md)
 
 ### Naming
-Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`).
+Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`). 
 
 ### Commands
 To run tests:
@@ -188,6 +190,13 @@ We haven't assigned an artibrary coverage requirement. Coverage and testing are 
 To generate a coverage report:
 
     yarn test --coverage
+
+## Testing React Components
+
+React Components are testable using [storybook](https://github.com/storybooks/storybook). To access
+the manager storybook:
+
+    yarn storybook
 
 ## Coding Style
 
