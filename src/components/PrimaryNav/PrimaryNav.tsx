@@ -41,6 +41,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   headerGrid: {
     borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
     minHeight: 64,
+    width: '100%',
+    margin: 0,
     [theme.breakpoints.up('sm')]: {
       minHeight: 72,
     },
@@ -49,26 +51,28 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     },
   },
   logoItem: {
-    paddingLeft: 40,
+    padding: '10px 0 8px 34px',
   },
   listItem: {
     padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
-    '&:hover, &:focus': {
-      borderLeftColor: 'rgba(0, 0, 0, 0.08)',
+    transition: theme.transitions.create(['background-color', 'border-left-color']),
+    '&:hover': {
+      borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
         color: 'white',
       },
     },
   },
   linkItem: {
+    transition: theme.transitions.create(['color']),
     color: '#C9CACB',
     fontWeight: 700,
   },
   active: {
     transition: 'border-color .7s ease-in-out',
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     borderLeftColor: LinodeTheme.color.green,
     '&:hover': {
       borderLeftColor: LinodeTheme.color.green,
@@ -81,19 +85,19 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     paddingLeft: theme.spacing.unit * 4,
     paddingRight: theme.spacing.unit * 4,
     fontSize: '.9rem',
-    transition: 'color 225ms ease-in-out, background-color 225ms ease-in-out',
+    transition: theme.transitions.create(['color', 'background-color']),
     '&:hover, &:focus': {
-      backgroundColor: 'rgba(0, 0, 0, 0.08)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
     },
     '& span': {
       color: '#C9CACB',
-      transition: 'color 225ms ease-in-out',
+      transition: theme.transitions.create(['color']),
     },
     '& svg': {
       color: '#C9CACB',
       fontSize: '20px',
       margin: '5px 2px 4px 0',
-      transition: 'color 225ms ease-in-out',
+      transition: theme.transitions.create(['color']),
     },
     '&:hover, &:focus, & .hOpen': {
       color: 'white',
@@ -187,8 +191,10 @@ class PrimaryNav extends React.Component<Props> {
           alignItems="center"
           spacing={0}
         >
-          <Grid item className={classes.logoItem}>
-            <img width="120" height="48" src={logoPng} />
+          <Grid item>
+            <div className={classes.logoItem}>
+              <img width="115" height="43" src={logoPng} />
+            </div>
           </Grid>
         </Grid>
         {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}

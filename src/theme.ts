@@ -166,6 +166,33 @@ const LinodeTheme: Linode.Theme = {
         transform: 'none',
       },
     },
+    MuiFormControl: {
+      root: {
+        marginTop: 16,
+      },
+    },
+    MuiFormControlLabel: {
+      root: {
+        marginLeft: -11,
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: '#555',
+        fontWeight: 700,
+      },
+      focused: {
+        color: '#555',
+      },
+      error: {
+        color: '#555',
+      },
+    },
+    MuiFormHelperText: {
+      error: {
+        color: '#CA0813',
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,
@@ -202,32 +229,15 @@ const LinodeTheme: Linode.Theme = {
       inputType: {
         height: 'auto',
       },
-    },
-    MuiFormControl: {
-      root: {
-        marginTop: 16,
+      formControl: {
+        'label + &': {
+          marginTop: 0,
+        },
       },
     },
-    MuiFormControlLabel: {
-      root: {
-        marginLeft: -11,
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        color: '#555',
-        fontWeight: 700,
-      },
-      focused: {
-        color: '#555',
-      },
-      error: {
-        color: '#555',
-      },
-    },
-    MuiFormHelperText: {
-      error: {
-        color: '#CA0813',
+    MuiInputLabel: {
+      formControl: {
+        position: 'relative',
       },
     },
     MuiList: {

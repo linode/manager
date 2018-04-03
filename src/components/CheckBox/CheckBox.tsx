@@ -15,6 +15,7 @@ import LinodeTheme from '../../../src/theme';
 
 type CSSClasses =
   'root'
+  | 'checked'
   | 'disabled'
   | 'warning'
   | 'error';
@@ -39,6 +40,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '&:hover$error': {
       color: '#cf1f1f',
     },
+  },
+  checked: {
+    color: theme.palette.primary.main,
   },
   warning: {
     color: LinodeTheme.palette.status.warningDark,
@@ -74,6 +78,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   const classnames = classNames({
     [classes.root]: true,
     [classes.disabled]: props.disabled === true,
+    [classes.checked]: Boolean(props.checked),
     [classes.warning]: props.variant === 'warning',
     [classes.error]: props.variant === 'error',
   });
