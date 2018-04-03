@@ -12,36 +12,20 @@ import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-import APITokens from './APITokens';
-import OAuthClients from './OAuthClients';
+import { RouteTab, genTab } from 'src/tabs';
+import LinodeSummary from './LinodeSummary';
 
-type Props = RouteComponentProps<{}>;
+type Props = RouteComponentProps<{ linodeId?: number }>;
 
-type Tab = {
-  title: string,
-  routeName: string,
-  renderRoute: (path: string) => React.ReactNode;
-};
-
-class Profile extends React.Component<Props> {
-  genTab = (title: string, routeName: string, component: React.ComponentClass): Tab => {
-    return {
-      title,
-      routeName,
-      renderRoute: (path: string) =>
-        <Route key={title} component={component} path={`${routeName}`} />,
-    };
-  }
-
+class LinodeDetail extends React.Component<Props> {
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
 
-  tabs: Tab[] = [
-    this.genTab('API Tokens', `${this.props.match.path}/tokens`, APITokens),
-    this.genTab('OAuth Clients', `${this.props.match.path}/clients`, OAuthClients),
+  tabs: RouteTab[] = [
+    genTab('Summary', `${this.props.match.path}/summary`, LinodeSummary),
   ];
 
   render() {
@@ -51,7 +35,7 @@ class Profile extends React.Component<Props> {
     return (
       <div>
         <Typography variant="headline">
-          My Profile
+          Linode Detail
         </Typography>
         <AppBar position="static" color="default">
           <Tabs
@@ -65,11 +49,11 @@ class Profile extends React.Component<Props> {
         </AppBar>
         <Switch>
           {this.tabs.map(tab => tab.renderRoute(path))}
-          <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/tokens`} />)} />
+          <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/summary`} />)} />
         </Switch>
       </div>
     );
   }
 }
 
-export default withRouter(Profile);
+export default withRouter(LinodeDetail);
