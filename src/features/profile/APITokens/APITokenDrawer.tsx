@@ -15,6 +15,7 @@ import Button from 'material-ui/Button';
 
 import Radio from 'src/components/Radio';
 import ActionsPanel from 'src/components/ActionsPanel';
+import TextField from 'src/components/TextField';
 
 type ClassNames = 'permsTable';
 
@@ -33,16 +34,25 @@ interface Props {
   open: boolean;
   mode: string;
   closeDrawer: () => void;
+  onChange: (key: string, value: string) => void;
+  /* Due to the amount of transformation that needs to be done here, scopes is
+     an uncontrolled input that's sent back in the submit handler */
+  onCreate: (scopes: string) => void;
+  onEdit: () => void;
 }
 
-interface State {}
+interface State {
+  scopes: string;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 type Permission = [string, number];
 
 class APITokenDrawer extends React.Component<CombinedProps, State> {
-  state = {};
+  state = {
+    scopes: this.props.scopes || '',
+  };
 
   /**
    * This function accepts scopes strings directly from the API, which have the following format:
@@ -205,9 +215,13 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   render() {
     const {
       label,
+      expiry,
       open,
-      closeDrawer,
       mode,
+      closeDrawer,
+      onChange,
+      onCreate,
+      onEdit,
     } = this.props;
 
     return (
@@ -220,21 +234,46 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
         open={open}
         onClose={closeDrawer}
       >
-        {mode === 'create' || mode === 'edit'
-
+        {(mode === 'create' || mode === 'edit') &&
+          <TextField
+            value={label || ''}
+            label="Label"
+            onChange={e => onChange('label', e.target.value)}
+          />
+        }
+        {(mode === 'create' || mode === 'edit') &&
+          <TextField
+            value={expiry || ''}
+            label="Expiry"
+            onChange={e => onChange('expiry', e.target.value)}
+          />
         }
         {mode === 'view' &&
           'This application has access to your:'
         }
         {this.renderPermsTable()}
         <ActionsPanel>
-          <Button
-            variant="raised"
-            color="primary"
-            onClick={() => closeDrawer()}
-          >
-            Done
-          </Button>
+          {mode === 'view' &&
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={() => closeDrawer()}
+            >
+              Done
+            </Button>
+          }
+          {(mode === 'create' || mode === 'edit') &&
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={mode as string === 'create'
+                ? () => onCreate(this.state.scopes)
+                : () => onEdit()
+              }
+            >
+              {mode as string === 'create' ? 'Submit' : 'Save'}
+            </Button>
+          }
         </ActionsPanel>
       </Drawer>
     );

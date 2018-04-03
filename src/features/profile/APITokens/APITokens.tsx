@@ -186,7 +186,18 @@ class APITokens extends React.Component<CombinedProps, State> {
     }});
   }
 
+  createToken = (scopes: string) => {
+    const { form } = this.state;
+    console.log(`create ${scopes} ${form.values.label} ${form.values.expiry}`);
+  }
+
+  editToken = () => {
+    const { form } = this.state;
+    console.log(`edit ${form.values.label}`);
+  }
+
   render() {
+    const { form } = this.state;
     const appTokens = this.formatDates(
       pathOr([], ['response', 'data'], this.props.appTokens));
     const pats = this.formatDates(
@@ -205,12 +216,16 @@ class APITokens extends React.Component<CombinedProps, State> {
           pats,
         )}
         <APITokenDrawer
-          open={this.state.form.open}
-          mode={this.state.form.mode}
-          label={this.state.form.values.label}
-          scopes={this.state.form.values.scopes}
-          expiry={this.state.form.values.expiry}
+          open={form.open}
+          mode={form.mode}
+          label={form.values.label}
+          scopes={form.values.scopes}
+          expiry={form.values.expiry}
           closeDrawer={this.closeDrawer}
+          onChange={(key, value) => this.setState({ form:
+            { ...form, values: { ...form.values, [key]: value } }})}
+          onCreate={(scopes: string) => this.createToken(scopes)}
+          onEdit={() => this.editToken()}
         />
       </React.Fragment>
     );
