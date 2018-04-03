@@ -8,7 +8,7 @@ import {
   WithStyles,
   StyleRulesCallback,
 } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 

@@ -16,7 +16,7 @@ import {
   values,
 } from 'ramda';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import TabbedPanel from 'src/components/TabbedPanel';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -94,7 +94,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
           title: 'Public Images',
           render: () => (
             <React.Fragment>
-              <Grid container spacing={8} style={{ marginBottom: 4 }}>
+              <Grid container spacing={8}>
                 {publicImages.length
                 && publicImages.map((image: Linode.Image, idx: number) => (
                   <SelectionCard

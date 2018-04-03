@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isEmpty } from 'ramda';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import TabbedPanel from '../../../components/TabbedPanel';
 import { Tab } from '../../../components/TabbedPanel/TabbedPanel';

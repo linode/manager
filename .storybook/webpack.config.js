@@ -24,6 +24,9 @@ module.exports = {
     alias: {
       'src/': paths.appSrc,
     },
+    plugins: [
+      new TsconfigPathsPlugin({configFile: paths.appTsConfig}),
+    ],
   },
   module: {
     rules: [
@@ -66,7 +69,4 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new TsconfigPathsPlugin({configFile: paths.appTsConfig}),
-  ],
 };

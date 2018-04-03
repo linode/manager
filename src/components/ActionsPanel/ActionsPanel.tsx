@@ -25,7 +25,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <ExpansionPanelActions
-      className={props.classes.root}
+      className={`${props.classes.root} actionPanel`}
       {...props}
     >
       { props.children }
