@@ -21,7 +21,7 @@ import Radio from 'src/components/Radio';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
-import { dateFormat } from 'src/events';
+import { dateFormat } from 'src/time';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import {

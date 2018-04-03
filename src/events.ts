@@ -3,7 +3,7 @@ import { API_ROOT } from 'src/constants';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 
-export const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
+import { dateFormat } from 'src/time';
 
 function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
