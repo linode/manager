@@ -33,4 +33,3 @@ class WrappedTable extends React.Component<CombinedProps> {
 
 export default withStyles(styles, { withTheme: true })(WrappedTable);
 
-

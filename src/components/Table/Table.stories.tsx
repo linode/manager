@@ -14,15 +14,17 @@ storiesOf('Table', module)
     <TableWrapper>
       <TableHead>
         <TableRow>
-          <TableCell>Head-1-1</TableCell>
-          <TableCell>Head-1-2</TableCell>
-          <TableCell>Head-1-3</TableCell>
+          <TableCell style={{ width: '33%' }}>Head-1-1</TableCell>
+          <TableCell style={{ width: '33%' }}>Head-1-2</TableCell>
+          <TableCell style={{ width: '33%' }}>Head-1-3</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         <TableRow>
           <TableCell>Col-1-1</TableCell>
-          <TableCell>Col-1-2</TableCell>
+          <TableCell>
+            Col-1-2 content with a long, unbreakable token slkjdhgf7890LKAJhsf7890234567q23ghjkjhg
+          </TableCell>
           <TableCell>Col-1-3</TableCell>
         </TableRow>
         <TableRow>
