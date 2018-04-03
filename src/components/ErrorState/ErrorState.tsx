@@ -6,7 +6,7 @@ import {
   WithStyles,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import ErrorOutline from 'material-ui-icons/ErrorOutline';
 

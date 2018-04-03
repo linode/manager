@@ -7,7 +7,7 @@ import {
   WithStyles,
 } from 'material-ui';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import LinodeTheme from 'src/theme';
 
 import FooterLogo from 'src/assets/logo/logo-footer.svg';

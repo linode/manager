@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Select from 'material-ui/Select';
 import MenuItem from 'material-ui/Menu/MenuItem';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 
 import PaginationControls from '../PaginationControls';
 

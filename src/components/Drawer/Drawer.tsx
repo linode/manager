@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Typography, withStyles, WithStyles, Theme, StyleRulesCallback } from 'material-ui';
 import Drawer, { DrawerProps } from 'material-ui/Drawer';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Button from 'material-ui/Button';
 import Close from 'material-ui-icons/Close';
 
@@ -24,6 +24,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     [theme.breakpoints.up('lg')]: {
       width: 480,
+    },
+    '& .actionPanel': {
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginLeft: -8,
     },
   },
   drawerHeader: {

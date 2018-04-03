@@ -12,7 +12,7 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -29,9 +29,11 @@ import AddonsPanel from './AddonsPanel';
 import { typeLabelDetails, typeLabel } from '../presentation';
 import CheckoutBar from './CheckoutBar';
 import { resetEventsPolling } from 'src/events';
+
 type ChangeEvents = React.MouseEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>;
 
 type Info = { name: string, details: string } | undefined;
+
 export type TypeInfo = {
   name: string,
   details: string,
@@ -64,11 +66,6 @@ interface PreloadedProps {
 
 type CombinedProps = Props & WithStyles<Styles> & PreloadedProps & RouteComponentProps<{}>;
 
-interface ApiFieldError {
-  field: string;
-  reason: string;
-}
-
 interface State {
   selectedTab: number;
   selectedImageID: string | null;
@@ -78,7 +75,7 @@ interface State {
   password: string | null;
   backups: boolean;
   privateIP: boolean;
-  errors?: ApiFieldError[];
+  errors?: Linode.ApiFieldError[];
   [index: string]: any;
 }
 
@@ -140,7 +137,7 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-const getErrorFor = (field: string, arr: ApiFieldError[] = []): undefined | string => {
+const getErrorFor = (field: string, arr: Linode.ApiFieldError[] = []): undefined | string => {
   const err = arr.find(e => e.field === field);
   if (!err) {
     return;
