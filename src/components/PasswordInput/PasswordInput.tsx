@@ -10,7 +10,7 @@ import  {
 } from 'material-ui';
 import { TextFieldProps } from 'material-ui/TextField';
 
-import Grid from 'material-ui/Grid';
+import Grid from 'src/components/Grid';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 
 import HideShowText from './HideShowText';

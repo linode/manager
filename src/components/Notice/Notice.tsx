@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+import Typography, { TypographyProps } from 'material-ui/Typography';
 
 type ClassNames = 'root'
   | 'error'
@@ -13,11 +14,9 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 
   return {
     root: {
-      paddingLeft: spacing.unit * 3,
-      paddingRight: spacing.unit * 3,
-      paddingTop: spacing.unit * 2,
-      paddingBottom: spacing.unit * 2,
-      marginBottom: spacing.unit * 1 + 2,
+      padding: `${spacing.unit * 2}px ${spacing.unit * 3}px`,
+      margin: `${spacing.unit}px 0`,
+      wordBreak: 'break-word',
     },
     error: {
       backgroundColor: status.error,
@@ -35,16 +34,17 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
 };
 
 interface Props {
+  text: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
-  text: string;
+  typeProps?: TypographyProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Notice: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, text, error, warning, success } = props;
+  const { classes, text, error, warning, success, typeProps } = props;
 
   return (
     <div className={classNames({
@@ -52,8 +52,9 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       [classes.warning]: warning,
       [classes.success]: success,
       [classes.root]: true,
+      notice: true,
     })}>
-      {text}
+      <Typography {...typeProps}>{text}</Typography>
     </div>
   );
 };

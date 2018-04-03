@@ -10,6 +10,11 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'inherit',
       },
     },
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      },
+    },
     MuiButton: {
       root: {
         textTransform: 'inherit',
@@ -94,12 +99,34 @@ const LinodeTheme: Linode.Theme = {
         strokeLinecap: 'inherit',
       },
     },
+    MuiDialog: {
+      paper: {
+        boxShadow: '0 0 5px #bbb',
+        maxWidth: '768px !important',
+      },
+    },
+    MuiDialogActions: {
+      root: {
+        margin: 0,
+        padding: '0 24px 24px 24px',
+        justifyContent: 'flex-start',
+      },
+      action: {
+        margin: 0,
+      },
+    },
+    MuiDrawer: {
+      paper: {
+        boxShadow: '0 0 5px #bbb',
+      },
+    },
     MuiExpansionPanel: {},
     MuiExpansionPanelActions: {
       root: {
         justifyContent: 'flex-start',
         backgroundColor: 'white',
       },
+      action: {},
     },
     MuiExpansionPanelDetails: {
       root: {
@@ -139,9 +166,31 @@ const LinodeTheme: Linode.Theme = {
         transform: 'none',
       },
     },
-    MuiDrawer: {
-      paper: {
-        boxShadow: '0 0 5px #ddd',
+    MuiFormControl: {
+      root: {
+        marginTop: 16,
+      },
+    },
+    MuiFormControlLabel: {
+      root: {
+        marginLeft: -11,
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: '#555',
+        fontWeight: 700,
+      },
+      focused: {
+        color: '#555',
+      },
+      error: {
+        color: '#555',
+      },
+    },
+    MuiFormHelperText: {
+      error: {
+        color: '#CA0813',
       },
     },
     MuiInput: {
@@ -180,32 +229,15 @@ const LinodeTheme: Linode.Theme = {
       inputType: {
         height: 'auto',
       },
-    },
-    MuiFormControl: {
-      root: {
-        marginTop: 16,
+      formControl: {
+        'label + &': {
+          marginTop: 0,
+        },
       },
     },
-    MuiFormControlLabel: {
-      root: {
-        marginLeft: -10,
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        color: '#555',
-        fontWeight: 700,
-      },
-      focused: {
-        color: '#555',
-      },
-      error: {
-        color: '#CA0813',
-      },
-    },
-    MuiFormHelperText: {
-      error: {
-        color: '#CA0813',
+    MuiInputLabel: {
+      formControl: {
+        position: 'relative',
       },
     },
     MuiList: {
@@ -223,6 +255,20 @@ const LinodeTheme: Linode.Theme = {
     MuiMenuItem: {
       root: {
         height: 'auto',
+        fontWeight: 400,
+        fontSize: '.9rem',
+        whiteSpace: 'initial',
+        textOverflow: 'initial',
+        color: '#666',
+        '&:hover, &:focus': {
+          backgroundColor: 'white',
+        },
+        '& em': {
+          fontStyle: 'normal !important',
+        },
+      },
+      selected: {
+        backgroundColor: 'white !important',
       },
     },
     MuiPopover: {
@@ -240,11 +286,33 @@ const LinodeTheme: Linode.Theme = {
       selectMenu: {
         minHeight: 38,
         padding: '9px 32px 7px 10px',
-        borderColor: '#e7e7e7',
         color: '#666',
         backgroundColor: '#fff',
         '&:focus': {
           backgroundColor: '#fff',
+          borderColor: 'pink',
+        },
+      },
+      select: {
+        '&[aria-pressed="true"]': {
+          '&+ input + $icon': {
+            transform: 'scale(1.25)',
+            stroke: '#666',
+          },
+        },
+      },
+      icon: {
+        marginTop: -5,
+        width: 32,
+        height: 32,
+        fill: 'none',
+        stroke: '#999',
+        clipPath: 'inset(45% 0 0 0)',
+        transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+      },
+      disabled: {
+        '&+ input + $icon': {
+          opacity: '.5',
         },
       },
     },
@@ -276,6 +344,9 @@ const LinodeTheme: Linode.Theme = {
         bottom: 0,
         backgroundColor: '#3B85D9',
       },
+    },
+    MuiTable: {
+      root: {},
     },
     MuiTableCell: {
       root: {
@@ -329,7 +400,7 @@ const LinodeTheme: Linode.Theme = {
       warning: '#fdf4da',
       warningDark: '#ffd002',
       error: '#f8dedf',
-      errorDark: '#970d0d',
+      errorDark: '#cd2227',
     },
   },
   typography: {

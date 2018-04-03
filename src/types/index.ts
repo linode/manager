@@ -70,4 +70,9 @@ namespace Linode {
     entity: EventEntity | null;
     action: string;
   }
+
+  export interface ApiFieldError {
+    field: string;
+    reason: string;
+  }
 }
