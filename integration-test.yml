@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./src:/src/src
     entrypoint: yarn storybook
     depends_on:
       - chrome
@@ -33,6 +35,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./src:/src/src
     entrypoint: yarn start
   manager-e2e:
     container_name: manager_e2e
@@ -41,6 +45,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./src:/src/src
+      - ./e2e:/src/e2e
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e:all"]
     depends_on:
       - manager-storybook

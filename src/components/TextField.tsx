@@ -2,22 +2,26 @@ import * as React from 'react';
 
 import TextField, { TextFieldProps } from 'material-ui/TextField';
 
-interface Props {
+interface Props extends TextFieldProps{
   errorText?: string;
   affirmative?: Boolean;
 }
 
-type CombinedProps = Props & TextFieldProps;
+const LinodeTextField: React.StatelessComponent<Props> = (props) => {
+  const {
+    errorText,
+    affirmative,
+    ...textFieldProps,
+  } = props;
 
-const LinodeTextField: React.StatelessComponent<CombinedProps> = (props) => {
-  const finalProps = { ...props };
+  const finalProps: TextFieldProps = { ...textFieldProps };
 
-  if (props.errorText) {
+  if (errorText) {
     finalProps.error = true;
     finalProps.helperText = props.errorText;
   }
 
-  if (props.affirmative) {
+  if (affirmative) {
     finalProps.InputProps = {
       className: 'affirmative',
     };

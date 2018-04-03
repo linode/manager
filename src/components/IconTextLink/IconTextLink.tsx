@@ -18,6 +18,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     cursor: 'pointer',
     color: theme.palette.primary.main,
     transition: 'color 225ms ease-in-out',
+    margin: `${theme.spacing.unit}px 0`,
     '&:hover, &:hover $icon': {
       color: theme.palette.primary.light,
     },
