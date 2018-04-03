@@ -3,6 +3,7 @@ exports.constants = {
 
 	},
 	routes: {
+		storybook: 'http://localhost:6006',
 		dashboard: '/',
 		linodes: '/linodes',
 		volumes: '/volumes',
