@@ -18,6 +18,7 @@ import IconTextLink from 'src/components/IconTextLink';
 
 import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode } from './APITokenDrawer';
+import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 type ClassNames = 'headline';
 
@@ -42,20 +43,39 @@ interface Props {
   appTokens: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Token>>;
 }
 
+interface FormState {
+  mode: DrawerMode;
+  open: boolean;
+  errors?: Linode.ApiFieldError[];
+  id?: number;
+  values: {
+    scopes?: string;
+    expiry?: string;
+    label?: string;
+  };
+}
+
 interface State {
-  drawerOpen: boolean;
-  activeToken: Linode.Token | null;
-  drawerMode: DrawerMode;
+  form: FormState;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class APITokens extends React.Component<CombinedProps, State> {
-  state = {
-    drawerOpen: false,
-    drawerMode: 'view' as DrawerMode,
-    activeToken: null,
+  static defaultState = {
+    form: {
+      mode: 'view' as DrawerMode,
+      open: false,
+      errors: undefined,
+      values: {
+        scopes: undefined,
+        expiry: undefined,
+        label: undefined,
+      },
+    },
   };
+
+  state = APITokens.defaultState;
 
   renderTokenTable(
     title: string,
@@ -72,9 +92,9 @@ class APITokens extends React.Component<CombinedProps, State> {
         {type === 'Personal Access Token' &&
           <IconTextLink
             SideIcon={PlusSquare}
-            onClick={() => this.toggleCreateDrawer(true)}
-            text="Create an OAuth Client"
-            title="Link title"
+            onClick={() => this.openCreateDrawer()}
+            text="Add a Personal Access Token"
+            title="Add a Personal Access Token"
           />
         }
         <Paper>
@@ -113,9 +133,7 @@ class APITokens extends React.Component<CombinedProps, State> {
                   </TableCell>
                   <TableCell>
                     <APITokenMenu
-                      openViewDrawer={() => {
-                        this.openDrawer(token);
-                      }}
+                      openViewDrawer={() => { this.openViewDrawer(token); }}
                     />
                   </TableCell>
                 </TableRow>,
@@ -140,17 +158,35 @@ class APITokens extends React.Component<CombinedProps, State> {
     });
   }
 
-  openDrawer = (token: Linode.Token) => {
-    this.setState({ activeToken: token });
-    this.setState({ drawerOpen: true });
+  openCreateDrawer = () => {
+    this.setState({ form: {
+      ...APITokens.defaultState.form,
+      mode: 'create',
+      open: true,
+    }});
+  }
+
+  openViewDrawer = (token: Linode.Token) => {
+    this.setState({ form: {
+      ...APITokens.defaultState.form,
+      mode: 'view',
+      open: true,
+      id: token.id,
+      values: {
+        scopes: token.scopes,
+        expiry: token.expiry,
+        label: token.label,
+      },
+    }});
   }
 
   closeDrawer = () => {
-    this.setState({ drawerOpen: false });
+    this.setState({ form: {
+      ...APITokens.defaultState.form,
+    }});
   }
 
   render() {
-    const { drawerOpen, activeToken, drawerMode } = this.state;
     const appTokens = this.formatDates(
       pathOr([], ['response', 'data'], this.props.appTokens));
     const pats = this.formatDates(
@@ -169,9 +205,11 @@ class APITokens extends React.Component<CombinedProps, State> {
           pats,
         )}
         <APITokenDrawer
-          activeToken={activeToken}
-          drawerOpen={drawerOpen}
-          drawerMode={drawerMode}
+          open={this.state.form.open}
+          mode={this.state.form.mode}
+          label={this.state.form.values.label}
+          scopes={this.state.form.values.scopes}
+          expiry={this.state.form.values.expiry}
           closeDrawer={this.closeDrawer}
         />
       </React.Fragment>

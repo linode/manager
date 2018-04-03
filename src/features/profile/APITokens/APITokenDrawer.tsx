@@ -27,10 +27,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 export type DrawerMode = 'view' | 'edit' | 'create';
 
 interface Props {
-  activeToken: Linode.Token | null;
-  drawerOpen: boolean;
+  label?: string;
+  scopes?: string;
+  expiry?: string;
+  open: boolean;
+  mode: string;
   closeDrawer: () => void;
-  drawerMode: DrawerMode;
 }
 
 interface State {}
@@ -151,7 +153,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   };
 
   renderPermsTable() {
-    const { classes, activeToken, drawerMode } = this.props;
+    const { classes, mode, scopes } = this.props;
     return (
       <Table className={classes.permsTable}>
         <TableHead>
@@ -163,7 +165,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
-          {activeToken && this.scopesToPermTuples(activeToken.scopes).map(
+          {scopes && this.scopesToPermTuples(scopes).map(
             (scopeTup) => {
               return (
                 <TableRow>
@@ -173,21 +175,21 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                   <TableCell>
                     <Radio
                       name={scopeTup[0]}
-                      disabled={drawerMode === 'view' && scopeTup[1] !== 0}
+                      disabled={mode === 'view' && scopeTup[1] !== 0}
                       checked={scopeTup[1] === 0}
                     />
                   </TableCell>
                   <TableCell>
                     <Radio
                       name={scopeTup[0]}
-                      disabled={drawerMode === 'view' && scopeTup[1] !== 1}
+                      disabled={mode === 'view' && scopeTup[1] !== 1}
                       checked={scopeTup[1] === 1}
                     />
                   </TableCell>
                   <TableCell>
                     <Radio
                       name={scopeTup[0]}
-                      disabled={drawerMode === 'view' && scopeTup[1] !== 2}
+                      disabled={mode === 'view' && scopeTup[1] !== 2}
                       checked={scopeTup[1] === 2}
                     />
                   </TableCell>
@@ -202,23 +204,26 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      activeToken,
-      drawerOpen,
+      label,
+      open,
       closeDrawer,
-      drawerMode,
+      mode,
     } = this.props;
 
     return (
       <Drawer
         title={
-          activeToken && activeToken.label
-          || drawerMode === 'create' && 'Add a Personal Access Token'
+          mode === 'view' && label
+          || mode === 'create' && 'Add a Personal Access Token'
           || ''
         }
-        open={drawerOpen}
+        open={open}
         onClose={closeDrawer}
       >
-        {drawerMode === 'view' &&
+        {mode === 'create' || mode === 'edit'
+
+        }
+        {mode === 'view' &&
           'This application has access to your:'
         }
         {this.renderPermsTable()}
