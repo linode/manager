@@ -94,7 +94,7 @@ const CreateFromImage: React.StatelessComponent<Props> = (props) => {
           title: 'Public Images',
           render: () => (
             <React.Fragment>
-              <Grid container spacing={8} style={{ marginBottom: 4 }}>
+              <Grid container spacing={8}>
                 {publicImages.length
                 && publicImages.map((image: Linode.Image, idx: number) => (
                   <SelectionCard
