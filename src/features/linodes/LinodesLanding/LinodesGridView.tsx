@@ -3,15 +3,17 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 
 import LinodeCard from './LinodeCard';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props {
   linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
+  openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 const LinodesGridView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, images, types } = props;
+  const { linodes, types, images, openConfigDrawer } = props;
 
   return (
     <Grid container>
@@ -21,6 +23,7 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
           linode={linode}
           image={images.find(image => linode.image === image.id)}
           type={types.find(type => linode.type === type.id)}
+          openConfigDrawer={openConfigDrawer}
         />,
       )}
     </Grid>

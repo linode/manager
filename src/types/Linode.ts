@@ -57,7 +57,7 @@ namespace Linode {
   type LinodeBackupType = 'auto' | 'snapshot';
 
   type LinodeBackupStatus =
-      'pending'
+    'pending'
     | 'running'
     | 'needsPostProcessing'
     | 'successful'
@@ -66,7 +66,7 @@ namespace Linode {
 
 
   export type LinodeStatus =
-      'offline'
+    'offline'
     | 'booting'
     | 'running'
     | 'shutting_down'
@@ -74,4 +74,17 @@ namespace Linode {
     | 'provisioning'
     | 'deleting'
     | 'migrating';
+
+  export interface Config {
+    id: number;
+    kernel: string;
+    comments: string;
+    memory_limit: number;
+    root_device_ro: boolean;
+    run_level: 'default' | 'single' | 'binbash';
+    virt_mode: 'paravirt' | 'fullvirt';
+    helpers: any;
+    label: any;
+    devices: any;
+  }
 }

@@ -1,10 +1,11 @@
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
+import * as moment from 'moment';
 
 import { API_ROOT } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
-import * as moment from 'moment';
 
 import { dateFormat } from 'src/time';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 export const genEvent = (
   action: string,
@@ -31,35 +32,59 @@ export const genEvent = (
   } as Linode.Event;
 };
 
-export const rebootLinode = (
-  linodeID: string | number,
-  linodeLabel: string,
-) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/reboot`)
+export interface LinodePowerAction {
+  (id: string | number, label: string, config_id?: number): void;
+}
+
+const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
+  Axios.post(`${API_ROOT}/linode/instances/${id}/reboot`, { config_id })
   .then((response) => {
-    events$.next(genEvent('linode_reboot', linodeID, linodeLabel));
+    events$.next(genEvent('linode_reboot', id, label));
     resetEventsPolling();
   });
 };
 
-export const powerOffLinode = (
-  linodeID: string | number,
-  linodeLabel: string,
-) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/shutdown`)
+const _powerOnLinode: LinodePowerAction = (id, label) => {
+  Axios.post(`${API_ROOT}/linode/instances/${id}/boot`)
   .then((response) => {
-    events$.next(genEvent('linode_shutdown', linodeID, linodeLabel));
+    events$.next(genEvent('linode_boot', id, label));
     resetEventsPolling();
   });
 };
 
-export const powerOnLinode = (
-  linodeID: string | number,
-  linodeLabel: string,
+interface DrawerFunction {
+  (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback): void;
+}
+
+const withAction = (
+  action: LinodePowerAction,
+) => (
+  updateDrawer: DrawerFunction,
+  id: number | string,
+  label: string,
 ) => {
-  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/boot`)
+  Axios
+    .get(`${API_ROOT}/linode/instances/${id}/configs`)
+    .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Config>>) => {
+      const configs = response.data.data;
+      const len = configs.length;
+
+      if (len > 1) {
+        updateDrawer(configs, config_id => action(id, label, config_id));
+      } else {
+        action(id, label);
+      }
+    });
+};
+
+export const powerOffLinode: LinodePowerAction = (id, label) => {
+  Axios.post(`${API_ROOT}/linode/instances/${id}/shutdown`)
   .then((response) => {
-    events$.next(genEvent('linode_boot', linodeID, linodeLabel));
+    events$.next(genEvent('linode_shutdown', id, label));
     resetEventsPolling();
   });
 };
+
+export const rebootLinode = withAction(_rebootLinode);
+
+export const powerOnLinode = withAction(_powerOnLinode);

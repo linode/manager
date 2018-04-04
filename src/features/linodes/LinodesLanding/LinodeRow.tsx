@@ -14,6 +14,7 @@ import TableCell from 'material-ui/Table/TableCell';
 
 import Tag from 'src/components/Tag';
 import LinearProgress from 'src/components/LinearProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
@@ -75,6 +76,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   type?: Linode.LinodeType;
+  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
@@ -123,7 +125,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   loadedState = () => {
-    const { linode, classes } = this.props;
+    const { linode, classes, openConfigDrawer } = this.props;
 
     /**
      * @todo Until tags are implemented we're using the group as a faux tag.
@@ -146,7 +148,10 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell className={classes.actionCell}>
-          <LinodeActionMenu linode={linode} />
+          <LinodeActionMenu
+            linode={linode}
+            openConfigDrawer={openConfigDrawer}
+          />
         </TableCell>
     </TableRow>
     );
