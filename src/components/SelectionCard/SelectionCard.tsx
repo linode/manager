@@ -172,7 +172,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
           })
         }
         { ...((onClick && !disabled) && { onClick, onKeyPress: onClick }) }
-        data-qa-selection-card={checked}
+        data-qa-selection-card
       >
         <WithTooltip
           title={tooltip}
