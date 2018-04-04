@@ -13,6 +13,14 @@ import LinodeTheme from '../../../theme';
 type ClassNames = 'root' | 'icon' | 'new';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
     marginLeft: theme.spacing.unit * 2,
     position: 'relative',
@@ -27,6 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     fill: '#999',
   },
   new: {
+    animation: 'fadeIn 225ms ease-in-out',
     width: 10,
     height: 10,
     backgroundColor: LinodeTheme.color.red,
