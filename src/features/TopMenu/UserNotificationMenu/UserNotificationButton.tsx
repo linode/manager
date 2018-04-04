@@ -23,6 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   root: {
     marginLeft: theme.spacing.unit * 2,
+    marginRight: - theme.spacing.unit,
     position: 'relative',
     '&:hover, &:focus': {
       '& $icon': {
