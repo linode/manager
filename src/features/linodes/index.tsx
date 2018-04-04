@@ -27,8 +27,8 @@ class LinodesRoutes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={LinodesDetail} path={`${path}/:linodeId`}/>
         <Route component={LinodesCreate} path={`${path}/create`}/>
+        <Route component={LinodesDetail} path={`${path}/:linodeId`}/>
         <Route component={LinodesLanding} path={path} exact />
       </Switch>
     );
