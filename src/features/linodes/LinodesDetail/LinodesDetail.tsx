@@ -48,7 +48,7 @@ class LinodeDetail extends React.Component<CombinedProps> {
   render() {
     const { match: { path, url } } = this.props;
     const { data: linode } = this.props.linode.response;
-    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.match.url }));
+    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
       <div>
