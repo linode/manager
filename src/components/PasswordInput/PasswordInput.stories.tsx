@@ -9,7 +9,7 @@ storiesOf('Password Input', module)
 .addDecorator(ThemeDecorator)
 .add('Example', () => (
     <div>
-        <PasswordInput />
+        <PasswordInput/>
         <p>Some text underneath</p>
     </div>
 ));

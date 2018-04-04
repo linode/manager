@@ -172,6 +172,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
           })
         }
         { ...((onClick && !disabled) && { onClick, onKeyPress: onClick }) }
+        data-qa-selection-card={checked}
       >
         <WithTooltip
           title={tooltip}
@@ -187,12 +188,13 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
                 </Grid>
               }
               <Grid item className={classes.flex}>
-                <div className={classes.heading}>
+                <div className={classes.heading} data-qa-select-card-heading={heading}>
                   {heading}
                 </div>
                 {subheadings.map((subheading, idx) => {
                   return (
-                    <div key={idx} className={classes.subheading}>
+                    <div key={idx} className={classes.subheading}
+                      data-qa-select-card-subheading={subheading}>
                       {subheading}
                     </div>
                   );
