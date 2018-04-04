@@ -7,7 +7,6 @@ import {
   WithStyles,
 } from 'material-ui';
 import Drawer from 'src/components/Drawer';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
@@ -17,6 +16,7 @@ import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 
+import Table from 'src/components/Table';
 import Radio from 'src/components/Radio';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';

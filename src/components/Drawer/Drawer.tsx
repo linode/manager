@@ -19,11 +19,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   paper: {
     width: 300,
     padding: theme.spacing.unit * 4,
-    [theme.breakpoints.up('md')]: {
-      width: 400,
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: 480,
+    [theme.breakpoints.up('sm')]: {
+      width: 500,
     },
     '& .actionPanel': {
       paddingLeft: 0,

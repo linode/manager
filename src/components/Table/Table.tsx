@@ -16,16 +16,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-type CombinedProps = TableProps & WithStyles<ClassNames>;
+type CombinedProps = { className?: string } & TableProps & WithStyles<ClassNames>;
 
 class WrappedTable extends React.Component<CombinedProps> {
 
   render() {
-    const { classes } = this.props;
+    const { classes, className, ...rest } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Table {...this.props}>{this.props.children}</Table>
+      <div className={`${classes.root} ${className}`}>
+        <Table {...rest}>{this.props.children}</Table>
       </div>
     );
   }
