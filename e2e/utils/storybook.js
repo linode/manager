@@ -18,3 +18,16 @@ exports.waitForFocus = (elementToBeFocused) => {
         return browser.isExisting(elementToBeFocused) !== false;
     }, 10000)
 }
+
+
+exports.executeInAllStories = (storyArray, callback) => {
+    storyArray.forEach(story => {
+        browser.click(story);
+        browser.waitUntil(function() {
+            return browser.getAttribute(story, 'href').includes('?selectedKind');
+        }, 5000);
+        exports.previewFocus();
+        callback();
+        browser.frame();
+    });
+}
