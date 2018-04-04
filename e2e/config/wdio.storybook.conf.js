@@ -1,10 +1,12 @@
 const { merge } = require('ramda');
+const { argv } = require('yargs');
 const { browserCommands } = require('./custom-commands');
 const wdioMaster = require('./wdio.conf.js');
+const specsToRun = argv.file ? [ argv.file ] : ['./src/components/**/*.spec.js'];
 
 exports.config = merge(wdioMaster.config, {
-    specs: ['./src/components/**/*.spec.js'],
-    baseUrl: process.env.DOCKER ? 'https://manager-storybook:6006' : 'http://localhost:6006',
+    specs: specsToRun,
+    baseUrl: process.env.DOCKER ? 'http://manager-storybook:6006' : 'http://localhost:6006',
     before: function (capabilities, specs) {
         browserCommands();
     },
