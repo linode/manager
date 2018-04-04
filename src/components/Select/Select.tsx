@@ -26,20 +26,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   menu: {
-    border: '1px solid #bbb',
   },
   dropDown: {
+    border: '1px solid #bbb',
     boxShadow: 'none',
     position: 'absolute',
-    width: '100%',
-    maxWidth: 417,
     overflowY: 'auto',
     overflowX: 'hidden',
     background: LinodeTheme.bg.offWhite,
-    left: '16px !important',
-    [theme.breakpoints.down('sm')]: {
-      width: 'calc(100% - 30px)',
-    },
+    margin: '8px 0 0 -1px',
+    boxSizing: 'content-box',
   },
   inputError: {
     borderColor: LinodeTheme.color.red,
@@ -93,7 +89,6 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
 
   return (
     <Select
-      autoWidth
       className={c}
       MenuProps={menuProps}
       input={<Input {...inputProps} />}
