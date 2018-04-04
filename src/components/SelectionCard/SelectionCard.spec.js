@@ -62,10 +62,6 @@ describe('Selection Card Suite', () => {
         waitForFocus(selectionCard);
     }
 
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display selection card in navigation', () => {
         const selectionCardElemstory = $(menuItem);
         expect(selectionCardElemstory.isVisible()).toBe(true);

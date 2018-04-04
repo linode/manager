@@ -7,10 +7,6 @@ describe('Icon Text Link Suite', () => {
     const childMenuItem = '[data-name="Interactive"]';
     const iconTextLinkTitle = '[data-qa-icon-text-link="Link title"]';
 
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display icon text link in navigation', () => {
         const iconTextLink = $(parentMenuItem);
         expect(iconTextLink.isVisible()).toBe(true);

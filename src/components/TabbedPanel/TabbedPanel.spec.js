@@ -10,10 +10,6 @@ describe('Tabbed Panel Suite', () => {
     const tab = '[data-qa-tab]';
     const tabBody = '[data-qa-tab-body]';
 
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display tabbed panel in navigation', () => {
         const tabbedPanelMenu = $(menuItem);
         expect(tabbedPanelMenu.isVisible()).toBe(true);
