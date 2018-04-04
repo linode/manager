@@ -5,7 +5,6 @@ import { compose, path } from 'ramda';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
@@ -17,6 +16,7 @@ import IconTextLink from 'src/components/IconTextLink';
 
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { API_ROOT } from 'src/constants';
+import Table from 'src/components/Table';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -232,7 +232,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           SideIcon={PlusSquare}
           onClick={() => this.toggleCreateDrawer(true)}
           text="Create an OAuth Client"
-          title="Link title"
+          title="Create an OAuth Client"
         />
 
         <ConfirmationDialog

@@ -33,6 +33,7 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
         first
         disabled={isFirstPage}
         onClick={() => onClickHandler(currentPage - 1) }
+        data-qa-prev-page
       />
 
       { displayedPages.map((page, idx) =>
@@ -49,6 +50,7 @@ const PaginationControls: React.StatelessComponent<Props> = (props) => {
         last
         disabled={isLastPage}
         onClick={() => onClickHandler(currentPage + 1) }
+        data-qa-next-page
       />
     </div>
   );
