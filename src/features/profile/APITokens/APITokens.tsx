@@ -5,6 +5,7 @@ import { path, pathOr } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
+import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Table from 'material-ui/Table';
@@ -105,17 +106,27 @@ class APITokens extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography variant="headline" className={classes.headline}>
-          {title}
-        </Typography>
-        {type === 'Personal Access Token' &&
-          <IconTextLink
-            SideIcon={PlusSquare}
-            onClick={() => this.openCreateDrawer()}
-            text="Add a Personal Access Token"
-            title="Add a Personal Access Token"
-          />
-        }
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+        >
+          <Grid item>
+            <Typography variant="headline" className={classes.headline}>
+              {title}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {type === 'Personal Access Token' &&
+              <IconTextLink
+                SideIcon={PlusSquare}
+                onClick={() => this.openCreateDrawer()}
+                text="Add a Personal Access Token"
+                title="Add a Personal Access Token"
+              />
+            }
+          </Grid>
+        </Grid>
         <Paper>
           <Table>
             <TableHead>

@@ -22,6 +22,10 @@ namespace Linode {
     results: number;
   }
 
+  export interface SingleResourceState<T> {
+    data: T;
+  }
+
   export interface ApiState {
     linodes?: ManyResourceState<Linode.Linode>;
     linodeTypes?: ManyResourceState<Linode.LinodeType>;
