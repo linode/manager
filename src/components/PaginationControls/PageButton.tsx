@@ -67,6 +67,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
       ${classes.first}` }
       onClick={onClick}
       disabled={disabled}
+      data-qa-previous-page
     >
       <KeyboardArrowLeft />
     </Button>
@@ -80,6 +81,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
       ${classes.last}` }
       onClick={onClick}
       disabled={disabled}
+      data-qa-next-page
     >
       <KeyboardArrowRight />
     </Button>
@@ -87,7 +89,7 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   }
 
   return (
-    <Button className={rootClasses} onClick={onClick}>{page}</Button>
+    <Button className={rootClasses} onClick={onClick} data-qa-page-to={page}>{page}</Button>
   );
 });
 

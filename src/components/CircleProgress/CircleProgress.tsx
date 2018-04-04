@@ -59,6 +59,7 @@ const CircleProgressComponent = (props: Props & WithStyles<CSSClasses>) => {
         value={value}
         variant={variant}
         thickness={2}
+        data-qa-circle-progress
       />
     </div>
   );
