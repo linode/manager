@@ -25,11 +25,11 @@ class LinodeDetail extends React.Component<Props> {
   }
 
   tabs: RouteTab[] = [
-    genTab('Summary', `${this.props.match.path}/summary`, LinodeSummary),
+    genTab('Summary', `${this.props.location.pathname}/summary`, LinodeSummary),
   ];
 
   render() {
-    const { match: { path } } = this.props;
+    const { match: { path }, location } = this.props;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
@@ -49,7 +49,8 @@ class LinodeDetail extends React.Component<Props> {
         </AppBar>
         <Switch>
           {this.tabs.map(tab => tab.renderRoute(path))}
-          <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/summary`} />)} />
+          <Route exact path={`${path}/`} render={() =>
+            (<Redirect to={`${location.pathname}/summary`} />)} />
         </Switch>
       </div>
     );
