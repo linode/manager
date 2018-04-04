@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { compose, path } from 'ramda';
 
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
+import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import TableBody from 'material-ui/Table/TableBody';
@@ -38,7 +39,7 @@ type ClassNames = 'root' | 'title';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   title: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    margin: `${theme.spacing.unit * 2}px 0`,
   },
 });
 
@@ -209,9 +210,26 @@ class OAuthClients extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography className={classes.title} variant="title">
-          OAuth Clients
-        </Typography>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          style={{ marginTop: 8 }}
+        >
+          <Grid item>
+            <Typography className={classes.title} variant="title">
+              OAuth Clients
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconTextLink
+              SideIcon={PlusSquare}
+              onClick={() => this.toggleCreateDrawer(true)}
+              text="Create an OAuth Client"
+              title="Create an OAuth Client"
+            />
+          </Grid>
+        </Grid>
         <Paper>
           <Table>
             <TableHead>
@@ -228,12 +246,6 @@ class OAuthClients extends React.Component<CombinedProps, State> {
             </TableBody>
           </Table>
         </Paper>
-        <IconTextLink
-          SideIcon={PlusSquare}
-          onClick={() => this.toggleCreateDrawer(true)}
-          text="Create an OAuth Client"
-          title="Create an OAuth Client"
-        />
 
         <ConfirmationDialog
           title="Client Secret"
