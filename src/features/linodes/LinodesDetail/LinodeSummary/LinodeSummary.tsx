@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Typography from 'material-ui/Typography';
+import SummaryPanel from './SummaryPanel';
 
 
 interface Props {
@@ -14,11 +14,7 @@ class LinodeSummary extends React.Component<FinalProps> {
   render() {
     const { linode } = this.props;
     return (
-      <React.Fragment>
-        <Typography variant="headline">
-          Linode Summary for {linode.label}
-        </Typography>
-      </React.Fragment>
+      <SummaryPanel linode={linode}/>
     );
   }
 }
