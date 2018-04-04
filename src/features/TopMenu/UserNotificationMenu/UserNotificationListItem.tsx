@@ -10,9 +10,20 @@ import {
 type ClassNames = 'root' | 'title' | 'content';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  title: {},
-  content: {},
+  root: {
+    padding: `${theme.spacing.unit * 2}px
+    ${theme.spacing.unit * 4}px
+    ${theme.spacing.unit * 2}px
+    ${theme.spacing.unit * 3 - 1}px`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
+  },
+  title: {
+    ...theme.typography.subheading,
+  },
+  content: {
+    ...theme.typography.caption,
+  },
 });
 
 export interface UserNotificationListItemProps {
