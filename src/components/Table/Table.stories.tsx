@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 
 import { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
+import ThemeDecorator from 'src/utilities/storybookDecorators';
 
 import TableWrapper from './Table';
 
