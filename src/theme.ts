@@ -118,6 +118,10 @@ const LinodeTheme: Linode.Theme = {
     MuiDrawer: {
       paper: {
         boxShadow: '0 0 5px #bbb',
+        overflowY: 'overlay',
+        fallbacks: {
+          overflowY: 'auto',
+        },
       },
     },
     MuiExpansionPanel: {},
@@ -168,7 +172,9 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControl: {
       root: {
+        minHeight: 60,
         marginTop: 16,
+        minWidth: 200,
       },
     },
     MuiFormControlLabel: {
@@ -199,6 +205,9 @@ const LinodeTheme: Linode.Theme = {
         border: '1px solid #ccc',
         alignItems: 'center',
         transition: 'border-color 225ms ease-in-out',
+        lineHeight: 1,
+        minHeight: 44,
+        boxSizing: 'border-box',
         '& svg': {
           fontSize: 18,
           marginLeft: 8,
@@ -284,10 +293,10 @@ const LinodeTheme: Linode.Theme = {
     MuiSelect: {
       root: {},
       selectMenu: {
-        minHeight: 38,
-        padding: '9px 32px 7px 10px',
+        padding: '7px 32px 7px 10px',
         color: '#666',
         backgroundColor: '#fff',
+        lineHeight: .9,
         '&:focus': {
           backgroundColor: '#fff',
           borderColor: 'pink',

@@ -1,5 +1,21 @@
 # Testing Linode Manager
 
+## Unit Tests
+
+The unit tests for Linode manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with `.test.tsx` file extension and can be found throughout the codebase.
+
+To run tests:
+
+    yarn && yarn test
+
+To Run a specific file or files in a directory:
+
+    yarn test myFile.test.tsx
+    yarn test src/some-folder
+
+
+## End-to-End Tests
+
 End-to-end Testing of the Linode Manager can be done locally by running Selenium & WebdriverIO tests
 alongside the local development environment, or by running multiple containers via docker-compose.
 
