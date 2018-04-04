@@ -4,7 +4,7 @@ import { API_ROOT } from 'src/constants';
 import { linodeEvents$, resetEventsPolling } from 'src/events';
 import * as moment from 'moment';
 
-const dateFormat = 'YYYY-MM-DDTHH:mm:ss';
+import { dateFormat } from 'src/time';
 
 export const genEvent = (
   action: string,

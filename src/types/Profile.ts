@@ -21,4 +21,13 @@ namespace Linode {
     pending: number,
     credit: number,
   };
+
+  export type Token = {
+    id: number,
+    scopes: string,
+    label: string,
+    created: string,
+    token: string,
+    expiry: string,
+  };
 }
