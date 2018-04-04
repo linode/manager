@@ -26,6 +26,16 @@ exports.browserConf = {
         maxInstances: 5,
         acceptInsecureCerts: true
     },
+
+    firefoxNightly: {
+        browserName: 'firefox',
+        marionette: true,
+         'moz:firefoxOptions' : {
+            'binary': '/Applications/Firefox Nightly.app/Contents/MacOS/firefox-bin'
+        },
+        maxInstances: 5,
+        acceptInsecureCerts: true
+    },
     headlessFirefox: {
         browserName: 'firefox',
         marionette: true,

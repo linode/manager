@@ -75,7 +75,8 @@
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
     "selenium": "./node_modules/.bin/selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
-    "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js"
+    "e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js",
+    "e2e:all": "./node_modules/.bin/wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js"
   },
   "pre-commit": [
     "lint",
