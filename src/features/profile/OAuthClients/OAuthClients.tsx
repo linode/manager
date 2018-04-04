@@ -232,7 +232,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           SideIcon={PlusSquare}
           onClick={() => this.toggleCreateDrawer(true)}
           text="Create an OAuth Client"
-          title="Link title"
+          title="Create an OAuth Client"
         />
 
         <ConfirmationDialog
