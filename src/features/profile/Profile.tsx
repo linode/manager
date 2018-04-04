@@ -26,13 +26,15 @@ class Profile extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'API Tokens', routeName: `${this.props.match.path}/tokens` },
-    { title: 'OAuth Clients', routeName: `${this.props.match.path}/clients` },
+    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
+    { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
   ];
 
   render() {
     const { match: { path, url } } = this.props;
-    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.match.url }));
+    const matches = (p: string) => {
+      return Boolean(matchPath(p, { path: this.props.location.pathname }));
+    };
 
     return (
       <div>
