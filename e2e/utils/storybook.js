@@ -1,6 +1,6 @@
 /*
 * Sets focus to storybook preview iframe
-* @returns {null} returns nothing
+* @returns { null } returns nothing
 */
 exports.previewFocus = () => {
     // Shift focus to storybook preview iFrame
@@ -19,7 +19,13 @@ exports.waitForFocus = (elementToBeFocused) => {
     }, 10000)
 }
 
-
+/*
+* Navigate to a story form the story array, set focus to storybook preview,
+* execute the callback function, and set the focus back to default.
+* @param { Array } array of story css selectors
+* @param { Function } function containing actions to take in each story
+* @returns { null } returns nothing
+*/
 exports.executeInAllStories = (storyArray, callback) => {
     storyArray.forEach(story => {
         browser.click(story);
