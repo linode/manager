@@ -7,14 +7,35 @@ import {
   WithStyles,
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
-import Notifications from 'material-ui-icons/Notifications';
-import NotificationsNone from 'material-ui-icons/NotificationsNone';
+import NotificationIcon from '../../../assets/icons/bell.svg';
+import LinodeTheme from '../../../theme';
 
-type ClassNames = 'root' | 'icon';
+type ClassNames = 'root' | 'icon' | 'new';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  icon: { fontSize: '31px' },
+  root: {
+    marginLeft: theme.spacing.unit * 2,
+    position: 'relative',
+    '&:hover, &:focus': {
+      '& $icon': {
+        fill: theme.palette.primary.main,
+      },
+    },
+  },
+  icon: {
+    transition: theme.transitions.create['fill'],
+    fill: '#999',
+  },
+  new: {
+    width: 10,
+    height: 10,
+    backgroundColor: LinodeTheme.color.red,
+    borderRadius: '50%',
+    position: 'absolute',
+    zINdex: 2,
+    bottom: 8,
+    right: 8,
+  },
 });
 
 interface Props {
@@ -31,11 +52,18 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   onClick,
   getRef,
 }) => {
-  const Icon = hasNew ? Notifications : NotificationsNone;
 
   return (
-    <IconButton onClick={onClick} buttonRef={getRef} >
-      <Icon className={classes.icon} />
+    <IconButton
+      onClick={onClick}
+      buttonRef={getRef}
+      className={classes.root}
+    >
+      <NotificationIcon className={classes.icon} />
+      {hasNew
+        ? <span className={classes.new}/>
+        : ''
+      }
     </IconButton>
   );
 };
