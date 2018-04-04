@@ -14,7 +14,7 @@ export const events$ = new Rx.Subject<Linode.Event>();
 let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean} = {};
 
-const initialPollInterval = 1000;
+const initialPollInterval = 2000;
 export let eventRequestDeadline = Date.now();
 export let currentPollIntervalMultiplier = 1;
 
@@ -22,6 +22,10 @@ export function resetEventsPolling() {
   eventRequestDeadline = Date.now() + initialPollInterval;
   currentPollIntervalMultiplier = 1;
 }
+export const init = () => {
+  filterDatestamp = createInitialDatestamp();
+  resetEventsPolling();
+};
 
 export function generateInFilter(keyName: string, arr: any[]) {
   return {

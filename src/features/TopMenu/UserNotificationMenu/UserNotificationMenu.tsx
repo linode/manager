@@ -1,89 +1,125 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui';
 import { Subscription, Observable } from 'rxjs/Rx';
-import { init, take } from 'ramda';
+import { assoc, compose, sort, take, values } from 'ramda';
 import * as moment from 'moment';
 import Axios from 'axios';
 
-import IconButton from 'material-ui/IconButton';
-import Notifications from 'material-ui-icons/Notifications';
-import NotificationsNone from 'material-ui-icons/NotificationsNone';
 import Menu from 'material-ui/Menu';
 
 import { API_ROOT } from 'src/constants';
-import EventListItem from 'src/components/EventListItem';
-import eventTypes from 'src/eventTypes';
-import { events$ } from 'src/events';
+import { events$, init } from 'src/events';
+import UserNotificationButton from './UserNotificationButton';
+import UserNotificationList from './UserNotificationList';
 
-type ClassNames = 'root' | 'icon';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
-  icon: { fontSize: '31px' },
 });
 
 interface Props {
-  hasNew?: boolean;
+  [index: string]: any;
 }
 
 interface State {
   anchorEl?: HTMLElement;
   events: Linode.Event[];
+  hasNew?: boolean;
   notifications: Linode.Notification[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = {} & WithStyles<ClassNames>;
+
+interface EventsMap {
+  [index: string]: Linode.Event;
+}
 
 class UserNotificationMenu extends React.Component<CombinedProps, State> {
   state = {
-    anchorEl: undefined,
     events: [],
     notifications: [],
-  };
-
-  static defaultProps = {
+    anchorEl: undefined,
     hasNew: false,
   };
 
   subscription: Subscription;
 
+  static defaultProps = {
+    hasNew: false,
+  };
+
   componentDidMount() {
+
     this.subscription = Observable
       .combineLatest(
+
         Observable.defer(() =>
           Axios.get(`${API_ROOT}/account/notifications`).then(response => response.data.data)),
+
         events$
-          .scan((acc, value) => {
-            return [value, ...(acc.length > 99 ? init(acc) : acc)];
-          }, []),
-        )
+          /** Filter the fuax event used to kick off the progress bars. */
+          .filter((event: Linode.Event) => event.id !== 1)
+
+          /** Create a map of the Events using Event.ID as the key. */
+          .scan((events: EventsMap, event: Linode.Event) =>
+            assoc(String(event.id), event, events), {}),
+    )
+      /** Wait for the events to settle before calling setState. */
       .debounce(() => Observable.interval(250))
+
+      /** Notifications are fine, but the events need to be extracts and sorted. */
+      .map(([notifications, events]) => {
+        return [
+          notifications,
+          extractAndSortByCreated(events),
+        ];
+      })
       .subscribe(
-        ([notifications, events]) => {
+        ([notifications, events]: [Linode.Notification[], Linode.Event[]]) => {
           this.setState({
-            events: take(100 - notifications.length, events),
+            hasNew: hasUnseenEvent(events),
+            events,
             notifications,
           });
         },
         () => null,
-      );
+    );
+
+    Observable
+      .fromEvent(this.buttonRef, 'click')
+      .withLatestFrom(
+        events$
+          .filter(e => e.id !== 1)
+          .map(e => e.id),
+    )
+      .subscribe(([e, id]) => {
+        Axios
+          .post(`${API_ROOT}/account/events/${id}/seen`)
+          .then(() => init());
+      });
   }
 
   componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  render() {
-    const { classes, hasNew } = this.props;
-    const { anchorEl, events, notifications } = this.state;
+  private buttonRef: HTMLElement;
 
-    const Icon = hasNew ? Notifications : NotificationsNone;
+  setRef = (element: HTMLElement) => {
+    this.buttonRef = element;
+  }
+
+  render() {
+    const { anchorEl, hasNew, events, notifications } = this.state;
 
     return (
       <React.Fragment>
-        <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}>
-          <Icon className={classes.icon} />
-        </IconButton>
+        <UserNotificationButton
+          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+          getRef={this.setRef}
+          hasNew={hasNew}
+        />
         <Menu
           anchorEl={anchorEl}
           getContentAnchorEl={undefined}
@@ -92,41 +128,33 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: undefined })}
         >
-        {
-          /**
-           * @todo Mapping minor/major/critital severity to colors for display.
-           */
-          (notifications as Linode.Notification[]).map((notification, idx) =>
-          <EventListItem key={idx} title={notification.label} />)
-        }
-        {
-          (events as Linode.Event[]).map((event, idx) =>
-          <EventListItem
-            key={idx}
-            title={createEventTitle(event)}
-            success={!event.seen}
-            content={createEventBody(event)}
-          />)
-        }
+        <UserNotificationList notifications={notifications} events={events}/>
         </Menu>
       </React.Fragment>
     );
   }
 }
 
-/** Who did what? */
-function createEventTitle(event:Linode.Event): string {
-  const verb = eventTypes[event.action].pastTenseAction;
-  const subject = (event.entity && event.entity.label) || '';
-
-  return `${event.username} ${verb} ${subject}`;
-}
-
-/** When */
-function createEventBody(event:Linode.Event): string {
-  return moment(`${event.created}Z`).fromNow();
-}
-
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(UserNotificationMenu);
+const extractAndSortByCreated = compose(
+  take(25),
+  sort((a: Linode.Event, b: Linode.Event) => moment(b.created).diff(moment(a.created))),
+  values,
+);
+
+const hasUnseenEvent = (events: Linode.Event[]) => {
+  const len = events.length;
+  let idx = 0;
+  while (idx < len) {
+    if (!events[idx].seen) {
+      return true;
+    }
+
+    idx += 1;
+  }
+
+  return false;
+};
+
+export default styled<Props>(UserNotificationMenu);
