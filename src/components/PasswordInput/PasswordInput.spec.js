@@ -21,10 +21,6 @@ describe('Password Input Suite', () => {
         }
     }
 
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display password input in navigation', () => {
         const navItem = $(menuItem);
         expect(navItem.isVisible()).toBe(true);
