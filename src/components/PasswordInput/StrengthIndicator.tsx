@@ -44,7 +44,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const StrengthIndicator: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, strength } = props;
   return (
-    <Grid container spacing={8} className={classes.root}>
+    <Grid container spacing={8} className={classes.root} data-qa-strength={strength}>
       {
         Array
           .from(Array(4), (v, idx) => idx + 1)
