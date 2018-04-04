@@ -23,18 +23,37 @@ import LinodeSummary from './LinodeSummary';
 
 type Props = RouteComponentProps<{ linodeId?: number }>;
 
+interface Data {
+  linode: Linode.Linode;
+  type: Linode.LinodeType;
+  image: Linode.Image;
+}
+
 interface State {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
 interface PreloadedProps {
-  linode: PromiseLoaderResponse<Linode.SingleResourceState<Linode.Linode>>;
+  data: PromiseLoaderResponse<Data>;
 }
 
 const preloaded = PromiseLoader<Props>({
-  linode: ((props) => {
+  data: ((props) => {
     const { match: { params: { linodeId } } } = props;
-    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`);
+    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+      .then((response) => {
+        const { data: linode } = response;
+        const typeReq = Axios.get(`${API_ROOT}/images/${linode.image}`);
+        const imageReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`);
+        return Promise.all([typeReq, imageReq])
+          .then((responses) => {
+            return {
+              linode,
+              type: responses[0],
+              image: responses[1],
+            };
+          });
+      });
   }),
 });
 
@@ -43,7 +62,9 @@ type CombinedProps = Props & PreloadedProps;
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
-  state = { linode: this.props.linode.response.data };
+  state = {
+    linode: this.props.data.response.linode,
+  };
 
   componentWillUnmount() {
     this.subscription.unsubscribe();
@@ -78,8 +99,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const { match: { path, url } } = this.props;
+    const { type, image } = this.props.data.response;
     const { linode } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
+
+    console.log(linode, type, image);
 
     return (
       <div>
