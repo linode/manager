@@ -14,13 +14,14 @@ import {
 } from 'react-router-dom';
 
 import { events$ } from 'src/events';
+import { newLinodeEvents } from 'src/features/linodes/events';
 import ErrorState from 'src/components/ErrorState';
 import WithDocumentation from 'src/components/WithDocumentation';
+import PaginationFooter from 'src/components/PaginationFooter';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
-import PaginationFooter from '../../../components/PaginationFooter';
 import ToggleBox from './ToggleBox';
 
 import './linodes.css';
@@ -103,33 +104,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
-      .filter((linodeEvent) => {
-
-        const actionWhitelist = [
-          'linode_boot',
-          'linode_reboot',
-          'linode_shutdown',
-        ];
-
-        const statusWhitelist = [
-          'started',
-          'finished',
-          'scheduled',
-          'failed',
-        ];
-
-        const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
-        const createdAfterMountTime = moment(linodeEvent.created + 'Z') > mountTime;
-        const isPendingCompletion = linodeEvent.percent_complete !== null
-          && linodeEvent.percent_complete < 100;
-
-        const result = isLinodeEvent
-          && statusWhitelist.includes(linodeEvent.status)
-          && actionWhitelist.includes(linodeEvent.action)
-          && (createdAfterMountTime || isPendingCompletion);
-
-          return result;
-      })
+      .filter(newLinodeEvents(mountTime))
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
