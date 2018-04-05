@@ -85,8 +85,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes  } = this.props;
-    const { actions, anchorEl  } = this.state;
+    const { classes } = this.props;
+    const { actions, anchorEl } = this.state;
 
     if (typeof actions === 'undefined') { return null; }
 

@@ -31,10 +31,14 @@ const menuLinks: MenuLink[] = [
 ];
 
 type CSSClasses =
-'leftIcon'
+| 'menu'
+| 'leftIcon'
 | 'menuItem';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
+  menu: {
+    transform: `translateY(${theme.spacing.unit}px)`,
+  },
   leftIcon: {
     marginRight: theme.spacing.unit,
     width: '50px',
@@ -131,7 +135,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 
   render() {
-    const { profile } = this.props;
+    const { profile, classes } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -158,6 +162,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           }}
           open={open}
           onClose={this.handleClose}
+          className={classes.menu}
         >
           {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
         </Menu>

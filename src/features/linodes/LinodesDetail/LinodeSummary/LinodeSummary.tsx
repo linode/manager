@@ -1,22 +1,22 @@
 import * as React from 'react';
-import Typography from 'material-ui/Typography';
+
+import SummaryPanel from './SummaryPanel';
 
 interface Props {
-  linode: Linode.Linode;
-}
-
-interface State {
+  linode: Linode.Linode & { recentEvent?: Linode.Event };
+  type: Linode.LinodeType;
+  image: Linode.Image;
+  volumes: Linode.Volume[];
 }
 
 type FinalProps = Props;
 
-class LinodeSummary extends React.Component<FinalProps, State> {
+class LinodeSummary extends React.Component<FinalProps> {
+
   render() {
-    const { linode } = this.props;
+    const { linode, type, image, volumes } = this.props;
     return (
-      <Typography variant="headline">
-        Linode Summary for {linode.label}
-      </Typography>
+      <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
     );
   }
 }

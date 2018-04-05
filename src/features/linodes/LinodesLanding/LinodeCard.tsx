@@ -16,6 +16,7 @@ import Typography from 'material-ui/Typography';
 
 import Tag from 'src/components/Tag';
 import CircleProgress from 'src/components/CircleProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -44,8 +45,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingTop: theme.spacing.unit,
     paddingLeft: 5,
     paddingRight: 5,
-    fontSize: '90%',
     color: LinodeTheme.palette.text.primary,
+    ...theme.typography.caption,
   },
   flexContainer: {
     display: 'flex',
@@ -100,6 +101,7 @@ interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   image?: Linode.Image;
   type?: Linode.LinodeType;
+  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -183,7 +185,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, linode } = this.props;
+    const { classes, linode, openConfigDrawer } = this.props;
     const loading = transitionStatus.includes(linode.status);
 
     return (
@@ -192,7 +194,12 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <LinodeActionMenu linode={linode} />
+              <div style={{ position: 'relative', top: 6 }}>
+                <LinodeActionMenu
+                 linode={linode}
+                 openConfigDrawer={openConfigDrawer}
+                />
+              </div>
             }
           />
           {<Divider />}
@@ -204,7 +211,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(linode.id, linode.label)}
+              onClick={() => rebootLinode(openConfigDrawer, linode.id, linode.label)}
             >
               <span className="btnLink">Reboot</span>
             </Button>
