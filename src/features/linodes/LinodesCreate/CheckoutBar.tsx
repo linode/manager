@@ -126,7 +126,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root} style={finalStyle}>
-        <Typography variant="title" className={classes.sidebarTitle}>
+        <Typography variant="title" className={classes.sidebarTitle} data-qa-order-summary>
           {label || 'Linode'} Summary
         </Typography>
 
@@ -179,7 +179,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
           </React.Fragment>
         }
 
-        <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+        <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-total-price>
           <Typography variant="subheading" className={classes.price}>
             {this.formatPrice()}
           </Typography>
@@ -194,6 +194,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
             color="primary"
             fullWidth
             onClick={onDeploy}
+            data-qa-deploy-linode
           >
             Deploy Linode
           </Button>
