@@ -10,21 +10,37 @@ import {
 import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import Hidden from 'material-ui/Hidden';
 
 import { typeLabelLong, formatRegion } from 'src/features/linodes/presentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 
-type ClassNames = 'root' | 'text';
+type ClassNames = 'root'
+| 'title'
+| 'section'
+| 'region';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 2,
   },
-  text: {
-    marginTop: theme.spacing.unit,
+  title: {
+    marginBottom: theme.spacing.unit * 2,
   },
+  section: {
+    marginBottom: theme.spacing.unit,
+  },
+  region: {
+    [theme.breakpoints.between('sm', 'md')]: {
+      flexBasis: '100%',
+      maxWidth: '100%',
+      display: 'flex',
+      '& > span': {
+        width: '50%',
+      },
+    },
+  },
+  volume: {},
 });
 
 interface Props {
@@ -43,63 +59,36 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
     <Paper className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="subheading">
+          <Typography variant="title" className={classes.title}>
             Summary
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
-          <Typography className={classes.text} variant="body1">
+          <Typography className={classes.section} variant="caption">
             {image.label} {image.description}
           </Typography>
-          <Typography className={classes.text} variant="body1">
+          <Typography className={classes.section} variant="caption">
             {typeLabelLong(type.memory, type.disk, type.vcpus)}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
-          <Typography className={classes.text} variant="body1">
+          <Typography className={classes.section} variant="caption">
             <IPAddress ips={linode.ipv4} copyRight />
           </Typography>
-          <Typography className={classes.text} variant="body1">
+          <Typography className={classes.section} variant="caption">
             <IPAddress ips={[linode.ipv6]} copyRight />
           </Typography>
         </Grid>
-
-        {/**
-          * Note: The following pair of Grid items must be kept in sync. The purpose of doing
-          * this is so that at lower breakpoints, these two items, which are not related, dont
-          * stack on top of each other, breaking the appearance of the grid, and, at larger
-          * breakpoints, they don't break the grid in the other direction.
-          **/}
-        {/* This is shown at "large" and above */}
-        <Hidden mdDown>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.text} variant="body1">
-              {formatRegion(linode.region)}
-            </Typography>
-            <Typography className={classes.text} variant="body1">
-              Volumes: <Link
-                className="btnLink"
-                to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
-            </Typography>
-          </Grid>
-        </Hidden>
-
-        {/* This is shown at medium and below */}
-        <Hidden lgUp>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.text} variant="body1">
-              {formatRegion(linode.region)}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.text} variant="body1">
-              Volumes: <Link
-                className="btnLink"
-                to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
-            </Typography>
-          </Grid>
-        </Hidden>
-
+        <Grid item xs={12} sm={6} lg={4} className={classes.region}>
+          <Typography className={`${classes.section}`} variant="caption">
+            {formatRegion(linode.region)}
+          </Typography>
+          <Typography className={classes.section} variant="caption">
+            Volumes: <Link
+              className="btnLink"
+              to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
+          </Typography>
+        </Grid>
       </Grid>
     </Paper>
   );
