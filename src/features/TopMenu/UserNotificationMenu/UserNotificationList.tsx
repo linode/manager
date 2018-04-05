@@ -74,6 +74,9 @@ const createNotificationProps = (
     // ticket_abuse: {},
     // notice: {},
     default: {
+      success: notification.severity === 'minor',
+      warning: notification.severity === 'major',
+      error: notification.severity === 'critical',
       title: notification.label,
     },
   };
