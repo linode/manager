@@ -25,9 +25,18 @@ type ClassNames = 'root'
   | 'icon'
   | 'powerOn'
   | 'powerOff'
-  | 'rotate';
+  | 'rotate'
+  | 'fadeIn';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)',
@@ -83,6 +92,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   rotate: {
     animation: 'rotate 2s linear infinite',
     color: theme.palette.text.primary,
+  },
+  fadeIn: {
+    animation: 'fadeIn .2s ease-in-out',
   },
 });
 
@@ -152,19 +164,19 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
         >
           {isRunning &&
-            <span>
+            <span className={classes.fadeIn}>
               <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Running
             </span>
           }
           {isOffline &&
-            <span>
+            <span className={classes.fadeIn}>
               <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
               Offline
             </span>
           }
           {isBusy &&
-            <span>
+            <span className={classes.fadeIn}>
               <Reload className={`${classes.icon} ${classes.rotate}`} />
               Busy
             </span>
