@@ -339,6 +339,11 @@ const LinodeTheme: Linode.Theme = {
         color: '#32363C',
         fontWeight: 700,
       },
+      label: {
+        [breakpoints.up('md')]: {
+          fontSize: '1rem',
+        },
+      },
       labelContainer: {
         paddingLeft: 9,
         paddingRight: 9,
