@@ -11,11 +11,7 @@ describe('Help Icon Component Suite', () => {
 
     const helpButton = '[data-qa-help-button]';
     const popoverText = '[data-qa-popover-text]';
-
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
+    
     it('should display help icon in the navigation', () => {
         const helpIcon = $(navItem);
         expect(helpIcon.isVisible()).toBe(true);

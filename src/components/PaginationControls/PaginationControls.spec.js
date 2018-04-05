@@ -8,9 +8,6 @@ describe('Pagination Controls Suite', () => {
     const jumpToPage = page => `[data-qa-page-to="${page}"]`;
     const next = '[data-qa-next-page]';
 
-
-    beforeAll(() => browser.url(constants.routes.storybook));
-
     it('should display pagination controls in navigation', () => {
         const paginationMenuStory = $(menuItem);
         expect(paginationMenuStory.isVisible()).toBe(true);
