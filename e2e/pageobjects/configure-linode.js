@@ -50,7 +50,7 @@ class ConfigureLinode extends Page {
         expect(this.addonsHeader.isVisible()).toBe(true);
         this.addons.forEach(a => expect(a.isVisible()).toBe(true));
     }
-
+    // Configure a basic linode, selecting all the default options
     generic() {
         this.images[0].click();
         this.regions[0].click();

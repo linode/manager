@@ -37,9 +37,16 @@ describe('Create Linode - Configure Linode Suite', () => {
 
     it('should display three regions and have locations available in each', () => {
         ConfigureLinode.selectRegion('Europe');
+
+        // TODO assertion confirming selected region displays in checkoutsummary
     });
 
     it('should select a specific image', () => {
-        ConfigureLinode.selectImage('Debian 9');
+        const imageName = 'Debian 9';
+        ConfigureLinode.selectImage(imageName);
+
+        expect(CheckoutSummary.imageSummary.isVisible()).toBe(true);
+        expect(CheckoutSummary.imageDetail.isVisible()).toBe(true);
+        expect(CheckoutSummary.imageDetail.getText()).toBe(imageName);
     });
 });
