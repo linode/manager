@@ -52,7 +52,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     top: 2,
     left: 2,
     marginLeft: theme.spacing.unit / 2,
-    // color: theme.palette.text.primary,
   },
   popOver: {
     position: 'absolute',
