@@ -51,7 +51,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<CombinedProps> = (pr
     >
       <FormControl fullWidth>
         <InputLabel
-          htmlFor="awesomeness"
+          htmlFor="config"
           disableAnimation
           shrink={true}
           error={hasError}
@@ -78,7 +78,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<CombinedProps> = (pr
       <ActionsPanel>
         <Button variant="raised" color="primary" onClick={onSubmit}>
           Submit
-      </Button>
+        </Button>
         <Button onClick={onClose}>Cancel</Button>
       </ActionsPanel>
     </Drawer>
