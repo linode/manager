@@ -13,30 +13,39 @@ The following buzzwords are involved in this project:
 * ES6/ES7 (via [Babel](https://babeljs.io/))
 * [SCSS](http://sass-lang.com)
 * [Yarn](https://yarnpkg.com/)
+* [WebdriverIO](https://webdriver.io/)
 
 ## Setup
 
     git clone https://github.com/Linode/manager.git
     cd manager
-    node --version # should be 8.4.0
-    (cd components && yarn link) # brew install yarn # on mac
+    node --version # should be Node 8 LTS
+    brew install yarn # on mac
     yarn
-    yarn link linode-components
+
+##### Setup w/Docker
+    git clone https://github.com/Linode/manager.git
+    cd manager
+    docker build -f Dockerfile . -t 'linode-manager'
+
 
 This application communicates with Linode via the
 [Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
-client](https://cloud.linode.com/profile/tokens), then create a file at
-`src/secrets.js` with your client ID and client secret set appropriately:
+client](https://cloud.linode.com/profile/tokens), then create a file in the base
+of the manager repository entitled `.env` with the following variables/values:
 
-    export const clientId = 'change me';
-    export const clientSecret = 'change me';
+    REACT_APP_CLIENT_ID='CHANGE_ME'
+    REACT_APP_LOGIN_ROOT='https://login.linode.com'
+    REACT_APP_API_ROOT='https://api.linode.com/v4'
+    REACT_APP_APP_ROOT='http://localhost:3000'
 
 Be sure to set your callback URL to something like
 `http://localhost:3000/oauth/callback` when you register your OAuth client.
 
 Note: if you pick a callback url that is not on localhost:3000, you will need to
-update the APP_ROOT variable in src/constants.js to point to the different
-server.
+update the REACT_APP_APP_ROOT variable in `.env` to point to the different
+server. Non-localhost callback urls must also be HTTPS. To enable HTTPS, you must
+also include `HTTPS='true'` in your `.env` file.
 
 ## Development Flow
 
@@ -63,11 +72,20 @@ adding features/elements/components that don't have a clear precedent. If this
 is the case, you will need to submit an issue with a mockup and send a request
 for comments to the [(#linode-next channel on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4).
 
-## Development
+## Development 
 
 Run:
 
     yarn start
+
+Or, using Docker:
+    
+    docker run --rm -p 3000:3000 -v $(pwd)/src:/src/src linode-manager start
+    
+    ## If you have installed yarn, 
+    ## you can call the following convenience script:
+
+    yarn docker:local
 
 to start the development server. Connect to
 [localhost:3000](https://localhost:3000) to try it out. Most of the changes you
@@ -80,6 +98,7 @@ around the screen if necessary. If you'd rather disable the devtools, you can
 set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false:
 
     DEVTOOLS_DISABLED=true yarn start
+
 
 ## Git workflows
 
@@ -147,10 +166,12 @@ chmod +x .git/hooks/pre-commit
 ```
 
 ## Testing
-This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking.
+This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking. [Sinon](http://sinonjs.org/) is still found throughout the project, however is being phased out in favor of Jest mocking. 
+
+End-to-end tests are written using WebdriverIO. More documentation on running these tests can be found in the testing [docs](/TESTING.md)
 
 ### Naming
-Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`).
+Test files are collocated with their target file and are suffixed "spec.js" (ie `myFile.js` and `myFile.spec.js`). 
 
 ### Commands
 To run tests:
@@ -169,6 +190,23 @@ We haven't assigned an artibrary coverage requirement. Coverage and testing are 
 To generate a coverage report:
 
     yarn test --coverage
+
+## Testing React Components
+
+React Components are testable using [storybook](https://github.com/storybooks/storybook). To access
+the manager storybook:
+
+    yarn storybook
+
+Or, using Docker:
+
+    docker build -f Dockerfile . -t 'storybook'
+    docker run -it --rm -p 6006:6006 -v $(pwd)/src:/src/src storybook storybook
+
+    ## If you have installed yarn, 
+    ## you can call the following convenience script:
+
+    yarn docker:storybook
 
 ## Coding Style
 

@@ -15,38 +15,26 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import APITokens from './APITokens';
 import OAuthClients from './OAuthClients';
 
-type Props = RouteComponentProps<{ linodeId?: number }>;
-
-type Tab = {
-  title: string,
-  routeName: string,
-  renderRoute: (path: string) => React.ReactNode;
-};
+type Props = RouteComponentProps<{}>;
 
 class Profile extends React.Component<Props> {
-  genTab = (title: string, routeName: string, component: React.ComponentClass): Tab => {
-    return {
-      title,
-      routeName,
-      renderRoute: (path: string) =>
-        <Route key={title} component={component} path={`${routeName}`} />,
-    };
-  }
-
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
   }
 
-  tabs: Tab[] = [
-    this.genTab('API Tokens', `${this.props.match.path}/tokens`, APITokens),
-    this.genTab('OAuth Clients', `${this.props.match.path}/clients`, OAuthClients),
+  tabs = [
+    /* NB: These must correspond to the routes inside the Switch */
+    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
+    { title: 'OAuth Clients', routeName: `${this.props.match.url}/clients` },
   ];
 
   render() {
-    const { match: { path } } = this.props;
-    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
+    const { match: { path, url } } = this.props;
+    const matches = (p: string) => {
+      return Boolean(matchPath(p, { path: this.props.location.pathname }));
+    };
 
     return (
       <div>
@@ -64,7 +52,8 @@ class Profile extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          {this.tabs.map(tab => tab.renderRoute(path))}
+          <Route exact path={`${url}/tokens`} component={APITokens} />
+          <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/tokens`} />)} />
         </Switch>
       </div>

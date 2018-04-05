@@ -34,26 +34,28 @@ class Example extends React.Component<any, State> {
     const { selected } = this.state;
 
     return (
-    <FormControl fullWidth>
-      <InputLabel htmlFor="awesomeness" disableAnimation shrink={true} error={this.state.error}>
-        Awesomness
-      </InputLabel>
-      <Select
-        value={selected}
-        onChange={this.handleChange}
-        inputProps={{ name: 'awesomeness', id: 'awesomeness' }}
-        error={this.state.error}
-        success={this.state.success}
-        {...this.props}
-      >
-        <MenuItem value=""><em>None</em></MenuItem>
-        <MenuItem value={1000}>Meh</MenuItem>
-        <MenuItem value={2500}>Mediocre</MenuItem>
-        <MenuItem value={9000}>9000</MenuItem>
-        <MenuItem value={9001}>It's over 9000!</MenuItem>
-      </Select>
-      <FormHelperText error={this.state.error}>Here's some action text!</FormHelperText>
-    </FormControl>
+      <div style={{ marginLeft: '300px', marginTop: '200px' }}>
+        <FormControl fullWidth>
+          <InputLabel htmlFor="awesomeness" disableAnimation shrink={true} error={this.state.error}>
+            Awesomness
+          </InputLabel>
+          <Select
+            value={selected}
+            onChange={this.handleChange}
+            inputProps={{ name: 'awesomeness', id: 'awesomeness' }}
+            error={this.state.error}
+            success={this.state.success}
+            {...this.props}
+          >
+            <MenuItem value=""><em>None</em></MenuItem>
+            <MenuItem value={1000}>Meh</MenuItem>
+            <MenuItem value={2500}>Mediocre</MenuItem>
+            <MenuItem value={9000}>9000</MenuItem>
+            <MenuItem value={9001}>It's over 9000!</MenuItem>
+          </Select>
+          <FormHelperText error={this.state.error}>Here's some action text!</FormHelperText>
+        </FormControl>
+      </div>
     );
   }
 }

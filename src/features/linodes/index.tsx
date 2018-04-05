@@ -15,8 +15,11 @@ const LinodesCreate = DefaultLoader({
   loader: () => import('./LinodesCreate'),
 });
 
+const LinodesDetail = DefaultLoader({
+  loader: () => import('./LinodesDetail'),
+});
 
-type Props = RouteComponentProps<{ linodeId?: number }>;
+type Props = RouteComponentProps<{}>;
 
 class LinodesRoutes extends React.Component<Props> {
   render() {
@@ -25,6 +28,7 @@ class LinodesRoutes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={LinodesCreate} path={`${path}/create`}/>
+        <Route component={LinodesDetail} path={`${path}/:linodeId`}/>
         <Route component={LinodesLanding} path={path} exact />
       </Switch>
     );

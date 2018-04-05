@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   withStyles,
@@ -111,7 +112,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <LinodeStatusIndicator status={linode.status} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          {linode.label}
+          <Link to={`/linodes/${linode.id}`}>
+            <Typography variant="subheading">
+              {linode.label}
+            </Typography>
+          </Link>
         </Grid>
       </Grid>
     );
