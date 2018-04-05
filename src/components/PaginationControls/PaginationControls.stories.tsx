@@ -19,7 +19,7 @@ class Implementor extends React.Component<{ range: number }, { currentPage: numb
   }
 
   render() {
-    const pages = Array.from(Array(30), (_, idx) => idx + 1);
+    const pages = Array.from(Array(14), (_, idx) => idx + 1);
 
     return (
     <MuiThemeProvider theme={theme}>
@@ -44,5 +44,5 @@ storiesOf('Pagination Controls', module)
     <Implementor range={10} />
   ))
   .add('With odd range.', () => (
-    <Implementor range={15} />
+    <Implementor range={13} />
   ));

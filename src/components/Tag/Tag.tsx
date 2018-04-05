@@ -84,6 +84,7 @@ const Tag: React.SFC<PropsWithStyles> = (props) => {
     className={classNames}
     deleteIcon={<Close />}
     classes={{ label: props.classes.label }}
+    data-qa-tag
     {...rest}
   />;
 };

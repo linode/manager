@@ -7,10 +7,6 @@ describe('Error State Component Suite', () => {
     const icon = '[data-qa-error-icon]';
     const errorMsg = '[data-qa-error-msg]';
 
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display error states in the navigation', () => {
         const errorState = $(navItem);
         expect(errorState.isVisible()).toBe(true);

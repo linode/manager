@@ -26,6 +26,7 @@ class HideShowText extends React.Component<FinalProps, State> {
 
     return (
       <TextField
+        data-qa-hide={hidden}
         label={this.props.label}
         placeholder={this.props.placeholder}
         onChange={this.props.onChange}

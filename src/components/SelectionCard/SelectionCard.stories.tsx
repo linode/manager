@@ -42,7 +42,7 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
         renderIcon: () => {
           return <InsertPhoto />;
         },
-        heading: 'Photos',
+        heading: 'Photos 2',
         subheadings: [
           'Use a photo',
           'Select up to 3',
@@ -73,7 +73,7 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
           <SelectionCard
             key={idx}
             {...card}
-            onClick={() => this.handleClick(idx) }
+            onClick={() => this.handleClick(idx)}
           />)
       }
       </Grid>
