@@ -15,7 +15,16 @@ import UserNotificationList from './UserNotificationList';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    position: 'absolute',
+    outline: 0,
+    boxShadow: '0 0 5px #ddd',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    minHeight: 16,
+    minWidth: 250,
+    transform: `translate(-${theme.spacing.unit * 3}px, ${theme.spacing.unit}px)`,
+  },
 });
 
 interface Props {
@@ -112,6 +121,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
   render() {
     const { anchorEl, hasNew, events, notifications } = this.state;
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -129,6 +139,8 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: undefined })}
+          className={classes.root}
+          PaperProps={{ className: classes.root }}
         >
         <UserNotificationList notifications={notifications} events={events}/>
         </Menu>
