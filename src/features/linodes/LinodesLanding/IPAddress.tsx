@@ -5,7 +5,6 @@ import {
   WithStyles,
   StyleRulesCallback,
 } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 
@@ -18,7 +17,6 @@ type CSSClasses =  'root'
 | 'right'
 | 'icon'
 | 'row'
-| 'ip'
 | 'ipLink'
 | 'copied';
 
@@ -50,14 +48,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   icon: {
     marginRight: theme.spacing.unit,
-    height: 18,
+    height: 13,
     width: 18,
-    padding: 3,
+    padding: '0 3px',
     transition: 'backgroundColor 225ms ease-in-out, color 225ms ease-in-out',
     borderRadius: 2,
-  },
-  ip: {
-    fontSize: 14,
   },
   ipLink: {
     color: LinodeTheme.palette.primary.main,
@@ -132,9 +127,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <Typography className={classes.ip}>
-          {ip}
-        </Typography>
+        <div className="ip">{ip}</div>
         {copyRight && this.renderCopyIcon(ip)}
       </div>
     );
