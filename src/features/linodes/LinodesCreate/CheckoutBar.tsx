@@ -132,11 +132,11 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         {imageInfo &&
           <React.Fragment>
-            <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+            <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-image-summary>
               <Typography variant="subheading">
                 {imageInfo.name}
               </Typography>
-              <Typography className={classes.detail}>
+              <Typography className={classes.detail} data-qa-image-details-summary>
                 {imageInfo.details}
               </Typography>
             </div>
@@ -145,7 +145,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         {regionName &&
           <React.Fragment>
-            <div className={classes.checkoutSection}>
+            <div className={classes.checkoutSection} data-qa-region-summary>
               <Typography variant="subheading">
                 {regionName && regionName}
               </Typography>
@@ -155,7 +155,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         {typeInfo &&
           <React.Fragment>
-            <div className={classes.checkoutSection}>
+            <div className={classes.checkoutSection} data-qa-type-summary>
               <Divider />
               <Typography variant="subheading">
                 {typeInfo.name}
@@ -169,7 +169,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         {backups &&
           <React.Fragment>
-            <div className={classes.checkoutSection}>
+            <div className={classes.checkoutSection} data-qa-backups-summary>
               <Divider />
               <Typography variant="subheading">
                 Backups Enabled

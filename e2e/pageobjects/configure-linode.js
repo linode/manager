@@ -2,22 +2,19 @@ import Page from './page';
 
 class ConfigureLinode extends Page {
     get createHeader() { return $('[data-qa-create-linode-header]'); }
-    get orderSummary() { return $('[data-qa-order-summary'); }
-    get costSummary() { return $('[data-qa-total-price]'); }
-    get deploy() { return $('[data-qa-deploy-linode]'); }
     
-    get selectImageHeader() { return $('[data-qa-tp-title="Select Image Type"]'); }
-    get imageTabs() { return  $$('[data-qa-tp-title="Select Image Type"] [data-qa-tab]'); }
-    get images() { return $$('[data-qa-tp-title="Select Image Type"] [data-qa-selection-card]'); }
+    get selectImageHeader() { return $('[data-qa-tp="Select Image Type"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image Type"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image Type"] [data-qa-selection-card]'); }
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
     
-    get selectRegionHeader() { return $('[data-qa-tp-title="Region"]'); }
-    get regionTabs() { return $$('[data-qa-tp-title="Region"] [data-qa-tab]'); }
-    get regions() { return $$('[data-qa-tp-title="Region"] [data-qa-selection-card]'); }
+    get selectRegionHeader() { return $('[data-qa-tp="Region"]'); }
+    get regionTabs() { return $$('[data-qa-tp="Region"] [data-qa-tab]'); }
+    get regions() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
 
-    get planHeader() { return $('[data-qa-tp-title="Linode Plan"]'); }
-    get planTabs() { return $$('[data-qa-tp-title="Linode Plan"] [data-qa-tab]'); }
-    get plans() { return $$('[data-qa-tp-title="Linode Plan"] [data-qa-selection-card]'); }
+    get planHeader() { return $('[data-qa-tp="Linode Plan"]'); }
+    get planTabs() { return $$('[data-qa-tp="Linode Plan"] [data-qa-tab]'); }
+    get plans() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
 
     get labelHeader() { return $('[data-qa-label-header]'); }
     get label() { return $('[data-qa-label-header] input'); }
@@ -26,13 +23,10 @@ class ConfigureLinode extends Page {
     get password() { return $('[data-qa-password-input] input'); }
 
     get addonsHeader() { return $('[data-qa-add-ons]'); }
-    get addons() { return $$('[data-qa-add-ons] [data-qa-checked]')  }
+    get addons() { return $$('[data-qa-add-ons] [data-qa-checked]');  }
 
-    elementsDisplay() {
+    baseDisplay() {
         expect(this.createHeader.waitForVisible()).toBe(true);
-        expect(this.orderSummary.isVisible()).toBe(true);
-        expect(this.costSummary.isVisible()).toBe(true);
-        expect(this.deploy.isVisible()).toBe(true);
 
         expect(this.selectImageHeader.isVisible()).toBe(true);
         this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
@@ -56,5 +50,33 @@ class ConfigureLinode extends Page {
         expect(this.addonsHeader.isVisible()).toBe(true);
         this.addons.forEach(a => expect(a.isVisible()).toBe(true));
     }
+
+    generic() {
+        this.images[0].click();
+        this.regions[0].click();
+        this.plans[0].click();
+        this.label.setValue(`Test-Linode${new Date().getTime()}`);
+        this.password.setValue('Testing1234#');
+        this.addons[0].click();
+    }
+
+    selectRegion(region) {
+        this.generic();
+        browser.click(`[data-qa-tp="Region"] [data-qa-tab="${region}"]`);
+
+        // Select first available location in region
+        this.regions[0].click();
+    }
+
+    selectImage(imageName) {
+        const requestedImage = $(`[data-qa-select-card-subheading="${imageName}"]`);
+        requestedImage.click();
+    }
+
+    selectPlan(plan) {
+
+    }
+
+
 }
 export default new ConfigureLinode();
