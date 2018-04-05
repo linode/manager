@@ -8,7 +8,6 @@ import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
@@ -16,6 +15,7 @@ import TableRow from 'material-ui/Table/TableRow';
 
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import Table from 'src/components/Table';
 import IconTextLink from 'src/components/IconTextLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
