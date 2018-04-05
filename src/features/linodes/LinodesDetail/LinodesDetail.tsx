@@ -27,6 +27,7 @@ interface Data {
   linode: Linode.Linode;
   type: Linode.LinodeType;
   image: Linode.Image;
+  volumes: Linode.Volume[];
 }
 
 interface State {
@@ -45,12 +46,14 @@ const preloaded = PromiseLoader<Props>({
         const { data: linode } = response;
         const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`);
         const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`);
-        return Promise.all([typeReq, imageReq])
+        const volReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`);
+        return Promise.all([typeReq, imageReq, volReq])
           .then((responses) => {
             return {
               linode,
               type: responses[0].data,
               image: responses[1].data,
+              volumes: responses[2].data.data,
             };
           });
       });
@@ -99,7 +102,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const { match: { path, url } } = this.props;
-    const { type, image } = this.props.data.response;
+    const { type, image, volumes } = this.props.data.response;
     const { linode } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
@@ -120,7 +123,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         </AppBar>
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (
-            <LinodeSummary linode={linode} type={type} image={image}/>
+            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes}/>
           )} />
           <Route exact path={`${path}/`} render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
