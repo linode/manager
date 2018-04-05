@@ -21,7 +21,7 @@ import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
-import transitionStatus from './linodeTransitionStatus';
+import transitionStatus from '../linodeTransitionStatus';
 
 type ClassNames = 'bodyRow'
 | 'linodeCell'
@@ -107,17 +107,14 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
   loadingState = () => {
     const { linode, classes } = this.props;
-    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
-      ? Math.max(linode.recentEvent.percent_complete, 1)
-      : true;
-
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
     return(
       <TableRow key={linode.id} className={classes.bodyRow}>
         {this.headCell()}
         <TableCell colSpan={4}>
-        { typeof value === 'number' &&
-          <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
-        }
+          {typeof value === 'number' &&
+            <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
+          }
           <LinearProgress value={value} />
         </TableCell>
       </TableRow>
