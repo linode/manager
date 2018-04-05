@@ -16,6 +16,7 @@ import Typography from 'material-ui/Typography';
 
 import Tag from 'src/components/Tag';
 import CircleProgress from 'src/components/CircleProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -100,6 +101,7 @@ interface Props {
   linode: (Linode.Linode & { recentEvent?: Linode.Event });
   image?: Linode.Image;
   type?: Linode.LinodeType;
+  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
@@ -183,7 +185,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, linode } = this.props;
+    const { classes, linode, openConfigDrawer } = this.props;
     const loading = transitionStatus.includes(linode.status);
 
     return (
@@ -193,7 +195,10 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             subheader={this.renderTitle()}
             action={
               <div style={{ position: 'relative', top: 6 }}>
-                <LinodeActionMenu linode={linode} />
+                <LinodeActionMenu
+                 linode={linode}
+                 openConfigDrawer={openConfigDrawer}
+                />
               </div>
             }
           />
@@ -206,7 +211,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(linode.id, linode.label)}
+              onClick={() => rebootLinode(openConfigDrawer, linode.id, linode.label)}
             >
               <span className="btnLink">Reboot</span>
             </Button>
