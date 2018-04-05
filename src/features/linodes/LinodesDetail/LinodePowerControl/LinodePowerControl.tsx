@@ -2,6 +2,7 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
 
 import Button from 'material-ui/Button';
+import Divider from 'material-ui/Divider';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
@@ -15,6 +16,7 @@ import {
 
 import LinodeTheme from 'src/theme';
 import PowerOn from '../../../../assets/icons/powerOn.svg';
+import Reload from '../../../../assets/icons/reload.svg';
 
 type ClassNames = 'root'
   | 'button'
@@ -22,7 +24,9 @@ type ClassNames = 'root'
   | 'popOver'
   | 'menuItem'
   | 'icon'
-  | 'power';
+  | 'powerOn'
+  | 'powerOff'
+  | 'reboot';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -57,7 +61,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   icon: {
     marginRight: theme.spacing.unit + 2,
   },
-  power: {
+  powerOn: {
+    color: LinodeTheme.color.green,
+  },
+  powerOff: {
+    color: LinodeTheme.color.red,
+  },
+  reboot: {
 
   },
 });
@@ -129,10 +139,16 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
         >
           {isRunning &&
             <span>
-              <PowerOn className={`${classes.icon} ${classes.power}`} />
+              <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Running
-            </span>}
-          {isOffline && 'Offline'}
+            </span>
+          }
+          {isOffline &&
+            <span>
+              <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
+              Offline
+            </span>
+          }
           {isBusy && 'Busy'}
           {
             anchorEl
@@ -150,30 +166,32 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
           PaperProps={{ className: classes.popOver }}
         >
+          <MenuItem
+            onClick={this.reboot}
+            className={classes.menuItem}
+          >
+            <Reload className={`${classes.icon} ${classes.reboot}`} />
+            Power Reboot
+          </MenuItem>
+          <Divider />
           { isRunning &&
-            <span>
-              <PowerOn className={`${classes.icon} ${classes.power}`} />
-              <MenuItem
-                onClick={this.powerOff}
-                className={classes.menuItem}
-              >
-                Power Off
-              </MenuItem>
-            </span>
+            <MenuItem
+              onClick={this.powerOff}
+              className={classes.menuItem}
+            >
+              <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
+              Power Off
+            </MenuItem>
           }
           { isOffline &&
             <MenuItem
               onClick={this.powerOn}
               className={classes.menuItem}
             >
+              <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Power On
             </MenuItem>
           }
-          <MenuItem
-            onClick={this.reboot}
-            className={classes.menuItem}
-          >
-            Power Reboot</MenuItem>
         </Menu>
       </React.Fragment>
     );
