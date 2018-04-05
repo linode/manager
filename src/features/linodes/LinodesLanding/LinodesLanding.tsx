@@ -23,8 +23,10 @@ import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ToggleBox from './ToggleBox';
-
 import './linodes.css';
+import LinodeConfigSelectionDrawer, {
+  LinodeConfigSelectionDrawerCallback,
+} from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props { }
 
@@ -37,12 +39,21 @@ interface PreloadedProps {
   images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
 }
 
+interface ConfigDrawerState {
+  open: boolean;
+  configs: Linode.Config[];
+  error?: string;
+  selected?: number;
+  action?: LinodeConfigSelectionDrawerCallback;
+}
+
 interface State {
   linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   page: number;
   pages: number;
   results: number;
   pageSize: number;
+  configDrawer: ConfigDrawerState;
 }
 
 const mapStateToProps = (state: Linode.AppState) => ({
@@ -59,15 +70,21 @@ const preloaded = PromiseLoader<Props>({
 
 type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
-
 class ListLinodes extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
-  state: State = {
+  state = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
     page: pathOr(-1, ['response', 'page'], this.props.linodes),
     pages: pathOr(-1, ['response', 'pages'], this.props.linodes),
     results: pathOr(0, ['response', 'results'], this.props.linodes),
+    configDrawer: {
+      open: false,
+      configs: [],
+      error: undefined,
+      selected: undefined,
+      action: (id: number) => null,
+    },
     pageSize: 25,
   };
 
@@ -97,6 +114,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
    ex elit, quis sed.`,
     },
   ];
+
   componentWillUnmount() {
     this.subscription.unsubscribe();
   }
@@ -119,6 +137,29 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       });
   }
 
+  openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
+    this.setState({
+      configDrawer: {
+        open: true,
+        configs,
+        selected: configs[0].id,
+        action,
+      },
+    });
+  }
+
+  closeConfigDrawer = () => {
+    this.setState({
+      configDrawer: {
+        open: false,
+        configs: [],
+        error: undefined,
+        selected: undefined,
+        action: (id: number) => null,
+      },
+    });
+  }
+
   changeViewStyle = (style: string) => {
     const { history } = this.props;
     history.push(`#${style}`);
@@ -134,6 +175,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         linodes={linodes}
         images={images}
         types={types}
+        openConfigDrawer={this.openConfigDrawer}
       />
     );
   }
@@ -148,6 +190,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         linodes={linodes}
         images={images}
         types={types}
+        openConfigDrawer={this.openConfigDrawer}
       />
     );
   }
@@ -182,6 +225,24 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
+  selectConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    this.setState(prevState => ({
+      configDrawer: {
+        ...prevState.configDrawer,
+        selected: value,
+      },
+    }));
+  }
+
+  submitConfigChoice = () => {
+    const { action, selected } = this.state.configDrawer;
+    if (selected) {
+      action(selected);
+      this.closeConfigDrawer();
+    }
+  }
+
   render() {
     return (
       <WithDocumentation
@@ -189,7 +250,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         docs={this.docs}
         render={() => {
           const { types, location: { hash } } = this.props;
-          const { linodes } = this.state;
+          const { linodes, configDrawer } = this.state;
           const images = pathOr([], ['response', 'data'], this.props.images);
 
           if (this.props.linodes.error) {
@@ -251,6 +312,15 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                   page={this.state.page}
                 />
               }
+              <LinodeConfigSelectionDrawer
+                onClose={this.closeConfigDrawer}
+                onSubmit={this.submitConfigChoice}
+                onChange={this.selectConfig}
+                open={configDrawer.open}
+                configs={configDrawer.configs}
+                selected={String(configDrawer.selected)}
+                error={configDrawer.error}
+              />
             </React.Fragment>
           );
         }}

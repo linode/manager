@@ -78,7 +78,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
           /** Create a map of the Events using Event.ID as the key. */
           .scan((events: EventsMap, event: Linode.Event) =>
-            assoc(String(event.id), event, events), {}),
+            assoc(String(event.id), event, events),{}),
     )
       /** Wait for the events to settle before calling setState. */
       .debounce(() => Observable.interval(250))

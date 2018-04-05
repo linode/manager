@@ -9,15 +9,17 @@ import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
 import LinodeRow from './LinodeRow';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props {
   linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
+  openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 const LinodesListView: React.StatelessComponent<Props> = (props) => {
-  const { linodes, types } = props;
+  const { linodes, types, openConfigDrawer } = props;
 
   return (
     <Paper>
@@ -39,6 +41,7 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
                   key={linode.id}
                   linode={linode}
                   type={types.find(type => linode.type === type.id)}
+                  openConfigDrawer={openConfigDrawer}
                 />,
               )}
             </TableBody>
