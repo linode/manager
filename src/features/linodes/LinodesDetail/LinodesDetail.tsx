@@ -20,6 +20,7 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import LinodeSummary from './LinodeSummary';
+import LinodePowerControl from './LinodePowerControl';
 
 type Props = RouteComponentProps<{ linodeId?: number }>;
 
@@ -111,6 +112,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         <Typography variant="headline">
           {linode.label}
         </Typography>
+        <LinodePowerControl
+          status={linode.status}
+          id={linode.id}
+          label={linode.label}
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
