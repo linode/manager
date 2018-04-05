@@ -17,6 +17,11 @@ namespace Linode {
     specs: LinodeSpecs;
   }
 
+  export interface EnhancedLinode extends Linode.Linode {
+    recentEvent?: Linode.Event;
+    notification?: string;
+  }
+
   interface LinodeAlerts {
     cpu: number;
     io: number;

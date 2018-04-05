@@ -98,7 +98,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  linode: (Linode.Linode & { recentEvent?: Linode.Event });
+  linode: Linode.EnhancedLinode;
   image?: Linode.Image;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
