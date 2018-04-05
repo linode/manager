@@ -18,11 +18,11 @@ import Typography from 'material-ui/Typography';
 import { API_ROOT } from 'src/constants';
 import 'typeface-lato';
 import LinodeTheme from 'src/theme';
-import TopMenu from 'src/components/TopMenu';
+import TopMenu from 'src/features/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
-import Footer from 'src/components/Footer';
+import Footer from 'src/features/Footer';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
