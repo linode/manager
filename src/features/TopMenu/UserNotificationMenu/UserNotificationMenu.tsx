@@ -120,6 +120,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           getRef={this.setRef}
           hasNew={hasNew}
           disabled={notifications.length + events.length === 0}
+          className={ anchorEl ? 'active' : '' }
         />
         <Menu
           anchorEl={anchorEl}

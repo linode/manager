@@ -25,10 +25,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginLeft: theme.spacing.unit * 2,
     marginRight: - theme.spacing.unit,
     position: 'relative',
-    '&:hover, &:focus': {
+    opacity: 1,
+    transition: theme.transitions.create(['opacity']),
+    '&:hover, &.active': {
       '& $icon': {
         fill: theme.palette.primary.main,
       },
+    },
+    '&[disabled]': {
+      opacity: .3,
     },
   },
   icon: {
@@ -53,6 +58,7 @@ interface Props {
   getRef: (e: HTMLElement) => void;
   hasNew: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -63,13 +69,14 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   onClick,
   getRef,
   disabled,
+  className,
 }) => {
 
   return (
     <IconButton
       onClick={onClick}
       buttonRef={getRef}
-      className={classes.root}
+      className={`${classes.root} ${className}`}
       disabled={disabled}
     >
       <NotificationIcon className={classes.icon} />
