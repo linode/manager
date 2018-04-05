@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 import { API_ROOT } from 'src/constants';
-import { linodeEvents$, resetEventsPolling } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 import * as moment from 'moment';
 
 import { dateFormat } from 'src/time';
@@ -27,6 +27,7 @@ export const genEvent = (
       type: 'linode',
       id: linodeID,
     },
+    username: '',
   } as Linode.Event;
 };
 
@@ -36,7 +37,7 @@ export const rebootLinode = (
 ) => {
   Axios.post(`${API_ROOT}/linode/instances/${linodeID}/reboot`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_reboot', linodeID, linodeLabel));
+    events$.next(genEvent('linode_reboot', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };
@@ -47,7 +48,7 @@ export const powerOffLinode = (
 ) => {
   Axios.post(`${API_ROOT}/linode/instances/${linodeID}/shutdown`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_shutdown', linodeID, linodeLabel));
+    events$.next(genEvent('linode_shutdown', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };
@@ -58,7 +59,7 @@ export const powerOnLinode = (
 ) => {
   Axios.post(`${API_ROOT}/linode/instances/${linodeID}/boot`)
   .then((response) => {
-    linodeEvents$.next(genEvent('linode_boot', linodeID, linodeLabel));
+    events$.next(genEvent('linode_boot', linodeID, linodeLabel));
     resetEventsPolling();
   });
 };

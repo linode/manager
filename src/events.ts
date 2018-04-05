@@ -9,12 +9,12 @@ function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-export const linodeEvents$ = new Rx.Subject<Linode.Event>();
+export const events$ = new Rx.Subject<Linode.Event>();
 
 let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean} = {};
 
-const initialPollInterval = 1000;
+const initialPollInterval = 2000;
 export let eventRequestDeadline = Date.now();
 export let currentPollIntervalMultiplier = 1;
 
@@ -22,6 +22,10 @@ export function resetEventsPolling() {
   eventRequestDeadline = Date.now() + initialPollInterval;
   currentPollIntervalMultiplier = 1;
 }
+export const init = () => {
+  filterDatestamp = createInitialDatestamp();
+  resetEventsPolling();
+};
 
 export function generateInFilter(keyName: string, arr: any[]) {
   return {
@@ -80,7 +84,7 @@ export function requestEvents() {
         pollIDs[linodeEvent.id] = true;
       }
 
-      linodeEvents$.next(linodeEvent);
+      events$.next(linodeEvent);
     });
   });
 }
