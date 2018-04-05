@@ -23,18 +23,40 @@ import LinodeSummary from './LinodeSummary';
 
 type Props = RouteComponentProps<{ linodeId?: number }>;
 
+interface Data {
+  linode: Linode.Linode;
+  type: Linode.LinodeType;
+  image: Linode.Image;
+  volumes: Linode.Volume[];
+}
+
 interface State {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
 interface PreloadedProps {
-  linode: PromiseLoaderResponse<Linode.SingleResourceState<Linode.Linode>>;
+  data: PromiseLoaderResponse<Data>;
 }
 
 const preloaded = PromiseLoader<Props>({
-  linode: ((props) => {
+  data: ((props) => {
     const { match: { params: { linodeId } } } = props;
-    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`);
+    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+      .then((response) => {
+        const { data: linode } = response;
+        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`);
+        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`);
+        const volReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`);
+        return Promise.all([typeReq, imageReq, volReq])
+          .then((responses) => {
+            return {
+              linode,
+              type: responses[0].data,
+              image: responses[1].data,
+              volumes: responses[2].data.data,
+            };
+          });
+      });
   }),
 });
 
@@ -43,7 +65,9 @@ type CombinedProps = Props & PreloadedProps;
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
-  state = { linode: this.props.linode.response.data };
+  state = {
+    linode: this.props.data.response.linode,
+  };
 
   componentWillUnmount() {
     this.subscription.unsubscribe();
@@ -78,6 +102,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const { match: { path, url } } = this.props;
+    const { type, image, volumes } = this.props.data.response;
     const { linode } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
@@ -97,7 +122,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/summary`} render={() => (<LinodeSummary linode={linode} />)} />
+          <Route exact path={`${url}/summary`} render={() => (
+            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes}/>
+          )} />
           <Route exact path={`${path}/`} render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
       </div>

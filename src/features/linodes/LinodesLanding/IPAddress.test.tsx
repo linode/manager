@@ -11,7 +11,7 @@ describe('IPAddress', () => {
     );
 
     const rendered = result.find('IPAddress');
-    const ipText = result.find('Typography').text();
+    const ipText = result.find('.ip').text();
 
     expect(rendered).toHaveLength(1);
     expect(ipText).toBe('8.8.8.8');
