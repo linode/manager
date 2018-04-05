@@ -21,6 +21,7 @@ import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import LinodeSummary from './LinodeSummary';
 import LinodePowerControl from './LinodePowerControl';
+import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
 type Props = RouteComponentProps<{ linodeId?: number }>;
 
@@ -31,7 +32,16 @@ interface Data {
   volumes: Linode.Volume[];
 }
 
+interface ConfigDrawerState {
+  open: boolean;
+  configs: Linode.Config[];
+  error?: string;
+  selected?: number;
+  action?: (id: number) => void;
+}
+
 interface State {
+  configDrawer: ConfigDrawerState;
   linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
@@ -68,6 +78,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   state = {
     linode: this.props.data.response.linode,
+    configDrawer: {
+      open: false,
+      configs: [],
+      error: undefined,
+      selected: undefined,
+      action: (id: number) => null,
+    },
   };
 
   componentWillUnmount() {
@@ -101,10 +118,51 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
   ];
 
+  openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
+    this.setState({
+      configDrawer: {
+        open: true,
+        configs,
+        selected: configs[0].id,
+        action,
+      },
+    });
+  }
+
+  closeConfigDrawer = () => {
+    this.setState({
+      configDrawer: {
+        open: false,
+        configs: [],
+        error: undefined,
+        selected: undefined,
+        action: (id: number) => null,
+      },
+    });
+  }
+
+  selectConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    this.setState(prevState => ({
+      configDrawer: {
+        ...prevState.configDrawer,
+        selected: value,
+      },
+    }));
+  }
+
+  submitConfigChoice = () => {
+    const { action, selected } = this.state.configDrawer;
+    if (selected) {
+      action(selected);
+      this.closeConfigDrawer();
+    }
+  }
+
   render() {
     const { match: { path, url } } = this.props;
     const { type, image, volumes } = this.props.data.response;
-    const { linode } = this.state;
+    const { linode, configDrawer } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
@@ -116,6 +174,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           status={linode.status}
           id={linode.id}
           label={linode.label}
+          openConfigDrawer={this.openConfigDrawer}
         />
         <AppBar position="static" color="default">
           <Tabs
@@ -133,6 +192,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           )} />
           <Route exact path={`${path}/`} render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
+        <LinodeConfigSelectionDrawer
+          onClose={this.closeConfigDrawer}
+          onSubmit={this.submitConfigChoice}
+          onChange={this.selectConfig}
+          open={configDrawer.open}
+          configs={configDrawer.configs}
+          selected={String(configDrawer.selected)}
+          error={configDrawer.error}
+        />
       </div>
     );
   }

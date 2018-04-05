@@ -20,6 +20,7 @@ interface Props {
   id: string | number;
   label: string;
   status: 'running' | 'offline' | string;
+  openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
 }
 
 interface State {
@@ -48,18 +49,21 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   powerOn = () => {
-    const { id, label } = this.props;
-    powerOnLinode(id, label);
+    const { id, label, openConfigDrawer } = this.props;
+    powerOnLinode(openConfigDrawer, id, label);
+    this.closeMenu();
   }
 
   powerOff = () => {
     const { id, label } = this.props;
     powerOffLinode(id, label);
+    this.closeMenu();
   }
 
   reboot = () => {
-    const { id, label } = this.props;
-    rebootLinode(id, label);
+    const { id, label, openConfigDrawer } = this.props;
+    rebootLinode(openConfigDrawer, id, label);
+    this.closeMenu();
   }
 
   render() {
@@ -81,8 +85,8 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           {isBusy && 'busy'}
         </Button>
         <Menu open={Boolean(anchorEl)} onClose={this.closeMenu} anchorEl={anchorEl}>
-          { isRunning && <MenuItem onClick={this.powerOn}>Power On</MenuItem> }
-          { isOffline && <MenuItem onClick={this.powerOff}>Power Off</MenuItem> }
+          { isOffline && <MenuItem onClick={this.powerOn}>Power On</MenuItem> }
+          { isRunning && <MenuItem onClick={this.powerOff}>Power Off</MenuItem> }
           <MenuItem onClick={this.reboot}>Power Reboot</MenuItem>
         </Menu>
       </React.Fragment>
@@ -93,16 +97,3 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(LinodePowerButton);
-
-/**
- * Button
- *  - needs current status
- *    - When status is 'running' title displays "Running" with the green indicator.
- *    - When status is 'offline', title displays "Offline" with the red indicator.
- *    - When status is anything else, title displays "Busy", with busy indicator and is disabled.
- *
- * Menu
- *  - Always has "reboot" option.
- *  - Has option "Power On" when status is "offline"
- *  - Has option "Power Off" when status is "running"
- */
