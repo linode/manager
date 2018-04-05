@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Rx';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import Grid from 'material-ui/Grid';
 
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
@@ -109,14 +110,20 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     return (
       <div>
-        <Typography variant="headline">
-          {linode.label}
-        </Typography>
-        <LinodePowerControl
-          status={linode.status}
-          id={linode.id}
-          label={linode.label}
-        />
+        <Grid container justify="space-between">
+          <Grid item>
+            <Typography variant="headline">
+              {linode.label}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <LinodePowerControl
+              status={linode.status}
+              id={linode.id}
+              label={linode.label}
+            />
+          </Grid>
+        </Grid>
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

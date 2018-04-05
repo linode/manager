@@ -4,16 +4,62 @@ import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/s
 import Button from 'material-ui/Button';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/Menu/MenuItem';
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
+import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import {
   powerOffLinode,
   powerOnLinode,
   rebootLinode,
 } from 'src/features/linodes/LinodesLanding/powerActions';
-type ClassNames = 'root';
+
+import LinodeTheme from 'src/theme';
+import PowerOn from '../../../../assets/icons/powerOn.svg';
+
+type ClassNames = 'root'
+  | 'button'
+  | 'caret'
+  | 'popOver'
+  | 'menuItem'
+  | 'icon'
+  | 'power';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  button: {
+    background: 'white',
+    border: `1px solid ${LinodeTheme.color.border3}`,
+    transition: theme.transitions.create('border'),
+    padding: '12px 16px 14px',
+    '&:hover': {
+      borderColor: LinodeTheme.color.border1,
+    },
+  },
+  caret: {
+    position: 'relative',
+    top: 2,
+    left: 2,
+    marginLeft: theme.spacing.unit / 2,
+    // color: theme.palette.text.primary,
+  },
+  popOver: {
+    position: 'absolute',
+    outline: 0,
+    boxShadow: '0 0 5px #ddd',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    minHeight: 16,
+    minWidth: 250,
+  },
+  menuItem: {
+    color: theme.palette.primary.main,
+  },
+  icon: {
+    marginRight: theme.spacing.unit + 2,
+  },
+  power: {
+
+  },
 });
 
 interface Props {
@@ -65,7 +111,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { status } = this.props;
+    const { status, classes } = this.props;
     const { menu: { anchorEl } } = this.state;
 
     const isRunning = status === 'running';
@@ -77,15 +123,57 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
         <Button
           disabled={!['running', 'offline'].includes(status)}
           onClick={e => this.openMenu(e.currentTarget)}
+          aria-owns={anchorEl ? 'power' : undefined}
+          aria-haspopup="true"
+          className={classes.button}
         >
-          {isRunning && 'running'}
-          {isOffline && 'offline'}
-          {isBusy && 'busy'}
+          {isRunning &&
+            <span>
+              <PowerOn className={`${classes.icon} ${classes.power}`} />
+              Running
+            </span>}
+          {isOffline && 'Offline'}
+          {isBusy && 'Busy'}
+          {
+            anchorEl
+              ? <KeyboardArrowUp className={classes.caret}></KeyboardArrowUp>
+              : <KeyboardArrowDown className={classes.caret}></KeyboardArrowDown>
+          }
         </Button>
-        <Menu open={Boolean(anchorEl)} onClose={this.closeMenu} anchorEl={anchorEl}>
-          { isRunning && <MenuItem onClick={this.powerOff}>Power Off</MenuItem> }
-          { isOffline && <MenuItem onClick={this.powerOn}>Power On</MenuItem> }
-          <MenuItem onClick={this.reboot}>Power Reboot</MenuItem>
+        <Menu
+          id="power"
+          open={Boolean(anchorEl)}
+          getContentAnchorEl={undefined}
+          onClose={this.closeMenu}
+          anchorEl={anchorEl}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: -10, horizontal: 'right' }}
+          PaperProps={{ className: classes.popOver }}
+        >
+          { isRunning &&
+            <span>
+              <PowerOn className={`${classes.icon} ${classes.power}`} />
+              <MenuItem
+                onClick={this.powerOff}
+                className={classes.menuItem}
+              >
+                Power Off
+              </MenuItem>
+            </span>
+          }
+          { isOffline &&
+            <MenuItem
+              onClick={this.powerOn}
+              className={classes.menuItem}
+            >
+              Power On
+            </MenuItem>
+          }
+          <MenuItem
+            onClick={this.reboot}
+            className={classes.menuItem}
+          >
+            Power Reboot</MenuItem>
         </Menu>
       </React.Fragment>
     );
