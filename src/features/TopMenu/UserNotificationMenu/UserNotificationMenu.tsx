@@ -12,10 +12,13 @@ import { events$, init } from 'src/events';
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'dropDown';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
+    transform: `translate(-${theme.spacing.unit * 2}px, ${theme.spacing.unit}px)`,
+  },
+  dropDown: {
     position: 'absolute',
     outline: 0,
     boxShadow: '0 0 5px #ddd',
@@ -23,7 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     overflowX: 'hidden',
     minHeight: 16,
     minWidth: 250,
-    transform: `translate(-${theme.spacing.unit * 3}px, ${theme.spacing.unit}px)`,
+    maxHeight: 300,
+    [theme.breakpoints.up('sm')]: {
+      minWidth: 300,
+    },
   },
 });
 
@@ -140,7 +146,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: undefined })}
           className={classes.root}
-          PaperProps={{ className: classes.root }}
+          PaperProps={{ className: classes.dropDown }}
         >
         <UserNotificationList notifications={notifications} events={events}/>
         </Menu>
