@@ -1,22 +1,24 @@
 import * as React from 'react';
+
 import Typography from 'material-ui/Typography';
 
-interface Props {
-  linode: Linode.Linode;
-}
 
-interface State {
+interface Props {
+  linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
 type FinalProps = Props;
 
-class LinodeSummary extends React.Component<FinalProps, State> {
+class LinodeSummary extends React.Component<FinalProps> {
+
   render() {
     const { linode } = this.props;
     return (
-      <Typography variant="headline">
-        Linode Summary for {linode.label}
-      </Typography>
+      <React.Fragment>
+        <Typography variant="headline">
+          Linode Summary for {linode.label}
+        </Typography>
+      </React.Fragment>
     );
   }
 }
