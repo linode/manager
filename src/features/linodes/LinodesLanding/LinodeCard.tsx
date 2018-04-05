@@ -23,7 +23,7 @@ import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import { rebootLinode } from './powerActions';
 import { typeLabelLong } from '../presentation';
-import transitionStatus from './linodeTransitionStatus';
+import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
 type CSSClasses =
@@ -127,10 +127,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
 
   loadingState = () => {
     const { linode, classes } = this.props;
-
-    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
-    ? Math.max(linode.recentEvent.percent_complete, 1)
-    : true;
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
 
     return (
       <CardContent className={classes.cardContent}>
