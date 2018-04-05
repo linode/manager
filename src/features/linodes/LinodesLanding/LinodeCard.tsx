@@ -44,8 +44,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingTop: theme.spacing.unit,
     paddingLeft: 5,
     paddingRight: 5,
-    fontSize: '90%',
     color: LinodeTheme.palette.text.primary,
+    ...theme.typography.caption,
   },
   flexContainer: {
     display: 'flex',
@@ -192,7 +192,9 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardHeader
             subheader={this.renderTitle()}
             action={
-              <LinodeActionMenu linode={linode} />
+              <div style={{ position: 'relative', top: 6 }}>
+                <LinodeActionMenu linode={linode} />
+              </div>
             }
           />
           {<Divider />}
