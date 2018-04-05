@@ -102,6 +102,7 @@ interface Props {
   id: string | number;
   label: string;
   status: 'running' | 'offline' | string;
+  openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
 }
 
 interface State {
@@ -130,8 +131,9 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   powerOn = () => {
-    const { id, label } = this.props;
-    powerOnLinode(id, label);
+    const { id, label, openConfigDrawer } = this.props;
+    powerOnLinode(openConfigDrawer, id, label);
+    this.closeMenu();
   }
 
   powerOff = () => {
@@ -141,8 +143,8 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
   }
 
   reboot = () => {
-    const { id, label } = this.props;
-    rebootLinode(id, label);
+    const { id, label, openConfigDrawer } = this.props;
+    rebootLinode(openConfigDrawer, id, label);
     this.closeMenu();
   }
 
