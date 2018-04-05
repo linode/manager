@@ -9,6 +9,7 @@ import Menu from 'material-ui/Menu';
 
 import { API_ROOT } from 'src/constants';
 import { events$, init } from 'src/events';
+import notifications$ from 'src/notifications';
 import UserNotificationButton from './UserNotificationButton';
 import UserNotificationList from './UserNotificationList';
 
@@ -68,10 +69,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
     this.subscription = Observable
       .combineLatest(
-
-        Observable.defer(() =>
-          Axios.get(`${API_ROOT}/account/notifications`).then(response => response.data.data)),
-
+        notifications$,
         events$
           /** Filter the fuax event used to kick off the progress bars. */
           .filter((event: Linode.Event) => event.id !== 1)

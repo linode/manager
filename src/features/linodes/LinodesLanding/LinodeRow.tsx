@@ -74,7 +74,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 interface Props {
-  linode: (Linode.Linode & { recentEvent?: Linode.Event });
+  linode: Linode.EnhancedLinode;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
