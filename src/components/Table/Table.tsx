@@ -16,7 +16,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-type CombinedProps = { className?: string } & TableProps & WithStyles<ClassNames>;
+interface Props {
+  className?: string;
+}
+
+type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
 
 class WrappedTable extends React.Component<CombinedProps> {
 
