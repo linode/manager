@@ -119,6 +119,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
           onClick={e => this.setState({ anchorEl: e.currentTarget })}
           getRef={this.setRef}
           hasNew={hasNew}
+          disabled={notifications.length + events.length === 0}
         />
         <Menu
           anchorEl={anchorEl}

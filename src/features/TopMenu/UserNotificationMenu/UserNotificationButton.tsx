@@ -52,6 +52,7 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   getRef: (e: HTMLElement) => void;
   hasNew: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -61,6 +62,7 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
   hasNew,
   onClick,
   getRef,
+  disabled,
 }) => {
 
   return (
@@ -68,6 +70,7 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
       onClick={onClick}
       buttonRef={getRef}
       className={classes.root}
+      disabled={disabled}
     >
       <NotificationIcon className={classes.icon} />
       {hasNew
@@ -76,6 +79,10 @@ const UserNotificationButton: React.StatelessComponent<CombinedProps> = ({
       }
     </IconButton>
   );
+};
+
+UserNotificationButton.defaultProps = {
+  disabled: false,
 };
 
 const styled = withStyles(styles, { withTheme: true });
