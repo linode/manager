@@ -2,7 +2,6 @@ import * as React from 'react';
 import { withStyles, StyleRulesCallback, Theme, WithStyles } from 'material-ui/styles';
 
 import Button from 'material-ui/Button';
-import Divider from 'material-ui/Divider';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
@@ -26,16 +25,25 @@ type ClassNames = 'root'
   | 'icon'
   | 'powerOn'
   | 'powerOff'
-  | 'reboot';
+  | 'rotate';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
   root: {},
   button: {
     background: 'white',
     border: `1px solid ${LinodeTheme.color.border3}`,
     transition: theme.transitions.create('border'),
-    padding: '12px 16px 14px',
-    '&:hover': {
+    padding: '12px 16px 13px',
+    minWidth: 145,
+    '&:hover, &.active': {
       borderColor: LinodeTheme.color.border1,
     },
   },
@@ -57,6 +65,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   menuItem: {
     color: theme.palette.primary.main,
+    padding: theme.spacing.unit * 2,
+    outline: 0,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:hover, &:focus': {
+      backgroundColor: LinodeTheme.bg.offWhite,
+    },
   },
   icon: {
     marginRight: theme.spacing.unit + 2,
@@ -67,8 +81,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   powerOff: {
     color: LinodeTheme.color.red,
   },
-  reboot: {
-
+  rotate: {
+    animation: 'rotate 2s linear infinite',
+    color: theme.palette.text.primary,
   },
 });
 
@@ -135,7 +150,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           onClick={e => this.openMenu(e.currentTarget)}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
-          className={classes.button}
+          className={`${classes.button} ${anchorEl ? 'active' : ''}`}
         >
           {isRunning &&
             <span>
@@ -149,7 +164,12 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
               Offline
             </span>
           }
-          {isBusy && 'Busy'}
+          {isBusy &&
+            <span>
+              <Reload className={`${classes.icon} ${classes.rotate}`} />
+              Busy
+            </span>
+          }
           {
             anchorEl
               ? <KeyboardArrowUp className={classes.caret}></KeyboardArrowUp>
@@ -170,10 +190,9 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             onClick={this.reboot}
             className={classes.menuItem}
           >
-            <Reload className={`${classes.icon} ${classes.reboot}`} />
+            <Reload className={`${classes.icon}`} />
             Power Reboot
           </MenuItem>
-          <Divider />
           { isRunning &&
             <MenuItem
               onClick={this.powerOff}
