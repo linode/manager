@@ -254,12 +254,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     this.getLinodes(this.state.page, parseInt(event.target.value, 0));
   }
 
-  selectConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+  selectConfig = (id: number) => {
     this.setState(prevState => ({
       configDrawer: {
         ...prevState.configDrawer,
-        selected: value,
+        selected: id,
       },
     }));
   }

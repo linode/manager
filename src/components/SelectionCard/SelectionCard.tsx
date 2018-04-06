@@ -169,6 +169,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
             checked: checked === true,
             [classes.disabled]: disabled === true,
             [classes.showCursor]: onClick && !disabled,
+            selectionCard: true,
           })
         }
         { ...((onClick && !disabled) && { onClick, onKeyPress: onClick }) }
