@@ -57,22 +57,80 @@ namespace Linode {
     monthly: number;
     hourly: number;
   }
+  export type NotificationType =
+    'migration_scheduled' |
+    'migration_pending' |
+    'reboot_scheduled' |
+    'outage' |
+    'payment_due' |
+    'ticket_important' |
+    'ticket_abuse' |
+    'notice';
 
-  export interface EventEntity {
+  export interface Notification {
+    entity: Entity;
+    label: string;
+    message: string;
+    type: NotificationType;
+    severity: 'minor' | 'major' | 'critical';
+    when: null | string;
+    until: null | string;
+  }
+
+  export interface Entity {
     id: number;
     label: string;
     type: string;
     url: string;
   }
 
+  export type EventAction =
+    'linode_boot' |
+    'linode_create' |
+    'linode_delete' |
+    'linode_shutdown' |
+    'linode_reboot' |
+    'linode_snapshot' |
+    'linode_addip' |
+    'linode_migrate' |
+    'linode_rebuild' |
+    'linode_clone' |
+    'disk_create' |
+    'disk_delete' |
+    'disk_duplicate' |
+    'disk_resize' |
+    'backups_enable' |
+    'backups_cancel' |
+    'backups_restore' |
+    'password_reset' |
+    'domain_create' |
+    'domain_delete' |
+    'domain_record_create' |
+    'domain_record_delete' |
+    'stackscript_create' |
+    'stackscript_publicize' |
+    'stackscript_revise' |
+    'stackscript_delete';
+
+    export type EventStatus =
+      'scheduled' |
+      'started' |
+      'finished' |
+      'failed' |
+      'notification';
+
   export interface Event {
     id: number;
-    seen: Boolean;
+    action: EventAction;
     created: string;
-    status: 'scheduled' | 'started' | 'finished' | 'failed' | 'notification';
+    entity: Entity | null;
     percent_complete: number | null;
-    entity: EventEntity | null;
-    action: string;
+    rate: string | null;
+    read: boolean;
+    seen: Boolean;
+    status: EventStatus;
+    time_remaining: null | number;
+    username: string;
   }
 
   export interface ApiFieldError {

@@ -85,8 +85,8 @@ class ActionMenu extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes  } = this.props;
-    const { actions, anchorEl  } = this.state;
+    const { classes } = this.props;
+    const { actions, anchorEl } = this.state;
 
     if (typeof actions === 'undefined') { return null; }
 
@@ -99,6 +99,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           aria-haspopup="true"
           onClick={this.handleClick}
           className={classes.button}
+          data-qa-action-menu
         >
           <MoreHoriz color="primary" />
         </IconButton >
@@ -116,6 +117,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
               key={idx}
               onClick={a.onClick}
               className={classes.item}
+              data-qa-action-menu-item={a.title}
             >{a.title}</MenuItem>,
           )}
         </Menu>
