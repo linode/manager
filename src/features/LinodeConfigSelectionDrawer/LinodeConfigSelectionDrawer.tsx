@@ -45,7 +45,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<CombinedProps> = (pr
       onClose={onClose}
       title="Select a Linode Configuration"
     >
-      <Grid container spacing={8}>
+      <Grid container spacing={8} style={{ marginTop: 16 }}>
     {
       configs.map(config =>
         <SelectionCard
