@@ -14,7 +14,6 @@ import Grid from 'src/components/Grid';
 import LinodeTheme from 'src/theme';
 import Typography from 'material-ui/Typography';
 
-import Tag from 'src/components/Tag';
 import CircleProgress from 'src/components/CircleProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import Flag from 'src/assets/icons/flag.svg';
@@ -155,11 +154,6 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   loadedState = () => {
     const { classes, image, type, linode } = this.props;
 
-    /**
-     * @todo Until tags are implemented we're using the group as a faux tag.
-     * */
-    const tags = [linode.group].filter(Boolean);
-
     return (
       <CardContent className={classes.cardContent}>
       <div>
@@ -180,9 +174,6 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           {image.label}
         </div>
         }
-      </div>
-      <div className={classes.cardSection}>
-        {tags.map((tag: string, idx) => <Tag key={idx} label={tag} />)}
       </div>
     </CardContent>
     );
