@@ -1,9 +1,11 @@
 import * as React from 'react';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
-import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
+import {
+  clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte,
+} from 'ramda';
 import { connect } from 'react-redux';
-import { Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import Hidden from 'material-ui/Hidden';
 
 import { API_ROOT } from 'src/constants';
@@ -23,6 +25,8 @@ import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ToggleBox from './ToggleBox';
+import notifications$ from 'src/notifications';
+
 import './linodes.css';
 import LinodeConfigSelectionDrawer, {
   LinodeConfigSelectionDrawerCallback,
@@ -35,7 +39,7 @@ interface ConnectedProps {
 }
 
 interface PreloadedProps {
-  linodes: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Linode>>;
+  linodes: PromiseLoaderResponse<Linode.ManyResourceState<Linode.EnhancedLinode>>;
   images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
 }
 
@@ -48,7 +52,7 @@ interface ConfigDrawerState {
 }
 
 interface State {
-  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
+  linodes: Linode.EnhancedLinode[];
   page: number;
   pages: number;
   results: number;
@@ -71,7 +75,8 @@ const preloaded = PromiseLoader<Props>({
 type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
-  subscription: Subscription;
+  eventsSub: Subscription;
+  notificationSub: Subscription;
 
   state = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
@@ -116,12 +121,14 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   ];
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    this.eventsSub.unsubscribe();
+    this.notificationSub.unsubscribe();
   }
 
   componentDidMount() {
     const mountTime = moment().subtract(5, 'seconds');
-    this.subscription = events$
+
+    this.eventsSub = events$
       .filter(newLinodeEvents(mountTime))
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
@@ -135,6 +142,28 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             return { linodes: updatedLinodes };
           }));
       });
+
+    this.notificationSub = Observable
+      .combineLatest(
+        notifications$
+          .map(notifications => notifications.filter(n => n.entity.type === 'linode')),
+        Observable.of(this.props.linodes),
+      )
+      .map(([notifications, linodes]) => {
+        /** Imperative and gross a/f. Ill fix it. */
+        linodes.response.data = linodes.response.data.map((linode) => {
+          const notification = notifications.find(n => n.entity.id === linode.id);
+          if (notification) {
+            linode.notification = notification.message;
+            return linode;
+          }
+
+          return linode;
+        });
+
+        return linodes;
+      })
+      .subscribe(response => this.setState({ linodes: response.response.data }));
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
