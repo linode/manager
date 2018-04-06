@@ -6,7 +6,7 @@ import LinodeCard from './LinodeCard';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 
 interface Props {
-  linodes: (Linode.Linode & { recentEvent?: Linode.Event })[];
+  linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
   types: Linode.LinodeType[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;

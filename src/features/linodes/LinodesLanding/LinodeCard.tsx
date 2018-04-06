@@ -17,6 +17,7 @@ import Typography from 'material-ui/Typography';
 import Tag from 'src/components/Tag';
 import CircleProgress from 'src/components/CircleProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import Flag from 'src/assets/icons/flag.svg';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -56,6 +57,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardHeader: {
     fontWeight: 700,
     color: 'black',
+    flex: 1,
   },
   cardContent: {
     flex: 1,
@@ -98,7 +100,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  linode: (Linode.Linode & { recentEvent?: Linode.Event });
+  linode: Linode.EnhancedLinode;
   image?: Linode.Image;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
@@ -120,6 +122,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             </Typography>
           </Link>
         </Grid>
+        {linode.notification &&
+          <Grid item className="py0">
+            <Flag />
+          </Grid>
+        }
       </Grid>
     );
   }
