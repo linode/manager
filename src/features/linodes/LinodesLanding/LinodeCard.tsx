@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider';
 import Grid from 'src/components/Grid';
 import LinodeTheme from 'src/theme';
 import Typography from 'material-ui/Typography';
+import Tooltip from 'material-ui/Tooltip';
 
 import CircleProgress from 'src/components/CircleProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -123,7 +124,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         </Grid>
         {linode.notification &&
           <Grid item className="py0">
-            <Flag />
+            <Tooltip title={linode.notification}><Flag/></Tooltip>
           </Grid>
         }
       </Grid>
