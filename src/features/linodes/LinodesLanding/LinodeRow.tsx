@@ -12,7 +12,6 @@ import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
-import Tag from 'src/components/Tag';
 import LinearProgress from 'src/components/LinearProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import Flag from 'src/assets/icons/flag.svg';
@@ -134,17 +133,9 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   loadedState = () => {
     const { linode, classes, openConfigDrawer } = this.props;
 
-    /**
-     * @todo Until tags are implemented we're using the group as a faux tag.
-     **/
-    const tags = [linode.group].filter(Boolean);
-
     return(
       <TableRow key={linode.id}>
         {this.headCell()}
-        <TableCell className={classes.tagsCell}>
-          {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
-        </TableCell>
         <TableCell className={classes.ipCell}>
           <div className={classes.ipCellInner}>
             <IPAddress ips={linode.ipv4} />
