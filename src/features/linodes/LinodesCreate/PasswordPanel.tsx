@@ -42,7 +42,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
 
     return (
       <Paper className={classes.root}>
-      <div className={classes.inner}>
+      <div className={classes.inner} data-qa-password-input>
         { error && <Notice text={error} error /> }
         <Typography component="div" variant="title">Password</Typography>
         <PasswordInput

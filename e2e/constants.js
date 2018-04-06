@@ -4,7 +4,7 @@ exports.constants = {
 	},
 	routes: {
 		storybook: `http://localhost:6006/`,
-		dashboard: '/',
+		dashboard: 'http://localhost:3000/',
 		linodes: '/linodes',
 		volumes: '/volumes',
 		nodebalancers: '/nodebalancers',

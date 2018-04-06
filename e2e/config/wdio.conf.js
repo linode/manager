@@ -177,6 +177,7 @@ exports.config = {
      */
     before: function (capabilities, specs) {
         // Load up our custom commands
+        require('babel-register');
         browserCommands();
         getTokenIfNeeded(username, password);
     },
