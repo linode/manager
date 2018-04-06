@@ -394,6 +394,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #bbb',
         color: '#666',
+        textAlign: 'center',
         [breakpoints.up('sm')]: {
           padding: '12px  16px',
           fontSize: '.9rem',

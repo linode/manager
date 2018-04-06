@@ -38,7 +38,8 @@ type CSSClasses =
   | 'button'
   | 'consoleButton'
   | 'rebootButton'
-  | 'loadingStatusText';
+  | 'loadingStatusText'
+  | 'flag';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   cardSection: {
@@ -97,6 +98,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     position: 'relative',
     top: - theme.spacing.unit * 2,
   },
+  flag: {
+    transition: theme.transitions.create('opacity'),
+    opaity: 1,
+    '&:hover': {
+      opacity: .75,
+    },
+  },
 });
 
 interface Props {
@@ -124,7 +132,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         </Grid>
         {linode.notification &&
           <Grid item className="py0">
-            <Tooltip title={linode.notification}><Flag/></Tooltip>
+            <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
           </Grid>
         }
       </Grid>
