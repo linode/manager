@@ -7,7 +7,7 @@ import {
 } from 'material-ui';
 import Cached from 'material-ui-icons/Cached';
 
-import transitionStatus from './linodeTransitionStatus';
+import transitionStatus from '../linodeTransitionStatus';
 
 interface Props {
   status: Linode.LinodeStatus;

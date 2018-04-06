@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-import { ListItem, ListItemText } from 'material-ui/List';
+import { ListItemText } from 'material-ui/List';
+import { MenuItem, MenuItemProps } from 'material-ui/Menu';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
 import LinodeTheme from '../../../src/theme';
@@ -37,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {
+interface Props extends MenuItemProps {
   title: string;
   content?: string;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
@@ -61,7 +62,7 @@ const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
   } = props;
 
   return (
-    <ListItem
+    <MenuItem
       className={classNames({
         [classes.root]: true,
         [classes.error]: error,
@@ -77,7 +78,7 @@ const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
         primary={title}
         secondary={content}
       />
-    </ListItem>
+    </MenuItem>
   );
 };
 

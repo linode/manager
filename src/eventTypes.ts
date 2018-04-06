@@ -6,19 +6,19 @@ export function getLinodesRedirectUrl() {
   return '/linodes';
 }
 
-export function getLinodeRedirectUrl(entity) {
+export function getLinodeRedirectUrl(entity: Linode.Entity) {
   return `${getLinodesRedirectUrl()}/${entity.label}`;
 }
 
-export function getLinodeNetworkingRedirectUrl(entity) {
+export function getLinodeNetworkingRedirectUrl(entity: Linode.Entity) {
   return `${getLinodeRedirectUrl(entity)}/networking`;
 }
 
-export function getLinodeAdvancedRedirectUrl(entity) {
+export function getLinodeAdvancedRedirectUrl(entity: Linode.Entity) {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
 
-export function getLinodeBackupRedirectUrl(entity) {
+export function getLinodeBackupRedirectUrl(entity: Linode.Entity) {
   return `${getLinodeRedirectUrl(entity)}/backups`;
 }
 
@@ -26,7 +26,7 @@ export function getDomainsRedirectUrl() {
   return '/domains';
 }
 
-export function getDomainRedirectUrl(entity) {
+export function getDomainRedirectUrl(entity: Linode.Entity) {
   return `${getDomainsRedirectUrl()}/${entity.label}`;
 }
 
@@ -34,7 +34,7 @@ export function getNodeBalancersRedirectUrl() {
   return '/nodebalancers';
 }
 
-export function getNodebalancerRedirectUrl(entity) {
+export function getNodebalancerRedirectUrl(entity: Linode.Entity) {
   return `${getNodeBalancersRedirectUrl()}/${entity.label}`;
 }
 
@@ -42,7 +42,7 @@ export function getTicketsRedirectUrl() {
   return '/support';
 }
 
-export function getTicketRedirectUrl(entity) {
+export function getTicketRedirectUrl(entity: Linode.Entity) {
   return `${getTicketsRedirectUrl()}/${entity.id}`;
 }
 
@@ -50,7 +50,7 @@ export function getStackScriptsRedirectUrl() {
   return '/stackscripts';
 }
 
-export function getStackScriptRedirectUrl(entity) {
+export function getStackScriptRedirectUrl(entity: Linode.Entity) {
   return `${getStackScriptsRedirectUrl()}/${entity.id}`;
 }
 

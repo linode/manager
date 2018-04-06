@@ -15,7 +15,7 @@ describe('events module', () => {
   describe('resetEventsPolling', () => {
     it('resets both the request deadline and poll multiplier', () => {
       resetEventsPolling();
-      expect(eventRequestDeadline).toBe(1234567890 + 1000);
+      expect(eventRequestDeadline).toBe(1234567890 + 2000);
       expect(currentPollIntervalMultiplier).toBe(1);
     });
   });

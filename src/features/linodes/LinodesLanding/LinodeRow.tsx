@@ -12,15 +12,16 @@ import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
-import Tag from 'src/components/Tag';
 import LinearProgress from 'src/components/LinearProgress';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import Flag from 'src/assets/icons/flag.svg';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
 import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
-import transitionStatus from './linodeTransitionStatus';
+import transitionStatus from '../linodeTransitionStatus';
 
 type ClassNames = 'bodyRow'
 | 'linodeCell'
@@ -29,6 +30,8 @@ type ClassNames = 'bodyRow'
 | 'ipCellInner'
 | 'regionCell'
 | 'actionCell'
+| 'actionInner'
+| 'flag'
 | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
@@ -55,6 +58,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
         width: 30,
       },
     },
+    actionInner: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
     ipCellInner: {
       maxWidth: 100,
       display: 'block',
@@ -62,6 +69,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       [theme.breakpoints.up('md')]: {
         maxWidth: 300,
       },
+    },
+    flag: {
+      marginRight: 10,
     },
     status: {
       textTransform: 'capitalize',
@@ -73,8 +83,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 interface Props {
-  linode: (Linode.Linode & { recentEvent?: Linode.Event });
+  linode: Linode.EnhancedLinode;
   type?: Linode.LinodeType;
+  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
@@ -105,17 +116,14 @@ class LinodeRow extends React.Component<PropsWithStyles> {
 
   loadingState = () => {
     const { linode, classes } = this.props;
-    const value = (linode.recentEvent && linode.recentEvent.percent_complete !== null)
-      ? Math.max(linode.recentEvent.percent_complete, 1)
-      : true;
-
+    const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
     return(
       <TableRow key={linode.id} className={classes.bodyRow}>
         {this.headCell()}
         <TableCell colSpan={4}>
-        { typeof value === 'number' &&
-          <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
-        }
+          {typeof value === 'number' &&
+            <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
+          }
           <LinearProgress value={value} />
         </TableCell>
       </TableRow>
@@ -123,19 +131,11 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   loadedState = () => {
-    const { linode, classes } = this.props;
-
-    /**
-     * @todo Until tags are implemented we're using the group as a faux tag.
-     **/
-    const tags = [linode.group].filter(Boolean);
+    const { linode, classes, openConfigDrawer } = this.props;
 
     return(
       <TableRow key={linode.id}>
         {this.headCell()}
-        <TableCell className={classes.tagsCell}>
-          {tags.map((v: string, idx) => <Tag key={idx} label={v} />)}
-        </TableCell>
         <TableCell className={classes.ipCell}>
           <div className={classes.ipCellInner}>
             <IPAddress ips={linode.ipv4} />
@@ -146,7 +146,15 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell className={classes.actionCell}>
-          <LinodeActionMenu linode={linode} />
+          <div className={classes.actionInner}>
+            {linode.notification &&
+              <Flag className={classes.flag} />
+            }
+            <LinodeActionMenu
+              linode={linode}
+              openConfigDrawer={openConfigDrawer}
+            />
+          </div>
         </TableCell>
     </TableRow>
     );

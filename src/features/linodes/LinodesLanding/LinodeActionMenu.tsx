@@ -6,13 +6,14 @@ import { rebootLinode, powerOffLinode, powerOnLinode } from './powerActions';
 
 interface Props {
   linode: Linode.Linode;
+  openConfigDrawer: (configs: Linode.Config[], fn: (id: number) => void) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { linode, history: { push } } = this.props;
+    const { linode, openConfigDrawer, history: { push } } = this.props;
 
     return function (closeMenu: Function): Action[] {
       const actions = [
@@ -26,7 +27,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            rebootLinode(linode.id, linode.label);
+            e.preventDefault();
+            rebootLinode(openConfigDrawer, linode.id, linode.label);
             closeMenu();
           },
         },
@@ -64,7 +66,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift({
           title: 'Power On',
           onClick: (e) => {
-            powerOnLinode(linode.id, linode.label);
+            powerOnLinode(openConfigDrawer, linode.id, linode.label);
             closeMenu();
           },
         });

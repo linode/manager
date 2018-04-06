@@ -42,7 +42,7 @@ class InfoPanel extends React.Component<CombinedProps> {
     const setLabel = handleChange('label');
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} data-qa-label-header>
       <div className={classes.inner}>
         { error && <Notice text={error} error /> }
         <Typography variant="title">Label</Typography>

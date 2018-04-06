@@ -2,10 +2,6 @@ const { constants } = require('../../../e2e/constants');
 const { waitForFocus } = require('../../../e2e/utils/storybook');
 
 describe('Circle Progress Indicator Component Suite', () => {
-    beforeAll(() => {
-        browser.url(constants.routes.storybook);
-    });
-
     it('should display circle progess Indicator in the navigation', () => {
         const navigationItem = $('[data-name="Circle Progress Indicator"]');
         expect(navigationItem.isVisible()).toBe(true);

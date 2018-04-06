@@ -84,8 +84,9 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         role="menu"
+        data-qa-show-more-expanded={open ? 'true' : 'false'}
         >
-        <div className={`${classes.header} ${open ? 'hOpen' : '' }`}>
+        <div className={`${classes.header} ${open ? 'hOpen' : '' }`} data-qa-show-more-toggle>
           {open
             ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
             : <KeyboardArrowRight className={classes.caret}  />
