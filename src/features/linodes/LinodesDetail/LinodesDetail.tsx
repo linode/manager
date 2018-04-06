@@ -142,12 +142,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     });
   }
 
-  selectConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+  selectConfig = (id: number) => {
     this.setState(prevState => ({
       configDrawer: {
         ...prevState.configDrawer,
-        selected: value,
+        selected: id,
       },
     }));
   }
