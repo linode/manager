@@ -15,6 +15,7 @@ import TableCell from 'material-ui/Table/TableCell';
 import Tag from 'src/components/Tag';
 import LinearProgress from 'src/components/LinearProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import Flag from 'src/assets/icons/flag.svg';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
@@ -30,6 +31,8 @@ type ClassNames = 'bodyRow'
 | 'ipCellInner'
 | 'regionCell'
 | 'actionCell'
+| 'actionInner'
+| 'flag'
 | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
@@ -56,6 +59,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
         width: 30,
       },
     },
+    actionInner: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
     ipCellInner: {
       maxWidth: 100,
       display: 'block',
@@ -63,6 +70,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
       [theme.breakpoints.up('md')]: {
         maxWidth: 300,
       },
+    },
+    flag: {
+      marginRight: 10,
     },
     status: {
       textTransform: 'capitalize',
@@ -145,10 +155,15 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           <RegionIndicator region={linode.region} />
         </TableCell>
         <TableCell className={classes.actionCell}>
-          <LinodeActionMenu
-            linode={linode}
-            openConfigDrawer={openConfigDrawer}
-          />
+          <div className={classes.actionInner}>
+            {linode.notification &&
+              <Flag className={classes.flag} />
+            }
+            <LinodeActionMenu
+              linode={linode}
+              openConfigDrawer={openConfigDrawer}
+            />
+          </div>
         </TableCell>
     </TableRow>
     );
