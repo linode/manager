@@ -40,8 +40,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     position: 'relative',
     display: 'flex',
     height: '100%',
-    maxWidth: '1440px',
-    margin: '0 auto',
   },
   content: {
     width: '100%',
