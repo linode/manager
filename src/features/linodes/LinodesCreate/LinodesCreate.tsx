@@ -298,7 +298,9 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       <StickyContainer>
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography variant="headline">Create New Linode</Typography>
+            <Typography variant="headline" data-qa-create-linode-header>
+              Create New Linode
+            </Typography>
             <AppBar position="static" color="default">
               <Tabs
                 value={selectedTab}

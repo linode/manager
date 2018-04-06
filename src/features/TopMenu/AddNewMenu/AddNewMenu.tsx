@@ -104,6 +104,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           aria-haspopup="true"
           onClick={this.handleClick}
           className={classes.button}
+          data-qa-add-new-menu-button
         >
           Create {
             anchorEl

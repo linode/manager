@@ -99,7 +99,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     const setPrivateIP = handleChange('privateIP');
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} data-qa-add-ons>
         <div className={classes.inner}>
           <Typography variant="title">Optional Add-ons</Typography>
           <Grid container className={classes.option}>
