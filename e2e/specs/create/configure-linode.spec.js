@@ -24,7 +24,7 @@ describe('Create Linode - Configure Linode Suite', () => {
 
     it('should configure a generic linode and update cost summary', () => {
         const genericPrice = '$12.50 /mo';
-        const genericImage = 'Arch\nArch 2018.02.05';
+        const genericImage = ConfigureLinode.images[0].getText();
         const genericType = 'Linode 2G\n1 CPU, 30G Storage, 2G RAM';
 
         ConfigureLinode.generic();
