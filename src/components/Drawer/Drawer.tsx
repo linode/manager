@@ -27,6 +27,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
       paddingRight: 0,
       marginLeft: -8,
     },
+    '& .selectionCard': {
+      maxWidth: '100%',
+      flexBasis: '100%',
+    },
   },
   drawerHeader: {
     marginBottom: theme.spacing.unit * 2,
