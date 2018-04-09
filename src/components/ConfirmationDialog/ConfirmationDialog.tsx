@@ -31,8 +31,8 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
     ...dialogProps,
   } = props;
   return (
-    <Dialog { ...dialogProps }>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+    <Dialog { ...dialogProps } data-qa-dialog>
+      <DialogTitle id="alert-dialog-title" data-qa-dialog-title>{title}</DialogTitle>
       <DialogContent>
         { children }
       </DialogContent>
