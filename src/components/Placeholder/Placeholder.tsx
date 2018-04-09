@@ -9,12 +9,28 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-type ClassNames = 'root' | 'copy';
+type ClassNames = 'root' | 'button' | 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  copy: {},
+  root: {
+    paddingTop: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+  },
+  copy: {
+    textAlign: 'center',
+  },
+  button: {
+    borderRadius: '4px',
+  },
+  [theme.breakpoints.up('md')]: {
+    root: {
+      paddingTop: '50px',
+      paddingBottom: '50px',
+    },
+  },
 });
+
+
 
 interface Props {
   icon?: React.ComponentType<any>;

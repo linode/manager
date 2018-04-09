@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'redux';
-
+import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
 import {
   withStyles,
   Theme,
@@ -51,12 +51,13 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         justify="center"
         className={classes.root}
       >
-        <Grid item xs={12}> Image goes here... </Grid>
+        <Grid item xs={12}><LinodeSvg /></Grid>
+        <Grid item xs={12}>Linodes</Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce mollis
-            quis tortor ultrices lobortis. Aliquam rutrum dolor turpis, at
-            molestie purus semper non. Ut finibus bibendum velit.
+          Linodes are virtual servers that run in the cloud. You get complete control with root
+          access and a choice of operating system. Click the button below to choose your compute
+          resource options and create your first Linode.
         </Typography>
         </Grid>
         <Grid item xs={12}>

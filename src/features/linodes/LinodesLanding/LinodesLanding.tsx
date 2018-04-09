@@ -93,9 +93,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     pageSize: 25,
   };
 
-  /**
-  * @todo Test docs for review.
-  */
   docs = [
     {
       title: 'Getting Started with Linode',
