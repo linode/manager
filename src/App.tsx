@@ -160,7 +160,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
                   <TempRoute exact path="/images" render={() => 'Images'} />
                   <Route path="/profile" component={Profile} />
-                  <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
                 </Switch>
               </div>
             <Footer />
