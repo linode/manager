@@ -13,8 +13,6 @@ import {
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
-
-import Typography from 'material-ui/Typography';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
@@ -24,8 +22,8 @@ import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
+import Placeholder from 'src/components/Placeholder';
 import BetaNotification from './BetaNotification';
-
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
 });
@@ -75,21 +73,6 @@ interface State {
   menuOpen: Boolean;
   betaNotification: Boolean;
 }
-
-/**
- * Temoporary route.
- */
-const TempRoute = (props: any) => {
-  const { render, ...rest } = props;
-  return <Route
-    {...rest}
-    render={renderProps => (
-      <Typography variant="display1">
-        {render(renderProps)}
-      </Typography>
-    )}
-  />;
-};
 
 type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
 
@@ -158,20 +141,28 @@ export class App extends React.Component<CombinedProps, State> {
               <TopMenu toggleSideMenu={this.toggleMenu} />
               <div className={classes.wrapper}>
                 <Switch>
-                  <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
+                  <Route exact path="/dashboard" render={() =>
+                    <Placeholder title="Dashboard" />} />
                   <Route path="/linodes" component={LinodesRoutes} />
-                  <TempRoute exact path="/volumes" render={() => 'Volumes'} />
-                  <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
-                  <TempRoute exact path="/domains" render={() => 'Domains'} />
-                  <TempRoute exact path="/managed" render={() => 'Managed'} />
-                  <TempRoute exact path="/longview" render={() => 'LongView'} />
-                  <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
-                  <TempRoute exact path="/images" render={() => 'Images'} />
+                  <Route exact path="/volumes" render={() =>
+                    <Placeholder title="Volumes" />} />
+                  <Route exact path="/nodebalancers" render={() =>
+                    <Placeholder title="NodeBalancers" />} />
+                  <Route exact path="/domains" render={() =>
+                    <Placeholder title="Domains" />} />
+                  <Route exact path="/managed" render={() =>
+                    <Placeholder title="Managed" />} />
+                  <Route exact path="/longview" render={() =>
+                    <Placeholder title="LongView" />} />
+                  <Route exact path="/stackscripts" render={() =>
+                    <Placeholder title="StackScripts" />} />
+                  <Route exact path="/images" render={() =>
+                    <Placeholder title="Images" />} />
                   <Route path="/profile" component={Profile} />
                   <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
                 </Switch>
               </div>
-            <Footer />
+              <Footer />
             </main>
           </div>
           <BetaNotification open={this.state.betaNotification} onClose={this.closeBetaNotice} />

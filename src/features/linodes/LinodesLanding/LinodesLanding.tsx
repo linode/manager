@@ -109,9 +109,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       src: 'https://linode.com/docs/security/securing-your-server/',
       body: `Keeping your software up to date is the single biggest security precaution you can
       take for any operating system. Software updates range from critical vulnerability patches to
-      minor bug fixes, and...Keeping your software up to date is the single biggest security
-      precaution you can take for any operating system. Software updates range from critical
-      vulnerability patches to minor bug fixes, and...`,
+      minor bug fixes, and...`,
     },
 
   ];
