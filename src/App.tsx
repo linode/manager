@@ -49,6 +49,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     [theme.breakpoints.up('md')]: {
       marginLeft: 215,
     },
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: 275,
+    },
   },
   wrapper: {
     backgroundColor: LinodeTheme.bg.main,
