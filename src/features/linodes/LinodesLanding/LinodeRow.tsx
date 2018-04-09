@@ -22,6 +22,7 @@ import IPAddress from './IPAddress';
 import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
 import transitionStatus from '../linodeTransitionStatus';
+import Tooltip from 'material-ui/Tooltip';
 
 type ClassNames = 'bodyRow'
 | 'linodeCell'
@@ -72,6 +73,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     },
     flag: {
       marginRight: 10,
+      transition: theme.transitions.create('opacity'),
+      opaity: 1,
+      '&:hover': {
+        opacity: .75,
+      },
     },
     status: {
       textTransform: 'capitalize',
@@ -148,7 +154,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         <TableCell className={classes.actionCell}>
           <div className={classes.actionInner}>
             {linode.notification &&
-              <Flag className={classes.flag} />
+              <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
             }
             <LinodeActionMenu
               linode={linode}
