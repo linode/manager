@@ -7,6 +7,8 @@ const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
+const specsToRun = argv.file ? [ argv.file ] : ['./e2e/specs/**/*.js'];
+
 
 exports.config = {
     // Selenium Host/Port
@@ -21,9 +23,8 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: [
-        './e2e/specs/**/*.js'
-    ],
+    specs:
+        specsToRun,
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'

@@ -112,7 +112,7 @@ class APITokens extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography variant="headline" className={classes.headline}>
+            <Typography variant="headline" className={classes.headline} data-qa-table={title}>
               {title}
             </Typography>
           </Grid>
@@ -123,6 +123,7 @@ class APITokens extends React.Component<CombinedProps, State> {
                 onClick={() => this.openCreateDrawer()}
                 text="Add a Personal Access Token"
                 title="Add a Personal Access Token"
+                data-qa-token-create
               />
             }
           </Grid>
@@ -130,7 +131,7 @@ class APITokens extends React.Component<CombinedProps, State> {
         <Paper>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow data-qa-table-head>
                 <TableCell>Label</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell>Created</TableCell>
@@ -140,24 +141,24 @@ class APITokens extends React.Component<CombinedProps, State> {
             </TableHead>
             <TableBody>
               {tokens.map((token: Linode.Token) =>
-                <TableRow key={token.id}>
+                <TableRow key={token.id} data-qa-table-row={token.id}>
                   <TableCell>
-                    <Typography variant="subheading">
+                    <Typography variant="subheading" data-qa-token-label={token.label}>
                       {token.label}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1">
+                    <Typography variant="body1" data-qa-token-type>
                       {type}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1">
+                    <Typography variant="body1" data-qa-token-created>
                       {token.created}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1">
+                    <Typography variant="body1" data-qa-token-expiry>
                       {token.expiry}
                     </Typography>
                   </TableCell>
