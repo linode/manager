@@ -11,7 +11,7 @@ const Footer = ({ source }) => (
       <span>Version {VERSION}</span>
     </div>
 
-    {source && (
+    {source && source.source && (
       <ExternalLink
         to={`https://github.com/linode/manager/blob/${VERSION ? `v${VERSION}` : 'master'}/${source.source}`}
       >Page Source</ExternalLink>

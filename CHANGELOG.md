@@ -44,6 +44,24 @@ A new visual design has begun!
 - Promise preloader HOC
 - Request/response Redux action creators
 
+## [0.18.7] - 2018-04-02
+### Changed
+- Update region names for upcoming changes (#3104)
+- Update API calls for API-53 (#3108)
+
+## [0.18.6] - 2018-03-29
+### Changed
+- enable block storage volume support in us-south-1a (Dallas)
+
+## [0.18.5] - 2018-03-05
+### Fixed
+- fix non-expiring token creation
+- fix stats graphs rendering by correcting destructuring
+- throttle OAuth refresh between tabs
+- Refresh OAuth token only on user interaction
+
+## [0.18.4] - 2018-02-26
+
 ## [0.18.3] - 2018-02-20
 ### Added
 - Pagination added to `/domains`
