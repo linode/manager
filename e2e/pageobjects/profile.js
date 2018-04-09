@@ -1,6 +1,7 @@
 import Page from './page';
 
 export class CreateDrawer {
+    get title() { return $('[data-qa-drawer-title]'); }
     get accessColumn() { return $$('[data-qa-perm-access]'); }
     get noneColumn() { return $('[data-qa-perm-none]'); }
     get readColumn() { return $('[data-qa-perm-read]'); }
