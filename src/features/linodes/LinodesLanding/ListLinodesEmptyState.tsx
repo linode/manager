@@ -52,12 +52,11 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         className={classes.root}
       >
         <Grid item xs={12}><LinodeSvg /></Grid>
-        <Grid item xs={12}>Linodes</Grid>
+        <Grid item xs={12}>You don't have any linodes!</Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">
-          Linodes are virtual servers that run in the cloud. You get complete control with root
-          access and a choice of operating system. Click the button below to choose your compute
-          resource options and create your first Linode.
+          Host your next project on a Linode. Click the button below to choose a plan and deploy
+          an image.
         </Typography>
         </Grid>
         <Grid item xs={12}>
