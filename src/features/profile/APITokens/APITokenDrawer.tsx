@@ -32,6 +32,15 @@ import {
 
 type Expiry = [string, string];
 
+export const genExpiryTups = (): Expiry[] => {
+  return [
+    ['In 6 months', moment().add(6, 'months').startOf('day').format(dateFormat)],
+    ['In 3 months', moment().add(3, 'months').startOf('day').format(dateFormat)],
+    ['In 1 month', moment().add(1, 'months').startOf('day').format(dateFormat)],
+    ['Never', moment().add(200, 'years').startOf('day').format(dateFormat)],
+  ];
+};
+
 type ClassNames = 'permsTable';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -63,6 +72,7 @@ interface Props {
 }
 
 interface State {
+  scopes: Permission[];
   expiryTups: Expiry[];
 }
 
@@ -70,26 +80,30 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
-    expiryTups: APITokenDrawer.genExpiryTups(),
+    scopes: scopeStringToPermTuples(this.props.scopes || ''),
+    expiryTups: genExpiryTups(),
   };
 
-  static genExpiryTups = (): Expiry[] => {
-    return [
-      ['In 6 months', moment().add(6, 'months').format(dateFormat)],
-      ['In 3 months', moment().add(3, 'months').format(dateFormat)],
-      ['In 1 month', moment().add(1, 'months').format(dateFormat)],
-      ['Never', moment().add(200, 'years').format(dateFormat)],
-    ];
+  /* NB: Upon updating React, port this to getDerivedStateFromProps */
+  componentWillReceiveProps(nextProps: CombinedProps) {
+    if (
+      /* If we are about to display a new token */
+      this.props.id !== nextProps.id
+    ) {
+      /* Then update our current scopes state */
+      this.setState({ scopes: scopeStringToPermTuples(nextProps.scopes || '') });
+    }
   }
 
+
   handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
-    const scopeTups = scopeStringToPermTuples(this.props.scopes || '');
+    const scopeTups = this.state.scopes;
     const targetIndex = scopeTups.findIndex(
       (scopeTup: Permission) => scopeTup[0] === e.currentTarget.name);
     if (targetIndex !== undefined) {
       scopeTups[targetIndex][1] = +(e.currentTarget.value);
     }
-    this.props.onChange('scopes', permTuplesToScopeString(scopeTups));
+    this.setState({ scopes: scopeTups });
   }
 
   permNameMap = {
@@ -106,7 +120,8 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   };
 
   renderPermsTable() {
-    const { classes, mode, scopes } = this.props;
+    const { classes, mode } = this.props;
+    const { scopes } = this.state;
 
     return (
       <Table className={classes.permsTable}>
@@ -119,7 +134,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
-          {scopeStringToPermTuples(scopes || '').map(
+          {scopes.map(
             (scopeTup) => {
               return (
                 <TableRow key={scopeTup[0]}>
@@ -244,16 +259,17 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           {(mode === 'create' || mode === 'edit') &&
             [
               <Button
+                key="create"
                 variant="raised"
                 color="primary"
                 onClick={mode as string === 'create'
-                  ? () => onCreate(this.props.scopes || '')
+                  ? () => onCreate(permTuplesToScopeString(this.state.scopes))
                   : () => onEdit()
                 }
               >
                 {mode as string === 'create' ? 'Submit' : 'Save'}
               </Button>,
-              <Button onClick={() => closeDrawer()}>Cancel</Button>,
+              <Button key="cancel" onClick={() => closeDrawer()}>Cancel</Button>,
             ]
           }
         </ActionsPanel>
