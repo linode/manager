@@ -217,7 +217,7 @@ class PrimaryNav extends React.Component<Props> {
         <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Support">
           <a
             className={classes.sublink}
-            href="https://developers.linode.com/v4/introduction"
+            href="https://www.linode.com/docs"
             role="menuitem"
           >
             Documentation

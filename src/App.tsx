@@ -159,7 +159,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <Route exact path="/images" render={() =>
                     <Placeholder title="Images" />} />
                   <Route exact path="/billing" render={() =>
-                    <Placeholder title="billing" />} />
+                    <Placeholder title="Billing" />} />
                   <Route exact path="/users" render={() =>
                     <Placeholder title="Users" />} />
                   <Route path="/profile" component={Profile} />
