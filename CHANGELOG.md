@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.22.3] - 2018
+### Added:
+- API Token Management
+- OAuth Client Management
+- Linode Config selection on boot actions
+- Notifications and Events menu
+- Display flag on Linode row/card for notifications.
+- Linode Busy indicator to Linode Details page
+- Linode summary panel to details page
+- Documentation for unit testing
+- Linode Detail tabs and routes
+- TESTING.md, Updates to CONTRIBUTING.md
+- Responsive tables
+- Add Grid wrapper in response to MUI changes.
+- Create a simple confirm/decline dialog
+- Editable text component
+- Docker script commands
+- Add gitchangelog configuration and documentation
+- data-qa selectors for e2e tests
+### Changed:
+- Navigate to storybook before each e2e test w/wdio before hook
+### Fixed:
+- Show user feedback immediately upon Linode power action
+
 ## [0.21.0] - 2018-03-26
 ### Added
 - A variety of style and appearance updates
