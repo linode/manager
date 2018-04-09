@@ -40,8 +40,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     position: 'relative',
     display: 'flex',
     height: '100%',
-    maxWidth: '1440px',
-    margin: '0 auto',
   },
   content: {
     width: '100%',
@@ -50,6 +48,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flexDirection: 'column',
     [theme.breakpoints.up('md')]: {
       marginLeft: 215,
+    },
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: 275,
     },
   },
   wrapper: {
