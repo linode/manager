@@ -35,6 +35,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   root: {
     alignItems: 'center',
+    marginBottom: 2,
+    '&:last-child': {
+      marginBottom: 0,
+    },
   },
   row: {
     display: 'flex',
@@ -60,6 +64,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'inline-block',
     '&:hover': {
       color: theme.palette.primary.light,
+      cursor: 'pointer',
     },
     '&:focus $icon': {
       backgroundColor: theme.palette.primary.light,
@@ -137,7 +142,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, ips, copyRight } = this.props;
 
     return (
-      <div className={`dif ${classes.root}`}>
+      <div className={classes.root}>
         { this.renderIP(ips[0], copyRight) }
         {
           ips.length > 1 && <ShowMore
