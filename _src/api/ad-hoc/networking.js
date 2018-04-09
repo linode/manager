@@ -26,7 +26,7 @@ export function ipv4s(region) {
         const currentLinode = linodes[id] || {};
 
         const currentIPv6s = Object.keys(currentLinode._ips || {}).filter(
-          key => currentLinode._ips[key].version !== 'ipv4');
+          key => currentLinode._ips[key].type !== 'ipv4');
 
         currentIPv6s.forEach(function (key) {
           _ipsByLinode[id][key] = currentLinode._ips[key];
@@ -37,7 +37,6 @@ export function ipv4s(region) {
         ..._ipsByLinode[id],
         [ip.address]: {
           ...ip,
-          version: 'ipv4',
         },
       };
     });
@@ -82,7 +81,7 @@ export function assignIPs(region, assignments) {
       };
     });
 
-    await dispatch(fetch.post('/networking/ip-assign', data));
+    await dispatch(fetch.post('/networking/ipv4/assign', data));
 
     // Only change state after post above succeeds.
     await Promise.all(Object.keys(_ipsByLinode).map(function (id) {
@@ -91,7 +90,7 @@ export function assignIPs(region, assignments) {
       // The ipv4 list on the linode needs to be updated for the Linode list
       // and dashboard pages.
       const ipv4 = Object.values(_ips).filter(
-        ip => ip.version === 'ipv4').map(({ address }) => address);
+        ip => ip.type === 'ipv4').map(({ address }) => address);
 
       dispatch(actions.one({ _ips, ipv4 }, id));
     }));
@@ -100,7 +99,7 @@ export function assignIPs(region, assignments) {
 
 export function setRDNS(ip, linodeId, rdns) {
   return async function (dispatch, getState) {
-    const { address, version } = ip;
+    const { address } = ip;
     const rawAddress = address.split('/')[0].trim();
     let _ip = await dispatch(fetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`,
       { rdns }));
@@ -115,26 +114,27 @@ export function setRDNS(ip, linodeId, rdns) {
         ..._ips,
         [_ip.address]: {
           ..._ip,
-          version: version,
         },
       },
     }, linodeId));
   };
 }
 
-export function addIP(linodeId, type) {
+export function addIP(linodeId, visibility) {
   return async (dispatch, getState) => {
     const { _ips } = getState().api.linodes.linodes[linodeId];
 
     const ip = await dispatch(
-      fetch.post(`/linode/instances/${linodeId}/ips`, { type }));
+      fetch.post(`/linode/instances/${linodeId}/ips`, {
+        type: 'ipv4',
+        public: (visibility === 'public')
+      }));
 
     return dispatch(actions.one({
       _ips: {
         ..._ips,
         [ip.address]: {
           ...ip,
-          version: 'ipv4',
         },
       },
     }, linodeId));
@@ -144,45 +144,36 @@ export function addIP(linodeId, type) {
 export function getIPs(linodeId) {
   return async function (dispatch) {
     const ips = await dispatch(fetch.get(`/linode/instances/${linodeId}/ips`));
-
     const _ips = {};
     [...ips.ipv4.public, ...ips.ipv4.private].forEach(function (ip) {
       _ips[ip.address] = {
         ...ip,
-        version: 'ipv4',
+        key: ip.public ? 'public' : 'private',
       };
     });
 
     if (ips.ipv6.link_local) {
       _ips[ips.ipv6.link_local.address] = {
         address: ips.ipv6.link_local.address,
-        type: 'link-local',
-        version: 'ipv6',
+        key: 'link-local',
       };
     }
 
     if (ips.ipv6.slaac) {
       _ips[ips.ipv6.slaac.address] = {
         ...ips.ipv6.slaac,
-        type: 'slaac',
-        version: 'ipv6',
+        key: 'slaac',
       };
     }
 
     ips.ipv6.global.forEach(function (ip) {
       _ips[ip.range] = {
         ...ip,
-        type: 'pool',
-        version: 'ipv6',
+        key: 'addresses',
       };
     });
 
-    ips.ipv6.addresses.forEach(function (ip) {
-      _ips[ip.address] = {
-        ...ip,
-        version: 'ipv6',
-      };
-    });
+    // @TODO should the api provide networking/ips filtering for pool lookups, include them here
 
     dispatch(actions.one({ _ips, _shared: ips.ipv4.shared }, linodeId));
   };
@@ -194,7 +185,7 @@ export function setShared(linodeId, ips) {
       linode_id: linodeId,
       ips: ips.map(({ address }) => address),
     };
-    await dispatch(fetch.post('/networking/ip-sharing', data));
+    await dispatch(fetch.post('/networking/ipv4/share', data));
 
     dispatch(actions.one({ _shared: ips }, linodeId));
   };
