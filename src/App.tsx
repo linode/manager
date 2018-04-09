@@ -13,16 +13,18 @@ import {
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
+
 import Typography from 'material-ui/Typography';
+import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
-import 'typeface-lato';
 import LinodeTheme from 'src/theme';
 import TopMenu from 'src/features/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
+import BetaNotification from './BetaNotification';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -71,6 +73,7 @@ interface ConnectedProps {
 
 interface State {
   menuOpen: Boolean;
+  betaNotification: Boolean;
 }
 
 /**
@@ -93,6 +96,7 @@ type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & Co
 export class App extends React.Component<CombinedProps, State> {
   state = {
     menuOpen: false,
+    betaNotification: true,
   };
 
   componentDidMount() {
@@ -136,6 +140,10 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
+  closeBetaNotice = () => {
+    this.setState({ betaNotification: false });
+  }
+
   render() {
     const { menuOpen } = this.state;
     const { classes } = this.props;
@@ -166,6 +174,7 @@ export class App extends React.Component<CombinedProps, State> {
             <Footer />
             </main>
           </div>
+          <BetaNotification open={this.state.betaNotification} onClose={this.closeBetaNotice} />
         </React.Fragment>
       </MuiThemeProvider>
     );
