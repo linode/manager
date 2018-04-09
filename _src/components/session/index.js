@@ -41,7 +41,7 @@ const Menu = ({ open }) => {
         <hr />
         <li className="SessionMenu-header">Resources</li>
         <li className="SessionMenu-item">
-          <ExternalLink to="https://forum.linode.com/">Community Forum</ExternalLink>
+          <ExternalLink to="https://www.linode.com/community">Community</ExternalLink>
         </li>
         <li className="SessionMenu-item">
           <ExternalLink to="https://linode.com/docs">User Documentation</ExternalLink>
