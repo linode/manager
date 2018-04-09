@@ -24,6 +24,10 @@ import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
 import BetaNotification from './BetaNotification';
+
+import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
 });
@@ -146,9 +150,17 @@ export class App extends React.Component<CombinedProps, State> {
                     <Placeholder title="Dashboard" />} />
                   <Route path="/linodes" component={LinodesRoutes} />
                   <Route exact path="/volumes" render={() =>
-                    <Placeholder title="Volumes" />} />
+                    <Placeholder
+                      title="Volumes"
+                      icon={VolumeIcon}
+                    />}
+                  />
                   <Route exact path="/nodebalancers" render={() =>
-                    <Placeholder title="NodeBalancers" />} />
+                    <Placeholder
+                      title="NodeBalancers"
+                      icon={NodeBalancerIcon}
+                    />}
+                  />
                   <Route exact path="/domains" render={() =>
                     <Placeholder title="Domains" />} />
                   <Route exact path="/managed" render={() =>
