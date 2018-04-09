@@ -263,32 +263,32 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { types, location: { hash } } = this.props;
+    const { linodes, configDrawer } = this.state;
+    const images = pathOr([], ['response', 'data'], this.props.images);
+
+    if (linodes.length === 0) {
+      return <ListLinodesEmptyState />;
+    }
+
     return (
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
         render={() => {
-          const { types, location: { hash } } = this.props;
-          const { linodes, configDrawer } = this.state;
-          const images = pathOr([], ['response', 'data'], this.props.images);
 
           if (this.props.linodes.error) {
-            /** Maybe a fancy error state component? */
             return (
               <ErrorState errorText="Error loading data" />
             );
           }
 
           if (this.props.images.error) {
-            /** Maybe a fancy error state component? */
             return (
               <ErrorState errorText="Error loading data" />
             );
           }
 
-          if (linodes.length === 0) {
-            return <ListLinodesEmptyState />;
-          }
 
           const displayGrid: 'grid' | 'list' = ifElse(
             compose(isEmpty, prop('hash')),
