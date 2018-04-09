@@ -20,7 +20,7 @@ import IconTextLink from 'src/components/IconTextLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 import APITokenMenu from './APITokenMenu';
-import APITokenDrawer, { DrawerMode } from './APITokenDrawer';
+import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 type ClassNames = 'headline';
@@ -81,7 +81,7 @@ class APITokens extends React.Component<CombinedProps, State> {
       id: undefined,
       values: {
         scopes: undefined,
-        expiry: undefined,
+        expiry: genExpiryTups()[0][1],
         label: undefined,
       },
     },
@@ -201,6 +201,7 @@ class APITokens extends React.Component<CombinedProps, State> {
       ...APITokens.defaultState.form,
       mode: 'create',
       open: true,
+
     }});
   }
 
