@@ -5,7 +5,6 @@ import isEmpty from 'lodash/isEmpty';
 import Checkboxes from 'linode-components/dist/forms/Checkboxes';
 import Input from 'linode-components/dist/forms/Input';
 import ModalFormGroup from 'linode-components/dist/forms/ModalFormGroup';
-import PasswordInput from 'linode-components/dist/forms/PasswordInput';
 import Radio from 'linode-components/dist/forms/Radio';
 import { onChange } from 'linode-components/dist/forms/utilities';
 import FormModalBody from 'linode-components/dist/modals/FormModalBody';
@@ -34,18 +33,10 @@ export default class AddUser extends Component {
       errors: {},
       username: '',
       email: '',
-      password: '',
       restricted: 'yes',
     };
 
     this.onChange = onChange.bind(this);
-  }
-
-  componentDidMount() {
-    import('zxcvbn')
-      .then((zxcvbn) => {
-        this.passwordStrengthCalculator = (v) => isEmpty(v) ? null : zxcvbn(v).score;
-      });
   }
 
   onSubmit = () => {
@@ -54,7 +45,6 @@ export default class AddUser extends Component {
       username: this.state.username,
       email: this.state.email,
       restricted: this.state.restricted === 'yes',
-      password: this.state.password,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -65,9 +55,7 @@ export default class AddUser extends Component {
 
   render() {
     const { close } = this.props;
-    const { errors, username, email, restricted, password } = this.state;
-    const passwordStrength = this.passwordStrengthCalculator
-      && this.passwordStrengthCalculator(password);
+    const { errors, username, email, restricted } = this.state;
 
     return (
       <FormModalBody
@@ -93,15 +81,6 @@ export default class AddUser extends Component {
               id="email"
               value={email}
               onChange={this.onChange}
-            />
-          </ModalFormGroup>
-          <ModalFormGroup label="Password" errors={errors} id="password" apiKey="password">
-            <PasswordInput
-              name="password"
-              id="password"
-              value={password}
-              onChange={this.onChange}
-              strength={passwordStrength}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Restricted" errors={errors} id="restricted" apiKey="restricted">

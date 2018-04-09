@@ -29,21 +29,30 @@ export const LinodeStates = {
 };
 
 export const REGION_MAP = {
-  'North America': ['us-east-1a', 'us-south-1a', 'us-west-1a', 'us-southeast-1a'],
-  Europe: ['eu-central-1a', 'eu-west-1a'],
-  Asia: ['ap-northeast-1a', 'ap-south-1a', 'ap-northeast-1b'],
+  'North America': ['us-east', 'us-central', 'us-west', 'us-southeast'],
+  Europe: ['eu-central', 'eu-west'],
+  Asia: ['ap-northeast', 'ap-south', 'ap-northeast'],
 };
 
 // Still necessary for older DNS lookups.
 export const ZONES = {
+  'us-east': 'newark',
   'us-east-1a': 'newark',
+  'us-south': 'dallas',
   'us-south-1a': 'dallas',
+  'us-west': 'fremont',
   'us-west-1a': 'fremont',
+  'us-central': 'dallas',
+  'us-southeast': 'atlanta',
   'us-southeast-1a': 'atlanta',
+  'eu-central': 'frankfurt',
   'eu-central-1a': 'frankfurt',
+  'eu-west': 'london',
   'eu-west-1a': 'london',
+  'ap-northeast': 'shinagawa1',
   'ap-northeast-1a': 'tokyo',
   'ap-northeast-1b': 'shinagawa1',
+  'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
 };
 
@@ -69,7 +78,7 @@ export const NodebalancerStatusReadable = {
 };
 
 export const ipv4ns = {
-  'us-south-1a': [
+  'us-central': [
     '173.255.199.5',
     '66.228.53.5',
     '96.126.122.5',
@@ -80,7 +89,7 @@ export const ipv4ns = {
     '23.239.24.5',
     '72.14.179.5',
     '72.14.188.5'],
-  'us-west-1a': [
+  'us-west': [
     '173.230.145.5',
     '173.230.147.5',
     '173.230.155.5',
@@ -91,7 +100,7 @@ export const ipv4ns = {
     '173.255.244.5',
     '74.207.241.5',
     '74.207.242.5'],
-  'us-southeast-1a': [
+  'us-southeast': [
     '173.230.129.5',
     '173.230.136.5',
     '173.230.140.5',
@@ -102,7 +111,7 @@ export const ipv4ns = {
     '23.239.18.5',
     '75.127.97.6',
     '75.127.97.7'],
-  'us-east-1a': [
+  'us-east': [
     '66.228.42.5',
     '96.126.106.5',
     '50.116.53.5',
@@ -113,7 +122,7 @@ export const ipv4ns = {
     '97.107.133.4',
     '207.192.69.4',
     '207.192.69.5'],
-  'eu-west-1a': [
+  'eu-west': [
     '178.79.182.5',
     '176.58.107.5',
     '176.58.116.5',
@@ -124,7 +133,7 @@ export const ipv4ns = {
     '109.74.192.20',
     '109.74.193.20',
     '109.74.194.20'],
-  'eu-central-1a': [
+  'eu-central': [
     '139.162.130.5',
     '139.162.131.5',
     '139.162.132.5',
@@ -146,7 +155,7 @@ export const ipv4ns = {
     '106.187.34.20',
     '106.187.35.20',
     '106.187.36.20'],
-  'ap-northeast-1b': [
+  'ap-northeast': [
     '139.162.66.5',
     '139.162.67.5',
     '139.162.68.5',
@@ -157,7 +166,7 @@ export const ipv4ns = {
     '139.162.73.5',
     '139.162.74.5',
     '139.162.75.5'],
-  'ap-south-1a': [
+  'ap-south': [
     '139.162.11.5',
     '139.162.13.5',
     '139.162.14.5',
@@ -170,15 +179,33 @@ export const ipv4ns = {
     '103.3.60.20'],
 };
 
+// Temporary Aliases to handle south -> central rename
+ipv4ns['us-south-1a'] = ipv4ns['us-central'];
+ipv4ns['us-west-1a'] = ipv4ns['us-west'];
+ipv4ns['us-southeast-1a'] = ipv4ns['us-southeast'];
+ipv4ns['us-east-1a'] = ipv4ns['us-east'];
+ipv4ns['eu-west-1a'] = ipv4ns['eu-west'];
+ipv4ns['eu-central-1a'] = ipv4ns['eu-central'];
+ipv4ns['ap-northeast-1b'] = ipv4ns['ap-northeast'];
+ipv4ns['ap-south-1a'] = ipv4ns['ap-south'];
+
 export const ipv6ns = {
+  'us-central': '2600:3c00::',
   'us-south-1a': '2600:3c00::',
+  'us-west': '2600:3c01::',
   'us-west-1a': '2600:3c01::',
+  'us-southeast': '2600:3c02::',
   'us-southeast-1a': '2600:3c02::',
+  'us-east': '2600:3c03::',
   'us-east-1a': '2600:3c03::',
+  'eu-west': '2a01:7e00::',
   'eu-west-1a': '2a01:7e00::',
+  'eu-central': '2a01:7e01::',
   'eu-central-1a': '2a01:7e01::',
   'ap-northeast-1a': '2400:8900::',
+  'ap-northeast': '2400:8902::',
   'ap-northeast-1b': '2400:8902::',
+  'ap-south': '2400:8901::',
   'ap-south-1a': '2400:8901::',
 };
 
@@ -262,7 +289,7 @@ export const DISTRIBUTION_DISPLAY_ORDER = [
 
 export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';
 
-export const AVAILABLE_VOLUME_REGIONS = ['us-east-1a', 'us-west-1a'];
+export const AVAILABLE_VOLUME_REGIONS = ['us-east', 'us-central', 'us-west'];
 
 export const BANNER_TYPES = {
   OUTAGE: 'outage',
