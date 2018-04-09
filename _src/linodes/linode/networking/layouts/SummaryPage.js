@@ -58,7 +58,7 @@ export class SummaryPage extends Component {
     const addIPModal = () => AddIP.trigger(dispatch, linode);
 
     const privateIPv4s = Object.values(linode._ips).filter(
-      ip => ip.version === 'ipv4' && ip.type === 'private');
+      ip => ip.type === 'ipv4' && !ip.pubic);
     if (privateIPv4s.length) {
       return (
         <PrimaryButton
@@ -96,9 +96,9 @@ export class SummaryPage extends Component {
     ];
 
     const numPublicIPv4 = Object.values(linode._ips).filter(
-      ip => ip.type === 'public' && ip.version === 'ipv4').length;
+      ip => ip.public && ip.type === 'ipv4').length;
 
-    if (['slaac', 'link-local', 'private'].indexOf(record.type.toLowerCase()) !== -1
+    if (['slaac', 'link-local', 'private'].indexOf(record.key.toLowerCase()) !== -1
       || numPublicIPv4 === 1) {
       // Cannot delete slaac, link-local, private, or last public IPv4 address.
       groups.pop();
@@ -112,7 +112,7 @@ export class SummaryPage extends Component {
       });
 
       if (record.rdns && ! /\.members\.linode\.com$/.test(record.rdns)) {
-        const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
+        const name = record.type === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
         groups[1].elements.push({
           name, action: () => this.resetRDNS(record, linode.id),
         });
@@ -129,9 +129,9 @@ export class SummaryPage extends Component {
     );
   }
 
-  renderIPSection(ips, type) {
+  renderIPSection(ips, key) {
     return (
-      <ListGroup name={type} key={type}>
+      <ListGroup name={key} key={key}>
         <Table
           className="Table--secondary"
           columns={[
@@ -149,7 +149,7 @@ export class SummaryPage extends Component {
               tooltipEnabled: true,
             },
             {
-              dataKey: 'type',
+              dataKey: 'key',
               label: 'Type',
             },
             {
@@ -158,7 +158,7 @@ export class SummaryPage extends Component {
             },
           ]}
           data={ips}
-          noDataMessage={`You have no ${type} addresses.`}
+          noDataMessage={`You have no ${key} addresses.`}
         />
       </ListGroup>
     );
@@ -167,22 +167,22 @@ export class SummaryPage extends Component {
   render() {
     const { linode } = this.props;
 
-    const ipv4s = Object.values(linode._ips).filter(ip => ip.version === 'ipv4').map(ip => ({
+    const ipv4s = Object.values(linode._ips).filter(ip => ip.type === 'ipv4').map(ip => ({
       ...ip,
-      type: capitalize(ip.type),
+      key: capitalize(ip.key),
     }));
 
-    const ipv6s = Object.values(linode._ips).filter(ip => ip.version === 'ipv6').map(ip => {
-      let type = capitalize(ip.type);
+    const ipv6s = Object.values(linode._ips).filter(ip => ip.type === 'ipv6').map(ip => {
+      let key = capitalize(ip.key);
       let address = `${ip.address} / ${ip.prefix}`;
-      if (ip.type === 'slaac') {
-        type = 'SLAAC';
-      } else if (ip.type === 'link-local') {
-        type = 'Link-Local';
+      if (ip.key === 'slaac') {
+        key = 'SLAAC';
+      } else if (ip.key === 'link-local') {
+        key = 'Link-Local';
         address = ip.address;
       }
 
-      return { ...ip, type, address };
+      return { ...ip, key, address };
     });
 
     return (

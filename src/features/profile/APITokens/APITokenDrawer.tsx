@@ -63,7 +63,6 @@ interface Props {
 }
 
 interface State {
-  scopes: string;
   expiryTups: Expiry[];
 }
 
@@ -71,7 +70,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
-    scopes: this.props.scopes || '',
     expiryTups: APITokenDrawer.genExpiryTups(),
   };
 
@@ -84,27 +82,14 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
     ];
   }
 
-  /* NB: Upon updating React, port this to getDerivedStateFromProps */
-  componentWillReceiveProps(nextProps: CombinedProps) {
-    if (
-      /* If we are about to display a new token */
-      this.props.id !== nextProps.id
-      /* Or scopes have just become undefined */
-      || nextProps.scopes === undefined
-    ) {
-      /* Then update our current scopes state */
-      this.setState({ scopes: (nextProps.scopes || '') });
-    }
-  }
-
   handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
-    const scopeTups = scopeStringToPermTuples(this.state.scopes);
+    const scopeTups = scopeStringToPermTuples(this.props.scopes || '');
     const targetIndex = scopeTups.findIndex(
       (scopeTup: Permission) => scopeTup[0] === e.currentTarget.name);
     if (targetIndex !== undefined) {
       scopeTups[targetIndex][1] = +(e.currentTarget.value);
     }
-    this.setState({ scopes: permTuplesToScopeString(scopeTups) });
+    this.props.onChange('scopes', permTuplesToScopeString(scopeTups));
   }
 
   permNameMap = {
@@ -121,8 +106,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   };
 
   renderPermsTable() {
-    const { classes, mode } = this.props;
-    const { scopes } = this.state;
+    const { classes, mode, scopes } = this.props;
 
     return (
       <Table className={classes.permsTable}>
@@ -135,7 +119,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
-          {scopeStringToPermTuples(scopes).map(
+          {scopeStringToPermTuples(scopes || '').map(
             (scopeTup) => {
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
@@ -267,7 +251,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="primary"
                 onClick={mode as string === 'create'
-                  ? () => onCreate(this.state.scopes)
+                  ? () => onCreate(this.props.scopes || '')
                   : () => onEdit()
                 }
                 data-qa-submit

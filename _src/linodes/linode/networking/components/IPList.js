@@ -13,7 +13,7 @@ export default function IPList(props) {
   if (!ips) return null;
 
   const transferableIps = Object.values(ips).filter(
-    ip => ip.version === 'ipv4' && ip.type === 'public');
+    ip => ip.type === 'ipv4' && ip.public);
 
   return (
     <div>

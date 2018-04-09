@@ -387,6 +387,20 @@ const LinodeTheme: Linode.Theme = {
         boxShadow: 'inset 0 -1px 0 #C5C6C8',
       },
     },
+    MuiTooltip: {
+      tooltip: {
+        borderRadius: 0,
+        maxWidth: 200,
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px #bbb',
+        color: '#666',
+        textAlign: 'center',
+        [breakpoints.up('sm')]: {
+          padding: '12px  16px',
+          fontSize: '.9rem',
+        },
+      },
+    },
     Popover: {
       root: {
         borderRadius: 0,
