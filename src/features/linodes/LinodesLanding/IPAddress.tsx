@@ -35,6 +35,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   root: {
     alignItems: 'center',
+    marginBottom: 2,
+    '&:last-child': {
+      marginBottom: 0,
+    },
   },
   row: {
     display: 'flex',
@@ -60,6 +64,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'inline-block',
     '&:hover': {
       color: theme.palette.primary.light,
+      cursor: 'pointer',
     },
     '&:focus $icon': {
       backgroundColor: theme.palette.primary.light,
