@@ -56,30 +56,28 @@ const preloaded = PromiseLoader<Props>({
     return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
         const { data: linode } = response;
-        const finalData: Data = {
-          linode,
-          type: undefined,
-          image: undefined,
-          volumes: [],
-        };
 
-        linode.image &&
-          Axios.get(`${API_ROOT}/images/${linode.image}`)
-            .then((response) => {
-              finalData.image = response.data;
-            });
+        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+          .then(response => response.data)
+          .catch(err => undefined);
 
-        Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
-          .then((response) => {
-            finalData.type = response.data;
+        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
+          .then(response => response.data)
+          .catch(err => undefined);
+
+        const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
+          .then(response => response.data)
+          .catch(err => []);
+
+        return Promise.all([typeReq, imageReq, volumesReq])
+          .then((responses) => {
+            return {
+              linode,
+              type: responses[0],
+              image: responses[1],
+              volumes: responses[2],
+            };
           });
-
-        Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-          .then((response) => {
-            finalData.volumes = response.data;
-          });
-
-        return finalData;
       });
   }),
 });
