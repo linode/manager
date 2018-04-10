@@ -77,30 +77,30 @@ export function getAccountRedirectUrl() {
 const EventTypeMap = {
   linode_boot: {
     presentTenseAction: 'Booting',
-    pastTenseAction: 'booted',
+    pastTenseAction: 'Booted',
     linodeStatus: 'running',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_create: {
     presentTenseAction: 'Provisioning',
-    pastTenseAction: 'provisioned',
+    pastTenseAction: 'Provisioned',
     linodeStatus: 'offline', // Technically this is "finished", but offline is more useful to us.
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getLinodesRedirectUrl,
   },
   linode_shutdown: {
     presentTenseAction: 'Shutting down',
-    pastTenseAction: 'shut down',
+    pastTenseAction: 'Shut down',
     linodeStatus: 'offline',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_reboot: {
     presentTenseAction: 'Rebooting',
-    pastTenseAction: 'rebooted',
+    pastTenseAction: 'Rebooted',
     linodeStatus: 'running',
     redirectUrl: getLinodeRedirectUrl,
   },
@@ -118,74 +118,74 @@ const EventTypeMap = {
   },
   linode_migrate: {
     presentTenseAction: 'Migrating',
-    pastTenseAction: 'migrated',
+    pastTenseAction: 'Migrated',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_rebuild: {
     presentTenseAction: 'Rebuilding',
-    pastTenseAction: 'rebuilt',
+    pastTenseAction: 'Rebuilt',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_resize: {
     presentTenseAction: 'Resizing',
-    pastTenseAction: 'resized',
+    pastTenseAction: 'Resized',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_clone: {
     presentTenseAction: 'Cloning',
-    pastTenseAction: 'cloned',
+    pastTenseAction: 'Cloned',
     redirectUrl: getLinodeRedirectUrl,
   },
   linode_kvmify: {
     presentTenseAction: 'KVMifying',
-    pastTenseAction: 'kvmified',
+    pastTenseAction: 'KVM-ified',
     redirectUrl: getLinodeRedirectUrl,
   },
 
   disk_create: {
     presentTenseAction: 'Creating disk on',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created disk on',
     pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_delete: {
     presentTenseAction: 'Deleting disk on',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted disk on',
     pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_duplicate: {
     presentTenseAction: 'Duplicating disk on',
-    pastTenseAction: 'duplicated',
+    pastTenseAction: 'Duplicated disk on',
     pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_resize: {
     presentTenseAction: 'Resizing disk on',
-    pastTenseAction: 'resized',
+    pastTenseAction: 'Resized disk on',
     pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   disk_imagize: {
     presentTenseAction: 'Creating an image from ',
-    pastTenseAction: 'scheduled for image creation',
+    pastTenseAction: 'Image creation scheduled for',
     pastTensePrefix: 'Disk on',
     redirectUrl: getImagesRedirectUrl,
   },
   linode_snapshot: {
     presentTenseAction: 'Taking a snapshot of',
-    pastTenseAction: 'taken',
+    pastTenseAction: 'Snapshot taken of',
     pastTensePrefix: 'Snapshot of',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_enable: {
     presentTenseAction: 'Enabling backups service',
-    pastTenseAction: 'backups enabled',
+    pastTenseAction: 'Enabled backup for',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_cancel: {
     presentTenseAction: 'Cancelling backups service',
-    pastTenseAction: 'backups service cancelled',
+    pastTenseAction: 'Cancled backup services for',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_restore: {
@@ -197,144 +197,144 @@ const EventTypeMap = {
 
   password_reset: {
     presentTenseAction: 'Resetting password for',
-    pastTenseAction: 'reset',
+    pastTenseAction: 'Reset password for',
     pastTensePrefix: 'Password for',
     redirectUrl: getLinodeRedirectUrl,
   },
 
   domain_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getDomainRedirectUrl,
   },
   domain_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getDomainsRedirectUrl,
   },
 
   domain_record_create: {
     presentTenseAction: 'Creating record on',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created record on',
     pastTensePrefix: 'Record on',
     redirectUrl: getDomainRedirectUrl,
   },
   domain_record_delete: {
     presentTenseAction: 'Deleting record on',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted record on',
     pastTensePrefix: 'Record on',
     redirectUrl: getDomainsRedirectUrl,
   },
-
   nodebalancer_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getNodeBalancersRedirectUrl,
   },
   nodebalancer_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getNodeBalancersRedirectUrl,
   },
   nodebalancer_config_create: {
     presentTenseAction: 'Creating config on',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created config on',
     pastTensePrefix: 'Config on',
     redirectUrl: getNodebalancerRedirectUrl,
   },
   nodebalancer_config_delete: {
     presentTenseAction: 'Deleting config on',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted config on',
     pastTensePrefix: 'Config on',
     redirectUrl: getNodebalancerRedirectUrl,
   },
 
   stackscript_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_publicize: {
     presentTenseAction: 'Publicizing',
-    pastTenseAction: 'publicized',
+    pastTenseAction: 'Publicized',
     redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_revise: {
     presentTenseAction: 'Revising',
-    pastTenseAction: 'revised',
+    pastTenseAction: 'Revised',
     redirectUrl: getStackScriptRedirectUrl,
   },
   stackscript_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getStackScriptsRedirectUrl,
   },
 
   ticket_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getTicketRedirectUrl,
   },
   ticket_update: {
     presentTenseAction: 'Replying',
-    pastTenseAction: '',
-    pastTensePrefix: 'Reply posted to',
+    pastTenseAction: 'Replied to',
+    pastTensePrefix: 'Replied to',
     redirectUrl: getTicketRedirectUrl,
   },
   ticket_attachment_upload: {
     presentTenseAction: 'Attachment uploading',
-    pastTenseAction: '',
-    pastTensePrefix: 'Attachment uploaded to',
+    pastTenseAction: 'Attached an upload to',
+    pastTensePrefix: 'Attached an upload to',
     redirectUrl: getTicketRedirectUrl,
   },
 
   volume_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getVolumeRedirectUrl,
   },
   volume_attach: {
     presentTenseAction: 'Attaching',
-    pastTenseAction: 'attached',
+    pastTenseAction: 'Attached',
     redirectUrl: getLinodeAdvancedRedirectUrl,
   },
   volume_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getVolumesRedirectUrl,
   },
   volume_detach: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getVolumeRedirectUrl,
   },
   volume_resize: {
     presentTenseAction: 'Resizing',
-    pastTenseAction: 'resized',
+    pastTenseAction: 'Resized',
     redirectUrl: getVolumeRedirectUrl,
   },
   volume_clone: {
     presentTenseAction: 'Cloning',
-    pastTenseAction: 'cloned',
+    pastTenseAction: 'Cloned',
     redirectUrl: getVolumesRedirectUrl,
   },
 
   image_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'Created',
     redirectUrl: getImageRedirectUrl,
   },
   image_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'Deleted',
     redirectUrl: getImagesRedirectUrl,
   },
-
   credit_card_updated: {
+    pastTenseAction: 'Updated credit card',
     pastTensePrefix: 'Credit card updated by',
     redirectUrl: getAccountRedirectUrl,
   },
   payment_submitted: {
+    pastTenseAction: 'Submitted a payment',
     pastTensePrefix: 'Payment submitted by',
     redirectUrl: getAccountRedirectUrl,
   },
