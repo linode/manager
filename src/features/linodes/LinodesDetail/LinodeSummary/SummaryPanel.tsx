@@ -45,8 +45,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linode: Linode.Linode;
-  image: Linode.Image;
-  type: Linode.LinodeType;
+  image?: Linode.Image;
+  type?: Linode.LinodeType;
   volumes: Linode.Volume[];
 }
 
@@ -65,10 +65,18 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
           <Typography className={classes.section} variant="caption">
-            {image.label} {image.description}
+            {image
+              ? <span>{image.label} {image.description}</span>
+              : linode.image
+                ? <span>{linode.image}</span>
+                : <span>Unknown Image</span>
+            }
           </Typography>
           <Typography className={classes.section} variant="caption">
-            {typeLabelLong(type.memory, type.disk, type.vcpus)}
+            {type
+              ? <span>{typeLabelLong(type.memory, type.disk, type.vcpus)}</span>
+              : <span>Unknown Plan</span>
+            }
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} lg={4}>
