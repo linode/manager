@@ -62,7 +62,10 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       anchor="right"
       {...rest}
       classes={{ paper: classes.paper }}
-      ModalProps={{ BackdropProps: { invisible: true } }}
+      ModalProps={{
+        BackdropProps: { invisible: true },
+        disableBackdropClick: true,
+      }}
       >
       <Grid
         container
