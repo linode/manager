@@ -30,6 +30,6 @@ describe('ActionMenu', () => {
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 
     result.find('IconButton').simulate('click');
-    expect(result.find('WithStyles(MenuItem)')).toHaveLength(3);
+    expect(result.find('WithStyles(MenuItem)')).toHaveLength(4);
   });
 });
