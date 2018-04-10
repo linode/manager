@@ -7,8 +7,8 @@ import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 
 interface Props {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
-  type: Linode.LinodeType;
-  image: Linode.Image;
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
   volumes: Linode.Volume[];
 }
 

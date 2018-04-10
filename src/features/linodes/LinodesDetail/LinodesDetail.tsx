@@ -28,8 +28,8 @@ type Props = RouteComponentProps<{ linodeId?: number }>;
 
 interface Data {
   linode: Linode.Linode;
-  type: Linode.LinodeType;
-  image: Linode.Image;
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
   volumes: Linode.Volume[];
 }
 
@@ -56,18 +56,30 @@ const preloaded = PromiseLoader<Props>({
     return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
         const { data: linode } = response;
-        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`);
-        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`);
-        const volReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`);
-        return Promise.all([typeReq, imageReq, volReq])
-          .then((responses) => {
-            return {
-              linode,
-              type: responses[0].data,
-              image: responses[1].data,
-              volumes: responses[2].data.data,
-            };
+        const finalData: Data = {
+          linode,
+          type: undefined,
+          image: undefined,
+          volumes: [],
+        };
+
+        linode.image &&
+          Axios.get(`${API_ROOT}/images/${linode.image}`)
+            .then((response) => {
+              finalData.image = response.data;
+            });
+
+        Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+          .then((response) => {
+            finalData.type = response.data;
           });
+
+        Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
+          .then((response) => {
+            finalData.volumes = response.data;
+          });
+
+        return finalData;
       });
   }),
 });
