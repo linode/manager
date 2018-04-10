@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.22.3] - 2018
+## [0.22.4] - 2018-04-10
+### Added:
+- Early-access notice
+### Changed:
+- Updated placeholder components and copy
+
+## [0.22.3] - 2018-04-09
 ### Added:
 - API Token Management
 - OAuth Client Management
