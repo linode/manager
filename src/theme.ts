@@ -325,6 +325,25 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiSnackbarContent: {
+      root: {
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px #ddd',
+        color: '#666',
+        [breakpoints.up('md')]: {
+          minWidth: 800,
+          maxWidth: 1000,
+          borderRadius: 2,
+        },
+        [breakpoints.up('lg')]: {
+          minWidth: 950,
+        },
+      },
+      message: {
+        margin: '0 auto',
+        width: '100%',
+      },
+    },
     MuiTab: {
       root: {
         color: '#C5C6C8',
@@ -385,6 +404,20 @@ const LinodeTheme: Linode.Theme = {
     MuiTabs: {
       scroller: {
         boxShadow: 'inset 0 -1px 0 #C5C6C8',
+      },
+    },
+    MuiTooltip: {
+      tooltip: {
+        borderRadius: 0,
+        maxWidth: 200,
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px #bbb',
+        color: '#666',
+        textAlign: 'center',
+        [breakpoints.up('sm')]: {
+          padding: '12px  16px',
+          fontSize: '.9rem',
+        },
       },
     },
     Popover: {

@@ -12,17 +12,18 @@ import Drawer from 'material-ui/Drawer';
 
 import PrimaryNav from 'src/components/PrimaryNav';
 
-export const menuWidth = 215;
-
 type CSSClasses = 'menuPaper' | 'menuDocked';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   menuPaper: {
     height: '100%',
-    width: menuWidth,
+    width: 215,
     backgroundColor: LinodeTheme.bg.navy,
     left: 'inherit',
     boxShadow: 'none',
+    [theme.breakpoints.up('xl')]: {
+      width: 275,
+    },
   },
   menuDocked: {
     height: '100%',

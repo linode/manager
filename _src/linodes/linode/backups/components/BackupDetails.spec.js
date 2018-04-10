@@ -44,7 +44,7 @@ describe('linodes/linode/backups/components/BackupDetails', () => {
     expect(duration.text()).toBe('(1 minute)');
 
     const region = page.find('#region');
-    expect(region.text()).toBe('us-east-1a');
+    expect(region.text()).toBe('us-east');
 
     const configs = page.find('#configs');
     expect(configs.text()).toBe('Ubuntu Disk');

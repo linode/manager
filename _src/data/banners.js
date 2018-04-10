@@ -68,9 +68,9 @@ const testOutageBanner1 = {
   when: null,
   entity: {
     label: null,
-    id: 'us-east-1a',
+    id: 'us-east',
     type: 'region',
-    url: '/regions/us-east-1a',
+    url: '/regions/us-east',
   },
   type: OUTAGE,
 };
@@ -79,8 +79,8 @@ const testOutageBanner2 = {
   ...testOutageBanner1,
   entity: {
     ...testOutageBanner1.entity,
-    id: 'us-south-1a',
-    url: '/regions/us-south-1a',
+    id: 'us-central',
+    url: '/regions/us-central',
   },
 };
 

@@ -162,6 +162,7 @@ const SelectionCard: React.StatelessComponent<CombinedProps> = (props) => {
         xs={12}
         sm={6}
         md={4}
+        xl={3}
         tabIndex={0}
         className={
           classNames({

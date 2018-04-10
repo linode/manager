@@ -21,7 +21,6 @@ describe('users/layouts/UserForm', () => {
       <UserForm
         dispatch={dispatch}
         user={testUser}
-        passwordStrengthCalculator={jest.fn()}
       />
     );
 

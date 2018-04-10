@@ -18,14 +18,23 @@ import sg from 'flag-icon-css/flags/4x3/sg.svg';
 import jp from 'flag-icon-css/flags/4x3/jp.svg';
 
 export const flags = {
+  'us-east': us,
   'us-east-1a': us,
+  'us-south': us,
   'us-south-1a': us,
+  'us-west': us,
   'us-west-1a': us,
+  'us-central': us,
+  'us-southeast': us,
   'us-southeast-1a': us,
+  'eu-central': de,
   'eu-central-1a': de,
+  'eu-west': gb,
   'eu-west-1a': gb,
+  'ap-northeast': jp,
   'ap-northeast-1a': jp,
   'ap-northeast-1b': jp,
+  'ap-south': sg,
   'ap-south-1a': sg,
 };
 

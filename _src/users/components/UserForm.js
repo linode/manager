@@ -5,7 +5,6 @@ import Form from 'linode-components/dist/forms/Form';
 import FormGroup from 'linode-components/dist/forms/FormGroup';
 import FormGroupError from 'linode-components/dist/forms/FormGroupError';
 import FormSummary from 'linode-components/dist/forms/FormSummary';
-import PasswordInput from 'linode-components/dist/forms/PasswordInput';
 import Checkboxes from 'linode-components/dist/forms/Checkboxes';
 import Radio from 'linode-components/dist/forms/Radio';
 import SubmitButton from 'linode-components/dist/forms/SubmitButton';
@@ -15,7 +14,6 @@ import { onChange } from 'linode-components/dist/forms/utilities';
 import api from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/generic/users';
-import withZxcvbn from '~/decorators/withZxcvbn';
 
 
 export class UserForm extends Component {
@@ -26,7 +24,6 @@ export class UserForm extends Component {
       username: props.user.username,
       email: props.user.email,
       restricted: props.user.restricted ? 'yes' : 'no',
-      password: '',
       loading: false,
       errors: {},
     };
@@ -40,12 +37,7 @@ export class UserForm extends Component {
       username: this.state.username,
       email: this.state.email,
       restricted: this.state.restricted === 'yes',
-      password: this.state.password,
     };
-
-    if (oldUsername) {
-      delete data.password;
-    }
 
     const creating = !oldUsername;
 
@@ -62,9 +54,8 @@ export class UserForm extends Component {
   }
 
   render() {
-    const { user: { username: oldUsername }, passwordStrengthCalculator } = this.props;
-    const { username, email, restricted, password, loading, errors } = this.state;
-    const passwordStrength = passwordStrengthCalculator(password);
+    const { user: { username: oldUsername } } = this.props;
+    const { username, email, restricted, loading, errors } = this.state;
 
     return (
       <Form
@@ -92,26 +83,12 @@ export class UserForm extends Component {
               id="email"
               value={email}
               onChange={this.onChange}
+              readOnly
               className="float-sm-left"
             />
             <FormGroupError errors={errors} name="email" className="float-sm-left" />
           </div>
         </FormGroup>
-        {this.props.user.username ? null :
-          <FormGroup errors={errors} name="password" className="row">
-            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-            <div className="col-sm-10 clearfix">
-              <PasswordInput
-                name="password"
-                id="password"
-                value={password}
-                onChange={this.onChange}
-                strength={passwordStrength}
-              />
-              <FormGroupError errors={errors} name="password" className="float-sm-left" />
-            </div>
-          </FormGroup>
-        }
         <FormGroup errors={errors} name="restricted" className="row">
           <label className="col-sm-2 col-form-label">Restricted</label>
           <div className="col-sm-10 clearfix">
@@ -156,7 +133,6 @@ export class UserForm extends Component {
 UserForm.propTypes = {
   user: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  passwordStrengthCalculator: PropTypes.func.isRequired,
 };
 
 UserForm.defaultProps = {
@@ -166,4 +142,4 @@ UserForm.defaultProps = {
     restricted: true,
   },
 };
-export default withZxcvbn(UserForm);
+export default UserForm;

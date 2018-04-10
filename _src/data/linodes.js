@@ -27,16 +27,16 @@ function createTestStats() {
 }
 
 let usedIPv4UpTo = 0;
-function createTestIPv4(linodeId, type = 'public') {
+function createTestIPv4(linodeId, visibility = 'public') {
   const address = `97.107.143.${usedIPv4UpTo++}`;
   return {
     address,
-    type,
-    version: 'ipv4',
+    type: 'ipv4',
     linode_id: linodeId,
     gateway: '97.107.143.0',
     rdns: 'li1-1.members.linode.com',
-    prefix: type === 'public' ? 24 : 17,
+    prefix: (visibility === 'public') ? 24 : 17,
+    public: (visibility === 'public'),
     key: address,
   };
 }
@@ -47,12 +47,12 @@ function createTestIPv6(linodeId) {
 
   return {
     address,
-    key: address,
     linode_id: linodeId,
     gateway: 'fe80::1',
     rdns: 'li1-1.members.linode.com',
-    type: 'public',
-    version: 'ipv6',
+    public: true,
+    key: 'global',
+    type: 'ipv6',
     prefix: '64',
   };
 }
@@ -62,10 +62,9 @@ function createTestLinkLocal(linodeId) {
 
   return {
     address,
-    key: address,
     linode_id: linodeId,
-    type: 'link-local',
-    version: 'ipv6',
+    key: 'link-local',
+    type: 'ipv6',
   };
 }
 
@@ -74,7 +73,7 @@ function createTestSlaac(linodeId) {
 
   return {
     ...ipv6,
-    type: 'slaac',
+    key: 'slaac',
   };
 }
 
@@ -185,7 +184,7 @@ function createTestLinode(id) {
           linode_id: null,
           status: 'active',
           created: '2017-08-08T13:55:16',
-          region: 'us-east-1a',
+          region: 'us-east',
           updated: '2017-08-08T04:00:00',
           size: 20,
         },

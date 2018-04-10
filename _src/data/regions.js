@@ -1,5 +1,5 @@
 export const apiTestRegion = {
-  id: 'us-east-1a',
+  id: 'us-east',
   country: 'US',
   label: 'Newark, NJ',
 };
@@ -10,7 +10,7 @@ export const testRegion = {
 };
 
 export const regions = {
-  'us-east-1a': testRegion,
+  'us-east': testRegion,
   // TODO: The alpha env only has Newark, but maybe we want to add more DCs
   // here later anyway
 };

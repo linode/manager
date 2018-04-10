@@ -17,7 +17,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
 
   const dispatch = sandbox.stub();
   const ip = Object.values(testLinode._ips).filter(
-    ip => ip.type === 'public' && ip.version === 'ipv4')[0];
+    ip => ip.public && ip.type === 'ipv4')[0];
 
   it.skip('renders fields correctly', () => {
     const page = mount(
