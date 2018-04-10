@@ -41,7 +41,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   copy: {
     textAlign: 'center',
-    maxWidth: 350,
+    maxWidth: 390,
   },
   icon: {
     animation: 'scaleIn .5s ease-in-out',

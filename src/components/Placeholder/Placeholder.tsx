@@ -101,7 +101,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
 
 Placeholder.defaultProps = {
   icon: LinodeIcon,
-  copy: 'The feature you are looking for is currently in development. Please check back soon.',
+  copy: 'This feature is currently in development. Please check back soon.',
   title: 'Feature in Progress',
 };
 
