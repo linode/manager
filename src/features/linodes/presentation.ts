@@ -3,6 +3,9 @@ function titlecase(string: string): string {
 }
 
 export function formatRegion(region: string) {
+  if (region.indexOf('-') < 0) {
+    return titlecase(region);
+  }
   const [countryCode, area] = region.split('-');
   return `${countryCode.toUpperCase()} ${titlecase(area)}`;
 }
