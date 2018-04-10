@@ -338,9 +338,6 @@ const EventTypeMap = {
     pastTensePrefix: 'Payment submitted by',
     redirectUrl: getAccountRedirectUrl,
   },
-  community_question_reply: {
-    pastTensePrefix: 'replied',
-  },
 };
 
 export default EventTypeMap;
