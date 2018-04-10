@@ -90,7 +90,7 @@ const createEventProps = (event: Linode.Event): UserNotificationListItemProps =>
   const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
   const remaining = event.percent_complete;
   const entity = (event.entity as Linode.Entity);
-  const options = eventTypes[event.action];
+  const options = eventTypes[event.action] || {};
   const verb = remaining && remaining < 100
     ? options.presentTenseAction
     : options.pastTenseAction;
