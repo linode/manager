@@ -21,6 +21,13 @@ import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import LinodeSummary from './LinodeSummary';
+import LinodeVolumes from './LinodeVolumes';
+import LinodeNetworking from './LinodeNetworking';
+import LinodeRebuild from './LinodeRebuild';
+import LinodeRescue from './LinodeRescue';
+import LinodeResize from './LinodeResize';
+import LinodeBackup from './LinodeBackup';
+import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
@@ -117,6 +124,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
+    { routeName: `${this.props.match.url}/volumes`, title: 'Volumes' },
+    { routeName: `${this.props.match.url}/networking`, title: 'Networking' },
+    { routeName: `${this.props.match.url}/resize`, title: 'Resize' },
+    { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
+    { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
+    { routeName: `${this.props.match.url}/backup`, title: 'Backup' },
+    { routeName: `${this.props.match.url}/settings`, title: 'Setttings' },
   ];
 
   openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
@@ -160,7 +174,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { match: { path, url } } = this.props;
+    const { match: { url } } = this.props;
     const { type, image, volumes } = this.props.data.response;
     const { linode, configDrawer } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -196,7 +210,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/summary`} render={() => (
             <LinodeSummary linode={linode} type={type} image={image} volumes={volumes}/>
           )} />
-          <Route exact path={`${path}/`} render={() => (<Redirect to={`${url}/summary`} />)} />
+          <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes/>)} />
+          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking/>)} />
+          <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue/>)} />
+          <Route exact path={`${url}/resize`} render={() => (<LinodeResize/>)} />
+          <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild/>)} />
+          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup/>)} />
+          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings/>)} />
+          {/* 404 */}
+          <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
         <LinodeConfigSelectionDrawer
           onClose={this.closeConfigDrawer}
