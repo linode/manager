@@ -84,11 +84,16 @@ type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & Co
 export class App extends React.Component<CombinedProps, State> {
   state = {
     menuOpen: false,
-    betaNotification: true,
+    betaNotification: false,
   };
 
   componentDidMount() {
     const { request, response } = this.props;
+
+    const betaNotification = window.localStorage.getItem('BetaNotification');
+    if (betaNotification !== 'closed') {
+      this.setState({ betaNotification: true });
+    }
 
     const promises = [
       new Promise(() => {
@@ -130,6 +135,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeBetaNotice = () => {
     this.setState({ betaNotification: false });
+    window.localStorage.setItem('BetaNotification', 'closed');
   }
 
   render() {
