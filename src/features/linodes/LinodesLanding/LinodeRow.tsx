@@ -28,7 +28,6 @@ type ClassNames = 'bodyRow'
 | 'linodeCell'
 | 'tagsCell'
 | 'ipCell'
-| 'ipCellInner'
 | 'regionCell'
 | 'actionCell'
 | 'actionInner'
@@ -62,14 +61,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
-    },
-    ipCellInner: {
-      maxWidth: 100,
-      display: 'block',
-      overflow: 'auto',
-      [theme.breakpoints.up('md')]: {
-        maxWidth: 300,
-      },
     },
     flag: {
       marginRight: 10,
@@ -143,10 +134,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
       <TableRow key={linode.id}>
         {this.headCell()}
         <TableCell className={classes.ipCell}>
-          <div className={classes.ipCellInner}>
           <IPAddress ips={linode.ipv4} copyRight />
           <IPAddress ips={[linode.ipv6]} copyRight />
-          </div>
         </TableCell>
         <TableCell className={classes.regionCell}>
           <RegionIndicator region={linode.region} />
