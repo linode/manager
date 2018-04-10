@@ -49,7 +49,7 @@ class DocComponent extends React.Component<PropsWithStyles> {
       <React.Fragment>
         <div className={classes.root}>
           <Typography variant="subheading" className={classes.title}>
-            <a href={src} className={classes.titleLink}>{title}</a>
+            <a href={src} target="_blank" className={classes.titleLink}>{title}</a>
           </Typography>
           <Typography variant="body2" className={classes.body}>
             {body}

@@ -56,7 +56,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
   return (
-    <Drawer title="Create OAuth Client" open={open} onClose={onClose}>
+    <Drawer title={`${ edit ? 'Edit' : 'Create'} OAuth Client`} open={open} onClose={onClose}>
       <TextField
         value={label || ''}
         errorText={hasErrorFor('label')}

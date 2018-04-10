@@ -26,7 +26,7 @@ type MenuLink = {
 };
 
 const menuLinks: MenuLink[] = [
-  { display: 'Edit Profile', href: '/profile' },
+  { display: 'My Profile', href: '/profile' },
   { display: 'Log Out', href: '/logout' },
 ];
 
