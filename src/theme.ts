@@ -330,18 +330,17 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #ddd',
         color: '#666',
+        padding: 8,
         [breakpoints.up('md')]: {
-          minWidth: 800,
-          maxWidth: 1000,
+          width: 800,
           borderRadius: 2,
-        },
-        [breakpoints.up('lg')]: {
-          minWidth: 950,
+          maxWidth: 'auto',
         },
       },
       message: {
         margin: '0 auto',
         width: '100%',
+        padding: 0,
       },
     },
     MuiTab: {
