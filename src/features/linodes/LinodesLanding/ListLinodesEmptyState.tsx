@@ -12,26 +12,59 @@ import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
+import LinodeTheme from 'src/theme';
 
-type CSSClasses = 'root' | 'copy' | 'button';
+type CSSClasses = 'root' | 'copy' | 'button' | 'icon' | 'title';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+  '@keyframes scaleIn': {
+    from: {
+      transform: 'translateX( -10px ) rotateY( -180deg )',
+    },
+    to: {
+      transformOrigin: 'center center',
+    },
+  },
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
+    padding: `${theme.spacing.unit * 2}px 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing.unit * 10}px 0`,
+    },
   },
   copy: {
     textAlign: 'center',
+    maxWidth: 350,
+  },
+  icon: {
+    animation: 'scaleIn .5s ease-in-out',
+    // backfaceVisibility: 'hidden',
+    width: 225,
+    height: 225,
+    '& .outerCircle': {
+      fill: 'white',
+      stroke: LinodeTheme.bg.offWhite,
+    },
+    '& .insidePath path': {
+      opacity: 0,
+      animation: 'fadeIn .2s ease-in-out forwards .3s',
+      stroke: theme.palette.primary.main,
+    },
+  },
+  title: {
+    fontWeight: 700,
   },
   button: {
     borderRadius: '4px',
   },
-  [theme.breakpoints.up('md')]: {
-    root: {
-      paddingTop: '50px',
-      paddingBottom: '50px',
-    },
-  },
+
 });
 
 interface Props { }
@@ -44,22 +77,24 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
 
     return (
       <Grid
-        container
-        spacing={24}
-        alignItems="center"
-        direction="column"
-        justify="center"
-        className={classes.root}
-      >
-        <Grid item xs={12}><LinodeSvg /></Grid>
-        <Grid item xs={12}>You don't have any linodes!</Grid>
+      container
+      spacing={24}
+      alignItems="center"
+      direction="column"
+      justify="center"
+      className={classes.root}
+    >
+        <Grid item xs={12}><LinodeSvg className={classes.icon} /></Grid>
+        <Typography variant="display2" className={classes.title}>
+          You dont have any Linodes!
+        </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">
           Host your next project on a Linode. Click the button below to choose a plan and deploy
           an image.
         </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
             variant="raised"
             color="primary"
