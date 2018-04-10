@@ -21,7 +21,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
   const allIps = {};
   Object.values(linodesInRegion).forEach(linode => {
     const publicIPv4s = Object.values(linode._ips).filter(
-      ip => ip.type === 'public' && ip.version === 'ipv4');
+      ip => ip.public && ip.type === 'ipv4');
 
     publicIPv4s.forEach(ip => {
       allIps[ip.address] = ip;
@@ -44,7 +44,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     const sectionA = page.find('#sectionA');
     const rowsA = sectionA.find('.TableRow');
     expect(rowsA.length).toBe(Object.values(testLinode._ips).filter(
-      ({ type, version }) => type === 'public' && version === 'ipv4').length);
+      ({ type, public }) => public && type === 'ipv4').length);
     rowsA.forEach(row => {
       const address = row.find('.TableCell').at(1).text();
       const ip = allIps[address.split.skip(' ')[0]];
@@ -55,7 +55,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
     const linodeB = linodes[page.find('[name="selectedOtherLinode"]').props().value];
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).toBe(Object.values(linodeB._ips).filter(
-      ({ type, version }) => type === 'public' && version === 'ipv4').length);
+      ({ type, public }) => public && type === 'ipv4').length);
     rowsB.forEach(row => {
       const address = row.find('.TableCell').at(1).text();
       const ip = allIps[address.split.skip(' ')[0]];
@@ -81,7 +81,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).toBe(Object.values(notLinodeB._ips).filter(
-      ({ type, version }) => type === 'public' && version === 'ipv4').length);
+      ({ type, public }) => public && type === 'ipv4').length);
     rowsB.forEach(row => {
       const address = row.find('.TableCell').at(1).text();
       const ip = allIps[address.split.skip(' ')[0]];
@@ -120,7 +120,7 @@ describe('linodes/linode/networking/layouts/IPTransferPage', () => {
 
     expect(dispatch.callCount).toBe(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/networking/ip-assign', {
+      ([fn]) => expectRequest(fn, '/networking/ipv4/assign', {
         method: 'POST',
         body: {
           region: testLinode.region,

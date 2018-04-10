@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.22.4] - 2018-04-10
+### Added:
+- Early-access notice
+### Changed:
+- Updated placeholder components and copy
+
+## [0.22.3] - 2018-04-09
+### Added:
+- API Token Management
+- OAuth Client Management
+- Linode Config selection on boot actions
+- Notifications and Events menu
+- Display flag on Linode row/card for notifications.
+- Linode Busy indicator to Linode Details page
+- Linode summary panel to details page
+- Documentation for unit testing
+- Linode Detail tabs and routes
+- TESTING.md, Updates to CONTRIBUTING.md
+- Responsive tables
+- Add Grid wrapper in response to MUI changes.
+- Create a simple confirm/decline dialog
+- Editable text component
+- Docker script commands
+- Add gitchangelog configuration and documentation
+- data-qa selectors for e2e tests
+### Changed:
+- Navigate to storybook before each e2e test w/wdio before hook
+### Fixed:
+- Show user feedback immediately upon Linode power action
+
 ## [0.21.0] - 2018-03-26
 ### Added
 - A variety of style and appearance updates
@@ -43,6 +73,24 @@ A new visual design has begun!
 - Footer
 - Promise preloader HOC
 - Request/response Redux action creators
+
+## [0.18.7] - 2018-04-02
+### Changed
+- Update region names for upcoming changes (#3104)
+- Update API calls for API-53 (#3108)
+
+## [0.18.6] - 2018-03-29
+### Changed
+- enable block storage volume support in us-south-1a (Dallas)
+
+## [0.18.5] - 2018-03-05
+### Fixed
+- fix non-expiring token creation
+- fix stats graphs rendering by correcting destructuring
+- throttle OAuth refresh between tabs
+- Refresh OAuth token only on user interaction
+
+## [0.18.4] - 2018-02-26
 
 ## [0.18.3] - 2018-02-20
 ### Added

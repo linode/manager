@@ -13,16 +13,20 @@ import {
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
-import Typography from 'material-ui/Typography';
+import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
-import 'typeface-lato';
 import LinodeTheme from 'src/theme';
 import TopMenu from 'src/features/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
+import Placeholder from 'src/components/Placeholder';
+import BetaNotification from './BetaNotification';
+
+import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -40,8 +44,6 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     position: 'relative',
     display: 'flex',
     height: '100%',
-    maxWidth: '1440px',
-    margin: '0 auto',
   },
   content: {
     width: '100%',
@@ -50,6 +52,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     flexDirection: 'column',
     [theme.breakpoints.up('md')]: {
       marginLeft: 215,
+    },
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: 275,
     },
   },
   wrapper: {
@@ -71,28 +76,15 @@ interface ConnectedProps {
 
 interface State {
   menuOpen: Boolean;
+  betaNotification: Boolean;
 }
-
-/**
- * Temoporary route.
- */
-const TempRoute = (props: any) => {
-  const { render, ...rest } = props;
-  return <Route
-    {...rest}
-    render={renderProps => (
-      <Typography variant="display1">
-        {render(renderProps)}
-      </Typography>
-    )}
-  />;
-};
 
 type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
 
 export class App extends React.Component<CombinedProps, State> {
   state = {
     menuOpen: false,
+    betaNotification: true,
   };
 
   componentDidMount() {
@@ -136,6 +128,10 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
+  closeBetaNotice = () => {
+    this.setState({ betaNotification: false });
+  }
+
   render() {
     const { menuOpen } = this.state;
     const { classes } = this.props;
@@ -150,22 +146,47 @@ export class App extends React.Component<CombinedProps, State> {
               <TopMenu toggleSideMenu={this.toggleMenu} />
               <div className={classes.wrapper}>
                 <Switch>
-                  <TempRoute exact path="/dashboard" render={() => 'Dashboard'} />
+                  <Route exact path="/dashboard" render={() =>
+                    <Placeholder title="Dashboard" />} />
                   <Route path="/linodes" component={LinodesRoutes} />
-                  <TempRoute exact path="/volumes" render={() => 'Volumes'} />
-                  <TempRoute exact path="/nodebalancers" render={() => 'NodeBalancers'} />
-                  <TempRoute exact path="/domains" render={() => 'Domains'} />
-                  <TempRoute exact path="/managed" render={() => 'Managed'} />
-                  <TempRoute exact path="/longview" render={() => 'LongView'} />
-                  <TempRoute exact path="/stackscripts" render={() => 'StackScripts'} />
-                  <TempRoute exact path="/images" render={() => 'Images'} />
+                  <Route exact path="/volumes" render={() =>
+                    <Placeholder
+                      title="Volumes"
+                      icon={VolumeIcon}
+                    />}
+                  />
+                  <Route exact path="/nodebalancers" render={() =>
+                    <Placeholder
+                      title="NodeBalancers"
+                      icon={NodeBalancerIcon}
+                    />}
+                  />
+                  <Route exact path="/domains" render={() =>
+                    <Placeholder title="Domains" />} />
+                  <Route exact path="/managed" render={() =>
+                    <Placeholder title="Managed" />} />
+                  <Route exact path="/longview" render={() =>
+                    <Placeholder title="LongView" />} />
+                  <Route exact path="/stackscripts" render={() =>
+                    <Placeholder title="StackScripts" />} />
+                  <Route exact path="/images" render={() =>
+                    <Placeholder title="Images" />} />
+                  <Route exact path="/billing" render={() =>
+                    <Placeholder title="Billing" />} />
+                  <Route exact path="/users" render={() =>
+                    <Placeholder title="Users" />} />
                   <Route path="/profile" component={Profile} />
-                  <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+                  <Route exact path="/support" render={() =>
+                    <Placeholder title="Support" />} />
+                  <Route path="/profile" component={Profile} />
+                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                  <Route render={() => (<Redirect to="/linodes" />)} />
                 </Switch>
               </div>
-            <Footer />
+              <Footer />
             </main>
           </div>
+          <BetaNotification open={this.state.betaNotification} onClose={this.closeBetaNotice} />
         </React.Fragment>
       </MuiThemeProvider>
     );

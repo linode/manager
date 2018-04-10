@@ -19,9 +19,9 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   });
 
   const ipv4s = Object.values(testLinode._ips).filter(
-    ip => ip.version === 'ipv4');
+    ip => ip.type === 'ipv4');
   const ipv6s = Object.values(testLinode._ips).filter(
-    ip => ip.version === 'ipv6');
+    ip => ip.type === 'ipv6');
 
   it.skip('renders ipv4 addresses', function () {
     const page = mount(
@@ -42,7 +42,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const ip = testLinode._ips[address];
 
       expect(columns.at(1).text()).toBe(ip.rdns);
-      expect(columns.at(2).text().toLowerCase()).toBe(ip.type);
+      expect(columns.at(2).text().toLowerCase()).toBe(ip.key);
     });
   });
 
@@ -65,7 +65,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const ip = testLinode._ips[address.split.skip('/')[0].trim()];
 
       expect(columns.at(1).text()).toBe(ip.rdns || '');
-      expect(columns.at(2).text().toLowerCase()).toBe(ip.type);
+      expect(columns.at(2).text().toLowerCase()).toBe(ip.key);
     });
   });
 
