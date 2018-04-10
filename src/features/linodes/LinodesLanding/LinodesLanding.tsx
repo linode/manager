@@ -93,31 +93,22 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     pageSize: 25,
   };
 
-  /**
-  * @todo Test docs for review.
-  */
   docs = [
     {
-      title: 'Lorem Ipsum Dolor',
-      src: 'http://www.linode.com',
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-   Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
-   ex elit, quis sed.`,
+      title: 'Getting Started with Linode',
+      src: 'https://linode.com/docs/getting-started/',
+      body: `Thank you for choosing Linode as your cloud hosting provider! This guide will help you
+      sign up for an account, set up a Linux distribution, boot your Linode, and perform some basic
+      system administr...`,
     },
     {
-      title: 'Lorem Ipsum Dolor',
-      src: 'http://www.linode.com',
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-   Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
-   ex elit, quis sed.`,
+      title: 'How to Sercure your Server',
+      src: 'https://linode.com/docs/security/securing-your-server/',
+      body: `Keeping your software up to date is the single biggest security precaution you can
+      take for any operating system. Software updates range from critical vulnerability patches to
+      minor bug fixes, and...`,
     },
-    {
-      title: 'Lorem Ipsum Dolor',
-      src: 'http://www.linode.com',
-      body: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-   Suspendisse dignissim porttitor turpis a elementum. Ut vulputate
-   ex elit, quis sed.`,
-    },
+
   ];
 
   componentWillUnmount() {
@@ -272,32 +263,32 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { types, location: { hash } } = this.props;
+    const { linodes, configDrawer } = this.state;
+    const images = pathOr([], ['response', 'data'], this.props.images);
+
+    if (linodes.length === 0) {
+      return <ListLinodesEmptyState />;
+    }
+
     return (
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
         render={() => {
-          const { types, location: { hash } } = this.props;
-          const { linodes, configDrawer } = this.state;
-          const images = pathOr([], ['response', 'data'], this.props.images);
 
           if (this.props.linodes.error) {
-            /** Maybe a fancy error state component? */
             return (
               <ErrorState errorText="Error loading data" />
             );
           }
 
           if (this.props.images.error) {
-            /** Maybe a fancy error state component? */
             return (
               <ErrorState errorText="Error loading data" />
             );
           }
 
-          if (linodes.length === 0) {
-            return <ListLinodesEmptyState />;
-          }
 
           const displayGrid: 'grid' | 'list' = ifElse(
             compose(isEmpty, prop('hash')),
