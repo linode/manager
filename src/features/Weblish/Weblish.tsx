@@ -2,11 +2,6 @@ import * as React from 'react';
 import Axios from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Terminal } from 'xterm';
-import * as fit from 'xterm/lib/addons/fit/fit';
-
-import '../../assets/weblish/weblish.css';
-import '../../assets/weblish/weblish-fonts.css';
-import '../../assets/weblish/xterm.css';
 
 import { ZONES, LISH_ROOT, API_ROOT } from 'src/constants';
 
@@ -14,7 +9,7 @@ export function weblishLaunch(linodeId: string) {
   window.open(
     `${window.location.protocol}//${window.location.host}/linodes/${linodeId}/weblish`,
     `weblish_con_${linodeId}`,
-    'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1',
+    'left=100,top=100,width=1024,height=640,toolbar=0,resizable=1',
   );
 }
 
@@ -32,20 +27,28 @@ type CombinedProps = Props & RouteComponentProps<{ linodeId?: number }>;
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
     token: '',
-    renderingLish: false,
+    renderingLish: true,
   };
 
   constructor(props: CombinedProps) {
     super(props);
   }
 
-  componentWillMount() {
+  getLinode() {
     const { match: { params: { linodeId } } } = this.props;
     Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
         const { data: linode } = response;
         this.setState({ linode }, this.connect);
       });
+  }
+
+  componentWillMount() {
+    const webLishCss = import('' + '../../assets/weblish/weblish.css');
+    const webLishFonts = import('' + '../../assets/weblish/weblish-fonts.css');
+    const xtermCss = import('' + '../../assets/weblish/xterm.css');
+    Promise.all([webLishCss, webLishFonts, xtermCss])
+      .then(() => this.getLinode());
   }
 
   getLishSchemeAndHostname(region: string): string {
@@ -83,15 +86,12 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     const { group, label } = linode;
 
-    Terminal.applyAddon(fit);
-
     const terminal = new Terminal({ cols: 120, rows: 40 });
 
     terminal.on('data', (data: string) => socket.send(data));
     terminal.open(document.body);
 
     terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
-    (terminal as any).fit();
 
     socket.addEventListener('message', evt => terminal.write(evt.data));
 
