@@ -11,7 +11,6 @@ import {
 } from 'react-router-dom';
 import { Subscription } from 'rxjs/Rx';
 
-import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
@@ -19,6 +18,7 @@ import Grid from 'material-ui/Grid';
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
+import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import LinodeSummary from './LinodeSummary';
 import LinodeVolumes from './LinodeVolumes';
@@ -183,6 +183,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
   }
 
+  updateLabel = (label: string) => {
+    const { linode } = this.state;
+    Axios.put(`${API_ROOT}/linode/instances/${linode.id}`, { label })
+      .catch((err) => {
+        /** @todo Toast error. */
+      });
+  }
+
   render() {
     const { match: { url } } = this.props;
     const { type, image, volumes } = this.props.data.response;
@@ -193,9 +201,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       <div>
         <Grid container justify="space-between">
           <Grid item>
-            <Typography variant="headline">
-              {linode.label}
-            </Typography>
+            <EditableText
+              variant="headline"
+              text={linode.label}
+              onEdit={this.updateLabel}
+            />
           </Grid>
           <Grid item>
             <LinodePowerControl
@@ -218,7 +228,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         </AppBar>
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (
-            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes}/>
+            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes} />
           )} />
           <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes/>)} />
           <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking/>)} />
