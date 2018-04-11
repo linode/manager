@@ -59,37 +59,4 @@ describe('Profile - OAuth Clients Suite', () => {
     it('should display base elements', () => {
         profile.oauthBaseElems();
     });
-
-    describe('OAuth Clients - Edit', () => {
-        const editedClient = {
-            label: `${timestamp} Test Client Edit`,
-            callback: 'https://test-edit.com:3000',
-            access: 'Public',
-        }
-        it('should display the edit drawer', () => {
-            
-        });
-
-        it('should display public checkbox as disabled', () => {
-            
-        });
-
-        it('should update table on edit submit', () => {
-            
-        });
-    });
-
-    describe('OAuth Clients - Delete', () => {
-        it('should display delete dialog', () => {
-            
-        });
-
-        it('should not delete client on cancel', () => {
-            
-        });
-
-        it('should delete client on confirm delete', () => {
-            
-        });
-    });
 });
