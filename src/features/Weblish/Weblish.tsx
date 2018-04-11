@@ -52,9 +52,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   getLishSchemeAndHostname(region: string): string {
-    if (LISH_ROOT.startsWith('wss')) {
+    if (LISH_ROOT.includes('alpha')) {
       /* Note: This is only the case for pre-production environments! */
-      return LISH_ROOT;
+      return `wss://${LISH_ROOT}`;
     }
     return `wss://${ZONES[region]}.${LISH_ROOT}`;
   }
