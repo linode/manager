@@ -17,11 +17,6 @@ describe('Create Linode - Configure Linode Suite', () => {
         browser.waitForVisible('[data-qa-tp="Linode Plan"] [data-qa-selection-card]');
         ConfigureLinode.plans.forEach(p => {
             const originalPrice = CheckoutSummary.costSummary.getText();
-            try { p.click(); 
-            } catch (err) {
-                console.log(p.selector);
-            }
-
             p.click();
             const updatedPrice = CheckoutSummary.costSummary.getText();
             expect(updatedPrice).not.toBe(originalPrice);
