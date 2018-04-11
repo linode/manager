@@ -29,13 +29,11 @@ describe('View - Personal Access Tokens', () => {
             expect(tokenCreateDrawer.title.getText()).toBe('Add a Personal Access Token');
          });
 
-        it('should fail to create without updating permissions', () => {
+        xit('M3-348 - should fail to create without updating permissions', () => {
             tokenCreateDrawer.submit.click();
-
-            // const errorMsg = browser.isVisible();
         });
 
-        it('should set basic permissions', () => {
+        it('should set basic scopes', () => {
             tokenCreateDrawer.setPermission(tokenCreateDrawer.account, tokenCreateDrawer.readPermission);
             tokenCreateDrawer.setPermission(tokenCreateDrawer.domain, tokenCreateDrawer.nonePermission);
             tokenCreateDrawer.setPermission(tokenCreateDrawer.events, tokenCreateDrawer.rwPermission);
@@ -99,6 +97,7 @@ describe('View - Personal Access Tokens', () => {
             });
 
             it('should update label on edit', () => {
+                // Hack needed to edit a label
                 browser.waitUntil(function() {
                     try {
                         tokenCreateDrawer.label.click();
