@@ -62,12 +62,14 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         errorText={hasErrorFor('label')}
         label="Label"
         onChange={e => onChange('label', e.target.value)}
+        data-qa-add-label
       />
       <TextField
         value={redirect_uri || ''}
         label="Callback URL"
         errorText={hasErrorFor('redirect_uri')}
         onChange={e => onChange('redirect_uri', e.target.value)}
+        data-qa-callback
       />
       <FormControl>
         <FormControlLabel
@@ -77,13 +79,20 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
               onChange={() => onChange('public', !isPublic)}
               checked={isPublic}
               disabled={edit}
+              data-qa-public
             />
           }
         />
       </FormControl>
       <ActionsPanel>
-        <Button variant="raised" color="primary" onClick={() => onSubmit()}>Submit</Button>
-        <Button onClick={() => onClose()}>Cancel</Button>
+        <Button
+          variant="raised"
+          color="primary"
+          onClick={() => onSubmit()}
+          data-qa-submit
+          >Submit
+        </Button>
+        <Button onClick={() => onClose()} data-qa-cancel>Cancel</Button>
       </ActionsPanel>
     </Drawer>
   );
