@@ -144,8 +144,8 @@ class LinodeRow extends React.Component<PropsWithStyles> {
         {this.headCell()}
         <TableCell className={classes.ipCell}>
           <div className={classes.ipCellInner}>
-            <IPAddress ips={linode.ipv4} />
-            <IPAddress ips={[linode.ipv6]} />
+          <IPAddress ips={linode.ipv4} copyRight />
+          <IPAddress ips={[linode.ipv6]} copyRight />
           </div>
         </TableCell>
         <TableCell className={classes.regionCell}>
