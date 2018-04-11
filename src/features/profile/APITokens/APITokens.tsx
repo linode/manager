@@ -356,7 +356,7 @@ class APITokens extends React.Component<CombinedProps, State> {
           actions={() => {
             return (
               <React.Fragment>
-                <Button onClick={() => this.closeRevokeDialog()}>No</Button>
+                <Button onClick={() => this.closeRevokeDialog()} data-qa-button-cancel>No</Button>
                 <Button
                   variant="raised"
                   color="secondary"
@@ -364,7 +364,8 @@ class APITokens extends React.Component<CombinedProps, State> {
                   onClick={() => {
                     this.closeRevokeDialog();
                     this.revokeToken();
-                  }}>
+                  }}
+                  data-qa-button-remove>
                   Yes
                 </Button>
               </React.Fragment>
@@ -382,6 +383,7 @@ class APITokens extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => this.closeTokenDialog() }
+              data-qa-close-dialog
             >
               OK
             </Button>}

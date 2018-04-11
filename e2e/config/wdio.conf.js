@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { argv } = require('yargs');
-const { getTokenIfNeeded, loadToken } = require('../utils/common');
+const { getTokenIfNeeded, loadToken, login } = require('../utils/common');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
@@ -180,7 +180,14 @@ exports.config = {
         // Load up our custom commands
         require('babel-register');
         browserCommands();
-        getTokenIfNeeded(username, password);
+        browser.timeouts('page load', 20000);
+        login(username, password);
+        // getTokenIfNeeded(username, password);
+        // loadToken();
+
+        // Click beta notice button
+        browser.waitForVisible('[data-qa-beta-notice]');
+        browser.click('[data-qa-beta-notice] button');
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -195,8 +202,6 @@ exports.config = {
      * @param {Object} suite suite details
      */
     beforeSuite: function (suite) {
-        // Load our token into localStorage before the suite starts
-        loadToken();
     },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.

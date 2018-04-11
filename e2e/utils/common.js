@@ -65,14 +65,25 @@ exports.loadToken = () => {
         const storageObj = keys.map(key => {
             return { [key]: localStorageObj[key] }
         });
+
         browser.url('/null');
-        browser.execute(function(storageObj) {
-            storageObj.forEach(item => {
-                localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
-            });
-        }, storageObj);
+        browser.waitForText('#root > span:nth-child(1)');
+        browser.waitUntil(function() {
+            browser.execute(function(storageObj) {
+                storageObj.forEach(item => {
+                    localStorage.setItem(Object.keys(item)[0], Object.values(item)[0]);
+                });
+            }, storageObj);
+            browser.url('/null');
+            return browser.execute(function(storageObj) {
+                return localStorage.getItem('authentication/oauth-token').includes(storageObj['authentication/oauth-token']) === true;
+            }, storageObj);
+        }, 10000);
         browser.url(constants.routes.dashboard);
+        browser.waitForVisible('[data-qa-beta-notice]');
+        browser.click('[data-qa-beta-notice] button');
     } catch (err) {
         console.log(`${err} \n ensure that your local manager environment is running!`);
+        browser.debug();
     }
 }

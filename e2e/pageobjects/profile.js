@@ -1,6 +1,21 @@
 import Page from './page';
 
-export class CreateDrawer {
+export const dialogMap = {
+    dialogTitle: '[data-qa-dialog-title]',
+    dialogContent: '[data-qa-dialog-content]',
+    closeDialog: '[data-qa-close-dialog]',
+}
+
+export class OauthCreateDrawer {
+    get title() { return $('[data-qa-drawer-title]'); }
+    get label() { return $('[data-qa-add-label] input'); }
+    get submit() { return $('[data-qa-submit]'); }
+    get cancel() { return $('[data-qa-cancel]'); }
+    get callbackUrl() { return $('[data-qa-callback] input'); }
+    get public() { return $('[data-qa-public]'); }
+}
+
+export class TokenCreateDrawer {
     get title() { return $('[data-qa-drawer-title]'); }
     get accessColumn() { return $$('[data-qa-perm-access]'); }
     get noneColumn() { return $('[data-qa-perm-none]'); }
@@ -26,6 +41,8 @@ export class CreateDrawer {
 
     get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
+    get closeDialog() { return $('[data-qa-close-dialog]'); }
+
 
     baseElemsDisplay() {
         expect(this.noneColumn.isVisible()).toBe(true); 
@@ -83,10 +100,10 @@ export class Profile extends Page {
 
     get oauthLabel() { return $('[data-qa-oauth-label]'); }
     get oauthAccess() { return $('[data-qa-oauth-access]'); }
-    get oauthId() { return $('data-qa-oauth-id]'); }
-    get oauthCallback() {return $('[data-qa-oauth-callback]'); }
+    get oauthId() { return $('[data-qa-oauth-id]'); }
+    get oauthCallback() { return $('[data-qa-oauth-callback]'); }
     get oauthActionMenu() { return $('[data-qa-action-menu]'); }
-    get oauthCreate() { return $('[data-qa-oauth-create]'); }
+    get oauthCreate() { return $('[data-qa-icon-text-link="Create an OAuth Client"]'); }
 
     tokenBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]');
@@ -99,15 +116,26 @@ export class Profile extends Page {
     }
 
     oauthBaseElems() {
+        browser.waitForVisible('[data-qa-profile-header]');
+        const oauthSelected = browser.getAttribute('[data-qa-tab="OAuth Clients"]', 'aria-selected').includes('true');
+        expect(oauthSelected).toBe(true);
 
+        browser.waitForVisible('[data-qa-oauth-label]');
+        expect(this.oauthLabel.isVisible()).toBe(true);
+        expect(this.oauthAccess.isVisible()).toBe(true);
+        expect(this.oauthId.isVisible()).toBe(true);
+        expect(this.oauthActionMenu.isVisible()).toBe(true);
+        expect(this.oauthCreate.isVisible()).toBe(true);
     }
 
-    createToken() {
-        this.tokenCreate.click();
+    create(type) {
+        if (type === 'oauth') {
+            this.oauthCreate.click();
+        }
+        if (type === 'token') {
+            this.tokenCreate.click();
+        }
         browser.waitForVisible('[data-qa-add-label]');
-    }
-
-    createOauth() {
-
+        browser.waitForText('[data-qa-drawer-title]');
     }
 }

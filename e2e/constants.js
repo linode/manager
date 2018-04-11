@@ -17,6 +17,11 @@ exports.constants = {
 			billing: '/billing',
 			users: '/users',
 		},
+		profile: {
+			view: '/profile/',
+			tokens: '/profile/tokens',
+			oauth: '/profile/clients'
+		},
 		support: {
 			docs: '/documentation',
 			community: '/community/questions/',

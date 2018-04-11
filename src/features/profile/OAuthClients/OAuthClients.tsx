@@ -189,7 +189,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     const { data } = this.state;
 
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
-      <TableRow key={id}>
+      <TableRow key={id} data-qa-table-row={label}>
         <TableCell data-qa-oauth-label>{label}</TableCell>
         <TableCell data-qa-oauth-access>{isPublic ? 'Public' : 'Private'}</TableCell>
         <TableCell data-qa-oauth-id>{id}</TableCell>
@@ -255,6 +255,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => this.reset() }
+              data-qa-close-dialog
             >
               OK
             </Button>}
