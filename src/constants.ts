@@ -35,3 +35,22 @@ export const ZONES = {
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
 };
+
+export const dcDisplayNames = {
+  'us-east-1a': 'Newark, NJ',
+  'us-south-1a': 'Dallas, TX',
+  'us-west-1a': 'Fremont, CA',
+  'us-southeast-1a': 'Atlanta, GA',
+  'eu-central-1a': 'Frankfurt, DE',
+  'eu-west-1a': 'London, UK',
+  'ap-northeast-1a': 'Tokyo',
+  'ap-northeast-1b': 'Tokyo 2, JP',
+  'us-central': 'Dallas, TX',
+  'us-west': 'Fremont, CA',
+  'us-southeast': 'Atlanta, GA',
+  'us-east': 'Newark, NJ',
+  'eu-west': 'London, UK',
+  'ap-south': 'Singapore, SG',
+  'eu-central': 'Frankfurt, DE',
+  'ap-northeast': 'Tokyo 2, JP',
+};

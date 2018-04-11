@@ -54,7 +54,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linode, image, type, volumes } = props;
-
   return (
     <Paper className={classes.root}>
       <Grid container>

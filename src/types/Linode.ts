@@ -1,6 +1,6 @@
 namespace Linode {
   export interface Linode {
-    id: string | number;
+    id: number;
     alerts: LinodeAlerts;
     backups: LinodeBackups;
     created: string;
@@ -90,6 +90,23 @@ namespace Linode {
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
     label: any;
-    devices: any;
+    devices: ConfigDevices;
+  }
+
+  export interface ConfigDevices {
+    sda: null | ConfigDevice;
+    sdb: null | ConfigDevice;
+    sdc: null | ConfigDevice;
+    sdd: null | ConfigDevice;
+    sde: null | ConfigDevice;
+    sdf: null | ConfigDevice;
+    sdg: null | ConfigDevice;
+    sdh: null | ConfigDevice;
+  }
+
+  interface ConfigDevice {
+    /* disk_id and volume_id are mutually exclusive. */
+    disk_id: null | number;
+    volume_id: null | number;
   }
 }
