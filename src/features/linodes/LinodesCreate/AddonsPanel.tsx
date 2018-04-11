@@ -141,13 +141,6 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 }
                 label="Private IP (Free!)"
               />
-              <Grid item xs={12} className="py0">
-                <Typography variant="caption" className={classes.caption}>
-                  We need copy! We need copy! We need copy! We need copy! We need copy! We need
-                  copy! We need copy! We need copy! We need copy! We need copy! We need copy! We
-                  need copy!
-                </Typography>
-              </Grid>
             </Grid>
           </Grid>
         </div>
