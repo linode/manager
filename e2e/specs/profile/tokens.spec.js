@@ -1,5 +1,5 @@
-const { constants} = require('../../../constants');
-import { Profile, TokenCreateDrawer } from '../../../pageobjects/profile';
+const { constants} = require('../../constants');
+import { Profile, TokenCreateDrawer } from '../../pageobjects/profile';
 
 const profile = new Profile();
 const tokenCreateDrawer = new TokenCreateDrawer();
