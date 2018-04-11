@@ -36,6 +36,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   root: {
     alignItems: 'center',
     marginBottom: 2,
+    width: '100%',
     '&:last-child': {
       marginBottom: 0,
     },
