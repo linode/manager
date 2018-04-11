@@ -26,7 +26,13 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   deleteDialogActions = () => {
     return (
       <React.Fragment>
-        <Button onClick={() => this.toggleConfirmDelete(false)}>No</Button>
+        <Button
+          onClick={() => this.toggleConfirmDelete(false)}
+          variant="raised"
+          color="primary"
+        >
+          No
+        </Button>
         <Button
           variant="raised"
           color="secondary"
@@ -46,7 +52,13 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   resetDialogActions = () => {
     return (
       <React.Fragment>
-        <Button onClick={() => this.toggleConfirmReset(false)}>No</Button>
+        <Button
+          onClick={() => this.toggleConfirmReset(false)}
+          variant="raised"
+          color="primary"
+        >
+          No
+        </Button>
         <Button
           variant="raised"
           color="secondary"
