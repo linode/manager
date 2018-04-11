@@ -23,15 +23,15 @@ import {
 } from './session';
 
 import 'src/utilities/request';
+import DefaultLoader from 'src/components/DefaultLoader';
 
 import App from './App';
 import './index.css';
 
 import './events';
 
-const Weblish = Loadable({
-  loader: () => import('./linodes/linode/layouts/Weblish'),
-  loading: PageLoader,
+const Weblish = DefaultLoader({
+  loader: () => import('src/features/Weblish'),
 });
 
 /**
@@ -64,7 +64,7 @@ ReactDOM.render(
         <Route render={() =>
           <AuthenticationWrapper>
             <Switch>
-              <Route exact path="/linodes/:linodeLabel/weblish" component={Weblish} />
+              <Route exact path="/linodes/:linodeId/weblish" component={Weblish} />
               <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
               {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
               <Route exact path="/nullauth" render={() => <span>null auth route</span>} />
