@@ -18,6 +18,7 @@ import Tooltip from 'material-ui/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import Flag from 'src/assets/icons/flag.svg';
+import { weblishLaunch } from 'src/features/Weblish';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -221,7 +222,10 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           {<Divider />}
           { loading ? this.loadingState() : this.loadedState() }
           <CardActions className={classes.cardActions}>
-            <Button className={`${classes.button} ${classes.consoleButton}`}>
+            <Button
+              className={`${classes.button} ${classes.consoleButton}`}
+              onClick={() => weblishLaunch(`${linode.id}`)}
+            >
               <span className="btnLink">Launch Console</span>
             </Button>
             <Button
