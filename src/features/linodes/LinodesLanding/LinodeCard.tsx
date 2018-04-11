@@ -28,7 +28,8 @@ import transitionStatus from '../linodeTransitionStatus';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 
 type CSSClasses =
-  'cardSection'
+  'customeMQ'
+  | 'cardSection'
   | 'flexContainer'
   | 'cardHeader'
   | 'cardContent'
@@ -42,6 +43,16 @@ type CSSClasses =
   | 'flag';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
+  customeMQ: {
+    '@media (min-width: 600px) and (max-width: 680px)': {
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
+    },
+    '@media (min-width: 1280px) and (max-width: 1400px)': {
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
+    },
+  },
   cardSection: {
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
@@ -164,7 +175,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const { classes, image, type, linode } = this.props;
 
     return (
-      <CardContent className={classes.cardContent}>
+      <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
       <div>
         {image && type &&
         <div className={classes.cardSection}>
@@ -205,6 +216,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
                 />
               </div>
             }
+            className={classes.customeMQ}
           />
           {<Divider />}
           { loading ? this.loadingState() : this.loadedState() }
