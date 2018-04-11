@@ -120,7 +120,14 @@ const preloaded = PromiseLoader<Props>({
         'eu-west-1a': 'London, UK',
         'ap-northeast-1a': 'Tokyo',
         'ap-northeast-1b': 'Tokyo 2, JP',
-        'ap-south-1a': 'Singapore, SG',
+        'us-central': 'Dallas, TX',
+        'us-west': 'Fremont, CA',
+        'us-southeast': 'Atlanta, GA',
+        'us-east': 'Newark, NJ',
+        'eu-west': 'London, UK',
+        'ap-south': 'Singapore, SG',
+        'eu-central': 'Frankfurt, DE',
+        'ap-northeast': 'Tokyo 2, JP',
       };
 
       return response.data.map((region: Linode.Region) => ({

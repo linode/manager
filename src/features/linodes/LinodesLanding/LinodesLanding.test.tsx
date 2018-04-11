@@ -80,6 +80,6 @@ describe('ListLinodes', () => {
     kabobButton.simulate('click');
 
     const menuItems = component.find('MenuItem');
-    expect(menuItems.length).toBe(7);
+    expect(menuItems.length).toBe(8);
   });
 });

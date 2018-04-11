@@ -376,7 +376,7 @@ class APITokens extends React.Component<CombinedProps, State> {
         </ConfirmationDialog>
 
         <ConfirmationDialog
-          title="Peronsal Access Token"
+          title="Personal Access Token"
           actions={() =>
             <Button
               variant="raised"
