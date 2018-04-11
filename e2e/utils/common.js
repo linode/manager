@@ -84,6 +84,5 @@ exports.loadToken = () => {
         browser.click('[data-qa-beta-notice] button');
     } catch (err) {
         console.log(`${err} \n ensure that your local manager environment is running!`);
-        browser.debug();
     }
 }
