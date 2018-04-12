@@ -33,6 +33,7 @@ const menuLinks: MenuLink[] = [
 type CSSClasses =
 | 'menu'
 | 'leftIcon'
+| 'username'
 | 'menuItem';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
@@ -44,6 +45,15 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     width: '50px',
     height: '50px',
     borderRadius: '50px',
+    [theme.breakpoints.down('sm')]: {
+      width: '40px',
+      height: '40px',
+    },
+  },
+  username: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   menuItem: {
     fontSize: '.9rem',
@@ -145,7 +155,9 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           {profile.username &&
             <React.Fragment>
               {this.renderAvatar()}
-              {profile.username && profile.username}
+              <span className={classes.username}>
+                {profile.username && profile.username}
+              </span>
             </React.Fragment>
           }
         </ButtonBase>
