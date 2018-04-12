@@ -42,7 +42,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
             this.toggleConfirmDelete(false);
             this.props.onDelete();
           }}
-          data-qa-button-remove>
+          data-qa-button-confirm>
           Yes
         </Button>
       </React.Fragment>
@@ -70,7 +70,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
             this.toggleConfirmReset(false);
             this.props.onReset();
           }}
-          data-qa-button-remove>
+          data-qa-button-confirm>
           Yes
         </Button>
       </React.Fragment>
