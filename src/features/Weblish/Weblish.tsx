@@ -5,6 +5,8 @@ import { Terminal } from 'xterm';
 
 import { ZONES, LISH_ROOT, API_ROOT } from 'src/constants';
 
+import 'typeface-ubuntu-mono';
+
 export function weblishLaunch(linodeId: string) {
   window.open(
     `${window.location.protocol}//${window.location.host}/linodes/${linodeId}/weblish`,
@@ -44,9 +46,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
   componentWillMount() {
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
-    const webLishFonts = import('' + '../../assets/weblish/weblish-fonts.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
-    Promise.all([webLishCss, webLishFonts, xtermCss])
+    Promise.all([webLishCss, xtermCss])
       .then(() => this.getLinode());
   }
 
@@ -85,7 +86,11 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     const { group, label } = linode;
 
-    const terminal = new Terminal({ cols: 120, rows: 40 });
+    const terminal = new Terminal({
+      cols: 120,
+      rows: 40,
+      fontFamily: '"Ubuntu Mono", "PT Mono", sans-serif',
+    });
 
     terminal.on('data', (data: string) => socket.send(data));
     terminal.open(document.getElementById('root') as HTMLElement);
