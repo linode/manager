@@ -17,7 +17,7 @@ import { ListItem, ListItemText } from 'material-ui/List';
 import LinodeTheme from 'src/theme';
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import logoPng from 'src/assets/logo/logo.png';
+import Logo from 'src/assets/logo/logo-text.svg';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
 type PrimaryLink = {
@@ -193,7 +193,7 @@ class PrimaryNav extends React.Component<Props> {
         >
           <Grid item>
             <div className={classes.logoItem}>
-              <img width="115" height="43" src={logoPng} />
+              <Logo width={115} height={43} />
             </div>
           </Grid>
         </Grid>

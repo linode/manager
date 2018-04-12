@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.22.6] - 2018-04-10
+### Fixed:
+- Issues related to uncommon regions, plan types, and images
+- Clipping of copy animation on linode row
+
+## [0.22.5] - 2018-04-10
+### Fixed:
+- Show personal access tokens upon creation
+- Show notifications for Linode community site
+
 ## [0.22.4] - 2018-04-10
 ### Added:
 - Early-access notice

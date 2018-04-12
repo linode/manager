@@ -12,7 +12,10 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'root' | 'item' | 'button';
+type CSSClasses = 'root'
+  | 'item'
+  | 'button'
+  | 'hidden';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   root: {
@@ -40,6 +43,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     '& svg': {
       fontSize: '28px',
     },
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -112,6 +119,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
+          <MenuItem key="placeholder" className={classes.hidden} />
           {(actions as Action[]).map((a, idx) =>
             <MenuItem
               key={idx}
