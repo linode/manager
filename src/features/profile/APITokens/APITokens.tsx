@@ -18,18 +18,31 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import Table from 'src/components/Table';
 import IconTextLink from 'src/components/IconTextLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Notice from 'src/components/Notice';
 
 import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 
-type ClassNames = 'headline';
+type ClassNames = 'headline'
+  | 'labelCell'
+  | 'typeCell'
+  | 'createdCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
     headline: {
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2,
+    },
+    labelCell: {
+      width: '30%',
+    },
+    typeCell: {
+      width: '20%',
+    },
+    createdCell: {
+      width: '20%',
     },
   });
 };
@@ -64,10 +77,16 @@ interface DialogState {
   label?: string;
 }
 
+interface TokenState {
+  open: boolean;
+  value?: string;
+}
+
 interface State {
   pats: Linode.Token[];
   form: FormState;
   dialog: DialogState;
+  token?: TokenState;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -89,6 +108,10 @@ class APITokens extends React.Component<CombinedProps, State> {
       open: false,
       id: undefined,
       label: undefined,
+    },
+    token: {
+      open: false,
+      value: undefined,
     },
   };
 
@@ -131,9 +154,9 @@ class APITokens extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Label</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Created</TableCell>
+                <TableCell className={classes.labelCell}>Label</TableCell>
+                <TableCell className={classes.typeCell}>Type</TableCell>
+                <TableCell className={classes.createdCell}>Created</TableCell>
                 <TableCell>Expires</TableCell>
                 <TableCell></TableCell>
               </TableRow>
@@ -250,6 +273,14 @@ class APITokens extends React.Component<CombinedProps, State> {
     this.setState({ dialog: { ...this.state.dialog, id: undefined, open: false } });
   }
 
+  openTokenDialog = (token: string) => {
+    this.setState({ token: { open: true, value: token } });
+  }
+
+  closeTokenDialog = () => {
+    this.setState({ token: { open: false, value: undefined } });
+  }
+
   revokeToken = () => {
     const { dialog } = this.state;
     Axios.delete(`${API_ROOT}/profile/tokens/${dialog.id}`)
@@ -271,7 +302,10 @@ class APITokens extends React.Component<CombinedProps, State> {
     const { form } = this.state;
     this.setState({ form: { ...form, values: { ...form.values, scopes } } }, () => {
       Axios.post(`${API_ROOT}/profile/tokens`, this.state.form.values)
-      .then(() => { this.closeDrawer(); })
+      .then((response) => {
+        this.closeDrawer();
+        this.openTokenDialog(response.data.token);
+      })
       .then(() => this.requestTokens())
       .catch((errResponse) => {
         this.setState({ form: {
@@ -351,6 +385,27 @@ class APITokens extends React.Component<CombinedProps, State> {
         >
           Are you sure you want to revoke this API Token?
         </ConfirmationDialog>
+
+        <ConfirmationDialog
+          title="Personal Access Token"
+          actions={() =>
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={() => this.closeTokenDialog() }
+            >
+              OK
+            </Button>}
+          open={this.state.token.open}
+          onClose={() => this.closeTokenDialog() }
+        >
+          <Typography variant="body1">
+            {`Your personal access token has been created.
+              Store this secret. It won't be shown again.`}
+          </Typography>
+          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.token.value!} />
+        </ConfirmationDialog>
+
       </React.Fragment>
     );
   }

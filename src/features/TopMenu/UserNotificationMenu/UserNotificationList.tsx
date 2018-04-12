@@ -90,7 +90,10 @@ const createEventProps = (event: Linode.Event): UserNotificationListItemProps =>
   const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
   const remaining = event.percent_complete;
   const entity = (event.entity as Linode.Entity);
-  const options = eventTypes[event.action];
+  const options = eventTypes[event.action] || {
+    pastTenseAction: event.action,
+    presentTenseAction: event.action,
+  };
   const verb = remaining && remaining < 100
     ? options.presentTenseAction
     : options.pastTenseAction;
@@ -124,6 +127,11 @@ const createEventProps = (event: Linode.Event): UserNotificationListItemProps =>
     // stackscript_publicize: {},
     // stackscript_revise: {},
     // stackscript_delete: {},
+    community_question_reply: {
+      title: entity.label,
+      success,
+      content: `${event.username} has replied to your question.`,
+    },
     default: {
       title,
       success,

@@ -11,7 +11,6 @@ import {
 } from 'react-router-dom';
 import { Subscription } from 'rxjs/Rx';
 
-import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
@@ -19,8 +18,16 @@ import Grid from 'material-ui/Grid';
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
+import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import LinodeSummary from './LinodeSummary';
+import LinodeVolumes from './LinodeVolumes';
+import LinodeNetworking from './LinodeNetworking';
+import LinodeRebuild from './LinodeRebuild';
+import LinodeRescue from './LinodeRescue';
+import LinodeResize from './LinodeResize';
+import LinodeBackup from './LinodeBackup';
+import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
@@ -28,8 +35,8 @@ type Props = RouteComponentProps<{ linodeId?: number }>;
 
 interface Data {
   linode: Linode.Linode;
-  type: Linode.LinodeType;
-  image: Linode.Image;
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
   volumes: Linode.Volume[];
 }
 
@@ -56,16 +63,26 @@ const preloaded = PromiseLoader<Props>({
     return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
         const { data: linode } = response;
-        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`);
-        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`);
-        const volReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`);
-        return Promise.all([typeReq, imageReq, volReq])
+
+        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+          .then(response => response.data)
+          .catch(err => undefined);
+
+        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
+          .then(response => response.data)
+          .catch(err => undefined);
+
+        const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
+          .then(response => response.data)
+          .catch(err => []);
+
+        return Promise.all([typeReq, imageReq, volumesReq])
           .then((responses) => {
             return {
               linode,
-              type: responses[0].data,
-              image: responses[1].data,
-              volumes: responses[2].data.data,
+              type: responses[0],
+              image: responses[1],
+              volumes: responses[2],
             };
           });
       });
@@ -117,6 +134,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
+    { routeName: `${this.props.match.url}/volumes`, title: 'Volumes' },
+    { routeName: `${this.props.match.url}/networking`, title: 'Networking' },
+    { routeName: `${this.props.match.url}/resize`, title: 'Resize' },
+    { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
+    { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
+    { routeName: `${this.props.match.url}/backup`, title: 'Backup' },
+    { routeName: `${this.props.match.url}/settings`, title: 'Setttings' },
   ];
 
   openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
@@ -159,8 +183,16 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
   }
 
+  updateLabel = (label: string) => {
+    const { linode } = this.state;
+    Axios.put(`${API_ROOT}/linode/instances/${linode.id}`, { label })
+      .catch((err) => {
+        /** @todo Toast error. */
+      });
+  }
+
   render() {
-    const { match: { path, url } } = this.props;
+    const { match: { url } } = this.props;
     const { type, image, volumes } = this.props.data.response;
     const { linode, configDrawer } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -169,9 +201,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       <div>
         <Grid container justify="space-between">
           <Grid item>
-            <Typography variant="headline">
-              {linode.label}
-            </Typography>
+            <EditableText
+              variant="headline"
+              text={linode.label}
+              onEdit={this.updateLabel}
+            />
           </Grid>
           <Grid item>
             <LinodePowerControl
@@ -194,9 +228,17 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         </AppBar>
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (
-            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes}/>
+            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes} />
           )} />
-          <Route exact path={`${path}/`} render={() => (<Redirect to={`${url}/summary`} />)} />
+          <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes/>)} />
+          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking/>)} />
+          <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue/>)} />
+          <Route exact path={`${url}/resize`} render={() => (<LinodeResize/>)} />
+          <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild/>)} />
+          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup/>)} />
+          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings/>)} />
+          {/* 404 */}
+          <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
         <LinodeConfigSelectionDrawer
           onClose={this.closeConfigDrawer}

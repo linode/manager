@@ -42,6 +42,7 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'transparent',
         color: '#3B85D9',
         border: '1px solid #3B85D9',
+        padding: '11px 26px 13px',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
           color: '#5F99EA',
@@ -110,9 +111,21 @@ const LinodeTheme: Linode.Theme = {
         margin: 0,
         padding: '0 24px 24px 24px',
         justifyContent: 'flex-start',
+        '& button': {
+          marginRight: 16,
+          '&:last-child': {
+            marginRight: 0,
+          },
+        },
       },
       action: {
         margin: 0,
+      },
+    },
+    MuiDialogTitle: {
+      root: {
+        borderBottom: '1px solid #eee',
+        marginBottom: 20,
       },
     },
     MuiDrawer: {
@@ -330,18 +343,17 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: 'white',
         boxShadow: '0 0 5px #ddd',
         color: '#666',
+        padding: 8,
         [breakpoints.up('md')]: {
-          minWidth: 800,
-          maxWidth: 1000,
+          width: 800,
           borderRadius: 2,
-        },
-        [breakpoints.up('lg')]: {
-          minWidth: 950,
+          maxWidth: 'auto',
         },
       },
       message: {
         margin: '0 auto',
         width: '100%',
+        padding: 0,
       },
     },
     MuiTab: {
