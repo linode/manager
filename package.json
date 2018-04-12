@@ -16,10 +16,12 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
+    "@types/chart.js": "^2.7.13",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
+    "chart.js": "^2.7.2",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
     "coveralls": "^3.0.0",
@@ -48,7 +50,7 @@
     "ramda": "^0.25.0",
     "raven-js": "^3.22.3",
     "react": "^16.2.0",
-    "react-chartjs": "^1.2.0",
+    "react-chartjs-2": "^2.7.0",
     "react-dev-utils": "4.2.1",
     "react-dom": "^16.2.0",
     "react-loadable": "^5.3.1",
