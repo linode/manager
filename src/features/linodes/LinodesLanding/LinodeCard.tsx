@@ -56,8 +56,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   cardSection: {
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 3,
+    paddingRight: 3,
     color: LinodeTheme.palette.text.primary,
     ...theme.typography.caption,
   },
