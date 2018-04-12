@@ -2,8 +2,10 @@ import * as React from 'react';
 
 import SummaryPanel from './SummaryPanel';
 
-import LinodeBusyStatus from './LinodeBusyStatus';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+
+import LinodeBusyStatus from './LinodeBusyStatus';
 
 interface Props {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
@@ -24,6 +26,21 @@ class LinodeSummary extends React.Component<FinalProps> {
           <LinodeBusyStatus linode={linode} />
         }
         <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
+        <ExpansionPanel
+          heading="CPU %"
+        >
+          CPU Chart
+        </ExpansionPanel>
+        <ExpansionPanel
+          heading="IPv4 Traffic"
+        >
+          IPv4 Chart
+        </ExpansionPanel>
+        <ExpansionPanel
+          heading="IPv6 Traffic"
+        >
+          IPv6 Chart
+        </ExpansionPanel>
       </React.Fragment>
     );
   }

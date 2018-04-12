@@ -48,6 +48,7 @@
     "ramda": "^0.25.0",
     "raven-js": "^3.22.3",
     "react": "^16.2.0",
+    "react-chartjs": "^1.2.0",
     "react-dev-utils": "4.2.1",
     "react-dom": "^16.2.0",
     "react-loadable": "^5.3.1",
