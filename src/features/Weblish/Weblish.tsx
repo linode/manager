@@ -27,7 +27,7 @@ type CombinedProps = Props & RouteComponentProps<{ linodeId?: number }>;
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
     token: '',
-    renderingLish: false,
+    renderingLish: true,
   };
 
   getLinode() {
@@ -88,7 +88,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const terminal = new Terminal({ cols: 120, rows: 40 });
 
     terminal.on('data', (data: string) => socket.send(data));
-    terminal.open(document.body);
+    terminal.open(document.getElementById('root') as HTMLElement);
 
     terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
