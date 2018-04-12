@@ -34,10 +34,15 @@ class LinodeSummary extends React.Component<FinalProps, State> {
     stats: undefined,
   };
 
-  componentDidMount() {
+  getStats() {
     const { linode } = this.props;
     Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`)
       .then(response => this.setState({ stats: response.data }));
+  }
+
+  componentDidMount() {
+    this.getStats();
+    window.setInterval(() => this.getStats(), 15000);
   }
 
   getChartJSDataFor(stat: string) {
