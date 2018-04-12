@@ -66,6 +66,7 @@
     "tslint": "^5.7.0",
     "tslint-react": "^3.2.0",
     "typeface-lato": "^0.0.54",
+    "typeface-ubuntu-mono": "^0.0.54",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
