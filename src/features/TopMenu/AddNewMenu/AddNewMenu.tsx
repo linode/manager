@@ -26,6 +26,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   button: {
     paddingRight: 22,
+    [theme.breakpoints.down('sm')]: {
+      padding: '6px 11px 7px 14px',
+    },
   },
   caret: {
     position: 'relative',
