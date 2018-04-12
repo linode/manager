@@ -27,12 +27,8 @@ type CombinedProps = Props & RouteComponentProps<{ linodeId?: number }>;
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
     token: '',
-    renderingLish: true,
+    renderingLish: false,
   };
-
-  constructor(props: CombinedProps) {
-    super(props);
-  }
 
   getLinode() {
     const { match: { params: { linodeId } } } = this.props;
@@ -40,6 +36,9 @@ export class Weblish extends React.Component<CombinedProps, State> {
       .then((response) => {
         const { data: linode } = response;
         this.setState({ linode }, this.connect);
+      })
+      .catch(() => {
+        this.setState({ renderingLish: false });
       });
   }
 
@@ -109,8 +108,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
       <div>
         <div id="disconnected">
           <h2>Connection Lost</h2>
-          <p>Lish appears to be temporarily unavailable.</p>
-          <button onClick={() => this.connect()}>Reload &#x27f3;</button>
+          {this.state.linode === undefined
+            ? <p>Data for this Linode is unavailble.</p>
+            : <p>Lish appears to be temporarily unavailable.</p>
+          }
+          {this.state.linode !== undefined &&
+            <button onClick={() => this.connect()}>Reconnect &#x27f3;</button>
+          }
         </div>
       </div>
     );
