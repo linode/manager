@@ -46,10 +46,12 @@ class LinodeSummary extends React.Component<FinalProps, State> {
 
     const { data: { [stat]: data } } = stats;
 
-    const xs = data.map((tuple: [number, number]) => tuple[0]);
-    const ys = data.map((tuple: [number, number]) => tuple[1]);
+    const timeData = data.reduce((acc: any, point: any) => {
+      acc.push({ t: point[0], y: point[1] });
+      return acc;
+    }, []);
+
     return {
-      labels: xs,
       datasets: [{
         label: statToLabel[stat],
         backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -59,13 +61,14 @@ class LinodeSummary extends React.Component<FinalProps, State> {
         lineTension: 0,
         pointRadius: 0,
         pointHitRadius: 5,
-        data: ys,
+        data: timeData,
       }],
     };
   }
 
   render() {
     const { linode, type, image, volumes } = this.props;
+    const { stats } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
@@ -75,13 +78,44 @@ class LinodeSummary extends React.Component<FinalProps, State> {
         <ExpansionPanel
           heading={statToLabel.cpu}
         >
-          <Line
-            height={400}
-            options={{
-              maintainAspectRatio: false,
-            }}
-            data={this.getChartJSDataFor('cpu') as any}
-          />
+          {stats &&
+            <Line
+              height={400}
+              options={{
+                maintainAspectRatio: false,
+                animation: {
+                  duration: 0,
+                },
+                legend: {
+                  position: 'bottom',
+                },
+                scales: {
+                  yAxes: [{
+                    gridLines: {
+                      borderDash: [3, 6],
+                    },
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'CPU %',
+                    },
+                  }],
+                  xAxes: [{
+                    type: 'time',
+                    gridLines: {
+                      display: false,
+                    },
+                    time: {
+                      displayFormats: {
+                        hour: 'HH:00',
+                        minute: 'HH:00',
+                      },
+                    },
+                  }],
+                },
+              }}
+              data={this.getChartJSDataFor('cpu') as any}
+            />
+          }
         </ExpansionPanel>
         <ExpansionPanel
           heading="IPv4 Traffic"
