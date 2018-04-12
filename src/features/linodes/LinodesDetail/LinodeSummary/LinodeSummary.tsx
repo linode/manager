@@ -66,7 +66,12 @@ const statToLabel = {
   cpu: 'CPU %',
   netv4: 'IPv4 Traffic',
   netv6: 'IPv6 Traffic',
+  in: 'Public Traffic In',
+  out: 'Public Traffic Out',
+  private_in: 'Private Traffic In',
+  private_out: 'Private Traffic Out',
   io: 'Disk I/O',
+  swap: 'Swap I/O',
 };
 
 const statToColor = {
@@ -92,7 +97,7 @@ class LinodeSummary extends React.Component<FinalProps, State> {
 
   componentDidMount() {
     this.getStats();
-    window.setInterval(() => this.getStats(), 15000);
+    window.setInterval(() => this.getStats(), 20000);
   }
 
   getChartJSDataFor(stat: string, data: [number, number][]) {
@@ -102,6 +107,7 @@ class LinodeSummary extends React.Component<FinalProps, State> {
     }, []);
 
     return {
+      label: statToLabel[stat],
       borderColor: statToColor[stat],
       data: timeData,
       ...lineOptions,
@@ -226,7 +232,7 @@ class LinodeSummary extends React.Component<FinalProps, State> {
           {stats &&
             <React.Fragment>
               <div>
-                bits/sec
+                blocks/sec
               </div>
               <div>
                 <Line
