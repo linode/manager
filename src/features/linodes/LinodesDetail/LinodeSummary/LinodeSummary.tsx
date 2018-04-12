@@ -37,6 +37,17 @@ const chartOptions = {
         zeroLineWidth: 1,
         zeroLineBorderDashOffset: 2,
       },
+      ticks: {
+        callback(value: number, index: number) {
+          if (value >= 1000000) {
+            return (value / 1000000) + 'M';
+          }
+          if (value >= 1000) {
+            return (value / 1000) + 'K';
+          }
+          return value;
+        },
+      },
     }],
     xAxes: [{
       type: 'time',
