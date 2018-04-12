@@ -44,6 +44,13 @@ const styles = (theme: Theme): StyleRules => ({
     },
   },
   navIconHide: {
+    '& > span': {
+      justifyContent: 'flex-start',
+    },
+    '& svg': {
+      width: 32,
+      height: 32,
+    },
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
