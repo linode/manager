@@ -377,7 +377,7 @@ class APITokens extends React.Component<CombinedProps, State> {
                     this.closeRevokeDialog();
                     this.revokeToken();
                   }}
-                  data-qa-button-remove>
+                  data-qa-button-confirm>
                   Yes
                 </Button>
               </React.Fragment>
