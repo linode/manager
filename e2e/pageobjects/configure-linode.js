@@ -69,7 +69,7 @@ class ConfigureLinode extends Page {
     }
 
     selectImage(imageName) {
-        const requestedImage = $(`[data-qa-select-card-subheading="${imageName}"]`);
+        const requestedImage = $(`[data-qa-select-card-heading="${imageName}"]`);
         requestedImage.click();
     }
 
