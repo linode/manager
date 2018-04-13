@@ -73,7 +73,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         alignItems="center"
         className={classes.drawerHeader}>
         <Grid item>
-          <Typography variant="title">
+          <Typography variant="title" data-qa-drawer-title>
             {title}
           </Typography>
         </Grid>

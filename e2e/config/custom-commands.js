@@ -41,4 +41,16 @@ exports.browserCommands = () => {
             els.forEach(e => e.click());
         }, elementsToClick);
     });
+
+    /* Waits for the element to click to be visible
+    * then execute a browser.click command on the element
+    * @param { String } selector to wait for/click
+    * @returns { null } Returns nothing
+    */
+    browser.addCommand('waitClick', function(elementToClick) {
+        browser.waitUntil(function() {
+            browser.waitForVisible(elementToClick);
+            return browser.click(elementToClick).state === 'success';
+        }, 10000);
+    });
 }
