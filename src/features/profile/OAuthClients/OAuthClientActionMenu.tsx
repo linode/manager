@@ -30,6 +30,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClick={() => this.toggleConfirmDelete(false)}
           variant="raised"
           color="primary"
+          data-qa-button-cancel
         >
           No
         </Button>
@@ -40,7 +41,8 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClick={() => {
             this.toggleConfirmDelete(false);
             this.props.onDelete();
-          }}>
+          }}
+          data-qa-button-remove>
           Yes
         </Button>
       </React.Fragment>
@@ -56,6 +58,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClick={() => this.toggleConfirmReset(false)}
           variant="raised"
           color="primary"
+          data-qa-button-cancel
         >
           No
         </Button>
@@ -66,7 +69,8 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClick={() => {
             this.toggleConfirmReset(false);
             this.props.onReset();
-          }}>
+          }}
+          data-qa-button-remove>
           Yes
         </Button>
       </React.Fragment>

@@ -133,7 +133,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
         {imageInfo &&
           <React.Fragment>
             <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-image-summary>
-              <Typography variant="subheading">
+              <Typography variant="subheading" data-qa-image-name={imageInfo.name}>
                 {imageInfo.name}
               </Typography>
               <Typography className={classes.detail} data-qa-image-details-summary>
