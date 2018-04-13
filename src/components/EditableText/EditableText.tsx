@@ -187,6 +187,7 @@ class EditableText extends React.Component<FinalProps, State> {
                       [classes.input]: true,
                     }),
                   }}
+                  autoFocus={true}
                 />
                 <Button
                   className={classes.button}
