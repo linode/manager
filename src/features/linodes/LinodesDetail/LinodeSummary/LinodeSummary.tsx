@@ -2,12 +2,24 @@ import * as React from 'react';
 import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
+import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+
 import { API_ROOT } from 'src/constants';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 
+import LinodeTheme from 'src/theme';
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
+
+type ClassNames = 'container'
+  | 'chart'
+  | 'leftLegend'
+  | 'bottomLegend'
+  | 'blue'
+  | 'green'
+  | 'red'
+  | 'yellow';
 
 interface Props {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
@@ -20,7 +32,63 @@ interface State {
   stats: Linode.TodoAny;
 }
 
-type FinalProps = Props;
+const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+  return {
+    container: {
+      position: 'relative',
+    },
+    chart: {
+      paddingLeft: theme.spacing.unit * 4,
+    },
+    leftLegend: {
+      position: 'absolute',
+      left: -8,
+      bottom: 72,
+      transform: 'rotate(-90deg)',
+      color: '#777',
+      fontSize: 14,
+    },
+    bottomLegend: {
+      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+      display: 'flex',
+      color: '#777',
+      fontSize: 14,
+      '& > div': {
+        display: 'flex',
+        marginRight: theme.spacing.unit * 5,
+        '&:before': {
+          content: '""',
+          display: 'block',
+          width: 20,
+          height: 20,
+          marginRight: theme.spacing.unit,
+        },
+      },
+    },
+    blue: {
+      '&:before': {
+        backgroundColor: LinodeTheme.palette.primary.main,
+      },
+    },
+    green: {
+      '&:before': {
+        backgroundColor: LinodeTheme.color.green,
+      },
+    },
+    red: {
+      '&:before': {
+        backgroundColor: LinodeTheme.color.red,
+      },
+    },
+    yellow: {
+      '&:before': {
+        backgroundColor: LinodeTheme.color.yellow,
+      },
+    },
+  };
+};
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const chartOptions = {
   maintainAspectRatio: false,
@@ -95,7 +163,7 @@ const statToColor = {
   swap: '#d01e1e',
 };
 
-class LinodeSummary extends React.Component<FinalProps, State> {
+class LinodeSummary extends React.Component<CombinedProps, State> {
   state: State = {
     stats: undefined,
   };
@@ -126,7 +194,7 @@ class LinodeSummary extends React.Component<FinalProps, State> {
   }
 
   render() {
-    const { linode, type, image, volumes } = this.props;
+    const { linode, type, image, volumes, classes } = this.props;
     const { stats } = this.state;
     return (
       <React.Fragment>
@@ -137,25 +205,30 @@ class LinodeSummary extends React.Component<FinalProps, State> {
 
         <ExpansionPanel
           heading={statToLabel.cpu}
+          defaultExpanded={true}
         >
           {stats &&
             <React.Fragment>
-              <div>
-                CPU %
-              </div>
-              <div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('cpu', stats.data.cpu) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div>
-                CPU %
+              <div className={classes.container}>
+                <div className={classes.leftLegend}>
+                  CPU %
+                </div>
+                <div className={classes.chart}>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('cpu', stats.data.cpu) as any,
+                      ],
+                    }}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    CPU %
+                  </div>
+                </div>
               </div>
             </React.Fragment>
           }
@@ -166,34 +239,38 @@ class LinodeSummary extends React.Component<FinalProps, State> {
         >
           {stats &&
             <React.Fragment>
-              <div>
-                bits/sec
-              </div>
-              <div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('in', stats.data.netv4.in) as any,
-                      this.getChartJSDataFor('out', stats.data.netv4.out) as any,
-                      this.getChartJSDataFor('private_in', stats.data.netv4.private_in) as any,
-                      this.getChartJSDataFor('private_out', stats.data.netv4.private_out) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div>
-                Public IPv4 Inbound
-              </div>
-              <div>
-                Public IPv4 Outbound
-              </div>
-              <div>
-                Private IPv4 Inbound
-              </div>
-              <div>
-                Private IPv4 Outbound
+              <div className={classes.container}>
+                <div className={classes.leftLegend}>
+                  bits/sec
+                </div>
+                <div className={classes.chart}>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('in', stats.data.netv4.in) as any,
+                        this.getChartJSDataFor('out', stats.data.netv4.out) as any,
+                        this.getChartJSDataFor('private_in', stats.data.netv4.private_in) as any,
+                        this.getChartJSDataFor('private_out', stats.data.netv4.private_out) as any,
+                      ],
+                    }}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    Public IPv4 Inbound
+                  </div>
+                  <div className={classes.green}>
+                    Public IPv4 Outbound
+                  </div>
+                  <div className={classes.red}>
+                    Private IPv4 Inbound
+                  </div>
+                  <div className={classes.yellow}>
+                    Private IPv4 Outbound
+                  </div>
+                </div>
               </div>
             </React.Fragment>
           }
@@ -204,34 +281,38 @@ class LinodeSummary extends React.Component<FinalProps, State> {
         >
           {stats &&
             <React.Fragment>
-              <div>
-                bits/sec
-              </div>
-              <div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('in', stats.data.netv6.in) as any,
-                      this.getChartJSDataFor('out', stats.data.netv6.out) as any,
-                      this.getChartJSDataFor('private_in', stats.data.netv6.private_in) as any,
-                      this.getChartJSDataFor('private_out', stats.data.netv6.private_out) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div>
-                Public IPv6 Inbound
-              </div>
-              <div>
-                Public IPv6 Outbound
-              </div>
-              <div>
-                Private IPv6 Inbound
-              </div>
-              <div>
-                Private IPv6 Outbound
+              <div className={classes.container}>
+                <div className={classes.leftLegend}>
+                  bits/sec
+                </div>
+                <div className={classes.chart}>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('in', stats.data.netv6.in) as any,
+                        this.getChartJSDataFor('out', stats.data.netv6.out) as any,
+                        this.getChartJSDataFor('private_in', stats.data.netv6.private_in) as any,
+                        this.getChartJSDataFor('private_out', stats.data.netv6.private_out) as any,
+                      ],
+                    }}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    Public IPv6 Inbound
+                  </div>
+                  <div className={classes.green}>
+                    Public IPv6 Outbound
+                  </div>
+                  <div className={classes.red}>
+                    Private IPv6 Inbound
+                  </div>
+                  <div className={classes.yellow}>
+                    Private IPv6 Outbound
+                  </div>
+                </div>
               </div>
             </React.Fragment>
           }
@@ -242,26 +323,30 @@ class LinodeSummary extends React.Component<FinalProps, State> {
         >
           {stats &&
             <React.Fragment>
-              <div>
-                blocks/sec
-              </div>
-              <div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('io', stats.data.io.io) as any,
-                      this.getChartJSDataFor('swap', stats.data.io.swap) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div>
-                I/O Rate
-              </div>
-              <div>
-                Swap Rate
+              <div className={classes.container}>
+                <div className={classes.leftLegend}>
+                  blocks/sec
+                </div>
+                <div className={classes.chart}>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('io', stats.data.io.io) as any,
+                        this.getChartJSDataFor('swap', stats.data.io.swap) as any,
+                      ],
+                    }}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.red}>
+                    I/O Rate
+                  </div>
+                  <div className={classes.yellow}>
+                    Swap Rate
+                  </div>
+                </div>
               </div>
             </React.Fragment>
           }
@@ -271,4 +356,6 @@ class LinodeSummary extends React.Component<FinalProps, State> {
   }
 }
 
-export default LinodeSummary;
+const styled = withStyles(styles, { withTheme: true });
+
+export default styled<Props>(LinodeSummary);
