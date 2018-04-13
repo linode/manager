@@ -63,6 +63,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: theme.spacing.unit * 3,
     marginBottom: -100 + theme.spacing.unit * 3,
     paddingBottom: 100 + theme.spacing.unit * 3,
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing.unit * 2,
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
+    },
   },
 });
 
