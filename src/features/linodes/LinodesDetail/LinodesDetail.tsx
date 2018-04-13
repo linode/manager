@@ -14,12 +14,14 @@ import { Subscription } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
+import Button from 'material-ui/Button';
 
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import { weblishLaunch } from 'src/features/Weblish';
 import LinodeSummary from './LinodeSummary';
 import LinodeVolumes from './LinodeVolumes';
 import LinodeNetworking from './LinodeNetworking';
@@ -200,12 +202,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     return (
       <div>
         <Grid container justify="space-between">
-          <Grid item>
+          <Grid item style={{ flex: 1 }}>
             <EditableText
               variant="headline"
               text={linode.label}
               onEdit={this.updateLabel}
             />
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={() => weblishLaunch(`${linode.id}`)}>
+              Launch Console
+            </Button>
           </Grid>
           <Grid item>
             <LinodePowerControl
