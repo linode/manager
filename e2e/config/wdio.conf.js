@@ -7,6 +7,11 @@ const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
+const selectedReporters = ['dot'];
+
+if (argv.log) {
+    selectedReporters.push('junit');
+}
 
 exports.config = {
     // Selenium Host/Port
@@ -128,7 +133,12 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/reporters/dot.html
-    reporters: ['dot'],
+    reporters: selectedReporters,
+    reporterOptions: {
+        junit: {
+            outputDir: './e2e/test-results'
+        }
+    },
     
     //
     // Options to be passed to Jasmine.

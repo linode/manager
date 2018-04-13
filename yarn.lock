@@ -10361,7 +10361,7 @@ wdio-jasmine-framework@0.3.2:
     jasmine "^2.5.3"
     wdio-sync "0.7.0"
 
-wdio-junit-reporter@0.4.2:
+wdio-junit-reporter@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/wdio-junit-reporter/-/wdio-junit-reporter-0.4.2.tgz#08c31265b5b34c1d6b5c716ce305e2c08fd76632"
   dependencies:
