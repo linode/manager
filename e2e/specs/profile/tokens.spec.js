@@ -1,13 +1,14 @@
 const { constants} = require('../../constants');
-import { Profile, TokenCreateDrawer } from '../../pageobjects/profile';
+import { Profile, TokenCreateDrawer, dialogMap } from '../../pageobjects/profile';
 
 const profile = new Profile();
 const tokenCreateDrawer = new TokenCreateDrawer();
 
 describe('View - Personal Access Tokens', () => {
     const timestamp = new Date().getTime();
-    const dialogTitle = '[data-qa-dialog-title]';
-    const dialogContent = '[data-qa-dialog-content]';
+    const dialogTitle = dialogMap.title;
+    const dialogContent = dialogMap.content;
+    const dialogConfirm = dialogMap.confirm;
     const newToken = `[data-qa-table-row="${timestamp}"]`;
     const updatedSelector = `[data-qa-table-row="${timestamp} updated!"]`;
     const updatedMsg = `${timestamp} updated!`;
@@ -139,7 +140,7 @@ describe('View - Personal Access Tokens', () => {
             });
 
             it('should revoke on remove', () => {
-                browser.click('[data-qa-button-remove]');
+                browser.click(dialogConfirm);
                 browser.waitForVisible(updatedSelector, 10000, true);
             });
         });
