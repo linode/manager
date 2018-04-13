@@ -11,8 +11,9 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
-import UserMenu from './UserMenu';
 import AddNewMenu from './AddNewMenu';
+import SearchBar from './SearchBar';
+import UserMenu from './UserMenu';
 import UserNotificationMenu from './UserNotificationMenu';
 
 type ClassNames = 'appBar'

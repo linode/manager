@@ -6,20 +6,18 @@ import {
   Theme,
   StyleRules,
 } from 'material-ui/styles';
-import Input from 'material-ui/Input';
+import Paper from 'material-ui/Paper';
 
 import Search from 'material-ui-icons/Search';
 
 import LinodeTheme from 'src/theme';
-import Paper from 'material-ui/Paper';
+import TextField from 'src/components/TextField';
 
-interface Props {}
-
-interface State {
-  searchText: string;
-  searchElement?: HTMLElement;
-  lastFetch: Date;
-}
+type Styles =
+  'root'
+  | 'textfield'
+  | 'icon'
+  | 'searchResults';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -36,7 +34,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: '#c9cacb',
     fontSize: '2rem',
   },
-  input: {
+  textfield: {
     color: '#606469',
     flexGrow: 1,
     marginLeft: theme.spacing.unit,
@@ -50,22 +48,23 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-type Styles =
-  'root'
-  | 'input'
-  | 'icon'
-  | 'searchResults';
+interface Props {}
+
+interface State {
+  searchText: string;
+  searchElement?: HTMLElement;
+  lastFetch?: Date;
+}
 
 type FinalProps = Props & WithStyles<Styles>;
 
 class SearchBar extends React.Component<FinalProps, State> {
-  state = {
+  state: State = {
     searchText: '',
-    searchElement: undefined,
   };
 
   showResults() {
-    return this.state.searchText.length >= 3;
+    return this.state.searchText && this.state.searchText.length >= 3;
   }
 
   handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -78,19 +77,15 @@ class SearchBar extends React.Component<FinalProps, State> {
     return (
       <React.Fragment>
         <div
-          id="search-bar"
-          ref="searchBar"
           className={classes.root}
         >
           <Search
             className={classes.icon}
-            fontSize
           />
-          <Input
-            disableUnderline
+          <TextField
             placeholder="Go to Linodes, Volumes, NodeBalancers, Domains..."
-            className={classes.input}
-            inputProps={{
+            className={classes.textfield}
+            InputProps={{
               'aria-label': 'Search',
             }}
             value={this.state.searchText}
@@ -99,7 +94,6 @@ class SearchBar extends React.Component<FinalProps, State> {
           {this.showResults() &&
             <Paper
               className={classes.searchResults}
-              id="search-menu"
             >
               Search results go here
             </Paper>
