@@ -107,7 +107,7 @@ interface Props {
 
 interface State {
   stats: Linode.TodoAny;
-  chartSelection: string;
+  rangeSelection: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -188,17 +188,17 @@ const statToColor = {
 class LinodeSummary extends React.Component<CombinedProps, State> {
   state: State = {
     stats: undefined,
-    chartSelection: '24',
+    rangeSelection: '24',
   };
 
   getStats() {
     const { linode } = this.props;
-    const { chartSelection } = this.state;
-    if (chartSelection === '24') {
+    const { rangeSelection } = this.state;
+    if (rangeSelection === '24') {
       Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`)
         .then(response => this.setState({ stats: response.data }));
     } else {
-      const [year, month] = chartSelection.split(' ');
+      const [year, month] = rangeSelection.split(' ');
       Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats/${year}/${month}`)
         .then(response => this.setState({ stats: response.data }));
     }
@@ -223,16 +223,33 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     };
   }
 
+  getChartOptions() {
+    const finalChartOptions = chartOptions;
+    const { rangeSelection } = this.state;
+    if (rangeSelection === '24') {
+      finalChartOptions.scales.xAxes[0].time.displayFormats = {
+        hour: 'HH:00',
+        minute: 'HH:00',
+      };
+    } else {
+      finalChartOptions.scales.xAxes[0].time.displayFormats = {
+        hour: 'MMM DD',
+        minute: 'MMM DD',
+      };
+    }
+    return finalChartOptions;
+  }
+
   handleChartRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    this.setState({ chartSelection: value }, () => {
+    this.setState({ rangeSelection: value }, () => {
       this.getStats();
     });
   }
 
   render() {
     const { linode, type, image, volumes, classes } = this.props;
-    const { stats, chartSelection } = this.state;
+    const { stats, rangeSelection } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
@@ -248,7 +265,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   Graphs
                 </InputLabel>
                 <Select
-                  value={chartSelection}
+                  value={rangeSelection}
                   onChange={this.handleChartRangeChange}
                   inputProps={{ name: 'chartRange', id: 'chartRange' }}
                 >
@@ -269,7 +286,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={300}
-                    options={chartOptions}
+                    options={this.getChartOptions()}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('cpu', stats.data.cpu) as any,
