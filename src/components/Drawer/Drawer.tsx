@@ -20,7 +20,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     width: 300,
     padding: theme.spacing.unit * 4,
     [theme.breakpoints.up('sm')]: {
-      width: 500,
+      width: 480,
     },
     '& .actionPanel': {
       paddingLeft: 0,
