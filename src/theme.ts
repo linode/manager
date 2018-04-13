@@ -419,6 +419,9 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiTabs: {
+      root: {
+        margin: '16px 0',
+      },
       scroller: {
         boxShadow: 'inset 0 -1px 0 #C5C6C8',
       },
