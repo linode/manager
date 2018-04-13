@@ -247,7 +247,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       })
       .catch((response) => {
         /** @todo Error handling. */
-        console.error(response);
       });
   }
 
@@ -262,7 +261,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       })
       .catch((response) => {
         /** @todo Error handling */
-        console.error(response);
       });
   }
 
