@@ -16,14 +16,16 @@ import TextField from 'src/components/TextField';
 type Styles =
   'root'
   | 'textfield'
+  | 'input'
   | 'icon'
   | 'searchResults';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
-    position: 'relative',
+    position: 'relative', /* for search results */
+    height: 50,
+    flex: 1,
     display: 'flex',
-    flexGrow: 1,
     alignItems: 'center',
     backgroundColor: LinodeTheme.bg.main,
     padding: theme.spacing.unit,
@@ -36,14 +38,19 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   textfield: {
     color: '#606469',
-    flexGrow: 1,
-    marginLeft: theme.spacing.unit,
+    flex: 1,
+    '& input': {
+      fontSize: '1.0em',
+    },
+  },
+  input: {
+    border: 0,
   },
   searchResults: {
     position: 'absolute',
     left: 0,
     right: 0,
-    marginTop: 40,
+    marginTop: 42,
     padding: theme.spacing.unit * 1,
   },
 });
@@ -87,6 +94,7 @@ class SearchBar extends React.Component<FinalProps, State> {
             className={classes.textfield}
             InputProps={{
               'aria-label': 'Search',
+              className: classes.input,
             }}
             value={this.state.searchText}
             onChange={this.handleSearchChange}
