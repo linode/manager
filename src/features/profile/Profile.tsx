@@ -38,7 +38,7 @@ class Profile extends React.Component<Props> {
 
     return (
       <div>
-        <Typography variant="headline">
+        <Typography variant="headline" data-qa-profile-header>
           My Profile
         </Typography>
         <AppBar position="static" color="default">
@@ -48,7 +48,9 @@ class Profile extends React.Component<Props> {
             indicatorColor="primary"
             textColor="primary"
           >
-            {this.tabs.map(tab => <Tab key={tab.title} label={tab.title} />)}
+            {this.tabs
+              .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}
+            />)}
           </Tabs>
         </AppBar>
         <Switch>

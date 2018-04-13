@@ -189,11 +189,11 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     const { data } = this.state;
 
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
-      <TableRow key={id}>
-        <TableCell>{label}</TableCell>
-        <TableCell>{isPublic ? 'Public' : 'Private'}</TableCell>
-        <TableCell>{id}</TableCell>
-        <TableCell>{redirect_uri}</TableCell>
+      <TableRow key={id} data-qa-table-row={label}>
+        <TableCell data-qa-oauth-label>{label}</TableCell>
+        <TableCell data-qa-oauth-access>{isPublic ? 'Public' : 'Private'}</TableCell>
+        <TableCell data-qa-oauth-id>{id}</TableCell>
+        <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
         <TableCell>
           <ActionMenu
             onDelete={() => this.deleteClient(id)}
@@ -217,7 +217,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
           style={{ marginTop: 8 }}
         >
           <Grid item>
-            <Typography className={classes.title} variant="title">
+            <Typography className={classes.title} variant="title" data-qa-table={classes.title}>
               OAuth Clients
             </Typography>
           </Grid>
@@ -227,12 +227,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
               onClick={() => this.toggleCreateDrawer(true)}
               text="Create an OAuth Client"
               title="Create an OAuth Client"
+              data-qa-oauth-create
             />
           </Grid>
         </Grid>
         <Paper>
           <Table>
-            <TableHead>
+            <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell>Label</TableCell>
                 <TableCell>Access</TableCell>
@@ -254,6 +255,7 @@ class OAuthClients extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => this.reset() }
+              data-qa-close-dialog
             >
               OK
             </Button>}

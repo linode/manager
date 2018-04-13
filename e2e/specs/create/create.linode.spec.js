@@ -8,6 +8,7 @@ describe('Create - Menu Suite', () => {
 
     it('should display create linode in header and link to create linode page', () => {
         Create.menuButton.click();
+        Create.linodeMenuItem.waitForVisible();
         expect(Create.linodeMenuItem.isVisible()).toBe(true);
 
         Create.linode();
