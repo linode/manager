@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
@@ -191,6 +192,37 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     rangeSelection: '24',
   };
 
+  rangeSelectOptions: (typeof MenuItem)[] = [];
+
+  constructor(props: CombinedProps) {
+    super(props);
+    const { linode } = props;
+
+    const options: [string, string][] = [['24', 'Last 24 Hours']];
+    const [createMonth, createYear] = [
+      moment.utc(linode.created).month() + 1,
+      moment.utc(linode.created).year(),
+    ];
+    let [testMonth, testYear] = [moment.utc().month() + 1, moment.utc().year()];
+    while (!(testMonth === createMonth && testYear === createYear)) {
+      options.push([
+        `${testYear} ${testMonth.toString().padStart(2, '0')}`,
+        `${moment().month(testMonth - 1).format('MMM')} ${testYear}`,
+      ]);
+
+      if (testMonth === 1) {
+        testMonth = 12;
+        testYear -= 1;
+      } else {
+        testMonth -= 1;
+      }
+    }
+    (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
+      return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
+    });
+
+  }
+
   getStats() {
     const { linode } = this.props;
     const { rangeSelection } = this.state;
@@ -269,8 +301,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   onChange={this.handleChartRangeChange}
                   inputProps={{ name: 'chartRange', id: 'chartRange' }}
                 >
-                  <MenuItem value="24">Last 24 Hours</MenuItem>
-                  <MenuItem value="2018 04">April 2018</MenuItem>
+                  {this.rangeSelectOptions}
                 </Select>
               </FormControl>
             </div>
@@ -313,7 +344,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={300}
-                    options={chartOptions}
+                    options={this.getChartOptions()}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('in', stats.data.netv4.in) as any,
@@ -352,7 +383,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                   </div>
                   <Line
                     height={300}
-                    options={chartOptions}
+                    options={this.getChartOptions()}
                     data={{
                       datasets: [
                         this.getChartJSDataFor('in', stats.data.netv6.in) as any,
@@ -391,7 +422,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     </div>
                     <Line
                       height={300}
-                      options={chartOptions}
+                      options={this.getChartOptions()}
                       data={{
                         datasets: [
                           this.getChartJSDataFor('io', stats.data.io.io) as any,
