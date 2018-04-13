@@ -172,7 +172,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <Route exact path="/managed" render={() =>
                     <Placeholder title="Managed" />} />
                   <Route exact path="/longview" render={() =>
-                    <Placeholder title="LongView" />} />
+                    <Placeholder title="Longview" />} />
                   <Route exact path="/stackscripts" render={() =>
                     <Placeholder title="StackScripts" />} />
                   <Route exact path="/images" render={() =>
