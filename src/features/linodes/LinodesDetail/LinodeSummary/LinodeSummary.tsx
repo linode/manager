@@ -214,146 +214,142 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         }
         <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
 
-        <ExpansionPanel
-          heading={statToLabel.cpu}
-          defaultExpanded={true}
-        >
-          {stats &&
-            <React.Fragment>
-              <div className={classes.chart}>
-                <div className={classes.leftLegend}>
-                  CPU %
+        {stats &&
+          <React.Fragment>
+            <ExpansionPanel
+              heading={statToLabel.cpu}
+              defaultExpanded={true}
+            >
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    CPU %
+                  </div>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('cpu', stats.data.cpu) as any,
+                      ],
+                    }}
+                  />
                 </div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('cpu', stats.data.cpu) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div className={classes.bottomLegend}>
-                <div className={classes.blue}>
-                  CPU %
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    CPU %
+                  </div>
                 </div>
-              </div>
-            </React.Fragment>
-          }
-        </ExpansionPanel>
+              </React.Fragment>
+            </ExpansionPanel>
 
-        <ExpansionPanel
-          heading="IPv4 Traffic"
-        >
-          {stats &&
-            <React.Fragment>
-              <div className={classes.chart}>
-                <div className={classes.leftLegend}>
-                  bits/sec
+            <ExpansionPanel
+              heading="IPv4 Traffic"
+            >
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    bits/sec
+                  </div>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('in', stats.data.netv4.in) as any,
+                        this.getChartJSDataFor('out', stats.data.netv4.out) as any,
+                        this.getChartJSDataFor('private_in', stats.data.netv4.private_in) as any,
+                        this.getChartJSDataFor('private_out', stats.data.netv4.private_out) as any,
+                      ],
+                    }}
+                  />
                 </div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('in', stats.data.netv4.in) as any,
-                      this.getChartJSDataFor('out', stats.data.netv4.out) as any,
-                      this.getChartJSDataFor('private_in', stats.data.netv4.private_in) as any,
-                      this.getChartJSDataFor('private_out', stats.data.netv4.private_out) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div className={classes.bottomLegend}>
-                <div className={classes.blue}>
-                  Public IPv4 Inbound
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    Public IPv4 Inbound
+                  </div>
+                  <div className={classes.green}>
+                    Public IPv4 Outbound
+                  </div>
+                  <div className={classes.red}>
+                    Private IPv4 Inbound
+                  </div>
+                  <div className={classes.yellow}>
+                    Private IPv4 Outbound
+                  </div>
                 </div>
-                <div className={classes.green}>
-                  Public IPv4 Outbound
-                </div>
-                <div className={classes.red}>
-                  Private IPv4 Inbound
-                </div>
-                <div className={classes.yellow}>
-                  Private IPv4 Outbound
-                </div>
-              </div>
-            </React.Fragment>
-          }
-        </ExpansionPanel>
+              </React.Fragment>
+            </ExpansionPanel>
 
-        <ExpansionPanel
-          heading="IPv6 Traffic"
-        >
-          {stats &&
-            <React.Fragment>
-              <div className={classes.chart}>
-                <div className={classes.leftLegend}>
-                  bits/sec
+            <ExpansionPanel
+              heading="IPv6 Traffic"
+            >
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    bits/sec
+                  </div>
+                  <Line
+                    height={300}
+                    options={chartOptions}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('in', stats.data.netv6.in) as any,
+                        this.getChartJSDataFor('out', stats.data.netv6.out) as any,
+                        this.getChartJSDataFor('private_in', stats.data.netv6.private_in) as any,
+                        this.getChartJSDataFor('private_out', stats.data.netv6.private_out) as any,
+                      ],
+                    }}
+                  />
                 </div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('in', stats.data.netv6.in) as any,
-                      this.getChartJSDataFor('out', stats.data.netv6.out) as any,
-                      this.getChartJSDataFor('private_in', stats.data.netv6.private_in) as any,
-                      this.getChartJSDataFor('private_out', stats.data.netv6.private_out) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div className={classes.bottomLegend}>
-                <div className={classes.blue}>
-                  Public IPv6 Inbound
+                <div className={classes.bottomLegend}>
+                  <div className={classes.blue}>
+                    Public IPv6 Inbound
+                  </div>
+                  <div className={classes.green}>
+                    Public IPv6 Outbound
+                  </div>
+                  <div className={classes.red}>
+                    Private IPv6 Inbound
+                  </div>
+                  <div className={classes.yellow}>
+                    Private IPv6 Outbound
+                  </div>
                 </div>
-                <div className={classes.green}>
-                  Public IPv6 Outbound
-                </div>
-                <div className={classes.red}>
-                  Private IPv6 Inbound
-                </div>
-                <div className={classes.yellow}>
-                  Private IPv6 Outbound
-                </div>
-              </div>
-            </React.Fragment>
-          }
-        </ExpansionPanel>
+              </React.Fragment>
+            </ExpansionPanel>
 
-        <ExpansionPanel
-          heading="Disk I/O"
-        >
-          {stats &&
-            <React.Fragment>
-              <div className={classes.chart}>
-                <div className={classes.leftLegend}>
-                  blocks/sec
-                </div>
-                <Line
-                  height={300}
-                  options={chartOptions}
-                  data={{
-                    datasets: [
-                      this.getChartJSDataFor('io', stats.data.io.io) as any,
-                      this.getChartJSDataFor('swap', stats.data.io.swap) as any,
-                    ],
-                  }}
-                />
-              </div>
-              <div className={classes.bottomLegend}>
-                <div className={classes.red}>
-                  I/O Rate
-                </div>
-                <div className={classes.yellow}>
-                  Swap Rate
-                </div>
-              </div>
-            </React.Fragment>
-          }
-        </ExpansionPanel>
+            <ExpansionPanel
+              heading="Disk I/O"
+            >
+                <React.Fragment>
+                  <div className={classes.chart}>
+                    <div className={classes.leftLegend}>
+                      blocks/sec
+                    </div>
+                    <Line
+                      height={300}
+                      options={chartOptions}
+                      data={{
+                        datasets: [
+                          this.getChartJSDataFor('io', stats.data.io.io) as any,
+                          this.getChartJSDataFor('swap', stats.data.io.swap) as any,
+                        ],
+                      }}
+                    />
+                  </div>
+                  <div className={classes.bottomLegend}>
+                    <div className={classes.red}>
+                      I/O Rate
+                    </div>
+                    <div className={classes.yellow}>
+                      Swap Rate
+                    </div>
+                  </div>
+                </React.Fragment>
+            </ExpansionPanel>
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
