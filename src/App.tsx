@@ -192,7 +192,10 @@ export class App extends React.Component<CombinedProps, State> {
               <Footer />
             </main>
           </div>
-          <BetaNotification open={this.state.betaNotification} onClose={this.closeBetaNotice} />
+          <BetaNotification
+            open={this.state.betaNotification}
+            onClose={this.closeBetaNotice}
+            data-qa-beta-notice/>
         </React.Fragment>
       </MuiThemeProvider>
     );

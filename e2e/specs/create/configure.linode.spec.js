@@ -14,6 +14,7 @@ describe('Create Linode - Configure Linode Suite', () => {
     });
 
     it('should update cost summary on plan selection', () => {
+        browser.waitForVisible('[data-qa-tp="Linode Plan"] [data-qa-selection-card]');
         ConfigureLinode.plans.forEach(p => {
             const originalPrice = CheckoutSummary.costSummary.getText();
             p.click();
@@ -36,17 +37,22 @@ describe('Create Linode - Configure Linode Suite', () => {
     });
 
     it('should display three regions and have locations available in each', () => {
-        ConfigureLinode.selectRegion('Europe');
-
-        // TODO assertion confirming selected region displays in checkoutsummary
+        const regions = ConfigureLinode.regionTabs;
+        regions.forEach(r => {
+            r.click();
+            browser.waitUntil(function() {
+                return r.getAttribute('aria-selected').includes('true');
+            }, 10000);
+        });
+        browser.waitForVisible('[data-qa-selection-card]');
     });
 
     it('should select a specific image', () => {
-        const imageName = 'Debian 9';
+        const imageName = 'Debian';
         ConfigureLinode.selectImage(imageName);
 
         expect(CheckoutSummary.imageSummary.isVisible()).toBe(true);
         expect(CheckoutSummary.imageDetail.isVisible()).toBe(true);
-        expect(CheckoutSummary.imageDetail.getText()).toBe(imageName);
+        expect(CheckoutSummary.imageName.getText()).toBe(imageName);
     });
 });

@@ -127,17 +127,17 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
       <Table className={classes.permsTable}>
         <TableHead>
           <TableRow>
-            <TableCell>Access</TableCell>
-            <TableCell>None</TableCell>
-            <TableCell>Read Only</TableCell>
-            <TableCell>Read/Write</TableCell>
+            <TableCell data-qa-perm-access>Access</TableCell>
+            <TableCell data-qa-perm-none>None</TableCell>
+            <TableCell data-qa-perm-read>Read Only</TableCell>
+            <TableCell data-qa-perm-rw>Read/Write</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {scopes.map(
             (scopeTup) => {
               return (
-                <TableRow key={scopeTup[0]}>
+                <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
                   <TableCell>
                     {this.permNameMap[scopeTup[0]]}
                   </TableCell>
@@ -148,6 +148,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       checked={scopeTup[1] === 0}
                       value="0"
                       onChange={this.handleScopeChange}
+                      data-qa-perm-none-radio
                     />
                   </TableCell>
                   <TableCell>
@@ -157,6 +158,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       checked={scopeTup[1] === 1}
                       value="1"
                       onChange={this.handleScopeChange}
+                      data-qa-perm-read-radio
                     />
                   </TableCell>
                   <TableCell>
@@ -166,6 +168,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       checked={scopeTup[1] === 2}
                       value="2"
                       onChange={this.handleScopeChange}
+                      data-qa-perm-rw-radio
                     />
                   </TableCell>
                 </TableRow>
@@ -214,6 +217,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
             value={label || ''}
             label="Label"
             onChange={e => onChange('label', e.target.value)}
+            data-qa-add-label
           />
         }
         {mode === 'create' &&
@@ -252,6 +256,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={() => closeDrawer()}
+              data-qa-close-drawer
             >
               Done
             </Button>
@@ -266,10 +271,11 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                   ? () => onCreate(permTuplesToScopeString(this.state.scopes))
                   : () => onEdit()
                 }
+                data-qa-submit
               >
                 {mode as string === 'create' ? 'Submit' : 'Save'}
               </Button>,
-              <Button key="cancel" onClick={() => closeDrawer()}>Cancel</Button>,
+              <Button key="cancel" onClick={() => closeDrawer()} data-qa-cancel>Cancel</Button>,
             ]
           }
         </ActionsPanel>

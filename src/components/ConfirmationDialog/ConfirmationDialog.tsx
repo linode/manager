@@ -35,8 +35,8 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
       { ...rest }
       disableBackdropClick={true}
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-      <DialogContent>
+      <DialogTitle id="alert-dialog-title" data-qa-dialog-title>{title}</DialogTitle>
+      <DialogContent data-qa-dialog-content>
         { children }
       </DialogContent>
       <DialogActions>
