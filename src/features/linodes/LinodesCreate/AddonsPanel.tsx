@@ -14,7 +14,9 @@ import LinodeTheme from 'src/theme';
 
 type ClassNames = 'root'
 | 'flex'
-| 'option'
+| 'title'
+| 'divider'
+| 'lastItem'
 | 'inner'
 | 'panelBody'
 | 'label'
@@ -31,11 +33,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   flex: {
     flex: 1,
   },
-  option: {
-    marginTop: theme.spacing.unit * 3,
-    '&:last-child': {
-      marginBottom: theme.spacing.unit,
-    },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  divider: {
+    marginTop: theme.spacing.unit,
+  },
+  lastItem: {
+    paddingBottom: '0 !important',
   },
   inner: {
     padding: theme.spacing.unit * 3,
@@ -101,9 +106,9 @@ class AddonsPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root} data-qa-add-ons>
         <div className={classes.inner}>
-          <Typography variant="title">Optional Add-ons</Typography>
-          <Grid container className={classes.option}>
-            <Grid item xs={12} className="py0">
+          <Typography variant="title"className={classes.title} >Optional Add-ons</Typography>
+          <Grid container>
+            <Grid item xs={12}>
               <FormControlLabel
                 className={classes.label}
                 control={
@@ -115,8 +120,6 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 label="Backups"
               />
               {this.renderBackupsPrice()}
-            </Grid>
-            <Grid item xs={12} className="py0">
               <Typography variant="caption" className={classes.caption}>
                 Three backup slots are executed and rotated automatically: a daily backup, a 2-7
                 day old backup, and an 8-14 day old backup. Plans are priced according to you
@@ -124,13 +127,13 @@ class AddonsPanel extends React.Component<CombinedProps> {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container className={classes.option}>
+          <Grid container className={classes.divider}>
             <Grid item xs={12}>
               <Divider />
             </Grid>
           </Grid>
-          <Grid container className={classes.option}>
-            <Grid item xs={12} className="py0">
+          <Grid container>
+            <Grid item xs={12} className={classes.lastItem}>
               <FormControlLabel
                 className={classes.label}
                 control={
