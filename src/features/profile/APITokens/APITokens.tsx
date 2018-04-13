@@ -24,13 +24,25 @@ import APITokenMenu from './APITokenMenu';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 
-type ClassNames = 'headline';
+type ClassNames = 'headline'
+  | 'labelCell'
+  | 'typeCell'
+  | 'createdCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
     headline: {
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2,
+    },
+    labelCell: {
+      width: '30%',
+    },
+    typeCell: {
+      width: '20%',
+    },
+    createdCell: {
+      width: '20%',
     },
   });
 };
@@ -143,9 +155,9 @@ class APITokens extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow data-qa-table-head>
-                <TableCell>Label</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Created</TableCell>
+                <TableCell className={classes.labelCell}>Label</TableCell>
+                <TableCell className={classes.typeCell}>Type</TableCell>
+                <TableCell className={classes.createdCell}>Created</TableCell>
                 <TableCell>Expires</TableCell>
                 <TableCell></TableCell>
               </TableRow>
