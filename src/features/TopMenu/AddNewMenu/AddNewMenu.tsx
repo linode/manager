@@ -71,7 +71,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         this.handleClose();
         e.preventDefault();
       },
-      body: `Block storage service allows you to attach additional storage to your Linode`,
+      body: `Block Storage service allows you to attach additional storage to your Linode`,
       ItemIcon: VolumeIcon,
     },
     {
