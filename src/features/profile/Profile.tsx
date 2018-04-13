@@ -37,7 +37,7 @@ class Profile extends React.Component<Props> {
     };
 
     return (
-      <div>
+      <React.Fragment>
         <Typography variant="headline" data-qa-profile-header>
           My Profile
         </Typography>
@@ -58,7 +58,7 @@ class Profile extends React.Component<Props> {
           <Route exact path={`${url}/clients`} component={OAuthClients} />
           <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/tokens`} />)} />
         </Switch>
-      </div>
+      </React.Fragment>
     );
   }
 }
