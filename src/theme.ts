@@ -77,6 +77,11 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '1rem',
       },
     },
+    MuiCardHeader: {
+      root: {
+        backgroundColor: '#fbfbfb',
+      },
+    },
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',

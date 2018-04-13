@@ -36,7 +36,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   root: {
-    padding: '12px 12px 12px 0',
+    padding: '12px 12px 14px 0',
     display: 'inline-block',
     borderBottom: '2px dotted transparent',
     color: theme.palette.primary.main,
@@ -55,8 +55,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   edit: {
+    fontSize: 22,
   },
   textField: {
+    opacity: 0,
+    animation: 'fadeIn .3s ease-in-out forwards',
     margin: 0,
   },
   inputRoot: {
@@ -69,16 +72,17 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     background: 'transparent !important',
   },
   icon: {
-    fontSize: 20,
-    padding: 10,
+    margin: '0 10px',
     color: theme.palette.text.primary,
     '&:hover, &:focus': {
       color: theme.palette.primary.light,
     },
   },
   save: {
+    fontSize: 26,
   },
   close: {
+    fontSize: 26,
   },
   input: {
     padding: '12px 12px 12px 0',
@@ -150,11 +154,11 @@ class EditableText extends React.Component<FinalProps, State> {
                 >
                   {text}
                 </Typography>
-                <Button className={classes.button}>
-                  <ModeEdit
-                    className={classes.icon}
-                    onClick={this.toggleEditing}
-                  />
+                <Button
+                  className={classes.button}
+                  onClick={this.toggleEditing}
+                >
+                  <ModeEdit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>
               </React.Fragment>
             </div>

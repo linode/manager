@@ -154,7 +154,7 @@ export class Profile extends Page {
         browser.waitForVisible('[data-qa-add-label]');
         browser.waitForText('[data-qa-drawer-title]');
     }
-
+    
     selectActionMenu(row, item) {
         browser.click(`[data-qa-table-row="${row}"] [data-qa-action-menu]`);
         browser.waitForVisible('[data-qa-action-menu-item]');
