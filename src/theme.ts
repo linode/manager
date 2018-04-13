@@ -167,9 +167,8 @@ const LinodeTheme: Linode.Theme = {
     MuiExpansionPanelSummary: {
       root: {
         padding: '0 16px',
-        backgroundColor: 'white',
+        backgroundColor: '#fbfbfb',
         '&:hover, &:focus': {
-          backgroundColor: 'white',
           '& h3': {
             color: '#5F99EA',
           },
