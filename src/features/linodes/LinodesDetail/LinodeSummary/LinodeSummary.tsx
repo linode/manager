@@ -3,33 +3,27 @@ import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+import { InputLabel } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
+import { MenuItem } from 'material-ui/Menu';
 
 import { API_ROOT } from 'src/constants';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-
 import LinodeTheme from 'src/theme';
+import Select from 'src/components/Select';
+
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
 
 type ClassNames = 'chart'
   | 'leftLegend'
   | 'bottomLegend'
+  | 'graphControls'
   | 'blue'
   | 'green'
   | 'red'
   | 'yellow';
-
-interface Props {
-  linode: Linode.Linode & { recentEvent?: Linode.Event };
-  type?: Linode.LinodeType;
-  image?: Linode.Image;
-  volumes: Linode.Volume[];
-}
-
-interface State {
-  stats: Linode.TodoAny;
-}
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
@@ -76,6 +70,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
         },
       },
     },
+    graphControls: {
+      marginTop: theme.spacing.unit * 2,
+      display: 'flex',
+      justifyContent: 'flex-start',
+    },
     blue: {
       '&:before': {
         backgroundColor: LinodeTheme.palette.primary.main,
@@ -98,6 +97,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
     },
   };
 };
+
+interface Props {
+  linode: Linode.Linode & { recentEvent?: Linode.Event };
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
+  volumes: Linode.Volume[];
+}
+
+interface State {
+  stats: Linode.TodoAny;
+  chartSelection: string;
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
@@ -177,12 +188,20 @@ const statToColor = {
 class LinodeSummary extends React.Component<CombinedProps, State> {
   state: State = {
     stats: undefined,
+    chartSelection: '24',
   };
 
   getStats() {
     const { linode } = this.props;
-    Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`)
-      .then(response => this.setState({ stats: response.data }));
+    const { chartSelection } = this.state;
+    if (chartSelection === '24') {
+      Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`)
+        .then(response => this.setState({ stats: response.data }));
+    } else {
+      const [year, month] = chartSelection.split(' ');
+      Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats/${year}/${month}`)
+        .then(response => this.setState({ stats: response.data }));
+    }
   }
 
   componentDidMount() {
@@ -204,9 +223,16 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     };
   }
 
+  handleChartRangeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    this.setState({ chartSelection: value }, () => {
+      this.getStats();
+    });
+  }
+
   render() {
     const { linode, type, image, volumes, classes } = this.props;
-    const { stats } = this.state;
+    const { stats, chartSelection } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
@@ -216,6 +242,22 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
         {stats &&
           <React.Fragment>
+            <div className={classes.graphControls}>
+              <FormControl>
+                <InputLabel htmlFor="chartRange" disableAnimation>
+                  Graphs
+                </InputLabel>
+                <Select
+                  value={chartSelection}
+                  onChange={this.handleChartRangeChange}
+                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                >
+                  <MenuItem value="24">Last 24 Hours</MenuItem>
+                  <MenuItem value="2018 04">April 2018</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+
             <ExpansionPanel
               heading={statToLabel.cpu}
               defaultExpanded={true}
