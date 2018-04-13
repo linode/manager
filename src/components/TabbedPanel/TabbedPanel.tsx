@@ -18,7 +18,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
     backgroundColor: theme.palette.background.paper,
   },
   inner: {
@@ -33,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     margin: `${theme.spacing.unit}px 0`,
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 0`,
+    padding: `${theme.spacing.unit * 2}px 0 0`,
   },
 });
 
