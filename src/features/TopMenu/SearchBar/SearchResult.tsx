@@ -32,7 +32,7 @@ interface Props extends SearchResultT {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const maybeStyleSegment = (text: string, searchText: string, hlClass: string): React.ReactNode => {
-  const idx = text.indexOf(searchText);
+  const idx = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
   if (idx === -1) { return text; }
   return (
     <React.Fragment>
