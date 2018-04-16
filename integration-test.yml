@@ -48,7 +48,7 @@ services:
     volumes:
       - ./src:/src/src
       - ./e2e:/src/e2e
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e:all"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e:all", "--log"]
     depends_on:
       - manager-storybook
       - manager-local

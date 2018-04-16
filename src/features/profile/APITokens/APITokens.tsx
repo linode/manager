@@ -25,6 +25,7 @@ import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 
 type ClassNames = 'headline'
+  | 'paper'
   | 'labelCell'
   | 'typeCell'
   | 'createdCell';
@@ -33,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
     headline: {
       marginTop: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 2,
+    },
+    paper: {
       marginBottom: theme.spacing.unit * 2,
     },
     labelCell: {
@@ -135,7 +139,7 @@ class APITokens extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography variant="headline" className={classes.headline} data-qa-table={title}>
+            <Typography variant="title" className={classes.headline} data-qa-table={title}>
               {title}
             </Typography>
           </Grid>
@@ -151,7 +155,7 @@ class APITokens extends React.Component<CombinedProps, State> {
             }
           </Grid>
         </Grid>
-        <Paper>
+        <Paper className={classes.paper}>
           <Table>
             <TableHead>
               <TableRow data-qa-table-head>
@@ -377,7 +381,7 @@ class APITokens extends React.Component<CombinedProps, State> {
                     this.closeRevokeDialog();
                     this.revokeToken();
                   }}
-                  data-qa-button-remove>
+                  data-qa-button-confirm>
                   Yes
                 </Button>
               </React.Fragment>

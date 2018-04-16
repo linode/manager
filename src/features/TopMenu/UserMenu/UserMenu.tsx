@@ -33,7 +33,9 @@ const menuLinks: MenuLink[] = [
 type CSSClasses =
 | 'menu'
 | 'leftIcon'
-| 'menuItem';
+| 'username'
+| 'menuItem'
+| 'hidden';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   menu: {
@@ -44,14 +46,27 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     width: '50px',
     height: '50px',
     borderRadius: '50px',
+    [theme.breakpoints.down('sm')]: {
+      width: '40px',
+      height: '40px',
+    },
+  },
+  username: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   menuItem: {
     fontSize: '.9rem',
     fontWeight: 400,
-    '&:hover': {
+    '&:hover, &:focus': {
       backgroundColor: LinodeTheme.bg.offWhite,
       color: theme.palette.primary.main,
     },
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -145,7 +160,9 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           {profile.username &&
             <React.Fragment>
               {this.renderAvatar()}
-              {profile.username && profile.username}
+              <span className={classes.username}>
+                {profile.username && profile.username}
+              </span>
             </React.Fragment>
           }
         </ButtonBase>
@@ -164,6 +181,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
           onClose={this.handleClose}
           className={classes.menu}
         >
+          <MenuItem key="placeholder" className={classes.hidden} />
           {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
         </Menu>
       </React.Fragment>

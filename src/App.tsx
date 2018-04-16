@@ -63,6 +63,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     padding: theme.spacing.unit * 3,
     marginBottom: -100 + theme.spacing.unit * 3,
     paddingBottom: 100 + theme.spacing.unit * 3,
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing.unit * 2,
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
+    },
   },
 });
 
@@ -172,7 +177,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <Route exact path="/managed" render={() =>
                     <Placeholder title="Managed" />} />
                   <Route exact path="/longview" render={() =>
-                    <Placeholder title="LongView" />} />
+                    <Placeholder title="Longview" />} />
                   <Route exact path="/stackscripts" render={() =>
                     <Placeholder title="StackScripts" />} />
                   <Route exact path="/images" render={() =>
