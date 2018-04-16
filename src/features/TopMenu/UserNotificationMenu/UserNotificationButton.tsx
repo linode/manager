@@ -22,11 +22,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   root: {
-    marginLeft: theme.spacing.unit * 2,
     marginRight: - theme.spacing.unit,
     position: 'relative',
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing.unit * 2,
+    },
     '&:hover, &.active': {
       '& $icon': {
         fill: theme.palette.primary.main,

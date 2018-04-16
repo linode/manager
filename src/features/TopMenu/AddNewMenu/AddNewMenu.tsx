@@ -26,6 +26,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   button: {
     paddingRight: 22,
+    [theme.breakpoints.down('sm')]: {
+      padding: '6px 11px 7px 14px',
+    },
   },
   caret: {
     position: 'relative',
@@ -68,7 +71,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         this.handleClose();
         e.preventDefault();
       },
-      body: `Block storage service allows you to attach additional storage to your Linode`,
+      body: `Block Storage service allows you to attach additional storage to your Linode`,
       ItemIcon: VolumeIcon,
     },
     {

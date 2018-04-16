@@ -1,9 +1,11 @@
 import Page from './page';
 
 export const dialogMap = {
-    dialogTitle: '[data-qa-dialog-title]',
-    dialogContent: '[data-qa-dialog-content]',
-    closeDialog: '[data-qa-close-dialog]',
+    title: '[data-qa-dialog-title]',
+    content: '[data-qa-dialog-content]',
+    close: '[data-qa-close-dialog]',
+    cancel: '[data-qa-button-cancel]',
+    confirm: '[data-qa-button-confirm]',
 }
 
 export class OauthCreateDrawer {
@@ -13,6 +15,20 @@ export class OauthCreateDrawer {
     get cancel() { return $('[data-qa-cancel]'); }
     get callbackUrl() { return $('[data-qa-callback] input'); }
     get public() { return $('[data-qa-public]'); }
+
+    updateLabel(updateMsg) {
+        const labelField = this.label;
+        // Hack needed to edit a label
+        browser.waitUntil(function() {
+            try {
+                labelField.clearElement();
+                labelField.setValue(updateMsg);
+                return labelField.getValue() === updateMsg;
+            } catch (err) {
+                return false;
+            }
+        }, 15000);
+    }
 }
 
 export class TokenCreateDrawer {
@@ -137,5 +153,27 @@ export class Profile extends Page {
         }
         browser.waitForVisible('[data-qa-add-label]');
         browser.waitForText('[data-qa-drawer-title]');
+    }
+    
+    selectActionMenu(row, item) {
+        browser.click(`[data-qa-table-row="${row}"] [data-qa-action-menu]`);
+        browser.waitForVisible('[data-qa-action-menu-item]');
+        browser.click(`[data-qa-action-menu-item="${item}"]`);
+    }
+
+    delete(type, row) {
+        if (type === 'oauth') {
+            this.selectActionMenu(row, 'Delete');
+            browser.waitForVisible(dialogMap.title);
+
+            const deleteButton = $(dialogMap.confirm);
+            deleteButton.click();
+
+            browser.waitForVisible(`[data-qa-table-row="${row}"]`, 10000, true);
+        }
+
+        if (type == 'token') {
+
+        }
     }
 }
