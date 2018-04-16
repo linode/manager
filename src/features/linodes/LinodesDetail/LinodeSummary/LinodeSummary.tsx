@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
-import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
+import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
 import { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
@@ -20,6 +20,7 @@ import SummaryPanel from './SummaryPanel';
 type ClassNames = 'chart'
   | 'leftLegend'
   | 'bottomLegend'
+  | 'graphTitle'
   | 'graphControls'
   | 'blue'
   | 'green'
@@ -71,10 +72,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
         },
       },
     },
+    graphTitle: {
+      marginRight: theme.spacing.unit * 2,
+    },
     graphControls: {
       marginTop: theme.spacing.unit * 2,
       display: 'flex',
-      justifyContent: 'flex-start',
+      alignItems: 'center',
     },
     blue: {
       '&:before': {
@@ -292,9 +296,12 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         {stats &&
           <React.Fragment>
             <div className={classes.graphControls}>
-              <FormControl>
-                <InputLabel htmlFor="chartRange" disableAnimation>
-                  Graphs
+              <Typography variant="title" className={classes.graphTitle}>
+                Graphs
+              </Typography>
+              <FormControl style={{ martginTop: 0 }}>
+                <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                  Select Time Range
                 </InputLabel>
                 <Select
                   value={rangeSelection}
