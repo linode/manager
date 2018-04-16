@@ -213,8 +213,9 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       moment.utc(linode.created).month() + 1,
       moment.utc(linode.created).year(),
     ];
+    const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
     let [testMonth, testYear] = [moment.utc().month() + 1, moment.utc().year()];
-    while (!(testMonth === createMonth && testYear === createYear)) {
+    do {
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
         `${moment().month(testMonth - 1).format('MMM')} ${testYear}`,
@@ -226,7 +227,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
       } else {
         testMonth -= 1;
       }
-    }
+    } while (moment(`${testYear}-${testMonth}-01`).diff(creationFirstOfMonth) >= 0);
     (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
       return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
     });
