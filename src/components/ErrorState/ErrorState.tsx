@@ -9,6 +9,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 
 import ErrorOutline from 'material-ui-icons/ErrorOutline';
+import LinodeTheme from 'src/theme';
 
 interface Props {
   errorText: string;
@@ -18,12 +19,14 @@ type CSSClasses = 'root' | 'iconContainer' | 'icon';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    height: '100%',
+    padding: theme.spacing.unit * 10,
   },
   iconContainer: {
     textAlign: 'center',
   },
   icon: {
+    marginBottom: theme.spacing.unit * 2,
+    color: LinodeTheme.color.red,
     width: 50,
     height: 50,
   },
