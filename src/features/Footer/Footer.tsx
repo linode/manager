@@ -35,6 +35,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
+    backgroundColor: LinodeTheme.bg.main,
+    height: 70,
   },
   logo: {
     opacity: .5,
