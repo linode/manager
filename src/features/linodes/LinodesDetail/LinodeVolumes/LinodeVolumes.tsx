@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { pathOr, compose } from 'ramda';
+import { Subscription } from 'rxjs/Rx';
 
 import {
   withStyles,
@@ -40,6 +41,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import AttachVolumeDrawer from './AttachVolumeDrawer';
 import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
 import ActionMenu from './LinodeVolumesActionMenu';
+import { events$ } from 'src/events';
 
 type ClassNames = 'title';
 
@@ -127,6 +129,34 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       updateDialog: LinodeVolumes.updateDialogDefaultState,
       updateVolumeDrawer: LinodeVolumes.updateVolumeDrawerDefaultState,
     };
+  }
+
+  eventSubscription: Subscription;
+
+  componentDidMount() {
+
+    this.eventSubscription = events$
+      /** @todo filter on mount time. */
+      .filter(e => [
+          'volume_attach',
+          'volume_clone',
+          'volume_create',
+          'volume_delete',
+          'volume_detach',
+          'volume_resize',
+        ].includes(e.action))
+      .subscribe((v) => {
+        getLinodeVolumes(this.props.linodeID)
+          .then(response => response.data)
+          .then((attachedVolumes) => {
+            this.setState({ attachedVolumes });
+          })
+          .catch(err => console.error(err));
+      });
+  }
+
+  componentWillUnmount() {
+    this.eventSubscription.unsubscribe();
   }
 
   getAllVolumes = () => {
