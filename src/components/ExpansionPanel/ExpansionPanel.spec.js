@@ -43,7 +43,7 @@ describe('Expansion Panel Suite', () => {
             const expansionPanel = $(panel);
             const expansionPanelText = $(panelSubheading);
             expect(expansionPanel.isVisible()).toBe(true);
-            exect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
+            expect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
             browser.frame();
         });
     });

@@ -153,6 +153,13 @@ describe('Button Suite', () => {
     });
 
     describe('Destructive Button', () => {
+
+        beforeAll(() => {
+            browser.frame();
+            browser.click(childStories[4]);
+            waitForFocus(button.destructive);
+        });
+        
         let destructiveButtons;
 
         it('should display an enabled destructive button and a disabled button', () => {
