@@ -22,7 +22,7 @@ import {
   getVolumes,
   attach as attachtoLinode,
   detach as detachVolume,
-  ddelete as deleteVolume,
+  _delete as deleteVolume,
   clone as cloneVolume,
   create as createVolume,
   update as updateVolume,
@@ -151,7 +151,9 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
           .then((attachedVolumes) => {
             this.getAllVolumes();
           })
-          .catch(err => console.error(err));
+          .catch(() => {
+            /** @todo Error handling. */
+          });
       });
   }
 
@@ -411,7 +413,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             open: true,
             id,
             label: label!,
-            title: 'Resize a Volume',
+            title: 'Clone a Volume',
             cloning: true,
             cloneLabel: '',
             linodeLabel,
