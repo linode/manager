@@ -273,7 +273,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
-    window.clearInterval(this.statsInterval);
+    window.clearInterval(this.statsInterval as number);
   }
 
   getChartJSDataFor(stat: string, data: [number, number][]) {
