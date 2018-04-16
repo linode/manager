@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { pathEq } from 'ramda';
 import * as moment from 'moment';
 import Axios from 'axios';
 import {
@@ -115,6 +116,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
       .filter(newLinodeEvents(mountTime))
+      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
