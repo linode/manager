@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import * as Raven from 'raven-js';
 import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { pathOr } from 'ramda';
@@ -10,6 +11,7 @@ import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
 import { API_ROOT } from 'src/constants';
+import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ErrorState from 'src/components/ErrorState';
@@ -18,6 +20,8 @@ import Select from 'src/components/Select';
 
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
+
+setUpCharts();
 
 type ClassNames = 'chart'
   | 'leftLegend'
@@ -165,6 +169,8 @@ const chartOptions = {
 
 const chartHeight = 300;
 
+const statsFetchInterval = 30000;
+
 const lineOptions = {
   backgroundColor: 'rgba(0, 0, 0, 0)',
   borderWidth: 1,
@@ -197,6 +203,8 @@ const statToColor = {
 };
 
 class LinodeSummary extends React.Component<CombinedProps, State> {
+  statsInterval?: number = undefined;
+
   state: State = {
     stats: undefined,
     rangeSelection: '24',
@@ -255,12 +263,17 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         } else {
           this.setState({ statsLoadError: 'error' });
         }
+        Raven.captureException(err);
       });
   }
 
   componentDidMount() {
     this.getStats();
-    window.setInterval(() => this.getStats(), 20000);
+    this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.statsInterval);
   }
 
   getChartJSDataFor(stat: string, data: [number, number][]) {
@@ -313,8 +326,8 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
         {(statsLoadError) && (
             statsLoadError === 'rateLimited'
-              ? <ErrorState errorText="Rate limit reached when fetching performance statistics"/>
-              : <ErrorState errorText="Error when fetching performance statistics"/>
+              ? <ErrorState errorText="Rate limit exceeded when fetching performance statistics"/>
+              : <ErrorState errorText="Network error when fetching performance statistics"/>
           )
         }
 
