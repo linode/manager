@@ -38,7 +38,7 @@ import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 import AttachVolumeDrawer from './AttachVolumeDrawer';
-import UpdateVolumeDrawer from './UpdateVolumeDrawer';
+import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
 import ActionMenu from './LinodeVolumesActionMenu';
 
 type ClassNames = 'title';
@@ -73,15 +73,9 @@ interface UpdateDialogState {
   id?: number;
 }
 
-interface UpdateVolumeDrawerState {
-  open: boolean;
+interface UpdateVolumeDrawerState extends UpdateVolumeDrawerProps {
   mode?: 'create' | 'edit' | 'resize' | 'clone';
-  errors?: Linode.ApiFieldError[];
   id?: number;
-  label?: string;
-  size?: number;
-  region?: string;
-  linodeId?: number;
 }
 
 interface State {
@@ -111,6 +105,15 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
   static updateVolumeDrawerDefaultState = {
     open: false,
+    label: '',
+    title: '',
+    linodeLabel: '',
+    size: 0,
+    region: '',
+    linodeId: 0,
+    onClose: () => null,
+    onChange: () => null,
+    onSubmit: () => null,
   };
 
   constructor(props: CombinedProps) {
@@ -313,20 +316,115 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
   /** Create / Edit / Resize / Cloning */
   openUpdatingDrawer = (
     mode: 'create' | 'edit' | 'resize' | 'clone',
-    id?: number,
-    label?: string,
-    size?: number,
-  ) => () => this.setState(prevState => ({
-    updateVolumeDrawer: {
-      mode,
-      open: true,
-      id,
-      label,
-      size,
-      region: this.props.linodeRegion,
-      linodeId: this.props.linodeID,
-    },
-  }))
+    id: number,
+    label: string,
+    size: number,
+  ) => () => {
+    const { linodeLabel, linodeRegion, linodeID } = this.props;
+
+    switch (mode) {
+      case 'create':
+        return this.setState({
+          updateVolumeDrawer: {
+            open: true,
+            label: '',
+            title: 'Create a Volume',
+            linodeLabel,
+            size: 20,
+            region: linodeRegion,
+            linodeId: linodeID,
+            disabled: { region: true, linode: true },
+            onClose: this.closeUpdatingDrawer,
+            onLabelChange: (label: string) => this.setState(prevState => ({
+              updateVolumeDrawer: {
+                ...prevState.updateVolumeDrawer,
+                label,
+              },
+            })),
+            onSizeChange: (size: string) => this.setState(prevState => ({
+              updateVolumeDrawer: {
+                ...prevState.updateVolumeDrawer,
+                size: Number(size),
+              },
+            })),
+            onSubmit: this.createVolume,
+          },
+        });
+
+      case 'resize':
+        return this.setState({
+          updateVolumeDrawer: {
+            open: true,
+            id,
+            label: label!,
+            title: 'Resize a Volume',
+            linodeLabel,
+            size: size!,
+            region: linodeRegion,
+            linodeId: linodeID,
+            disabled: { region: true, linode: true, label: true },
+            onClose: this.closeUpdatingDrawer,
+            onSizeChange: (size: string) => this.setState(prevState => ({
+              updateVolumeDrawer: {
+                ...prevState.updateVolumeDrawer,
+                size: Number(size),
+              },
+            })),
+            onSubmit: this.resizeVolume,
+          },
+        });
+
+      case 'clone':
+        return this.setState({
+          updateVolumeDrawer: {
+            open: true,
+            id,
+            label: label!,
+            title: 'Resize a Volume',
+            cloning: true,
+            cloneLabel: '',
+            linodeLabel,
+            size: size!,
+            region: linodeRegion,
+            linodeId: linodeID,
+            disabled: { region: true, linode: true, size: true, label: true },
+            onClose: this.closeUpdatingDrawer,
+            onCloneLabelChange: (cloneLabel: string) => this.setState(prevState => ({
+              updateVolumeDrawer: {
+                ...prevState.updateVolumeDrawer,
+                cloneLabel,
+              },
+            })),
+            onSubmit: this.cloneVolume,
+          },
+        });
+
+      case 'edit':
+        return this.setState({
+          updateVolumeDrawer: {
+            open: true,
+            id,
+            label: label!,
+            title: 'Rename a Volume',
+            linodeLabel,
+            size: size!,
+            region: linodeRegion,
+            disabled: { region: true, linode: true, size: true },
+            linodeId: linodeID,
+            onClose: this.closeUpdatingDrawer,
+            onLabelChange: (label: string) => this.setState(prevState => ({
+              updateVolumeDrawer: {
+                ...prevState.updateVolumeDrawer,
+                label,
+              },
+            })),
+            onSubmit: this.editVolume,
+          },
+        });
+
+      default: return {};
+    }
+  }
 
   closeUpdatingDrawer = () => this.setState(prevState => ({
     updateVolumeDrawer: LinodeVolumes.updateVolumeDrawerDefaultState,
@@ -381,7 +479,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         label,
       },
     } = this.state;
-
 
     if (!id) {
       return;
@@ -452,9 +549,9 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
   }
 
   cloneVolume = () => {
-    const { updateVolumeDrawer: { id, label } } = this.state;
+    const { updateVolumeDrawer: { id, cloneLabel } } = this.state;
 
-    if (!label) {
+    if (!cloneLabel) {
       return this.setState({
         updateVolumeDrawer: {
           ...this.state.updateVolumeDrawer,
@@ -467,7 +564,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       return;
     }
 
-    cloneVolume(id, label || '')
+    cloneVolume(id, cloneLabel)
       .then(() => {
         /**
          * @todo Now what? Per CF parity the volume is not automagically attached.
@@ -484,83 +581,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
           },
         });
       });
-  }
-
-  UpdateVolumeDrawer = (): null | JSX.Element => {
-    const { updateVolumeDrawer: {
-      mode,
-      open,
-      id,
-      label = '',
-      size = 20,
-      region,
-      linodeId,
-      errors,
-    } } = this.state;
-
-    if (!mode) { return null; }
-
-    const bail = (function () {
-
-      switch (mode) {
-        case 'create': return !region || !linodeId;
-        case 'edit': return !id;
-        case 'resize': return !id;
-        case 'clone': return !id;
-      }
-    })();
-
-    if (bail) {
-      return null;
-    }
-
-    const method = (function (that) {
-      switch (mode) {
-        case 'create': return that.createVolume;
-        case 'edit': return that.editVolume;
-        case 'resize': return that.resizeVolume;
-        case 'clone': return that.cloneVolume;
-      }
-    })(this);
-
-    const disabled = (function () {
-      switch (mode) {
-        case 'create': return { region: true, linode: true };
-        case 'edit': return { region: true, linode: true, size: true };
-        case 'resize': return { region: true, linode: true, label: true };
-        case 'clone': return { size: true, region: true, linode: true };
-      }
-    })();
-
-    const title = (function () {
-      switch (mode) {
-        case 'create': return 'Create Volume';
-        case 'edit': return 'Edit Volume';
-        case 'resize': return 'Resize Volume';
-        case 'clone': return 'Clone Volume';
-      }
-    })();
-
-    return (
-      <UpdateVolumeDrawer
-        open={open}
-        title={title}
-        label={label}
-        size={size}
-        region={region}
-        linodeId={linodeId}
-        onClose={this.closeUpdatingDrawer}
-        disabled={disabled}
-        onChange={(key, value) => this.setState({
-          updateVolumeDrawer: {
-            ...this.state.updateVolumeDrawer,
-            [key]: value,
-          },
-        })}
-        onSubmit={method}
-        errors={errors}
-      />
-    );
   }
 
   /**
@@ -582,7 +602,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     let IconTextLinkProps: IconTextLinkProps = {
       SideIcon: PlusSquare,
-      onClick: this.openUpdatingDrawer('create'),
+      onClick: this.openUpdatingDrawer('create', 0, '', 0),
       text: 'Create a Volume',
       title: 'Create a Volume',
     };
@@ -647,7 +667,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     /** We have at least one config, but we have no volumes. */
     props = {
       buttonProps: {
-        onClick: this.openUpdatingDrawer('create'),
+        onClick: this.openUpdatingDrawer('create', 0, '', 0),
         children: 'Create a Volume',
       },
       icon: VolumeIcon,
@@ -719,6 +739,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
                         onClone={this.openUpdatingDrawer(
                           'clone',
                           volume.id,
+                          volume.label,
+                          volume.size,
                         )}
                         onEdit={this.openUpdatingDrawer(
                           'edit',
@@ -757,6 +779,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       linodeConfigs: { error: linodeConfigsError },
     } = this.props;
 
+    const { updateVolumeDrawer } = this.state;
+
     if (volumesError || linodeConfigsError) {
       return <ErrorState errorText="An error has occured." />;
     }
@@ -766,7 +790,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         <this.Placeholder />
         <this.Table />
         <this.AttachVolumeDrawer />
-        <this.UpdateVolumeDrawer />
+        <UpdateVolumeDrawer {...updateVolumeDrawer} />
       </React.Fragment>
     );
   }

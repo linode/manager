@@ -19,13 +19,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {
+export interface Props {
   open: boolean;
   title: string;
-  label?: string;
-  size?: number;
-  region?: string;
-  linodeId?: number;
+  label: string;
+  cloneLabel?: string;
+  cloning?: boolean;
+  size: number;
+  region: string;
+  linodeId: number;
   disabled?: {
     label?: boolean;
     size?: boolean;
@@ -35,8 +37,12 @@ interface Props {
   errors?: Linode.ApiFieldError[];
 
   onClose: () => void;
-  onChange: (k: string, v: any) => void;
   onSubmit: () => void;
+  onLabelChange?: (id: string) => void;
+  onCloneLabelChange?: (id: string) => void;
+  onSizeChange?: (id: string) => void;
+  onRegionChange?: (id: string) => void;
+  onLinodeChange?: (id: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -52,12 +58,17 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
     errors,
     disabled,
     label,
+    cloneLabel,
+    cloning,
     size,
     region,
     linodeId,
-
+    onLabelChange,
+    onCloneLabelChange,
+    onSizeChange,
+    onRegionChange,
+    onLinodeChange,
     onClose,
-    onChange,
     onSubmit,
   } = props;
 
@@ -73,41 +84,50 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       onClose={onClose}
       title={title}
     >
+      {cloning && <TextField
+        label="Cloned Label"
+        value={cloneLabel}
+        {...(onCloneLabelChange && { onChange: e => onCloneLabelChange(e.target.value) })}
+        error={Boolean(labelError)}
+        errorText={labelError}
+        />}
+
       <TextField
         label="Label"
         value={label}
-        onChange={e => onChange('label', e.target.value)}
+        {...(onLabelChange && { onChange: e => onLabelChange(e.target.value) })}
         error={Boolean(labelError)}
         errorText={labelError}
-        disabled={disabled!.label}
-      />
+        disabled={disabled && disabled.label}
+        />
+
       <TextField
         label="Size"
         value={size}
-        onChange={e => onChange('size', e.target.value)}
+        {...(onSizeChange && { onChange: e => onSizeChange(e.target.value) })}
         error={Boolean(sizeError)}
         errorText={sizeError}
-        disabled={disabled!.size}
+        disabled={disabled && disabled.size}
         />
 
       {/** Needs to be Select */}
       <TextField
         label="Region"
-        onChange={e => onChange('region', e.target.value)}
-        value={dcDisplayNames[region!]}
+        {...(onRegionChange && { onChange: e => onRegionChange(e.target.value) })}
+        value={region && dcDisplayNames[region]}
         error={Boolean(regionError)}
         errorText={regionError}
-        disabled={disabled!.region}
-      />
+        disabled={disabled && disabled.region}
+        />
 
       {/** Needs to be Select */}
       <TextField
         label="Attached To"
-        onChange={e => onChange('linodeId', e.target.value)}
+        {...(onLinodeChange && { onChange: e => onLinodeChange(e.target.value) })}
         value={linodeId}
         error={Boolean(linodeError)}
         errorText={linodeError}
-        disabled={disabled!.linode}
+        disabled={disabled && disabled.linode}
       />
 
       <ActionsPanel>
@@ -116,14 +136,6 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       </ActionsPanel>
     </Drawer>
   );
-};
-
-UpdateVolumeDrawer.defaultProps = {
-  label: '',
-  region: '',
-  linodeId: 0,
-  size: 20,
-  disabled: {},
 };
 
 const styled = withStyles(styles, { withTheme: true });
