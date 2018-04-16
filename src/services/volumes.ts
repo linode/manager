@@ -15,7 +15,7 @@ export const detach = (volumeId: number): Promise<{}> =>
     .post(`${API_ROOT}/volumes/${volumeId}/detach`);
 
 /* delete is a reserved word */
-export const ddelete = (volumeId: number): Promise<{}> =>
+export const _delete = (volumeId: number): Promise<{}> =>
   Axios
     .delete(`${API_ROOT}/volumes/${volumeId}`);
 

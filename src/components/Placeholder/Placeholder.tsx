@@ -62,9 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     fontWeight: 700,
   },
-  button: {
-    borderRadius: '4px',
-  },
+  button: {},
 });
 
 export interface Props {
