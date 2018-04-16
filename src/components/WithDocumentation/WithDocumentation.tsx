@@ -46,7 +46,7 @@ class WithDocumentation extends React.Component<PropsWithStyles>  {
     const { classes, title, docs, render, ...rest } = this.props;
 
     return (
-      <Grid container spacing={40}>
+      <Grid container>
         <Grid item xs={12}>
           <Grid container>
             <Grid item className={`${classes.listContainer} mlMain`}>

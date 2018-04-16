@@ -37,8 +37,12 @@ const styles = (theme: Theme): StyleRules => ({
   },
   toolbar: {
     minHeight: 64,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
+      paddingLeft: theme.spacing.unit * 3,
+      paddingRight: theme.spacing.unit * 3,
     },
   },
   navIconHide: {
