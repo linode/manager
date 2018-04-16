@@ -200,7 +200,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
-      <div>
+      <React.Fragment>
         <Grid container justify="space-between">
           <Grid item style={{ flex: 1 }}>
             <EditableText
@@ -264,7 +264,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           selected={String(configDrawer.selected)}
           error={configDrawer.error}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

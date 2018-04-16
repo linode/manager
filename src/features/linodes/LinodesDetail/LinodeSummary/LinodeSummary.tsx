@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
+import { pathOr } from 'ramda';
 
 import { withStyles, StyleRulesCallback, WithStyles, Typography } from 'material-ui';
 import { InputLabel } from 'material-ui/Input';
@@ -11,6 +12,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { API_ROOT } from 'src/constants';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import ErrorState from 'src/components/ErrorState';
 import LinodeTheme from 'src/theme';
 import Select from 'src/components/Select';
 
@@ -113,6 +115,7 @@ interface Props {
 interface State {
   stats: Linode.TodoAny;
   rangeSelection: string;
+  statsLoadError?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -133,6 +136,7 @@ const chartOptions = {
         zeroLineBorderDashOffset: 2,
       },
       ticks: {
+        beginAtZero: true,
         callback(value: number, index: number) {
           if (value >= 1000000) {
             return (value / 1000000) + 'M';
@@ -158,6 +162,8 @@ const chartOptions = {
     }],
   },
 };
+
+const chartHeight = 300;
 
 const lineOptions = {
   backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -230,14 +236,25 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   getStats() {
     const { linode } = this.props;
     const { rangeSelection } = this.state;
+    let req;
     if (rangeSelection === '24') {
-      Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`)
-        .then(response => this.setState({ stats: response.data }));
+      req = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`);
     } else {
       const [year, month] = rangeSelection.split(' ');
-      Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats/${year}/${month}`)
-        .then(response => this.setState({ stats: response.data }));
+      req = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats/${year}/${month}`);
     }
+    req
+      .then((response) => {
+        this.setState({ statsLoadError: undefined });
+        this.setState({ stats: response.data });
+      })
+      .catch((err) => {
+        if (pathOr(undefined, ['response', 'status'], err) === 429) {
+          this.setState({ statsLoadError: 'rateLimited' });
+        } else {
+          this.setState({ statsLoadError: 'error' });
+        }
+      });
   }
 
   componentDidMount() {
@@ -285,7 +302,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   render() {
     const { linode, type, image, volumes, classes } = this.props;
-    const { stats, rangeSelection } = this.state;
+    const { stats, rangeSelection, statsLoadError } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
@@ -293,7 +310,14 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         }
         <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
 
-        {stats &&
+        {(statsLoadError) && (
+            statsLoadError === 'rateLimited'
+              ? <ErrorState errorText="Rate limit reached when fetching performance statistics"/>
+              : <ErrorState errorText="Error when fetching performance statistics"/>
+          )
+        }
+
+        {(stats && !statsLoadError) &&
           <React.Fragment>
             <div className={classes.graphControls}>
               <Typography variant="title" className={classes.graphTitle}>
@@ -323,7 +347,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     CPU %
                   </div>
                   <Line
-                    height={300}
+                    height={chartHeight}
                     options={this.getChartOptions()}
                     data={{
                       datasets: [
@@ -350,7 +374,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     bits/sec
                   </div>
                   <Line
-                    height={300}
+                    height={chartHeight}
                     options={this.getChartOptions()}
                     data={{
                       datasets: [
@@ -389,7 +413,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                     bits/sec
                   </div>
                   <Line
-                    height={300}
+                    height={chartHeight}
                     options={this.getChartOptions()}
                     data={{
                       datasets: [
@@ -428,7 +452,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
                       blocks/sec
                     </div>
                     <Line
-                      height={300}
+                      height={chartHeight}
                       options={this.getChartOptions()}
                       data={{
                         datasets: [
