@@ -5,22 +5,28 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import * as H from 'history';
 
 type ClassNames = 'root' | 'highlight';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    cursor: 'pointer',
+    display: 'flex',
+  },
   highlight: { color: 'blue' },
 });
 
 export interface SearchResultT {
+  Icon: React.ComponentClass<any>;
   title: string;
   description: string;
-  Icon: React.ComponentClass<any>;
+  path: string;
 }
 
 interface Props extends SearchResultT {
   searchText: string;
+  history: H.History;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -37,10 +43,22 @@ const maybeStyleSegment = (text: string, searchText: string, hlClass: string): R
   );
 };
 
+const onClick = (path: string, history: H.History) => {
+  history.push(path);
+};
+
 const SearchResult: React.StatelessComponent<CombinedProps> = (props) => {
-  const { title, description, Icon, searchText, classes: { highlight } } = props;
+  const {
+    title,
+    description,
+    Icon,
+    searchText,
+    classes: { highlight, root },
+    path,
+    history,
+  } = props;
   return (
-    <div style={{ display: 'flex' }}>
+    <div onClick={() => onClick(path, history)} className={root}>
       <div><Icon /></div>
       <div>
         <div>{maybeStyleSegment(title, searchText, highlight)}</div>

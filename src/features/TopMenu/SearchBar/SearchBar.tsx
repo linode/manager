@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import {
   withStyles,
@@ -82,7 +83,7 @@ interface State {
   images?: Linode.Image[];
 }
 
-type FinalProps = Props & WithStyles<Styles>;
+type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
 
 class SearchBar extends React.Component<FinalProps, State> {
   state: State = {
@@ -165,6 +166,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         title: linode.label,
         description: this.linodeDescription(linode.type, linode.image),
         Icon: LinodeIcon,
+        path: `/linodes/${linode.id}`,
       }))));
     }
 
@@ -176,6 +178,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         title: volume.label,
         description: volume.size + ' G',
         Icon: VolumeIcon,
+        path: `/volumes/${volume.id}`,
       }))));
     }
 
@@ -187,6 +190,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         title: nodebal.label,
         description: nodebal.hostname,
         Icon: NodebalIcon,
+        path: `/nodebalancers/${nodebal.id}`,
       }))));
     }
 
@@ -199,6 +203,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         description: domain.description || domain.status,
         /* TODO: Update this with the Domains icon! */
         Icon: NodebalIcon,
+        path: `/domains/${domain.id}`,
       }))));
     }
 
@@ -220,7 +225,7 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -252,6 +257,8 @@ class SearchBar extends React.Component<FinalProps, State> {
                     title={result.title}
                     description={result.description}
                     searchText={this.state.searchText}
+                    path={result.path}
+                    history={history}
                   />
                 );
               })}
@@ -263,7 +270,9 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 }
 
-const StyledSearchBar = withStyles(styles, { withTheme: true })<Props>(SearchBar);
+const RoutedSearchBar = withRouter(SearchBar);
+
+const StyledSearchBar = withStyles(styles, { withTheme: true })<Props>(RoutedSearchBar);
 
 const mapStateToProps = (state: Linode.AppState) => ({
   types: pathOr({}, ['resources', 'types', 'data', 'data'], state),
