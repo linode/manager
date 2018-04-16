@@ -38,6 +38,6 @@ services:
       - ./storybook-test-results:/src/storybook-test-results
       - /etc/passwd:/etc/passwd
       - /etc/group:/etc/group
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-storybook:6006", "--", "yarn","storybook:e2e", "--log", "&&", "chown", "-R", "jenkins", "**/storybook-test-results/*.xml"]
+    entrypoint: ["./scripts/storybook_entrypoint.sh"]
     depends_on:
       - manager-storybook
