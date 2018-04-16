@@ -65,6 +65,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   inputRoot: {
     border: 0,
     borderBottom: '2px dotted #333',
+    backgroundColor: 'transparent',
   },
   button: {
     minWidth: 'auto',
