@@ -41,7 +41,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import AttachVolumeDrawer from './AttachVolumeDrawer';
 import UpdateVolumeDrawer, { Props as UpdateVolumeDrawerProps } from './UpdateVolumeDrawer';
 import ActionMenu from './LinodeVolumesActionMenu';
-import { events$ } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 
 type ClassNames = 'title';
 
@@ -138,18 +138,18 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     this.eventSubscription = events$
       /** @todo filter on mount time. */
       .filter(e => [
-          'volume_attach',
-          'volume_clone',
-          'volume_create',
-          'volume_delete',
-          'volume_detach',
-          'volume_resize',
-        ].includes(e.action))
+        'volume_attach',
+        'volume_clone',
+        'volume_create',
+        'volume_delete',
+        'volume_detach',
+        'volume_resize',
+      ].includes(e.action))
       .subscribe((v) => {
         getLinodeVolumes(this.props.linodeID)
           .then(response => response.data)
           .then((attachedVolumes) => {
-            this.setState({ attachedVolumes });
+            this.getAllVolumes();
           })
           .catch(err => console.error(err));
       });
@@ -210,7 +210,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     attachtoLinode(Number(selectedVolume))(Number(linodeID))
       .then((response) => {
         this.closeAttachmentDrawer();
-        this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((error) => {
         this.setState({
@@ -276,7 +276,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     detachVolume(id)
       .then((response) => {
         this.closeUpdateDialog();
-        this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((response) => {
         /** @todo Error handling. */
@@ -290,9 +290,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     deleteVolume(id)
       .then((response) => {
         this.closeUpdateDialog();
-        this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((response) => {
+        this.closeUpdateDialog();
         /** @todo Error handling */
       });
   }
@@ -489,8 +490,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
 
     createVolume(label, Number(size), region, linodeId)
       .then(() => {
-        this.closeUpdatingDrawer();
         this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((errorResponse) => {
         this.setState({
@@ -563,7 +564,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
     resizeVolume(id, Number(size))
       .then(() => {
         this.closeUpdatingDrawer();
-        this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((errorResponse: any) => {
         this.setState({
@@ -600,7 +601,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
          * @todo Now what? Per CF parity the volume is not automagically attached.
         */
         this.closeUpdatingDrawer();
-        this.getAllVolumes();
+        resetEventsPolling();
       })
       .catch((error) => {
         /** @todo Error handling. */
