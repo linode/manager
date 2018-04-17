@@ -355,8 +355,15 @@ const LinodeTheme: Linode.Theme = {
       root: {
         boxShadow: '0 0 5px #ddd',
         color: '#666',
-        padding: 24,
+        padding: 16,
+        margin: 16,
         backgroundColor: 'transparent',
+        textAlign: 'center',
+        [breakpoints.up('md')]: {
+          margin: 0,
+          padding: 24,
+          textAlign: 'left',
+        },
       },
       message: {
         margin: '0 auto',

@@ -34,9 +34,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   const { palette: { status } } = theme;
 
   return {
-    root: {},
+    root: {
+      background: 'white',
+      border: `2px solid ${theme.palette.primary.main}`,
+      width: 300,
+      [theme.breakpoints.up('md')]: {
+        width: 500,
+      },
+    },
     content: {
       color: '#333',
+      lineHeight: 1.4,
       '& a': {
         color: '#000',
         '&:hover': {
