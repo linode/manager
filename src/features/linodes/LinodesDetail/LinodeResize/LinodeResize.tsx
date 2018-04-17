@@ -22,10 +22,39 @@ import { resize as resizeLinode } from 'src/service/linodes';
 import { resetEventsPolling, events$ } from 'src/events';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 
-type ClassNames = 'root';
+import LinodeTheme from 'src/theme';
+
+type ClassNames = 'root'
+ | 'title'
+ | 'subTitle'
+ | 'currentPlanContainer'
+ | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 1,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  subTitle: {
+    margin: `${theme.spacing.unit * 3}px 0`,
+  },
+  currentPlanContainer: {
+    '& .selectionCard': {
+      padding: 0,
+      cursor: 'not-allowed',
+      '& > div, &:focus > div': {
+        backgroundColor: LinodeTheme.bg.main,
+        borderColor: '#C9CACB',
+      },
+    },
+  },
+  actionPanel: {
+    padding: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -61,40 +90,46 @@ class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { type: { memory, disk, vcpus, price } } = this.props;
+    const { type: { memory, disk, vcpus, price }, classes } = this.props;
 
     return (
-      <Paper>
-        <Typography variant="headline">Resize</Typography>
-        <Typography>
-          If you're expecting a temporary burst of traffic to your website, or if you're not using
-          your Linode as much as you thought, you can temporarily or permenantly resize your Linode
-          to a different plan.
-        </Typography>
-        <Typography variant="subheading">Current Plan</Typography>
-        {<SelectionCard
-          checked={true}
-          disabled
-          onClick={e => null}
-          heading={typeLabel(memory) || ''}
-          subheadings={[
-            `$${price.monthly}/mo ($${price.hourly}/hr)`,
-            typeLabelDetails(memory, disk, vcpus),
-          ]}
-        />}
+      <React.Fragment>
+        <Paper className={classes.root}>
+          <Typography variant="headline" className={classes.title}>Resize</Typography>
+          <Typography>
+            If you're expecting a temporary burst of traffic to your website,
+            or if you're not using your Linode as much as you thought,
+            you can temporarily or permenantly resize your Linode
+            to a different plan.
+          </Typography>
+          <div className={classes.currentPlanContainer}>
+            <Typography variant="title" className={classes.subTitle}>Current Plan</Typography>
+            {<SelectionCard
+              checked={false}
+              onClick={e => null}
+              heading={typeLabel(memory) || ''}
+              subheadings={[
+                `$${price.monthly}/mo ($${price.hourly}/hr)`,
+                typeLabelDetails(memory, disk, vcpus),
+              ]}
+            />}
+          </div>
+        </Paper>
         <SelectPlanPanel
           types={this.props.types.response}
           onSelect={(id: string) => this.setState({ selectedId: id })}
           selectedID={this.state.selectedId}
         />
-        <ActionsPanel>
+        <ActionsPanel className={classes.actionPanel}>
           <Button
             variant="raised"
             color="primary"
             onClick={this.onSubmit}
-          >Submit</Button>
+          >
+            Submit
+          </Button>
         </ActionsPanel>
-      </Paper>
+      </React.Fragment>
     );
   }
 }
