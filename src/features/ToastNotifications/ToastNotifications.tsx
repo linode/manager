@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import { Subscription } from 'rxjs/Rx';
 import {
   lensPath,
@@ -10,54 +11,102 @@ import {
 import {
   withStyles,
   StyleRulesCallback,
-  Theme,
   WithStyles,
 } from 'material-ui';
 
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import Grid from 'src/components/Grid';
+import Close from 'material-ui-icons/Close';
 import Typography from 'material-ui/Typography';
 
 import toasts$, { Toast } from './toasts';
 
 type ClassNames = 'root'
   | 'content'
-  | 'contentInner'
   | 'actions'
-  | 'button';
+  | 'button'
+  | 'error'
+  | 'warning'
+  | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  content: {
-    textAlign: 'center',
-    [theme.breakpoints.up('md')]: {
-      textAlign: 'left',
-    },
-    '& a': {
-      color: '#000',
-      '&:hover': {
-        textDecoration: 'underline',
+const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
+  const { palette: { status } } = theme;
+
+  return {
+    root: {},
+    content: {
+      color: '#333',
+      '& a': {
+        color: '#000',
+        '&:hover': {
+          textDecoration: 'underline',
+        },
       },
     },
-  },
-  contentInner: {
-    paddingLeft: theme.spacing.unit,
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'center',
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'flex-end',
+    actions: {
+      display: 'flex',
+      justifyContent: 'center',
+      [theme.breakpoints.up('md')]: {
+        justifyContent: 'flex-end',
+      },
     },
-  },
-  button: {
-    padding: '6px 14px 7px',
-  },
-});
+    button: {
+      minWidth: 'auto',
+      minHeight: 'auto',
+      padding: 0,
+      '& > span': {
+        padding: 2,
+      },
+      '& svg': {
+        width: 16,
+        height: 16,
+      },
+      '&:hover, &:focus': {
+        color: 'white',
+        backgroundColor: theme.palette.primary.main,
+      },
+    },
+    error: {
+      backgroundColor: status.error,
+      border: `2px solid ${status.errorDark}`,
+      '& button': {
+        color: status.errorDark,
+        borderColor: status.errorDark,
+        '&:hover, &:focus': {
+          backgroundColor: status.errorDark,
+          borderColor: status.errorDark,
+        },
+      },
+    },
+    warning: {
+      backgroundColor: status.warning,
+      border: `2px solid ${status.warningDark}`,
+      '& button': {
+        color: status.warningDark,
+        borderColor: status.warningDark,
+        '&:hover, &:focus': {
+          backgroundColor: status.warningDark,
+          borderColor: status.warningDark,
+        },
+      },
+    },
+    success: {
+      backgroundColor: status.success,
+      border: `2px solid ${status.successDark}`,
+      '& button': {
+        color: status.successDark,
+        borderColor: status.successDark,
+        '&:hover, &:focus': {
+          backgroundColor: status.successDark,
+          borderColor: status.successDark,
+        },
+      },
+    },
+  };
+};
 
-interface Props { }
-
+interface Props {}
 
 interface State {
   toasts: Toast[];
@@ -138,6 +187,14 @@ class Notifier extends React.Component<CombinedProps, State> {
             horizontal: 'right',
           }}
           open={Boolean(toast.open)}
+          SnackbarContentProps={{ className:
+            classNames({
+              [classes.error]: toast.level === 'error',
+              [classes.warning]: toast.level === 'warning',
+              [classes.success]: toast.level === 'success',
+              [classes.root]: true,
+            }),
+          }}
           message={
             <Grid
               container
@@ -145,18 +202,23 @@ class Notifier extends React.Component<CombinedProps, State> {
               justify="space-between"
               spacing={0}
             >
-              <Grid item className={classes.content} xs={12} md={9} lg={10}>
-                <Typography className={classes.contentInner}>{toast.message}</Typography>
+              <Grid item xs={12} md={9} lg={10}>
+                <Typography
+                  variant="caption"
+                  className={classes.content}
+                >
+                  {toast.message}
+                </Typography>
               </Grid>
               <Grid item className={classes.actions} xs={12} md={3} lg={2}>
                 <Button
                   onClick={this.onClose}
-                  color="primary"
+                  color="secondary"
                   variant="raised"
                   className={classes.button}
                 >
-                  Close
-                  </Button>
+                  <Close />
+                </Button>
               </Grid>
             </Grid>}
         />;

@@ -19,7 +19,15 @@ type ClassNames = 'root'
   | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    backgroundColor: 'white',
+    padding: 8,
+    [theme.breakpoints.up('md')]: {
+      width: 800,
+      borderRadius: 2,
+      maxWidth: 'auto',
+    },
+  },
   content: {
     textAlign: 'center',
     [theme.breakpoints.up('md')]: {

@@ -353,15 +353,10 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiSnackbarContent: {
       root: {
-        backgroundColor: 'white',
         boxShadow: '0 0 5px #ddd',
         color: '#666',
-        padding: 8,
-        [breakpoints.up('md')]: {
-          width: 800,
-          borderRadius: 2,
-          maxWidth: 'auto',
-        },
+        padding: 24,
+        backgroundColor: 'transparent',
       },
       message: {
         margin: '0 auto',
