@@ -45,7 +45,7 @@ type ClassNames = 'permsTable';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   permsTable: {
-    marginTop: theme.spacing.unit * 2,
+    margin: `${theme.spacing.unit * 3}px 0`,
   },
 });
 
@@ -127,10 +127,10 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
       <Table className={classes.permsTable}>
         <TableHead>
           <TableRow>
-            <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none>None</TableCell>
-            <TableCell data-qa-perm-read>Read Only</TableCell>
-            <TableCell data-qa-perm-rw>Read/Write</TableCell>
+            <TableCell padding="checkbox" data-qa-perm-access>Access</TableCell>
+            <TableCell padding="checkbox" data-qa-perm-none>None</TableCell>
+            <TableCell padding="checkbox" data-qa-perm-read>Read Only</TableCell>
+            <TableCell padding="checkbox" data-qa-perm-rw>Read/Write</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -138,10 +138,10 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
             (scopeTup) => {
               return (
                 <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
-                  <TableCell>
+                  <TableCell padding="checkbox">
                     {this.permNameMap[scopeTup[0]]}
                   </TableCell>
-                  <TableCell>
+                  <TableCell padding="checkbox">
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 0}
@@ -151,7 +151,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-none-radio
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell padding="checkbox">
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 1}
@@ -161,7 +161,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
                       data-qa-perm-read-radio
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell padding="checkbox">
                     <Radio
                       name={scopeTup[0]}
                       disabled={mode !== 'create' && scopeTup[1] !== 2}
