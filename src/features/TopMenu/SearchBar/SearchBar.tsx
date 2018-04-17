@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
-import Downshift from 'downshift';
+import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -69,7 +69,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: theme.spacing.unit * 1,
   },
   selectedMenuItem: {
-    backgroundColor: '#333',
+    backgroundColor: '#fafafa !important',
   },
 });
 
@@ -242,8 +242,21 @@ class SearchBar extends React.Component<FinalProps, State> {
     );
   }
 
+  downshiftStateReducer(state: DownshiftState, changes: StateChangeOptions) {
+    switch (changes.type) {
+      case Downshift.stateChangeTypes.clickItem:
+      case Downshift.stateChangeTypes.keyDownEnter:
+        return {
+          ...changes,
+          inputValue: '',
+        };
+      default:
+        return changes;
+    }
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -254,12 +267,16 @@ class SearchBar extends React.Component<FinalProps, State> {
             className={classes.icon}
           />
           <Downshift
+            onSelect={(item: SearchSuggestionT) => history.push(item.path)}
+            stateReducer={this.downshiftStateReducer}
+            itemToString={(item: SearchSuggestionT) => (item && item.title) || ''}
             render={({
               getInputProps,
               getItemProps,
               isOpen,
               inputValue,
               highlightedIndex,
+              clearSelection,
             }) => (
               <div>
                 <TextField
@@ -285,7 +302,7 @@ class SearchBar extends React.Component<FinalProps, State> {
                         suggestion,
                         index,
                         highlightedIndex,
-                        getItemProps({ item: suggestion.title }),
+                        getItemProps({ item: suggestion }),
                       );
                     })}
                   </Paper>

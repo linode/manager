@@ -303,7 +303,7 @@ const LinodeTheme: Linode.Theme = {
         },
       },
       selected: {
-        backgroundColor: '#fafafa !important',
+        backgroundColor: 'white !important',
       },
     },
     MuiPopover: {
