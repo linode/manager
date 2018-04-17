@@ -109,7 +109,6 @@ class EExpansionPanel extends React.Component<CombinedProps> {
 
     return (
       <ExpansionPanel
-        expanded={this.state.open}
         {...expansionPanelProps}
         className={classes.root}
         data-qa-panel
