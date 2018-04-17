@@ -61,12 +61,14 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
   subscription: Subscription;
 
+  mounted: boolean = false;
+
   static defaultProps = {
     hasNew: false,
   };
 
   componentDidMount() {
-
+    this.mounted = true;
     this.subscription = Observable
       .combineLatest(
         notifications$,
@@ -90,6 +92,8 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
       })
       .subscribe(
         ([notifications, events]: [Linode.Notification[], Linode.Event[]]) => {
+          if (!this.mounted) { return; }
+
           this.setState({
             hasNew: hasUnseenEvent(events),
             events,
@@ -114,6 +118,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.subscription.unsubscribe();
   }
 

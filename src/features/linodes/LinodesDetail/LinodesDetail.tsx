@@ -96,6 +96,7 @@ type CombinedProps = Props & PreloadedProps;
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
+  mounted: boolean = false;
 
   state = {
     linode: this.props.data.response.linode,
@@ -109,10 +110,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   };
 
   componentWillUnmount() {
+    this.mounted = false;
     this.subscription.unsubscribe();
   }
 
   componentDidMount() {
+    this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
       .filter(newLinodeEvents(mountTime))
@@ -120,10 +123,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
-          .then(linode => this.setState(() => {
-            linode.recentEvent = linodeEvent;
-            return { linode };
-          }));
+          .then((linode) => {
+            if (!this.mounted) { return; }
+
+            this.setState(() => {
+              linode.recentEvent = linodeEvent;
+              return { linode };
+            });
+          });
       });
   }
 

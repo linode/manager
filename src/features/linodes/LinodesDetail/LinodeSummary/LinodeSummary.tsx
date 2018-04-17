@@ -204,6 +204,7 @@ const statToColor = {
 
 class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
+  mounted: boolean = false;
 
   state: State = {
     stats: undefined,
@@ -254,10 +255,14 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     }
     req
       .then((response) => {
+        if (!this.mounted) { return; }
+
         this.setState({ statsLoadError: undefined });
         this.setState({ stats: response.data });
       })
       .catch((err) => {
+        if (!this.mounted) { return; }
+
         if (pathOr(undefined, ['response', 'status'], err) === 429) {
           this.setState({ statsLoadError: 'rateLimited' });
         } else {
@@ -268,11 +273,13 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getStats();
     this.statsInterval = window.setInterval(() => this.getStats(), statsFetchInterval);
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     window.clearInterval(this.statsInterval as number);
   }
 
