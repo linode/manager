@@ -3,6 +3,12 @@ import { pathEq } from 'ramda';
 import * as moment from 'moment';
 import Axios from 'axios';
 import {
+  withStyles,
+  StyleRulesCallback,
+  Theme,
+  WithStyles,
+} from 'material-ui';
+import {
   matchPath,
   withRouter,
   Route,
@@ -60,6 +66,22 @@ interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
 
+type ClassNames = 'launchButton';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  launchButton: {
+    marginRight: theme.spacing.unit,
+    padding: '12px 16px 13px',
+    minHeight: 49,
+    marginTop: 1,
+    transition: theme.transitions.create(['background-color', 'color']),
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
+  },
+});
+
 const preloaded = PromiseLoader<Props>({
   data: ((props) => {
     const { match: { params: { linodeId } } } = props;
@@ -92,7 +114,7 @@ const preloaded = PromiseLoader<Props>({
   }),
 });
 
-type CombinedProps = Props & PreloadedProps;
+type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
@@ -194,7 +216,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { match: { url } } = this.props;
+    const { match: { url }, classes } = this.props;
     const { type, image, volumes } = this.props.data.response;
     const { linode, configDrawer } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -211,7 +233,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <Button
-              onClick={() => weblishLaunch(`${linode.id}`)}>
+              onClick={() => weblishLaunch(`${linode.id}`)}
+              className={classes.launchButton}
+            >
               Launch Console
             </Button>
           </Grid>
@@ -269,4 +293,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withRouter(preloaded(LinodeDetail));
+const styled = withStyles(styles, { withTheme: true });
+
+export default withRouter(preloaded(styled(LinodeDetail)));
