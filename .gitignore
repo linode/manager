@@ -1,5 +1,6 @@
 # production
 /dist
+/build
 
 # editor configuration
 .vscode

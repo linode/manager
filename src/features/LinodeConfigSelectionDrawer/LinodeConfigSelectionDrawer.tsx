@@ -59,10 +59,21 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<CombinedProps> = (pr
     }
       </Grid>
       <ActionsPanel>
-        <Button variant="raised" color="primary" onClick={onSubmit}>
+        <Button
+          variant="raised"
+          color="primary"
+          onClick={onSubmit}
+        >
           Submit
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button
+          onClick={onClose}
+          variant="raised"
+          color="secondary"
+          className="cancel"
+        >
+          Cancel
+        </Button>
       </ActionsPanel>
     </Drawer>
   );

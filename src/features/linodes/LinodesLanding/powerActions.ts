@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from 'axios';
+import Axios from 'axios';
 import * as moment from 'moment';
 
 import { API_ROOT } from 'src/constants';
@@ -6,6 +6,7 @@ import { events$, resetEventsPolling } from 'src/events';
 
 import { dateFormat } from 'src/time';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { getLinodeConfigs } from 'src/services/linode';
 
 export const genEvent = (
   action: string,
@@ -60,13 +61,12 @@ const withAction = (
   action: LinodePowerAction,
 ) => (
   updateDrawer: DrawerFunction,
-  id: number | string,
+  id: number,
   label: string,
 ) => {
-  Axios
-    .get(`${API_ROOT}/linode/instances/${id}/configs`)
-    .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Config>>) => {
-      const configs = response.data.data;
+  getLinodeConfigs(id)
+    .then((response: Linode.ManyResourceState<Linode.Config>) => {
+      const configs = response.data;
       const len = configs.length;
 
       if (len > 1) {

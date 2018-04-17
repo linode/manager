@@ -43,6 +43,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#3B85D9',
         border: '1px solid #3B85D9',
         padding: '11px 26px 13px',
+        transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
           color: '#5F99EA',
@@ -57,6 +58,13 @@ const LinodeTheme: Linode.Theme = {
           borderColor: '#C9CACB',
           backgroundColor: 'transparent',
           color: '#C9CACB',
+        },
+        '&.cancel': {
+          borderColor: 'transparent',
+          color: '#222',
+          '&:hover, &:focus': {
+            borderColor: '#222',
+          },
         },
         '&.destructive': {
           borderColor: '#C44742',

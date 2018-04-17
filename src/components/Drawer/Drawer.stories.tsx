@@ -28,8 +28,19 @@ class Example extends React.Component {
             placeholder="This is a placeholder"
           />
           <ActionsPanel>
-            <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="primary"
+            >
+              Save
+            </Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         </Drawer>
       </React.Fragment>
