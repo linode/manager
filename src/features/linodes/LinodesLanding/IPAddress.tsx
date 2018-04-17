@@ -120,8 +120,9 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         className={classes.ipLink}
         title={ip}
         onClick={() => this.clickIcon(ip)}
+        data-qa-copy-ip
       >
-        {copied && <span className={classes.copied}>copied</span>}
+        {copied && <span className={classes.copied} data-qa-copied>copied</span>}
         <ContentCopyIcon
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
         />
