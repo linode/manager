@@ -91,6 +91,8 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     gravatarUrl: undefined,
   };
 
+  mounted: boolean = false;
+
   handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
   }
@@ -127,9 +129,13 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     const instance = Axios.create();
     return instance.get(url)
       .then((response) => {
+        if (!this.mounted) { return; }
+
         this.setState({ gravatarUrl: response.config.url });
       })
       .catch((error) => {
+        if (!this.mounted) { return; }
+
         this.setState({ gravatarUrl: 'not found' });
       });
   }
@@ -147,6 +153,14 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
       ? <img src={gravatarUrl} className={classes.leftIcon} />
       : <AccountCircle className={classes.leftIcon} />
     );
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {

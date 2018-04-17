@@ -167,9 +167,8 @@ const LinodeTheme: Linode.Theme = {
     MuiExpansionPanelSummary: {
       root: {
         padding: '0 16px',
-        backgroundColor: 'white',
+        backgroundColor: '#fbfbfb',
         '&:hover, &:focus': {
-          backgroundColor: 'white',
           '& h3': {
             color: '#5F99EA',
           },
@@ -234,6 +233,7 @@ const LinodeTheme: Linode.Theme = {
         lineHeight: 1,
         minHeight: 44,
         boxSizing: 'border-box',
+        backgroundColor: 'white',
         '& svg': {
           fontSize: 18,
           marginLeft: 8,
@@ -514,6 +514,7 @@ const LinodeTheme: Linode.Theme = {
     headline: '#32363C',
     red: '#CA0813',
     green: '#00B159',
+    yellow: '#FECF2F',
     border1: '#ABADAF',
     border2: '#C5C6C8',
     border3: '#eee',

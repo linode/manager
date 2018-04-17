@@ -13,8 +13,8 @@ import ExpansionPanel, {
 import Typography, { TypographyProps } from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 
-import OpenIcon from '../../assets/icons/plus-square.svg';
-import CloseIcon from '../../assets/icons/minus-square.svg';
+import Plus from '../../assets/icons/plus-square.svg';
+import Minus from '../../assets/icons/minus-square.svg';
 
 import Notice from '../Notice';
 
@@ -88,7 +88,7 @@ interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: true };
+  state = { open: false };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
@@ -108,10 +108,14 @@ class EExpansionPanel extends React.Component<CombinedProps> {
     const notice = success || warning || error || null;
 
     return (
-      <ExpansionPanel {...expansionPanelProps} className={classes.root} data-qa-panel>
+      <ExpansionPanel
+        {...expansionPanelProps}
+        className={classes.root}
+        data-qa-panel
+      >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <OpenIcon /> : <CloseIcon />}
+          expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
           className={classNames({
             [classes.success]: Boolean(this.props.success),

@@ -18,22 +18,32 @@ export interface PromiseLoaderResponse<T> {
 export default function preload<P>(requests: RequestMap<P>) {
   return function (Component: React.ComponentType<P>) {
     return class AxiosLoadedComponent extends React.Component<P, State> {
+      mounted: boolean = false;
       state = { loading: true };
 
       static displayName = `PromiseLoader(${Component.displayName || Component.name})`;
 
+      componentWillUnmount() {
+        this.mounted = false;
+      }
+
       componentDidMount() {
+        this.mounted = true;
         const promises = Object
           .entries(requests)
           .map(([name, request]) =>
             request(this.props)
               .then((response) => {
+                if (!this.mounted) { return; }
+
                 this.setState(prevState => ({
                   ...prevState,
                   [name]: { response },
                 }));
               })
               .catch((response) => {
+                if (!this.mounted) { return; }
+
                 this.setState(prevState => ({
                   ...prevState,
                   [name]: { error: true, response },
@@ -44,9 +54,13 @@ export default function preload<P>(requests: RequestMap<P>) {
         Promise
           .all(promises)
           .then((responses) => {
+            if (!this.mounted) { return; }
+
             this.setState(prevState => ({ ...prevState, loading: false }));
           })
           .catch(([key, error]) => {
+            if (!this.mounted) { return; }
+
             this.setState(prevState => ({ ...prevState, loading: false }));
           });
       }
