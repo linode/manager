@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { pathEq } from 'ramda';
 import * as moment from 'moment';
 import Axios from 'axios';
 import {
@@ -75,7 +76,7 @@ const preloaded = PromiseLoader<Props>({
           .catch(err => undefined);
 
         const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-          .then(response => response.data)
+          .then(response => response.data.data)
           .catch(err => []);
 
         return Promise.all([typeReq, imageReq, volumesReq])
@@ -114,9 +115,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
-      /* TODO: factor out this filter using a higher-order function that
-         takes mountTime */
       .filter(newLinodeEvents(mountTime))
+      .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
@@ -238,13 +238,20 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/summary`} render={() => (
             <LinodeSummary linode={linode} type={type} image={image} volumes={volumes} />
           )} />
-          <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes/>)} />
-          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking/>)} />
-          <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue/>)} />
-          <Route exact path={`${url}/resize`} render={() => (<LinodeResize/>)} />
-          <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild/>)} />
-          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup/>)} />
-          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings/>)} />
+          <Route exact path={`${url}/volumes`} render={() => (
+            <LinodeVolumes
+              linodeID={linode.id}
+              linodeLabel={linode.label}
+              linodeRegion={linode.region}
+              linodeVolumes={volumes}
+            />
+          )} />
+          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
+          <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue />)} />
+          <Route exact path={`${url}/resize`} render={() => (<LinodeResize />)} />
+          <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild />)} />
+          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup />)} />
+          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings />)} />
           {/* 404 */}
           <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>
