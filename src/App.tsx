@@ -23,10 +23,11 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import { request, response } from 'src/store/reducers/resources';
 import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
-import BetaNotification from './BetaNotification';
 
 import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+
+import BetaNotification from './BetaNotification';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),

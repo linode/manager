@@ -91,6 +91,8 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     },
   };
 
+  mounted: boolean = false;
+
   state = {
     data: this.props.data.response,
     ...OAuthClients.defaultState,
@@ -111,7 +113,11 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   requestClients = () => {
     Axios.get(apiPath)
       .then(response => response.data.data)
-      .then(data => this.setState({ data }));
+      .then((data) => {
+        if (!this.mounted) { return; }
+
+        return this.setState({ data });
+      });
   }
 
   deleteClient = (id: string) => {
@@ -122,7 +128,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
   resetSecret = (id: string) => {
     Axios.post(`${apiPath}/${id}/reset-secret`)
       .then(({ data: { secret } }) => {
-        this.setState({ secret: { open: true, value: secret } });
+        if (!this.mounted) { return; }
+
+        return this.setState({ secret: { open: true, value: secret } });
       });
   }
 
@@ -141,7 +149,9 @@ class OAuthClients extends React.Component<CombinedProps, State> {
     const { form: { values } } = this.state;
     Axios.post(apiPath, values)
       .then((response) => {
-        this.setState({
+        if (!this.mounted) { return; }
+
+        return this.setState({
           secret: { value: response.data.secret, open: true },
           form: {
             open: false,
@@ -155,9 +165,13 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         });
       })
       .then((response) => {
+        if (!this.mounted) { return; }
+
         this.requestClients();
       })
       .catch((errResponse) => {
+        if (!this.mounted) { return; }
+
         this.setForm(form => ({
           ...form,
           errors: path(['response', 'data', 'errors'], errResponse),
@@ -203,6 +217,14 @@ class OAuthClients extends React.Component<CombinedProps, State> {
         </TableCell>
       </TableRow>
     ));
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {

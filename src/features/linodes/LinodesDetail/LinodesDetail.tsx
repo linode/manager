@@ -118,6 +118,7 @@ type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
+  mounted: boolean = false;
 
   state = {
     linode: this.props.data.response.linode,
@@ -131,10 +132,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   };
 
   componentWillUnmount() {
+    this.mounted = false;
     this.subscription.unsubscribe();
   }
 
   componentDidMount() {
+    this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
       .filter(newLinodeEvents(mountTime))
@@ -142,10 +145,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
-          .then(linode => this.setState(() => {
-            linode.recentEvent = linodeEvent;
-            return { linode };
-          }));
+          .then((linode) => {
+            if (!this.mounted) { return; }
+
+            this.setState(() => {
+              linode.recentEvent = linodeEvent;
+              return { linode };
+            });
+          });
       });
   }
 
@@ -222,7 +229,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
-      <div>
+      <React.Fragment>
         <Grid container justify="space-between">
           <Grid item style={{ flex: 1 }}>
             <EditableText
@@ -288,7 +295,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           selected={String(configDrawer.selected)}
           error={configDrawer.error}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

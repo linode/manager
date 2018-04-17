@@ -146,6 +146,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     errors: undefined,
   };
 
+  mounted: boolean = false;
+
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     this.setState({ selectedTab: value });
   }
@@ -207,6 +209,14 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
     },
   ];
 
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   onDeploy = () => {
     const { history } = this.props;
     const {
@@ -233,6 +243,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       history.push('/linodes');
     })
     .catch((error: AxiosError) => {
+      if (!this.mounted) { return; }
+
       this.setState(() => ({
         errors: error.response && error.response.data && error.response.data.errors,
       }));
