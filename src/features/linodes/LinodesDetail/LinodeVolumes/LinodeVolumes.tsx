@@ -328,7 +328,6 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       <ConfirmationDialog
         onClose={this.closeUpdateDialog}
         actions={() => <div>
-          <Button onClick={this.closeUpdateDialog}>Cancel</Button>
           <Button
             variant="raised"
             color="secondary"
@@ -336,7 +335,15 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             onClick={method}
           >
             Confirm
-        </Button>
+          </Button>
+          <Button
+            onClick={this.closeUpdateDialog}
+            variant="raised"
+            color="secondary"
+            className="cancel"
+          >
+            Cancel
+          </Button>
         </div>}
         open={open}
         title={title}
