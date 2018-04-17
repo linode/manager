@@ -17,7 +17,8 @@ import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 type ClassNames = 'root'
 | 'title'
 | 'section'
-| 'region';
+| 'region'
+| 'volumeLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -40,7 +41,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       },
     },
   },
-  volume: {},
+  volumeLink: {
+    color: theme.palette.primary.main,
+    fontSize: '1rem',
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+    },
+  },
 });
 
 interface Props {
@@ -92,7 +99,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
           <Typography className={classes.section} variant="caption">
             Volumes: <Link
-              className="btnLink"
+              className={classes.volumeLink}
               to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
           </Typography>
         </Grid>
