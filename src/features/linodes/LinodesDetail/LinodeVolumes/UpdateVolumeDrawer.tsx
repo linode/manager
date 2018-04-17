@@ -131,8 +131,21 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       />
 
       <ActionsPanel>
-        <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button
+          onClick={onSubmit}
+          variant="raised"
+          color="primary"
+        >
+          Submit
+        </Button>
+        <Button
+          onClick={onClose}
+          variant="raised"
+          color="secondary"
+          className="cancel"
+        >
+          Cancel
+        </Button>
       </ActionsPanel>
     </Drawer>
   );

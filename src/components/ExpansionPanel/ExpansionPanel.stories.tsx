@@ -27,7 +27,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
@@ -40,7 +46,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
@@ -57,7 +69,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
@@ -70,7 +88,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
@@ -87,7 +111,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
@@ -100,7 +130,13 @@ storiesOf('ExpansionPanel', module)
       actions={props => (
           <ActionsPanel>
             <Button variant="raised" color="primary">Save</Button>
-            <Button>Cancel</Button>
+            <Button
+              variant="raised"
+              color="secondary"
+              className="cancel"
+            >
+              Cancel
+            </Button>
           </ActionsPanel>
         )
       }
