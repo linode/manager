@@ -358,11 +358,9 @@ const LinodeTheme: Linode.Theme = {
         padding: 16,
         margin: 16,
         backgroundColor: 'transparent',
-        textAlign: 'center',
         [breakpoints.up('md')]: {
           margin: 0,
           padding: 24,
-          textAlign: 'left',
         },
       },
       message: {

@@ -54,10 +54,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
     },
     actions: {
       display: 'flex',
-      justifyContent: 'center',
-      [theme.breakpoints.up('md')]: {
-        justifyContent: 'flex-end',
-      },
+      justifyContent: 'flex-end',
     },
     button: {
       minWidth: 'auto',
@@ -210,7 +207,7 @@ class Notifier extends React.Component<CombinedProps, State> {
               justify="space-between"
               spacing={0}
             >
-              <Grid item xs={12} md={9} lg={10}>
+              <Grid item xs={9} lg={10}>
                 <Typography
                   variant="caption"
                   className={classes.content}
@@ -218,7 +215,7 @@ class Notifier extends React.Component<CombinedProps, State> {
                   {toast.message}
                 </Typography>
               </Grid>
-              <Grid item className={classes.actions} xs={12} md={3} lg={2}>
+              <Grid item className={classes.actions} xs={3} lg={2}>
                 <Button
                   onClick={this.onClose}
                   color="secondary"
