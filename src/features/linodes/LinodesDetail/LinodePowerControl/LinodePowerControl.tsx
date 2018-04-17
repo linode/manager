@@ -204,7 +204,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             className={classes.menuItem}
           >
             <Reload className={`${classes.icon}`} />
-            Power Reboot
+            Reboot
           </MenuItem>
           { isRunning &&
             <MenuItem
