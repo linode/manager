@@ -17,14 +17,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   highlight: { color: 'blue' },
 });
 
-export interface SearchResultT {
+export interface SearchSuggestionT {
   Icon: React.ComponentClass<any>;
   title: string;
   description: string;
   path: string;
 }
 
-interface Props extends SearchResultT {
+interface Props extends SearchSuggestionT {
   searchText: string;
   history: H.History;
 }
@@ -47,7 +47,7 @@ const onClick = (path: string, history: H.History) => {
   history.push(path);
 };
 
-const SearchResult: React.StatelessComponent<CombinedProps> = (props) => {
+const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     title,
     description,
@@ -70,4 +70,4 @@ const SearchResult: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(SearchResult);
+export default styled<Props>(SearchSuggestion);

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
+import Downshift from 'downshift';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -23,14 +24,14 @@ import LinodeTheme from 'src/theme';
 import TextField from 'src/components/TextField';
 import { labelFromType } from 'src/features/linodes/presentation';
 
-import SearchResult, { SearchResultT } from './SearchResult';
+import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
 type Styles =
   'root'
   | 'textfield'
   | 'input'
   | 'icon'
-  | 'searchResults';
+  | 'searchSuggestions';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -58,7 +59,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   input: {
     border: 0,
   },
-  searchResults: {
+  searchSuggestions: {
     position: 'absolute',
     left: 0,
     right: 0,
@@ -75,7 +76,6 @@ interface Props {
 interface State {
   searchText: string;
   lastFetch: moment.Moment;
-  searchResults?: SearchResultT[];
   linodes?: Linode.Linode[];
   volumes?: Linode.Volume[];
   nodebalancers?: Linode.NodeBalancer[];
@@ -100,15 +100,6 @@ class SearchBar extends React.Component<FinalProps, State> {
     );
   }
 
-  showResults() {
-    return (
-      this.dataAvailable()
-      && this.state.searchResults
-      && this.state.searchResults.length
-      && this.state.searchText
-    );
-  }
-
   linodeDescription(typeId: string, imageId: string) {
     const { types } = this.props;
     const { images } = this.state;
@@ -125,36 +116,31 @@ class SearchBar extends React.Component<FinalProps, State> {
     Axios.get(`${API_ROOT}/linode/instances/`)
       .then((response) => {
         this.setState({ linodes: response.data.data });
-        this.search(this.state.searchText);
       });
 
     Axios.get(`${API_ROOT}/volumes`)
       .then((response) => {
         this.setState({ volumes: response.data.data });
-        this.search(this.state.searchText);
       });
 
     Axios.get(`${API_ROOT}/nodebalancers`)
       .then((response) => {
         this.setState({ nodebalancers: response.data.data });
-        this.search(this.state.searchText);
       });
 
     Axios.get(`${API_ROOT}/domains`)
       .then((response) => {
         this.setState({ domains: response.data.data });
-        this.search(this.state.searchText);
       });
 
     Axios.get(`${API_ROOT}/images`)
       .then((response) => {
         this.setState({ images: response.data.data });
-        this.search(this.state.searchText);
       });
   }
 
-  search(query: string) {
-    if (!this.dataAvailable) return;
+  getSearchResults(query: string | null) {
+    if (!this.dataAvailable || !query) return;
 
     const searchResults = [];
 
@@ -207,25 +193,51 @@ class SearchBar extends React.Component<FinalProps, State> {
       }))));
     }
 
-    this.setState({ searchResults });
+    return searchResults;
   }
 
   handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
       searchText: e.target.value,
-      searchResults: undefined,
     }, () => {
-      if (this.state.searchText.length >= 3) {
-        this.search(this.state.searchText);
-        if (!this.dataAvailable() || moment.utc().diff(this.state.lastFetch) > 30000) {
+      if (!this.dataAvailable() || moment.utc().diff(this.state.lastFetch) > 30000) {
+        this.setState({ lastFetch: moment.utc() }, () => {
           this.updateData();
-        }
+        });
       }
     });
   }
 
+  renderSearchResult({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
+    const isHighlighted = highlightedIndex === index;
+    const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
+
+    return (
+      <MenuItem
+        {...itemProps}
+        key={suggestion.label}
+        selected={isHighlighted}
+        component="div"
+        style={{
+          fontWeight: isSelected ? 500 : 400,
+        }}
+      >
+        <SearchSuggestion
+          key={suggestion.title + suggestion.description}
+          Icon={suggestion.Icon}
+          title={suggestion.title}
+          description={suggestion.description}
+          searchText={this.state.searchText}
+          path={suggestion.path}
+          history={history}
+        />
+      </MenuItem>
+    );
+  }
+
   render() {
-    const { classes, history } = this.props;
+    // const { classes, history } = this.props;
+    const { classes } = this.props;
 
     return (
       <React.Fragment>
@@ -235,35 +247,55 @@ class SearchBar extends React.Component<FinalProps, State> {
           <Search
             className={classes.icon}
           />
-          <TextField
-            placeholder="Go to Linodes, Volumes, NodeBalancers, Domains..."
-            className={classes.textfield}
-            InputProps={{
-              'aria-label': 'Search',
-              className: classes.input,
-            }}
-            value={this.state.searchText}
-            onChange={this.handleSearchChange}
+          <Downshift
+            defaultIsOpen={true}
+            render={({
+              getInputProps,
+              isOpen,
+              inputValue,
+            }) => (
+              <div>
+                <TextField
+                  fullWidth
+                  className={classes.textfield}
+                  InputProps={{
+                    classes: {
+                      root: classes.input,
+                    },
+                    ...getInputProps({
+                      placeholder: 'Go to Linodes, Volumes, NodeBalancers, Domains...',
+                      id: 'searchbar-simple',
+                      onChange: this.handleSearchChange,
+                    }),
+                  }}
+                />
+                {isOpen &&
+                  <Paper
+                    className={classes.searchResults}
+                  >
+                    {this.getSearchResults(inputValue).map((suggestion, index)) => {
+
+                    }}
+                    {/*
+                    {this.state.searchResults && this.state.searchResults.map((result) => {
+                      return (
+                        <SearchResult
+                          key={result.title + result.description}
+                          Icon={result.Icon}
+                          title={result.title}
+                          description={result.description}
+                          searchText={this.state.searchText}
+                          path={result.path}
+                          history={history}
+                        />
+                      );
+                    })}
+                    */}
+                  </Paper>
+                }
+              </div>
+            )}
           />
-          {this.showResults() &&
-            <Paper
-              className={classes.searchResults}
-            >
-              {this.state.searchResults && this.state.searchResults.map((result) => {
-                return (
-                  <SearchResult
-                    key={result.title + result.description}
-                    Icon={result.Icon}
-                    title={result.title}
-                    description={result.description}
-                    searchText={this.state.searchText}
-                    path={result.path}
-                    history={history}
-                  />
-                );
-              })}
-            </Paper>
-          }
         </div>
       </React.Fragment>
     );
