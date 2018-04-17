@@ -62,7 +62,7 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
       <div><Icon /></div>
       <div>
         <div>{maybeStyleSegment(title, searchText, highlight)}</div>
-        <div>{maybeStyleSegment(description, searchText, highlight)}</div>
+        <div>{description}</div>
       </div>
     </div>
   );

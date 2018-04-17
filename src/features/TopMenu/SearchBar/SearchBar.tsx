@@ -13,6 +13,7 @@ import {
   StyleRules,
 } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import { MenuItem } from 'material-ui/Menu';
 
 import Search from 'material-ui-icons/Search';
 
@@ -31,7 +32,8 @@ type Styles =
   | 'textfield'
   | 'input'
   | 'icon'
-  | 'searchSuggestions';
+  | 'searchSuggestions'
+  | 'selectedMenuItem';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -65,6 +67,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     right: 0,
     marginTop: 50,
     padding: theme.spacing.unit * 1,
+  },
+  selectedMenuItem: {
+    backgroundColor: '#333',
   },
 });
 
@@ -139,8 +144,8 @@ class SearchBar extends React.Component<FinalProps, State> {
       });
   }
 
-  getSearchResults(query: string | null) {
-    if (!this.dataAvailable || !query) return;
+  getSearchSuggestions(query: string | null) {
+    if (!this.dataAvailable || !query) return [];
 
     const searchResults = [];
 
@@ -208,22 +213,24 @@ class SearchBar extends React.Component<FinalProps, State> {
     });
   }
 
-  renderSearchResult({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
+  renderSuggestion(
+    suggestion: SearchSuggestionT,
+    index: number,
+    highlightedIndex: number | null,
+    itemProps: any,
+  ) {
+    const { classes, history } = this.props;
     const isHighlighted = highlightedIndex === index;
-    const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
 
     return (
       <MenuItem
         {...itemProps}
-        key={suggestion.label}
+        key={suggestion.title + suggestion.description}
         selected={isHighlighted}
         component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
+        classes={{ selected: classes.selectedMenuItem }}
       >
         <SearchSuggestion
-          key={suggestion.title + suggestion.description}
           Icon={suggestion.Icon}
           title={suggestion.title}
           description={suggestion.description}
@@ -236,7 +243,6 @@ class SearchBar extends React.Component<FinalProps, State> {
   }
 
   render() {
-    // const { classes, history } = this.props;
     const { classes } = this.props;
 
     return (
@@ -248,11 +254,12 @@ class SearchBar extends React.Component<FinalProps, State> {
             className={classes.icon}
           />
           <Downshift
-            defaultIsOpen={true}
             render={({
               getInputProps,
+              getItemProps,
               isOpen,
               inputValue,
+              highlightedIndex,
             }) => (
               <div>
                 <TextField
@@ -271,26 +278,16 @@ class SearchBar extends React.Component<FinalProps, State> {
                 />
                 {isOpen &&
                   <Paper
-                    className={classes.searchResults}
+                    className={classes.searchSuggestions}
                   >
-                    {this.getSearchResults(inputValue).map((suggestion, index)) => {
-
-                    }}
-                    {/*
-                    {this.state.searchResults && this.state.searchResults.map((result) => {
-                      return (
-                        <SearchResult
-                          key={result.title + result.description}
-                          Icon={result.Icon}
-                          title={result.title}
-                          description={result.description}
-                          searchText={this.state.searchText}
-                          path={result.path}
-                          history={history}
-                        />
+                    {this.getSearchSuggestions(inputValue).map((suggestion, index) => {
+                      return this.renderSuggestion(
+                        suggestion,
+                        index,
+                        highlightedIndex,
+                        getItemProps({ item: suggestion.title }),
                       );
                     })}
-                    */}
                   </Paper>
                 }
               </div>
