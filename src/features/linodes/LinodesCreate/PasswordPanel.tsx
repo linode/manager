@@ -30,7 +30,7 @@ const styled = withStyles(styles, { withTheme: true });
 interface Props {
   password: string | null;
   error?: string;
-  handleChange: (key: string) => (e: React.ChangeEvent<HTMLInputElement>, label: string) => void;
+  handleChange: (value: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -38,7 +38,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class PasswordPanel extends React.Component<CombinedProps> {
   render() {
     const { classes, handleChange, error } = this.props;
-    const setPassword = handleChange('password');
 
     return (
       <Paper className={classes.root}>
@@ -48,7 +47,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
         <PasswordInput
           label="Root Password"
           placeholder="Enter a password."
-          onChange={e => setPassword(e, e.target.value) }
+          onChange={e => handleChange(e.target.value)}
         />
       </div>
     </Paper>

@@ -34,10 +34,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
-import {
-  getLinodeConfigs,
-  getLinodeVolumes,
-} from 'src/services/linodes';
+import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
