@@ -54,7 +54,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.down('sm')]: {
       backgroundColor: 'white',
-      position: 'fixed',
+      position: 'absolute',
       width: 'calc(100% - 118px)',
       zIndex: '2',
       left: 0,
@@ -325,8 +325,7 @@ class SearchBar extends React.Component<FinalProps, State> {
 
   downshiftStateReducer(state: DownshiftState, changes: StateChangeOptions) {
     switch (changes.type) {
-      case Downshift.stateChangeTypes.clickItem:
-      case Downshift.stateChangeTypes.keyDownEnter:
+      case Downshift.stateChangeTypes.blurInput:
         return {
           ...changes,
           inputValue: '',
