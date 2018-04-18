@@ -44,10 +44,26 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import ErrorState from 'src/components/ErrorState';
 import DeviceSelection from './DeviceSelection';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+ | 'title'
+ | 'intro'
+ | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 1,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  intro: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  actionPanel: {
+    padding: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -168,7 +184,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
   render() {
     const { disks, volumes } = this.state;
-    const { disks: { error: disksError }, volumes: { error: volumesError } } = this.props;
+    const { disks: { error: disksError }, volumes: { error: volumesError }, classes } = this.props;
 
     if (disksError) {
       return <ErrorState errorText="There was an error retrieving disks information." />;
@@ -179,49 +195,51 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Paper>
-        <Typography variant="headline">Rescue</Typography>
-        <Typography>
-          If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot
-          your Linode into Rescue Mode. This is a safe environment for performing many system
-          recovery and disk management tasks.
-        </Typography>
-        {
-          compose<any, any, any, any>(
-            (devices: (Linode.Disk & { _id: string } | Linode.Volume & { _id: string })[]) =>
-              <DeviceSelection
-                devices={devices}
-                onSdaChange={this.onSdaChange}
-                selectedSda={this.state.rescueDevices.sda}
-                onSdbChange={this.onSdbChange}
-                selectedSdb={this.state.rescueDevices.sdb}
-                onSdcChange={this.onSdcChange}
-                selectedSdc={this.state.rescueDevices.sdc}
-                onSddChange={this.onSddChange}
-                selectedSdd={this.state.rescueDevices.sdd}
-                onSdeChange={this.onSdeChange}
-                selectedSde={this.state.rescueDevices.sde}
-                onSdfChange={this.onSdfChange}
-                selectedSdf={this.state.rescueDevices.sdf}
-                onSdgChange={this.onSdgChange}
-                selectedSdg={this.state.rescueDevices.sdg}
-                counter={this.state.counter}
-              />,
-            (disks, volumes) => concat(defaultTo([], disks), defaultTo([], volumes)),
-          )(disks, volumes)
-        }
-        <IconTextLink
-          SideIcon={PlusSquare}
-          onClick={() => this.incrementCounter()}
-          text="Add Disk"
-          title="Add Disk"
-          data-qa-oauth-create
-          disabled={this.state.counter >= 7}
-        />
-        <ActionsPanel>
-          <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
-        </ActionsPanel>
-      </Paper>
+      <React.Fragment>
+        <Paper className={classes.root}>
+          <Typography variant="headline" className={classes.title}>Rescue</Typography>
+          <Typography className={classes.intro}>
+            If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot
+            your Linode into Rescue Mode. This is a safe environment for performing many system
+            recovery and disk management tasks.
+          </Typography>
+          {
+            compose<any, any, any, any>(
+              (devices: (Linode.Disk & { _id: string } | Linode.Volume & { _id: string })[]) =>
+                <DeviceSelection
+                  devices={devices}
+                  onSdaChange={this.onSdaChange}
+                  selectedSda={this.state.rescueDevices.sda}
+                  onSdbChange={this.onSdbChange}
+                  selectedSdb={this.state.rescueDevices.sdb}
+                  onSdcChange={this.onSdcChange}
+                  selectedSdc={this.state.rescueDevices.sdc}
+                  onSddChange={this.onSddChange}
+                  selectedSdd={this.state.rescueDevices.sdd}
+                  onSdeChange={this.onSdeChange}
+                  selectedSde={this.state.rescueDevices.sde}
+                  onSdfChange={this.onSdfChange}
+                  selectedSdf={this.state.rescueDevices.sdf}
+                  onSdgChange={this.onSdgChange}
+                  selectedSdg={this.state.rescueDevices.sdg}
+                  counter={this.state.counter}
+                />,
+              (disks, volumes) => concat(defaultTo([], disks), defaultTo([], volumes)),
+            )(disks, volumes)
+          }
+          <IconTextLink
+            SideIcon={PlusSquare}
+            onClick={() => this.incrementCounter()}
+            text="Add Disk"
+            title="Add Disk"
+            data-qa-oauth-create
+            disabled={this.state.counter >= 7}
+          />
+          </Paper>
+          <ActionsPanel className={classes.actionPanel}>
+            <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
+          </ActionsPanel>
+      </React.Fragment>
     );
   }
 }
