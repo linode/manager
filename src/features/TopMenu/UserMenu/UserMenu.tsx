@@ -61,17 +61,18 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   userWrapper: {
     marginRight: theme.spacing.unit,
     borderRadius: '50%',
-    width: '40px',
-    height: '40px',
+    width: '46px',
+    height: '46px',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('sm')]: {
-      width: '34px',
-      height: '34px',
+      width: '40px',
+      height: '40px',
     },
   },
   leftIcon: {
     width: '100%',
     height: '100%',
+    borderRadius: '50%',
   },
   username: {
     transition: theme.transitions.create(['color']),
