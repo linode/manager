@@ -34,6 +34,7 @@ type Styles =
   | 'input'
   | 'icon'
   | 'searchSuggestions'
+  | 'item'
   | 'selectedMenuItem';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
@@ -76,8 +77,26 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: 0,
     boxShadow: '0 0 5px #ddd',
   },
+  item: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '&:last-item': {
+      border: 0,
+    },
+  },
   selectedMenuItem: {
     backgroundColor: '#fafafa !important',
+    '& .circle': {
+      transition: theme.transitions.create(['fill']),
+      fill: theme.palette.primary.main,
+    },
+    '& .outerCircle': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: '#2967B1',
+    },
+    '& .insidePath *': {
+      transition: theme.transitions.create(['stroke']),
+      stroke: 'white',
+    },
   },
 });
 
@@ -236,6 +255,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         key={suggestion.title + suggestion.description}
         selected={isHighlighted}
         component="div"
+        className={classes.item}
         classes={{ selected: classes.selectedMenuItem }}
       >
         <SearchSuggestion
