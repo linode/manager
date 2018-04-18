@@ -14,7 +14,8 @@ import {
 } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import { MenuItem } from 'material-ui/Menu';
-
+import IconButton from 'material-ui/IconButton';
+import Close from 'material-ui-icons/Close';
 import Search from 'material-ui-icons/Search';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -29,6 +30,8 @@ import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
 type Styles =
   'root'
+  | 'navIconHide'
+  | 'close'
   | 'textfieldContainer'
   | 'textfield'
   | 'input'
@@ -48,14 +51,44 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: theme.spacing.unit,
     marginLeft: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2,
+    transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.down('sm')]: {
-      backgroundColor: 'transparent',
-      height: 40,
-      maxWidth: 50,
+      backgroundColor: 'white',
+      position: 'fixed',
+      width: 'calc(100% - 118px)',
+      zIndex: '2',
+      left: 0,
+      visibility: 'hidden',
+      opacity: 0,
       margin: 0,
-      '&:hover input': {
+      '&.active': {
+        visibility: 'visible',
         opacity: 1,
       },
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  navIconHide: {
+    '& > span': {
+      justifyContent: 'flex-end',
+    },
+    '& svg': {
+      width: 32,
+      height: 32,
+    },
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  close: {
+    '& > span': {
+      padding: 2,
+    },
+    '&:hover, &:focus': {
+      color: 'white',
+      backgroundColor: theme.palette.primary.main,
     },
   },
   icon: {
@@ -64,12 +97,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   textfieldContainer: {
     width: '100%',
-    [theme.breakpoints.down('sm')]: {
-      position: 'fixed',
-      width: '100%',
-      top: 65,
-      left: 0,
-    },
+    [theme.breakpoints.down('sm')]: {},
   },
   textfield: {
     margin: 0,
@@ -83,14 +111,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     '& input': {
       transition: theme.transitions.create(['opacity']),
       fontSize: '1.0em',
-      [theme.breakpoints.down('sm')]: {
-        opacity: 0,
-        padding: '16px 28px',
-        background: 'white',
-        '&:focus': {
-          opacity: 1,
-        },
-      },
+      [theme.breakpoints.down('sm')]: {},
     },
   },
   searchSuggestions: {
@@ -137,6 +158,7 @@ interface State {
   nodebalancers?: Linode.NodeBalancer[];
   domains?: Linode.Domain[];
   images?: Linode.Image[];
+  searchActive: boolean;
 }
 
 type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
@@ -145,6 +167,7 @@ class SearchBar extends React.Component<FinalProps, State> {
   state: State = {
     searchText: '',
     lastFetch: moment.utc(),
+    searchActive: false,
   };
 
   dataAvailable() {
@@ -264,6 +287,12 @@ class SearchBar extends React.Component<FinalProps, State> {
     });
   }
 
+  toggleSearch = () => {
+    this.setState({
+      searchActive: !this.state.searchActive,
+    });
+  }
+
   renderSuggestion(
     suggestion: SearchSuggestionT,
     index: number,
@@ -309,12 +338,24 @@ class SearchBar extends React.Component<FinalProps, State> {
 
   render() {
     const { classes, history } = this.props;
+    const { searchActive } = this.state;
 
     return (
       <React.Fragment>
-        <div
-          className={classes.root}
+        <IconButton
+          color="inherit"
+          aria-label="open menu"
+          onClick={this.toggleSearch}
+          className={classes.navIconHide}
+          style={{ marginRight: 10 }}
         >
+          <Search />
+        </IconButton>
+        <div
+          className={`
+          ${classes.root}
+          ${searchActive ? 'active' : ''}
+        `}>
           <Search
             className={classes.icon}
           />
@@ -362,6 +403,14 @@ class SearchBar extends React.Component<FinalProps, State> {
               </div>
             )}
           />
+          <IconButton
+            color="inherit"
+            aria-label="close menu"
+            onClick={this.toggleSearch}
+            className={classes.navIconHide}
+          >
+            <Close className={classes.close} />
+          </IconButton>
         </div>
       </React.Fragment>
     );
