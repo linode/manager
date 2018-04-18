@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import {
   withStyles,
   StyleRulesCallback,
@@ -44,6 +45,11 @@ interface State {}
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
+const typeMap = {
+  auto: 'Automatic',
+  snapshot: 'Manual',
+};
+
 class LinodeBackup extends React.Component<CombinedProps, State> {
   state = {};
 
@@ -82,62 +88,47 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
   }
 
-  Table = (): JSX.Element | null => {
+  Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
     return (
       <Paper>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell>Size</TableCell>
-              <TableCell>File System Path</TableCell>
+              <TableCell>Date Created</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Duration</TableCell>
+              <TableCell>Disks</TableCell>
+              <TableCell>Space Required</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {
-              attachedVolumes!.map((volume) => {
-                /** @todo Remove path defaulting when API releases filesystem_path. */
-                const label = pathOr('', ['label'], volume);
-                const size = pathOr('', ['size'], volume);
-                const filesystem_path = pathOr(
-                  `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
-                  ['filesystem_path'],
-                  volume,
-                );
-
-                return <TableRow key={volume.id}>
-                  <TableCell>{label}</TableCell>
-                  <TableCell>{size} GiB</TableCell>
-                  <TableCell>{filesystem_path}</TableCell>
+            {backups.map((backup) => {
+              return (
+                <TableRow key={backup.id}>
                   <TableCell>
-                    <ActionMenu
-                      volumeId={volume.id}
-                      onDetach={this.openUpdateDialog('detach', volume.id)}
-                      onDelete={this.openUpdateDialog('delete', volume.id)}
-                      onClone={this.openUpdatingDrawer(
-                        'clone',
-                        volume.id,
-                        volume.label,
-                        volume.size,
-                      )}
-                      onEdit={this.openUpdatingDrawer(
-                        'edit',
-                        volume.id,
-                        volume.label,
-                        volume.size,
-                      )}
-                      onResize={this.openUpdatingDrawer(
-                        'resize',
-                        volume.id,
-                        volume.label,
-                        volume.size,
-                      )}
-                    />
+                    {moment.utc(backup.created).local().format('YYYY-MM-DD - HH:MM')}
                   </TableCell>
-                </TableRow>;
-              })
-            }
+                  <TableCell>{typeMap[backup.type]}</TableCell>
+                  <TableCell>
+                    {moment.duration(
+                      moment(backup.finished).diff(moment(backup.created)),
+                    ).humanize()}
+                  </TableCell>
+                  <TableCell>
+                    {backup.disks.map(disk => (
+                      <div>{disk.label} ({disk.filesystem}) - {disk.size}MB</div>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {backup.disks.reduce((acc, disk) => (
+                      acc + disk.size
+                    ), 0)}MB
+                  </TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </Paper>
@@ -146,6 +137,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   Management = (): JSX.Element | null => {
     const { classes } = this.props;
+    const backups = this.aggregateBackups();
 
     return (
       <React.Fragment>
@@ -154,8 +146,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           className={classes.title}>
           Backups
         </Typography>
-        {this.aggregateBackups() &&
-          <this.Table />
+        {backups &&
+          <this.Table backups={backups} />
         }
       </React.Fragment>
     );
