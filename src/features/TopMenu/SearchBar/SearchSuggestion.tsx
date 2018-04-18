@@ -7,14 +7,43 @@ import {
 } from 'material-ui';
 import * as H from 'history';
 
-type ClassNames = 'root' | 'highlight';
+type ClassNames = 'root'
+ | 'highlight'
+ | 'suggestionItem'
+ | 'suggestionIcon'
+ | 'suggestionContent'
+ | 'suggestionTitle'
+ | 'suggestionDescription';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     cursor: 'pointer',
     display: 'flex',
   },
-  highlight: { color: 'blue' },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
+  suggestionItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  suggestionIcon: {
+    '& svg': {
+      width: '40px',
+      height: '40px',
+    },
+  },
+  suggestionContent: {
+    marginLeft: theme.spacing.unit * 2,
+  },
+  suggestionTitle: {
+    fontSize: '1rem',
+  },
+  suggestionDescription: {
+    fontSize: '.8rem',
+    fontWeight: 700,
+  },
 });
 
 export interface SearchSuggestionT {
@@ -56,13 +85,26 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
     classes: { highlight, root },
     path,
     history,
+    classes,
   } = props;
   return (
     <div onClick={() => onClick(path, history)} className={root}>
-      <div><Icon /></div>
-      <div>
-        <div>{maybeStyleSegment(title, searchText, highlight)}</div>
-        <div>{description}</div>
+      <div className={`
+        ${classes.suggestionItem}
+        ${classes.suggestionIcon}
+      `}>
+        <Icon />
+      </div>
+      <div className={`
+        ${classes.suggestionItem}
+        ${classes.suggestionContent}
+      `}>
+        <div className={classes.suggestionTitle}>
+          {maybeStyleSegment(title, searchText, highlight)}
+        </div>
+        <div className={classes.suggestionDescription}>
+          {description}
+        </div>
       </div>
     </div>
   );

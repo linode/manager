@@ -29,6 +29,7 @@ import SearchSuggestion, { SearchSuggestionT } from './SearchSuggestion';
 
 type Styles =
   'root'
+  | 'textfieldContainer'
   | 'textfield'
   | 'input'
   | 'icon'
@@ -51,22 +52,29 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     color: '#c9cacb',
     fontSize: '2rem',
   },
+  textfieldContainer: {
+    width: '100%',
+  },
   textfield: {
-    color: '#606469',
+    margin: 0,
     flex: 1,
+    minHeight: 'initial',
+  },
+  input: {
+    maxWidth: '100%',
+    border: 0,
+    background: 'transparent',
     '& input': {
       fontSize: '1.0em',
     },
-  },
-  input: {
-    border: 0,
   },
   searchSuggestions: {
     position: 'absolute',
     left: 0,
     right: 0,
-    marginTop: 50,
-    padding: theme.spacing.unit * 1,
+    top: 60,
+    padding: 0,
+    boxShadow: '0 0 5px #ddd',
   },
   selectedMenuItem: {
     backgroundColor: '#fafafa !important',
@@ -278,7 +286,7 @@ class SearchBar extends React.Component<FinalProps, State> {
               highlightedIndex,
               clearSelection,
             }) => (
-              <div>
+              <div className={classes.textfieldContainer}>
                 <TextField
                   fullWidth
                   className={classes.textfield}
