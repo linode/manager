@@ -16,6 +16,7 @@ import {
   path,
   prop,
   split,
+  pathOr,
 } from 'ramda';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 
@@ -28,7 +29,6 @@ import {
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-
 import {
   rescue as rescueLinode,
   getDisks as getLinodeDisks,
@@ -36,6 +36,7 @@ import {
 } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -136,7 +137,8 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
         /** @todo What is the result here? Toast? Redirect? Brimstone and fire? */
       })
       .catch((errorResponse) => {
-        /** @todo Toast notification. */
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
   }
 
