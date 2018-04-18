@@ -27,10 +27,34 @@ import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+ | 'title'
+ | 'intro'
+ | 'imageControl'
+ | 'image'
+ | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 1,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  intro: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  imageControl: {
+    display: 'flex',
+  },
+  image: {
+    display: 'flex',
+  },
+  actionPanel: {
+    padding: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 3,
+  },
 });
 
 interface Props {
@@ -97,7 +121,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   onPasswordChange = (value: string) => this.setState({ password: value });
 
   render() {
-    const { images: { error: imagesError } } = this.props;
+    const { images: { error: imagesError }, classes } = this.props;
     const { errors } = this.state;
 
     if (imagesError) {
@@ -109,45 +133,50 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     const passwordError = getErrorFor('password');
 
     return (
-      <Paper>
-        <Typography variant="headline">Rebuild</Typography>
-        <Typography>
-          If you can't rescue an exiting disk, it's time to rebuild your Linode. There are a couple
-          of different ways you can do this, from a backup or start over with a fresh Linux
-          distribution. Rebuilding will destroy all data.
-        </Typography>
-        <FormControl fullWidth>
-          <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
-            Image
-          </InputLabel>
-          <Select
-            helpText="Choosing a 64-bit distro is recommended."
-            error={Boolean(imageError)}
-            value={this.state.selected || ''}
-            onChange={e => this.onImageChange(e.target.value)}
-            inputProps={{ name: 'image-select', id: 'image-select' }}
-          >
-            <MenuItem value={''} disabled>Select an Image</MenuItem>
-            {
-              Object
-                .entries(this.state.images)
-                .map(([group, images]) => [
-                  <Typography>{getDisplayNameForGroup(group)}</Typography>,
-                  ...images.map(({ id, label }: Linode.Image) =>
-                    <MenuItem key={id} value={id}>{label}</MenuItem>),
-                ])
-            }
-          </Select>
-          {imageError && <FormHelperText error>{imageError}</FormHelperText>}
-        </FormControl>
+      <React.Fragment>
+        <Paper className={classes.root}>
+          <Typography variant="headline" className={classes.title}>Rebuild</Typography>
+          <Typography className={classes.intro}>
+            If you can't rescue an exiting disk, it's time to rebuild your Linode.
+            There are a couple of different ways you can do this,
+            from a backup or start over with a fresh Linux
+            distribution. Rebuilding will destroy all data.
+          </Typography>
+          <FormControl className={classes.imageControl}>
+            <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
+              Image
+            </InputLabel>
+            <div className={classes.image}>
+              <Select
+                helpText="Choosing a 64-bit distro is recommended."
+                error={Boolean(imageError)}
+                value={this.state.selected || ''}
+                onChange={e => this.onImageChange(e.target.value)}
+                inputProps={{ name: 'image-select', id: 'image-select' }}
+              >
+                <MenuItem value={''} disabled>Select an Image</MenuItem>
+                {
+                  Object
+                    .entries(this.state.images)
+                    .map(([group, images]) => [
+                      <Typography>{getDisplayNameForGroup(group)}</Typography>,
+                      ...images.map(({ id, label }: Linode.Image) =>
+                        <MenuItem key={id} value={id}>{label}</MenuItem>),
+                    ])
+                }
+              </Select>
+              {imageError && <FormHelperText error>{imageError}</FormHelperText>}
+            </div>
+          </FormControl>
 
-        <PasswordInput
-          label="Root Password"
-          onChange={e => this.onPasswordChange(e.target.value)}
-          errorText={passwordError}
-          value={this.state.password || ''}
-        />
-        <ActionsPanel>
+          <PasswordInput
+            label="Root Password"
+            onChange={e => this.onPasswordChange(e.target.value)}
+            errorText={passwordError}
+            value={this.state.password || ''}
+          />
+        </Paper>
+        <ActionsPanel className={classes.actionPanel}>
           <Button
             variant="raised"
             color="secondary"
@@ -157,7 +186,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             Rebuild
           </Button>
         </ActionsPanel>
-      </Paper>
+      </React.Fragment>
     );
   }
 }
