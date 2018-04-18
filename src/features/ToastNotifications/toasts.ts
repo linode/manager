@@ -26,10 +26,4 @@ export const sendToast = (message: string, level = 'notice'): void => {
   toast$.next(createToast(message, level));
 };
 
-// const toast$ = Observable.from([
-//   createToast('something or other'),
-//   createToast('who cares', 'warn'),
-//   createToast('whatever', 'error'),
-// ]);
-
 export default toast$;
