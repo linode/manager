@@ -375,6 +375,7 @@ class SearchBar extends React.Component<FinalProps, State> {
                 <TextField
                   fullWidth
                   className={classes.textfield}
+                  autoFocus={searchActive}
                   InputProps={{
                     classes: {
                       root: classes.input,
