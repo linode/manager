@@ -2,17 +2,23 @@ import * as Rx from 'rxjs/Rx';
 import { API_ROOT } from 'src/constants';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
+import { assoc, compose, when } from 'ramda';
 
 import { dateFormat } from 'src/time';
+
+let initialRequest: boolean = true;
 
 function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-export const events$ = new Rx.Subject<Linode.Event>();
+export interface EventStreamType extends Linode.Event {
+  _initial?: boolean;
+}
+export const events$ = new Rx.Subject<EventStreamType>();
 
 let filterDatestamp = createInitialDatestamp();
-const pollIDs: { [key: string]: boolean} = {};
+const pollIDs: { [key: string]: boolean } = {};
 
 const initialPollInterval = 2000;
 export let eventRequestDeadline = Date.now();
@@ -51,42 +57,59 @@ type EventResponse = AxiosResponse<Linode.ManyResourceState<Linode.Event>>;
 export function requestEvents() {
   Axios.get(
     `${API_ROOT}/account/events`,
-    { headers: { 'X-Filter': JSON.stringify(
-      generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
-    ) } })
-  .then((response: EventResponse) => response.data.data)
-  .then((data) => {
-    /*
-     * Events come back in reverse chronological order, so we update our
-     * datestamp with the latest Event that we've seen. We need to perform
-     * a date comparison here because we also might get back some old events
-     * from IDs that we're polling for.
-     */
-    if (data[0]) {
-      const newDatestamp = moment(data[0].created);
-      const currentDatestamp = moment(filterDatestamp);
-      if (newDatestamp > currentDatestamp) {
-        filterDatestamp = newDatestamp.format(dateFormat);
+    {
+      headers: {
+        'X-Filter': JSON.stringify(
+          generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
+        ),
+      },
+    })
+    .then((response: EventResponse) => response.data.data)
+    .then(events => events.map(
+      /** @note This is my first succesfully typed compose... */
+      compose<Linode.Event, Linode.Event & { _initial: boolean }>(
+        when(() => initialRequest, assoc('_initial', true)),
+      ),
+    ))
+    .then((events) => {
+      if (initialRequest) {
+        initialRequest = false;
       }
-    }
+      return events;
+    })
+    .then((data) => {
+      /*
+       * Events come back in reverse chronological order, so we update our
+       * datestamp with the latest Event that we've seen. We need to perform
+       * a date comparison here because we also might get back some old events
+       * from IDs that we're polling for.
+       */
 
-    data.reverse().map((linodeEvent) => {
-      // if an Event completes it is removed from pollIDs
-      if (linodeEvent.percent_complete === 100
+      if (data[0]) {
+        const newDatestamp = moment(data[0].created);
+        const currentDatestamp = moment(filterDatestamp);
+        if (newDatestamp > currentDatestamp) {
+          filterDatestamp = newDatestamp.format(dateFormat);
+        }
+      }
+
+      data.reverse().map((linodeEvent) => {
+        // if an Event completes it is removed from pollIDs
+        if (linodeEvent.percent_complete === 100
           && pollIDs[linodeEvent.id]) {
-        delete pollIDs[linodeEvent.id];
-      }
+          delete pollIDs[linodeEvent.id];
+        }
 
-      // we poll for Event IDs that have not yet been completed
-      if (linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100) {
-        // when we have an "incomplete event" poll at the initial polling rate
-        resetEventsPolling();
-        pollIDs[linodeEvent.id] = true;
-      }
+        // we poll for Event IDs that have not yet been completed
+        if (linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100) {
+          // when we have an "incomplete event" poll at the initial polling rate
+          resetEventsPolling();
+          pollIDs[linodeEvent.id] = true;
+        }
 
-      events$.next(linodeEvent);
+        events$.next(linodeEvent);
+      });
     });
-  });
 }
 
 setInterval(

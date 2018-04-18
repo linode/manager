@@ -10,21 +10,24 @@ import Button from 'material-ui/Button';
 import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import Snackbar, { SnackbarProps } from 'material-ui/Snackbar';
-
+import Close from 'material-ui-icons/Close';
 
 type ClassNames = 'root'
   | 'content'
-  | 'contentInner'
   | 'actions'
   | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  content: {
-    textAlign: 'center',
+  root: {
+    backgroundColor: 'white',
+    padding: 12,
     [theme.breakpoints.up('md')]: {
-      textAlign: 'left',
+      borderRadius: 2,
+      maxWidth: 'initial !important',
+      width: 820,
     },
+  },
+  content: {
     '& a': {
       color: '#000',
       '&:hover': {
@@ -32,18 +35,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       },
     },
   },
-  contentInner: {
-    paddingLeft: theme.spacing.unit,
-  },
   actions: {
     display: 'flex',
-    justifyContent: 'center',
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'flex-end',
-    },
+    justifyContent: 'flex-end',
   },
   button: {
-    padding: '6px 14px 7px',
+    minWidth: 'auto',
+    minHeight: 'auto',
+    padding: 0,
+    '& > span': {
+      padding: 2,
+    },
+    '& svg': {
+      width: 18,
+      height: 18,
+    },
+    '&:hover, &:focus': {
+      color: 'white',
+      backgroundColor: theme.palette.primary.main,
+    },
   },
 });
 
@@ -57,7 +67,9 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (<Snackbar
     {...rest}
-    className={classes.root}
+    SnackbarContentProps={{
+      className: classes.root,
+    }}
     message={
       <Grid
         container
@@ -65,21 +77,21 @@ const BetaNotification: React.StatelessComponent<CombinedProps> = (props) => {
         justify="space-between"
         spacing={0}
       >
-        <Grid item className={classes.content} xs={12} md={9} lg={10}>
-          <Typography className={classes.contentInner}>
+        <Grid item className={classes.content} xs={9} lg={10}>
+          <Typography>
             This is the early-access Linode Manager. <a href="https://manager.linode.com/">Click
             here</a> to go back to the classic Linode Manager.
           </Typography>
         </Grid>
         { onClose &&
-        <Grid item className={classes.actions} xs={12} md={3} lg={2}>
+        <Grid item className={classes.actions} xs={3} lg={2}>
             <Button
               onClick={e => onClose(e, '')}
-              color="primary"
+              color="secondary"
               variant="raised"
               className={classes.button}
             >
-              Close
+              <Close />
             </Button>
           </Grid>
         }

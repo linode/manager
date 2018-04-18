@@ -26,6 +26,7 @@ import Placeholder from 'src/components/Placeholder';
 
 import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import ToastNotifications from 'src/features/ToastNotifications';
 
 import BetaNotification from './BetaNotification';
 
@@ -202,6 +203,7 @@ export class App extends React.Component<CombinedProps, State> {
             open={this.state.betaNotification}
             onClose={this.closeBetaNotice}
             data-qa-beta-notice/>
+          <ToastNotifications />
         </React.Fragment>
       </MuiThemeProvider>
     );

@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import * as moment from 'moment';
+import { pathOr } from 'ramda';
 
 import { API_ROOT } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
@@ -7,6 +8,7 @@ import { events$, resetEventsPolling } from 'src/events';
 import { dateFormat } from 'src/time';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getLinodeConfigs } from 'src/services/linode';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 export const genEvent = (
   action: string,
@@ -42,6 +44,10 @@ const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
   .then((response) => {
     events$.next(genEvent('linode_reboot', id, label));
     resetEventsPolling();
+  })
+  .catch((err) => {
+    const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+    errors.forEach(e => sendToast(e.reason, 'error'));
   });
 };
 
