@@ -18,11 +18,13 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 
-type CSSClasses = 'root' | 'menu' | 'button' | 'caret';
+type CSSClasses = 'wrapper' | 'menu' | 'button' | 'caret';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
-  root: {
-    flex: 1,
+  wrapper: {
+    [theme.breakpoints.down('sm')]: {
+      flex: 1,
+    },
   },
   button: {
     paddingRight: 22,
@@ -99,7 +101,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     const itemsLen = this.items.length;
 
     return (
-      <div className={classes.root}>
+      <div className={classes.wrapper}>
         <Button
           variant="raised"
           color="primary"

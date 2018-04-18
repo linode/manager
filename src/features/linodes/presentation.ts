@@ -10,6 +10,10 @@ export function formatRegion(region: string) {
   return `${countryCode.toUpperCase()} ${titlecase(area)}`;
 }
 
+export function labelFromType(type: Linode.LinodeType) {
+  return typeLabelLong(type.memory, type.disk, type.vcpus);
+}
+
 export function typeLabelLong(memory?: number, disk?: number, cpus?: number) {
   return `${typeLabel(memory)} ${typeLabelDetails(memory, disk, cpus)}`;
 }

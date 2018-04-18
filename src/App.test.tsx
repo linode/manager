@@ -15,6 +15,7 @@ it('renders without crashing', () => {
           classes={{ appFrame: '', content: '', wrapper: '' }}
           request={jest.fn()}
           response={jest.fn()}
+          longLivedLoaded
         />
       </StaticRouter>
     </Provider>,
