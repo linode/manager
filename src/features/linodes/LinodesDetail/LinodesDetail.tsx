@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { pathEq } from 'ramda';
-import * as moment from 'moment';
 import Axios from 'axios';
+import { pathEq, pathOr } from 'ramda';
+import * as moment from 'moment';
+
+
 import {
   withStyles,
   StyleRulesCallback,
@@ -39,6 +41,7 @@ import LinodeBackup from './LinodeBackup';
 import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 type Props = RouteComponentProps<{ linodeId?: number }>;
 
@@ -218,7 +221,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { linode } = this.state;
     Axios.put(`${API_ROOT}/linode/instances/${linode.id}`, { label })
       .catch((err) => {
-        /** @todo Toast error. */
+        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+        errors.forEach(e => sendToast(e.reason, 'error'));
+        this.setState({ linode });
       });
   }
 
