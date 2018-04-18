@@ -35,6 +35,7 @@ import {
   RescueRequestObject,
 } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
+import { resetEventsPolling } from 'src/events';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import IconTextLink from 'src/components/IconTextLink';
@@ -134,6 +135,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
     rescueLinode(linodeId, createRescueDevicesPostObject(rescueDevices))
       .then((response) => {
+        resetEventsPolling();
         /** @todo What is the result here? Toast? Redirect? Brimstone and fire? */
       })
       .catch((errorResponse) => {
@@ -178,7 +180,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <Typography variant="headline">Resize</Typography>
+        <Typography variant="headline">Rescue</Typography>
         <Typography>
           If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot
           your Linode into Rescue Mode. This is a safe environment for performing many system
