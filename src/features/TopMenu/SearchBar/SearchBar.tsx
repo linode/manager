@@ -48,6 +48,15 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     padding: theme.spacing.unit,
     marginLeft: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2,
+    [theme.breakpoints.down('sm')]: {
+      backgroundColor: 'transparent',
+      height: 40,
+      maxWidth: 50,
+      margin: 0,
+      '&:hover input': {
+        opacity: 1,
+      },
+    },
   },
   icon: {
     color: '#c9cacb',
@@ -55,6 +64,12 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   textfieldContainer: {
     width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      position: 'fixed',
+      width: '100%',
+      top: 65,
+      left: 0,
+    },
   },
   textfield: {
     margin: 0,
@@ -66,7 +81,16 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     border: 0,
     background: 'transparent',
     '& input': {
+      transition: theme.transitions.create(['opacity']),
       fontSize: '1.0em',
+      [theme.breakpoints.down('sm')]: {
+        opacity: 0,
+        padding: '16px 28px',
+        background: 'white',
+        '&:focus': {
+          opacity: 1,
+        },
+      },
     },
   },
   searchSuggestions: {

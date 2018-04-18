@@ -37,9 +37,6 @@ const styles = (theme: Theme): StyleRules => ({
   },
   toolbar: {
     minHeight: 64,
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 72,
-    },
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
     },
