@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Axios, { AxiosResponse } from 'axios';
-import { compose } from 'ramda';
+import { compose, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -21,14 +21,15 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { resize as resizeLinode } from 'src/service/linodes';
 import { resetEventsPolling, events$ } from 'src/events';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LinodeTheme from 'src/theme';
 
 type ClassNames = 'root'
- | 'title'
- | 'subTitle'
- | 'currentPlanContainer'
- | 'actionPanel';
+  | 'title'
+  | 'subTitle'
+  | 'currentPlanContainer'
+  | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -85,7 +86,8 @@ class LinodeResize extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        /** @todo Toast notification. */
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
   }
 
