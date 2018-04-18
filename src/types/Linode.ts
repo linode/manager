@@ -30,19 +30,19 @@ namespace Linode {
     transfer_quota: number;
   }
 
-  interface LinodeBackups {
+  export interface LinodeBackups {
     enabled: boolean;
     schedule: LinodeBackupSchedule;
     last_backup?: LinodeBackup;
     snapshot?: LinodeBackup;
   }
 
-  interface LinodeBackupSchedule {
+  export interface LinodeBackupSchedule {
     window: string;
     day: string;
   }
 
-  interface LinodeBackup {
+  export interface LinodeBackup {
     id: number;
     label: string;
     status: LinodeBackupStatus;
