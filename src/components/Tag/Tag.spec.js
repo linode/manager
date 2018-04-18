@@ -1,4 +1,3 @@
-const { constants } = require('../../../e2e/constants');
 const { waitForFocus, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Tags Suite', () => {

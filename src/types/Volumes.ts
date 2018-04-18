@@ -8,6 +8,7 @@ namespace Linode {
     linode_id: number;
     created: string;
     updated: string;
+    filesystem_path: string;
   }
 
   type VolumeStatus =

@@ -7,14 +7,15 @@ import {
 } from 'material-ui';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Typography from 'material-ui/Typography';
-
+import Button, { ButtonProps } from 'material-ui/Button';
 import Grid from 'src/components/Grid';
 import LinodeTheme from 'src/theme';
 
 type ClassNames = 'root'
   | 'title'
   | 'copy'
-  | 'icon';
+  | 'icon'
+  | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   '@keyframes scaleIn': {
@@ -61,18 +62,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
     fontWeight: 700,
   },
+  button: {},
 });
 
-interface Props {
+export interface Props {
   icon?: React.ComponentType<any>;
   copy?: string;
   title?: string;
+  buttonProps?: ButtonProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, copy, title, icon: Icon } = props;
+  const { classes, copy, title, icon: Icon, buttonProps } = props;
   return (
     <Grid
       container
@@ -95,6 +98,16 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       <Grid item xs={12} lg={10} className={classes.copy}>
         <Typography variant="body1">{copy}</Typography>
       </Grid>
+      {buttonProps &&
+        <Grid item xs={12} lg={10} className={classes.copy}>
+          <Button
+            variant="raised"
+            color="primary"
+            className={classes.button}
+            {...buttonProps}
+          />
+        </Grid>
+      }
     </Grid >
   );
 };

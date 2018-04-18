@@ -32,14 +32,20 @@ export class Weblish extends React.Component<CombinedProps, State> {
     renderingLish: true,
   };
 
+  mounted: boolean = false;
+
   getLinode() {
     const { match: { params: { linodeId } } } = this.props;
     Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
+        if (!this.mounted) { return; }
+
         const { data: linode } = response;
         this.setState({ linode }, this.connect);
       })
       .catch(() => {
+        if (!this.mounted) { return; }
+
         this.setState({ renderingLish: false });
       });
   }
@@ -47,8 +53,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
   componentWillMount() {
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
+    this.mounted = false;
     Promise.all([webLishCss, xtermCss])
       .then(() => this.getLinode());
+  }
+
+  componentDidMount() {
+    this.mounted = true;
   }
 
   getLishSchemeAndHostname(region: string): string {
