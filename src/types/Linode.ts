@@ -42,6 +42,14 @@ namespace Linode {
     day: string;
   }
 
+  export interface LinodeBackupsResponse {
+    automatic: LinodeBackup[];
+    snapshot: {
+      current: LinodeBackup,
+      in_progress: LinodeBackup,
+    };
+  }
+
   export interface LinodeBackup {
     id: number;
     label: string;
