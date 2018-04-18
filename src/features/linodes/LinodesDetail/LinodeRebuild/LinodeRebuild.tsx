@@ -119,11 +119,13 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             Image
           </InputLabel>
           <Select
+            helpText="Choosing a 64-bit distro is recommended."
             error={Boolean(imageError)}
             value={this.state.selected || ''}
             onChange={e => this.onImageChange(e.target.value)}
             inputProps={{ name: 'image-select', id: 'image-select' }}
           >
+            <MenuItem value={''} disabled>Select an Image</MenuItem>
             {
               Object
                 .entries(this.state.images)
