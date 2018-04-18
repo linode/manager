@@ -91,6 +91,11 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     gravatarUrl: undefined,
   };
 
+  constructor(props: PropsWithStylesAndRoutes) {
+    super(props);
+    props.profile && this.getGravatarUrl(props.profile);
+  }
+
   mounted: boolean = false;
 
   handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -141,8 +146,7 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    nextProps.profile &&
-      this.getGravatarUrl(nextProps.profile);
+    nextProps.profile && this.getGravatarUrl(nextProps.profile);
   }
 
   renderAvatar() {

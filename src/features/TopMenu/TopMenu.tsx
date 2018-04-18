@@ -11,8 +11,9 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 
-import UserMenu from './UserMenu';
 import AddNewMenu from './AddNewMenu';
+import SearchBar from './SearchBar';
+import UserMenu from './UserMenu';
 import UserNotificationMenu from './UserNotificationMenu';
 
 type ClassNames = 'appBar'
@@ -36,9 +37,6 @@ const styles = (theme: Theme): StyleRules => ({
   },
   toolbar: {
     minHeight: 64,
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 72,
-    },
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
     },
@@ -79,6 +77,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
             <MenuIcon />
           </IconButton>
           <AddNewMenu />
+          <SearchBar />
           <UserMenu />
           <UserNotificationMenu />
         </Toolbar>

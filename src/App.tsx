@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Axios from 'axios';
+import { pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -74,6 +75,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 });
 
 interface Props {
+  longLivedLoaded: boolean;
 }
 
 interface ConnectedProps {
@@ -105,7 +107,6 @@ export class App extends React.Component<CombinedProps, State> {
     const promises = [
       new Promise(() => {
         request(['types']);
-
         return Axios.get(`${API_ROOT}/linode/types`)
           .then(({ data }) => {
             response(['types'], data);
@@ -114,7 +115,6 @@ export class App extends React.Component<CombinedProps, State> {
       }),
       new Promise(() => {
         request(['profile']);
-
         return Axios.get(`${API_ROOT}/profile`)
           .then(({ data }) => {
             response(['profile'], data);
@@ -147,77 +147,83 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes } = this.props;
+    const { classes, longLivedLoaded } = this.props;
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <React.Fragment>
-          <CssBaseline />
-          <div className={classes.appFrame}>
-            <SideMenu open={menuOpen} toggle={this.toggleMenu} />
-            <main className={classes.content}>
-              <TopMenu toggleSideMenu={this.toggleMenu} />
-              <div className={classes.wrapper}>
-                <Switch>
-                  <Route exact path="/dashboard" render={() =>
-                    <Placeholder title="Dashboard" />} />
-                  <Route path="/linodes" component={LinodesRoutes} />
-                  <Route exact path="/volumes" render={() =>
-                    <Placeholder
-                      title="Volumes"
-                      icon={VolumeIcon}
-                    />}
-                  />
-                  <Route exact path="/nodebalancers" render={() =>
-                    <Placeholder
-                      title="NodeBalancers"
-                      icon={NodeBalancerIcon}
-                    />}
-                  />
-                  <Route exact path="/domains" render={() =>
-                    <Placeholder title="Domains" />} />
-                  <Route exact path="/managed" render={() =>
-                    <Placeholder title="Managed" />} />
-                  <Route exact path="/longview" render={() =>
-                    <Placeholder title="Longview" />} />
-                  <Route exact path="/stackscripts" render={() =>
-                    <Placeholder title="StackScripts" />} />
-                  <Route exact path="/images" render={() =>
-                    <Placeholder title="Images" />} />
-                  <Route exact path="/billing" render={() =>
-                    <Placeholder title="Billing" />} />
-                  <Route exact path="/users" render={() =>
-                    <Placeholder title="Users" />} />
-                  <Route path="/profile" component={Profile} />
-                  <Route exact path="/support" render={() =>
-                    <Placeholder title="Support" />} />
-                  <Route path="/profile" component={Profile} />
-                  <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                  <Route render={() => (<Redirect to="/linodes" />)} />
-                </Switch>
-              </div>
-              <Footer />
-            </main>
-          </div>
-          <BetaNotification
-            open={this.state.betaNotification}
-            onClose={this.closeBetaNotice}
-            data-qa-beta-notice/>
-          <ToastNotifications />
-        </React.Fragment>
-      </MuiThemeProvider>
+      <React.Fragment>
+        {longLivedLoaded &&
+          <MuiThemeProvider theme={theme}>
+            <CssBaseline />
+            <div className={classes.appFrame}>
+              <SideMenu open={menuOpen} toggle={this.toggleMenu} />
+              <main className={classes.content}>
+                <TopMenu toggleSideMenu={this.toggleMenu} />
+                <div className={classes.wrapper}>
+                  <Switch>
+                    <Route exact path="/dashboard" render={() =>
+                      <Placeholder title="Dashboard" />} />
+                    <Route path="/linodes" component={LinodesRoutes} />
+                    <Route exact path="/volumes" render={() =>
+                      <Placeholder
+                        title="Volumes"
+                        icon={VolumeIcon}
+                      />}
+                    />
+                    <Route exact path="/nodebalancers" render={() =>
+                      <Placeholder
+                        title="NodeBalancers"
+                        icon={NodeBalancerIcon}
+                      />}
+                    />
+                    <Route exact path="/domains" render={() =>
+                      <Placeholder title="Domains" />} />
+                    <Route exact path="/managed" render={() =>
+                      <Placeholder title="Managed" />} />
+                    <Route exact path="/longview" render={() =>
+                      <Placeholder title="Longview" />} />
+                    <Route exact path="/stackscripts" render={() =>
+                      <Placeholder title="StackScripts" />} />
+                    <Route exact path="/images" render={() =>
+                      <Placeholder title="Images" />} />
+                    <Route exact path="/billing" render={() =>
+                      <Placeholder title="Billing" />} />
+                    <Route exact path="/users" render={() =>
+                      <Placeholder title="Users" />} />
+                    <Route path="/profile" component={Profile} />
+                    <Route exact path="/support" render={() =>
+                      <Placeholder title="Support" />} />
+                    <Route path="/profile" component={Profile} />
+                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                    <Route render={() => (<Redirect to="/linodes" />)} />
+                  </Switch>
+                </div>
+                <Footer />
+              </main>
+            </div>
+            <BetaNotification
+              open={this.state.betaNotification}
+              onClose={this.closeBetaNotice}
+              data-qa-beta-notice/>
+            <ToastNotifications />
+          </MuiThemeProvider>
+        }
+      </React.Fragment>
     );
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  {
-    request,
-    response,
-  },
-  dispatch);
+  { request, response },
+  dispatch,
+);
 
-export const connected = connect(null, mapDispatchToProps);
+const mapStateToProps = (state: Linode.AppState) => ({
+  longLivedLoaded:
+    Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
+    && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+});
+
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const styled = withStyles(styles, { withTheme: true });
 

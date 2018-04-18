@@ -12,7 +12,6 @@ import {
 } from 'material-ui';
 import {
   matchPath,
-  withRouter,
   Route,
   Switch,
   RouteComponentProps,
@@ -25,6 +24,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
+import reloadableWithRouter from './reloadableWithRouter';
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
@@ -42,8 +42,6 @@ import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-
-type Props = RouteComponentProps<{ linodeId?: number }>;
 
 interface Data {
   linode: Linode.Linode;
@@ -65,6 +63,10 @@ interface State {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
+type MatchProps = { linodeId?: number };
+
+type RouteProps = RouteComponentProps<MatchProps>;
+
 interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
@@ -85,7 +87,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-const preloaded = PromiseLoader<Props>({
+type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
+
+const preloaded = PromiseLoader<CombinedProps>({
   data: ((props) => {
     const { match: { params: { linodeId } } } = props;
     return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
@@ -116,8 +120,6 @@ const preloaded = PromiseLoader<Props>({
       });
   }),
 });
-
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
@@ -307,4 +309,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(preloaded(styled(LinodeDetail)));
+export default reloadableWithRouter<PreloadedProps, MatchProps>(
+  (routePropsOld, routePropsNew) => {
+    return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
+  },
+)((styled(preloaded(LinodeDetail))));
