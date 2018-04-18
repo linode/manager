@@ -53,30 +53,30 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   icon: {
     marginRight: theme.spacing.unit,
-    height: 13,
+    height: 18,
     width: 18,
-    padding: '0 3px',
-    transition: 'backgroundColor 225ms ease-in-out, color 225ms ease-in-out',
+    padding: '3px',
+    transition: theme.transitions.create(['background-color']),
     borderRadius: 2,
   },
   ipLink: {
     color: LinodeTheme.palette.primary.main,
     position: 'relative',
     display: 'inline-block',
-    '&:hover': {
-      color: theme.palette.primary.light,
-      cursor: 'pointer',
-    },
-    '&:focus $icon': {
-      backgroundColor: theme.palette.primary.light,
+    transition: theme.transitions.create(['color']),
+    '&:hover, &:focus': {
       color: 'white',
+      '& $icon': {
+        backgroundColor: theme.palette.primary.light,
+      },
     },
   },
   copied: {
     fontSize: '.85rem',
     left: -12,
     color: LinodeTheme.palette.primary.light,
-    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
+    padding: '6px 8px',
+    backgroundColor: 'white',
     position: 'absolute',
     boxShadow: '0 0 5px #ddd',
     transition: 'opacity .5s ease-in-out',
@@ -120,6 +120,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         className={classes.ipLink}
         title={ip}
         onClick={() => this.clickIcon(ip)}
+        href="javascript:void(0)"
       >
         {copied && <span className={classes.copied}>copied</span>}
         <ContentCopyIcon
