@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { always, cond, compose, groupBy, propOr } from 'ramda';
+import { always, cond, compose, groupBy, propOr, pathOr } from 'ramda';
 
 import {
   withStyles,
@@ -15,6 +15,7 @@ import FormHelperText from 'material-ui/Form/FormHelperText';
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
 
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
 import { rebuild as rebuildLinode } from 'src/services/linodes';
 import { resetEventsPolling } from 'src/events';
@@ -86,7 +87,8 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
         /** @todo What is the result here? Toast? Redirect? Brimstone and fire? */
       })
       .catch((errorResponse) => {
-        /** @todo Toast notification. */
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
   }
 
@@ -143,6 +145,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
           label="Root Password"
           onChange={e => this.onPasswordChange(e.target.value)}
           errorText={passwordError}
+          value={this.state.password || ''}
         />
         <ActionsPanel>
           <Button
