@@ -26,6 +26,11 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       flex: 1,
     },
   },
+  menu: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: 20,
+    },
+  },
   button: {
     paddingRight: 22,
     [theme.breakpoints.down('sm')]: {
@@ -124,9 +129,9 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
           PaperProps={{ square: true }}
-          anchorOrigin={{ vertical: 65, horizontal: 'left' }}
+          anchorOrigin={{ vertical: 45, horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          MenuListProps={{ className: classes.menu }}
+          className={classes.menu}
         >
           {this.items.map((i, idx) =>
             <AddNewMenuItem
