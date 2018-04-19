@@ -24,6 +24,7 @@ import {
   enableBackups,
   takeSnapshot,
   updateBackupsWindow,
+  cancelBackups,
 } from 'src/services/linode';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -147,6 +148,16 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     /**
      * TODO: Show a toast notification while waiting for the event:
      * 'Backups are being enabled'
+     **/
+  }
+
+  cancelBackups() {
+    const { linodeID } = this.props;
+    cancelBackups(linodeID)
+      .then(() => resetEventsPolling());
+    /**
+     * TODO: Show a toast notification while waiting for the event:
+     * 'Backups are being cancelled'
      **/
   }
 
@@ -376,6 +387,20 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           Settings
         </Typography>
         <this.SettingsForm />
+        <Button
+          variant="raised"
+          color="secondary"
+          className="destructive"
+          onClick={() => this.cancelBackups()}
+        >
+          Cancel Backups
+        </Button>
+        <Typography
+          variant="body2"
+        >
+          Please note that when you cancel backups associated with this
+          Linode, this will remove all existing backups.
+        </Typography>
       </React.Fragment>
     );
   }
