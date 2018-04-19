@@ -9,10 +9,6 @@ describe('Linode Detail - Volumes Suite', () => {
     let drawerElems;
 
     const testLabel = 'test-label';
-    const testVolume = {
-        label: 'test-label',
-        size: '20 GiB'
-    }
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
@@ -107,6 +103,8 @@ describe('Linode Detail - Volumes Suite', () => {
 
     describe('Linode Detail - Volumes - List View', () => {
         it('should display volume in list view', () => {
+            const testVolume = { label: 'test-label', size: '20 GiB' }
+            
             VolumeDetail.assertVolumeInTable(testVolume);
         });
 
