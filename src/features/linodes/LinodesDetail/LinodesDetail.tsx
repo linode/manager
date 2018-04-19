@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { pathEq, pathOr } from 'ramda';
 import * as moment from 'moment';
 
-
 import {
   withStyles,
   StyleRulesCallback,
@@ -175,7 +174,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     { routeName: `${this.props.match.url}/resize`, title: 'Resize' },
     { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
     { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${this.props.match.url}/backup`, title: 'Backup' },
+    { routeName: `${this.props.match.url}/backup`, title: 'Backups' },
     { routeName: `${this.props.match.url}/settings`, title: 'Setttings' },
   ];
 
@@ -288,7 +287,16 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue />)} />
           <Route exact path={`${url}/resize`} render={() => (<LinodeResize />)} />
           <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild />)} />
-          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup />)} />
+          <Route exact path={`${url}/backup`} render={() => (
+            <LinodeBackup
+              linodeID={linode.id}
+              backupsEnabled={linode.backups.enabled}
+              backupsSchedule={linode.backups.schedule}
+              backupsMonthlyPrice={
+                pathOr(undefined, ['addons', 'backups', 'price', 'monthly'], type)
+              }
+            />
+          )} />
           <Route exact path={`${url}/settings`} render={() => (<LinodeSettings />)} />
           {/* 404 */}
           <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
