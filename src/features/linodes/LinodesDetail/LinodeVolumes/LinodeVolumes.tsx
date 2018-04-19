@@ -35,8 +35,8 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import PlusSquare from 'src/assets/icons/plus-square.svg';
 import {
-  getConfigs as getLinodeConfigs,
-  getVolumes as getLinodeVolumes,
+  getLinodeConfigs,
+  getLinodeVolumes,
 } from 'src/services/linodes';
 import ErrorState from 'src/components/ErrorState';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
