@@ -284,7 +284,11 @@ class SearchBar extends React.Component<FinalProps, State> {
 
     if (this.state.images) {
       const imagesByLabel = this.state.images.filter(
-        image => image.label.toLowerCase().includes(query.toLowerCase()),
+        image => (
+          /* TODO: this should be a pre-filter at the API level */
+          image.is_public === false
+          && image.label.toLowerCase().includes(query.toLowerCase())
+        ),
       );
       searchResults.push(...(imagesByLabel.map(image => ({
         title: image.label,
