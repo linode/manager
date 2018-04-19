@@ -35,17 +35,26 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   return (
     <React.Fragment>
       {props.status === 'running' &&
-        <span className={`${props.classes.dot} ${props.classes.green}`}>
+        <span
+          className={`${props.classes.dot} ${props.classes.green}`}
+          data-qa-status={props.status}
+        >
           &#x25CF;
         </span>
       }
       {props.status === 'offline' &&
-        <span className={`${props.classes.dot} ${props.classes.red}`}>
+        <span
+          className={`${props.classes.dot} ${props.classes.red}`}
+          data-qa-status={props.status}
+        >
           &#x25CF;
         </span>
       }
       {transitionStatus.includes(props.status) &&
-        <span className={`${props.classes.transition}`}>
+        <span
+          className={`${props.classes.transition}`}
+          data-qa-status={props.status}
+        >
           <Cached style={{ fontSize: '1.0rem' }} />
         </span>
       }

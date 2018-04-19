@@ -137,7 +137,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
           <Link to={`/linodes/${linode.id}`}>
-            <Typography variant="subheading">
+            <Typography variant="subheading" data-qa-label>
               {linode.label}
             </Typography>
           </Link>
@@ -179,19 +179,19 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
       <div>
         {image && type &&
-        <div className={classes.cardSection}>
+        <div className={classes.cardSection} data-qa-linode-summary>
           {typeLabelLong(type.memory, type.disk, type.vcpus)}
         </div>
         }
-        <div className={classes.cardSection}>
+        <div className={classes.cardSection} data-qa-region>
           <RegionIndicator region={linode.region} />
         </div>
-        <div className={classes.cardSection}>
+        <div className={classes.cardSection} data-qa-ips>
           <IPAddress ips={linode.ipv4} copyRight />
           <IPAddress ips={[linode.ipv6]} copyRight />
         </div>
         {image && type &&
-        <div className={classes.cardSection}>
+        <div className={classes.cardSection} data-qa-image>
           {image.label}
         </div>
         }
@@ -205,7 +205,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const loading = transitionStatus.includes(linode.status);
 
     return (
-      <Grid item xs={12} sm={6} lg={4} xl={3}>
+      <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode>
         <Card className={classes.flexContainer}>
           <CardHeader
             subheader={this.renderTitle()}
@@ -225,6 +225,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
               onClick={() => weblishLaunch(`${linode.id}`)}
+              data-qa-console
             >
               <span className="btnLink">Launch Console</span>
             </Button>
@@ -232,6 +233,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               className={`${classes.button}
               ${classes.rebootButton}`}
               onClick={() => rebootLinode(openConfigDrawer, linode.id, linode.label)}
+              data-qa-reboot
             >
               <span className="btnLink">Reboot</span>
             </Button>

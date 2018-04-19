@@ -288,6 +288,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       <WithDocumentation
         title="Linodes"
         docs={this.docs}
+        data-qa-docs-drawer
         render={() => {
 
           if (this.props.linodes.error) {

@@ -100,7 +100,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
           </Grid>
           <Grid item className="py0">
             <Link to={`/linodes/${linode.id}`}>
-              <Typography variant="subheading">
+              <Typography variant="subheading" data-qa-label>
                 {linode.label}
               </Typography>
             </Link>
@@ -115,7 +115,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
     const { linode, classes } = this.props;
     const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
     return(
-      <TableRow key={linode.id} className={classes.bodyRow}>
+      <TableRow key={linode.id} className={classes.bodyRow} data-qa-loading>
         {this.headCell()}
         <TableCell colSpan={4}>
           {typeof value === 'number' &&
@@ -131,16 +131,16 @@ class LinodeRow extends React.Component<PropsWithStyles> {
     const { linode, classes, openConfigDrawer } = this.props;
 
     return(
-      <TableRow key={linode.id}>
+      <TableRow key={linode.id} data-qa-linode>
         {this.headCell()}
-        <TableCell className={classes.ipCell}>
+        <TableCell className={classes.ipCell} data-qa-ips>
           <IPAddress ips={linode.ipv4} copyRight />
           <IPAddress ips={[linode.ipv6]} copyRight />
         </TableCell>
-        <TableCell className={classes.regionCell}>
+        <TableCell className={classes.regionCell} data-qa-region>
           <RegionIndicator region={linode.region} />
         </TableCell>
-        <TableCell className={classes.actionCell}>
+        <TableCell className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
             {linode.notification &&
               <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
