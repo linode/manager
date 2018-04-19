@@ -81,6 +81,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
           [classes.root]: true,
           [classes.disabled]: disabled === true,
           [classes.active]: active === true,
+          iconTextLink: true,
         })
       }
       title={title}
