@@ -19,8 +19,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import { API_ROOT } from 'src/constants';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { resize as resizeLinode } from 'src/service/linodes';
-import { resetEventsPolling, events$ } from 'src/events';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LinodeTheme from 'src/theme';
@@ -60,7 +59,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linodeId: number;
-  linodeLabel: string;
   type: Linode.LinodeType;
   types: { response: ExtendedType[] };
 }
@@ -78,11 +76,11 @@ class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, linodeLabel } = this.props;
+    const { linodeId } = this.props;
     const { selectedId } = this.state;
     resizeLinode(linodeId, selectedId)
       .then((response: AxiosResponse<{}>) => {
-        events$.next(genEvent('linode_resize', linodeId, linodeLabel));
+        sendToast('Linode resize started.');
         resetEventsPolling();
       })
       .catch((errorResponse) => {
