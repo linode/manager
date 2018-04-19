@@ -33,20 +33,50 @@ import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
 import { resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 type ClassNames =
-  'root'
+  'paper'
   | 'title'
-  | 'snapshotForm';
+  | 'snapshotFormControl'
+  | 'snapshotAction'
+  | 'scheduleAction'
+  | 'chooseTime'
+  | 'cancelButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  title: {
-    margin: `${theme.spacing.unit * 2}px 0`,
-  },
-  snapshotForm: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+  paper: {
     padding: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  snapshotFormControl: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    '& > div': {
+      width: 'auto',
+    },
+  },
+  snapshotAction: {
+    height: 44,
+    marginLeft: theme.spacing.unit * 2,
+    paddingTop: 11,
+  },
+  scheduleAction: {
+    padding: 0,
+    '& button': {
+      marginLeft: 0,
+      marginTop: theme.spacing.unit * 2,
+    },
+  },
+  chooseTime: {
+    marginRight: theme.spacing.unit * 2,
+  },
+  cancelButton: {
+    marginBottom: theme.spacing.unit,
   },
 });
 
@@ -216,51 +246,55 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
+    const { classes } = this.props;
+
     return (
-      <Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date Created</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Disks</TableCell>
-              <TableCell>Space Required</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {backups.map((backup) => {
-              return (
-                <TableRow key={backup.id}>
-                  <TableCell>
-                    {moment.utc(backup.created).local().format('YYYY-MM-DD - HH:mm')}
-                  </TableCell>
-                  <TableCell>{typeMap[backup.type]}</TableCell>
-                  <TableCell>
-                    {moment.duration(
-                      moment(backup.finished).diff(moment(backup.created)),
-                    ).humanize()}
-                  </TableCell>
-                  <TableCell>
-                    {backup.disks.map((disk, idx) => (
-                      <div key={idx}>
-                        {disk.label} ({disk.filesystem}) - {disk.size}MB
-                      </div>
-                    ))}
-                  </TableCell>
-                  <TableCell>
-                    {backup.disks.reduce((acc, disk) => (
-                      acc + disk.size
-                    ), 0)}MB
-                  </TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Paper>
+      <React.Fragment>
+        <Paper className={classes.paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Date Created</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Duration</TableCell>
+                <TableCell>Disks</TableCell>
+                <TableCell>Space Required</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {backups.map((backup) => {
+                return (
+                  <TableRow key={backup.id}>
+                    <TableCell>
+                      {moment.utc(backup.created).local().format('YYYY-MM-DD - HH:mm')}
+                    </TableCell>
+                    <TableCell>{typeMap[backup.type]}</TableCell>
+                    <TableCell>
+                      {moment.duration(
+                        moment(backup.finished).diff(moment(backup.created)),
+                      ).humanize()}
+                    </TableCell>
+                    <TableCell>
+                      {backup.disks.map((disk, idx) => (
+                        <div key={idx}>
+                          {disk.label} ({disk.filesystem}) - {disk.size}MB
+                        </div>
+                      ))}
+                    </TableCell>
+                    <TableCell>
+                      {backup.disks.reduce((acc, disk) => (
+                        acc + disk.size
+                      ), 0)}MB
+                    </TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Paper>
+      </React.Fragment>
     );
   }
 
@@ -270,33 +304,38 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
 
     return (
-      <Paper className={classes.snapshotForm}>
-        <Typography variant="headline">
-          Manual Snapshot
-        </Typography>
-        <Typography variant="body1">
-          You can make a manual backup of your Linode by taking a snapshot.
-          Creating the manual snapshot can take serval minutes, depending on
-          the size of your Linode and the amount of data you have stored on
-          it.
-        </Typography>
-        <TextField
-          errorText={getErrorFor('label')}
-          label="Name Snapshot"
-          value={snapshotForm.label || ''}
-          onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
-        />
-        <Button
-          variant="raised"
-          color="primary"
-          onClick={this.takeSnapshot}
-        >
-          Take Snapshot
-        </Button>
-        {getErrorFor('none') &&
-          <FormHelperText error>{getErrorFor('none')}</FormHelperText>
-        }
-      </Paper>
+      <React.Fragment>
+        <Paper className={classes.paper}>
+          <Typography variant="title">
+            Manual Snapshot
+          </Typography>
+          <Typography variant="body1">
+            You can make a manual backup of your Linode by taking a snapshot.
+            Creating the manual snapshot can take serval minutes, depending on
+            the size of your Linode and the amount of data you have stored on
+            it.
+          </Typography>
+          <FormControl className={classes.snapshotFormControl}>
+            <TextField
+              errorText={getErrorFor('label')}
+              label="Name Snapshot"
+              value={snapshotForm.label || ''}
+              onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
+            />
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={this.takeSnapshot}
+              className={classes.snapshotAction}
+            >
+              Take Snapshot
+            </Button>
+            {getErrorFor('none') &&
+              <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+            }
+          </FormControl>
+        </Paper>
+      </React.Fragment>
     );
   }
 
@@ -308,60 +347,63 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       settingsForm.errors);
 
     return (
-      <Paper className={classes.snapshotForm}>
-        <Typography variant="body1">
-          Configure when automatic backups are initiated. The Linode Backup
-          Service will generate backups between the selected hours. The
-          selected day is when the backup is promoted to the weekly slot.
-        </Typography>
+      <React.Fragment>
+        <Paper className={classes.paper}>
+          <Typography variant="body1">
+            Configure when automatic backups are initiated. The Linode Backup
+            Service will generate backups between the selected hours. The
+            selected day is when the backup is promoted to the weekly slot.
+          </Typography>
 
-        <FormControl>
-          <InputLabel htmlFor="window">
-            Time of Day
-          </InputLabel>
-          <Select
-            value={settingsForm.window}
-            onChange={e => this.setState({ settingsForm:
-              { ...settingsForm, window: e.target.value } })}
-            inputProps={{ name: 'window', id: 'window' }}
-          >
-            {this.windows.map((window: string[]) => (
-              <MenuItem key={window[0]} value={window[1]}>
-                {window[0]}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl className={classes.chooseTime}>
+            <InputLabel htmlFor="window">
+              Time of Day
+            </InputLabel>
+            <Select
+              value={settingsForm.window}
+              onChange={e => this.setState({ settingsForm:
+                { ...settingsForm, window: e.target.value } })}
+              inputProps={{ name: 'window', id: 'window' }}
+            >
+              {this.windows.map((window: string[]) => (
+                <MenuItem key={window[0]} value={window[1]}>
+                  {window[0]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <FormControl>
-          <InputLabel htmlFor="day">
-            Day of Week
-          </InputLabel>
-          <Select
-            value={settingsForm.day}
-            onChange={e => this.setState({ settingsForm:
-              { ...settingsForm, day: e.target.value } })}
-            inputProps={{ name: 'day', id: 'day' }}
-          >
-            {this.days.map((day: string[]) => (
-              <MenuItem key={day[0]} value={day[1]}>
-                {day[0]}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button
-          variant="raised"
-          color="primary"
-          onClick={this.saveSettings}
-        >
-          Save Schedule
-        </Button>
-        {getErrorFor('none') &&
-          <FormHelperText error>{getErrorFor('none')}</FormHelperText>
-        }
-      </Paper>
+          <FormControl>
+            <InputLabel htmlFor="day">
+              Day of Week
+            </InputLabel>
+            <Select
+              value={settingsForm.day}
+              onChange={e => this.setState({ settingsForm:
+                { ...settingsForm, day: e.target.value } })}
+              inputProps={{ name: 'day', id: 'day' }}
+            >
+              {this.days.map((day: string[]) => (
+                <MenuItem key={day[0]} value={day[1]}>
+                  {day[0]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <ActionsPanel className={classes.scheduleAction}>
+            <Button
+              variant="raised"
+              color="primary"
+              onClick={this.saveSettings}
+            >
+              Save Schedule
+            </Button>
+            {getErrorFor('none') &&
+              <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+            }
+          </ActionsPanel>
+        </Paper>
+      </React.Fragment>
     );
   }
 
@@ -372,13 +414,16 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
-          variant="title"
-          className={classes.title}>
+          variant="headline"
+          className={classes.title}
+        >
           Backups
         </Typography>
         {backups.length
           ? <this.Table backups={backups} />
-          : <Paper>Automatic and manual backups will be listed here</Paper>
+          : <Paper className={classes.paper}>
+              Automatic and manual backups will be listed here
+            </Paper>
         }
         <this.SnapshotForm />
         <Typography
@@ -390,7 +435,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Button
           variant="raised"
           color="secondary"
-          className="destructive"
+          className={`
+            ${classes.cancelButton}
+            destructive
+          `}
           onClick={() => this.cancelBackups()}
         >
           Cancel Backups
