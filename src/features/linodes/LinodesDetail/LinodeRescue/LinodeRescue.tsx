@@ -129,9 +129,9 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      counter: 2,
       disks: props.disks.response,
       volumes: props.volumes.response,
+      counter: 1,
       rescueDevices: {
         sda: undefined,
         sdb: undefined,
@@ -152,7 +152,8 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
     rescueLinode(linodeId, createRescueDevicesPostObject(rescueDevices))
       .then((response) => {
         this.setState({
-          counter: 2, rescueDevices: {
+          counter: 1,
+          rescueDevices: {
             sda: undefined,
             sdb: undefined,
             sdc: undefined,
@@ -174,25 +175,17 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
   incrementCounter = () => {
     this.setState(
-      { counter: clamp(2, 7, this.state.counter + 1) },
+      { counter: clamp(1, 6, this.state.counter + 1) },
     );
   }
 
   /** string format is type-id */
-  onChange = (key: string) => (_id: string) => this.setState({
+  onChange = (slot: string, _id: string) => this.setState({
     rescueDevices: {
       ...this.state.rescueDevices,
-      [key]: _id,
+      [slot]: _id,
     },
   })
-
-  onSdaChange = this.onChange('sda');
-  onSdbChange = this.onChange('sdb');
-  onSdcChange = this.onChange('sdc');
-  onSddChange = this.onChange('sdd');
-  onSdeChange = this.onChange('sde');
-  onSdfChange = this.onChange('sdf');
-  onSdgChange = this.onChange('sdg');
 
   render() {
     const { disks, volumes } = this.state;
@@ -220,20 +213,8 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
               (devices: (Linode.Disk & { _id: string } | Linode.Volume & { _id: string })[]) =>
                 <DeviceSelection
                   devices={devices}
-                  onSdaChange={this.onSdaChange}
-                  selectedSda={this.state.rescueDevices.sda}
-                  onSdbChange={this.onSdbChange}
-                  selectedSdb={this.state.rescueDevices.sdb}
-                  onSdcChange={this.onSdcChange}
-                  selectedSdc={this.state.rescueDevices.sdc}
-                  onSddChange={this.onSddChange}
-                  selectedSdd={this.state.rescueDevices.sdd}
-                  onSdeChange={this.onSdeChange}
-                  selectedSde={this.state.rescueDevices.sde}
-                  onSdfChange={this.onSdfChange}
-                  selectedSdf={this.state.rescueDevices.sdf}
-                  onSdgChange={this.onSdgChange}
-                  selectedSdg={this.state.rescueDevices.sdg}
+                  onChange={this.onChange}
+                  getSelected={slot => pathOr('', ['rescueDevices', slot], this.state)}
                   counter={this.state.counter}
                 />,
               (disks, volumes) => concat(defaultTo([], disks), defaultTo([], volumes)),
@@ -245,7 +226,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
             text="Add Disk"
             title="Add Disk"
             data-qa-oauth-create
-            disabled={this.state.counter >= 7}
+            disabled={this.state.counter >= 6}
           />
         </Paper>
         <ActionsPanel className={classes.actionPanel}>
@@ -262,6 +243,7 @@ const styled = withStyles(styles, { withTheme: true });
 interface VolumeWithID extends Linode.Volume {
   _id: string;
 }
+
 const preloaded = PromiseLoader({
   /** @todo filter for available */
   disks: ({ linodeId }) => getLinodeDisks(linodeId)
