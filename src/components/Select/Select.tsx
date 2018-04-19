@@ -12,12 +12,13 @@ import Input, { InputProps } from 'material-ui/Input';
 import { MenuProps } from 'material-ui/Menu';
 
 import LinodeTheme from '../../../src/theme';
+import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
-| 'menu'
-| 'dropDown'
-| 'inputSucess'
-| 'inputError';
+  | 'menu'
+  | 'dropDown'
+  | 'inputSucess'
+  | 'inputError';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -55,6 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props extends SelectProps {
+  helpText?: string;
   success?: boolean;
 }
 
@@ -65,6 +67,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   classes,
   success,
   error,
+  helpText,
   ...props,
 }) => {
 
@@ -88,14 +91,17 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   });
 
   return (
-    <Select
-      className={c}
-      MenuProps={menuProps}
-      input={<Input {...inputProps} />}
-      {...props}
-    >
-      {children}
-    </Select>
+    <React.Fragment>
+      <Select
+        className={c}
+        MenuProps={menuProps}
+        input={<Input {...inputProps} />}
+        {...props}
+      >
+        {children}
+      </Select>
+      {helpText && <HelpIcon text="Choosing a 64 bit distro is recommended." />}
+    </React.Fragment>
   );
 };
 

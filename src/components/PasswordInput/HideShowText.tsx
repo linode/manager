@@ -10,9 +10,9 @@ interface State {
   hidden: Boolean;
 }
 
-type FinalProps = TextFieldProps;
+interface Props extends TextFieldProps { }
 
-class HideShowText extends React.Component<FinalProps, State> {
+class HideShowText extends React.Component<Props, State> {
   state = {
     hidden: true,
   };
@@ -26,15 +26,13 @@ class HideShowText extends React.Component<FinalProps, State> {
 
     return (
       <TextField
+        {...this.props}
         data-qa-hide={hidden}
-        label={this.props.label}
-        placeholder={this.props.placeholder}
-        onChange={this.props.onChange}
         type={hidden ? 'password' : 'text'}
         InputProps={{
           startAdornment: hidden
-            ? <Visibility onClick={this.toggleHidden}/>
-            : <VisibilityOff onClick={this.toggleHidden}/>,
+            ? <Visibility onClick={this.toggleHidden} />
+            : <VisibilityOff onClick={this.toggleHidden} />,
         }}
       />
     );

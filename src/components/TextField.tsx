@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import TextField, { TextFieldProps } from 'material-ui/TextField';
 
-interface Props extends TextFieldProps{
+export interface Props extends TextFieldProps {
   errorText?: string;
   affirmative?: Boolean;
 }
