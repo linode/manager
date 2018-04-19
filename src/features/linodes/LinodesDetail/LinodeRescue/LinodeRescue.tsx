@@ -45,9 +45,9 @@ import ErrorState from 'src/components/ErrorState';
 import DeviceSelection from './DeviceSelection';
 
 type ClassNames = 'root'
- | 'title'
- | 'intro'
- | 'actionPanel';
+  | 'title'
+  | 'intro'
+  | 'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -151,8 +151,20 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
     rescueLinode(linodeId, createRescueDevicesPostObject(rescueDevices))
       .then((response) => {
+        this.setState({
+          counter: 2, rescueDevices: {
+            sda: undefined,
+            sdb: undefined,
+            sdc: undefined,
+            sdd: undefined,
+            sde: undefined,
+            sdf: undefined,
+            sdg: undefined,
+            sdh: undefined,
+          },
+        });
+        sendToast('Linode rescue started.');
         resetEventsPolling();
-        /** @todo What is the result here? Toast? Redirect? Brimstone and fire? */
       })
       .catch((errorResponse) => {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
@@ -235,10 +247,10 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
             data-qa-oauth-create
             disabled={this.state.counter >= 7}
           />
-          </Paper>
-          <ActionsPanel className={classes.actionPanel}>
-            <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
-          </ActionsPanel>
+        </Paper>
+        <ActionsPanel className={classes.actionPanel}>
+          <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
+        </ActionsPanel>
       </React.Fragment>
     );
   }
