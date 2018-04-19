@@ -89,37 +89,40 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+const requestAllTheThings = (linodeId: number) =>
+  Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+    .then((response) => {
+      const { data: linode } = response;
+
+      const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+        .then(response => response.data)
+        .catch(err => undefined);
+
+      const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
+        .then(response => response.data)
+        .catch(err => undefined);
+
+      const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
+        .then(response => response.data.data)
+        .catch(err => []);
+
+      return Promise.all([typeReq, imageReq, volumesReq])
+        .then((responses) => {
+          return {
+            linode,
+            type: responses[0],
+            image: responses[1],
+            volumes: responses[2],
+          };
+        });
+    });
+
 type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   data: ((props) => {
     const { match: { params: { linodeId } } } = props;
-    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
-      .then((response) => {
-        const { data: linode } = response;
-
-        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
-          .then(response => response.data)
-          .catch(err => undefined);
-
-        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
-          .then(response => response.data)
-          .catch(err => undefined);
-
-        const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-          .then(response => response.data.data)
-          .catch(err => []);
-
-        return Promise.all([typeReq, imageReq, volumesReq])
-          .then((responses) => {
-            return {
-              linode,
-              type: responses[0],
-              image: responses[1],
-              volumes: responses[2],
-            };
-          });
-      });
+    return requestAllTheThings(linodeId!);
   }),
 });
 
@@ -156,31 +159,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
 
         const { match: { params: { linodeId } } } = this.props;
-        return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
-          .then((response) => {
-            const { data: linode } = response;
-
-            const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
-              .then(response => response.data)
-              .catch(err => undefined);
-
-            const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
-              .then(response => response.data)
-              .catch(err => undefined);
-
-            const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-              .then(response => response.data)
-              .catch(err => []);
-
-            return Promise.all([typeReq, imageReq, volumesReq])
-              .then((responses) => {
-                this.setState({
-                  linode,
-                  type: responses[0],
-                  image: responses[1],
-                  volumes: responses[2],
-                });
-              });
+        requestAllTheThings(linodeId!)
+          .then(({ linode, type, image, volumes }) => {
+            this.setState({ linode, type, image, volumes });
           });
       });
   }
