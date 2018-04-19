@@ -56,13 +56,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
+    flexWrap: 'wrap',
     '& > div': {
       width: 'auto',
+      marginRight: theme.spacing.unit * 2,
     },
   },
   snapshotAction: {
     height: 44,
-    marginLeft: theme.spacing.unit * 2,
     paddingTop: 11,
   },
   scheduleAction: {
