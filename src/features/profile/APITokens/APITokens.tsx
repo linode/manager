@@ -210,8 +210,9 @@ class APITokens extends React.Component<CombinedProps, State> {
   formatDates(tokens: Linode.Token[]): Linode.Token[] {
     const aLongTimeFromNow = moment.utc().add(100, 'year');
     return tokens.map((token) => {
-      const created = moment(token.created);
-      const expiry = moment(token.expiry);
+      const created = moment.utc(token.created).local();
+      const expiry = moment.utc(token.expiry).local();
+
       return {
         ...token,
         created: created > aLongTimeFromNow ? 'never' : created.fromNow(),
