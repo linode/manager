@@ -51,6 +51,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 1,
+    '& .iconTextLink': {
+      display: 'inline-flex',
+      margin: `${theme.spacing.unit * 3}px 0 0 0`,
+    },
   },
   title: {
     marginBottom: theme.spacing.unit * 2,
