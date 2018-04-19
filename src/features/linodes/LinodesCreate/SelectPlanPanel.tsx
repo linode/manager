@@ -15,8 +15,7 @@ export interface ExtendedType extends Linode.LinodeType {
 interface Props {
   types: ExtendedType[];
   error?: string;
-  handleSelection: (key: string) =>
-    (event: React.SyntheticEvent<HTMLElement>, value: string) => void;
+  onSelect: (key: string) => void;
   selectedID: string | null;
 }
 
@@ -34,7 +33,7 @@ const renderCard = (selectedID: string|null, handleSelection: Function) =>
       <SelectionCard
         key={idx}
         checked={region.id === String(selectedID)}
-        onClick={e => handleSelection('selectedTypeID')(e, region.id)}
+        onClick={e => handleSelection(region.id)}
         heading={region.heading}
         subheadings={region.subHeadings}
       />
@@ -57,7 +56,7 @@ class SelectPlanPanel extends React.Component<Props> {
 
           return (
             <Grid container spacing={8}>
-            { nanodes.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+            { nanodes.map(renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
         },
@@ -70,7 +69,7 @@ class SelectPlanPanel extends React.Component<Props> {
         render: () => {
           return (
             <Grid container spacing={8}>
-              { standards.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+              { standards.map(renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
         },
@@ -83,7 +82,7 @@ class SelectPlanPanel extends React.Component<Props> {
         render: () => {
           return (
             <Grid container spacing={8}>
-              { highmem.map(renderCard(this.props.selectedID, this.props.handleSelection))}
+              { highmem.map(renderCard(this.props.selectedID, this.props.onSelect))}
             </Grid>
           );
         },

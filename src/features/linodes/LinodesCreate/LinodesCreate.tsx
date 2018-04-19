@@ -184,7 +184,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             <SelectPlanPanel
               error={getErrorFor('type', this.state.errors)}
               types={this.props.types.response}
-              handleSelection={this.updateStateFor}
+              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
