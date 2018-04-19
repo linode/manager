@@ -26,19 +26,19 @@ class VolumeDetail {
     }
 
     editVolume(volume, newLabel) {
-
+        // Placeholder volume action
     }
 
     resizeVolume(volume, newSize) {
-
+        // Placeholder volume action
     }
 
     detachVolume(volume) {
-
+        // Placeholder volume action
     }
 
     cloneVolume(volume, newLabel) {
-
+        // Placeholder volume action
     }
 
     removeVolume(volumeElement) {
