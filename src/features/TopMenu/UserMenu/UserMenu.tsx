@@ -17,7 +17,7 @@ import {
 } from 'material-ui/styles';
 import ButtonBase from 'material-ui/ButtonBase';
 import Menu, { MenuItem } from 'material-ui/Menu';
-import AccountCircle from 'material-ui-icons/AccountCircle';
+import UserIcon from 'src/assets/icons/user.svg';
 import LinodeTheme from 'src/theme';
 
 type MenuLink = {
@@ -32,6 +32,8 @@ const menuLinks: MenuLink[] = [
 
 type CSSClasses =
 | 'menu'
+| 'button'
+| 'userWrapper'
 | 'leftIcon'
 | 'username'
 | 'menuItem'
@@ -41,17 +43,39 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   menu: {
     transform: `translateY(${theme.spacing.unit}px)`,
   },
-  leftIcon: {
+  button: {
+    '&:hover, &.active': {
+      '& $username': {
+        color: theme.palette.primary.main,
+      },
+      '& $userWrapper': {
+        boxShadow: '0 0 10px #bbb',
+      },
+    },
+    '&:focus': {
+      '& $username': {
+        color: theme.palette.primary.main,
+      },
+    },
+  },
+  userWrapper: {
     marginRight: theme.spacing.unit,
-    width: '50px',
-    height: '50px',
-    borderRadius: '50px',
+    borderRadius: '50%',
+    width: '46px',
+    height: '46px',
+    transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('sm')]: {
       width: '40px',
       height: '40px',
     },
   },
+  leftIcon: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+  },
   username: {
+    transition: theme.transitions.create(['color']),
     [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
@@ -91,6 +115,13 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     gravatarUrl: undefined,
   };
 
+  constructor(props: PropsWithStylesAndRoutes) {
+    super(props);
+    props.profile && this.getGravatarUrl(props.profile);
+  }
+
+  mounted: boolean = false;
+
   handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
   }
@@ -127,16 +158,19 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     const instance = Axios.create();
     return instance.get(url)
       .then((response) => {
+        if (!this.mounted) { return; }
+
         this.setState({ gravatarUrl: response.config.url });
       })
       .catch((error) => {
+        if (!this.mounted) { return; }
+
         this.setState({ gravatarUrl: 'not found' });
       });
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    nextProps.profile &&
-      this.getGravatarUrl(nextProps.profile);
+    nextProps.profile && this.getGravatarUrl(nextProps.profile);
   }
 
   renderAvatar() {
@@ -144,9 +178,21 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
     const { gravatarUrl } = this.state;
     if (!gravatarUrl) { return null; }
     return (gravatarUrl !== 'not found'
-      ? <img src={gravatarUrl} className={classes.leftIcon} />
-      : <AccountCircle className={classes.leftIcon} />
+      ? <div className={classes.userWrapper}>
+          <img src={gravatarUrl} className={classes.leftIcon} />
+        </div>
+      : <div className={classes.userWrapper}>
+          <UserIcon className={classes.leftIcon} />
+        </div>
     );
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
@@ -156,7 +202,10 @@ export class UserMenu extends React.Component<PropsWithStylesAndRoutes, State> {
 
     return (
       <React.Fragment>
-        <ButtonBase onClick={this.handleMenu}>
+        <ButtonBase
+          onClick={this.handleMenu}
+          className={` ${classes.button} ${anchorEl && 'active'}`}
+        >
           {profile.username &&
             <React.Fragment>
               {this.renderAvatar()}

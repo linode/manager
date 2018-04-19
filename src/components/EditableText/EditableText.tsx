@@ -65,6 +65,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   inputRoot: {
     border: 0,
     borderBottom: '2px dotted #333',
+    backgroundColor: 'transparent',
   },
   button: {
     minWidth: 'auto',
@@ -116,6 +117,12 @@ class EditableText extends React.Component<FinalProps, State> {
     savedText: this.props.text,
     text: this.props.text,
   };
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.text !== this.state.text) {
+      this.setState({ text: nextProps.text });
+    }
+  }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ text: e.target.value });

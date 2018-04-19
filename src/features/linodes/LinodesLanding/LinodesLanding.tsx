@@ -77,6 +77,7 @@ type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentPro
 class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
   notificationSub: Subscription;
+  mounted: boolean = false;
 
   state = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
@@ -112,11 +113,13 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   ];
 
   componentWillUnmount() {
+    this.mounted = false;
     this.eventsSub.unsubscribe();
     this.notificationSub.unsubscribe();
   }
 
   componentDidMount() {
+    this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
 
     this.eventsSub = events$
@@ -124,14 +127,18 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       .subscribe((linodeEvent) => {
         Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
           .then(response => response.data)
-          .then(linode => this.setState((prevState) => {
-            const targetIndex = prevState.linodes.findIndex(
-              _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
-            const updatedLinodes = clone(prevState.linodes);
-            updatedLinodes[targetIndex] = linode;
-            updatedLinodes[targetIndex].recentEvent = linodeEvent;
-            return { linodes: updatedLinodes };
-          }));
+          .then((linode) => {
+            if (!this.mounted) { return; }
+
+            return this.setState((prevState) => {
+              const targetIndex = prevState.linodes.findIndex(
+                _linode => _linode.id === (linodeEvent.entity as Linode.Entity).id);
+              const updatedLinodes = clone(prevState.linodes);
+              updatedLinodes[targetIndex] = linode;
+              updatedLinodes[targetIndex].recentEvent = linodeEvent;
+              return { linodes: updatedLinodes };
+            });
+          });
       });
 
     this.notificationSub = Observable
@@ -139,7 +146,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         notifications$
           .map(notifications => notifications.filter(n => n.entity.type === 'linode')),
         Observable.of(this.props.linodes),
-      )
+    )
       .map(([notifications, linodes]) => {
         /** Imperative and gross a/f. Ill fix it. */
         linodes.response.data = linodes.response.data.map((linode) => {
@@ -154,7 +161,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
         return linodes;
       })
-      .subscribe(response => this.setState({ linodes: response.response.data }));
+      .subscribe((response) => {
+        if (!this.mounted) { return; }
+
+        return this.setState({ linodes: response.response.data });
+      });
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -226,6 +237,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     })
       .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
       .then((response) => {
+        if (!this.mounted) { return; }
+
         this.setState(prevResults => ({
           ...prevResults,
           linodes: pathOr([], ['data'], response),

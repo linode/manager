@@ -99,7 +99,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  id: string | number;
+  id: number;
   label: string;
   status: 'running' | 'offline' | string;
   openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
@@ -204,7 +204,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             className={classes.menuItem}
           >
             <Reload className={`${classes.icon}`} />
-            Power Reboot
+            Reboot
           </MenuItem>
           { isRunning &&
             <MenuItem

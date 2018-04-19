@@ -13,8 +13,8 @@ import ExpansionPanel, {
 import Typography, { TypographyProps } from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 
-import OpenIcon from '../../assets/icons/plus-square.svg';
-import CloseIcon from '../../assets/icons/minus-square.svg';
+import Plus from '../../assets/icons/plus-square.svg';
+import Minus from '../../assets/icons/minus-square.svg';
 
 import Notice from '../Notice';
 
@@ -88,7 +88,7 @@ interface Props extends ExpansionPanelProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class EExpansionPanel extends React.Component<CombinedProps> {
-  state = { open: true };
+  state = { open: false };
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
@@ -108,26 +108,35 @@ class EExpansionPanel extends React.Component<CombinedProps> {
     const notice = success || warning || error || null;
 
     return (
-      <ExpansionPanel {...expansionPanelProps} className={classes.root}>
+      <ExpansionPanel
+        {...expansionPanelProps}
+        className={classes.root}
+        data-qa-panel
+      >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <OpenIcon /> : <CloseIcon />}
+          expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
           className={classNames({
             [classes.success]: Boolean(this.props.success),
             [classes.warning]: Boolean(this.props.warning),
             [classes.error]: Boolean(this.props.error),
           })}
+          data-qa-panel-summary
         >
-          <Typography className={classes.heading} {...headingProps} variant="subheading">
+          <Typography
+            className={classes.heading} {...headingProps}
+            variant="subheading"
+            data-qa-panel-subheading
+          >
             {this.props.heading}
           </Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails {...detailProps}>
+        <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
           <Grid container>
             {
               notice &&
-              <Grid item xs={12}>
+              <Grid item xs={12} data-qa-notice>
                 <Notice
                   text={notice}
                   {...(success && { success: true })}
@@ -136,7 +145,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
                 />
               </Grid>
             }
-            <Grid item xs={12}>{this.props.children}</Grid>
+            <Grid item xs={12} data-qa-grid-item>{this.props.children}</Grid>
           </Grid>
         </ExpansionPanelDetails>
         {actions && actions(expansionPanelProps)}

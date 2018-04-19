@@ -36,6 +36,8 @@ services:
       - ./src:/src/src
       - ./e2e:/src/e2e
       - ./storybook-test-results:/src/storybook-test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-storybook:6006", "--", "yarn","storybook:e2e", "--log"]
+      - /etc/passwd:/etc/passwd
+      - /etc/group:/etc/group
+    entrypoint: ["./scripts/storybook_entrypoint.sh"]
     depends_on:
       - manager-storybook

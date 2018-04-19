@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
 });
 
-interface Props {
+export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;
   text: string;
   onClick: () => void;

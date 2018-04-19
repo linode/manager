@@ -26,10 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     minHeight: 16,
-    minWidth: 250,
+    width: 250,
     maxHeight: 300,
     [theme.breakpoints.up('sm')]: {
-      minWidth: 300,
+      width: 380,
     },
   },
 });
@@ -61,12 +61,14 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
 
   subscription: Subscription;
 
+  mounted: boolean = false;
+
   static defaultProps = {
     hasNew: false,
   };
 
   componentDidMount() {
-
+    this.mounted = true;
     this.subscription = Observable
       .combineLatest(
         notifications$,
@@ -90,6 +92,8 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
       })
       .subscribe(
         ([notifications, events]: [Linode.Notification[], Linode.Event[]]) => {
+          if (!this.mounted) { return; }
+
           this.setState({
             hasNew: hasUnseenEvent(events),
             events,
@@ -114,6 +118,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
   }
 
   componentWillUnmount() {
+    this.mounted = false;
     this.subscription.unsubscribe();
   }
 

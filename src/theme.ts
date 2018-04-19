@@ -43,6 +43,7 @@ const LinodeTheme: Linode.Theme = {
         color: '#3B85D9',
         border: '1px solid #3B85D9',
         padding: '11px 26px 13px',
+        transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent',
           color: '#5F99EA',
@@ -57,6 +58,13 @@ const LinodeTheme: Linode.Theme = {
           borderColor: '#C9CACB',
           backgroundColor: 'transparent',
           color: '#C9CACB',
+        },
+        '&.cancel': {
+          borderColor: 'transparent',
+          color: '#222',
+          '&:hover, &:focus': {
+            borderColor: '#222',
+          },
         },
         '&.destructive': {
           borderColor: '#C44742',
@@ -159,9 +167,8 @@ const LinodeTheme: Linode.Theme = {
     MuiExpansionPanelSummary: {
       root: {
         padding: '0 16px',
-        backgroundColor: 'white',
+        backgroundColor: '#fbfbfb',
         '&:hover, &:focus': {
-          backgroundColor: 'white',
           '& h3': {
             color: '#5F99EA',
           },
@@ -226,6 +233,7 @@ const LinodeTheme: Linode.Theme = {
         lineHeight: 1,
         minHeight: 44,
         boxSizing: 'border-box',
+        backgroundColor: 'white',
         '& svg': {
           fontSize: 18,
           marginLeft: 8,
@@ -345,14 +353,14 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiSnackbarContent: {
       root: {
-        backgroundColor: 'white',
         boxShadow: '0 0 5px #ddd',
         color: '#666',
-        padding: 8,
+        padding: 16,
+        margin: 16,
+        backgroundColor: 'transparent',
         [breakpoints.up('md')]: {
-          width: 800,
-          borderRadius: 2,
-          maxWidth: 'auto',
+          margin: 0,
+          padding: 24,
         },
       },
       message: {
@@ -506,6 +514,7 @@ const LinodeTheme: Linode.Theme = {
     headline: '#32363C',
     red: '#CA0813',
     green: '#00B159',
+    yellow: '#FECF2F',
     border1: '#ABADAF',
     border2: '#C5C6C8',
     border3: '#eee',

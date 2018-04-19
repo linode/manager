@@ -11,7 +11,7 @@ export function weblishLaunch(linodeId: string) {
   window.open(
     `${window.location.protocol}//${window.location.host}/linodes/${linodeId}/weblish`,
     `weblish_con_${linodeId}`,
-    'left=100,top=100,width=1024,height=640,toolbar=0,resizable=1',
+    'left=100,top=100,width=1080,height=680,toolbar=0,resizable=1',
   );
 }
 
@@ -32,14 +32,20 @@ export class Weblish extends React.Component<CombinedProps, State> {
     renderingLish: true,
   };
 
+  mounted: boolean = false;
+
   getLinode() {
     const { match: { params: { linodeId } } } = this.props;
     Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
       .then((response) => {
+        if (!this.mounted) { return; }
+
         const { data: linode } = response;
         this.setState({ linode }, this.connect);
       })
       .catch(() => {
+        if (!this.mounted) { return; }
+
         this.setState({ renderingLish: false });
       });
   }
@@ -47,8 +53,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
   componentWillMount() {
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
+    this.mounted = false;
     Promise.all([webLishCss, xtermCss])
       .then(() => this.getLinode());
+  }
+
+  componentDidMount() {
+    this.mounted = true;
   }
 
   getLishSchemeAndHostname(region: string): string {
@@ -89,7 +100,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const terminal = new Terminal({
       cols: 120,
       rows: 40,
-      fontFamily: '"Ubuntu Mono", "PT Mono", sans-serif',
+      fontFamily: '"Ubuntu Mono", monospace, sans-serif',
     });
 
     terminal.on('data', (data: string) => socket.send(data));

@@ -119,6 +119,8 @@ class APITokens extends React.Component<CombinedProps, State> {
     },
   };
 
+  mounted: boolean = false;
+
   state = {
     pats: pathOr([], ['response', 'data'], this.props.pats),
     ...APITokens.defaultState,
@@ -208,8 +210,9 @@ class APITokens extends React.Component<CombinedProps, State> {
   formatDates(tokens: Linode.Token[]): Linode.Token[] {
     const aLongTimeFromNow = moment.utc().add(100, 'year');
     return tokens.map((token) => {
-      const created = moment(token.created);
-      const expiry = moment(token.expiry);
+      const created = moment.utc(token.created).local();
+      const expiry = moment.utc(token.expiry).local();
+
       return {
         ...token,
         created: created > aLongTimeFromNow ? 'never' : created.fromNow(),
@@ -221,7 +224,11 @@ class APITokens extends React.Component<CombinedProps, State> {
   requestTokens = () => {
     Axios.get(`${API_ROOT}/profile/tokens`)
     .then(response => response.data.data)
-    .then(data => this.setState({ pats: data }));
+    .then((data) => {
+      if (!this.mounted) { return; }
+
+      return this.setState({ pats: data });
+    });
   }
 
   openCreateDrawer = () => {
@@ -313,6 +320,8 @@ class APITokens extends React.Component<CombinedProps, State> {
       })
       .then(() => this.requestTokens())
       .catch((errResponse) => {
+        if (!this.mounted) { return; }
+
         this.setState({ form: {
           ...form,
           errors: path(['response', 'data', 'errors'], errResponse),
@@ -327,11 +336,21 @@ class APITokens extends React.Component<CombinedProps, State> {
     .then(() => { this.closeDrawer(); })
     .then(() => this.requestTokens())
     .catch((errResponse) => {
+      if (!this.mounted) { return; }
+
       this.setState({ form: {
         ...form,
         errors: path(['response', 'data', 'errors'], errResponse),
       }});
     });
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {

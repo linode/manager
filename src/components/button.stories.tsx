@@ -15,6 +15,7 @@ storiesOf('Button', module)
     <Button
       variant="raised"
       color="primary"
+      data-qa-button="primary"
     >
       Primary
     </Button>
@@ -22,6 +23,7 @@ storiesOf('Button', module)
     <Button
       variant="raised"
       color="primary"
+      data-qa-button="primary"
       disabled
     >
       Disabled
@@ -33,6 +35,7 @@ storiesOf('Button', module)
     <Button
       variant="raised"
       color="secondary"
+      data-qa-button="secondary"
     >
       Secondary
     </Button>
@@ -40,6 +43,7 @@ storiesOf('Button', module)
     <Button
       variant="raised"
       color="secondary"
+      data-qa-button="secondary"
       disabled
     >
       Disabled
@@ -52,6 +56,7 @@ storiesOf('Button', module)
       variant="raised"
       color="primary"
       className="button-dropdown"
+      data-qa-button="dropdown"
     >
       Primary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
@@ -61,6 +66,7 @@ storiesOf('Button', module)
       variant="raised"
       color="primary"
       className="button-dropdown"
+      data-qa-button="dropdown"
     >
       Primary Dropdown Active
       <KeyboardArrowUp className="caret"></KeyboardArrowUp>
@@ -71,6 +77,7 @@ storiesOf('Button', module)
       color="primary"
       disabled
       className="button-dropdown"
+      data-qa-button="dropdown"
     >
       Primary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
@@ -83,8 +90,9 @@ storiesOf('Button', module)
       variant="raised"
       color="secondary"
       className="button-dropdown"
+      data-qa-button="dropdown-secondary"
     >
-      Primary Dropdown
+      Secondary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
     </Button>
     <br /><br />
@@ -92,8 +100,9 @@ storiesOf('Button', module)
       variant="raised"
       color="secondary"
       className="button-dropdown"
+      data-qa-button="dropdown-secondary"
     >
-      Primary Dropdown Active
+      Secondary Dropdown Active
       <KeyboardArrowUp className="caret"></KeyboardArrowUp>
     </Button>
     <br /><br />
@@ -102,8 +111,9 @@ storiesOf('Button', module)
       color="secondary"
       disabled
       className="button-dropdown"
+      data-qa-button="dropdown-secondary"
     >
-      Primary Dropdown
+      Secondary Dropdown
       <KeyboardArrowDown className="caret"></KeyboardArrowDown>
     </Button>
   </React.Fragment>
@@ -114,6 +124,7 @@ storiesOf('Button', module)
       variant="raised"
       color="secondary"
       className="destructive"
+      data-qa-button="destructive"
     >
       Destructive
     </Button>
@@ -122,6 +133,7 @@ storiesOf('Button', module)
       variant="raised"
       color="secondary"
       disabled
+      data-qa-button="destructive"
     >
       Disabled
     </Button>
