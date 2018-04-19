@@ -28,8 +28,8 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import {
-  rescue as rescueLinode,
-  getDisks as getLinodeDisks,
+  rescueLinode,
+  getLinodeDisks,
   RescueRequestObject,
 } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
