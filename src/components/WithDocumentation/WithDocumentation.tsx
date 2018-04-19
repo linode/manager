@@ -46,17 +46,23 @@ class WithDocumentation extends React.Component<PropsWithStyles>  {
     const { classes, title, docs, render, ...rest } = this.props;
 
     return (
-      <Grid container spacing={40}>
+      <Grid container>
         <Grid item xs={12}>
           <Grid container>
             <Grid item className={`${classes.listContainer} mlMain`}>
               <Grid item xs={12} className={classes.titleContainer}>
-                <Typography variant="headline" data-test-id="title">{title}</Typography>
+                <Typography variant="headline" data-qa-title>{title}</Typography>
               </Grid>
               {render(rest)}
             </Grid>
             <Grid item className="mlSidebar">
-              <Typography variant="title" className={classes.sidebarTitle}>Linode Docs</Typography>
+              <Typography
+                variant="title"
+                className={classes.sidebarTitle}
+                data-qa-sidebar-title
+              >
+                Linode Docs
+              </Typography>
               {docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)}
             </Grid>
           </Grid>

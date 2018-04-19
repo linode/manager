@@ -13,7 +13,7 @@ describe('WithDocumentation', () => {
     );
 
     const rendered = result.find('#something');
-    const DOMtitle = result.find('[data-test-id="title"]').at(0).text();
+    const DOMtitle = result.find('[data-qa-title]').at(0).text();
 
     expect(rendered).toHaveLength(1);
     expect(DOMtitle).toEqual('something');

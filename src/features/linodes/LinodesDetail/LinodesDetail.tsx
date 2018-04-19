@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { pathEq } from 'ramda';
-import * as moment from 'moment';
 import Axios from 'axios';
+import { pathEq, pathOr } from 'ramda';
+import * as moment from 'moment';
+
+
 import {
   withStyles,
   StyleRulesCallback,
@@ -10,7 +12,6 @@ import {
 } from 'material-ui';
 import {
   matchPath,
-  withRouter,
   Route,
   Switch,
   RouteComponentProps,
@@ -23,6 +24,7 @@ import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
+import reloadableWithRouter from './reloadableWithRouter';
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { API_ROOT } from 'src/constants';
@@ -39,8 +41,7 @@ import LinodeBackup from './LinodeBackup';
 import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
-
-type Props = RouteComponentProps<{ linodeId?: number }>;
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 interface Data {
   linode: Linode.Linode;
@@ -62,6 +63,10 @@ interface State {
   linode: Linode.Linode & { recentEvent?: Linode.Event };
 }
 
+type MatchProps = { linodeId?: number };
+
+type RouteProps = RouteComponentProps<MatchProps>;
+
 interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
@@ -82,7 +87,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-const preloaded = PromiseLoader<Props>({
+type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
+
+const preloaded = PromiseLoader<CombinedProps>({
   data: ((props) => {
     const { match: { params: { linodeId } } } = props;
     return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
@@ -113,8 +120,6 @@ const preloaded = PromiseLoader<Props>({
       });
   }),
 });
-
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
   subscription: Subscription;
@@ -218,7 +223,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { linode } = this.state;
     Axios.put(`${API_ROOT}/linode/instances/${linode.id}`, { label })
       .catch((err) => {
-        /** @todo Toast error. */
+        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+        errors.forEach(e => sendToast(e.reason, 'error'));
+        this.setState({ linode });
       });
   }
 
@@ -302,4 +309,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(preloaded(styled(LinodeDetail)));
+export default reloadableWithRouter<PreloadedProps, MatchProps>(
+  (routePropsOld, routePropsNew) => {
+    return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
+  },
+)((styled(preloaded(LinodeDetail))));
