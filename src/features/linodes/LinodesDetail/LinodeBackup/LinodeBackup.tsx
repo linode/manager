@@ -25,7 +25,7 @@ import {
   takeSnapshot,
   updateBackupsWindow,
   cancelBackups,
-} from 'src/services/linode';
+} from 'src/services/linodes';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';

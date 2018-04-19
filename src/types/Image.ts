@@ -4,13 +4,11 @@ namespace Linode {
     label: string;
     description: string | null;
     created: string;
-    type: ImageType;
+    type: string;
     is_public: Boolean;
     size: number;
-    created_by: string;
+    created_by: null | string;
     vendor: string | null;
     deprecated: Boolean;
   }
-
-  type ImageType = 'manual' | 'automatic';
 }
