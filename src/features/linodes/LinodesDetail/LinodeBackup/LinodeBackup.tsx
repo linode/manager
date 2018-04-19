@@ -210,6 +210,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     takeSnapshot(linodeID, snapshotForm.label)
       .then(() => {
         sendToast('A snapshot is being taken');
+        this.setState({ snapshotForm : { label: '', errors: undefined } });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
