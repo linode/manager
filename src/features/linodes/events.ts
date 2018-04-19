@@ -7,6 +7,7 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
     'linode_reboot',
     'linode_shutdown',
     'backups_enable',
+    'backups_cancel',
     'linode_snapshot',
   ];
 

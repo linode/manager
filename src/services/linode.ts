@@ -20,6 +20,10 @@ export const enableBackups = (id: number): AxiosPromise =>
   Axios
     .post(`${API_ROOT}/linode/instances/${id}/backups/enable`);
 
+export const cancelBackups = (id: number): AxiosPromise =>
+  Axios
+    .post(`${API_ROOT}/linode/instances/${id}/backups/cancel`);
+
 export const takeSnapshot = (id: number, label: string): AxiosPromise =>
   Axios
     .post(`${API_ROOT}/linode/instances/${id}/backups`, { label });
