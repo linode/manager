@@ -51,7 +51,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     },
   },
   logoItem: {
-    padding: '10px 0 8px 34px',
+    padding: '10px 0 8px 26px',
   },
   listItem: {
     padding: '16px 40px 16px 34px',
