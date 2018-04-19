@@ -89,7 +89,7 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
   } = props;
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} data-qa-active-view={props.status}>
       <Button
         onClick={() => handleClick('list')}
         className={`
@@ -97,8 +97,9 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
             ${classes.button}
             ${classes.buttonLeft}`
         }
+        data-qa-view="list"
       >
-        <ViewList className={classes.icon} />
+        <ViewList className={classes.icon}/>
         List
         </Button>
       <Button
@@ -108,6 +109,7 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
             ${classes.button}
             ${classes.buttonRight}`
         }
+        data-qa-view="grid"
       >
         <ViewModule className={classes.icon} />
         Grid
