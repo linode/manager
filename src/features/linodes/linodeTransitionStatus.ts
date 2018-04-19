@@ -5,4 +5,5 @@ export default [
   'provisioning',
   'deleting',
   'migrating',
+  'resizing',
 ];

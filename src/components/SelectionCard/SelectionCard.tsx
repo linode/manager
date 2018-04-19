@@ -128,7 +128,7 @@ export interface Props {
   onKeyPress?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   heading: string;
-  subheadings: string[];
+  subheadings: (string|undefined)[];
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
