@@ -203,7 +203,7 @@ class SearchBar extends React.Component<FinalProps, State> {
     fetchFn(page)
       .then((response) => {
         this.setState(prevState => ({
-          [name]: [...prevState.name, ...response.data],
+          [name]: [...prevState[name], ...response.data],
         }));
         this.getAllPagesFor_(name, fetchFn, page + 1, pageCount);
       });
