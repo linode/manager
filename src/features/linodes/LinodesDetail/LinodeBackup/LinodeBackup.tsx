@@ -251,7 +251,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} style={{ padding: 0 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -307,7 +307,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.paper}>
-          <Typography variant="title">
+          <Typography
+            variant="title"
+            className={classes.title}
+          >
             Manual Snapshot
           </Typography>
           <Typography variant="body1">
@@ -350,6 +353,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.paper}>
+          <Typography
+            variant="title"
+            className={classes.title}>
+            Settings
+          </Typography>
           <Typography variant="body1">
             Configure when automatic backups are initiated. The Linode Backup
             Service will generate backups between the selected hours. The
@@ -427,11 +435,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </Paper>
         }
         <this.SnapshotForm />
-        <Typography
-          variant="title"
-          className={classes.title}>
-          Settings
-        </Typography>
         <this.SettingsForm />
         <Button
           variant="raised"
