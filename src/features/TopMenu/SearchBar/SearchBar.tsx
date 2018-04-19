@@ -121,6 +121,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     top: 60,
     padding: 0,
     boxShadow: '0 0 5px #ddd',
+    maxHeight: 325,
+    overflowY: 'auto',
   },
   item: {
     borderBottom: `1px solid ${theme.palette.divider}`,
