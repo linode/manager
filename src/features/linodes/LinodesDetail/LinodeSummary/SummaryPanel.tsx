@@ -65,7 +65,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
     <Paper className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="title" className={classes.title}>
+          <Typography variant="headline" className={classes.title}>
             Summary
           </Typography>
         </Grid>
