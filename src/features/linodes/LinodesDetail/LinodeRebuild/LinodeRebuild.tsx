@@ -135,7 +135,13 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="headline" className={classes.title}>Rebuild</Typography>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
+            Rebuild
+          </Typography>
           <Typography className={classes.intro}>
             If you can't rescue an exiting disk, it's time to rebuild your Linode.
             There are a couple of different ways you can do this,

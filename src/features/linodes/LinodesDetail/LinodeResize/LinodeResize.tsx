@@ -95,7 +95,13 @@ class LinodeResize extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="headline" className={classes.title}>Resize</Typography>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
+            Resize
+          </Typography>
           <Typography>
             If you're expecting a temporary burst of traffic to your website,
             or if you're not using your Linode as much as you thought,

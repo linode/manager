@@ -438,6 +438,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Typography
           variant="headline"
           className={classes.title}
+          data-qa-title
         >
           Backups
         </Typography>
