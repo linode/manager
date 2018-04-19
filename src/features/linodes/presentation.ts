@@ -1,4 +1,4 @@
-function titlecase(string: string): string {
+export function titlecase(string: string): string {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
 }
 
