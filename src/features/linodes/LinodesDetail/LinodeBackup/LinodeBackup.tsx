@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment-timezone';
-import { path, sortBy } from 'ramda';
+import { path, sortBy, pathOr } from 'ramda';
 import {
   withStyles,
   StyleRulesCallback,
@@ -26,6 +26,7 @@ import {
   updateBackupsWindow,
   cancelBackups,
 } from 'src/services/linode';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
@@ -175,21 +176,27 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   enableBackups() {
     const { linodeID } = this.props;
     enableBackups(linodeID)
-      .then(() => resetEventsPolling());
-    /**
-     * TODO: Show a toast notification while waiting for the event:
-     * 'Backups are being enabled'
-     **/
+      .then(() => {
+        sendToast('Backups are being enabled for this Linode');
+        resetEventsPolling();
+      })
+      .catch((errorResponse) => {
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+      });
   }
 
   cancelBackups() {
     const { linodeID } = this.props;
     cancelBackups(linodeID)
-      .then(() => resetEventsPolling());
-    /**
-     * TODO: Show a toast notification while waiting for the event:
-     * 'Backups are being cancelled'
-     **/
+      .then(() => {
+        sendToast('Backups are being cancelled for this Linode');
+        resetEventsPolling();
+      })
+      .catch((errorResponse) => {
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+      });
   }
 
   aggregateBackups = (): Linode.LinodeBackup[] => {
@@ -201,23 +208,23 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { linodeID } = this.props;
     const { snapshotForm } = this.state;
     takeSnapshot(linodeID, snapshotForm.label)
-      .then(() => resetEventsPolling())
-      .catch((err) => {
-        this.setState({ snapshotForm: {
-          ...snapshotForm,
-          errors: path(['response', 'data', 'errors'], err),
-        }});
+      .then(() => {
+        sendToast('A snapshot is being taken');
+        resetEventsPolling();
+      })
+      .catch((errorResponse) => {
+        pathOr([], ['response', 'data', 'errors'], errorResponse)
+          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
       });
-    /**
-     * TODO: Show a toast notification while waiting for the event:
-     * 'Snapshot is being taken'
-     **/
   }
 
   saveSettings = () => {
     const { linodeID } = this.props;
     const { settingsForm } = this.state;
     updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
+      .then(() => {
+        sendToast('Backup settings saved');
+      })
       .catch((err) => {
         this.setState({ settingsForm: {
           ...settingsForm,
