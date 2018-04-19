@@ -19,3 +19,12 @@ export const getLinodeBackups = (id: number): GetLinodeBackupsType =>
 export const enableBackups = (id: number): AxiosPromise =>
   Axios
     .post(`${API_ROOT}/linode/instances/${id}/backups/enable`);
+
+export const takeSnapshot = (id: number, label: string): AxiosPromise =>
+  Axios
+    .post(`${API_ROOT}/linode/instances/${id}/backups`, { label });
+
+export const updateBackupsWindow = (id: number, day: string, window: string): AxiosPromise =>
+  Axios
+    .put(`${API_ROOT}/linode/instances/${id}`,
+    { backups: { schedule: { day, window } } });
