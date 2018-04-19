@@ -23,7 +23,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
   state = {};
 
   render() {
-    return (<h1>Rescue</h1>);
+    return (<h1 data-qa-title>Rescue</h1>);
   }
 }
 

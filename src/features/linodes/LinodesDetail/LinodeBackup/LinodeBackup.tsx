@@ -23,7 +23,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   state = {};
 
   render() {
-    return (<h1>Backup</h1>);
+    return (<h1 data-qa-title>Backup</h1>);
   }
 }
 

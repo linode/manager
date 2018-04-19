@@ -23,7 +23,7 @@ class LinodeResize extends React.Component<CombinedProps, State> {
   state = {};
 
   render() {
-    return (<h1>Resize</h1>);
+    return (<h1 data-qa-title>Resize</h1>);
   }
 }
 

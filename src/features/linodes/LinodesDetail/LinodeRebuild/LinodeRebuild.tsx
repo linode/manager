@@ -23,7 +23,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   state = {};
 
   render() {
-    return (<h1>Rebuild</h1>);
+    return (<h1 data-qa-title>Rebuild</h1>);
   }
 }
 

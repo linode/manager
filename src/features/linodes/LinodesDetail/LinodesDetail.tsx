@@ -243,12 +243,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               variant="headline"
               text={linode.label}
               onEdit={this.updateLabel}
+              data-qa-label
             />
           </Grid>
           <Grid item>
             <Button
               onClick={() => weblishLaunch(`${linode.id}`)}
               className={classes.launchButton}
+              data-qa-launch-console
             >
               Launch Console
             </Button>
@@ -269,7 +271,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             indicatorColor="primary"
             textColor="primary"
           >
-            {this.tabs.map(tab => <Tab key={tab.title} label={tab.title} />)}
+            {this.tabs.map(tab =>
+              <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
         <Switch>
