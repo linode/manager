@@ -4,9 +4,7 @@ import {
   assoc,
   clamp,
   compose,
-  concat,
   contains,
-  defaultTo,
   filter,
   ifElse,
   isNil,
@@ -42,7 +40,7 @@ import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ErrorState from 'src/components/ErrorState';
-import DeviceSelection from './DeviceSelection';
+import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 
 type ClassNames = 'root'
   | 'title'
@@ -71,8 +69,8 @@ interface Props {
 }
 
 interface PromiseLoaderProps {
-  disks: PromiseLoaderResponse<Linode.Disk>;
-  volumes: PromiseLoaderResponse<Linode.Volume>;
+  disks: PromiseLoaderResponse<ExtendedDisk[]>;
+  volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
 interface RescueDeviceState {
@@ -89,8 +87,10 @@ interface RescueDeviceState {
 interface State {
   rescueDevices: RescueDeviceState;
   errors?: Linode.ApiFieldError[];
-  disks?: Linode.Disk;
-  volumes?: Linode.Volume;
+  devices: {
+    disks: ExtendedDisk[];
+    volumes: ExtendedVolume[];
+  };
   config?: Linode.Config;
   counter: number;
 }
@@ -129,8 +129,10 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      disks: props.disks.response,
-      volumes: props.volumes.response,
+      devices: {
+        disks: props.disks.response || [],
+        volumes: props.volumes.response || [],
+      },
       counter: 1,
       rescueDevices: {
         sda: undefined,
@@ -188,7 +190,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
   })
 
   render() {
-    const { disks, volumes } = this.state;
+    const { devices } = this.state;
     const { disks: { error: disksError }, volumes: { error: volumesError }, classes } = this.props;
 
     if (disksError) {
@@ -208,18 +210,12 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
             your Linode into Rescue Mode. This is a safe environment for performing many system
             recovery and disk management tasks.
           </Typography>
-          {
-            compose<any, any, any, any>(
-              (devices: (Linode.Disk & { _id: string } | Linode.Volume & { _id: string })[]) =>
-                <DeviceSelection
-                  devices={devices}
-                  onChange={this.onChange}
-                  getSelected={slot => pathOr('', ['rescueDevices', slot], this.state)}
-                  counter={this.state.counter}
-                />,
-              (disks, volumes) => concat(defaultTo([], disks), defaultTo([], volumes)),
-            )(disks, volumes)
-          }
+          <DeviceSelection
+            devices={devices}
+            onChange={this.onChange}
+            getSelected={slot => pathOr('', ['rescueDevices', slot], this.state)}
+            counter={this.state.counter}
+          />
           <IconTextLink
             SideIcon={PlusSquare}
             onClick={() => this.incrementCounter()}
@@ -239,14 +235,9 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-
-interface VolumeWithID extends Linode.Volume {
-  _id: string;
-}
-
 const preloaded = PromiseLoader({
   /** @todo filter for available */
-  disks: ({ linodeId }) => getLinodeDisks(linodeId)
+  disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
     .then(
       compose(
         map((disk: Linode.Disk) => assoc('_id', `disk-${disk.id}`, disk)),
@@ -255,15 +246,15 @@ const preloaded = PromiseLoader({
   ),
 
   /** @todo filter for available */
-  volumes: ({ linodeId, linodeRegion }) => getVolumes()
+  volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<
         Linode.ManyResourceState<Linode.Volume>,
         Linode.Volume[],
-        VolumeWithID[],
-        VolumeWithID[]
+        ExtendedVolume[],
+        ExtendedVolume[]
         >(
-          filter<VolumeWithID>(volume => volume.region === linodeRegion),
+          filter<ExtendedVolume>(volume => volume.region === linodeRegion),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
@@ -275,3 +266,4 @@ export default compose<any, any, any, any>(
   SectionErrorBoundary,
   styled,
 )(LinodeRescue);
+

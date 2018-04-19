@@ -6,21 +6,33 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
+  Typography,
 } from 'material-ui';
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import { FormControl } from 'material-ui/Form';
 
 import Select from 'src/components/Select';
-
+import { titlecase } from 'src/features/linodes/presentation';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
+export interface ExtendedDisk extends Linode.Disk {
+  _id: string;
+}
+
+export interface ExtendedVolume extends Linode.Volume {
+  _id: string;
+}
+
 interface Props {
-  devices: (Linode.Disk & { _id: string } | Linode.Volume & { _id: string })[];
+  devices: {
+    disks: ExtendedDisk[];
+    volumes: ExtendedVolume[];
+  };
   onChange: (slot: string, id: string) => void;
   getSelected: (slot: string) => string;
   counter?: number;
@@ -30,7 +42,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-
     devices,
     onChange,
     getSelected,
@@ -59,7 +70,13 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
             >
               <MenuItem value="none"><em>None</em></MenuItem>
               {
-                devices.map(({ _id, label }) => <MenuItem key={_id} value={_id}>{label}</MenuItem>)
+                Object
+                  .entries(devices)
+                  .map(([type, items]) => [
+                    <Typography >{titlecase(type)}</Typography>,
+                    ...(items as any[]).map(({ _id, label }) =>
+                    <MenuItem key={_id} value={_id}>{label}</MenuItem>),
+                  ])
               }
             </Select>
           </FormControl>;
