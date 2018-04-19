@@ -84,7 +84,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       .then((response) => {
         resetEventsPolling();
         this.setState({ errors: undefined, selected: undefined, password: undefined });
-        /** @todo What is the result here? Toast? Redirect? Brimstone and fire? */
+        sendToast('Linode rebuild started.');
       })
       .catch((errorResponse) => {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
