@@ -30,19 +30,27 @@ namespace Linode {
     transfer_quota: number;
   }
 
-  interface LinodeBackups {
+  export interface LinodeBackups {
     enabled: boolean;
     schedule: LinodeBackupSchedule;
     last_backup?: LinodeBackup;
     snapshot?: LinodeBackup;
   }
 
-  interface LinodeBackupSchedule {
+  export interface LinodeBackupSchedule {
     window: string;
     day: string;
   }
 
-  interface LinodeBackup {
+  export interface LinodeBackupsResponse {
+    automatic: LinodeBackup[];
+    snapshot: {
+      current: LinodeBackup,
+      in_progress: LinodeBackup,
+    };
+  }
+
+  export interface LinodeBackup {
     id: number;
     label: string;
     status: LinodeBackupStatus;
@@ -90,23 +98,24 @@ namespace Linode {
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
     label: any;
-    devices: ConfigDevices;
+    devices: Devices;
   }
 
-  export interface ConfigDevices {
-    sda: null | ConfigDevice;
-    sdb: null | ConfigDevice;
-    sdc: null | ConfigDevice;
-    sdd: null | ConfigDevice;
-    sde: null | ConfigDevice;
-    sdf: null | ConfigDevice;
-    sdg: null | ConfigDevice;
-    sdh: null | ConfigDevice;
-  }
-
-  interface ConfigDevice {
-    /* disk_id and volume_id are mutually exclusive. */
+  export interface DiskDevice {
     disk_id: null | number;
+  }
+  export interface VolumeDevice {
     volume_id: null | number;
+  }
+
+  export interface Devices {
+    sda: null | DiskDevice | VolumeDevice;
+    sdb: null | DiskDevice | VolumeDevice;
+    sdc: null | DiskDevice | VolumeDevice;
+    sdd: null | DiskDevice | VolumeDevice;
+    sde: null | DiskDevice | VolumeDevice;
+    sdf: null | DiskDevice | VolumeDevice;
+    sdg: null | DiskDevice | VolumeDevice;
+    sdh: null | DiskDevice | VolumeDevice;
   }
 }

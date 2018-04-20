@@ -3,7 +3,6 @@ import Axios from 'axios';
 import { pathEq, pathOr } from 'ramda';
 import * as moment from 'moment';
 
-
 import {
   withStyles,
   StyleRulesCallback,
@@ -17,7 +16,7 @@ import {
   RouteComponentProps,
   Redirect,
 } from 'react-router-dom';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -61,6 +60,9 @@ interface ConfigDrawerState {
 interface State {
   configDrawer: ConfigDrawerState;
   linode: Linode.Linode & { recentEvent?: Linode.Event };
+  type?: Linode.LinodeType;
+  image?: Linode.Image;
+  volumes?: Linode.Volume[];
 }
 
 type MatchProps = { linodeId?: number };
@@ -87,37 +89,40 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
+const requestAllTheThings = (linodeId: number) =>
+  Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+    .then((response) => {
+      const { data: linode } = response;
+
+      const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+        .then(response => response.data)
+        .catch(err => undefined);
+
+      const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
+        .then(response => response.data)
+        .catch(err => undefined);
+
+      const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
+        .then(response => response.data.data)
+        .catch(err => []);
+
+      return Promise.all([typeReq, imageReq, volumesReq])
+        .then((responses) => {
+          return {
+            linode,
+            type: responses[0],
+            image: responses[1],
+            volumes: responses[2],
+          };
+        });
+    });
+
 type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   data: ((props) => {
     const { match: { params: { linodeId } } } = props;
-    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
-      .then((response) => {
-        const { data: linode } = response;
-
-        const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
-          .then(response => response.data)
-          .catch(err => undefined);
-
-        const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
-          .then(response => response.data)
-          .catch(err => undefined);
-
-        const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-          .then(response => response.data.data)
-          .catch(err => []);
-
-        return Promise.all([typeReq, imageReq, volumesReq])
-          .then((responses) => {
-            return {
-              linode,
-              type: responses[0],
-              image: responses[1],
-              volumes: responses[2],
-            };
-          });
-      });
+    return requestAllTheThings(linodeId!);
   }),
 });
 
@@ -127,6 +132,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   state = {
     linode: this.props.data.response.linode,
+    type: this.props.data.response.type,
+    image: this.props.data.response.image,
+    volumes: this.props.data.response.volumes,
     configDrawer: {
       open: false,
       configs: [],
@@ -145,18 +153,15 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
     this.subscription = events$
-      .filter(newLinodeEvents(mountTime))
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
+      .filter(newLinodeEvents(mountTime))
+      .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
-        Axios.get(`${API_ROOT}/linode/instances/${(linodeEvent.entity as Linode.Entity).id}`)
-          .then(response => response.data)
-          .then((linode) => {
-            if (!this.mounted) { return; }
 
-            this.setState(() => {
-              linode.recentEvent = linodeEvent;
-              return { linode };
-            });
+        const { match: { params: { linodeId } } } = this.props;
+        requestAllTheThings(linodeId!)
+          .then(({ linode, type, image, volumes }) => {
+            this.setState({ linode, type, image, volumes });
           });
       });
   }
@@ -175,7 +180,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     { routeName: `${this.props.match.url}/resize`, title: 'Resize' },
     { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
     { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${this.props.match.url}/backup`, title: 'Backup' },
+    { routeName: `${this.props.match.url}/backup`, title: 'Backups' },
     { routeName: `${this.props.match.url}/settings`, title: 'Setttings' },
   ];
 
@@ -231,8 +236,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const { match: { url }, classes } = this.props;
-    const { type, image, volumes } = this.props.data.response;
-    const { linode, configDrawer } = this.state;
+    const {
+      type,
+      image,
+      volumes,
+      linode,
+      configDrawer,
+    } = this.state;
     const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
 
     return (
@@ -288,11 +298,37 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             />
           )} />
           <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
-          <Route exact path={`${url}/rescue`} render={() => (<LinodeRescue />)} />
-          <Route exact path={`${url}/resize`} render={() => (<LinodeResize />)} />
-          <Route exact path={`${url}/rebuild`} render={() => (<LinodeRebuild />)} />
-          <Route exact path={`${url}/backup`} render={() => (<LinodeBackup />)} />
+          <Route exact path={`${url}/rescue`} render={() => (
+            <LinodeRescue
+              linodeId={linode.id}
+              linodeRegion={linode.region}
+            />
+          )} />
+          <Route exact path={`${url}/resize`} render={() => (
+            <LinodeResize
+              linodeId={linode.id}
+              type={type}
+            />
+          )} />
+          <Route exact path={`${url}/rebuild`} render={() => (
+            <LinodeRebuild linodeId={linode.id} />
+          )} />
+          <Route exact path={`${url}/backup`} render={() => (
+            <LinodeBackup
+              linodeID={linode.id}
+              backupsEnabled={linode.backups.enabled}
+              backupsSchedule={linode.backups.schedule}
+              backupsMonthlyPrice={
+                pathOr(undefined, ['addons', 'backups', 'price', 'monthly'], type)
+              }
+            />
+          )} />
           <Route exact path={`${url}/settings`} render={() => (<LinodeSettings />)} />
+          <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes />)} />
+          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
+          <Route exact path={`${url}/rescue`} render={() => (
+            <LinodeRescue linodeId={linode.id} />
+          )} />
           {/* 404 */}
           <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
         </Switch>

@@ -6,6 +6,10 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
     'linode_boot',
     'linode_reboot',
     'linode_shutdown',
+    'backups_enable',
+    'backups_cancel',
+    'linode_snapshot',
+    'linode_rebuild',
   ];
 
   const statusWhitelist = [
@@ -13,6 +17,7 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
     'finished',
     'scheduled',
     'failed',
+    'notification',
   ];
 
   const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';

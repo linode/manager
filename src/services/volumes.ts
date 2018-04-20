@@ -1,10 +1,14 @@
 import Axios from 'axios';
 import { API_ROOT } from 'src/constants';
 
-export const getVolumes = (): Promise<Linode.ManyResourceState<Linode.Volume>> =>
+type GetVolumesPage = Promise<Linode.ManyResourceState<Linode.Volume>>;
+export const getVolumesPage = (page: number): GetVolumesPage =>
   Axios
-    .get(`${API_ROOT}/volumes`)
+    .get(`${API_ROOT}/volumes/?page=${page}`)
     .then(response => response.data);
+
+export const getVolumes = (): Promise<Linode.ManyResourceState<Linode.Volume>> =>
+  getVolumesPage(1);
 
 export const attach = (volumeId: number) => (linodeId: number): Promise<{}> =>
   Axios

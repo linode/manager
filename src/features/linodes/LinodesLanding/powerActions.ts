@@ -7,7 +7,7 @@ import { events$, resetEventsPolling } from 'src/events';
 
 import { dateFormat } from 'src/time';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { getLinodeConfigs } from 'src/services/linode';
+import { getLinodeConfigs } from 'src/services/linodes';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 export const genEvent = (

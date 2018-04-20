@@ -3,7 +3,7 @@ import Axios, { AxiosError } from 'axios';
 import {
   withRouter,
   RouteComponentProps,
-}from 'react-router-dom';
+} from 'react-router-dom';
 import { StickyContainer, Sticky, StickyProps } from 'react-sticky';
 
 import {
@@ -42,9 +42,9 @@ export type TypeInfo = {
 } | undefined;
 
 type Styles =
-'root'
-| 'main'
-| 'sidebar';
+  'root'
+  | 'main'
+  | 'sidebar';
 
 const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   root: {
@@ -174,7 +174,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
               images={this.props.images.response}
               handleSelection={this.updateStateFor}
               selectedImageID={this.state.selectedImageID}
-              />
+            />
             <SelectRegionPanel
               error={getErrorFor('region', this.state.errors)}
               regions={this.props.regions.response}
@@ -184,7 +184,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             <SelectPlanPanel
               error={getErrorFor('type', this.state.errors)}
               types={this.props.types.response}
-              handleSelection={this.updateStateFor}
+              onSelect={(id: string) => this.setState({ selectedTypeID: id })}
               selectedID={this.state.selectedTypeID}
             />
             <LabelAndTagsPanel
@@ -195,7 +195,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
             <PasswordPanel
               error={getErrorFor('root_pass', this.state.errors)}
               password={this.state.password}
-              handleChange={this.updateStateFor}
+              handleChange={v => this.setState({ password: v })}
             />
             <AddonsPanel
               backups={this.state.backups}
@@ -238,17 +238,17 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
     })
-    .then((response) => {
-      resetEventsPolling();
-      history.push('/linodes');
-    })
-    .catch((error: AxiosError) => {
-      if (!this.mounted) { return; }
+      .then((response) => {
+        resetEventsPolling();
+        history.push('/linodes');
+      })
+      .catch((error: AxiosError) => {
+        if (!this.mounted) { return; }
 
-      this.setState(() => ({
-        errors: error.response && error.response.data && error.response.data.errors,
-      }));
-    });
+        this.setState(() => ({
+          errors: error.response && error.response.data && error.response.data.errors,
+        }));
+      });
   }
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
@@ -308,7 +308,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
                 indicatorColor="primary"
                 textColor="primary"
               >
-              {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
+                {this.tabs.map((tab, idx) => <Tab key={idx} label={tab.title} />)}
               </Tabs>
             </AppBar>
             {tabRender()}
