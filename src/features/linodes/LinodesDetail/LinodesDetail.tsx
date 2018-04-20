@@ -181,7 +181,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     { routeName: `${this.props.match.url}/rescue`, title: 'Rescue' },
     { routeName: `${this.props.match.url}/rebuild`, title: 'Rebuild' },
     { routeName: `${this.props.match.url}/backup`, title: 'Backups' },
-    { routeName: `${this.props.match.url}/settings`, title: 'Setttings' },
+    { routeName: `${this.props.match.url}/settings`, title: 'Settings' },
   ];
 
   openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
