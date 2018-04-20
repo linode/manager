@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import Axios from 'axios';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { connect } from 'react-redux';
 import { pathOr } from 'ramda';
@@ -18,10 +17,14 @@ import IconButton from 'material-ui/IconButton';
 import Close from 'material-ui-icons/Close';
 import Search from 'material-ui-icons/Search';
 
+import { getLinodesPage } from 'src/services/linode';
+import { getVolumesPage } from 'src/services/volumes';
+import { getNodeBalancersPage } from 'src/services/nodebalancers';
+import { getDomainsPage } from 'src/services/domains';
+import { getImagesPage } from 'src/services/images';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import { API_ROOT } from 'src/constants';
 import LinodeTheme from 'src/theme';
 import TextField from 'src/components/TextField';
 import { labelFromType } from 'src/features/linodes/presentation';
@@ -145,20 +148,19 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
 });
 
-
 interface Props {
   types: Linode.LinodeType[];
 }
 
 interface State {
   searchText: string;
-  lastFetch: moment.Moment;
+  searchActive: boolean;
   linodes?: Linode.Linode[];
   volumes?: Linode.Volume[];
   nodebalancers?: Linode.NodeBalancer[];
   domains?: Linode.Domain[];
   images?: Linode.Image[];
-  searchActive: boolean;
+  [resource: string]: any;
 }
 
 type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
@@ -166,9 +168,10 @@ type FinalProps = Props & WithStyles<Styles> & RouteComponentProps<{}>;
 class SearchBar extends React.Component<FinalProps, State> {
   state: State = {
     searchText: '',
-    lastFetch: moment.utc(),
     searchActive: false,
   };
+
+  lastFetch = moment.utc('1970-01-01T00:00:00');
 
   dataAvailable() {
     return (
@@ -189,37 +192,44 @@ class SearchBar extends React.Component<FinalProps, State> {
     return `${imageDesc}, ${typeDesc}`;
   }
 
-  updateData() {
-    /* TODO: Use service modules for these API calls */
-    /* TODO: Fetch every page */
-    Axios.get(`${API_ROOT}/linode/instances/`)
+  getAllPagesFor_(
+    name: string,
+    fetchFn: (page: number) => Promise<any>,
+    page: number,
+    pageCount: number,
+  ) {
+    if (!page || !pageCount) { return ;}
+    if (page > pageCount) { return; }
+    fetchFn(page)
       .then((response) => {
-        this.setState({ linodes: response.data.data });
-      });
-
-    Axios.get(`${API_ROOT}/volumes`)
-      .then((response) => {
-        this.setState({ volumes: response.data.data });
-      });
-
-    Axios.get(`${API_ROOT}/nodebalancers`)
-      .then((response) => {
-        this.setState({ nodebalancers: response.data.data });
-      });
-
-    Axios.get(`${API_ROOT}/domains`)
-      .then((response) => {
-        this.setState({ domains: response.data.data });
-      });
-
-    Axios.get(`${API_ROOT}/images`)
-      .then((response) => {
-        this.setState({ images: response.data.data });
+        this.setState(prevState => ({
+          [name]: [...prevState[name], ...response.data],
+        }));
+        this.getAllPagesFor_(name, fetchFn, page + 1, pageCount);
       });
   }
 
+  getAllPagesFor(name: string, fetchFn: (page: number) => Promise<any>) {
+    /* fetch the first page and get the page count */
+    fetchFn(1)
+      .then((response) => {
+        this.setState({ [name]: response.data });
+        /* fetch the rest of the pages */
+        const pageCount = response.pages;
+        this.getAllPagesFor_(name, fetchFn, 2, pageCount);
+      });
+  }
+
+  updateData() {
+    this.getAllPagesFor('linodes', getLinodesPage);
+    this.getAllPagesFor('volumes', getVolumesPage);
+    this.getAllPagesFor('nodebalancers', getNodeBalancersPage);
+    this.getAllPagesFor('domains', getDomainsPage);
+    this.getAllPagesFor('images', getImagesPage);
+  }
+
   getSearchSuggestions(query: string | null) {
-    if (!this.dataAvailable || !query) return [];
+    if (!this.dataAvailable() || !query) return [];
 
     const searchResults = [];
 
@@ -272,6 +282,24 @@ class SearchBar extends React.Component<FinalProps, State> {
       }))));
     }
 
+    if (this.state.images) {
+      const imagesByLabel = this.state.images.filter(
+        image => (
+          /* TODO: this should be a pre-filter at the API level */
+          image.is_public === false
+          && image.label.toLowerCase().includes(query.toLowerCase())
+        ),
+      );
+      searchResults.push(...(imagesByLabel.map(image => ({
+        title: image.label,
+        description: image.description || '',
+        /* TODO: Update this with the Images icon! */
+        Icon: VolumeIcon,
+        /* TODO: Choose a real location for this to link to */
+        path: `/images/${image.id}`,
+      }))));
+    }
+
     return searchResults;
   }
 
@@ -279,10 +307,9 @@ class SearchBar extends React.Component<FinalProps, State> {
     this.setState({
       searchText: e.target.value,
     }, () => {
-      if (!this.dataAvailable() || moment.utc().diff(this.state.lastFetch) > 30000) {
-        this.setState({ lastFetch: moment.utc() }, () => {
-          this.updateData();
-        });
+      if (moment.utc().diff(this.lastFetch) > 60000) {
+        this.lastFetch = moment.utc();
+        this.updateData();
       }
     });
   }
