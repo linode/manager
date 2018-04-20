@@ -276,16 +276,19 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiList: {
-      root: {
-        '& p': {
-          padding: 16,
-          paddingBottom: 4,
-          fontWeight: 700,
-        },
-      },
       padding: {
         paddingTop: 0,
         paddingBottom: 0,
+      },
+    },
+    MuiListItem: {
+      root: {
+        '&.selectHeader': {
+          opacity: 1,
+          paddingBottom: 4,
+          fontWeight: 700,
+          fontSize: '1rem',
+        },
       },
     },
     MuiListItemText: {

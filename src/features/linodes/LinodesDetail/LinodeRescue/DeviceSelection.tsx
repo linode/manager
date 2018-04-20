@@ -6,7 +6,6 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-  Typography,
 } from 'material-ui';
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
@@ -68,12 +67,17 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
               onChange={e => onChange(slot, e.target.value)}
               inputProps={{ name: `rescueDevice_${slot}`, id: `rescueDevice_${slot}` }}
             >
-              <MenuItem value="none"><em>None</em></MenuItem>
+              <MenuItem value="none">None</MenuItem>
               {
                 Object
                   .entries(devices)
                   .map(([type, items]) => [
-                    <Typography >{titlecase(type)}</Typography>,
+                    <MenuItem
+                      className="selectHeader"
+                      disabled
+                    >
+                      {titlecase(type)}
+                    </MenuItem>,
                     ...(items as any[]).map(({ _id, label }) =>
                     <MenuItem key={_id} value={_id}>{label}</MenuItem>),
                   ])
@@ -91,7 +95,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
           value={'finnix'}
           inputProps={{ name: `rescueDevice_sdh`, id: `rescueDevice_sdh` }}
         >
-          <MenuItem value="finnix"><em>Finnix Media</em></MenuItem>
+          <MenuItem value="finnix">Finnix Media</MenuItem>
         </Select>
       </FormControl>
     </React.Fragment >
