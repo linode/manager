@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { bindActionCreators, Dispatch } from 'redux';
+
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Axios, { AxiosResponse } from 'axios';
@@ -18,7 +18,7 @@ import Grid from 'material-ui/Grid';
 import { events$ } from 'src/events';
 import notifications$ from 'src/notifications';
 import { API_ROOT } from 'src/constants';
-import { setDocs, clearDocs } from 'src/store/reducers/documentation';
+
 import { newLinodeEvents } from 'src/features/linodes/events';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
@@ -26,6 +26,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import LinodeConfigSelectionDrawer, {
   LinodeConfigSelectionDrawerCallback,
 } from 'src/features/LinodeConfigSelectionDrawer';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
@@ -48,8 +49,6 @@ interface Props { }
 
 interface ConnectedProps {
   types: Linode.LinodeType[];
-  setDocs: typeof setDocs;
-  clearDocs: typeof clearDocs;
 }
 
 interface PreloadedProps {
@@ -90,7 +89,8 @@ type CombinedProps = Props
   & ConnectedProps
   & PreloadedProps
   & RouteComponentProps<{}>
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & SetDocsProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
@@ -112,7 +112,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     pageSize: 25,
   };
 
-  docs = [
+  static docs = [
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
@@ -131,7 +131,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
-    this.props.setDocs(this.docs);
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
 
@@ -185,7 +184,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.mounted = false;
     this.eventsSub.unsubscribe();
     this.notificationSub.unsubscribe();
-    this.props.setDocs([]);
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -379,21 +377,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-  return bindActionCreators({
-    setDocs,
-    clearDocs,
-  }, dispatch);
-};
-
 export const styled = withStyles(styles, { withTheme: true });
 
-export const connected = connect<Props>(mapStateToProps, mapDispatchToProps);
+export const connected = connect<Props>(mapStateToProps);
 
 export const enhanced = compose(
   withRouter,
   styled,
   preloaded,
+  setDocs(ListLinodes.docs),
   connected,
 );
 

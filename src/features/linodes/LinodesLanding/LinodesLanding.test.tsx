@@ -45,9 +45,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
           setDocs={setDocs}
           clearDocs={clearDocs}
-          classes={{ root: '', title: '' }}
         />
       </StaticRouter>,
     );
@@ -62,9 +62,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
           setDocs={setDocs}
           clearDocs={clearDocs}
-          classes={{ root: '', title: '' }}
         />
       </StaticRouter>,
     );
@@ -81,9 +81,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
           setDocs={setDocs}
           clearDocs={clearDocs}
-          classes={{ root: '', title: '' }}
         />
       </StaticRouter>,
     );
