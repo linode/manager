@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
 import { pathOr } from 'ramda';
 
@@ -30,6 +30,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ToastNotifications from 'src/features/ToastNotifications';
 
 import BetaNotification from './BetaNotification';
+import DocsSidebar from 'src/components/DocsSidebar';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -81,6 +82,7 @@ interface Props {
 interface ConnectedProps {
   request: typeof request;
   response: typeof response;
+  documentation: Linode.Doc[];
 }
 
 interface State {
@@ -147,7 +149,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded } = this.props;
+    const { classes, longLivedLoaded, documentation } = this.props;
 
     return (
       <React.Fragment>
@@ -197,6 +199,7 @@ export class App extends React.Component<CombinedProps, State> {
                     <Route render={() => (<Redirect to="/linodes" />)} />
                   </Switch>
                 </div>
+                <DocsSidebar docs={documentation} />
                 <Footer />
               </main>
             </div>
@@ -221,10 +224,14 @@ const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  documentation: state.documentation,
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const styled = withStyles(styles, { withTheme: true });
 
-export default connected(styled(App)) as any;
+export default compose(
+  connected,
+  styled,
+)(App);

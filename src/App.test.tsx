@@ -12,10 +12,15 @@ it('renders without crashing', () => {
     <Provider store={store}>
       <StaticRouter location="/" context={{}}>
         <App
-          classes={{ appFrame: '', content: '', wrapper: '' }}
+          classes={{
+            appFrame: '',
+            content: '',
+            wrapper: '',
+          }}
           request={jest.fn()}
           response={jest.fn()}
           longLivedLoaded
+          documentation={[]}
         />
       </StaticRouter>
     </Provider>,
