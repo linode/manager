@@ -87,6 +87,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
   switchWrapper: {
     flex: 1,
+    maxWidth: '100%',
     position: 'relative',
   },
 });
