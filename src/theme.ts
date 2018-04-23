@@ -61,9 +61,8 @@ const LinodeTheme: Linode.Theme = {
         },
         '&.cancel': {
           borderColor: 'transparent',
-          color: '#222',
           '&:hover, &:focus': {
-            borderColor: '#222',
+            borderColor: '#5F99EA',
           },
         },
         '&.destructive': {
