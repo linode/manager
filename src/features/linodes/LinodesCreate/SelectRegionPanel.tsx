@@ -36,7 +36,7 @@ const getNARegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /us/.test(r.country));
 
 const getEURegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /uk/.test(r.country));
+  regions.filter(r => /(de|uk)/.test(r.country));
 
 const getASRegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(jp|sg)/.test(r.country));
