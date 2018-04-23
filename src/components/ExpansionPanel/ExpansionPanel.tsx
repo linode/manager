@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
+// import * as classNames from 'classnames';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
 
@@ -79,6 +79,7 @@ interface Props extends ExpansionPanelProps {
   error?: string;
   warning?: string;
   success?: string;
+  loading?: boolean;
   actions?: (props: ExpansionPanelProps) => JSX.Element;
   summaryProps?: ExpansionPanelSummaryProps;
   headingProps?: TypographyProps;
@@ -101,7 +102,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       detailProps,
       headingProps,
       actions,
-      success, warning, error,
+      success, warning, error, loading,
       ...expansionPanelProps,
     } = this.props;
 
@@ -117,11 +118,11 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           onClick={this.handleClick}
           expandIcon={this.state.open ? <Minus /> : <Plus />}
           {...summaryProps}
-          className={classNames({
-            [classes.success]: Boolean(this.props.success),
-            [classes.warning]: Boolean(this.props.warning),
-            [classes.error]: Boolean(this.props.error),
-          })}
+          // className={classNames({
+          //   [classes.success]: Boolean(this.props.success),
+          //   [classes.warning]: Boolean(this.props.warning),
+          //   [classes.error]: Boolean(this.props.error),
+          // })}
           data-qa-panel-summary
         >
           <Typography
