@@ -52,7 +52,7 @@ export function generatePollingFilter(datestamp: string, pollIDs: string[]) {
     };
 }
 
-type EventResponse = AxiosResponse<Linode.ManyResourceState<Linode.Event>>;
+type EventResponse = AxiosResponse<Linode.ResourcePage<Linode.Event>>;
 
 export function requestEvents() {
   Axios.get(
