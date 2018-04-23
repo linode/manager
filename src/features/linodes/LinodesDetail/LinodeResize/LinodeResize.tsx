@@ -18,7 +18,7 @@ import { typeLabelDetails, typeLabel } from 'src/features/linodes/presentation';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { API_ROOT } from 'src/constants';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { resize as resizeLinode } from 'src/service/linodes';
+import { resizeLinode } from 'src/services/linodes';
 import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 

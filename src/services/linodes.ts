@@ -50,6 +50,14 @@ export const updateBackupsWindow = (id: number, day: string, window: string): Ax
       { backups: { schedule: { day, window } } });
 
 type RebuildLinodeType = Promise<{}>;
-export const rebuild = (id: number, image: string, password: string): RebuildLinodeType =>
+export const rebuildLinode = (id: number, image: string, password: string): RebuildLinodeType =>
   Axios.post(`${API_ROOT}/linode/instances/${id}/rebuild`, { image, root_pass: password })
+    .then(response => response.data);
+
+export const resizeLinode = (id: number, type: string): Promise<{}> => Axios
+  .post(`${API_ROOT}/linode/instances/${id}/resize`, { type });
+
+type GetLinodesPage = Promise<Linode.ManyResourceState<Linode.Linode>>;
+export const getLinodesPage = (page: number): GetLinodesPage =>
+  Axios.get(`${API_ROOT}/linode/instances/?page=${page}`)
     .then(response => response.data);
