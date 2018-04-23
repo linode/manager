@@ -82,13 +82,13 @@ interface State {
 const preloaded = PromiseLoader<Props>({
   images: () => Axios.get(`${API_ROOT}/images`)
     .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.Image>) => {
+    .then((data: Linode.ResourcePage<Linode.Image>) => {
       return data.data.map(image => image) || [];
     }),
 
   types: () => Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.LinodeType>) => {
+    .then((data: Linode.ResourcePage<Linode.LinodeType>) => {
       return data.data.map((type) => {
         const {
           memory,

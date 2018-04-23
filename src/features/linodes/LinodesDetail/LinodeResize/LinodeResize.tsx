@@ -139,7 +139,7 @@ const styled = withStyles(styles, { withTheme: true });
 const preloaded = PromiseLoader({
   types: () => Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.LinodeType>) => {
+    .then((data: Linode.ResourcePage<Linode.LinodeType>) => {
       return data.data.map((type) => {
         const {
           memory,
