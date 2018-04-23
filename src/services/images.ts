@@ -8,3 +8,7 @@ export const getImagesPage = (page: number): GetImagesPage =>
 
 export const getImages = (): Promise<Linode.ResourcePage<Linode.Image>> =>
   getImagesPage(1);
+
+type GetImageType = Promise<Linode.SingleResourceState<Linode.Image>>;
+export const getImage = (imageId: string): GetImageType =>
+  Axios.get(`${API_ROOT}/images/${imageId}`);
