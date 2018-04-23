@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Axios from 'axios';
 import { pathEq, pathOr } from 'ramda';
 import * as moment from 'moment';
 
@@ -26,7 +25,6 @@ import Button from 'material-ui/Button';
 import reloadableWithRouter from './reloadableWithRouter';
 import { events$ } from 'src/events';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import { API_ROOT } from 'src/constants';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { weblishLaunch } from 'src/features/Weblish';
@@ -41,6 +39,8 @@ import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getLinode, getType, getLinodeVolumes, renameLinode } from 'src/services/linodes';
+import { getImage } from 'src/services/images';
 
 interface Data {
   linode: Linode.Linode;
@@ -90,20 +90,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 const requestAllTheThings = (linodeId: number) =>
-  Axios.get(`${API_ROOT}/linode/instances/${linodeId}`)
+  getLinode(linodeId)
     .then((response) => {
       const { data: linode } = response;
 
-      const typeReq = Axios.get(`${API_ROOT}/linode/types/${linode.type}`)
+      const typeReq = getType(linode.type)
         .then(response => response.data)
         .catch(err => undefined);
 
-      const imageReq = Axios.get(`${API_ROOT}/images/${linode.image}`)
+      const imageReq = getImage(linode.image)
         .then(response => response.data)
         .catch(err => undefined);
 
-      const volumesReq = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/volumes`)
-        .then(response => response.data.data)
+      const volumesReq = getLinodeVolumes(linode.id)
+        .then(response => response.data)
         .catch(err => []);
 
       return Promise.all([typeReq, imageReq, volumesReq])
@@ -226,7 +226,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { linode } = this.state;
-    Axios.put(`${API_ROOT}/linode/instances/${linode.id}`, { label })
+    renameLinode(linode.id, label)
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         errors.forEach(e => sendToast(e.reason, 'error'));

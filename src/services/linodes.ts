@@ -17,6 +17,10 @@ export const getLinodeConfigs = (id: number): GetLinodeType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/configs`)
     .then(response => response.data);
 
+type GetLinode = Promise<Linode.SingleResourceState<Linode.Linode>>;
+export const getLinode = (id: number): GetLinode =>
+  Axios.get(`${API_ROOT}/linode/instances/${id}`);
+
 type GetLinodeVolumesType = Promise<Linode.ResourcePage<Linode.Volume>>;
 export const getLinodeVolumes = (id: number): GetLinodeVolumesType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/volumes`)
@@ -58,10 +62,20 @@ export const getLinodesPage = (page: number): GetLinodesPage =>
   Axios.get(`${API_ROOT}/linode/instances/?page=${page}`)
     .then(response => response.data);
 
+/** @todo Type data */
+export const createLinode = (data: any) => Axios.post(`${API_ROOT}/linode/instances`, data)
+  .then(response => response.data);
+
 export const getLinodeTypes = (): Promise<Linode.ResourcePage<Linode.LinodeType>> =>
   Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data);
 
-/** @todo Type data */
-export const createLinode = (data: any) => Axios.post(`${API_ROOT}/linode/instances`, data)
-  .then(response => response.data);
+type GetType = Promise<Linode.SingleResourceState<Linode.LinodeType>>;
+export const getType = (typeId: string): GetType =>
+  Axios.get(`${API_ROOT}/linode/types/${typeId}`)
+    .then(response => response.data);
+
+type RenameLinodeType = Promise<Linode.SingleResourceState<Linode.Linode>>;
+export const renameLinode = (linodeId: number, label: string): RenameLinodeType =>
+  Axios.put(`${API_ROOT}/linode/instances/${linodeId}`, { label })
+    .then(response => response.data);
