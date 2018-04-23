@@ -57,3 +57,11 @@ type GetLinodesPage = Promise<Linode.ResourcePage<Linode.Linode>>;
 export const getLinodesPage = (page: number): GetLinodesPage =>
   Axios.get(`${API_ROOT}/linode/instances/?page=${page}`)
     .then(response => response.data);
+
+export const getLinodeTypes = (): Promise<Linode.ResourcePage<Linode.LinodeType>> =>
+  Axios.get(`${API_ROOT}/linode/types`)
+    .then(response => response.data);
+
+/** @todo Type data */
+export const createLinode = (data: any) => Axios.post(`${API_ROOT}/linode/instances`, data)
+  .then(response => response.data);
