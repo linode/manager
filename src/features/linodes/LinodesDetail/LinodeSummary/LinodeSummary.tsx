@@ -10,11 +10,11 @@ import { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { API_ROOT } from 'src/constants';
 import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import ErrorState from 'src/components/ErrorState';
 import LinodeTheme from 'src/theme';
 import Select from 'src/components/Select';
 
@@ -260,15 +260,21 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         this.setState({ statsLoadError: undefined });
         this.setState({ stats: response.data });
       })
-      .catch((err) => {
+      .catch((errorResponse) => {
         if (!this.mounted) { return; }
 
-        if (pathOr(undefined, ['response', 'status'], err) === 429) {
+        if (pathOr(undefined, ['response', 'status'], errorResponse) === 429) {
+          sendToast('Rate limit exceeded when fetching performance statistics', 'error');
           this.setState({ statsLoadError: 'rateLimited' });
         } else {
+          pathOr(
+            [{ reason: 'Network Error when fetching performance statistics' }],
+            ['response', 'data', 'errors'], errorResponse)
+            .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
           this.setState({ statsLoadError: 'error' });
         }
-        Raven.captureException(err);
+
+        Raven.captureException(errorResponse);
       });
   }
 
@@ -323,7 +329,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
 
   render() {
     const { linode, type, image, volumes, classes } = this.props;
-    const { stats, rangeSelection, statsLoadError } = this.state;
+    const { stats, rangeSelection } = this.state;
     return (
       <React.Fragment>
         {transitionStatus.includes(linode.status) &&
@@ -331,14 +337,7 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
         }
         <SummaryPanel linode={linode} type={type} image={image} volumes={volumes} />
 
-        {(statsLoadError) && (
-            statsLoadError === 'rateLimited'
-              ? <ErrorState errorText="Rate limit exceeded when fetching performance statistics"/>
-              : <ErrorState errorText="Network error when fetching performance statistics"/>
-          )
-        }
-
-        {(stats && !statsLoadError) &&
+        {stats &&
           <React.Fragment>
             <div className={classes.graphControls}>
               <Typography variant="title" className={classes.graphTitle}>

@@ -2,23 +2,20 @@ import * as React from 'react';
 import * as zxcvbn from 'zxcvbn';
 import { isEmpty } from 'ramda';
 
-import  {
+import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
   Theme,
 } from 'material-ui';
-import { TextFieldProps } from 'material-ui/TextField';
 
 import Grid from 'src/components/Grid';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
-
+import { Props as TextFieldProps } from 'src/components/TextField';
 import HideShowText from './HideShowText';
 
-interface Props {
-  label?: string;
-  placeholder?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+interface Props extends TextFieldProps {
 }
 
 interface State {
@@ -40,40 +37,38 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-type FinalProps = Props & WithStyles<ClassNames> & TextFieldProps;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-class PasswordInput extends React.Component<FinalProps, State> {
+class PasswordInput extends React.Component<CombinedProps, State> {
   state = { strength: null };
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange && this.props.onChange(e);
 
     const value = e.currentTarget.value;
     this.setState({
-      strength: isEmpty(value) ? null :  zxcvbn(value).score,
+      strength: isEmpty(value) ? null : zxcvbn(value).score,
     });
   }
 
   render() {
     const { strength } = this.state;
-    const { classes } = this.props;
+    const { classes, ...rest } = this.props;
 
     return (
       <Grid container className={classes.container}>
         <Grid item xs={12}>
           <HideShowText
-            label={this.props.label}
-            placeholder={this.props.placeholder}
-            value={this.props.value}
-            onChange={this.handleChange}
+            {...rest}
+            onChange={this.onChange}
             fullWidth
           />
         </Grid>
-      {
-        <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-          <StrengthIndicator strength={strength} />
-        </Grid>
-      }
+        {
+          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+            <StrengthIndicator strength={strength} />
+          </Grid>
+        }
       </Grid>
     );
   }

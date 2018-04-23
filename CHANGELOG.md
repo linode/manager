@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.23.0] - 2018-04-18
+### Added:
+- Added toast notifications for several Linode actions.
+- Added usage charts to the Linode summary page.
+- Users can now search for their Linodes, Volumes, Domains, and NodeBalancers.
+- Users can now resize their Linode.
+- Users can now rebuild their Linode.
+- Users can now rescue their Linode using Finnix.
+- Users can now enable or disable backups for a Linode.
+- Users can now view a list of their backups for a Linode.
+- Users can now take a manual backup snapshot of their Linodes.
+- Users can now set their automatic backup time and day of the week preferences for a Linode.
+- Users can now view a list of attached Volumes for a Linode.
+- Users can now rename, resize, detach, and delete a volume attached to their Linode.
+- Users can now attach an existing volume to their Linode.
+- Users can now access Weblish, a web-based shell, for their Linodes.
+- Linode label is now editable on the Linode detail page.
+
+### Changed:
+- Darkened the header of the Linode cards when viewing the Linodes grid.
+
+### Known Issues:
+- Linode Detail - Attach volume drawer menu should display "Select a Volume" be default.
+- Linode Detail - Linodes Rescue menus show invalid items (volumes attached to other Linodes).
+- Actions which produce a loading status sometime become stuck and require the user to reload the application.
+- Linode Summary - Volume count fails to update on create/delete.
+- App API Tokens cannot be edited or revoked.
+- Rebooting or shutting down a Linode should prompt for confirmation.
+- Cannot read property 'getBoundingClientRect' of null.
+- n.response.data is undefined on LinodesLanding.
+- Personal Access Token still displays after revoke.
+- Under rare circumstances the Linode detail page may be blank due to an unexpected user configuration.
+
+### Known Issues
+
 ## [0.22.6] - 2018-04-10
 ### Fixed:
 - Issues related to uncommon regions, plan types, and images
