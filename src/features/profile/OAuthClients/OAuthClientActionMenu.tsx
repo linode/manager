@@ -55,14 +55,6 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <Button
-          onClick={() => this.toggleConfirmReset(false)}
-          variant="raised"
-          color="primary"
-          data-qa-button-cancel
-        >
-          No
-        </Button>
-        <Button
           variant="raised"
           color="secondary"
           className="destructive"
@@ -72,6 +64,15 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           }}
           data-qa-button-confirm>
           Yes
+        </Button>
+        <Button
+          onClick={() => this.toggleConfirmReset(false)}
+          variant="raised"
+          color="secondary"
+          className="cancel"
+          data-qa-button-cancel
+        >
+          No
         </Button>
       </React.Fragment>
     );

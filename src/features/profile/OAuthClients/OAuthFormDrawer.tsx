@@ -92,7 +92,14 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
           data-qa-submit
           >Submit
         </Button>
-        <Button onClick={() => onClose()} data-qa-cancel>Cancel</Button>
+        <Button
+          onClick={() => onClose()} data-qa-cancel
+          variant="raised"
+          color="secondary"
+          className="cancel"
+        >
+          Cancel
+        </Button>
       </ActionsPanel>
     </Drawer>
   );
