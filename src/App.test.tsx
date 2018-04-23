@@ -16,6 +16,8 @@ it('renders without crashing', () => {
             appFrame: '',
             content: '',
             wrapper: '',
+            grid: '',
+            switchWrapper: '',
           }}
           request={jest.fn()}
           response={jest.fn()}

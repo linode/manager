@@ -13,8 +13,8 @@ import {
   Theme,
 } from 'material-ui/styles';
 import Hidden from 'material-ui/Hidden';
-import Grid from 'material-ui/Grid';
 
+import Grid from 'src/components/Grid';
 import { events$ } from 'src/events';
 import notifications$ from 'src/notifications';
 import { API_ROOT } from 'src/constants';
@@ -335,10 +335,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="headline" className={this.props.classes.title}>Linodes</Typography>
-          <ToggleBox
-            handleClick={this.changeViewStyle}
-            status={displayGrid}
-          />
+          <Hidden smDown>
+            <ToggleBox
+              handleClick={this.changeViewStyle}
+              status={displayGrid}
+            />
+          </Hidden>
         </Grid>
         <Grid item xs={12}>
           <Hidden mdUp>

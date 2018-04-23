@@ -14,6 +14,7 @@ import {
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
+import Grid from 'material-ui/Grid';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
@@ -42,6 +43,12 @@ const Profile = DefaultLoader({
 
 const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
 theme.shadows = theme.shadows.fill('none');
+
+type ClassNames = 'appFrame'
+  | 'content'
+  | 'wrapper'
+  | 'grid'
+  | 'switchWrapper';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   appFrame: {
@@ -73,6 +80,15 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       paddingRight: theme.spacing.unit * 2,
     },
   },
+  grid: {
+    [theme.breakpoints.up('lg')]: {
+      height: '100%',
+    },
+  },
+  switchWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
 });
 
 interface Props {
@@ -90,7 +106,7 @@ interface State {
   betaNotification: Boolean;
 }
 
-type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
+type CombinedProps = Props & WithStyles<ClassNames> & ConnectedProps;
 
 export class App extends React.Component<CombinedProps, State> {
   state = {
@@ -161,45 +177,49 @@ export class App extends React.Component<CombinedProps, State> {
               <main className={classes.content}>
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
-                  <Switch>
-                    <Route exact path="/dashboard" render={() =>
-                      <Placeholder title="Dashboard" />} />
-                    <Route path="/linodes" component={LinodesRoutes} />
-                    <Route exact path="/volumes" render={() =>
-                      <Placeholder
-                        title="Volumes"
-                        icon={VolumeIcon}
-                      />}
-                    />
-                    <Route exact path="/nodebalancers" render={() =>
-                      <Placeholder
-                        title="NodeBalancers"
-                        icon={NodeBalancerIcon}
-                      />}
-                    />
-                    <Route exact path="/domains" render={() =>
-                      <Placeholder title="Domains" />} />
-                    <Route exact path="/managed" render={() =>
-                      <Placeholder title="Managed" />} />
-                    <Route exact path="/longview" render={() =>
-                      <Placeholder title="Longview" />} />
-                    <Route exact path="/stackscripts" render={() =>
-                      <Placeholder title="StackScripts" />} />
-                    <Route exact path="/images" render={() =>
-                      <Placeholder title="Images" />} />
-                    <Route exact path="/billing" render={() =>
-                      <Placeholder title="Billing" />} />
-                    <Route exact path="/users" render={() =>
-                      <Placeholder title="Users" />} />
-                    <Route path="/profile" component={Profile} />
-                    <Route exact path="/support" render={() =>
-                      <Placeholder title="Support" />} />
-                    <Route path="/profile" component={Profile} />
-                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                    <Route render={() => (<Redirect to="/linodes" />)} />
-                  </Switch>
+                  <Grid container className={classes.grid}>
+                    <div className={classes.switchWrapper}>
+                      <Switch>
+                        <Route exact path="/dashboard" render={() =>
+                          <Placeholder title="Dashboard" />} />
+                        <Route path="/linodes" component={LinodesRoutes} />
+                        <Route exact path="/volumes" render={() =>
+                          <Placeholder
+                            title="Volumes"
+                            icon={VolumeIcon}
+                          />}
+                        />
+                        <Route exact path="/nodebalancers" render={() =>
+                          <Placeholder
+                            title="NodeBalancers"
+                            icon={NodeBalancerIcon}
+                          />}
+                        />
+                        <Route exact path="/domains" render={() =>
+                          <Placeholder title="Domains" />} />
+                        <Route exact path="/managed" render={() =>
+                          <Placeholder title="Managed" />} />
+                        <Route exact path="/longview" render={() =>
+                          <Placeholder title="Longview" />} />
+                        <Route exact path="/stackscripts" render={() =>
+                          <Placeholder title="StackScripts" />} />
+                        <Route exact path="/images" render={() =>
+                          <Placeholder title="Images" />} />
+                        <Route exact path="/billing" render={() =>
+                          <Placeholder title="Billing" />} />
+                        <Route exact path="/users" render={() =>
+                          <Placeholder title="Users" />} />
+                        <Route path="/profile" component={Profile} />
+                        <Route exact path="/support" render={() =>
+                          <Placeholder title="Support" />} />
+                        <Route path="/profile" component={Profile} />
+                        <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
+                        <Route render={() => (<Redirect to="/linodes" />)} />
+                      </Switch>
+                    </div>
+                    <DocsSidebar docs={documentation} />
+                  </Grid>
                 </div>
-                <DocsSidebar docs={documentation} />
                 <Footer />
               </main>
             </div>
