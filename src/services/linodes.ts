@@ -79,3 +79,16 @@ type RenameLinodeType = Promise<Linode.SingleResourceState<Linode.Linode>>;
 export const renameLinode = (linodeId: number, label: string): RenameLinodeType =>
   Axios.put(`${API_ROOT}/linode/instances/${linodeId}`, { label })
     .then(response => response.data);
+
+/** @todo TYPE */
+export const getLinodeStats = (linodeId: number, year?: string, month?: string) => {
+  if (year && month) {
+    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats/${year}/${month}`);
+  }
+
+  if (year) {
+    return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats/${year}`);
+  }
+
+  return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats`);
+};
