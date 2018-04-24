@@ -56,7 +56,7 @@ class Profile extends React.Component<Props> {
         <Switch>
           <Route exact path={`${url}/tokens`} component={APITokens} />
           <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Route exact path={`${path}/`} render={() => (<Redirect to={`${path}/tokens`} />)} />
+          <Redirect to={`${path}/tokens`} />
         </Switch>
       </React.Fragment>
     );
