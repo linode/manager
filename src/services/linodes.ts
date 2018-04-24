@@ -101,3 +101,6 @@ export const changeLinodeDiskPassword = (
 ): DiskResponse =>
   Axios.post(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/password`, { password })
     .then(response => response.data);
+
+export const deleteLinode = (linodeId: number): Promise<{}> =>
+  Axios.delete(`${API_ROOT}/linode/instances/${linodeId}`);

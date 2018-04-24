@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+
 import {
   compose,
   lensPath,
@@ -22,7 +24,12 @@ import RadioGroup from 'material-ui/Radio/RadioGroup';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Grid from 'src/components/Grid';
 
-import { updateLinode, getLinodeDisks, changeLinodeDiskPassword } from 'src/services/linodes';
+import {
+  updateLinode,
+  getLinodeDisks,
+  changeLinodeDiskPassword,
+  deleteLinode,
+} from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { events$ } from 'src/events';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
@@ -33,6 +40,7 @@ import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
 import Radio from 'src/components//Radio';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 interface Section {
   title: string;
@@ -95,15 +103,23 @@ interface AlertsFormState {
   transfer: AlertState;
 }
 
+interface DeleteDialog {
+  open: boolean;
+}
+
 interface State {
   disks: Linode.Disk[];
   labelForm: LabelFormState;
   passwordForm: PasswordFormState;
   alertsForm: AlertsFormState;
+  deleteDialog: DeleteDialog;
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
+type CombinedProps = Props
+  & PromiseLoaderProps
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>;
 
 class LinodeSettings extends React.Component<CombinedProps, State> {
   state: State = {
@@ -140,6 +156,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         state: this.props.alerts.transfer_quota > 0,
         value: this.props.alerts.transfer_quota,
       },
+    },
+    deleteDialog: {
+      open: false,
     },
   };
 
@@ -212,6 +231,20 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
       .catch((error) => {
         this.setState(set(lensPath(['errors']), error.response.data.errors));
       });
+  }
+
+  deleteLinode = () => {
+    this.setState(set(lensPath(['deleteForm', 'submitting']), true));
+    deleteLinode(this.props.linodeId)
+      .then((response) => {
+        /* redirect to index */
+        this.props.history.push('/');
+      })
+      .catch(response => console.log(response));
+  }
+
+  openDeleteDialog = () => {
+    this.setState({ deleteDialog: { open: true } });
   }
 
   AlertSection = (props: Section) => {
@@ -394,7 +427,7 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
             label="Label"
             value={this.state.labelForm.updatedValue}
             onChange={e =>
-              this.setState(set(lensPath(['labelForm', 'updatedValue']), Number(e.target.value)))}
+              this.setState(set(lensPath(['labelForm', 'updatedValue']), e.target.value))}
             errorText={labelError}
             error={Boolean(labelError)}
           />
@@ -469,7 +502,38 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded heading="Shutdown Watchdog"></ExpansionPanel>
         <ExpansionPanel defaultExpanded heading="Advanced Configurations"></ExpansionPanel>
-        <ExpansionPanel defaultExpanded heading="Delete Linode"></ExpansionPanel>
+        <ExpansionPanel defaultExpanded heading="Delete Linode">
+          <Typography>Deleting a Linode will result in permenant data loss.</Typography>
+          <Button
+            variant="raised"
+            color="secondary"
+            className="destructive"
+            onClick={this.openDeleteDialog}
+          >
+            Delete
+          </Button>
+        </ExpansionPanel>
+        <ConfirmationDialog
+          title="Confirm Deletion"
+          actions={() =>
+            <ActionsPanel>
+              <Button
+                variant="raised"
+                color="secondary"
+                className="destructive"
+                onClick={this.deleteLinode}
+              >
+                Delete
+          </Button>
+              <Button onClick={() => this.setState({ deleteDialog: { open: false } })}>
+                Cancel
+              </Button>
+            </ActionsPanel>
+          }
+          open={this.state.deleteDialog.open}
+        >
+          Deleting a Linode will result in permenant data loss. Are you sure?
+        </ConfirmationDialog>
       </React.Fragment >
     );
   }
@@ -485,4 +549,8 @@ const loaded = PromiseLoader<Props>({
 
 const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => state ? value : 0;
 
-export default loaded(styled(LinodeSettings));
+export default compose<any, any, any, any>(
+  withRouter,
+  loaded,
+  styled,
+)(LinodeSettings);
