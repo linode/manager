@@ -1,36 +1,49 @@
 import * as React from 'react';
+
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
-import {
-  clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte,
-} from 'ramda';
-import { connect } from 'react-redux';
+import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
 import { Observable, Subscription } from 'rxjs/Rx';
+
+import {
+  withStyles,
+  StyleRulesCallback,
+  Theme,
+} from 'material-ui/styles';
 import Hidden from 'material-ui/Hidden';
 
-import { API_ROOT } from 'src/constants';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import {
-  withRouter,
-  RouteComponentProps,
-} from 'react-router-dom';
-
+import Grid from 'src/components/Grid';
 import { events$ } from 'src/events';
+import notifications$ from 'src/notifications';
+import { API_ROOT } from 'src/constants';
+
 import { newLinodeEvents } from 'src/features/linodes/events';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import ErrorState from 'src/components/ErrorState';
-import WithDocumentation from 'src/components/WithDocumentation';
 import PaginationFooter from 'src/components/PaginationFooter';
+import LinodeConfigSelectionDrawer, {
+  LinodeConfigSelectionDrawerCallback,
+} from 'src/features/LinodeConfigSelectionDrawer';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ToggleBox from './ToggleBox';
-import notifications$ from 'src/notifications';
 
 import './linodes.css';
-import LinodeConfigSelectionDrawer, {
-  LinodeConfigSelectionDrawerCallback,
-} from 'src/features/LinodeConfigSelectionDrawer';
+import { Typography, WithStyles } from 'material-ui';
+
+type ClassNames = 'root' | 'title';
+
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  root: {},
+  title: {
+    marginbottom: theme.spacing.unit * 2,
+  },
+});
 
 interface Props { }
 
@@ -72,9 +85,14 @@ const preloaded = PromiseLoader<Props>({
     .then(response => response.data),
 });
 
-type CombinedProps = Props & ConnectedProps & PreloadedProps & RouteComponentProps<{}>;
+type CombinedProps = Props
+  & ConnectedProps
+  & PreloadedProps
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>
+  & SetDocsProps;
 
-class ListLinodes extends React.Component<CombinedProps, State> {
+export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
   notificationSub: Subscription;
   mounted: boolean = false;
@@ -94,7 +112,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     pageSize: 25,
   };
 
-  docs = [
+  static docs = [
     {
       title: 'Getting Started with Linode',
       src: 'https://linode.com/docs/getting-started/',
@@ -111,12 +129,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     },
 
   ];
-
-  componentWillUnmount() {
-    this.mounted = false;
-    this.eventsSub.unsubscribe();
-    this.notificationSub.unsubscribe();
-  }
 
   componentDidMount() {
     this.mounted = true;
@@ -166,6 +178,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
         return this.setState({ linodes: response.response.data });
       });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+    this.eventsSub.unsubscribe();
+    this.notificationSub.unsubscribe();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -284,88 +302,93 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       return <ListLinodesEmptyState />;
     }
 
+    if (this.props.linodes.error) {
+      return (
+        <ErrorState errorText="Error loading data" />
+      );
+    }
+
+    if (this.props.images.error) {
+      return (
+        <ErrorState errorText="Error loading data" />
+      );
+    }
+
+
+    const displayGrid: 'grid' | 'list' = ifElse(
+      compose(isEmpty, prop('hash')),
+      /* is empty */
+      ifElse(
+        compose(gte(3), prop('length')),
+        () => 'grid',
+        () => 'list',
+      ),
+      /* is not empty */
+      ifElse(
+        propEq('hash', '#grid'),
+        () => 'grid',
+        () => 'list',
+      ),
+    )({ hash, length: linodes.length });
+
     return (
-      <WithDocumentation
-        title="Linodes"
-        docs={this.docs}
-        data-qa-docs-drawer
-        render={() => {
-
-          if (this.props.linodes.error) {
-            return (
-              <ErrorState errorText="Error loading data" />
-            );
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography variant="headline" className={this.props.classes.title}>Linodes</Typography>
+          <Hidden smDown>
+            <ToggleBox
+              handleClick={this.changeViewStyle}
+              status={displayGrid}
+            />
+          </Hidden>
+        </Grid>
+        <Grid item xs={12}>
+          <Hidden mdUp>
+            {this.renderGridView(linodes, images, types)}
+          </Hidden>
+          <Hidden smDown>
+            {displayGrid === 'grid'
+              ? this.renderGridView(linodes, images, types)
+              : this.renderListView(linodes, images, types)
+            }
+          </Hidden>
+        </Grid>
+        <Grid item xs={12}>
+          {
+            this.state.results > 25 &&
+            <PaginationFooter
+              handlePageChange={this.handlePageSelection}
+              handleSizeChange={this.handlePageSizeChange}
+              pageSize={this.state.pageSize}
+              pages={this.state.pages}
+              page={this.state.page}
+            />
           }
-
-          if (this.props.images.error) {
-            return (
-              <ErrorState errorText="Error loading data" />
-            );
-          }
-
-
-          const displayGrid: 'grid' | 'list' = ifElse(
-            compose(isEmpty, prop('hash')),
-            /* is empty */
-            ifElse(
-              compose(gte(3), prop('length')),
-              () => 'grid',
-              () => 'list',
-            ),
-            /* is not empty */
-            ifElse(
-              propEq('hash', '#grid'),
-              () => 'grid',
-              () => 'list',
-            ),
-          )({ hash, length: linodes.length });
-
-          return (
-            <React.Fragment>
-              <Hidden mdUp>
-                {this.renderGridView(linodes, images, types)}
-              </Hidden>
-              <Hidden smDown>
-                <ToggleBox
-                  handleClick={this.changeViewStyle}
-                  status={displayGrid}
-                />
-                {displayGrid === 'grid'
-                  ? this.renderGridView(linodes, images, types)
-                  : this.renderListView(linodes, images, types)
-                }
-              </Hidden>
-              {
-                this.state.results > 25 &&
-                <PaginationFooter
-                  handlePageChange={this.handlePageSelection}
-                  handleSizeChange={this.handlePageSizeChange}
-                  pageSize={this.state.pageSize}
-                  pages={this.state.pages}
-                  page={this.state.page}
-                />
-              }
-              <LinodeConfigSelectionDrawer
-                onClose={this.closeConfigDrawer}
-                onSubmit={this.submitConfigChoice}
-                onChange={this.selectConfig}
-                open={configDrawer.open}
-                configs={configDrawer.configs}
-                selected={String(configDrawer.selected)}
-                error={configDrawer.error}
-              />
-            </React.Fragment>
-          );
-        }}
-      />
+          <LinodeConfigSelectionDrawer
+            onClose={this.closeConfigDrawer}
+            onSubmit={this.submitConfigChoice}
+            onChange={this.selectConfig}
+            open={configDrawer.open}
+            configs={configDrawer.configs}
+            selected={String(configDrawer.selected)}
+            error={configDrawer.error}
+          />
+        </Grid>
+      </Grid>
     );
   }
 }
 
-export const RoutedListLinodes = withRouter(ListLinodes);
+export const styled = withStyles(styles, { withTheme: true });
 
-const ConnectedListLinodes = connect<Props>(mapStateToProps)(
-  RoutedListLinodes,
+export const connected = connect<Props>(mapStateToProps);
+
+export const enhanced = compose(
+  withRouter,
+  styled,
+  preloaded,
+  setDocs(ListLinodes.docs),
+  connected,
 );
 
-export default preloaded(ConnectedListLinodes);
+export default enhanced(ListLinodes) as typeof ListLinodes;
