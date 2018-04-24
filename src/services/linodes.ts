@@ -1,7 +1,7 @@
 import Axios, { AxiosPromise } from 'axios';
 import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
-
+import { genAxiosConfig } from '.';
 
 /* tslint:disable-next-line */
 export type RescueRequestObject = Pick<Linode.Devices, 'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'>
@@ -57,9 +57,14 @@ export const rebuildLinode = (id: number, image: string, password: string): Rebu
 export const resizeLinode = (id: number, type: string): Promise<{}> => Axios
   .post(`${API_ROOT}/linode/instances/${id}/resize`, { type });
 
+type GetLinodes = Promise<Linode.ResourcePage<Linode.Linode>>;
+export const getLinodes = (params: any, filter: any): GetLinodes =>
+  Axios.get(`${API_ROOT}/linode/instances/`, genAxiosConfig(params, filter))
+    .then(response => response.data);
+
 type GetLinodesPage = Promise<Linode.ResourcePage<Linode.Linode>>;
 export const getLinodesPage = (page: number): GetLinodesPage =>
-  Axios.get(`${API_ROOT}/linode/instances/?page=${page}`)
+  Axios.get(`${API_ROOT}/linode/instances/`, genAxiosConfig({ page }))
     .then(response => response.data);
 
 export const createLinode = (data: any): Promise<Linode.SingleResourceState<Linode.Linode>> =>
