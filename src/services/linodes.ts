@@ -88,3 +88,14 @@ export const getLinodeStats = (linodeId: number, year?: string, month?: string) 
 
   return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats`);
 };
+
+export const restoreBackup = (
+  linodeID: number,
+  backupID: number,
+  targetLinodeID: number,
+  overwrite: boolean,
+) => {
+  return Axios.post(`${API_ROOT}/linode/instances/${linodeID}/backups/${backupID}/restore`,
+    { linode_id: targetLinodeID, overwrite })
+    .then(response => response.data);
+};
