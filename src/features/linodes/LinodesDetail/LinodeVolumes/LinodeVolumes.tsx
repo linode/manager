@@ -47,7 +47,7 @@ type ClassNames = 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   title: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
   },
 });
@@ -737,7 +737,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
           <Grid item>
             <Typography
-              variant="title"
+              variant="headline"
               className={classes.title}>
               Volumes
             </Typography>
