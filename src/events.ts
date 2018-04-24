@@ -55,52 +55,61 @@ export function requestEvents() {
       generatePollingFilter(filterDatestamp, Object.keys(pollIDs)),
     ),
   })
-  .then(response => response.data)
-  .then(events => events.map(
-    /** @note This is my first succesfully typed compose... */
-    compose<Linode.Event, Linode.Event & { _initial: boolean }>(
-      when(() => initialRequest, assoc('_initial', true)),
-    ),
-  ))
-  .then((events) => {
-    if (initialRequest) {
-      initialRequest = false;
-    }
-    return events;
-  })
-  .then((data) => {
-    /*
-      * Events come back in reverse chronological order, so we update our
-      * datestamp with the latest Event that we've seen. We need to perform
-      * a date comparison here because we also might get back some old events
-      * from IDs that we're polling for.
-      */
-
-    if (data[0]) {
-      const newDatestamp = moment(data[0].created);
-      const currentDatestamp = moment(filterDatestamp);
-      if (newDatestamp > currentDatestamp) {
-        filterDatestamp = newDatestamp.format(dateFormat);
+    .then(response => response.data)
+    .then(events => events.map(
+      /** @note This is my first succesfully typed compose... */
+      compose<Linode.Event, Linode.Event & { _initial: boolean }>(
+        when(() => initialRequest, assoc('_initial', true)),
+      ),
+    ))
+    .then((events) => {
+      if (initialRequest) {
+        initialRequest = false;
       }
-    }
+      return events;
+    })
+    .then((data) => {
+      /*
+        * Events come back in reverse chronological order, so we update our
+        * datestamp with the latest Event that we've seen. We need to perform
+        * a date comparison here because we also might get back some old events
+        * from IDs that we're polling for.
+        */
 
-    data.reverse().map((linodeEvent) => {
-      // if an Event completes it is removed from pollIDs
-      if (linodeEvent.percent_complete === 100
-        && pollIDs[linodeEvent.id]) {
-        delete pollIDs[linodeEvent.id];
+      if (data[0]) {
+        const newDatestamp = moment(data[0].created);
+        const currentDatestamp = moment(filterDatestamp);
+        if (newDatestamp > currentDatestamp) {
+          filterDatestamp = newDatestamp.format(dateFormat);
+        }
       }
 
-      // we poll for Event IDs that have not yet been completed
-      if (linodeEvent.percent_complete !== null && linodeEvent.percent_complete < 100) {
-        // when we have an "incomplete event" poll at the initial polling rate
-        resetEventsPolling();
-        pollIDs[linodeEvent.id] = true;
-      }
+      data.reverse().map((linodeEvent, idx, events) => {
+        // if an Event completes it is removed from pollIDs
+        if (linodeEvent.percent_complete === 100
+          && pollIDs[linodeEvent.id]) {
+          delete pollIDs[linodeEvent.id];
+        }
 
-      events$.next(linodeEvent);
+        // we poll for Event IDs that have not yet been completed
+        if (
+          linodeEvent.percent_complete !== null
+          && linodeEvent.percent_complete < 100
+
+          /** If a Linode is deleted the /events end-points sends updated regarding shutting down
+           * and eventuallly deletion. Subscribers of this stream want active Linodes only, and
+           * if provided a "deleted" Linode ID will result in 404s until the events stop.
+          */
+          && events.filter(e => e.action === 'linode_delete').length === 0
+        ) {
+          // when we have an "incomplete event" poll at the initial polling rate
+          resetEventsPolling();
+          pollIDs[linodeEvent.id] = true;
+        }
+
+        events$.next(linodeEvent);
+      });
     });
-  });
 }
 
 setInterval(
