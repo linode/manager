@@ -29,13 +29,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     to: {
       opacity: 1,
-      top: -35,
+      top: -45,
       transform: 'scale(1)',
     },
   },
   root: {
     alignItems: 'center',
-    marginBottom: 2,
+    marginBottom: theme.spacing.unit / 2,
     width: '100%',
     '&:last-child': {
       marginBottom: 0,
@@ -58,6 +58,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: '3px',
     transition: theme.transitions.create(['background-color']),
     borderRadius: 2,
+    position: 'absolute',
+    top: -9,
   },
   ipLink: {
     color: LinodeTheme.palette.primary.main,
