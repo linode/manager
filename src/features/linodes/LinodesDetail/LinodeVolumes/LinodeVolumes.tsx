@@ -145,6 +145,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         'volume_detach',
         'volume_resize',
       ].includes(e.action))
+      .filter(e => !e._initial)
       .subscribe((v) => {
         getLinodeVolumes(this.props.linodeID)
           .then(response => response.data)

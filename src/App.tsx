@@ -214,8 +214,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
-                        <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                        <Route render={() => (<Redirect to="/linodes" />)} />
+                        <Redirect to="/linodes" />
                       </Switch>
                     </div>
                     <DocsSidebar docs={documentation} />

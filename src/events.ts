@@ -12,10 +12,7 @@ function createInitialDatestamp() {
   return moment('1970-01-01 00:00:00.000Z').utc().format(dateFormat);
 }
 
-export interface EventStreamType extends Linode.Event {
-  _initial?: boolean;
-}
-export const events$ = new Rx.Subject<EventStreamType>();
+export const events$ = new Rx.Subject<Linode.Event>();
 
 let filterDatestamp = createInitialDatestamp();
 const pollIDs: { [key: string]: boolean } = {};
@@ -29,6 +26,7 @@ export function resetEventsPolling() {
   currentPollIntervalMultiplier = 1;
 }
 export const init = () => {
+  initialRequest = true;
   filterDatestamp = createInitialDatestamp();
   resetEventsPolling();
 };
