@@ -165,6 +165,19 @@ const chartOptions = {
       },
     }],
   },
+  tooltips: {
+    cornerRadius: 0,
+    backgroundColor: 'white',
+    bodyFontColor: '#333',
+    titleMarginBottom: 6,
+    displayColors: false,
+    titleFontColor: '#666',
+    xPadding: 16,
+    yPadding: 8,
+    borderWidth: .5,
+    borderColor: '#999',
+    caretPadding: 8,
+  },
 };
 
 const chartHeight = 300;
