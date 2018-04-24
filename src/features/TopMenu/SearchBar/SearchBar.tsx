@@ -17,7 +17,7 @@ import IconButton from 'material-ui/IconButton';
 import Close from 'material-ui-icons/Close';
 import Search from 'material-ui-icons/Search';
 
-import { getLinodesPage } from 'src/services/linode';
+import { getLinodesPage } from 'src/services/linodes';
 import { getVolumesPage } from 'src/services/volumes';
 import { getNodeBalancersPage } from 'src/services/nodebalancers';
 import { getDomainsPage } from 'src/services/domains';
