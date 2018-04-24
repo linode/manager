@@ -59,8 +59,8 @@ const preloaded = PromiseLoader<Props>({
 });
 
 interface Props {
-  pats: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Token>>;
-  appTokens: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Token>>;
+  pats: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>>;
+  appTokens: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>>;
 }
 
 interface FormState {

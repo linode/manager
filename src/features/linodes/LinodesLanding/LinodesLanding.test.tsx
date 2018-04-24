@@ -19,7 +19,7 @@ function promiseLoaderType(response: any, error?: Error) {
   };
 }
 
-function manyResourceState(data: any[], pages = 0, page = 0, results = 0) {
+function resourcePage(data: any[], pages = 0, page = 0, results = 0) {
   return {
     pages,
     page,
@@ -29,12 +29,12 @@ function manyResourceState(data: any[], pages = 0, page = 0, results = 0) {
 }
 
 describe('ListLinodes', () => {
-  let linodes: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Linode>>;
-  let images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
+  let linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
+  let images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
 
   beforeEach(() => {
-    linodes = promiseLoaderType(manyResourceState(mockLinodes));
-    images = promiseLoaderType(manyResourceState(mockImages));
+    linodes = promiseLoaderType(resourcePage(mockLinodes));
+    images = promiseLoaderType(resourcePage(mockImages));
 
   });
 
@@ -54,7 +54,7 @@ describe('ListLinodes', () => {
   });
 
   it('renders an empty state with no linodes', () => {
-    linodes = promiseLoaderType(manyResourceState([]));
+    linodes = promiseLoaderType(resourcePage([]));
     const component = mount(
 
       <StaticRouter location="/" context={{}}>

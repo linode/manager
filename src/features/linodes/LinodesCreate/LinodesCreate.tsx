@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Axios, { AxiosError } from 'axios';
+
 import {
   withRouter,
   RouteComponentProps,
@@ -17,8 +17,10 @@ import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-import { API_ROOT, dcDisplayNames } from 'src/constants';
-
+import { dcDisplayNames } from 'src/constants';
+import { createLinode, getLinodeTypes } from 'src/services/linodes';
+import { getImages } from 'src/services/images';
+import { getRegions } from 'src/services/misc';
 import PromiseLoader from 'src/components/PromiseLoader';
 import SelectImagePanel from './SelectImagePanel';
 import SelectRegionPanel, { ExtendedRegion } from './SelectRegionPanel';
@@ -80,16 +82,12 @@ interface State {
 }
 
 const preloaded = PromiseLoader<Props>({
-  images: () => Axios.get(`${API_ROOT}/images`)
-    .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.Image>) => {
-      return data.data.map(image => image) || [];
-    }),
+  images: () => getImages()
+    .then(response => response.data.map(image => image) || []),
 
-  types: () => Axios.get(`${API_ROOT}/linode/types`)
-    .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.LinodeType>) => {
-      return data.data.map((type) => {
+  types: () => getLinodeTypes()
+    .then((response) => {
+      return response.data.map((type) => {
         const {
           memory,
           vcpus,
@@ -108,8 +106,7 @@ const preloaded = PromiseLoader<Props>({
       }) || [];
     }),
 
-  regions: () => Axios.get(`${API_ROOT}/regions`)
-    .then(response => response.data)
+  regions: () => getRegions()
     .then((response) => {
       return response.data.map((region: Linode.Region) => ({
         ...region,
@@ -229,7 +226,7 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       // privateIP, /* This requires a separate API call! */
     } = this.state;
 
-    Axios.post(`${API_ROOT}/linode/instances`, {
+    createLinode({
       region: selectedRegionID,
       type: selectedTypeID,
       label, /* optional */
@@ -238,11 +235,11 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
     })
-      .then((response) => {
+      .then(() => {
         resetEventsPolling();
         history.push('/linodes');
       })
-      .catch((error: AxiosError) => {
+      .catch((error) => {
         if (!this.mounted) { return; }
 
         this.setState(() => ({

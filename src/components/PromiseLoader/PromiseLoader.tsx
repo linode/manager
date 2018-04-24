@@ -17,7 +17,7 @@ export interface PromiseLoaderResponse<T> {
 
 export default function preload<P>(requests: RequestMap<P>) {
   return function (Component: React.ComponentType<P>) {
-    return class AxiosLoadedComponent extends React.Component<P, State> {
+    return class LoadedComponent extends React.Component<P, State> {
       mounted: boolean = false;
       state = { loading: true };
 

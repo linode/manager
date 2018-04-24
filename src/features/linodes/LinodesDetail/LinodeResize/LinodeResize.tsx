@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Axios, { AxiosResponse } from 'axios';
 import { compose, pathOr } from 'ramda';
 
 import {
@@ -16,9 +15,8 @@ import SelectionCard from 'src/components/SelectionCard';
 import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails, typeLabel } from 'src/features/linodes/presentation';
 import PromiseLoader from 'src/components/PromiseLoader';
-import { API_ROOT } from 'src/constants';
 import ActionsPanel from 'src/components/ActionsPanel';
-import { resize as resizeLinode } from 'src/service/linodes';
+import { resizeLinode, getLinodeTypes } from 'src/services/linodes';
 import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
@@ -79,7 +77,7 @@ class LinodeResize extends React.Component<CombinedProps, State> {
     const { linodeId } = this.props;
     const { selectedId } = this.state;
     resizeLinode(linodeId, selectedId)
-      .then((response: AxiosResponse<{}>) => {
+      .then((response) => {
         sendToast('Linode resize started.');
         resetEventsPolling();
       })
@@ -137,9 +135,8 @@ class LinodeResize extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 
 const preloaded = PromiseLoader({
-  types: () => Axios.get(`${API_ROOT}/linode/types`)
-    .then(response => response.data)
-    .then((data: Linode.ManyResourceState<Linode.LinodeType>) => {
+  types: () => getLinodeTypes()
+    .then((data: Linode.ResourcePage<Linode.LinodeType>) => {
       return data.data.map((type) => {
         const {
           memory,
