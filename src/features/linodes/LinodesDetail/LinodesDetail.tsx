@@ -340,6 +340,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <LinodeSettings
             linodeId={linode.id}
             linodeLabel={linode.label}
+            alerts={linode.alerts}
           />
           )} />
           <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes />)} />

@@ -20,6 +20,7 @@ import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
 import RadioGroup from 'material-ui/Radio/RadioGroup';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
+import Grid from 'src/components/Grid';
 
 import { updateLinode, getLinodeDisks, changeLinodeDiskPassword } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -33,6 +34,19 @@ import Select from 'src/components/Select';
 import Radio from 'src/components//Radio';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
+interface Section {
+  title: string;
+  textTitle: string;
+  radioInputLabel: string;
+  textInputLabel: string;
+  copy: string;
+  state: boolean;
+  value: number;
+  onStateChange: (e: React.ChangeEvent<{}>, v: string) => void;
+  onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+}
+
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -45,6 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeId: number;
   linodeLabel: string;
+  alerts: Linode.LinodeAlerts;
 }
 
 interface PromiseLoaderProps {
@@ -65,31 +80,20 @@ interface PasswordFormState {
   success?: string;
 }
 
+interface AlertState {
+  state: boolean;
+  value: number;
+}
+
 interface AlertsFormState {
   submitting: boolean;
   success?: string;
-  cpuusage: {
-    state: boolean;
-    value: string;
-  };
-  diskio: {
-    state: boolean;
-    value: string;
-  };
-  incoming: {
-    state: boolean;
-    value: string;
-  };
-  outbound: {
-    state: boolean;
-    value: string;
-  };
-  transfer: {
-    state: boolean;
-    value: string;
-  };
+  cpuusage: AlertState;
+  diskio: AlertState;
+  incoming: AlertState;
+  outbound: AlertState;
+  transfer: AlertState;
 }
-
 
 interface State {
   disks: Linode.Disk[];
@@ -117,24 +121,24 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
     alertsForm: {
       submitting: false,
       cpuusage: {
-        state: true,
-        value: '',
+        state: this.props.alerts.cpu > 0,
+        value: this.props.alerts.cpu,
       },
       diskio: {
-        state: true,
-        value: '',
+        state: this.props.alerts.io > 0,
+        value: this.props.alerts.io,
       },
       incoming: {
-        state: true,
-        value: '',
+        state: this.props.alerts.network_in > 0,
+        value: this.props.alerts.network_in,
       },
       outbound: {
-        state: true,
-        value: '',
+        state: this.props.alerts.network_out > 0,
+        value: this.props.alerts.network_out,
       },
       transfer: {
-        state: true,
-        value: '',
+        state: this.props.alerts.transfer_quota > 0,
+        value: this.props.alerts.transfer_quota,
       },
     },
   };
@@ -182,6 +186,78 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
       });
   }
 
+  setLinodeAlertThresholds = () => {
+    this.setState(set(lensPath(['errors']), undefined));
+    this.setState(set(lensPath(['alertsForm', 'success']), undefined));
+    this.setState(set(lensPath(['alertsForm', 'submitting']), true));
+
+    updateLinode(
+      this.props.linodeId,
+      {
+        alerts: {
+          cpu: valueUnlessOff(this.state.alertsForm.cpuusage),
+          network_in: valueUnlessOff(this.state.alertsForm.incoming),
+          network_out: valueUnlessOff(this.state.alertsForm.outbound),
+          transfer_quota: valueUnlessOff(this.state.alertsForm.transfer),
+          io: valueUnlessOff(this.state.alertsForm.diskio),
+        },
+      },
+    )
+      .then((response) => {
+        this.setState(compose(
+          set(lensPath(['alertsForm', 'success']), `Linode alert thresholds changed successfully.`),
+          set(lensPath(['alertsForm', 'submitting']), false),
+        ));
+      })
+      .catch((error) => {
+        this.setState(set(lensPath(['errors']), error.response.data.errors));
+      });
+  }
+
+  AlertSection = (props: Section) => {
+    return (
+      <React.Fragment>
+        <Grid container>
+          <Grid item>
+            <RadioGroup
+              name={props.radioInputLabel}
+              value={String(props.state)}
+              onChange={props.onStateChange}
+            >
+              <FormControlLabel value="true" label="On" control={<Radio />} />
+              <FormControlLabel value="false" label="Off" control={<Radio />} />
+            </RadioGroup>
+          </Grid>
+          <Grid item>
+            <Typography>{props.title}</Typography>
+            <Typography>{props.copy}</Typography>
+          </Grid>
+          <Grid item>
+            {props.state && <TextField
+              label={props.textTitle}
+              type="number"
+              value={props.value}
+              InputProps={{
+                endAdornment: <span>%</span>,
+              }}
+              error={Boolean(props.error)}
+              errorText={props.error}
+              /**
+               * input type of NUMBER and maxlength do not work well together.
+               * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588
+               */
+              inputProps={{
+                maxLength: 2,
+              }}
+              onChange={props.onValueChange}
+            />}
+          </Grid>
+        </Grid>
+        <Divider />
+      </React.Fragment>
+    );
+  }
+
   componentWillReceiveProps(nextProps: CombinedProps) {
     if (nextProps.linodeLabel !== this.state.labelForm.initialValue) {
       this.setState(compose(
@@ -193,10 +269,112 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const hasErrorFor = getAPIErrorFor({ label: 'label', password: 'password' }, this.state.errors);
+    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const labelError = hasErrorFor('label');
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
+
+    const alertSections: Section[] = [
+      {
+        title: 'CPU Usage',
+        textTitle: 'Usage Threshold',
+        radioInputLabel: 'cpu_usage_state',
+        textInputLabel: 'cpu_usage_threshold',
+        copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
+        state: this.state.alertsForm.cpuusage.state,
+        value: this.state.alertsForm.cpuusage.value,
+        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+          this.setState(
+            set(lensPath(['alertsForm', 'cpuusage', 'state']), v === 'true')),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['alertsForm', 'cpuusage', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.cpu'),
+      },
+      {
+        radioInputLabel: 'disk_io_state',
+        textInputLabel: 'disk_io_threshold',
+        textTitle: 'IO Threshold',
+        title: 'Disk IO Rate',
+        copy: 'Average Disk IO ops/sec over 2 horus exceeding this value triggers this alert.',
+        state: this.state.alertsForm.diskio.state,
+        value: this.state.alertsForm.diskio.value,
+        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+          this.setState(
+            set(lensPath(['alertsForm', 'diskio', 'state']), v === 'true')),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['alertsForm', 'diskio', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.io'),
+      },
+      {
+        radioInputLabel: 'incoming_traffic_state',
+        textInputLabel: 'incoming_traffic_threshold',
+        textTitle: 'Traffic Threshold',
+        title: 'Incoming Traffic',
+        copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+        state: this.state.alertsForm.incoming.state,
+        value: this.state.alertsForm.incoming.value,
+        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+          this.setState(
+            set(lensPath(['alertsForm', 'incoming', 'state']), v === 'true')),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['alertsForm', 'incoming', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.network_in'),
+      },
+      {
+        radioInputLabel: 'outbound_traffic_state',
+        textInputLabel: 'outbound_traffic_threshold',
+        textTitle: 'Traffic Threshold',
+        title: 'Outbound Traffic',
+        copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
+        alert.`,
+        state: this.state.alertsForm.outbound.state,
+        value: this.state.alertsForm.outbound.value,
+        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+          this.setState(
+            set(lensPath(['alertsForm', 'outbound', 'state']), v === 'true')),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['alertsForm', 'outbound', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.network_out'),
+      },
+      {
+        radioInputLabel: 'transfer_quota_state',
+        textInputLabel: 'transfer_quota_threshold',
+        textTitle: 'Quota Threshold',
+        title: 'Transfer Quota',
+        copy: `Percentage of network transfer quota used being breater than this value will trigger
+          this alert.`,
+        state: this.state.alertsForm.transfer.state,
+        value: this.state.alertsForm.transfer.value,
+        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+          this.setState(
+            set(lensPath(['alertsForm', 'transfer', 'state']), v === 'true'),
+          ),
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          e.target.value.length <= 2
+            ? this.setState(
+              set(lensPath(['alertsForm', 'transfer', 'value']), Number(e.target.value)),
+            )
+            : () => null,
+        error: hasErrorFor('alerts.transfer_quota'),
+      },
+    ];
 
     return (
       <React.Fragment>
@@ -216,7 +394,7 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
             label="Label"
             value={this.state.labelForm.updatedValue}
             onChange={e =>
-              this.setState(set(lensPath(['labelForm', 'updatedValue']), e.target.value))}
+              this.setState(set(lensPath(['labelForm', 'updatedValue']), Number(e.target.value)))}
             errorText={labelError}
             error={Boolean(labelError)}
           />
@@ -246,7 +424,7 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
             <Select
               value={this.state.passwordForm.diskId}
               onChange={e =>
-                this.setState(set(lensPath(['passwordForm', 'diskId']), e.target.value))}
+                this.setState(set(lensPath(['passwordForm', 'diskId']), Number(e.target.value)))}
               inputProps={{ name: 'disk', id: 'disk' }}
               error={Boolean(diskIdError)}
             >
@@ -263,91 +441,36 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
           <PasswordInput
             label="Password"
             value={this.state.passwordForm.value}
-            onChange={e => this.setState(set(lensPath(['passwordForm', 'value']), e.target.value))}
+            onChange={e =>
+              this.setState(set(lensPath(['passwordForm', 'value']), Number(e.target.value)))}
             errorText={passwordError}
             error={Boolean(passwordError)}
           />
         </ExpansionPanel>
-        <ExpansionPanel defaultExpanded heading="Notification Thresholds">
-          CPU Usage
-          <RadioGroup
-            aria-label="cpu_usage"
-            name="gender"
-            value={String(this.state.alertsForm.cpuusage.state)}
-            onChange={(e, v) =>
-              this.setState(set(lensPath(['alertsForm', 'cpuusage', 'state']), v))}
-          >
-            <FormControlLabel value="true" label="On" control={<Radio />} />
-            <FormControlLabel value="false" label="Off" control={<Radio />} />
-          </RadioGroup>
-            <TextField
-              label="Usage Threshold"
-              type="number"
-              value={this.state.alertsForm.cpuusage.value}
-              inputProps={{
-                maxLength: 2,
-                endAdornment: <span>%</span>,
-              }}
-              onChange={e =>
-                  this.setState(set(lensPath(['alertsForm', 'cpuusage', 'value']), e.target.value))}
-            />
-          <Divider />
-          {/* Disk IO Rate
-              <RadioGroup
-            aria-label="gender"
-            name="gender"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            <FormControlLabel value="Disabled" label="Disabled" control={<Radio disabled />} />
-            <FormControlLabel value="D" label="Default" control={<Radio />} />
-            <FormControlLabel value="B" label="Warning" control={<Radio variant="warning" />} />
-            <FormControlLabel value="A" label="Error" control={<Radio variant="error" />} />
-          </RadioGroup>
-          <Divider />
-          Incoming Traffic
-              <RadioGroup
-            aria-label="gender"
-            name="gender"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            <FormControlLabel value="Disabled" label="Disabled" control={<Radio disabled />} />
-            <FormControlLabel value="D" label="Default" control={<Radio />} />
-            <FormControlLabel value="B" label="Warning" control={<Radio variant="warning" />} />
-            <FormControlLabel value="A" label="Error" control={<Radio variant="error" />} />
-          </RadioGroup>
-          <Divider />
-          Outbound Traffic
-              <RadioGroup
-            aria-label="gender"
-            name="gender"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            <FormControlLabel value="Disabled" label="Disabled" control={<Radio disabled />} />
-            <FormControlLabel value="D" label="Default" control={<Radio />} />
-            <FormControlLabel value="B" label="Warning" control={<Radio variant="warning" />} />
-            <FormControlLabel value="A" label="Error" control={<Radio variant="error" />} />
-          </RadioGroup>
-          <Divider />
-          Transfer Quota
-              <RadioGroup
-            aria-label="gender"
-            name="gender"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            <FormControlLabel value="Disabled" label="Disabled" control={<Radio disabled />} />
-            <FormControlLabel value="D" label="Default" control={<Radio />} />
-            <FormControlLabel value="B" label="Warning" control={<Radio variant="warning" />} />
-            <FormControlLabel value="A" label="Error" control={<Radio variant="error" />} />
-          </RadioGroup> */}
+        <ExpansionPanel
+          defaultExpanded
+          heading="Notification Thresholds"
+          success={this.state.alertsForm.success}
+          actions={() =>
+            <ActionsPanel>
+              <Button
+                variant="raised"
+                color="primary"
+                onClick={this.setLinodeAlertThresholds}
+              >
+                Save
+            </Button>
+            </ActionsPanel>
+          }
+        >
+          {
+            alertSections.map((p, idx) => <this.AlertSection key={idx} {...p} />)
+          }
         </ExpansionPanel>
         <ExpansionPanel defaultExpanded heading="Shutdown Watchdog"></ExpansionPanel>
         <ExpansionPanel defaultExpanded heading="Advanced Configurations"></ExpansionPanel>
         <ExpansionPanel defaultExpanded heading="Delete Linode"></ExpansionPanel>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 }
@@ -359,5 +482,7 @@ const loaded = PromiseLoader<Props>({
     .then(response => response.data)
     .then(disks => disks.filter(disk => disk.filesystem !== 'swap')),
 });
+
+const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => state ? value : 0;
 
 export default loaded(styled(LinodeSettings));
