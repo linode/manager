@@ -36,6 +36,8 @@ import { resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
 
+import LinodeBackupActionMenu from './LinodeBackupActionMenu';
+
 type ClassNames =
   'paper'
   | 'title'
@@ -129,8 +131,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       label: '',
     },
     settingsForm: {
-      window: this.props.backupsSchedule.window,
-      day: this.props.backupsSchedule.day,
+      window: this.props.backupsSchedule.window || 'Scheduling',
+      day: this.props.backupsSchedule.day || 'Scheduling',
     },
   };
 
@@ -301,7 +303,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                         acc + disk.size
                       ), 0)}MB
                     </TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>
+                      <LinodeBackupActionMenu
+                        onRestore={() => console.log(`restore ${backup.id}`)}
+                        onDeploy={() => console.log(`deploy ${backup.id}`)}
+                      />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -420,10 +427,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             >
               Save Schedule
             </Button>
-            {getErrorFor('none') &&
-              <FormHelperText error>{getErrorFor('none')}</FormHelperText>
-            }
           </ActionsPanel>
+          {getErrorFor('none') &&
+            <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+          }
         </Paper>
       </React.Fragment>
     );
