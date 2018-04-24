@@ -44,6 +44,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     transform: `translateY(${theme.spacing.unit}px)`,
   },
   button: {
+    padding: theme.spacing.unit,
+    borderRadius: 30,
     '&:hover, &.active': {
       '& $username': {
         color: theme.palette.primary.main,
