@@ -326,7 +326,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <LinodeRescue linodeId={linode.id} />
           )} />
           {/* 404 */}
-          <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
+          <Redirect to={`${url}/summary`} />
         </Switch>
         <LinodeConfigSelectionDrawer
           onClose={this.closeConfigDrawer}
