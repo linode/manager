@@ -26,6 +26,7 @@ export function resetEventsPolling() {
   currentPollIntervalMultiplier = 1;
 }
 export const init = () => {
+  initialRequest = true;
   filterDatestamp = createInitialDatestamp();
   resetEventsPolling();
 };
