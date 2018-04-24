@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 
 export const newLinodeEvents = (mountTime: moment.Moment) =>
-(linodeEvent : Linode.Event): boolean => {
+(linodeEvent : Linode.Event & { _initial?: boolean }): boolean => {
   const actionWhitelist = [
     'linode_boot',
     'linode_reboot',

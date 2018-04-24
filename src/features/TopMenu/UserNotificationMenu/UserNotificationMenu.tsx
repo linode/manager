@@ -74,7 +74,7 @@ class UserNotificationMenu extends React.Component<CombinedProps, State> {
         notifications$,
         events$
           /** Filter the fuax event used to kick off the progress bars. */
-          .filter((event: Linode.Event) => event.id !== 1)
+          .filter(event => event.id !== 1)
 
           /** Create a map of the Events using Event.ID as the key. */
           .scan((events: EventsMap, event: Linode.Event) =>

@@ -1,9 +1,8 @@
-import * as Rx from 'rxjs/Rx';
-import { API_ROOT } from 'src/constants';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 import { assoc, compose, when } from 'ramda';
-
+import * as Rx from 'rxjs/Rx';
+import { API_ROOT } from 'src/constants';
 import { dateFormat } from 'src/time';
 
 let initialRequest: boolean = true;
@@ -29,6 +28,7 @@ export function resetEventsPolling() {
   currentPollIntervalMultiplier = 1;
 }
 export const init = () => {
+  initialRequest = true;
   filterDatestamp = createInitialDatestamp();
   resetEventsPolling();
 };
