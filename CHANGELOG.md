@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.23.1] - 2018-04-19
+### Fixed:
+- Fixed an issue where unexpected requests were sent when opening the notification menu.
+- Fixed an issue Firefox on Windows would report "to much recursion".
+- Fixed an issue preventing Linode reboots from ever finishing.
+- Fixed an issue preventing users from creating Linodes in Frankfurt Germany.
+
 ## [0.23.0] - 2018-04-18
 ### Added:
 - Added toast notifications for several Linode actions.
@@ -551,7 +558,7 @@ A new visual design has begun!
 - required overwrite modal to backup restore #800
 - missing check_body and check_path fields to NodeBalancer config active health check form section #2089
 ### Changed
-- long text in link and label table cells are now truncated based on the width of the th, 
+- long text in link and label table cells are now truncated based on the width of the th,
 an ellipsis is shown with a tooltip enabled #2007
 - network tab revamped, IP Sharing and IP Transfer split into 2 separate tabs #2066
 - network tab now shows proper gateway for all addresses #2066
