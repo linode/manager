@@ -23,7 +23,7 @@ export const setDocs = (docs: Linode.Doc[]): SetType => ({
 
 export const defaultState: Linode.Doc[] = [];
 
-export default function authentication(state = defaultState, action: ClearType | SetType) {
+export default function documentation(state = defaultState, action: ClearType | SetType) {
   switch (action.type) {
     case CLEAR: return [];
 
