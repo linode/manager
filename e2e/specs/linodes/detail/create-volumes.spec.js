@@ -14,7 +14,7 @@ describe('Linode Detail - Volumes Suite', () => {
         browser.url(constants.routes.linodes);
 
         browser.waitForVisible('[data-qa-active-view]');
-        ListLinodes.gridElemsDisplay();
+        browser.waitForVisible('[data-qa-linode]');
         
         const linodes = ListLinodes.linode;
         
