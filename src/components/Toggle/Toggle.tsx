@@ -8,8 +8,10 @@ import {
   Theme,
 } from 'material-ui';
 import Switch, { SwitchProps } from 'material-ui/Switch';
+
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
+import './toggle.css';
 
 type CSSClasses =
   'root'

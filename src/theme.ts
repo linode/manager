@@ -379,8 +379,6 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiSwitch: {
       root: {
-        width: 42,
-        height: 22,
         '& .icon': {
           transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           position: 'relative',
