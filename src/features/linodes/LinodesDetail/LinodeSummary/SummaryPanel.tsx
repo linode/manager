@@ -23,6 +23,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
+    paddingBottom: 20,
     marginTop: theme.spacing.unit * 2,
   },
   title: {
