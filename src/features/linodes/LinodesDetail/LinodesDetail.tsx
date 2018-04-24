@@ -157,7 +157,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .filter(newLinodeEvents(mountTime))
       .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
-
         const { match: { params: { linodeId } } } = this.props;
         requestAllTheThings(linodeId!)
           .then(({ linode, type, image, volumes }) => {

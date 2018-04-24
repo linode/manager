@@ -131,6 +131,7 @@ namespace Linode {
     status: EventStatus;
     time_remaining: null | number;
     username: string;
+    _initial?: boolean;
   }
 
   export interface ApiFieldError {
