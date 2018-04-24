@@ -473,6 +473,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           Please note that when you cancel backups associated with this
           Linode, this will remove all existing backups.
         </Typography>
+
       </React.Fragment>
     );
   }
