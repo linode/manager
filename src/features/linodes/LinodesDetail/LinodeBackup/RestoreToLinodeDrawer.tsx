@@ -15,7 +15,7 @@ import FormHelperText from 'material-ui/Form/FormHelperText';
 import { FormControlLabel } from 'material-ui/Form';
 
 import Notice from 'src/components/Notice';
-import { getLinodesPage, restoreBackup } from 'src/services/linodes';
+import { getLinodes, restoreBackup } from 'src/services/linodes';
 import Select from 'src/components/Select';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -63,10 +63,9 @@ class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { linodeRegion } = this.props;
-    getLinodesPage(1)
+    getLinodes({ page: 1 }, { region: linodeRegion })
       .then((response) => {
-        const thisRegionLinodes = response.data.filter(linode => linode.region === linodeRegion);
-        const linodeChoices = thisRegionLinodes.map((linode) => {
+        const linodeChoices = response.data.map((linode) => {
           return [`${linode.id}`, linode.label];
         });
         this.setState({ linodes: linodeChoices });

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as moment from 'moment-timezone';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { path, sortBy, pathOr } from 'ramda';
+
 import {
   withStyles,
   StyleRulesCallback,
@@ -120,7 +122,7 @@ interface State {
   };
 }
 
-type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 const typeMap = {
   auto: 'Automatic',
@@ -287,7 +289,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   Table = ({ backups }: { backups: Linode.LinodeBackup[]}): JSX.Element | null => {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -334,7 +336,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                           backup.id,
                           this.formatBackupDate(backup.created),
                         )}
-                        onDeploy={() => console.log(`deploy ${backup.id}`)}
+                        onDeploy={() => {
+                          history.push(`/linodes/create?type=fromBackup&backupID=${backup.id}`);
+                        }}
                       />
                     </TableCell>
                   </TableRow>
@@ -537,4 +541,4 @@ const preloaded = PromiseLoader<Props>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default preloaded(styled(LinodeBackup));
+export default preloaded(styled(withRouter(LinodeBackup)));
