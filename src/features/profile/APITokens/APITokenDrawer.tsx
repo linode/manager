@@ -275,7 +275,15 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
               >
                 {mode as string === 'create' ? 'Submit' : 'Save'}
               </Button>,
-              <Button key="cancel" onClick={() => closeDrawer()} data-qa-cancel>Cancel</Button>,
+              <Button
+                variant="raised"
+                color="secondary"
+                className="cancel"
+                key="cancel"
+                onClick={() => closeDrawer()} data-qa-cancel
+              >
+                Cancel
+              </Button>,
             ]
           }
         </ActionsPanel>
