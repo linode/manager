@@ -1,4 +1,5 @@
 import createBreakpoints from 'material-ui/styles/createBreakpoints';
+import { relative } from 'path';
 
 const breakpoints = createBreakpoints({});
 
@@ -374,6 +375,49 @@ const LinodeTheme: Linode.Theme = {
         margin: '0 auto',
         width: '100%',
         padding: 0,
+      },
+    },
+    MuiSwitch: {
+      root: {
+        width: 42,
+        height: 22,
+        '& > span': {
+          width: 42,
+          height: 22,
+        },
+        '& .icon': {
+          transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+          position: 'relative',
+          top: 1,
+          left: -9,
+          width: 16,
+          height: 16,
+          borderRadius: 0,
+        },
+      },
+      checked: {
+        transform: 'translateX(20px)',
+        '& input': {
+          left: -20,
+        },
+        '& + $bar': {
+          opacity: 1,
+          backgroundColor: '#3B85D9 !important',
+          borderColor: '#2967B1',
+        },
+      },
+      switchBase: {
+      },
+      bar: {
+        top: 0,
+        left: 0,
+        marginLeft: 0,
+        marginTop: 0,
+        width: 42,
+        height: 22,
+        borderRadius: 0,
+        backgroundColor: '#F4F4F4',
+        border: '1px solid #999',
       },
     },
     MuiTab: {
