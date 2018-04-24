@@ -387,12 +387,26 @@ const LinodeTheme: Linode.Theme = {
           height: 16,
           borderRadius: 0,
         },
+        '& .square': {
+          transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        },
+        '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
+          '& $bar, & + $bar': {
+            borderColor: '#666',
+          },
+          '& .square': {
+            fill: '#aaa',
+          },
+        },
       },
       checked: {
         transform: 'translateX(20px)',
         color: '#3B85D9 !important',
         '& input': {
           left: -20,
+        },
+        '& .square': {
+          fill: 'white !important',
         },
         '& + $bar': {
           opacity: 1,

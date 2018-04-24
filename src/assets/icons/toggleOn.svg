@@ -6,7 +6,7 @@
   class="icon"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink">
-  <g id="symbols" stroke="none" stroke-width="0" fill="#fff" fill-rule="evenodd">
-    <rect x="0" y="0" width="16" height="16" rx="1"></rect>
+  <g stroke="none" stroke-width="0" fill="#fff" fill-rule="evenodd">
+    <rect class="square" x="0" y="0" width="16" height="16" rx="1"></rect>
   </g>
 </svg>
