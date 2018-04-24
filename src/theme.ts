@@ -381,15 +381,10 @@ const LinodeTheme: Linode.Theme = {
       root: {
         width: 42,
         height: 22,
-        '& > span': {
-          width: 42,
-          height: 22,
-        },
         '& .icon': {
           transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           position: 'relative',
-          top: 1,
-          left: -9,
+          left: 0,
           width: 16,
           height: 16,
           borderRadius: 0,
@@ -397,6 +392,7 @@ const LinodeTheme: Linode.Theme = {
       },
       checked: {
         transform: 'translateX(20px)',
+        color: '#3B85D9 !important',
         '& input': {
           left: -20,
         },
@@ -406,11 +402,9 @@ const LinodeTheme: Linode.Theme = {
           borderColor: '#2967B1',
         },
       },
-      switchBase: {
-      },
       bar: {
-        top: 0,
-        left: 0,
+        top: 12,
+        left: 12,
         marginLeft: 0,
         marginTop: 0,
         width: 42,
