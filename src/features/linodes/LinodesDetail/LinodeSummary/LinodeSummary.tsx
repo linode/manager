@@ -167,16 +167,17 @@ const chartOptions = {
   },
   tooltips: {
     cornerRadius: 0,
-    backgroundColor: 'white',
+    backgroundColor: '#fbfbfb',
     bodyFontColor: '#333',
-    titleMarginBottom: 6,
     displayColors: false,
     titleFontColor: '#666',
     xPadding: 16,
-    yPadding: 8,
+    yPadding: 10,
     borderWidth: .5,
     borderColor: '#999',
-    caretPadding: 8,
+    caretPadding: 10,
+    position: 'nearest',
+    afterBody: 'poo s',
   },
 };
 
@@ -190,7 +191,7 @@ const lineOptions = {
   borderJoinStyle: 'miter',
   lineTension: 0,
   pointRadius: 0,
-  pointHitRadius: 5,
+  pointHitRadius: 10,
 };
 
 const statToLabel = {
