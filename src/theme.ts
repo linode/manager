@@ -1,5 +1,4 @@
 import createBreakpoints from 'material-ui/styles/createBreakpoints';
-import { relative } from 'path';
 
 const breakpoints = createBreakpoints({});
 
