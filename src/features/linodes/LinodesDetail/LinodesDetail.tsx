@@ -155,6 +155,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     this.subscription = events$
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
       .filter(newLinodeEvents(mountTime))
+      .filter(e => !e._initial)
       .debounce(() => Observable.timer(1000))
       .subscribe((linodeEvent) => {
 
