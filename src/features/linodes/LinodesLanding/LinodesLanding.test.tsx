@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, withRouter } from 'react-router-dom';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import { RoutedListLinodes } from './LinodesLanding';
+import { ListLinodes } from './LinodesLanding';
 import {
   linodes as mockLinodes,
   images as mockImages,
   types as mockTypes,
 } from 'src/__data__';
+import { setDocs, clearDocs } from 'src/store/reducers/documentation';
+
+const RoutedListLinodes = withRouter(ListLinodes);
 
 function promiseLoaderType(response: any, error?: Error) {
   return {
@@ -42,6 +45,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
+          setDocs={setDocs}
+          clearDocs={clearDocs}
         />
       </StaticRouter>,
     );
@@ -56,6 +62,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
+          setDocs={setDocs}
+          clearDocs={clearDocs}
         />
       </StaticRouter>,
     );
@@ -72,6 +81,9 @@ describe('ListLinodes', () => {
           linodes={linodes}
           images={images}
           types={mockTypes}
+          classes={{ root: '', title: '' }}
+          setDocs={setDocs}
+          clearDocs={clearDocs}
         />
       </StaticRouter>,
     );

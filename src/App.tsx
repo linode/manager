@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
 import { pathOr } from 'ramda';
 
@@ -14,6 +14,7 @@ import {
   createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
+import Grid from 'material-ui/Grid';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
@@ -30,6 +31,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ToastNotifications from 'src/features/ToastNotifications';
 
 import BetaNotification from './BetaNotification';
+import DocsSidebar from 'src/components/DocsSidebar';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -41,6 +43,12 @@ const Profile = DefaultLoader({
 
 const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
 theme.shadows = theme.shadows.fill('none');
+
+type ClassNames = 'appFrame'
+  | 'content'
+  | 'wrapper'
+  | 'grid'
+  | 'switchWrapper';
 
 const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   appFrame: {
@@ -72,6 +80,16 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
       paddingRight: theme.spacing.unit * 2,
     },
   },
+  grid: {
+    [theme.breakpoints.up('lg')]: {
+      height: '100%',
+    },
+  },
+  switchWrapper: {
+    flex: 1,
+    maxWidth: '100%',
+    position: 'relative',
+  },
 });
 
 interface Props {
@@ -81,6 +99,7 @@ interface Props {
 interface ConnectedProps {
   request: typeof request;
   response: typeof response;
+  documentation: Linode.Doc[];
 }
 
 interface State {
@@ -88,7 +107,7 @@ interface State {
   betaNotification: Boolean;
 }
 
-type CombinedProps = Props & WithStyles<'appFrame' | 'content' | 'wrapper'> & ConnectedProps;
+type CombinedProps = Props & WithStyles<ClassNames> & ConnectedProps;
 
 export class App extends React.Component<CombinedProps, State> {
   state = {
@@ -147,7 +166,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded } = this.props;
+    const { classes, longLivedLoaded, documentation } = this.props;
 
     return (
       <React.Fragment>
@@ -159,43 +178,47 @@ export class App extends React.Component<CombinedProps, State> {
               <main className={classes.content}>
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
-                  <Switch>
-                    <Route exact path="/dashboard" render={() =>
-                      <Placeholder title="Dashboard" />} />
-                    <Route path="/linodes" component={LinodesRoutes} />
-                    <Route exact path="/volumes" render={() =>
-                      <Placeholder
-                        title="Volumes"
-                        icon={VolumeIcon}
-                      />}
-                    />
-                    <Route exact path="/nodebalancers" render={() =>
-                      <Placeholder
-                        title="NodeBalancers"
-                        icon={NodeBalancerIcon}
-                      />}
-                    />
-                    <Route exact path="/domains" render={() =>
-                      <Placeholder title="Domains" />} />
-                    <Route exact path="/managed" render={() =>
-                      <Placeholder title="Managed" />} />
-                    <Route exact path="/longview" render={() =>
-                      <Placeholder title="Longview" />} />
-                    <Route exact path="/stackscripts" render={() =>
-                      <Placeholder title="StackScripts" />} />
-                    <Route exact path="/images" render={() =>
-                      <Placeholder title="Images" />} />
-                    <Route exact path="/billing" render={() =>
-                      <Placeholder title="Billing" />} />
-                    <Route exact path="/users" render={() =>
-                      <Placeholder title="Users" />} />
-                    <Route path="/profile" component={Profile} />
-                    <Route exact path="/support" render={() =>
-                      <Placeholder title="Support" />} />
-                    <Route path="/profile" component={Profile} />
-                    <Route exact path="/" render={() => (<Redirect to="/linodes" />)} />
-                    <Route render={() => (<Redirect to="/linodes" />)} />
-                  </Switch>
+                  <Grid container className={classes.grid}>
+                    <div className={classes.switchWrapper}>
+                      <Switch>
+                        <Route exact path="/dashboard" render={() =>
+                          <Placeholder title="Dashboard" />} />
+                        <Route path="/linodes" component={LinodesRoutes} />
+                        <Route exact path="/volumes" render={() =>
+                          <Placeholder
+                            title="Volumes"
+                            icon={VolumeIcon}
+                          />}
+                        />
+                        <Route exact path="/nodebalancers" render={() =>
+                          <Placeholder
+                            title="NodeBalancers"
+                            icon={NodeBalancerIcon}
+                          />}
+                        />
+                        <Route exact path="/domains" render={() =>
+                          <Placeholder title="Domains" />} />
+                        <Route exact path="/managed" render={() =>
+                          <Placeholder title="Managed" />} />
+                        <Route exact path="/longview" render={() =>
+                          <Placeholder title="Longview" />} />
+                        <Route exact path="/stackscripts" render={() =>
+                          <Placeholder title="StackScripts" />} />
+                        <Route exact path="/images" render={() =>
+                          <Placeholder title="Images" />} />
+                        <Route exact path="/billing" render={() =>
+                          <Placeholder title="Billing" />} />
+                        <Route exact path="/users" render={() =>
+                          <Placeholder title="Users" />} />
+                        <Route path="/profile" component={Profile} />
+                        <Route exact path="/support" render={() =>
+                          <Placeholder title="Support" />} />
+                        <Route path="/profile" component={Profile} />
+                        <Redirect to="/linodes" />
+                      </Switch>
+                    </div>
+                    <DocsSidebar docs={documentation} />
+                  </Grid>
                 </div>
                 <Footer />
               </main>
@@ -221,10 +244,14 @@ const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
+  documentation: state.documentation,
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const styled = withStyles(styles, { withTheme: true });
 
-export default connected(styled(App)) as any;
+export default compose(
+  connected,
+  styled,
+)(App);

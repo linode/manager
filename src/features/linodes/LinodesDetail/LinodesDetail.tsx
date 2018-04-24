@@ -73,15 +73,29 @@ interface PreloadedProps {
   data: PromiseLoaderResponse<Data>;
 }
 
-type ClassNames = 'launchButton';
+type ClassNames = 'cta'
+  | 'launchButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  cta: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      margin: `${theme.spacing.unit * 2}px 0`,
+      flexBasis:  '100%',
+    },
+  },
   launchButton: {
     marginRight: theme.spacing.unit,
     padding: '12px 16px 13px',
     minHeight: 49,
     marginTop: 1,
     transition: theme.transitions.create(['background-color', 'color']),
+    [theme.breakpoints.down('sm')]: {
+      backgroundColor: 'white',
+      border: '1px solid #eee',
+      marginTop: 0,
+      minHeight: 51,
+    },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
@@ -247,7 +261,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between">
+        <Grid
+          container
+          justify="space-between"
+        >
           <Grid item style={{ flex: 1 }}>
             <EditableText
               variant="headline"
@@ -255,15 +272,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               onEdit={this.updateLabel}
             />
           </Grid>
-          <Grid item>
+          <Grid item className={classes.cta}>
             <Button
               onClick={() => weblishLaunch(`${linode.id}`)}
               className={classes.launchButton}
             >
               Launch Console
             </Button>
-          </Grid>
-          <Grid item>
             <LinodePowerControl
               status={linode.status}
               id={linode.id}
@@ -278,6 +293,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
+            scrollable
+            scrollButtons="off"
           >
             {this.tabs.map(tab => <Tab key={tab.title} label={tab.title} />)}
           </Tabs>
@@ -327,7 +344,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <LinodeRescue linodeId={linode.id} />
           )} />
           {/* 404 */}
-          <Route exact render={() => (<Redirect to={`${url}/summary`} />)} />
+          <Redirect to={`${url}/summary`} />
         </Switch>
         <LinodeConfigSelectionDrawer
           onClose={this.closeConfigDrawer}
