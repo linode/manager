@@ -208,7 +208,13 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="headline" className={classes.title}>Rescue</Typography>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
+            Rescue
+          </Typography>
           <Typography className={classes.intro}>
             If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot
             your Linode into Rescue Mode. This is a safe environment for performing many system

@@ -334,6 +334,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             color="secondary"
             className="destructive"
             onClick={method}
+            data-qa-confirm
           >
             Confirm
           </Button>
@@ -342,6 +343,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
             variant="raised"
             color="secondary"
             className="cancel"
+            data-qa-cancel
           >
             Cancel
           </Button>
@@ -739,7 +741,8 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography
               variant="headline"
-              className={classes.title}>
+              className={classes.title}
+              data-qa-title>
               Volumes
             </Typography>
           </Grid>
@@ -769,10 +772,10 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
                     volume,
                   );
 
-                  return <TableRow key={volume.id}>
-                    <TableCell>{label}</TableCell>
-                    <TableCell>{size} GiB</TableCell>
-                    <TableCell>{filesystem_path}</TableCell>
+                  return <TableRow key={volume.id} data-qa-volume-cell>
+                    <TableCell data-qa-volume-cell-label>{label}</TableCell>
+                    <TableCell data-qa-volume-size>{size} GiB</TableCell>
+                    <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
                     <TableCell>
                       <ActionMenu
                         volumeId={volume.id}

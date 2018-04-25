@@ -3,7 +3,7 @@ export default class Page {
     get docs() { return $$('[data-qa-doc]'); }
 
     constructor() {
-        this.title = 'Base page';
+        this.pageTitle = 'Base page';
     }
 
     open(path) {

@@ -3,6 +3,7 @@ import Page from './page';
 export class ListLinodes extends Page {
     // Grid/List Linode Card/Rows
     get subheader() { return $('[data-qa-title]'); }
+    get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get activeView() { return $('[data-qa-active-view]'); }
     get linode() { return $$('[data-qa-linode]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
@@ -20,6 +21,7 @@ export class ListLinodes extends Page {
 
     // Action Menu Items
     get powerOffMenu() { return $('[data-qa-action-menu-item="Power Off"]'); } 
+    get powerOnMenu() { return $('[data-qa-action-menu-item="Power On"]'); }
     get launchConsoleMenu() { return $('[data-qa-action-menu-item="Launch Console"]'); }
     get rebootMenu() { return $('[data-qa-action-menu-item="Reboot"]'); }
     get viewGraphsMenu() { return $('[data-qa-action-menu-item="View Graphs"]'); }
@@ -27,6 +29,20 @@ export class ListLinodes extends Page {
     get viewBackupsMenu() { return $('[data-qa-action-menu-item="View Backups"]'); }
     get settingsMenu() { return $('[data-qa-action-menu-item="Settings"]'); }
     get copyIp() { return $('[data-qa-copy-ip]'); }
+
+    linodesDisplay() {
+        try {
+            browser.waitUntil(function() {
+                return browser.waitForVisible('[data-qa-linode]') && $$('[data-qa-linode]').length > 0;
+            }, 10000);
+            return true;
+        } catch (err) {
+            if ($(this.placeholderText).isVisible()) {
+                return false;
+            }
+            throw new Error(err);
+        }
+    }
 
 
     gridElemsDisplay() {
@@ -51,6 +67,7 @@ export class ListLinodes extends Page {
         rebootButtonDisplays.forEach(l => expect(l).toBe(true));
         launchConsoleDisplays.forEach(l => expect(l).toBe(true));
     }
+
     listElemsDisplay() {
         const linodeDisplays = this.linode.map(l => l.isVisible());
         const labelDisplays = this.linode.map(l => l.$(this.linodeLabel.selector).isVisible());
@@ -63,6 +80,10 @@ export class ListLinodes extends Page {
         ipDisplays.forEach(i => expect(i).toBe(true));
         regionDisplays.forEach(r => expect(r).toBe(true));
         actionMenu.forEach(a => expect(a).toBe(true));
+    }
+
+    getStatus(linode) {
+        return linode.$(this.status.selector).getAttribute('data-qa-status');
     }
 
     reboot(linode) {
@@ -79,21 +100,43 @@ export class ListLinodes extends Page {
             linode.$(this.rebootButton).click();
             browser.waitForVisible('[data-qa-circular-progress]');
         }
+        
         browser.waitUntil(function() {
             return linode.$(this.status.selector).getAttribute('data-qa-status') === 'rebooting';
         }, 30000);
+        
         browser.waitUntil(function() {
             return linode.$(this.status).getAttribute('data-qa-status') === 'running';
         }, 30000);
     }
 
-    boot(linode) {
+    powerOff(linode) {
+        linode.$(this.linodeActionMenu.selector).click();
+        this.powerOffMenu.click();
+        
+        browser.waitUntil(function() {
+            return browser.isVisible('[data-qa-status="offline"]');
+        }, 60000);
+    }
 
+    powerOn(linode) {
+        linode.$(this.linodeActionMenu.selector).click();
+        this.powerOnMenu.click();
+
+        browser.waitUntil(function() {
+            return browser.isVisible('[data-qa-status="running"]');
+        }, 60000);
+    }
+
+    shutdownIfRunning(linode) {
+        if (this.getStatus(linode) === 'running') {
+            this.powerOff(linode);
+        }
     }
 
     selectMenuItem(linode, item) {
         linode.$(this.linodeActionMenu.selector).click();
-        browser.click(`[data-qa-action-menu-item="${item}"]`);
+        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
     switchView(view) {

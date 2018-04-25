@@ -4,7 +4,7 @@ import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes Suite', () => {
     function assertActionMenuItems() {
-        expect(ListLinodes.powerOffMenu.isVisible()).toBe(true);
+        expect([ListLinodes.powerOffMenu.isVisible(), ListLinodes.powerOnMenu.isVisible()]).toContain(true);
         expect(ListLinodes.launchConsoleMenu.isVisible()).toBe(true);
         expect(ListLinodes.rebootMenu.isVisible()).toBe(true);
         expect(ListLinodes.viewGraphsMenu.isVisible()).toBe(true);
@@ -25,8 +25,12 @@ describe('List Linodes Suite', () => {
     });
 
     it('should default to grid view', () => {
-        const activeView = $('[data-qa-active-view]').getAttribute('data-qa-active-view');
-        expect(activeView).toBe('grid');
+        if (ListLinodes.linode.length < 4) {
+            const activeView = $('[data-qa-active-view]').getAttribute('data-qa-active-view');
+            expect(activeView).toBe('grid');
+        } else {
+            pending('Defaults to list with > 3 Linodes');
+        }
     });
 
     it('should display with documentation', () => {
@@ -34,6 +38,14 @@ describe('List Linodes Suite', () => {
     });
 
     describe('Grid View Suite', () =>  {
+        beforeAll(() => {
+            const activeView = $('[data-qa-active-view]').getAttribute('data-qa-active-view');
+            
+            if (activeView !== 'grid') {
+                browser.click('[data-qa-view="grid"]');
+            }
+        });
+
         it('should display a Linode and linode grid item elements', () => {
             ListLinodes.gridElemsDisplay();            
         });
@@ -90,7 +102,7 @@ describe('List Linodes Suite', () => {
         it('should display the status', () => {
             linodes = ListLinodes.linode;
             const statuses = linodes.map(l => l.$(ListLinodes.status.selector));
-            statuses.forEach(s => expect(s.getAttribute('data-qa-status')).toBe('running'));
+            statuses.forEach(s => expect(['offline', 'running']).toContain(s.getAttribute('data-qa-status')));
         });
 
         it('should display action menu and linode action menu items', () => {
