@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment-timezone';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { path, sortBy, pathOr } from 'ramda';
+import { Subscription } from 'rxjs/Rx';
 
 import {
   withStyles,
@@ -34,7 +35,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
-import { resetEventsPolling } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
 
@@ -106,6 +107,7 @@ interface PreloadedProps {
 }
 
 interface State {
+  backups: Linode.LinodeBackupsResponse;
   snapshotForm: {
     label: string;
     errors?: Linode.ApiFieldError[];
@@ -136,6 +138,7 @@ const evenize = (n: number): number => {
 
 class LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
+    backups: this.props.backups.response,
     snapshotForm: {
       label: '',
     },
@@ -151,6 +154,30 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   windows: string[][] = [];
   days: string[][] = [];
+
+  eventSubscription: Subscription;
+
+  componentDidMount() {
+    this.eventSubscription = events$
+      .filter(e => [
+        'linode_snapshot',
+        'backups_enable',
+        'backups_cancel',
+        'backups_restore',
+      ].includes(e.action))
+      .filter(e => !e._initial)
+      .filter(e => e.status === 'finished')
+      .subscribe((e) => {
+        getLinodeBackups(this.props.linodeID)
+          .then((data) => {
+            this.setState({ backups: data });
+          });
+      });
+  }
+
+  componentWillUnmount() {
+    this.eventSubscription.unsubscribe();
+  }
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
@@ -224,8 +251,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   aggregateBackups = (): Linode.LinodeBackup[] => {
-    const { backups: { response: backups } } = this.props;
-    return backups && [...backups.automatic, backups.snapshot.current].filter(b => Boolean(b));
+    const { backups } = this.state;
+    const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
+      ? backups.snapshot.in_progress
+      : backups.snapshot.current;
+    return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
   }
 
   takeSnapshot = () => {
