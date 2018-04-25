@@ -41,9 +41,12 @@ namespace Linode {
     types?: ManyResourceState<Linode.LinodeType>;
   }
 
+  export type DocumentationState = Linode.Doc[];
+
   export interface AppState {
     authentication: AuthState;
     resources: ResourcesState;
+    documentation: DocumentationState;
   }
 
   export interface LinodeSpecs {
@@ -131,6 +134,7 @@ namespace Linode {
     status: EventStatus;
     time_remaining: null | number;
     username: string;
+    _initial?: boolean;
   }
 
   export interface ApiFieldError {

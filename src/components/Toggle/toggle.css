@@ -1,0 +1,13 @@
+label.toggleLabel {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  margin: 0;
+}
+
+label.toggleLabel > span:last-child {
+  position: relative;
+  left: 12px;
+  top: 5px;
+  font-size: .9rem;
+}

@@ -23,6 +23,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
+    paddingBottom: 20,
     marginTop: theme.spacing.unit * 2,
   },
   title: {
@@ -66,9 +67,10 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
       <Grid container>
         <Grid item xs={12}>
           <Typography
-            variant="title"
+            variant="headline"
             className={classes.title}
-            data-qa-title>
+            data-qa-title
+          >
             Summary
           </Typography>
         </Grid>

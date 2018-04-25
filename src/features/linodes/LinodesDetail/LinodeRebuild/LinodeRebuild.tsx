@@ -165,7 +165,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                   Object
                     .entries(this.state.images)
                     .map(([group, images]) => [
-                      <Typography>{getDisplayNameForGroup(group)}</Typography>,
+                      <MenuItem disabled className="selectHeader">
+                        {getDisplayNameForGroup(group)
+                      }</MenuItem>,
                       ...images.map(({ id, label }: Linode.Image) =>
                         <MenuItem key={id} value={id}>{label}</MenuItem>),
                     ])
