@@ -41,6 +41,7 @@ import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawe
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinode, getType, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import { getImage } from 'src/services/images';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
 interface Data {
   linode: Linode.Linode;
@@ -81,7 +82,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       margin: `${theme.spacing.unit * 2}px 0`,
-      flexBasis:  '100%',
+      flexBasis: '100%',
     },
   },
   launchButton: {
@@ -156,6 +157,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       action: (id: number) => null,
     },
   };
+
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
+    return haveAnyBeenModified<State>(
+      this.state,
+      nextState,
+      ['linode', 'type', 'image', 'volumes'],
+    );
+  }
 
   componentWillUnmount() {
     this.mounted = false;
