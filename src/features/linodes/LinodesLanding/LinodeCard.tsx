@@ -212,7 +212,9 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             action={
               <div style={{ position: 'relative', top: 6 }}>
                 <LinodeActionMenu
-                 linode={linode}
+                 linodeId={linode.id}
+                 linodeLabel={linode.label}
+                 linodeStatus={linode.status}
                  openConfigDrawer={openConfigDrawer}
                 />
               </div>

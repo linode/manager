@@ -146,7 +146,9 @@ class LinodeRow extends React.Component<PropsWithStyles> {
               <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
             }
             <LinodeActionMenu
-              linode={linode}
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeStatus={linode.status}
               openConfigDrawer={openConfigDrawer}
             />
           </div>
