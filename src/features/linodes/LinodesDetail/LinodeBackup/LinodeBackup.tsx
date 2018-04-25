@@ -102,7 +102,6 @@ interface Props {
 }
 
 interface PreloadedProps {
-  /* PromiseLoader */
   backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
 }
 
