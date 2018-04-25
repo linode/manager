@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { pathEq, pathOr } from 'ramda';
+import { pathEq, pathOr, filter, has, allPass } from 'ramda';
 import * as moment from 'moment';
 
 import {
@@ -16,18 +16,24 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { Subscription, Observable } from 'rxjs/Rx';
-
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 
-import reloadableWithRouter from './reloadableWithRouter';
+import notifications$ from 'src/notifications';
+import { getImage } from 'src/services/images';
+import { getLinode, getType, getLinodeVolumes, renameLinode } from 'src/services/linodes';
 import { events$ } from 'src/events';
+
 import { newLinodeEvents } from 'src/features/linodes/events';
+import { weblishLaunch } from 'src/features/Weblish';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import { weblishLaunch } from 'src/features/Weblish';
+import Notice from 'src/components/Notice';
+
 import LinodeSummary from './LinodeSummary';
 import LinodeVolumes from './LinodeVolumes';
 import LinodeNetworking from './LinodeNetworking';
@@ -37,10 +43,7 @@ import LinodeResize from './LinodeResize';
 import LinodeBackup from './LinodeBackup';
 import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
-import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { getLinode, getType, getLinodeVolumes, renameLinode } from 'src/services/linodes';
-import { getImage } from 'src/services/images';
+import reloadableWithRouter from './reloadableWithRouter';
 
 interface Data {
   linode: Linode.Linode;
@@ -59,6 +62,7 @@ interface ConfigDrawerState {
 
 interface State {
   configDrawer: ConfigDrawerState;
+  notifications?: Linode.Notification[];
   linode: Linode.Linode & { recentEvent?: Linode.Event };
   type?: Linode.LinodeType;
   image?: Linode.Image;
@@ -81,7 +85,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
       margin: `${theme.spacing.unit * 2}px 0`,
-      flexBasis:  '100%',
+      flexBasis: '100%',
     },
   },
   launchButton: {
@@ -141,10 +145,11 @@ const preloaded = PromiseLoader<CombinedProps>({
 });
 
 class LinodeDetail extends React.Component<CombinedProps, State> {
-  subscription: Subscription;
+  eventsSubscription: Subscription;
+  notificationsSubscription: Subscription;
   mounted: boolean = false;
 
-  state = {
+  state: State = {
     linode: this.props.data.response.linode,
     type: this.props.data.response.type,
     image: this.props.data.response.image,
@@ -160,13 +165,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   componentWillUnmount() {
     this.mounted = false;
-    this.subscription.unsubscribe();
+    this.eventsSubscription.unsubscribe();
+    this.notificationsSubscription.unsubscribe();
   }
 
   componentDidMount() {
     this.mounted = true;
     const mountTime = moment().subtract(5, 'seconds');
-    this.subscription = events$
+    this.eventsSubscription = events$
       .filter(pathEq(['entity', 'id'], Number(this.props.match.params.linodeId)))
       .filter(newLinodeEvents(mountTime))
       .debounce(() => Observable.timer(1000))
@@ -177,6 +183,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             this.setState({ linode, type, image, volumes });
           });
       });
+
+    this.notificationsSubscription = notifications$
+      .map(filter(allPass([
+        pathEq(['entity', 'id'], this.state.linode.id),
+        has('message'),
+      ])))
+      .subscribe((notifications: Linode.Notification[]) =>
+        this.setState({ notifications }));
   }
 
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
@@ -231,7 +245,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
   submitConfigChoice = () => {
     const { action, selected } = this.state.configDrawer;
-    if (selected) {
+    if (selected && action) {
       action(selected);
       this.closeConfigDrawer();
     }
@@ -298,9 +312,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             {this.tabs.map(tab => <Tab key={tab.title} label={tab.title} />)}
           </Tabs>
         </AppBar>
+        {
+          (this.state.notifications || []).map((notifications, idx) =>
+            <Notice warning key={idx} text={notifications.message} />)
+        }
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (
-            <LinodeSummary linode={linode} type={type} image={image} volumes={volumes} />
+            <LinodeSummary linode={linode} type={type} image={image} volumes={(volumes || [])} />
           )} />
           <Route exact path={`${url}/volumes`} render={() => (
             <LinodeVolumes
