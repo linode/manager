@@ -90,6 +90,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         {...(onCloneLabelChange && { onChange: e => onCloneLabelChange(e.target.value) })}
         error={Boolean(labelError)}
         errorText={labelError}
+        data-qa-clone-from
         />}
 
       <TextField
@@ -99,6 +100,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         error={Boolean(labelError)}
         errorText={labelError}
         disabled={disabled && disabled.label}
+        data-qa-volume-label
         />
 
       <TextField
@@ -108,6 +110,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         error={Boolean(sizeError)}
         errorText={sizeError}
         disabled={disabled && disabled.size}
+        data-qa-size
         />
 
       {/** Needs to be Select */}
@@ -118,6 +121,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         error={Boolean(regionError)}
         errorText={regionError}
         disabled={disabled && disabled.region}
+        data-qa-region
         />
 
       {/** Needs to be Select */}
@@ -128,6 +132,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         error={Boolean(linodeError)}
         errorText={linodeError}
         disabled={disabled && disabled.linode}
+        data-qa-attach-to
       />
 
       <ActionsPanel>
@@ -135,6 +140,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           onClick={onSubmit}
           variant="raised"
           color="primary"
+          data-qa-submit
         >
           Submit
         </Button>
@@ -143,6 +149,7 @@ const UpdateVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           variant="raised"
           color="secondary"
           className="cancel"
+          data-qa-cancel
         >
           Cancel
         </Button>

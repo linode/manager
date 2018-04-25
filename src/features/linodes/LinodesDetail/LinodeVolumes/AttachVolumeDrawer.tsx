@@ -67,6 +67,7 @@ const AttachVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           disableAnimation
           shrink={true}
           error={Boolean(volumeError)}
+          data-qa-label-field
         >
           Volume
           </InputLabel>
