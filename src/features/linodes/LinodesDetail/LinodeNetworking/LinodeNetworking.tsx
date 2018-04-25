@@ -16,6 +16,9 @@ import TableCell from 'material-ui/Table/TableCell';
 import { getLinodeIPs } from 'src/services/linodes';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
+import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import ViewIPDrawer from './ViewIPDrawer';
+
 type ClassNames =
   'root'
   | 'ipv4Title'
@@ -43,34 +46,73 @@ interface PreloadedProps {
 
 interface State {
   linodeIPs: Linode.LinodeIPsResponse;
+  viewIPDrawer: {
+    open: boolean;
+    ip?: Linode.IPAddress;
+  };
 }
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
-  state = {
+  state: State = {
     linodeIPs: this.props.linodeIPs.response,
+    viewIPDrawer: {
+      open: false,
+    },
   };
 
-  renderIPRow(ip: Linode.IPAddress | Linode.IPRange, type: string) {
-    const address = (ip as Linode.IPAddress).address
-      ? (ip as Linode.IPAddress).address
-      : (ip as Linode.IPRange).range;
+  renderRangeRow(range: Linode.IPRange, type: string) {
     return (
-      <TableRow key={address}>
+      <TableRow key={range.range}>
         <TableCell>
-          {address}
+          {range.range}
         </TableCell>
         <TableCell>
-          {(ip as Linode.IPAddress).rdns || ''}
         </TableCell>
         <TableCell>
           {type}
         </TableCell>
         <TableCell>
+          <LinodeNetworkingActionMenu
+            onView={() => console.log(range)}
+            onEdit={() => console.log(range)}
+          />
         </TableCell>
       </TableRow>
     );
+  }
+
+  renderIPRow(ip: Linode.IPAddress, type: string) {
+    return (
+      <TableRow key={ip.address}>
+        <TableCell>
+          {ip.address}
+        </TableCell>
+        <TableCell>
+          {ip.rdns}
+        </TableCell>
+        <TableCell>
+          {type}
+        </TableCell>
+        <TableCell>
+          <LinodeNetworkingActionMenu
+            onView={() => {
+              this.setState({ viewIPDrawer:
+                { open: true, ip },
+              });
+            }}
+            onEdit={() => console.log(ip)}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+
+  closeViewIPDrawer() {
+    this.setState({ viewIPDrawer:
+      { open: false, ip: undefined },
+    });
   }
 
   render() {
@@ -129,11 +171,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               {[linodeIPs.ipv6.link_local].map((ip: Linode.IPAddress) =>
                 this.renderIPRow(ip, 'Link Local'))}
               {linodeIPs.ipv6.global
-                .map((ip: Linode.IPRange) =>
-                  this.renderIPRow(ip, 'Range'))}
+                .map((range: Linode.IPRange) =>
+                  this.renderRangeRow(range, 'Range'))}
             </TableBody>
           </Table>
         </Paper>
+
+        <ViewIPDrawer
+          open={this.state.viewIPDrawer.open}
+          onClose={() => this.closeViewIPDrawer()}
+          ip={this.state.viewIPDrawer.ip }
+        />
       </React.Fragment>
     );
   }
