@@ -61,6 +61,7 @@ const LinodeTheme: Linode.Theme = {
         },
         '&.cancel': {
           borderColor: 'transparent',
+          marginLeft: 0,
           '&:hover, &:focus': {
             borderColor: '#5F99EA',
           },
@@ -125,6 +126,9 @@ const LinodeTheme: Linode.Theme = {
         justifyContent: 'flex-start',
         '& button': {
           marginRight: 16,
+          '&:first-child': {
+            marginLeft: 0,
+          },
           '&:last-child': {
             marginRight: 0,
           },

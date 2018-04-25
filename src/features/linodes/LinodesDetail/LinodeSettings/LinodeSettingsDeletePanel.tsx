@@ -52,20 +52,23 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <ExpansionPanel defaultExpanded heading="Delete Linode">
-          <Typography>Deleting a Linode will result in permenant data loss.</Typography>
           <Button
             variant="raised"
             color="secondary"
             className="destructive"
             onClick={this.openDeleteDialog}
+            style={{ marginBottom: 8 }}
           >
             Delete
           </Button>
+          <Typography variant="caption">
+            Deleting a Linode will result in permenant data loss.
+          </Typography>
         </ExpansionPanel>
         <ConfirmationDialog
           title="Confirm Deletion"
           actions={() =>
-            <ActionsPanel>
+            <ActionsPanel style={{ padding: 0 }}>
               <Button
                 variant="raised"
                 color="secondary"
@@ -74,7 +77,12 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
               >
                 Delete
               </Button>
-              <Button onClick={() => this.setState({ open: false })}>
+              <Button
+                onClick={() => this.setState({ open: false })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
                 Cancel
             </Button>
             </ActionsPanel>
@@ -82,7 +90,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
           open={this.state.open}
         >
           Deleting a Linode will result in permenant data loss. Are you sure?
-    </ConfirmationDialog>
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
