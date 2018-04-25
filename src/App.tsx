@@ -175,9 +175,9 @@ export class App extends React.Component<CombinedProps, State> {
           <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <div className={classes.appFrame}>
-              <AccountLevelNotifications />
               <SideMenu open={menuOpen} toggle={this.toggleMenu} />
               <main className={classes.content}>
+                <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
                 <div className={classes.wrapper}>
                   <Grid container className={classes.grid}>

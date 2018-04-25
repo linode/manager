@@ -16,14 +16,22 @@ import {
 } from 'material-ui';
 
 import notifications$ from 'src/notifications';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    margin: 0,
+    textAlign: 'center',
+    '& p': {
+      fontSize: '1.1rem',
+      color: '#333',
+    },
+  },
 });
 
-interface Props { }
+interface Props {}
 
 interface State {
   notifications?: Linode.Notification[];
@@ -62,9 +70,16 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (this.state.notifications || [])
       .map(notification =>
-        <div key={notification.type}>{notification.message}</div>,
+        <Notice
+          key={notification.type}
+          text={notification.message}
+          warning
+          className={classes.root}
+        />,
       );
   }
 }
