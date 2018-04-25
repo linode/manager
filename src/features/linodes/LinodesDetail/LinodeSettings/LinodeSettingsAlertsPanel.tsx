@@ -31,8 +31,16 @@ type ClassNames = 'root'
   | 'percentage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
   root: {
-    minHeight: 125,
+    minHeight: 130,
     position: 'relative',
     padding: `${theme.spacing.unit * 3}px 0`,
     '&:last-of-type + hr': {
@@ -58,11 +66,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       width: 300,
     },
     [theme.breakpoints.up('lg')]: {
-      width: 500,
+      width: 600,
     },
   },
   usage: {
-    marginTop: theme.spacing.unit,
+    animation: 'fadeIn .3s ease-in-out forwards',
+    marginTop: 0,
   },
   percentage: {
     fontSize: '.9rem',
