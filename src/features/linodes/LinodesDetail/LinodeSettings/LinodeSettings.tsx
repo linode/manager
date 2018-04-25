@@ -20,7 +20,6 @@ import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
 import FormControl from 'material-ui/Form/FormControl';
 import FormHelperText from 'material-ui/Form/FormHelperText';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Grid from 'src/components/Grid';
 
@@ -38,9 +37,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
-import Radio from 'src/components//Radio';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Toggle from 'src/components/Toggle';
 
 interface Section {
   title: string;
@@ -50,7 +49,7 @@ interface Section {
   copy: string;
   state: boolean;
   value: number;
-  onStateChange: (e: React.ChangeEvent<{}>, v: string) => void;
+  onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
 }
@@ -237,10 +236,11 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['deleteForm', 'submitting']), true));
     deleteLinode(this.props.linodeId)
       .then((response) => {
-        /* redirect to index */
         this.props.history.push('/');
       })
-      .catch(response => console.log(response));
+      .catch((error) => {
+        this.setState(set(lensPath(['errors']), error.response.data.errors));
+      });
   }
 
   openDeleteDialog = () => {
@@ -252,14 +252,11 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container>
           <Grid item>
-            <RadioGroup
-              name={props.radioInputLabel}
-              value={String(props.state)}
-              onChange={props.onStateChange}
-            >
-              <FormControlLabel value="true" label="On" control={<Radio />} />
-              <FormControlLabel value="false" label="Off" control={<Radio />} />
-            </RadioGroup>
+            <FormControlLabel
+              className="toggleLabel"
+              control={<Toggle checked={props.state} onChange={props.onStateChange} />}
+              label={props.textTitle}
+            />
           </Grid>
           <Grid item>
             <Typography>{props.title}</Typography>
@@ -316,10 +313,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         copy: 'Average CPU usage over 2 hours exceeding this value triggers this alert.',
         state: this.state.alertsForm.cpuusage.state,
         value: this.state.alertsForm.cpuusage.value,
-        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
-          this.setState(
-            set(lensPath(['alertsForm', 'cpuusage', 'state']), v === 'true')),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        onStateChange: (e, checked) =>
+          this.setState(set(lensPath(['alertsForm', 'cpuusage', 'state']), checked)),
+        onValueChange: e =>
           e.target.value.length <= 2
             ? this.setState(
               set(lensPath(['alertsForm', 'cpuusage', 'value']), Number(e.target.value)),
@@ -335,9 +331,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         copy: 'Average Disk IO ops/sec over 2 horus exceeding this value triggers this alert.',
         state: this.state.alertsForm.diskio.state,
         value: this.state.alertsForm.diskio.value,
-        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+        onStateChange: (e, checked) =>
           this.setState(
-            set(lensPath(['alertsForm', 'diskio', 'state']), v === 'true')),
+            set(lensPath(['alertsForm', 'diskio', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
           e.target.value.length <= 2
             ? this.setState(
@@ -355,9 +351,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         alert.`,
         state: this.state.alertsForm.incoming.state,
         value: this.state.alertsForm.incoming.value,
-        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+        onStateChange: (e, checked) =>
           this.setState(
-            set(lensPath(['alertsForm', 'incoming', 'state']), v === 'true')),
+            set(lensPath(['alertsForm', 'incoming', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
           e.target.value.length <= 2
             ? this.setState(
@@ -375,9 +371,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
         alert.`,
         state: this.state.alertsForm.outbound.state,
         value: this.state.alertsForm.outbound.value,
-        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+        onStateChange: (e, checked) =>
           this.setState(
-            set(lensPath(['alertsForm', 'outbound', 'state']), v === 'true')),
+            set(lensPath(['alertsForm', 'outbound', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
           e.target.value.length <= 2
             ? this.setState(
@@ -395,9 +391,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
           this alert.`,
         state: this.state.alertsForm.transfer.state,
         value: this.state.alertsForm.transfer.value,
-        onStateChange: (e: React.ChangeEvent<{}>, v: string) =>
+        onStateChange: (e, checked) =>
           this.setState(
-            set(lensPath(['alertsForm', 'transfer', 'state']), v === 'true'),
+            set(lensPath(['alertsForm', 'transfer', 'state']), checked),
           ),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
           e.target.value.length <= 2
