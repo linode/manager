@@ -91,7 +91,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
         }
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="display2" className={classes.title}>
+        <Typography variant="display2" className={classes.title} data-qa-placeholder-title>
           {title}
         </Typography>
       </Grid>
@@ -105,6 +105,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
             color="primary"
             className={classes.button}
             {...buttonProps}
+            data-qa-placeholder-button
           />
         </Grid>
       }

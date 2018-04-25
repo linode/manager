@@ -66,7 +66,11 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
     <Paper className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="headline" className={classes.title}>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
             Summary
           </Typography>
         </Grid>
@@ -98,7 +102,11 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography className={`${classes.section}`} variant="caption">
             {formatRegion(linode.region)}
           </Typography>
-          <Typography className={classes.section} variant="caption">
+          <Typography
+            className={classes.section}
+            variant="caption"
+            data-qa-volumes={volumes.length}
+          >
             Volumes: <Link
               className={classes.volumeLink}
               to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
