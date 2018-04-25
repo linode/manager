@@ -3,7 +3,7 @@ import Page from './page';
 class Backups extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get enableButton() { return $('[data-qa-placeholder-button]'); }
-    get heading() { return $('[data-qa-backup-heading]'); }
+    get heading() { return $('[data-qa-title]'); }
     get description() { return $('[data-qa-backup-description]'); }
     get manualSnapshotHeading() { return $('[data-qa-manual-heading]'); }
     get manualDescription() { return $('[data-qa-manual-desc]'); }
@@ -18,9 +18,8 @@ class Backups extends Page {
     get cancelButton() { return $('[data-qa-cancel]'); }
 
     get backupInstances() { return $$('[data-qa-backup]'); }
-    get name() { return $('[data-qa-backup-name]'); }
+    get label() { return $('[data-qa-backup-name]'); }
     get dateCreated() { return $('[data-qa-date-created]'); }
-    get type() { return $('[data-qa-backup-type]'); }
     get duration() { return $('[data-qa-backup-duration]'); }
     get disks() { return $('[data-qa-backup-disks]'); }
     get spaceRequired() { $('[data-qa-space-required]'); }
