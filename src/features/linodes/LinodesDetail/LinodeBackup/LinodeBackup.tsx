@@ -39,6 +39,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 type ClassNames =
   'paper'
   | 'title'
+  | 'subTitle'
   | 'snapshotFormControl'
   | 'snapshotAction'
   | 'scheduleAction'
@@ -51,7 +52,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 3,
   },
   title: {
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
+  },
+  subTitle: {
+    marginBottom: theme.spacing.unit,
   },
   snapshotFormControl: {
     display: 'flex',
@@ -317,7 +322,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Paper className={classes.paper}>
           <Typography
             variant="title"
-            className={classes.title}
+            className={classes.subTitle}
           >
             Manual Snapshot
           </Typography>
@@ -363,7 +368,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Paper className={classes.paper}>
           <Typography
             variant="title"
-            className={classes.title}>
+            className={classes.subTitle}>
             Settings
           </Typography>
           <Typography variant="body1">

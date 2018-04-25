@@ -21,14 +21,11 @@ export const newLinodeEvents = (mountTime: moment.Moment) =>
   ];
 
   const isLinodeEvent = linodeEvent.entity !== null && linodeEvent.entity.type === 'linode';
-  const createdAfterMountTime = moment(linodeEvent.created + 'Z') > mountTime;
-  const isPendingCompletion = linodeEvent.percent_complete !== null
-    && linodeEvent.percent_complete < 100;
 
   const result = isLinodeEvent
     && statusWhitelist.includes(linodeEvent.status)
     && actionWhitelist.includes(linodeEvent.action)
-    && (createdAfterMountTime || isPendingCompletion);
+    && (!linodeEvent._initial);
 
   return result;
 };

@@ -15,7 +15,7 @@ namespace Linode {
 
   export type Hypervisor = 'kvm' | 'zen';
 
-  export interface ManyResourceState<T> {
+  export interface ResourcePage<T> {
     data: T[];
     page: number;
     pages: number;
@@ -27,9 +27,9 @@ namespace Linode {
   }
 
   export interface ApiState {
-    linodes?: ManyResourceState<Linode.Linode>;
-    linodeTypes?: ManyResourceState<Linode.LinodeType>;
-    images?: ManyResourceState<Linode.Image>;
+    linodes?: ResourcePage<Linode.Linode>;
+    linodeTypes?: ResourcePage<Linode.LinodeType>;
+    images?: ResourcePage<Linode.Image>;
   }
 
   interface AuthState {
@@ -38,7 +38,7 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    types?: ManyResourceState<Linode.LinodeType>;
+    types?: ResourcePage<Linode.LinodeType>;
   }
 
   export type DocumentationState = Linode.Doc[];
@@ -134,6 +134,7 @@ namespace Linode {
     status: EventStatus;
     time_remaining: null | number;
     username: string;
+    _initial?: boolean;
   }
 
   export interface ApiFieldError {

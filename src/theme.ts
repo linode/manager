@@ -61,9 +61,8 @@ const LinodeTheme: Linode.Theme = {
         },
         '&.cancel': {
           borderColor: 'transparent',
-          color: '#222',
           '&:hover, &:focus': {
-            borderColor: '#222',
+            borderColor: '#5F99EA',
           },
         },
         '&.destructive': {
@@ -276,16 +275,19 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiList: {
-      root: {
-        '& p': {
-          padding: 16,
-          paddingBottom: 4,
-          fontWeight: 700,
-        },
-      },
       padding: {
         paddingTop: 0,
         paddingBottom: 0,
+      },
+    },
+    MuiListItem: {
+      root: {
+        '&.selectHeader': {
+          opacity: 1,
+          paddingBottom: 4,
+          fontWeight: 700,
+          fontSize: '1rem',
+        },
       },
     },
     MuiListItemText: {
@@ -376,6 +378,55 @@ const LinodeTheme: Linode.Theme = {
         padding: 0,
       },
     },
+    MuiSwitch: {
+      root: {
+        '& .icon': {
+          transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+          position: 'relative',
+          left: 0,
+          width: 16,
+          height: 16,
+          borderRadius: 0,
+        },
+        '& .square': {
+          transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        },
+        '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
+          '& $bar, & + $bar': {
+            borderColor: '#666',
+          },
+          '& .square': {
+            fill: '#aaa',
+          },
+        },
+      },
+      checked: {
+        transform: 'translateX(20px)',
+        color: '#3B85D9 !important',
+        '& input': {
+          left: -20,
+        },
+        '& .square': {
+          fill: 'white !important',
+        },
+        '& + $bar': {
+          opacity: 1,
+          backgroundColor: '#3B85D9 !important',
+          borderColor: '#2967B1',
+        },
+      },
+      bar: {
+        top: 12,
+        left: 12,
+        marginLeft: 0,
+        marginTop: 0,
+        width: 42,
+        height: 22,
+        borderRadius: 0,
+        backgroundColor: '#F4F4F4',
+        border: '1px solid #999',
+      },
+    },
     MuiTab: {
       root: {
         color: '#C5C6C8',
@@ -436,8 +487,6 @@ const LinodeTheme: Linode.Theme = {
     MuiTabs: {
       root: {
         margin: '16px 0',
-      },
-      scroller: {
         boxShadow: 'inset 0 -1px 0 #C5C6C8',
       },
     },

@@ -17,7 +17,7 @@ import MenuItem from 'material-ui/Menu/MenuItem';
 
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
-import { rebuild as rebuildLinode } from 'src/services/linodes';
+import { rebuildLinode } from 'src/services/linodes';
 import { resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Select from 'src/components/Select';
@@ -159,7 +159,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                   Object
                     .entries(this.state.images)
                     .map(([group, images]) => [
-                      <Typography>{getDisplayNameForGroup(group)}</Typography>,
+                      <MenuItem disabled className="selectHeader">
+                        {getDisplayNameForGroup(group)
+                      }</MenuItem>,
                       ...images.map(({ id, label }: Linode.Image) =>
                         <MenuItem key={id} value={id}>{label}</MenuItem>),
                     ])
