@@ -24,10 +24,50 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'switch'
+  | 'copy'
+  | 'usage'
+  | 'percentage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
+  root: {
+    minHeight: 125,
+    position: 'relative',
+    padding: `${theme.spacing.unit * 3}px 0`,
+    '&:last-of-type + hr': {
+      display: 'none',
+    },
+    '& .toggleLabel > span:last-child': {
+      position: 'absolute',
+      left: 90,
+      top: 40,
+      ...theme.typography.subheading,
+    },
+  },
+  switch: {
+    width: 50,
+    padding: '2px 0 !important',
+  },
+  copy: {
+    [theme.breakpoints.down('sm')]: {
+      flexBasis: '100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px 0`,
+      width: 300,
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: 500,
+    },
+  },
+  usage: {
+    marginTop: theme.spacing.unit,
+  },
+  percentage: {
+    fontSize: '.9rem',
+    marginRight: 10,
+  },
 });
 
 interface Props {
@@ -121,18 +161,23 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   }
 
   AlertSection = (props: Section) => {
+    const { classes } = this.props;
+
     return (
       <React.Fragment>
-        <Grid container>
-          <Grid item>
+        <Grid
+          container
+          alignItems="flex-start"
+          className={classes.root}
+        >
+          <Grid item className={classes.switch}>
             <FormControlLabel
               className="toggleLabel"
               control={<Toggle checked={props.state} onChange={props.onStateChange} />}
-              label={props.textTitle}
+              label={props.title}
             />
           </Grid>
-          <Grid item>
-            <Typography>{props.title}</Typography>
+          <Grid item className={classes.copy}>
             <Typography>{props.copy}</Typography>
           </Grid>
           <Grid item>
@@ -141,7 +186,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               type="number"
               value={props.value}
               InputProps={{
-                endAdornment: <span>%</span>,
+                endAdornment: <span className={classes.percentage}>%</span>,
               }}
               error={Boolean(props.error)}
               errorText={props.error}
@@ -153,6 +198,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
                 maxLength: 2,
               }}
               onChange={props.onValueChange}
+              className={classes.usage}
             />}
           </Grid>
         </Grid>
