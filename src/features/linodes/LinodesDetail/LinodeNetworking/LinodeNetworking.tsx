@@ -23,7 +23,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   state = {};
 
   render() {
-    return (<h1>Networking</h1>);
+    return (<h1 data-qa-title>Networking</h1>);
   }
 }
 
