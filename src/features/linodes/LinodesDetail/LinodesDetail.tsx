@@ -109,7 +109,6 @@ const requestAllTheThings = (linodeId: number) =>
       const { data: linode } = response;
 
       const typeReq = getType(linode.type)
-        .then(response => response.data)
         .catch(err => undefined);
 
       const imageReq = getImage(linode.image)

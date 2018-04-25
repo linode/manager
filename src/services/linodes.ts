@@ -70,7 +70,7 @@ export const getLinodeTypes = (): Promise<Linode.ResourcePage<Linode.LinodeType>
   Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data);
 
-type GetType = Promise<Linode.SingleResourceState<Linode.LinodeType>>;
+type GetType = Promise<Linode.LinodeType>;
 export const getType = (typeId: string): GetType =>
   Axios.get(`${API_ROOT}/linode/types/${typeId}`)
     .then(response => response.data);
