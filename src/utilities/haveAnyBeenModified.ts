@@ -1,6 +1,6 @@
 import { equals } from 'ramda';
 
-let haveAnyBeenModified: <S>(state: S, nextState: S, keys: (keyof S)[]) => boolean;
+let haveAnyBeenModified: <T>(objA: T, objB: T, keys: (keyof T)[]) => boolean;
 
 haveAnyBeenModified = (state, nextState, keys) => {
   let idx = 0;
