@@ -71,7 +71,7 @@ const withAction = (
   label: string,
 ) => {
   getLinodeConfigs(id)
-    .then((response: Linode.ManyResourceState<Linode.Config>) => {
+    .then((response: Linode.ResourcePage<Linode.Config>) => {
       const configs = response.data;
       const len = configs.length;
 

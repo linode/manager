@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'src/components/Grid';
 import Divider from 'material-ui/Divider';
 
-import CheckBox from '../../../components/CheckBox';
+import CheckBox from 'src/components/CheckBox';
 import { FormControlLabel } from 'material-ui/Form';
 
 import LinodeTheme from 'src/theme';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import * as Raven from 'raven-js';
-import Axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { pathOr } from 'ramda';
 
@@ -11,7 +10,6 @@ import { FormControl } from 'material-ui/Form';
 import { MenuItem } from 'material-ui/Menu';
 
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { API_ROOT } from 'src/constants';
 import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -20,6 +18,7 @@ import Select from 'src/components/Select';
 
 import LinodeBusyStatus from './LinodeBusyStatus';
 import SummaryPanel from './SummaryPanel';
+import { getLinodeStats } from 'src/services/linodes';
 
 setUpCharts();
 
@@ -165,6 +164,20 @@ const chartOptions = {
       },
     }],
   },
+  tooltips: {
+    cornerRadius: 0,
+    backgroundColor: '#fbfbfb',
+    bodyFontColor: '#333',
+    displayColors: false,
+    titleFontColor: '#666',
+    xPadding: 16,
+    yPadding: 10,
+    borderWidth: .5,
+    borderColor: '#999',
+    caretPadding: 10,
+    position: 'nearest',
+    afterBody: 'poo s',
+  },
 };
 
 const chartHeight = 300;
@@ -177,7 +190,7 @@ const lineOptions = {
   borderJoinStyle: 'miter',
   lineTension: 0,
   pointRadius: 0,
-  pointHitRadius: 5,
+  pointHitRadius: 10,
 };
 
 const statToLabel = {
@@ -248,10 +261,10 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection } = this.state;
     let req;
     if (rangeSelection === '24') {
-      req = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats`);
+      req = getLinodeStats(linode.id);
     } else {
       const [year, month] = rangeSelection.split(' ');
-      req = Axios.get(`${API_ROOT}/linode/instances/${linode.id}/stats/${year}/${month}`);
+      req = getLinodeStats(linode.id, year, month);
     }
     req
       .then((response) => {
@@ -466,31 +479,31 @@ class LinodeSummary extends React.Component<CombinedProps, State> {
               heading="Disk I/O"
               defaultExpanded
             >
-                <React.Fragment>
-                  <div className={classes.chart}>
-                    <div className={classes.leftLegend}>
-                      blocks/sec
+              <React.Fragment>
+                <div className={classes.chart}>
+                  <div className={classes.leftLegend}>
+                    blocks/sec
                     </div>
-                    <Line
-                      height={chartHeight}
-                      options={this.getChartOptions()}
-                      data={{
-                        datasets: [
-                          this.getChartJSDataFor('io', stats.data.io.io) as any,
-                          this.getChartJSDataFor('swap', stats.data.io.swap) as any,
-                        ],
-                      }}
-                    />
-                  </div>
-                  <div className={classes.bottomLegend}>
-                    <div className={classes.red}>
-                      I/O Rate
+                  <Line
+                    height={chartHeight}
+                    options={this.getChartOptions()}
+                    data={{
+                      datasets: [
+                        this.getChartJSDataFor('io', stats.data.io.io) as any,
+                        this.getChartJSDataFor('swap', stats.data.io.swap) as any,
+                      ],
+                    }}
+                  />
+                </div>
+                <div className={classes.bottomLegend}>
+                  <div className={classes.red}>
+                    I/O Rate
                     </div>
-                    <div className={classes.yellow}>
-                      Swap Rate
+                  <div className={classes.yellow}>
+                    Swap Rate
                     </div>
-                  </div>
-                </React.Fragment>
+                </div>
+              </React.Fragment>
             </ExpansionPanel>
           </React.Fragment>
         }

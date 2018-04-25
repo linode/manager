@@ -259,7 +259,7 @@ const preloaded = PromiseLoader({
   volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
     .then(
       compose<
-        Linode.ManyResourceState<Linode.Volume>,
+        Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
         ExtendedVolume[],
         ExtendedVolume[]

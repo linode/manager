@@ -52,8 +52,8 @@ interface ConnectedProps {
 }
 
 interface PreloadedProps {
-  linodes: PromiseLoaderResponse<Linode.ManyResourceState<Linode.EnhancedLinode>>;
-  images: PromiseLoaderResponse<Linode.ManyResourceState<Linode.Image>>;
+  linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.EnhancedLinode>>;
+  images: PromiseLoaderResponse<Linode.ResourcePage<Linode.Image>>;
 }
 
 interface ConfigDrawerState {
@@ -253,7 +253,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         page_size: pageSize,
       },
     })
-      .then((response: AxiosResponse<Linode.ManyResourceState<Linode.Linode>>) => response.data)
+      .then((response: AxiosResponse<Linode.ResourcePage<Linode.Linode>>) => response.data)
       .then((response) => {
         if (!this.mounted) { return; }
 
