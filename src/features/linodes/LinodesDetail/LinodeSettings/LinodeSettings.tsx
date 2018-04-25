@@ -4,7 +4,6 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import {
   compose,
   lensPath,
-  pathOr,
   set,
 } from 'ramda';
 import {
@@ -16,31 +15,23 @@ import {
   Divider,
 } from 'material-ui';
 import Button from 'material-ui/Button';
-import InputLabel from 'material-ui/Input/InputLabel';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import FormControl from 'material-ui/Form/FormControl';
-import FormHelperText from 'material-ui/Form/FormHelperText';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import Grid from 'src/components/Grid';
 
 import {
   updateLinode,
-  getLinodeDisks,
-  changeLinodeDiskPassword,
   deleteLinode,
 } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import PasswordInput from 'src/components/PasswordInput';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
-import Select from 'src/components/Select';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Toggle from 'src/components/Toggle';
 
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
+import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 
 interface Section {
   title: string;
@@ -70,17 +61,6 @@ interface Props {
   alerts: Linode.LinodeAlerts;
 }
 
-interface PromiseLoaderProps {
-  disks: PromiseLoaderResponse<Linode.Disk[]>;
-}
-
-interface PasswordFormState {
-  value: string;
-  diskId: string | number;
-  submitting: boolean;
-  success?: string;
-}
-
 interface AlertState {
   state: boolean;
   value: number;
@@ -102,27 +82,18 @@ interface DeleteDialog {
 
 interface State {
   linodeLabel: string;
-  disks: Linode.Disk[];
-  passwordForm: PasswordFormState;
   alertsForm: AlertsFormState;
   deleteDialog: DeleteDialog;
   errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props
-  & PromiseLoaderProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
 class LinodeSettings extends React.Component<CombinedProps, State> {
   state: State = {
-    disks: this.props.disks.response,
     linodeLabel: this.props.linodeLabel,
-    passwordForm: {
-      value: '',
-      diskId: pathOr('', ['disks', 'response', 0, 'id'], this.props),
-      submitting: false,
-    },
     alertsForm: {
       submitting: false,
       cpuusage: {
@@ -150,32 +121,6 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
       open: false,
     },
   };
-
-
-
-  changeDiskPassword = () => {
-    this.setState(set(lensPath(['passwordForm', 'submitting']), true));
-    this.setState(set(lensPath(['passwordForm', 'success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
-
-    changeLinodeDiskPassword(
-      this.props.linodeId,
-      Number(this.state.passwordForm.diskId),
-      this.state.passwordForm.value,
-    )
-      .then(response => response.data)
-      .then((linode) => {
-        this.setState(compose(
-          set(lensPath(['passwordForm', 'success']), `Linode password changed successfully.`),
-          set(lensPath(['passwordForm', 'submitting']), false),
-          set(lensPath(['passwordForm', 'value']), ''),
-          set(lensPath(['passwordForm', 'diskId']), ''),
-        ));
-      })
-      .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
-      });
-  }
 
   setLinodeAlertThresholds = () => {
     this.setState(set(lensPath(['errors']), undefined));
@@ -272,8 +217,7 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const passwordError = hasErrorFor('password');
-    const diskIdError = hasErrorFor('diskId');
+
 
     const alertSections: Section[] = [
       {
@@ -383,54 +327,10 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
           linodeLabel={this.state.linodeLabel}
           linodeId={this.props.linodeId}
         />
-        <ExpansionPanel
-          defaultExpanded
-          heading="Reset Root Password"
-          loading={this.state.passwordForm.submitting}
-          success={this.state.passwordForm.success}
-          actions={() =>
-            <ActionsPanel>
-              <Button variant="raised" color="primary" onClick={this.changeDiskPassword}>
-                Save
-              </Button>
-            </ActionsPanel>
-          }
-        >
-          <FormControl fullWidth>
-            <InputLabel
-              htmlFor="disk"
-              disableAnimation
-              shrink={true}
-              error={Boolean(diskIdError)}
-            >
-              Disk
-          </InputLabel>
-            <Select
-              value={this.state.passwordForm.diskId}
-              onChange={e =>
-                this.setState(set(lensPath(['passwordForm', 'diskId']), Number(e.target.value)))}
-              inputProps={{ name: 'disk', id: 'disk' }}
-              error={Boolean(diskIdError)}
-            >
-              {
-                this.state.disks.map(disk =>
-                  <MenuItem key={disk.id} value={disk.id}>{disk.label}</MenuItem>)
-              }
-            </Select>
-            {
-              diskIdError &&
-              <FormHelperText error={Boolean(diskIdError)}>Here's some action text!</FormHelperText>
-            }
-          </FormControl>
-          <PasswordInput
-            label="Password"
-            value={this.state.passwordForm.value}
-            onChange={e =>
-              this.setState(set(lensPath(['passwordForm', 'value']), Number(e.target.value)))}
-            errorText={passwordError}
-            error={Boolean(passwordError)}
-          />
-        </ExpansionPanel>
+        <LinodeSettingsPasswordPanel
+          linodeLabel={this.state.linodeLabel}
+          linodeId={this.props.linodeId}
+        />
         <ExpansionPanel
           defaultExpanded
           heading="Notification Thresholds"
@@ -492,16 +392,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const loaded = PromiseLoader<Props>({
-  disks: ({ linodeId }) => getLinodeDisks(linodeId)
-    .then(response => response.data)
-    .then(disks => disks.filter(disk => disk.filesystem !== 'swap')),
-});
-
 const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => state ? value : 0;
 
-export default compose<any, any, any, any>(
+export default compose<any, any, any>(
   withRouter,
-  loaded,
   styled,
 )(LinodeSettings);
