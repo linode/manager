@@ -268,9 +268,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>Label</TableCell>
                 <TableCell>Date Created</TableCell>
-                <TableCell>Type</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Disks</TableCell>
                 <TableCell>Space Required</TableCell>
@@ -282,12 +281,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 return (
                   <TableRow key={backup.id}>
                     <TableCell data-qa-backup-name>
-                      {backup.label}
+                      {backup.label || typeMap[backup.type]}
                     </TableCell>
                     <TableCell>
                       {moment.utc(backup.created).local().format('YYYY-MM-DD - HH:mm')}
                     </TableCell>
-                    <TableCell>{typeMap[backup.type]}</TableCell>
                     <TableCell>
                       {moment.duration(
                         moment(backup.finished).diff(moment(backup.created)),
