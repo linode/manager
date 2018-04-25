@@ -3,6 +3,14 @@ import createBreakpoints from 'material-ui/styles/createBreakpoints';
 const breakpoints = createBreakpoints({});
 
 const LinodeTheme: Linode.Theme = {
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
   breakpoints: { breakpoints },
   overrides: {
     MuiAppBar: {
@@ -76,6 +84,13 @@ const LinodeTheme: Linode.Theme = {
           '&:active': {
             color: '#963530',
             borderColor: '#963530',
+          },
+        },
+        '&.loading': {
+          '& svg': {
+            width: 22,
+            height: 22,
+            animation: 'rotate 2s linear infinite',
           },
         },
       },
