@@ -5,7 +5,7 @@ import { ListItemText } from 'material-ui/List';
 import { MenuItem, MenuItemProps } from 'material-ui/Menu';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-import LinodeTheme from '../../../src/theme';
+import LinodeTheme from 'src/theme';
 
 type ClassNames = 'root'
   | 'error'

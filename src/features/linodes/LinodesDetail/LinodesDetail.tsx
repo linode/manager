@@ -328,6 +328,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           <Route exact path={`${url}/backup`} render={() => (
             <LinodeBackup
               linodeID={linode.id}
+              linodeRegion={linode.region}
               backupsEnabled={linode.backups.enabled}
               backupsSchedule={linode.backups.schedule}
               backupsMonthlyPrice={
