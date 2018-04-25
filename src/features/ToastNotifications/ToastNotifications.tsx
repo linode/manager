@@ -111,7 +111,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {}
+interface Props { }
 
 interface State {
   toasts: Toast[];
@@ -164,7 +164,11 @@ class Notifier extends React.Component<CombinedProps, State> {
       });
   }
 
-  onClose = () => {
+  onClose = (e: any, reason?: string) => {
+    if (reason && reason === 'clickaway') {
+      return;
+    }
+
     this.setState(
       { toasts: dismissFirstToast(this.state.toasts) },
       () => this.setState(
@@ -192,13 +196,16 @@ class Notifier extends React.Component<CombinedProps, State> {
             horizontal: 'right',
           }}
           open={Boolean(toast.open)}
-          SnackbarContentProps={{ className:
-            classNames({
-              [classes.error]: toast.level === 'error',
-              [classes.warning]: toast.level === 'warning',
-              [classes.success]: toast.level === 'success',
-              [classes.root]: true,
-            }),
+          autoHideDuration={6000}
+          onClose={this.onClose}
+          SnackbarContentProps={{
+            className:
+              classNames({
+                [classes.error]: toast.level === 'error',
+                [classes.warning]: toast.level === 'warning',
+                [classes.success]: toast.level === 'success',
+                [classes.root]: true,
+              }),
           }}
           message={
             <Grid
