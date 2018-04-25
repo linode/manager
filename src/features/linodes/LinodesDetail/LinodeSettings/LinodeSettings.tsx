@@ -9,8 +9,6 @@ import {
   Typography,
 } from 'material-ui';
 
-import ExpansionPanel from 'src/components/ExpansionPanel';
-
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -78,8 +76,6 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
           linodeLabel={this.state.linodeLabel}
           linodeAlerts={this.state.alerts}
         />
-        <ExpansionPanel defaultExpanded heading="Shutdown Watchdog"></ExpansionPanel>
-        <ExpansionPanel defaultExpanded heading="Advanced Configurations"></ExpansionPanel>
         <LinodeSettingsDeletePanel
           linodeId={this.props.linodeId}
         />

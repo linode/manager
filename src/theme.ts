@@ -425,6 +425,7 @@ const LinodeTheme: Linode.Theme = {
         borderRadius: 0,
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
+        boxSizing: 'content-box',
       },
     },
     MuiTab: {
