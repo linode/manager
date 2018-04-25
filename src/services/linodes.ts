@@ -31,7 +31,7 @@ export const getLinodeDisks = (id: number): GetLinodeDisksType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/disks`)
     .then(response => response.data);
 
-type GetLinodeBackupsType = Promise<Linode.ResourcePage<Linode.LinodeBackup>>;
+type GetLinodeBackupsType = Promise<Linode.LinodeBackupsResponse>;
 export const getLinodeBackups = (id: number): GetLinodeBackupsType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/backups`)
     .then(response => response.data);
