@@ -30,8 +30,7 @@ import {
   deleteLinode,
 } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { events$ } from 'src/events';
-import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
+
 import PasswordInput from 'src/components/PasswordInput';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -40,6 +39,8 @@ import Select from 'src/components/Select';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Toggle from 'src/components/Toggle';
+
+import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 
 interface Section {
   title: string;
@@ -73,13 +74,6 @@ interface PromiseLoaderProps {
   disks: PromiseLoaderResponse<Linode.Disk[]>;
 }
 
-interface LabelFormState {
-  initialValue: string;
-  updatedValue: string;
-  submitting: boolean;
-  success?: string;
-}
-
 interface PasswordFormState {
   value: string;
   diskId: string | number;
@@ -107,8 +101,8 @@ interface DeleteDialog {
 }
 
 interface State {
+  linodeLabel: string;
   disks: Linode.Disk[];
-  labelForm: LabelFormState;
   passwordForm: PasswordFormState;
   alertsForm: AlertsFormState;
   deleteDialog: DeleteDialog;
@@ -123,11 +117,7 @@ type CombinedProps = Props
 class LinodeSettings extends React.Component<CombinedProps, State> {
   state: State = {
     disks: this.props.disks.response,
-    labelForm: {
-      initialValue: this.props.linodeLabel,
-      updatedValue: this.props.linodeLabel,
-      submitting: false,
-    },
+    linodeLabel: this.props.linodeLabel,
     passwordForm: {
       value: '',
       diskId: pathOr('', ['disks', 'response', 0, 'id'], this.props),
@@ -161,24 +151,7 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
     },
   };
 
-  changeLabel = () => {
-    this.setState(set(lensPath(['labelForm', 'submitting']), true));
-    this.setState(set(lensPath(['labelForm', 'success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
 
-    updateLinode(this.props.linodeId, { label: this.state.labelForm.updatedValue })
-      .then(response => response.data)
-      .then((linode) => {
-        this.setState(compose(
-          set(lensPath(['labelForm', 'success']), `Linode label changes successfully.`),
-          set(lensPath(['labelForm', 'submitting']), false),
-        ));
-        events$.next(genEvent('linode_reboot', linode.id, linode.label));
-      })
-      .catch((error) => {
-        this.setState(set(lensPath(['errors']), error.response.data.errors));
-      });
-  }
 
   changeDiskPassword = () => {
     this.setState(set(lensPath(['passwordForm', 'submitting']), true));
@@ -289,10 +262,9 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
   }
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    if (nextProps.linodeLabel !== this.state.labelForm.initialValue) {
+    if (nextProps.linodeLabel !== this.state.linodeLabel) {
       this.setState(compose(
-        set(lensPath(['labelForm', 'initialValue']), nextProps.linodeLabel),
-        set(lensPath(['labelForm', 'updatedValue']), nextProps.linodeLabel),
+        set(lensPath(['linodeLabel']), nextProps.linodeLabel),
       ));
     }
   }
@@ -300,7 +272,6 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const labelError = hasErrorFor('label');
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
 
@@ -408,26 +379,10 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="headline" className={classes.title}>Settings</Typography>
-        <ExpansionPanel
-          defaultExpanded
-          heading="Linode Label"
-          loading={this.state.labelForm.submitting}
-          success={this.state.labelForm.success}
-          actions={() =>
-            <ActionsPanel>
-              <Button variant="raised" color="primary" onClick={this.changeLabel} >Save</Button>
-            </ActionsPanel>
-          }
-        >
-          <TextField
-            label="Label"
-            value={this.state.labelForm.updatedValue}
-            onChange={e =>
-              this.setState(set(lensPath(['labelForm', 'updatedValue']), e.target.value))}
-            errorText={labelError}
-            error={Boolean(labelError)}
-          />
-        </ExpansionPanel>
+        <LinodeSettingsLabelPanel
+          linodeLabel={this.state.linodeLabel}
+          linodeId={this.props.linodeId}
+        />
         <ExpansionPanel
           defaultExpanded
           heading="Reset Root Password"
