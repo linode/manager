@@ -330,9 +330,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         actions={() =>
           <ActionsPanel>
             {
-              // ToDo: if any of the five thresholds has an error,
-              // don't trigger the loading button
-              (submitting && !hasErrorFor)
+              (submitting && !alertSections
+                  .reduce((result, s) => result || Boolean(s.error), false))
               ? (
                 <Button
                     variant="raised"
