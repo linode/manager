@@ -165,7 +165,7 @@ class Notifier extends React.Component<CombinedProps, State> {
   }
 
   onClose = (e: any, reason?: string) => {
-    if (reason && reason === 'clickaway') {
+    if (reason === 'clickaway') {
       return;
     }
 
