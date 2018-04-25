@@ -17,6 +17,7 @@ import { updateLinode } from 'src/services/linodes';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
+import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root';
 
@@ -68,16 +69,37 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   render() {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const labelError = hasErrorFor('label');
+    const { submitting } = this.state;
 
     return (
       <ExpansionPanel
         defaultExpanded
         heading="Linode Label"
-        loading={this.state.submitting}
         success={this.state.success}
         actions={() =>
           <ActionsPanel>
-            <Button variant="raised" color="primary" onClick={this.changeLabel} >Save</Button>
+            {
+              (submitting && !labelError)
+              ? (
+                <Button
+                  variant="raised"
+                  color="secondary"
+                  disabled
+                  className="loading"
+                >
+                  <Reload />
+                </Button>
+              )
+              : (
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={this.changeLabel}
+                  >
+                  Save
+                </Button>
+              )
+            }
           </ActionsPanel>
         }
       >

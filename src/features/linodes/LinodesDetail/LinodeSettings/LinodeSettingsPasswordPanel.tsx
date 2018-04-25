@@ -26,6 +26,7 @@ import PasswordInput from 'src/components/PasswordInput';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
+import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root';
 
@@ -89,18 +90,37 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
     const diskIdError = hasErrorFor('diskId');
+    const { submitting } = this.state;
 
     return (
       <ExpansionPanel
         defaultExpanded
         heading="Reset Root Password"
-        loading={this.state.submitting}
         success={this.state.success}
         actions={() =>
           <ActionsPanel>
-            <Button variant="raised" color="primary" onClick={this.changeDiskPassword}>
-              Save
-          </Button>
+            {
+              (submitting && !passwordError)
+              ? (
+                <Button
+                  variant="raised"
+                  color="secondary"
+                  disabled
+                  className="loading"
+                >
+                  <Reload />
+                </Button>
+              )
+              : (
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={this.changeDiskPassword}
+                >
+                Save
+                </Button>
+              )
+            }
           </ActionsPanel>
         }
       >
@@ -112,7 +132,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
             error={Boolean(diskIdError)}
           >
             Disk
-      </InputLabel>
+          </InputLabel>
           <Select
             value={this.state.diskId}
             onChange={e =>

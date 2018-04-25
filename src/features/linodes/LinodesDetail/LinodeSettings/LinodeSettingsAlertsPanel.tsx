@@ -23,6 +23,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+import Reload from 'src/assets/icons/reload.svg';
 
 type ClassNames = 'root'
   | 'switch'
@@ -218,6 +219,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
+    const { submitting } = this.state;
 
     const alertSections: Section[] = [
       {
@@ -327,13 +329,30 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         success={this.state.success}
         actions={() =>
           <ActionsPanel>
-            <Button
-              variant="raised"
-              color="primary"
-              onClick={this.setLinodeAlertThresholds}
-            >
-              Save
-        </Button>
+            {
+              // ToDo: if any of the five thresholds has an error,
+              // don't trigger the loading button
+              (submitting && !hasErrorFor)
+              ? (
+                <Button
+                    variant="raised"
+                    color="secondary"
+                    disabled
+                    className="loading"
+                  >
+                  <Reload />
+                </Button>
+              )
+              : (
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={this.setLinodeAlertThresholds}
+                >
+                  Save
+                </Button>
+              )
+            }
           </ActionsPanel>
         }
       >

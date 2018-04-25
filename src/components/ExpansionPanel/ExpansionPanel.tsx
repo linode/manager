@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   return {
     root: {
       '& .notice': {
-        marginTop: 0,
+        margin: 0,
       },
     },
     heading: {
