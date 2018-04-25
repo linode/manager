@@ -343,7 +343,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               linodeVolumes={volumes}
             />
           )} />
-          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
+          <Route exact path={`${url}/networking`} render={() => (
+            <LinodeNetworking
+              linodeID={linode.id}
+            />
+          )} />
           <Route exact path={`${url}/rescue`} render={() => (
             <LinodeRescue
               linodeId={linode.id}
@@ -371,16 +375,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             />
           )} />
           <Route exact path={`${url}/settings`} render={() => (
-          <LinodeSettings
-            linodeId={linode.id}
-            linodeLabel={linode.label}
-            alerts={linode.alerts}
-          />
-          )} />
-          <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes />)} />
-          <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
-          <Route exact path={`${url}/rescue`} render={() => (
-            <LinodeRescue linodeId={linode.id} />
+            <LinodeSettings
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              alerts={linode.alerts}
+            />
           )} />
           {/* 404 */}
           <Redirect to={`${url}/summary`} />
