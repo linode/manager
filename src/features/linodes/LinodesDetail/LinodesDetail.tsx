@@ -15,6 +15,7 @@ import {
   RouteComponentProps,
   Redirect,
 } from 'react-router-dom';
+import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 
 import AppBar from 'material-ui/AppBar';
@@ -159,11 +160,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   };
 
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
+    const { location } = this.props;
+    const { location: nextLocation } = nextProps;
+
     return haveAnyBeenModified<State>(
       this.state,
       nextState,
       ['linode', 'type', 'image', 'volumes'],
-    );
+    ) || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
   }
 
   componentWillUnmount() {
