@@ -29,6 +29,7 @@ import Placeholder from 'src/components/Placeholder';
 import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ToastNotifications from 'src/features/ToastNotifications';
+import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
@@ -174,6 +175,7 @@ export class App extends React.Component<CombinedProps, State> {
           <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <div className={classes.appFrame}>
+              <AccountLevelNotifications />
               <SideMenu open={menuOpen} toggle={this.toggleMenu} />
               <main className={classes.content}>
                 <TopMenu toggleSideMenu={this.toggleMenu} />
