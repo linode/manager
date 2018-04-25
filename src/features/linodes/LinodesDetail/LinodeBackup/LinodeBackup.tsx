@@ -165,12 +165,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         'backups_cancel',
         'backups_restore',
       ].includes(e.action))
-      .filter(e => !e._initial)
-      .filter(e => e.status === 'finished')
+      .filter(e => !e._initial && e.status === 'finished')
       .subscribe((e) => {
         getLinodeBackups(this.props.linodeID)
           .then((data) => {
             this.setState({ backups: data });
+          })
+          .catch(() => {
+            /* @todo: how do we want to display this error? */
           });
       });
   }
