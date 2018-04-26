@@ -23,6 +23,9 @@ The Manager application has a suite of automated browser tests that live in the 
 directory. These browser tests are written in Node.js using the [WebdriverIO](https://webdriver.io)
 selenium framework. The configuration files for the WDIO test runner can be found in `e2e/config`.
 
+Prior to running the tests, you must set `MANAGER_USER=` and `MANAGER_PASS` env variables in your
+`.env` file. These credentials will be used to login prior to each test.
+
 
 ##### Dependencies
 
@@ -68,7 +71,9 @@ Running E2E suite in a non-default browser
 In order to run the tests via docker-compose, you will need to update your OAuth Client Redirect URL
 to: `https://manager-local:3000/oauth/callback`. The recommendation is to generate a new OAuth
 client in the [Manager](https://cloud.linode.com), set the redirect url to the above, and set the
-`REACT_APP_CLIENT_ID=` to the new OAuth Client ID in the `.env` file.
+`REACT_APP_CLIENT_ID=` to the new OAuth Client ID in the `.env` file. You must also set
+`MANAGER_USER=` and `MANAGER_PASS` env variables in your `.env` file. These credentials will be used
+to login prior to each test.
 
 ##### Running the Suite
 

@@ -42,6 +42,9 @@ of the manager repository entitled `.env` with the following variables/values:
 Be sure to set your callback URL to something like
 `http://localhost:3000/oauth/callback` when you register your OAuth client.
 
+For convenience, an example `.env` file entitled: `.env.example` exists in the base
+of this repository.
+
 Note: if you pick a callback url that is not on localhost:3000, you will need to
 update the REACT_APP_APP_ROOT variable in `.env` to point to the different
 server. Non-localhost callback urls must also be HTTPS. To enable HTTPS, you must
