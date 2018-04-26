@@ -315,21 +315,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
 
-    const displayGrid: 'grid' | 'list' = ifElse(
-      compose(isEmpty, prop('hash')),
-      /* is empty */
-      ifElse(
-        compose(gte(3), prop('length')),
-        () => 'grid',
-        () => 'list',
-      ),
-      /* is not empty */
-      ifElse(
-        propEq('hash', '#grid'),
-        () => 'grid',
-        () => 'list',
-      ),
-    )({ hash, length: linodes.length });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
 
     return (
       <Grid container>
@@ -378,6 +364,22 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const getDisplayFormat = ifElse(
+  compose(isEmpty, prop('hash')),
+  /* is empty */
+  ifElse(
+    compose(gte(3), prop('length')),
+    () => 'grid',
+    () => 'list',
+  ),
+  /* is not empty */
+  ifElse(
+    propEq('hash', '#grid'),
+    () => 'grid',
+    () => 'list',
+  ),
+);
 
 export const styled = withStyles(styles, { withTheme: true });
 
