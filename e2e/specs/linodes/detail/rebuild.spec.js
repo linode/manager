@@ -50,9 +50,15 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display error on create image without setting a password', () => {
         Rebuild.selectImage();
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.submit.click();
     });
 
     it('should rebuild linode on valid image and password', () => {
-        
+        const testPassword = '~/4gNgmV$_J3vREN'
+        Rebuild.selectImage();
+        Rebuild.imageOptions.forEach(opt => opt.waitForVisible(5000, true));
+        Rebuild.password.setValue(testPassword);
+        Rebuild.rebuild();
     });
 });
