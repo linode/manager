@@ -100,7 +100,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
       >
         {children}
       </Select>
-      {helpText && <HelpIcon text="Choosing a 64 bit distro is recommended." />}
+      {helpText && <HelpIcon text={helpText} />}
     </React.Fragment>
   );
 };
