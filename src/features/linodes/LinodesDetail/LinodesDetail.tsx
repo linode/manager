@@ -32,7 +32,7 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import EditableText from 'src/components/EditableText';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import Notice from 'src/components/Notice';
+import ProductNotification from 'src/components/ProductNotification';
 
 import LinodeSummary from './LinodeSummary';
 import LinodeVolumes from './LinodeVolumes';
@@ -313,8 +313,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           </Tabs>
         </AppBar>
         {
-          (this.state.notifications || []).map((notifications, idx) =>
-            <Notice warning key={idx} text={notifications.message} />)
+          (this.state.notifications || []).map((n, idx) =>
+            <ProductNotification key={idx} severity={n.severity} text={n.message} />)
         }
         <Switch>
           <Route exact path={`${url}/summary`} render={() => (

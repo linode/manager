@@ -42,7 +42,7 @@ import LinodeConfigSelectionDrawer, {
   LinodeConfigSelectionDrawerCallback,
 } from 'src/features/LinodeConfigSelectionDrawer';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import Notice from 'src/components/Notice';
+import ProductNotification from 'src/components/ProductNotification';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
@@ -374,7 +374,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           {
             (this.state.notifications || []).map(n =>
-                <Notice key={n.type} warning text={n.message} />)
+              <ProductNotification key={n.type} severity={n.severity} text={n.message} />)
           }
           <Hidden mdUp>
             {this.renderGridView(linodes, images, types)}
