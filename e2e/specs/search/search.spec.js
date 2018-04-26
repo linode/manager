@@ -1,0 +1,66 @@
+import SearchBar from '../../pageobjects/search.page';
+
+const { constants } = require('../../constants');
+
+describe('Header - Search Suite', () => {
+    beforeAll(() => {
+        browser.url(constants.routes.dashboard);
+    });
+
+    describe('Search Displays Suite', () => {
+        it('should display search elements on all routes', () => {
+            const routes = [
+                constants.routes.dashboard, constants.routes.linodes,
+                constants.routes.volumes, constants.routes.nodebalancers,
+                constants.routes.domains, constants.routes.managed,
+                constants.routes.longview, constants.routes.stackscripts,
+                constants.routes.images, constants.routes.account.billing,
+                constants.routes.account.users, constants.routes.profile.view,
+                constants.routes.profile.tokens, constants.routes.profile.oauth,
+                constants.routes.support.tickets,
+            ]
+
+            routes.forEach(r => {
+                browser.url(r);
+                SearchBar.assertSearchDisplays();
+            });
+        });
+    });
+
+    it('should not display suggestions when no matching results found', () => {
+        SearchBar.executeSearch('blahlblahblah');
+        browser.waitForVisible('[data-qa-suggestion]', 5000, true);
+    });
+
+    it('should display search suggestions on a legitmate search', () => {
+        SearchBar.executeSearch('test');
+        SearchBar.assertSuggestions();
+    });
+
+    it('should select result on arrow down', () => {
+        SearchBar.selectByKeyDown();
+    });
+
+    it('should navigate to result on enter', () => {
+        SearchBar.searchInput.setValue('\uE006');
+        const currentUrl = browser.getUrl();
+        
+        browser.waitUntil(function() {
+            return browser.getUrl() !== currentUrl;
+        }, 10000);
+    });
+
+    it('should navigate to result on click', () => {
+        browser.url(constants.routes.dashboard);
+        const currentUrl = browser.getUrl();
+        
+        SearchBar.executeSearch('test');
+        browser.waitForVisible('[data-qa-suggestion]');
+
+        SearchBar.suggestions[0].click();
+
+        browser.waitUntil(function() {
+            return browser.getUrl() !== currentUrl;
+        }, 10000);
+    });
+});

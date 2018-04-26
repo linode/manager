@@ -99,10 +99,10 @@ const SearchSuggestion: React.StatelessComponent<CombinedProps> = (props) => {
         ${classes.suggestionItem}
         ${classes.suggestionContent}
       `}>
-        <div className={classes.suggestionTitle}>
+        <div className={classes.suggestionTitle} data-qa-suggestion-title>
           {maybeStyleSegment(title, searchText, highlight)}
         </div>
-        <div className={classes.suggestionDescription}>
+        <div className={classes.suggestionDescription} data-qa-suggestion-desc>
           {description}
         </div>
       </div>

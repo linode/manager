@@ -339,6 +339,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         component="div"
         className={classes.item}
         classes={{ selected: classes.selectedMenuItem }}
+        data-qa-suggestion={suggestion.title}
       >
         <SearchSuggestion
           Icon={suggestion.Icon}
@@ -386,6 +387,7 @@ class SearchBar extends React.Component<FinalProps, State> {
         `}>
           <Search
             className={classes.icon}
+            data-qa-search-icon
           />
           <Downshift
             onSelect={(item: SearchSuggestionT) => history.push(item.path)}
@@ -414,6 +416,7 @@ class SearchBar extends React.Component<FinalProps, State> {
                       onChange: this.handleSearchChange,
                     }),
                   }}
+                  data-qa-search
                 />
                 {isOpen &&
                   <Paper
