@@ -60,6 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   title: {
+    textAlign: 'center',
     fontWeight: 700,
   },
   button: {},
