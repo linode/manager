@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
-import { path, pathOr } from 'ramda';
+import { compose, filter, path, pathOr } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
@@ -14,6 +14,7 @@ import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
 
 import { API_ROOT } from 'src/constants';
+import isPast from 'src/utilities/isPast';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import Table from 'src/components/Table';
 import IconTextLink from 'src/components/IconTextLink';
@@ -95,7 +96,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class APITokens extends React.Component<CombinedProps, State> {
+export class APITokens extends React.Component<CombinedProps, State> {
   static defaultState = {
     form: {
       mode: 'view' as DrawerMode,
@@ -223,58 +224,66 @@ class APITokens extends React.Component<CombinedProps, State> {
 
   requestTokens = () => {
     Axios.get(`${API_ROOT}/profile/tokens`)
-    .then(response => response.data.data)
-    .then((data) => {
-      if (!this.mounted) { return; }
+      .then(response => response.data.data)
+      .then((data) => {
+        if (!this.mounted) { return; }
 
-      return this.setState({ pats: data });
-    });
+        return this.setState({ pats: data });
+      });
   }
 
   openCreateDrawer = () => {
-    this.setState({ form: {
-      ...APITokens.defaultState.form,
-      mode: 'create',
-      open: true,
+    this.setState({
+      form: {
+        ...APITokens.defaultState.form,
+        mode: 'create',
+        open: true,
 
-    }});
+      },
+    });
   }
 
   openViewDrawer = (token: Linode.Token) => {
-    this.setState({ form: {
-      ...APITokens.defaultState.form,
-      mode: 'view',
-      open: true,
-      id: token.id,
-      values: {
-        scopes: token.scopes,
-        expiry: token.expiry,
-        label: token.label,
+    this.setState({
+      form: {
+        ...APITokens.defaultState.form,
+        mode: 'view',
+        open: true,
+        id: token.id,
+        values: {
+          scopes: token.scopes,
+          expiry: token.expiry,
+          label: token.label,
+        },
       },
-    }});
+    });
   }
 
   openEditDrawer = (token: Linode.Token) => {
-    this.setState({ form: {
-      ...APITokens.defaultState.form,
-      mode: 'edit',
-      open: true,
-      id: token.id,
-      values: {
-        scopes: token.scopes,
-        expiry: token.expiry,
-        label: token.label,
+    this.setState({
+      form: {
+        ...APITokens.defaultState.form,
+        mode: 'edit',
+        open: true,
+        id: token.id,
+        values: {
+          scopes: token.scopes,
+          expiry: token.expiry,
+          label: token.label,
+        },
       },
-    }});
+    });
   }
 
   closeDrawer = () => {
     const { form } = this.state;
     /* Only set { open: false } to avoid flicker of drawer appearance while closing */
-    this.setState({ form: {
-      ...form,
-      open: false,
-    }});
+    this.setState({
+      form: {
+        ...form,
+        open: false,
+      },
+    });
   }
 
   openRevokeDialog = (label: string, id: number) => {
@@ -296,53 +305,59 @@ class APITokens extends React.Component<CombinedProps, State> {
   revokeToken = () => {
     const { dialog } = this.state;
     Axios.delete(`${API_ROOT}/profile/tokens/${dialog.id}`)
-    .then(() => { this.closeRevokeDialog(); })
-    .then(() => this.requestTokens());
+      .then(() => { this.closeRevokeDialog(); })
+      .then(() => this.requestTokens());
   }
 
   createToken = (scopes: string) => {
     if (scopes === '') {
-      this.setState({ form: {
-        ...this.state.form,
-        errors: [
-          { reason: 'You must select some permissions', field: 'scopes' },
-        ],
-      }});
+      this.setState({
+        form: {
+          ...this.state.form,
+          errors: [
+            { reason: 'You must select some permissions', field: 'scopes' },
+          ],
+        },
+      });
       return;
     }
 
     const { form } = this.state;
     this.setState({ form: { ...form, values: { ...form.values, scopes } } }, () => {
       Axios.post(`${API_ROOT}/profile/tokens`, this.state.form.values)
-      .then((response) => {
-        this.closeDrawer();
-        this.openTokenDialog(response.data.token);
-      })
-      .then(() => this.requestTokens())
-      .catch((errResponse) => {
-        if (!this.mounted) { return; }
+        .then((response) => {
+          this.closeDrawer();
+          this.openTokenDialog(response.data.token);
+        })
+        .then(() => this.requestTokens())
+        .catch((errResponse) => {
+          if (!this.mounted) { return; }
 
-        this.setState({ form: {
-          ...form,
-          errors: path(['response', 'data', 'errors'], errResponse),
-        }});
-      });
+          this.setState({
+            form: {
+              ...form,
+              errors: path(['response', 'data', 'errors'], errResponse),
+            },
+          });
+        });
     });
   }
 
   editToken = () => {
     const { form } = this.state;
     Axios.put(`${API_ROOT}/profile/tokens/${form.id}`, { label: form.values.label })
-    .then(() => { this.closeDrawer(); })
-    .then(() => this.requestTokens())
-    .catch((errResponse) => {
-      if (!this.mounted) { return; }
+      .then(() => { this.closeDrawer(); })
+      .then(() => this.requestTokens())
+      .catch((errResponse) => {
+        if (!this.mounted) { return; }
 
-      this.setState({ form: {
-        ...form,
-        errors: path(['response', 'data', 'errors'], errResponse),
-      }});
-    });
+        this.setState({
+          form: {
+            ...form,
+            errors: path(['response', 'data', 'errors'], errResponse),
+          },
+        });
+      });
   }
 
   componentDidMount() {
@@ -355,9 +370,20 @@ class APITokens extends React.Component<CombinedProps, State> {
 
   render() {
     const { form, dialog } = this.state;
-    const appTokens = this.formatDates(
-      pathOr([], ['response', 'data'], this.props.appTokens));
-    const pats = this.formatDates(this.state.pats);
+    const now = moment.utc().format();
+    const isPastNow = isPast(now);
+
+    const appTokens = compose<Props, Linode.Token[], Linode.Token[], Linode.Token[]>(
+      this.formatDates,
+      filter<Linode.Token>(t => isPastNow(t.expiry)),
+      pathOr([], ['appTokens', 'response', 'data']),
+    )(this.props);
+
+    const pats = compose<State, Linode.Token[], Linode.Token[], Linode.Token[]>(
+      this.formatDates,
+      filter<Linode.Token>(t => isPastNow(t.expiry)),
+      pathOr([], ['pats']),
+    )(this.state);
 
     return (
       <React.Fragment>
@@ -380,8 +406,10 @@ class APITokens extends React.Component<CombinedProps, State> {
           scopes={form.values.scopes}
           expiry={form.values.expiry}
           closeDrawer={this.closeDrawer}
-          onChange={(key, value) => this.setState({ form:
-            { ...form, values: { ...form.values, [key]: value } }})}
+          onChange={(key, value) => this.setState({
+            form:
+              { ...form, values: { ...form.values, [key]: value } },
+          })}
           onCreate={(scopes: string) => this.createToken(scopes)}
           onEdit={() => this.editToken()}
         />
@@ -424,13 +452,13 @@ class APITokens extends React.Component<CombinedProps, State> {
             <Button
               variant="raised"
               color="primary"
-              onClick={() => this.closeTokenDialog() }
+              onClick={() => this.closeTokenDialog()}
               data-qa-close-dialog
             >
               OK
             </Button>}
           open={this.state.token.open}
-          onClose={() => this.closeTokenDialog() }
+          onClose={() => this.closeTokenDialog()}
         >
           <Typography variant="body1">
             {`Your personal access token has been created.

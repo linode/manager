@@ -27,7 +27,8 @@ namespace Linode {
     scopes: string,
     label: string,
     created: string,
-    token: string,
+    token?: string,
     expiry: string,
+    thumbnail_url?: null | string;
   };
 }
