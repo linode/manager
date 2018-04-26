@@ -339,7 +339,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               }
             />
           )} />
-          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings />)} />
+          <Route exact path={`${url}/settings`} render={() => (
+          <LinodeSettings
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            alerts={linode.alerts}
+          />
+          )} />
           <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes />)} />
           <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
           <Route exact path={`${url}/rescue`} render={() => (
