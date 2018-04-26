@@ -94,6 +94,22 @@ export const getLinodeStats = (linodeId: number, year?: string, month?: string) 
   return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats`);
 };
 
+export const updateLinode =
+  (id: number, values: any): Promise<Linode.SingleResourceState<Linode.Linode>> =>
+    Axios.put(`${API_ROOT}/linode/instances/${id}`, values);
+
+type DiskResponse = Promise<Linode.SingleResourceState<Linode.Disk>>;
+export const changeLinodeDiskPassword = (
+  linodeId: number,
+  diskId: number,
+  password: string,
+): DiskResponse =>
+  Axios.post(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/password`, { password })
+    .then(response => response.data);
+
+export const deleteLinode = (linodeId: number): Promise<{}> =>
+  Axios.delete(`${API_ROOT}/linode/instances/${linodeId}`);
+
 export const restoreBackup = (
   linodeID: number,
   backupID: number,

@@ -7,6 +7,7 @@ import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown';
 import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp';
 
 import ThemeDecorator from '../utilities/storybookDecorators';
+import Reload from 'src/assets/icons/reload.svg';
 
 storiesOf('Button', module)
 .addDecorator(ThemeDecorator)
@@ -136,6 +137,31 @@ storiesOf('Button', module)
       data-qa-button="destructive"
     >
       Disabled
+    </Button>
+  </React.Fragment>
+))
+.add('Cancel', () => (
+  <React.Fragment>
+    <Button
+      variant="raised"
+      color="secondary"
+      className="cancel"
+      data-qa-button="cancel"
+    >
+      Cancel
+    </Button>
+  </React.Fragment>
+))
+.add('Loading', () => (
+  <React.Fragment>
+    <Button
+      variant="raised"
+      color="secondary"
+      className="loading"
+      data-qa-button="loading"
+      disabled
+    >
+      <Reload />
     </Button>
   </React.Fragment>
 ))
