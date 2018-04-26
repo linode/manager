@@ -137,6 +137,9 @@ export class ListLinodes extends Page {
     }
 
     selectMenuItem(linode, item) {
+        if (this.getStatus(linode) === 'rebooting') {
+            browser.waitForVisible('[data-qa-status="running"]', 45000);
+        }
         linode.$(this.linodeActionMenu.selector).click();
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }

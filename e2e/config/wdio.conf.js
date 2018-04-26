@@ -7,7 +7,17 @@ const { browserConf } = require('./browser-config');
 const selectedBrowser = argv.b ? browserConf[argv.b] : browserConf['chrome'];
 const username = process.env.MANAGER_USER;
 const password = process.env.MANAGER_PASS;
-const specsToRun = argv.file ? [ argv.file ] : ['./e2e/specs/**/*.js'];
+
+
+const specsToRun = () => {
+    if (argv.file) {
+        return [argv.file];
+    }
+    if (argv.dir) {
+        return [`./e2e/specs/${argv.dir}/**/*.spec.js`]
+    }
+    return ['./e2e/specs/**/*.js'];
+}
 const selectedReporters = ['dot'];
 
 if (argv.log) {
@@ -28,7 +38,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs:
-        specsToRun,
+        specsToRun(),
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -49,7 +59,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 1,
+    maxInstances: 2,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:

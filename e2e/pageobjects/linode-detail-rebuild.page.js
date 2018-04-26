@@ -33,7 +33,7 @@ class Rebuild {
             return this;
         }
         const imageOption = this.imageOptions[0];
-        const imageName = imageOptions.getText();
+        const imageName = imageOption.getText();
 
         imageOption.click();
         // Expect image select to update with imageName
