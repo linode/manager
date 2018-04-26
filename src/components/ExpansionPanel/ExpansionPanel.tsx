@@ -115,7 +115,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       >
         <ExpansionPanelSummary
           onClick={this.handleClick}
-          expandIcon={this.state.open ? <Minus /> : <Plus />}
+          expandIcon={this.state.open ? <Plus /> : <Minus />}
           {...summaryProps}
           className={classNames({
             [classes.success]: Boolean(this.props.success),
