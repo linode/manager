@@ -233,6 +233,9 @@ const LinodeTheme: Linode.Theme = {
         minHeight: 44,
         boxSizing: 'border-box',
         backgroundColor: 'white',
+        [breakpoints.down('xs')]: {
+          maxWidth: 250,
+        },
         '& svg': {
           fontSize: 18,
           marginLeft: 8,
@@ -331,7 +334,8 @@ const LinodeTheme: Linode.Theme = {
         padding: '7px 32px 7px 10px',
         color: '#666',
         backgroundColor: '#fff',
-        lineHeight: .9,
+        lineHeight: 2.2,
+        minHeight: 46,
         '&:focus': {
           backgroundColor: '#fff',
           borderColor: 'pink',

@@ -27,16 +27,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   menu: {
-  },
-  dropDown: {
-    border: '1px solid #bbb',
-    boxShadow: 'none',
-    position: 'absolute',
+    maxHeight: 250,
     overflowY: 'auto',
     overflowX: 'hidden',
     background: LinodeTheme.bg.offWhite,
-    margin: '8px 0 0 -1px',
     boxSizing: 'content-box',
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 200,
+    },
+  },
+  dropDown: {
+    boxShadow: 'none',
+    position: 'absolute',
+    boxSizing: 'content-box',
+    border: '1px solid #bbb',
+    margin: '0 0 0 -1px',
+    outline: 0,
   },
   inputError: {
     borderColor: LinodeTheme.color.red,
