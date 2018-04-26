@@ -100,7 +100,7 @@ export function requestEvents() {
            * and eventuallly deletion. Subscribers of this stream want active Linodes only, and
            * if provided a "deleted" Linode ID will result in 404s until the events stop.
           */
-          && events.filter(e => e.action === 'linode_delete').length === 0
+          && !isBeingDeleted(events, linodeEvent.id)
         ) {
           // when we have an "incomplete event" poll at the initial polling rate
           resetEventsPolling();
@@ -126,3 +126,7 @@ setInterval(
   /* the following is the Nyquist rate for the minimum polling interval */
   (initialPollInterval / 2 - 1),
 );
+
+
+const isBeingDeleted = (events: Linode.Event[], id: number): boolean =>
+  events.filter(event => event.id === id && event.action === 'linode_delete').length > 0;
