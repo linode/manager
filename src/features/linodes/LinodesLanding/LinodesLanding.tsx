@@ -334,7 +334,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="headline" className={this.props.classes.title}>Linodes</Typography>
+          <Typography
+            variant="headline"
+            className={this.props.classes.title}
+            data-qa-title
+            >
+            Linodes
+          </Typography>
           <Hidden smDown>
             <ToggleBox
               handleClick={this.changeViewStyle}
