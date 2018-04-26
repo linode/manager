@@ -5,6 +5,7 @@ export class ListLinodes extends Page {
     get subheader() { return $('[data-qa-title]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get activeView() { return $('[data-qa-active-view]'); }
+    get linodeElem() { return $('[data-qa-linode]'); }
     get linode() { return $$('[data-qa-linode]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
     get hardwareSummary() { return $('[data-qa-linode-summary]'); }

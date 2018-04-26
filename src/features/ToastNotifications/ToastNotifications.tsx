@@ -206,11 +206,13 @@ class Notifier extends React.Component<CombinedProps, State> {
               alignItems="center"
               justify="space-between"
               spacing={0}
+              data-qa-toast
             >
               <Grid item xs={9} lg={10}>
                 <Typography
                   variant="caption"
                   className={classes.content}
+                  data-qa-toast-message
                 >
                   {toast.message}
                 </Typography>
