@@ -73,6 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   usage: {
     animation: 'fadeIn .3s ease-in-out forwards',
     marginTop: 0,
+    width: 200,
   },
   percentage: {
     fontSize: '.9rem',
