@@ -250,8 +250,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
     return image && {
-      name: `${image.vendor}`,
-      details: `${image.label}`,
+      name: `${image.vendor || image.label}`,
+      details: `${image.vendor ? image.label : ''}`,
     };
   }
 
