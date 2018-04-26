@@ -56,7 +56,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
       .then(response => response.data)
       .then((linode) => {
         this.setState(compose(
-          set(lensPath(['success']), `Linode label changes successfully.`),
+          set(lensPath(['success']), `Linode label changed successfully.`),
           set(lensPath(['submitting']), false),
         ));
         events$.next(genEvent('linode_reboot', linode.id, linode.label));
