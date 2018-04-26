@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { compose, lensPath, set } from 'ramda';
+import { lensPath, set } from 'ramda';
 
 import {
   withStyles,
@@ -45,15 +45,15 @@ class LinodeSettings extends React.Component<CombinedProps, State> {
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     if (nextProps.linodeLabel !== this.state.linodeLabel) {
-      this.setState(compose(
+      this.setState(
         set(lensPath(['linodeLabel']), nextProps.linodeLabel),
-      ));
+      );
     }
 
     if (nextProps.alerts !== this.state.alerts) {
-      this.setState(compose(
+      this.setState(
         set(lensPath(['alerts']), nextProps.alerts),
-      ));
+      );
     }
   }
 
