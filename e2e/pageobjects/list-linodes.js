@@ -7,6 +7,7 @@ export class ListLinodes extends Page {
     get activeView() { return $('[data-qa-active-view]'); }
     get linodeElem() { return $('[data-qa-linode]'); }
     get linode() { return $$('[data-qa-linode]'); }
+    get linodeElem() { return $('[data-qa-linode]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
     get hardwareSummary() { return $('[data-qa-linode-summary]'); }
     get region() { return $('[data-qa-region]'); }
@@ -29,7 +30,7 @@ export class ListLinodes extends Page {
     get resizeMenu() { return $('[data-qa-action-menu-item="Resize"]'); }
     get viewBackupsMenu() { return $('[data-qa-action-menu-item="View Backups"]'); }
     get settingsMenu() { return $('[data-qa-action-menu-item="Settings"]'); }
-    get copyIp() { return $('[data-qa-copy-ip]'); }
+    get copyIp() { return $('[data-qa-copy-ip] svg'); }
 
     linodesDisplay() {
         try {
@@ -136,6 +137,9 @@ export class ListLinodes extends Page {
     }
 
     selectMenuItem(linode, item) {
+        if (this.getStatus(linode) === 'rebooting') {
+            browser.waitForVisible('[data-qa-status="running"]', 45000);
+        }
         linode.$(this.linodeActionMenu.selector).click();
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
