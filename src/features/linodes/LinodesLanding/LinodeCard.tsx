@@ -10,15 +10,16 @@ import {
 import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
-import Grid from 'src/components/Grid';
-import LinodeTheme from 'src/theme';
 import Typography from 'material-ui/Typography';
 import Tooltip from 'material-ui/Tooltip';
 
-import CircleProgress from 'src/components/CircleProgress';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import LinodeTheme from 'src/theme';
 import Flag from 'src/assets/icons/flag.svg';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { weblishLaunch } from 'src/features/Weblish';
+import Grid from 'src/components/Grid';
+import CircleProgress from 'src/components/CircleProgress';
 
 import RegionIndicator from './RegionIndicator';
 import IPAddress from './IPAddress';
@@ -120,7 +121,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
 });
 
 interface Props {
-  linode: Linode.EnhancedLinode;
+  linodeId: number;
+  linodeStatus: Linode.LinodeStatus;
+  linodeIpv4: string[];
+  linodeIpv6: string;
+  linodeRegion: string;
+  linodeNotification?: string;
+  linodeLabel: string;
+  linodeRecentEvent?: Linode.Event;
   image?: Linode.Image;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
@@ -128,23 +136,23 @@ interface Props {
 
 class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   renderTitle() {
-    const { linode, classes } = this.props;
+    const { classes, linodeStatus, linodeId, linodeLabel, linodeNotification } = this.props;
 
     return (
       <Grid container alignItems="center">
         <Grid item className={'py0'}>
-          <LinodeStatusIndicator status={linode.status} />
+          <LinodeStatusIndicator status={linodeStatus} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Link to={`/linodes/${linode.id}`}>
+          <Link to={`/linodes/${linodeId}`}>
             <Typography variant="subheading" data-qa-label>
-              {linode.label}
+              {linodeLabel}
             </Typography>
           </Link>
         </Grid>
-        {linode.notification &&
+        {linodeNotification &&
           <Grid item className="py0">
-            <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
+            <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
           </Grid>
         }
       </Grid>
@@ -153,8 +161,8 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
 
 
   loadingState = () => {
-    const { linode, classes } = this.props;
-    const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
+    const { classes, linodeRecentEvent, linodeStatus } = this.props;
+    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
 
     return (
       <CardContent className={classes.cardContent}>
@@ -164,7 +172,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           </Grid>
           <Grid item xs={12}>
             <Typography align="center" className={classes.loadingStatusText}>
-              {linode.status.replace('_', ' ')}
+              {linodeStatus.replace('_', ' ')}
             </Typography>
           </Grid>
         </Grid>
@@ -173,7 +181,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 
   loadedState = () => {
-    const { classes, image, type, linode } = this.props;
+    const { classes, image, type, linodeIpv4, linodeIpv6, linodeRegion } = this.props;
 
     return (
       <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
@@ -184,11 +192,11 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
         </div>
         }
         <div className={classes.cardSection} data-qa-region>
-          <RegionIndicator region={linode.region} />
+          <RegionIndicator region={linodeRegion} />
         </div>
         <div className={classes.cardSection} data-qa-ips>
-          <IPAddress ips={linode.ipv4} copyRight />
-          <IPAddress ips={[linode.ipv6]} copyRight />
+          <IPAddress ips={linodeIpv4} copyRight />
+          <IPAddress ips={[linodeIpv6]} copyRight />
         </div>
         {image && type &&
         <div className={classes.cardSection} data-qa-image>
@@ -200,9 +208,25 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     );
   }
 
+  shouldComponentUpdate(nextProps: Props) {
+    return haveAnyBeenModified<Props>(
+      nextProps,
+      this.props,
+      [
+        'type',
+        'linodeStatus',
+        'linodeRegion',
+        'linodeNotification',
+        'linodeLabel',
+        'linodeIpv6',
+        'linodeIpv4',
+      ],
+    );
+  }
+
   render() {
-    const { classes, linode, openConfigDrawer } = this.props;
-    const loading = transitionStatus.includes(linode.status);
+    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeStatus } = this.props;
+    const loading = transitionStatus.includes(linodeStatus);
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode>
@@ -212,7 +236,9 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             action={
               <div style={{ position: 'relative', top: 6 }}>
                 <LinodeActionMenu
-                 linode={linode}
+                 linodeId={linodeId}
+                 linodeLabel={linodeLabel}
+                 linodeStatus={linodeStatus}
                  openConfigDrawer={openConfigDrawer}
                 />
               </div>
@@ -224,7 +250,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
-              onClick={() => weblishLaunch(`${linode.id}`)}
+              onClick={() => weblishLaunch(`${linodeId}`)}
               data-qa-console
             >
               <span className="btnLink">Launch Console</span>
@@ -232,7 +258,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
             <Button
               className={`${classes.button}
               ${classes.rebootButton}`}
-              onClick={() => rebootLinode(openConfigDrawer, linode.id, linode.label)}
+              onClick={() => rebootLinode(openConfigDrawer, linodeId, linodeLabel)}
               data-qa-reboot
             >
               <span className="btnLink">Reboot</span>

@@ -5,7 +5,9 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { rebootLinode, powerOffLinode, powerOnLinode } from './powerActions';
 
 interface Props {
-  linode: Linode.Linode;
+  linodeId: number;
+  linodeLabel: string;
+  linodeStatus: string;
   openConfigDrawer: (configs: Linode.Config[], fn: (id: number) => void) => void;
 }
 
@@ -13,14 +15,14 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { linode, openConfigDrawer, history: { push } } = this.props;
+    const { linodeId, linodeLabel, linodeStatus, openConfigDrawer, history: { push } } = this.props;
 
     return function (closeMenu: Function): Action[] {
       const actions = [
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linode.id}/glish`);
+            push(`/linodes/${linodeId}/glish`);
             e.preventDefault();
           },
         },
@@ -28,55 +30,55 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           title: 'Reboot',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
-            rebootLinode(openConfigDrawer, linode.id, linode.label);
+            rebootLinode(openConfigDrawer, linodeId, linodeLabel);
             closeMenu();
           },
         },
         {
           title: 'View Graphs',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linode.id}/summary`);
+            push(`/linodes/${linodeId}/summary`);
             e.preventDefault();
           },
         },
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linode.id}/resize`);
+            push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
           },
         },
         {
           title: 'View Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linode.id}/backups`);
+            push(`/linodes/${linodeId}/backups`);
             e.preventDefault();
           },
         },
         {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            push(`/linodes/${linode.id}/settings`);
+            push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
           },
         },
       ];
 
-      if (linode.status === 'offline') {
+      if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
           onClick: (e) => {
-            powerOnLinode(openConfigDrawer, linode.id, linode.label);
+            powerOnLinode(openConfigDrawer, linodeId, linodeLabel);
             closeMenu();
           },
         });
       }
 
-      if (linode.status === 'running') {
+      if (linodeStatus === 'running') {
         actions.unshift({
           title: 'Power Off',
           onClick: (e) => {
-            powerOffLinode(linode.id, linode.label);
+            powerOffLinode(linodeId, linodeLabel);
             closeMenu();
           },
         });
