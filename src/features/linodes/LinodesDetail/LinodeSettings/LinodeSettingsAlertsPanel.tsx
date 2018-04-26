@@ -113,6 +113,7 @@ interface Section {
   onStateChange: (e: React.ChangeEvent<{}>, checked: boolean) => void;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  endAdornment: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -196,7 +197,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               type="number"
               value={props.value}
               InputProps={{
-                endAdornment: <span className={classes.percentage}>%</span>,
+                endAdornment: <span className={classes.percentage}>{props.endAdornment}</span>,
               }}
               error={Boolean(props.error)}
               errorText={props.error}
@@ -239,6 +240,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             )
             : () => null,
         error: hasErrorFor('alerts.cpu'),
+        endAdornment: '%',
       },
       {
         radioInputLabel: 'disk_io_state',
@@ -258,6 +260,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             )
             : () => null,
         error: hasErrorFor('alerts.io'),
+        endAdornment: 'IOPS',
       },
       {
         radioInputLabel: 'incoming_traffic_state',
@@ -278,6 +281,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             )
             : () => null,
         error: hasErrorFor('alerts.network_in'),
+        endAdornment: 'Mb/s',
       },
       {
         radioInputLabel: 'outbound_traffic_state',
@@ -298,6 +302,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             )
             : () => null,
         error: hasErrorFor('alerts.network_out'),
+        endAdornment: 'Mb/s',
       },
       {
         radioInputLabel: 'transfer_quota_state',
@@ -319,6 +324,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             )
             : () => null,
         error: hasErrorFor('alerts.transfer_quota'),
+        endAdornment: '%',
       },
     ];
 
