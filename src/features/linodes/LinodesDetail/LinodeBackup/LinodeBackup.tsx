@@ -419,6 +419,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               color="primary"
               onClick={this.takeSnapshot}
               className={classes.snapshotAction}
+              data-qa-snapshot-button
             >
               Take Snapshot
             </Button>
