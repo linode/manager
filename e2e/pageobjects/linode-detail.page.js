@@ -8,7 +8,7 @@ class LinodeDetail extends Page {
     get resizeTab() { return $('[data-qa-tab="Resize"]'); }
     get rescueTab() { return $('[data-qa-tab="Rescue"]'); }
     get rebuildTab() { return $('[data-qa-tab="Rebuild"]'); }
-    get backupTab() { return $('[data-qa-tab="Backup"]'); }
+    get backupTab() { return $('[data-qa-tab="Backups"]'); }
     get settingsTab() { return $('[data-qa-tab="Settings"]'); }
     get launchConsole() { return $('[data-qa-launch-console]'); }
     get powerControl() { return $('[data-qa-power-control]'); }
@@ -25,6 +25,7 @@ class LinodeDetail extends Page {
                 .getAttribute(`[data-qa-tab="${tab}"]`, 'class')
                 .includes('Selected');
         }, 5000);
+        browser.waitForVisible('[data-qa-circle-progress]', 10000, true);
         return this;
     }
 
