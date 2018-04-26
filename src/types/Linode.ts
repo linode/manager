@@ -92,7 +92,7 @@ namespace Linode {
   export interface IPRange {
     range: string;
     region: string;
-    prefix: number;
+    prefix?: number;
   }
 
   export interface LinodeIPsResponse {

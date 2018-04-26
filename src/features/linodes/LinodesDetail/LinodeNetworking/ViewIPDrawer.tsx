@@ -6,8 +6,10 @@ import {
   WithStyles,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
 
 import Drawer from 'src/components/Drawer';
+import ActionsPanel from 'src/components/ActionsPanel';
 
 type ClassNames = 'root';
 
@@ -47,10 +49,39 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             {props.ip.subnet_mask}
           </Typography>
 
-          <Typography variant="title"></Typography>
+          <Typography variant="title">Type</Typography>
           <Typography variant="body1">
-            /{props.ip.prefix}
+            {props.ip.type}
           </Typography>
+
+          <Typography variant="title">Public</Typography>
+          <Typography variant="body1">
+            {props.ip.public ? 'Yes' : 'No'}
+          </Typography>
+
+          {props.ip.rdns &&
+            <React.Fragment>
+              <Typography variant="title">RDNS</Typography>
+              <Typography variant="body1">
+                {props.ip.rdns}
+              </Typography>
+            </React.Fragment>
+          }
+
+          <Typography variant="title">Region</Typography>
+          <Typography variant="body1">
+            {props.ip.region}
+          </Typography>
+
+          <ActionsPanel>
+            <Button
+              variant="raised"
+              color="secondary"
+              onClick={props.onClose}
+            >
+              Close
+            </Button>
+          </ActionsPanel>
         </React.Fragment>
       }
     </Drawer>

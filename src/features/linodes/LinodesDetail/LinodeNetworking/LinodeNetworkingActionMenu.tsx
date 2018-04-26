@@ -5,7 +5,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onView: () => void;
-  onEdit: () => void;
+  onEdit?: () => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -27,15 +27,21 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
           },
         },
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit();
-            closeMenu();
-            e.preventDefault();
-          },
-        },
       ];
+
+      if (onEdit) {
+        actions.push(
+          {
+            title: 'Edit RDNS',
+            onClick: (e: React.MouseEvent<HTMLElement>) => {
+              onEdit();
+              closeMenu();
+              e.preventDefault();
+            },
+          },
+        );
+      }
+
       return actions;
     };
   }

@@ -18,6 +18,8 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import ViewIPDrawer from './ViewIPDrawer';
+import ViewRangeDrawer from './ViewRangeDrawer';
+import EditRDNSDrawer from './EditRDNSDrawer';
 
 type ClassNames =
   'root'
@@ -50,6 +52,15 @@ interface State {
     open: boolean;
     ip?: Linode.IPAddress;
   };
+  viewRangeDrawer: {
+    open: boolean;
+    range?: Linode.IPRange;
+  };
+  editRDNSDrawer: {
+    open: boolean;
+    address?: string;
+    rdns?: string;
+  };
 }
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
@@ -60,7 +71,21 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     viewIPDrawer: {
       open: false,
     },
+    viewRangeDrawer: {
+      open: false,
+    },
+    editRDNSDrawer: {
+      open: false,
+    },
   };
+
+  refreshIPs() {
+    getLinodeIPs(this.props.linodeID)
+      .then(ips => this.setState({ linodeIPs: ips }))
+      .catch(() => {
+        /* @todo: we need a pattern for handling these errors */
+      });
+  }
 
   renderRangeRow(range: Linode.IPRange, type: string) {
     return (
@@ -75,8 +100,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>
           <LinodeNetworkingActionMenu
-            onView={() => console.log(range)}
-            onEdit={() => console.log(range)}
+            onView={() => {
+              this.setState({
+                viewRangeDrawer: { open: true, range },
+              });
+            }}
           />
         </TableCell>
       </TableRow>
@@ -84,6 +112,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPRow(ip: Linode.IPAddress, type: string) {
+    /* Don't show edit RDNS for private IP addresses */
+    const onEditAction = (type === 'Private' || type === 'Link Local')
+      ? undefined
+      : () => {
+        this.setState({
+          editRDNSDrawer: { open: true, address: ip.address, rdns: ip.rdns },
+        });
+      };
+
     return (
       <TableRow key={ip.address}>
         <TableCell>
@@ -98,11 +135,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell>
           <LinodeNetworkingActionMenu
             onView={() => {
-              this.setState({ viewIPDrawer:
-                { open: true, ip },
+              this.setState({
+                viewIPDrawer: { open: true, ip },
               });
             }}
-            onEdit={() => console.log(ip)}
+            onEdit={onEditAction}
           />
         </TableCell>
       </TableRow>
@@ -110,9 +147,22 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   closeViewIPDrawer() {
-    this.setState({ viewIPDrawer:
-      { open: false, ip: undefined },
+    this.setState({
+      viewIPDrawer: { open: false, ip: undefined },
     });
+  }
+
+  closeViewRangeDrawer() {
+    this.setState({
+      viewRangeDrawer: { open: false, range: undefined },
+    });
+  }
+
+  closeEditRDNSDrawer() {
+    this.setState({
+      editRDNSDrawer: { open: false, address: undefined, rnds: undefined },
+    });
+    this.refreshIPs();
   }
 
   render() {
@@ -181,6 +231,19 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           open={this.state.viewIPDrawer.open}
           onClose={() => this.closeViewIPDrawer()}
           ip={this.state.viewIPDrawer.ip }
+        />
+
+        <ViewRangeDrawer
+          open={this.state.viewRangeDrawer.open}
+          onClose={() => this.closeViewRangeDrawer()}
+          range={this.state.viewRangeDrawer.range }
+        />
+
+        <EditRDNSDrawer
+          open={this.state.editRDNSDrawer.open}
+          onClose={() => this.closeEditRDNSDrawer()}
+          address={this.state.editRDNSDrawer.address}
+          rdns={this.state.editRDNSDrawer.rdns}
         />
       </React.Fragment>
     );
