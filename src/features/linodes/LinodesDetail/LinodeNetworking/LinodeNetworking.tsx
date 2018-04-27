@@ -23,11 +23,30 @@ import EditRDNSDrawer from './EditRDNSDrawer';
 
 type ClassNames =
   'root'
+  | 'address'
+  | 'reverseDNS'
+  | 'type'
+  | 'action'
   | 'ipv4Title'
   | 'ipv6Title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  address: {
+    width: '35%',
+  },
+  reverseDNS: {
+    width: '35%',
+  },
+  type: {
+    width: '20%',
+  },
+  action: {
+    textAlign: 'right',
+    '& a': {
+      marginRight: theme.spacing.unit,
+    },
+  },
   ipv4Title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
@@ -88,6 +107,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderRangeRow(range: Linode.IPRange, type: string) {
+    const { classes } = this.props;
+
     return (
       <TableRow key={range.range}>
         <TableCell>
@@ -98,7 +119,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell>
           {type}
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.action}>
           <LinodeNetworkingActionMenu
             onView={() => {
               this.setState({
@@ -120,6 +141,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           editRDNSDrawer: { open: true, address: ip.address, rdns: ip.rdns },
         });
       };
+    const { classes } = this.props;
 
     return (
       <TableRow key={ip.address}>
@@ -132,7 +154,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell>
           {type}
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.action}>
           <LinodeNetworkingActionMenu
             onView={() => {
               this.setState({
@@ -182,9 +204,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Address</TableCell>
-                <TableCell>Reverse DNS</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell className={classes.address}>Address</TableCell>
+                <TableCell className={classes.reverseDNS}>Reverse DNS</TableCell>
+                <TableCell className={classes.type}>Type</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -209,9 +231,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Address</TableCell>
-                <TableCell>Reverse DNS</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell className={classes.address}>Address</TableCell>
+                <TableCell className={classes.reverseDNS}>Reverse DNS</TableCell>
+                <TableCell className={classes.type}>Type</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
