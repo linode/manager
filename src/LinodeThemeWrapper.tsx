@@ -10,14 +10,19 @@ interface State {
   themeChoice: ThemeOptions;
 }
 
+const lightTheme = LinodeLightTheme;
+const darkTheme = {
+  ...LinodeLightTheme,
+  ...LinodeDarkTheme,
+};
+
 class LinodeThemeWrapper extends React.Component<Props, State> {
   state = {
-    themeChoice: LinodeLightTheme,
+    themeChoice: lightTheme,
   };
 
   componentDidMount() {
     document.addEventListener('keydown', (e) => {
-      console.log(e.code);
       if (e.ctrlKey && e.altKey && e.code === 'KeyD') {
         this.toggleTheme();
       }
@@ -25,10 +30,10 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   }
 
   toggleTheme = () => {
-    if (this.state.themeChoice === LinodeLightTheme) {
-      this.setState({ themeChoice: LinodeDarkTheme });
+    if (this.state.themeChoice === lightTheme) {
+      this.setState({ themeChoice: darkTheme });
     } else {
-      this.setState({ themeChoice: LinodeLightTheme });
+      this.setState({ themeChoice: lightTheme });
     }
   }
 
