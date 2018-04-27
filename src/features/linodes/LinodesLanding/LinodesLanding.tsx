@@ -5,18 +5,18 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
 import {
+  allPass,
   clone,
-  ifElse,
   compose,
-  prop,
-  propEq,
-  isEmpty,
+  filter,
   gte,
+  has,
+  ifElse,
+  isEmpty,
   pathEq,
   pathOr,
-  filter,
-  has,
-  allPass,
+  prop,
+  propEq,
   uniqBy,
 } from 'ramda';
 
@@ -174,13 +174,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.notificationSub = Observable
       .combineLatest(
         notifications$
-          .map(notifications => notifications.filter(n => n.entity.type === 'linode')),
+          .map(notifications => notifications.filter(pathEq(['entity', 'type'], 'linode'))),
         Observable.of(this.props.linodes),
     )
       .map(([notifications, linodes]) => {
         /** Imperative and gross a/f. Ill fix it. */
         linodes.response.data = linodes.response.data.map((linode) => {
-          const notification = notifications.find(n => n.entity.id === linode.id);
+          const notification = notifications.find(pathEq(['entity', 'id'], linode.id));
           if (notification) {
             linode.notification = notification.message;
             return linode;
