@@ -7,12 +7,12 @@ import {
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import Table from 'material-ui/Table';
 import TableHead from 'material-ui/Table/TableHead';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
+import Table from 'src/components/Table';
 import { getLinodeIPs } from 'src/services/linodes';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
