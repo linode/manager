@@ -82,7 +82,7 @@ class Backups extends Page {
         browser.waitForVisible('[data-qa-backup]', 45000);
 
         const backupInstance = this.backupInstances.map(i => {
-            return i.$(this.name.selector).getText();
+            return i.$(this.label.selector).getText();
         });
         expect(backupInstance).toContain(label);
         return this;

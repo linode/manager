@@ -1,21 +1,23 @@
 const { constants } = require('../../../constants');
 
-import Backups from '../../../pageobjects/backups.page';
+import { createGenericLinode, deleteLinode }  from '../../../utils/common';
+import Backups from '../../../pageobjects/linode-detail-backups.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail.page';
+import Settings from '../../../pageobjects/linode-detail-settings.page';
+
 
 describe('Linode Detail - Backups Suite', () => {
+    const linodeLabel = new Date().getTime();
+
     beforeAll(() => {
         // create a linode
         browser.url(constants.routes.linodes);
-        browser.waitForVisible('[data-qa-linode]');
-        ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
+        browser.waitForVisible('[data-qa-add-new-menu-button]');
+        createGenericLinode(linodeLabel);
+        browser.click(`[data-qa-linode="${linodeLabel}"] [data-qa-label]`);
         LinodeDetail.launchConsole.waitForVisible();
         LinodeDetail.changeTab('Backups');
-    });
-
-    afterAll(() => {
-        // remove linode
     });
 
     it('should dislay placeholder text', () => {
@@ -23,7 +25,10 @@ describe('Linode Detail - Backups Suite', () => {
     });
 
     it('should enable backups', () => {
+        const toastMsg = 'Backups are being enabled for this Linode';
+
         Backups.enableButton.click();
+        Backups.toastDisplays(toastMsg);
         Backups.description.waitForVisible();
     });
 
@@ -34,25 +39,18 @@ describe('Linode Detail - Backups Suite', () => {
     it('should fail to take a snapshot without a name', () => {
         Backups.snapshotButton.click();
 
-        browser.waitUntil(() => {
-            const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
-            browser.waitForVisible('[data-qa-toast-message]');
-            
-            if (browser.getText('[data-qa-toast-message]').includes(toastMsg)) {
-                browser.click('[data-qa-toast] button');
-                return true;
-            };
-        }, 10000);
-    });
-
-    it('should take a snapshot', () => {
-        const testSnapshot = 'test-snap-1';
-        Backups
-            .takeSnapshot(testSnapshot)
-            .assertSnapshot(testSnapshot);
+        const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
+        Backups.toastDisplays(toastMsg);
     });
 
     it('should cancel backups', () => {
-        
+        Backups.cancelButton.click();
+
+        const toastMsg = 'Backups are being cancelled for this Linode';
+        Backups.toastDisplays(toastMsg);
+    });
+
+    it('should remove the backup test linode', () => {
+        deleteLinode(linodeLabel);
     });
 });

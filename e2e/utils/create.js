@@ -1,5 +1,3 @@
-const { constants } = require('../constants');
-
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
 import Create from '../pageobjects/create';
@@ -16,8 +14,7 @@ export const createGenericLinode = (label) => {
 }
 
 export const deleteLinode = (label) => {
-    browser.url(constants.routes.linodes);
-    browser.waitClick(`[data-qa-linode="${label}"] [data-qa-label]`);
+    browser.click(`[data-qa-linode="${label}"] [data-qa-label]`);
     LinodeDetail.landingElemsDisplay();
     LinodeDetail.changeTab('Settings');
     Settings.remove();

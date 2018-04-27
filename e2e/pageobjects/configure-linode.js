@@ -25,6 +25,8 @@ class ConfigureLinode extends Page {
     get addonsHeader() { return $('[data-qa-add-ons]'); }
     get addons() { return $$('[data-qa-add-ons] [data-qa-checked]');  }
 
+    get deploy() { return $('[data-qa-deploy-linode]'); }
+
     baseDisplay() {
         expect(this.createHeader.waitForVisible()).toBe(true);
 
@@ -51,13 +53,12 @@ class ConfigureLinode extends Page {
         this.addons.forEach(a => expect(a.isVisible()).toBe(true));
     }
     // Configure a basic linode, selecting all the default options
-    generic() {
+    generic(label=`Test-Linode${new Date().getTime()}`) {
         this.images[0].click();
         this.regions[0].click();
         this.plans[0].click();
-        this.label.setValue(`Test-Linode${new Date().getTime()}`);
-        this.password.setValue('Testing1234#');
-        this.addons[0].click();
+        this.label.setValue(label);
+        this.password.setValue('d89w345uj8934#');
     }
 
     selectRegion(region) {
