@@ -55,7 +55,11 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
   static displayedEvents = [
+    'outage',
+    'payment_due',
+    'ticket_important',
     'ticket_abuse',
+    'notice',
   ];
 
   componentDidMount() {
