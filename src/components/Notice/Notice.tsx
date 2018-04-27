@@ -39,21 +39,23 @@ interface Props {
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
+  className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Notice: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, text, error, warning, success, typeProps } = props;
+  const { classes, text, error, warning, success, typeProps, className } = props;
 
   return (
-    <div className={classNames({
+    <div className={`${classNames({
       [classes.error]: error,
       [classes.warning]: warning,
       [classes.success]: success,
       [classes.root]: true,
       notice: true,
-    })}>
+    })}
+    ${className}`}>
       <Typography {...typeProps}>{text}</Typography>
     </div>
   );
