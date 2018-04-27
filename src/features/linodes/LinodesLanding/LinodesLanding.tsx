@@ -4,7 +4,22 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Axios, { AxiosResponse } from 'axios';
 import * as moment from 'moment';
-import { clone, pathOr, ifElse, compose, prop, propEq, isEmpty, gte } from 'ramda';
+import {
+  clone,
+  ifElse,
+  compose,
+  prop,
+  propEq,
+  isEmpty,
+  gte,
+  pathEq,
+  pathOr,
+  filter,
+  has,
+  allPass,
+  uniqBy,
+} from 'ramda';
+
 import { Observable, Subscription } from 'rxjs/Rx';
 
 import {
@@ -27,6 +42,7 @@ import LinodeConfigSelectionDrawer, {
   LinodeConfigSelectionDrawerCallback,
 } from 'src/features/LinodeConfigSelectionDrawer';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import ProductNotification from 'src/components/ProductNotification';
 
 import LinodesListView from './LinodesListView';
 import LinodesGridView from './LinodesGridView';
@@ -66,6 +82,7 @@ interface ConfigDrawerState {
 
 interface State {
   linodes: Linode.EnhancedLinode[];
+  notifications?: Linode.Notification[];
   page: number;
   pages: number;
   results: number;
@@ -95,9 +112,10 @@ type CombinedProps = Props
 export class ListLinodes extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
   notificationSub: Subscription;
+  notificationsSubscription: Subscription;
   mounted: boolean = false;
 
-  state = {
+  state: State = {
     linodes: pathOr([], ['response', 'data'], this.props.linodes),
     page: pathOr(-1, ['response', 'page'], this.props.linodes),
     pages: pathOr(-1, ['response', 'pages'], this.props.linodes),
@@ -178,6 +196,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
         return this.setState({ linodes: response.response.data });
       });
+
+    this.notificationsSubscription = notifications$
+      .map(compose(
+        uniqBy(prop('type')),
+        filter(allPass([
+          pathEq(['entity', 'type'], 'linode'),
+          has('message'),
+        ])),
+      ))
+      .subscribe((notifications: Linode.Notification[]) =>
+        this.setState({ notifications }));
   }
 
   componentWillUnmount() {
@@ -287,7 +316,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   submitConfigChoice = () => {
     const { action, selected } = this.state.configDrawer;
-    if (selected) {
+    if (selected && action) {
       action(selected);
       this.closeConfigDrawer();
     }
@@ -335,6 +364,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           </Hidden>
         </Grid>
         <Grid item xs={12}>
+          {
+            (this.state.notifications || []).map(n =>
+              <ProductNotification key={n.type} severity={n.severity} text={n.message} />)
+          }
           <Hidden mdUp>
             {this.renderGridView(linodes, images, types)}
           </Hidden>
