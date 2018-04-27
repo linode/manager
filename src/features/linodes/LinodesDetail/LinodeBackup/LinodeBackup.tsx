@@ -329,7 +329,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
                 <TableCell>Date Created</TableCell>
                 <TableCell>Label</TableCell>
                 <TableCell>Duration</TableCell>
