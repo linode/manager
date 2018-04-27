@@ -15,6 +15,7 @@ import {
   RouteComponentProps,
   Redirect,
 } from 'react-router-dom';
+import { Location } from 'history';
 import { Subscription, Observable } from 'rxjs/Rx';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
@@ -44,6 +45,7 @@ import LinodeBackup from './LinodeBackup';
 import LinodeSettings from './LinodeSettings';
 import LinodePowerControl from './LinodePowerControl';
 import reloadableWithRouter from './reloadableWithRouter';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 
 interface Data {
   linode: Linode.Linode;
@@ -113,7 +115,6 @@ const requestAllTheThings = (linodeId: number) =>
       const { data: linode } = response;
 
       const typeReq = getType(linode.type)
-        .then(response => response.data)
         .catch(err => undefined);
 
       const imageReq = getImage(linode.image)
@@ -162,6 +163,17 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       action: (id: number) => null,
     },
   };
+
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
+    const { location } = this.props;
+    const { location: nextLocation } = nextProps;
+
+    return haveAnyBeenModified<State>(
+      this.state,
+      nextState,
+      ['linode', 'type', 'image', 'volumes'],
+    ) || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
+  }
 
   componentWillUnmount() {
     this.mounted = false;
@@ -283,12 +295,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               variant="headline"
               text={linode.label}
               onEdit={this.updateLabel}
+              data-qa-label
             />
           </Grid>
           <Grid item className={classes.cta}>
             <Button
               onClick={() => weblishLaunch(`${linode.id}`)}
               className={classes.launchButton}
+              data-qa-launch-console
             >
               Launch Console
             </Button>
@@ -309,7 +323,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             scrollable
             scrollButtons="off"
           >
-            {this.tabs.map(tab => <Tab key={tab.title} label={tab.title} />)}
+            {this.tabs.map(tab =>
+              <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
           </Tabs>
         </AppBar>
         {
@@ -355,7 +370,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               }
             />
           )} />
-          <Route exact path={`${url}/settings`} render={() => (<LinodeSettings />)} />
+          <Route exact path={`${url}/settings`} render={() => (
+          <LinodeSettings
+            linodeId={linode.id}
+            linodeLabel={linode.label}
+            alerts={linode.alerts}
+          />
+          )} />
           <Route exact path={`${url}/volumes`} render={() => (<LinodeVolumes />)} />
           <Route exact path={`${url}/networking`} render={() => (<LinodeNetworking />)} />
           <Route exact path={`${url}/rescue`} render={() => (

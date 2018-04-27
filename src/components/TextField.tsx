@@ -5,6 +5,7 @@ import TextField, { TextFieldProps } from 'material-ui/TextField';
 export interface Props extends TextFieldProps {
   errorText?: string;
   affirmative?: Boolean;
+  [index: string]: any;
 }
 
 const LinodeTextField: React.StatelessComponent<Props> = (props) => {

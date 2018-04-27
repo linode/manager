@@ -175,7 +175,7 @@ class EditableText extends React.Component<FinalProps, State> {
               onClickAway={this.cancelEditing}
               mouseEvent="onMouseDown"
             >
-              <div className={`${classes.container} ${classes.edit}`}>
+              <div className={`${classes.container} ${classes.edit}`} data-qa-edit-field>
                 <TextField
                   className={classes.textField}
                   type="text"
@@ -201,6 +201,7 @@ class EditableText extends React.Component<FinalProps, State> {
                   onClick={() => {
                     this.finishEditing(text);
                   }}
+                  data-qa-save-edit
                 >
                   <Save
                     className={`${classes.icon} ${classes.save}`}
@@ -209,6 +210,7 @@ class EditableText extends React.Component<FinalProps, State> {
                 <Button
                   className={classes.button}
                   onClick={this.cancelEditing}
+                  data-qa-cancel-edit
                 >
                   <Close
                     className={`${classes.icon} ${classes.close}`}

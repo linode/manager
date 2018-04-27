@@ -344,26 +344,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
 
-    const displayGrid: 'grid' | 'list' = ifElse(
-      compose(isEmpty, prop('hash')),
-      /* is empty */
-      ifElse(
-        compose(gte(3), prop('length')),
-        () => 'grid',
-        () => 'list',
-      ),
-      /* is not empty */
-      ifElse(
-        propEq('hash', '#grid'),
-        () => 'grid',
-        () => 'list',
-      ),
-    )({ hash, length: linodes.length });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodes.length });
 
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Typography variant="headline" className={this.props.classes.title}>Linodes</Typography>
+          <Typography
+            variant="headline"
+            className={this.props.classes.title}
+            data-qa-title
+            >
+            Linodes
+          </Typography>
           <Hidden smDown>
             <ToggleBox
               handleClick={this.changeViewStyle}
@@ -411,6 +403,22 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const getDisplayFormat = ifElse(
+  compose(isEmpty, prop('hash')),
+  /* is empty */
+  ifElse(
+    compose(gte(3), prop('length')),
+    () => 'grid',
+    () => 'list',
+  ),
+  /* is not empty */
+  ifElse(
+    propEq('hash', '#grid'),
+    () => 'grid',
+    () => 'list',
+  ),
+);
 
 export const styled = withStyles(styles, { withTheme: true });
 

@@ -38,7 +38,14 @@ const LinodesListView: React.StatelessComponent<Props> = (props) => {
               {linodes.map(linode =>
                 <LinodeRow
                   key={linode.id}
-                  linode={linode}
+                  linodeId={linode.id}
+                  linodeStatus={linode.status}
+                  linodeIpv4={linode.ipv4}
+                  linodeIpv6={linode.ipv6}
+                  linodeRegion={linode.region}
+                  linodeNotification={linode.notification}
+                  linodeLabel={linode.label}
+                  linodeRecentEvent={linode.recentEvent}
                   type={types.find(type => linode.type === type.id)}
                   openConfigDrawer={openConfigDrawer}
                 />,

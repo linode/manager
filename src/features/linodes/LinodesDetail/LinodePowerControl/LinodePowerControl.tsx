@@ -164,6 +164,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
+          data-qa-power-control={status}
         >
           {isRunning &&
             <span className={classes.fadeIn}>
@@ -202,6 +203,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           <MenuItem
             onClick={this.reboot}
             className={classes.menuItem}
+            data-qa-set-power="reboot"
           >
             <Reload className={`${classes.icon}`} />
             Reboot
@@ -210,6 +212,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             <MenuItem
               onClick={this.powerOff}
               className={classes.menuItem}
+              data-qa-set-power="powerOff"
             >
               <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
               Power Off
@@ -219,6 +222,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
             <MenuItem
               onClick={this.powerOn}
               className={classes.menuItem}
+              data-qa-set-power="powerOn"
             >
               <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Power On

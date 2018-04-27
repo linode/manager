@@ -135,8 +135,14 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography variant="headline" className={classes.title}>Rebuild</Typography>
-          <Typography className={classes.intro}>
+          <Typography
+            variant="headline"
+            className={classes.title}
+            data-qa-title
+          >
+            Rebuild
+          </Typography>
+          <Typography className={classes.intro} data-qa-rebuild-desc>
             If you can't rescue an exiting disk, it's time to rebuild your Linode.
             There are a couple of different ways you can do this,
             from a backup or start over with a fresh Linux
@@ -153,21 +159,23 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                 value={this.state.selected || ''}
                 onChange={e => this.onImageChange(e.target.value)}
                 inputProps={{ name: 'image-select', id: 'image-select' }}
+                data-qa-rebuild-image
               >
                 <MenuItem value={''} disabled>Select an Image</MenuItem>
                 {
                   Object
                     .entries(this.state.images)
                     .map(([group, images]) => [
-                      <MenuItem disabled className="selectHeader">
+                      <MenuItem disabled className="selectHeader" data-qa-select-header>
                         {getDisplayNameForGroup(group)
                       }</MenuItem>,
                       ...images.map(({ id, label }: Linode.Image) =>
-                        <MenuItem key={id} value={id}>{label}</MenuItem>),
+                        <MenuItem key={id} value={id} data-qa-image-option>{label}</MenuItem>),
                     ])
                 }
               </Select>
-              {imageError && <FormHelperText error>{imageError}</FormHelperText>}
+              {imageError &&
+              <FormHelperText error data-qa-image-error>{imageError}</FormHelperText>}
             </div>
           </FormControl>
 
@@ -184,6 +192,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             color="secondary"
             className="destructive"
             onClick={this.onSubmit}
+            data-qa-rebuild
           >
             Rebuild
           </Button>

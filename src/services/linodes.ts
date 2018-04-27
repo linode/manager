@@ -31,7 +31,7 @@ export const getLinodeDisks = (id: number): GetLinodeDisksType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/disks`)
     .then(response => response.data);
 
-type GetLinodeBackupsType = Promise<Linode.ResourcePage<Linode.LinodeBackup>>;
+type GetLinodeBackupsType = Promise<Linode.LinodeBackupsResponse>;
 export const getLinodeBackups = (id: number): GetLinodeBackupsType =>
   Axios.get(`${API_ROOT}/linode/instances/${id}/backups`)
     .then(response => response.data);
@@ -75,7 +75,7 @@ export const getLinodeTypes = (): Promise<Linode.ResourcePage<Linode.LinodeType>
   Axios.get(`${API_ROOT}/linode/types`)
     .then(response => response.data);
 
-type GetType = Promise<Linode.SingleResourceState<Linode.LinodeType>>;
+type GetType = Promise<Linode.LinodeType>;
 export const getType = (typeId: string): GetType =>
   Axios.get(`${API_ROOT}/linode/types/${typeId}`)
     .then(response => response.data);
@@ -93,6 +93,22 @@ export const getLinodeStats = (linodeId: number, year?: string, month?: string) 
 
   return Axios.get(`${API_ROOT}/linode/instances/${linodeId}/stats`);
 };
+
+export const updateLinode =
+  (id: number, values: any): Promise<Linode.SingleResourceState<Linode.Linode>> =>
+    Axios.put(`${API_ROOT}/linode/instances/${id}`, values);
+
+type DiskResponse = Promise<Linode.SingleResourceState<Linode.Disk>>;
+export const changeLinodeDiskPassword = (
+  linodeId: number,
+  diskId: number,
+  password: string,
+): DiskResponse =>
+  Axios.post(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/password`, { password })
+    .then(response => response.data);
+
+export const deleteLinode = (linodeId: number): Promise<{}> =>
+  Axios.delete(`${API_ROOT}/linode/instances/${linodeId}`);
 
 export const restoreBackup = (
   linodeID: number,

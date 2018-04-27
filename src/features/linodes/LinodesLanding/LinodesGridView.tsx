@@ -20,7 +20,14 @@ const LinodesGridView: React.StatelessComponent<Props> = (props) => {
       {linodes.map(linode =>
         <LinodeCard
           key={linode.id}
-          linode={linode}
+          linodeId={linode.id}
+          linodeStatus={linode.status}
+          linodeIpv4={linode.ipv4}
+          linodeIpv6={linode.ipv6}
+          linodeRegion={linode.region}
+          linodeNotification={linode.notification}
+          linodeLabel={linode.label}
+          linodeRecentEvent={linode.recentEvent}
           image={images.find(image => linode.image === image.id)}
           type={types.find(type => linode.type === type.id)}
           openConfigDrawer={openConfigDrawer}

@@ -67,6 +67,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     height: '46px',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.down('sm')]: {
+      margin: 0,
       width: '40px',
       height: '40px',
     },

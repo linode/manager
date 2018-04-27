@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as moment from 'moment-timezone';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { path, sortBy, pathOr } from 'ramda';
+import { Subscription } from 'rxjs/Rx';
 
 import {
   withStyles,
@@ -34,7 +35,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
 import Select from 'src/components/Select';
-import { resetEventsPolling } from 'src/events';
+import { events$, resetEventsPolling } from 'src/events';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ActionsPanel from 'src/components/ActionsPanel';
 
@@ -106,6 +107,7 @@ interface PreloadedProps {
 }
 
 interface State {
+  backups: Linode.LinodeBackupsResponse;
   snapshotForm: {
     label: string;
     errors?: Linode.ApiFieldError[];
@@ -136,6 +138,7 @@ const evenize = (n: number): number => {
 
 class LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
+    backups: this.props.backups.response,
     snapshotForm: {
       label: '',
     },
@@ -151,6 +154,32 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   windows: string[][] = [];
   days: string[][] = [];
+
+  eventSubscription: Subscription;
+
+  componentDidMount() {
+    this.eventSubscription = events$
+      .filter(e => [
+        'linode_snapshot',
+        'backups_enable',
+        'backups_cancel',
+        'backups_restore',
+      ].includes(e.action))
+      .filter(e => !e._initial && e.status === 'finished')
+      .subscribe((e) => {
+        getLinodeBackups(this.props.linodeID)
+          .then((data) => {
+            this.setState({ backups: data });
+          })
+          .catch(() => {
+            /* @todo: how do we want to display this error? */
+          });
+      });
+  }
+
+  componentWillUnmount() {
+    this.eventSubscription.unsubscribe();
+  }
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
@@ -224,8 +253,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   aggregateBackups = (): Linode.LinodeBackup[] => {
-    const { backups: { response: backups } } = this.props;
-    return backups && [...backups.automatic, backups.snapshot.current].filter(b => Boolean(b));
+    const { backups } = this.state;
+    const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
+      ? backups.snapshot.in_progress
+      : backups.snapshot.current;
+    return backups && [...backups.automatic, manualSnapshot].filter(b => Boolean(b));
   }
 
   takeSnapshot = () => {
@@ -297,8 +329,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Name</TableCell>
                 <TableCell>Date Created</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell>Label</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Disks</TableCell>
                 <TableCell>Space Required</TableCell>
@@ -312,20 +345,22 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                     <TableCell>
                       {this.formatBackupDate(backup.created)}
                     </TableCell>
-                    <TableCell>{typeMap[backup.type]}</TableCell>
+                    <TableCell data-qa-backup-name>
+                      {backup.label || typeMap[backup.type]}
+                    </TableCell>
                     <TableCell>
                       {moment.duration(
                         moment(backup.finished).diff(moment(backup.created)),
                       ).humanize()}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-backup-disks>
                       {backup.disks.map((disk, idx) => (
                         <div key={idx}>
                           {disk.label} ({disk.filesystem}) - {disk.size}MB
                         </div>
                       ))}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-qa-space-required>
                       {backup.disks.reduce((acc, disk) => (
                         acc + disk.size
                       ), 0)}MB
@@ -362,10 +397,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Typography
             variant="title"
             className={classes.subTitle}
+            data-qa-manual-heading
           >
             Manual Snapshot
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" data-qa-manual-desc>
             You can make a manual backup of your Linode by taking a snapshot.
             Creating the manual snapshot can take serval minutes, depending on
             the size of your Linode and the amount of data you have stored on
@@ -377,6 +413,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               label="Name Snapshot"
               value={snapshotForm.label || ''}
               onChange={e => this.setState({ snapshotForm: { label: e.target.value } })}
+              data-qa-manual-name
             />
             <Button
               variant="raised"
@@ -407,10 +444,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Paper className={classes.paper}>
           <Typography
             variant="title"
-            className={classes.subTitle}>
+            className={classes.subTitle}
+            data-qa-settings-heading>
             Settings
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body1" data-qa-settings-desc>
             Configure when automatic backups are initiated. The Linode Backup
             Service will generate backups between the selected hours. The
             selected day is when the backup is promoted to the weekly slot.
@@ -425,6 +463,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               onChange={e => this.setState({ settingsForm:
                 { ...settingsForm, window: e.target.value } })}
               inputProps={{ name: 'window', id: 'window' }}
+              data-qa-time-select
             >
               {this.windows.map((window: string[]) => (
                 <MenuItem key={window[0]} value={window[1]}>
@@ -443,6 +482,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               onChange={e => this.setState({ settingsForm:
                 { ...settingsForm, day: e.target.value } })}
               inputProps={{ name: 'day', id: 'day' }}
+              data-qa-weekday-select
             >
               {this.days.map((day: string[]) => (
                 <MenuItem key={day[0]} value={day[1]}>
@@ -456,6 +496,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               variant="raised"
               color="primary"
               onClick={this.saveSettings}
+              data-qa-schedule
             >
               Save Schedule
             </Button>
@@ -477,12 +518,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Typography
           variant="headline"
           className={classes.title}
+          data-qa-title
         >
           Backups
         </Typography>
         {backups.length
           ? <this.Table backups={backups} />
-          : <Paper className={classes.paper}>
+          : <Paper className={classes.paper} data-qa-backup-description>
               Automatic and manual backups will be listed here
             </Paper>
         }
@@ -496,11 +538,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             destructive
           `}
           onClick={() => this.cancelBackups()}
+          data-qa-cancel
         >
           Cancel Backups
         </Button>
         <Typography
           variant="body2"
+          data-qa-cancel-desc
         >
           Please note that when you cancel backups associated with this
           Linode, this will remove all existing backups.

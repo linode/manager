@@ -22,7 +22,7 @@ namespace Linode {
     notification?: string;
   }
 
-  interface LinodeAlerts {
+  export interface LinodeAlerts {
     cpu: number;
     io: number;
     network_in: number;

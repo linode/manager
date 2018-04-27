@@ -11,10 +11,12 @@ import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
+import Tooltip from 'material-ui/Tooltip';
 
-import LinearProgress from 'src/components/LinearProgress';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import Flag from 'src/assets/icons/flag.svg';
+import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import LinearProgress from 'src/components/LinearProgress';
 
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
@@ -22,17 +24,16 @@ import IPAddress from './IPAddress';
 import { displayLabel } from '../presentation';
 import LinodeActionMenu from './LinodeActionMenu';
 import transitionStatus from '../linodeTransitionStatus';
-import Tooltip from 'material-ui/Tooltip';
 
 type ClassNames = 'bodyRow'
-| 'linodeCell'
-| 'tagsCell'
-| 'ipCell'
-| 'regionCell'
-| 'actionCell'
-| 'actionInner'
-| 'flag'
-| 'status';
+  | 'linodeCell'
+  | 'tagsCell'
+  | 'ipCell'
+  | 'regionCell'
+  | 'actionCell'
+  | 'actionInner'
+  | 'flag'
+  | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
   return ({
@@ -80,7 +81,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => {
 };
 
 interface Props {
-  linode: Linode.EnhancedLinode;
+  linodeId: number;
+  linodeStatus: Linode.LinodeStatus;
+  linodeIpv4: string[];
+  linodeIpv6: string;
+  linodeRegion: string;
+  linodeNotification?: string;
+  linodeLabel: string;
+  linodeRecentEvent?: Linode.Event;
   type?: Linode.LinodeType;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
 }
@@ -88,20 +96,36 @@ interface Props {
 type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<PropsWithStyles> {
+  shouldComponentUpdate(nextProps: PropsWithStyles) {
+    return haveAnyBeenModified<Props>(
+      nextProps,
+      this.props,
+      [
+        'type',
+        'linodeStatus',
+        'linodeRegion',
+        'linodeNotification',
+        'linodeLabel',
+        'linodeIpv6',
+        'linodeIpv4',
+      ],
+    );
+  }
+
   headCell = () => {
-    const { type, linode, classes } = this.props;
+    const { type, linodeId, linodeStatus, linodeLabel, classes } = this.props;
     const specsLabel = type && displayLabel(type.memory);
 
-    return(
+    return (
       <TableCell className={classes.linodeCell}>
         <Grid container alignItems="center">
           <Grid item className="py0">
-            <LinodeStatusIndicator status={linode.status} />
+            <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className="py0">
-            <Link to={`/linodes/${linode.id}`}>
+            <Link to={`/linodes/${linodeId}`}>
               <Typography variant="subheading" data-qa-label>
-                {linode.label}
+                {linodeLabel}
               </Typography>
             </Link>
             {specsLabel && <div>{specsLabel}</div>}
@@ -112,14 +136,14 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   loadingState = () => {
-    const { linode, classes } = this.props;
-    const value = (linode.recentEvent && linode.recentEvent.percent_complete) || 1;
-    return(
-      <TableRow key={linode.id} className={classes.bodyRow} data-qa-loading>
+    const { linodeId, linodeStatus, linodeRecentEvent, classes } = this.props;
+    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
+    return (
+      <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
         {this.headCell()}
         <TableCell colSpan={4}>
           {typeof value === 'number' &&
-            <div className={classes.status}>{linode.status.replace('_', ' ')}: {value}%</div>
+            <div className={classes.status}>{linodeStatus.replace('_', ' ')}: {value}%</div>
           }
           <LinearProgress value={value} />
         </TableCell>
@@ -128,35 +152,47 @@ class LinodeRow extends React.Component<PropsWithStyles> {
   }
 
   loadedState = () => {
-    const { linode, classes, openConfigDrawer } = this.props;
+    const {
+      linodeId,
+      linodeStatus,
+      linodeIpv4,
+      linodeIpv6,
+      linodeRegion,
+      linodeNotification,
+      linodeLabel,
+      classes,
+      openConfigDrawer,
+    } = this.props;
 
-    return(
-      <TableRow key={linode.id} data-qa-linode>
+    return (
+      <TableRow key={linodeId} data-qa-linode>
         {this.headCell()}
         <TableCell className={classes.ipCell} data-qa-ips>
-          <IPAddress ips={linode.ipv4} copyRight />
-          <IPAddress ips={[linode.ipv6]} copyRight />
+          <IPAddress ips={linodeIpv4} copyRight />
+          <IPAddress ips={[linodeIpv6]} copyRight />
         </TableCell>
         <TableCell className={classes.regionCell} data-qa-region>
-          <RegionIndicator region={linode.region} />
+          <RegionIndicator region={linodeRegion} />
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
-            {linode.notification &&
-              <Tooltip title={linode.notification}><Flag className={classes.flag} /></Tooltip>
+            {linodeNotification &&
+              <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
             }
             <LinodeActionMenu
-              linode={linode}
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeStatus={linodeStatus}
               openConfigDrawer={openConfigDrawer}
             />
           </div>
         </TableCell>
-    </TableRow>
+      </TableRow>
     );
   }
 
   render() {
-    const loading = transitionStatus.includes(this.props.linode.status);
+    const loading = transitionStatus.includes(this.props.linodeStatus);
 
     return loading
       ? this.loadingState()
