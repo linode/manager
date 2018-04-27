@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { StaticRouter, withRouter } from 'react-router-dom';
+
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+
 import { ListLinodes } from './LinodesLanding';
 import {
   linodes as mockLinodes,
@@ -40,33 +43,36 @@ describe('ListLinodes', () => {
 
   it('renders without error', () => {
     mount(
-      <StaticRouter location="/" context={{}}>
-        <RoutedListLinodes
-          linodes={linodes}
-          images={images}
-          types={mockTypes}
-          classes={{ root: '', title: '' }}
-          setDocs={setDocs}
-          clearDocs={clearDocs}
-        />
-      </StaticRouter>,
+      <LinodeThemeWrapper>
+        <StaticRouter location="/" context={{}}>
+          <RoutedListLinodes
+            linodes={linodes}
+            images={images}
+            types={mockTypes}
+            classes={{ root: '', title: '' }}
+            setDocs={setDocs}
+            clearDocs={clearDocs}
+          />
+        </StaticRouter>
+      </LinodeThemeWrapper>,
     );
   });
 
   it('renders an empty state with no linodes', () => {
     linodes = promiseLoaderType(resourcePage([]));
     const component = mount(
-
-      <StaticRouter location="/" context={{}}>
-        <RoutedListLinodes
-          linodes={linodes}
-          images={images}
-          types={mockTypes}
-          classes={{ root: '', title: '' }}
-          setDocs={setDocs}
-          clearDocs={clearDocs}
-        />
-      </StaticRouter>,
+      <LinodeThemeWrapper>
+        <StaticRouter location="/" context={{}}>
+          <RoutedListLinodes
+            linodes={linodes}
+            images={images}
+            types={mockTypes}
+            classes={{ root: '', title: '' }}
+            setDocs={setDocs}
+            clearDocs={clearDocs}
+          />
+        </StaticRouter>,
+      </LinodeThemeWrapper>,
     );
 
     const emptyState = component.find('ListLinodesEmptyState');
@@ -76,16 +82,18 @@ describe('ListLinodes', () => {
 
   it('renders menu actions when the kabob is clicked', () => {
     const component = mount(
-      <StaticRouter location="/" context={{}}>
-        <RoutedListLinodes
-          linodes={linodes}
-          images={images}
-          types={mockTypes}
-          classes={{ root: '', title: '' }}
-          setDocs={setDocs}
-          clearDocs={clearDocs}
-        />
-      </StaticRouter>,
+      <LinodeThemeWrapper>
+        <StaticRouter location="/" context={{}}>
+          <RoutedListLinodes
+            linodes={linodes}
+            images={images}
+            types={mockTypes}
+            classes={{ root: '', title: '' }}
+            setDocs={setDocs}
+            clearDocs={clearDocs}
+          />
+        </StaticRouter>
+      </LinodeThemeWrapper>,
     );
 
     const kabobButton = component.find('MoreHoriz').first();
