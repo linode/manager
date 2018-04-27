@@ -378,7 +378,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             <LinodeSettings
               linodeId={linode.id}
               linodeLabel={linode.label}
-              alerts={linode.alerts}
+              linodeAlerts={linode.alerts}
             />
           )} />
           {/* 404 */}
