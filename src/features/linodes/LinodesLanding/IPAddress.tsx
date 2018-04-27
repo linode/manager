@@ -8,7 +8,6 @@ import {
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 
-
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
