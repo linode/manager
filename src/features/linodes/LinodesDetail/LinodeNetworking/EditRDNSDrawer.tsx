@@ -90,11 +90,11 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           />
           { hasErrorFor('none') && <FormHelperText error>{ hasErrorFor('none') }</FormHelperText> }
 
-          <Typography variant="caption" >
+          <Typography variant="caption">
             Leave this field blank to reset RDNS
           </Typography>
 
-          <ActionsPanel>
+          <ActionsPanel style={{ marginTop: 16 }}>
             <Button
               variant="raised"
               color="primary"

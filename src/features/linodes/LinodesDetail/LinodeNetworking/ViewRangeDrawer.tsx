@@ -11,10 +11,16 @@ import Button from 'material-ui/Button';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'section';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  section: {
+    marginBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
 });
 
 interface Props {
@@ -26,6 +32,8 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
+
   return (
     <Drawer
       open={props.open}
@@ -34,15 +42,19 @@ const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
     >
       {props.range &&
         <React.Fragment>
-          <Typography variant="title">IP Range</Typography>
-          <Typography variant="body1">
-            {props.range.range}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">IP Range</Typography>
+            <Typography variant="body1">
+              {props.range.range}
+            </Typography>
+          </div>
 
-          <Typography variant="title">Region</Typography>
-          <Typography variant="body1">
-            {props.range.region}
-          </Typography>
+          <div className={classes.section} style={{ border: 0, paddingBottom: 0 }}>
+            <Typography variant="subheading">Region</Typography>
+            <Typography variant="body1">
+              {props.range.region}
+            </Typography>
+          </div>
 
           <ActionsPanel>
             <Button

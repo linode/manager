@@ -11,10 +11,16 @@ import Button from 'material-ui/Button';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'section';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  section: {
+    marginBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
 });
 
 interface Props {
@@ -26,6 +32,8 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ViewIPDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
+
   return (
     <Drawer
       open={props.open}
@@ -34,44 +42,56 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = (props) => {
     >
       {props.ip &&
         <React.Fragment>
-          <Typography variant="title">Address</Typography>
-          <Typography variant="body1">
-            {props.ip.address}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">Address</Typography>
+            <Typography variant="body1">
+              {props.ip.address}
+            </Typography>
+          </div>
 
-          <Typography variant="title">Gateway</Typography>
-          <Typography variant="body1">
-            {props.ip.gateway}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">Gateway</Typography>
+            <Typography variant="body1">
+              {props.ip.gateway}
+            </Typography>
+          </div>
 
-          <Typography variant="title">Subnet Mask</Typography>
-          <Typography variant="body1">
-            {props.ip.subnet_mask}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">Subnet Mask</Typography>
+            <Typography variant="body1">
+              {props.ip.subnet_mask}
+            </Typography>
+          </div>
 
-          <Typography variant="title">Type</Typography>
-          <Typography variant="body1">
-            {props.ip.type}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">Type</Typography>
+            <Typography variant="body1">
+              {props.ip.type}
+            </Typography>
+          </div>
 
-          <Typography variant="title">Public</Typography>
-          <Typography variant="body1">
-            {props.ip.public ? 'Yes' : 'No'}
-          </Typography>
+          <div className={classes.section}>
+            <Typography variant="subheading">Public</Typography>
+            <Typography variant="body1">
+              {props.ip.public ? 'Yes' : 'No'}
+            </Typography>
+          </div>
 
           {props.ip.rdns &&
-            <React.Fragment>
-              <Typography variant="title">RDNS</Typography>
+            <div className={classes.section}>
+              <Typography variant="subheading">RDNS</Typography>
               <Typography variant="body1">
                 {props.ip.rdns}
               </Typography>
-            </React.Fragment>
+            </div>
           }
 
-          <Typography variant="title">Region</Typography>
-          <Typography variant="body1">
-            {props.ip.region}
-          </Typography>
+          <div className={classes.section} style={{ border: 0, paddingBottom: 0 }}>
+            <Typography variant="subheading">Region</Typography>
+            <Typography variant="body1">
+              {props.ip.region}
+            </Typography>
+          </div>
 
           <ActionsPanel>
             <Button
