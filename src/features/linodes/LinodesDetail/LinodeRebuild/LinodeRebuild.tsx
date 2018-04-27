@@ -50,6 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   image: {
     display: 'flex',
+    flexWrap: 'wrap',
   },
   actionPanel: {
     padding: theme.spacing.unit * 2,
@@ -122,7 +123,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
   render() {
     const { images: { error: imagesError }, classes } = this.props;
-    const { errors } = this.state;
+    const { errors, selected } = this.state;
 
     if (imagesError) {
       return <ErrorState errorText="There was an error retrieving images information." />;
@@ -156,12 +157,18 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
               <Select
                 helpText="Choosing a 64-bit distro is recommended."
                 error={Boolean(imageError)}
-                value={this.state.selected || ''}
+                value={selected || 'select'}
                 onChange={e => this.onImageChange(e.target.value)}
                 inputProps={{ name: 'image-select', id: 'image-select' }}
                 data-qa-rebuild-image
               >
-                <MenuItem value={''} disabled>Select an Image</MenuItem>
+                <MenuItem
+                  value={'select'}
+                  disabled
+                  className="selectPlaceholder"
+                >
+                  Select an Image
+                </MenuItem>
                 {
                   Object
                     .entries(this.state.images)

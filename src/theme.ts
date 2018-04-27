@@ -238,6 +238,9 @@ const LinodeTheme: Linode.Theme = {
       },
     },
     MuiFormHelperText: {
+      root: {
+        flexBasis: '100%',
+      },
       error: {
         color: '#CA0813',
       },
@@ -311,6 +314,9 @@ const LinodeTheme: Linode.Theme = {
           fontSize: '1rem',
         },
       },
+      disabled: {
+        opacity: 1,
+      },
     },
     MuiListItemText: {
       secondary: {
@@ -326,8 +332,11 @@ const LinodeTheme: Linode.Theme = {
         whiteSpace: 'initial',
         textOverflow: 'initial',
         color: '#666',
+        transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
+        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
-          backgroundColor: 'white',
+          backgroundColor: '#3B85D9',
+          color: 'white',
         },
         '& em': {
           fontStyle: 'normal !important',
@@ -335,6 +344,8 @@ const LinodeTheme: Linode.Theme = {
       },
       selected: {
         backgroundColor: 'white !important',
+        color: '#3B85D9 !important',
+        cursor: 'initial',
       },
     },
     MuiPopover: {
