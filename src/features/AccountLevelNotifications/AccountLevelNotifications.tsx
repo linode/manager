@@ -7,6 +7,7 @@ import {
   filter,
   propSatisfies,
   uniqBy,
+  pathOr,
 } from 'ramda';
 import {
   withStyles,
@@ -72,17 +73,24 @@ class AccountLevelNotifications extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
 
-    return (this.state.notifications || [])
-      .map(notification =>
-        <Notice
-          key={notification.type}
-          text={notification.message}
-          warning
-          className={classes.root}
-        />,
-      );
+    return (this.state.notifications || []).map((n) => {
+      const level = pathOr('warning', [n.severity], severityMap);
+
+      return React.createElement(Notice, {
+        key: n.type,
+        text: n.message,
+        className: classes.root,
+        [level]: true,
+      });
+    });
   }
 }
+
+const severityMap = {
+  minor: 'success',
+  major: 'warning',
+  critical: 'error',
+};
 
 const styled = withStyles(styles, { withTheme: true });
 

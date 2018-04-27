@@ -71,7 +71,7 @@ namespace Linode {
     'notice';
 
   export interface Notification {
-    entity: Entity;
+    entity: null | Entity;
     label: string;
     message: string;
     type: NotificationType;
