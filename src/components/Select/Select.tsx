@@ -30,10 +30,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     maxHeight: 250,
     overflowY: 'auto',
     overflowX: 'hidden',
-    background: LinodeTheme.bg.offWhite,
     boxSizing: 'content-box',
     [theme.breakpoints.down('xs')]: {
       minWidth: 200,
+    },
+    '& .selectPlaceholder': {
+      height: 0,
+      padding: 0,
     },
   },
   dropDown: {
