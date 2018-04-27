@@ -25,6 +25,7 @@ import {
 import 'src/utilities/request';
 import DefaultLoader from 'src/components/DefaultLoader';
 
+import LinodeThemeWrapper from './LinodeThemeWrapper';
 import App from './App';
 import './index.css';
 
@@ -69,7 +70,11 @@ ReactDOM.render(
               {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
               <Route exact path="/nullauth" render={() => <span>null auth route</span>} />
               <Route exact path="/logout" component={Logout} />
-              <Route component={App} />
+              <Route render={() =>
+                <LinodeThemeWrapper>
+                  <App />
+                </LinodeThemeWrapper>
+              }/>
             </Switch>
           </AuthenticationWrapper>
         }/>

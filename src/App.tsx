@@ -10,15 +10,12 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
-  MuiThemeProvider,
-  createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
 import Grid from 'material-ui/Grid';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
-import LinodeTheme from 'src/theme';
 import TopMenu from 'src/features/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -46,9 +43,6 @@ const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
 });
 
-const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
-theme.shadows = theme.shadows.fill('none');
-
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -74,7 +68,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   wrapper: {
-    backgroundColor: LinodeTheme.bg.main,
+    backgroundColor: theme.bg.main,
     flex: 1,
     padding: theme.spacing.unit * 3,
     marginBottom: -100 + theme.spacing.unit * 3,
@@ -158,6 +152,7 @@ export class App extends React.Component<CombinedProps, State> {
       });
   }
 
+
   toggleMenu = () => {
     this.setState({
       menuOpen: !this.state.menuOpen,
@@ -176,7 +171,7 @@ export class App extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {longLivedLoaded &&
-          <MuiThemeProvider theme={theme}>
+          <React.Fragment>
             <CssBaseline />
             <div className={classes.appFrame}>
               <SideMenu open={menuOpen} toggle={this.toggleMenu} />
@@ -230,7 +225,7 @@ export class App extends React.Component<CombinedProps, State> {
               data-qa-beta-notice/>
             <ToastNotifications />
             <VolumeDrawer />
-          </MuiThemeProvider>
+          </React.Fragment>
         }
       </React.Fragment>
     );
