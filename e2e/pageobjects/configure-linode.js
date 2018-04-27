@@ -58,7 +58,7 @@ class ConfigureLinode extends Page {
         this.regions[0].click();
         this.plans[0].click();
         this.label.setValue(label);
-        this.password.setValue('d89w345uj8934#');
+        this.password.setValue(new Date().getTime());
     }
 
     selectRegion(region) {
