@@ -11,7 +11,7 @@ import Radio, { RadioProps } from 'material-ui/Radio';
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 
-import LinodeTheme from '../../../src/theme';
+
 
 type CSSClasses =
   'root'
@@ -48,15 +48,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   warning: {
-    color: LinodeTheme.palette.status.warningDark,
+    color: theme.palette.status.warningDark,
     '& .defaultFill': {
-      fill: LinodeTheme.palette.status.warning,
+      fill: theme.palette.status.warning,
     },
   },
   error: {
-    color: LinodeTheme.palette.status.errorDark,
+    color: theme.palette.status.errorDark,
     '& .defaultFill': {
-      fill: LinodeTheme.palette.status.error,
+      fill: theme.palette.status.error,
     },
   },
   disabled: {

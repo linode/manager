@@ -8,7 +8,7 @@ import {
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 
-import LinodeTheme from 'src/theme';
+
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     top: -9,
   },
   ipLink: {
-    color: LinodeTheme.palette.primary.main,
+    color: theme.palette.primary.main,
     position: 'relative',
     display: 'inline-block',
     width: 28,
@@ -77,7 +77,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   copied: {
     fontSize: '.85rem',
     left: -12,
-    color: LinodeTheme.palette.primary.light,
+    color: theme.palette.primary.light,
     padding: '6px 8px',
     backgroundColor: 'white',
     position: 'absolute',

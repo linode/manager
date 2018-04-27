@@ -10,7 +10,7 @@ import Divider from 'material-ui/Divider';
 import CheckBox from 'src/components/CheckBox';
 import { FormControlLabel } from 'material-ui/Form';
 
-import LinodeTheme from 'src/theme';
+
 
 type ClassNames = 'root'
 | 'flex'
@@ -23,7 +23,7 @@ type ClassNames = 'root'
 | 'subLabel'
 | 'caption';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
@@ -50,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   label: {
     '& > span:last-child': {
-      color: LinodeTheme.color.headline,
+      color: theme.color.headline,
       fontWeight: 700,
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {

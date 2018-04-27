@@ -3,13 +3,12 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
-  Theme,
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import Popover from 'material-ui/Popover';
 import HelpOutline from 'material-ui-icons/HelpOutline';
-import LinodeTheme from '../../../src/theme';
+
 
 interface Props {
   text: string;
@@ -23,11 +22,11 @@ interface State {
 
 type ClassNames = 'root' | 'helpIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   root: {
     '& .helpPaper': {
       padding: theme.spacing.unit * 2,
-      backgroundColor: LinodeTheme.bg.offWhite,
+      backgroundColor: theme.bg.offWhite,
       '&::after': {
         content: 'poo',
         display: 'block',
@@ -35,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     },
   },
   helpIcon: {
-    color: LinodeTheme.palette.primary.main,
+    color: theme.palette.primary.main,
   },
 });
 

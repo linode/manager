@@ -6,7 +6,7 @@ import {
   Theme,
   StyleRulesCallback,
 } from 'material-ui/styles';
-import LinodeTheme from 'src/theme';
+
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
 
@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   menuPaper: {
     height: '100%',
     width: 215,
-    backgroundColor: LinodeTheme.bg.navy,
+    backgroundColor: theme.bg.navy,
     left: 'inherit',
     boxShadow: 'none',
     [theme.breakpoints.up('xl')]: {

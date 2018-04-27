@@ -7,7 +7,7 @@ import {
 } from 'material-ui';
 
 import Typography from 'material-ui/Typography';
-import LinodeTheme from 'src/theme';
+
 
 export interface Doc {
   title: string;
@@ -27,7 +27,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   title: {},
   titleLink: {
     textDecoration: 'none',
-    color: LinodeTheme.color.headline,
+    color: theme.color.headline,
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },

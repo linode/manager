@@ -11,7 +11,7 @@ import Check from 'material-ui-icons/Check';
 import Tooltip from 'material-ui/Tooltip';
 import Grid from 'src/components/Grid';
 import Fade from 'material-ui/transitions/Fade';
-import LinodeTheme from '../../../src/theme';
+
 
 type CSSClasses =
 'root'
@@ -24,7 +24,7 @@ type CSSClasses =
 | 'disabled'
 | 'showCursor';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -92,7 +92,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   heading: {
     fontWeight: 700,
     fontSize: '1em',
-    color: LinodeTheme.color.headline,
+    color: theme.color.headline,
   },
   subheading: {
     fontSize: '0.8em',
@@ -101,8 +101,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   innerGrid: {
     width: '100%',
     minHeight: 70,
-    backgroundColor: LinodeTheme.bg.offWhite,
-    border: '1px solid ' + `${LinodeTheme.bg.main}`,
+    backgroundColor: theme.bg.offWhite,
+    border: '1px solid ' + `${theme.bg.main}`,
     transition: `${'background-color 225ms ease-in-out, '}
     ${'border-color 225ms ease-in-out'}`,
     '&:hover': {

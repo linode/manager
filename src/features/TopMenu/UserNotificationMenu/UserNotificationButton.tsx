@@ -8,11 +8,11 @@ import {
 } from 'material-ui';
 import IconButton from 'material-ui/IconButton';
 import NotificationIcon from '../../../assets/icons/bell.svg';
-import LinodeTheme from '../../../theme';
+
 
 type ClassNames = 'root' | 'icon' | 'new';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     animation: 'fadeIn 225ms ease-in-out',
     width: 10,
     height: 10,
-    backgroundColor: LinodeTheme.color.red,
+    backgroundColor: theme.color.red,
     borderRadius: '50%',
     position: 'absolute',
     zINdex: 2,

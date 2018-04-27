@@ -2,14 +2,13 @@ import * as React from 'react';
 import {
   withStyles,
   StyleRulesCallback,
-  Theme,
   WithStyles,
 } from 'material-ui';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Typography from 'material-ui/Typography';
 import Button, { ButtonProps } from 'material-ui/Button';
 import Grid from 'src/components/Grid';
-import LinodeTheme from 'src/theme';
+
 
 type ClassNames = 'root'
   | 'title'
@@ -17,7 +16,7 @@ type ClassNames = 'root'
   | 'icon'
   | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   '@keyframes scaleIn': {
     from: {
       transform: 'translateX( -10px ) rotateY( -180deg )',
@@ -51,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     height: 225,
     '& .outerCircle': {
       fill: 'white',
-      stroke: LinodeTheme.bg.offWhite,
+      stroke: theme.bg.offWhite,
     },
     '& .insidePath path': {
       opacity: 0,

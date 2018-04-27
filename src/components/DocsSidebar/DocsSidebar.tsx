@@ -8,7 +8,7 @@ import {
 } from 'material-ui/styles';
 import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
-import LinodeTheme from 'src/theme';
+
 
 import DocComponent, { Doc } from './DocComponent';
 
@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   root: {},
   title: {
     fontSize: '1.5rem',
-    color: LinodeTheme.color.green,
+    color: theme.color.green,
   },
 });
 

@@ -11,7 +11,7 @@ import Checkbox, { CheckboxProps } from 'material-ui/Checkbox';
 import CheckboxIcon from '../../assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from '../../assets/icons/checkboxChecked.svg';
 
-import LinodeTheme from '../../../src/theme';
+
 
 type CSSClasses =
   'root'
@@ -45,15 +45,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     color: theme.palette.primary.main,
   },
   warning: {
-    color: LinodeTheme.palette.status.warningDark,
+    color: theme.palette.status.warningDark,
     '& .defaultFill': {
-      fill: LinodeTheme.palette.status.warning,
+      fill: theme.palette.status.warning,
     },
   },
   error: {
-    color: LinodeTheme.palette.status.errorDark,
+    color: theme.palette.status.errorDark,
     '& .defaultFill': {
-      fill: LinodeTheme.palette.status.error,
+      fill: theme.palette.status.error,
     },
   },
   disabled: {
