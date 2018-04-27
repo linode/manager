@@ -25,7 +25,7 @@ import { getImagesPage } from 'src/services/images';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import LinodeTheme from 'src/theme';
+
 import TextField from 'src/components/TextField';
 import { labelFromType } from 'src/features/linodes/presentation';
 
@@ -50,7 +50,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     flex: 1,
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: LinodeTheme.bg.main,
+    backgroundColor: theme.bg.main,
     padding: theme.spacing.unit,
     marginLeft: theme.spacing.unit * 2,
     marginRight: theme.spacing.unit * 2,

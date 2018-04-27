@@ -10,7 +10,7 @@ import Chip from 'material-ui/Chip';
 
 type CSSClasses = 'label' | 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
   return ({
     label: {
     },

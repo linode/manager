@@ -1,17 +1,17 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import { withStyles, Theme, StyleRulesCallback, WithStyles, Button } from 'material-ui';
-import LinodeTheme from '../../../src/theme';
+import { withStyles, StyleRulesCallback, WithStyles, Button } from 'material-ui';
+
 
 import KeyboardArrowLeft from 'material-ui-icons/KeyboardArrowLeft';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
 
 type CSSClasses = 'root' | 'first' | 'last'| 'active';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Linode.Theme) => ({
   root: {
-    backgroundColor: LinodeTheme.bg.offWhite,
-    border: '1px solid ' + `${LinodeTheme.color.grey3}`,
+    backgroundColor: theme.bg.offWhite,
+    border: '1px solid ' + `${theme.color.grey3}`,
     borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
@@ -20,11 +20,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       fontSize: 22,
     },
     '&.active': {
-      backgroundColor: LinodeTheme.bg.main,
+      backgroundColor: theme.bg.main,
       color: 'black',
     },
     '&:last-child': {
-      borderRight: '1px solid ' + `${LinodeTheme.color.grey3}`,
+      borderRight: '1px solid ' + `${theme.color.grey3}`,
     },
   },
   active: {},

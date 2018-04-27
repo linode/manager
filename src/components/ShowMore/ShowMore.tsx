@@ -8,7 +8,7 @@ import {
 import Chip from 'material-ui/Chip';
 import Popover from 'material-ui/Popover';
 
-import LinodeTheme from 'src/theme';
+
 
 type CSSClasses =  'chip' | 'label' | 'popover';
 
@@ -16,15 +16,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   chip: {
     height: 20,
     marginLeft: theme.spacing.unit / 2,
-    backgroundColor: LinodeTheme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue,
     fontWeight: 500,
     lineHeight: 1,
     '&:hover, &.active': {
-      backgroundColor: LinodeTheme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
       color: 'white',
     },
     '&:focus': {
-      backgroundColor: LinodeTheme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue,
     },
   },
   label: {

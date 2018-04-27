@@ -11,7 +11,7 @@ import Select, { SelectProps } from 'material-ui/Select';
 import Input, { InputProps } from 'material-ui/Input';
 import { MenuProps } from 'material-ui/Menu';
 
-import LinodeTheme from '../../../src/theme';
+
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
@@ -20,7 +20,7 @@ type ClassNames = 'root'
   | 'inputSucess'
   | 'inputError';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     '&[class*="focused"]': {
       borderColor: '#bbb',
@@ -44,18 +44,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     outline: 0,
   },
   inputError: {
-    borderColor: LinodeTheme.color.red,
+    borderColor: theme.color.red,
     '&[class*="focused"]': {
-      borderColor: LinodeTheme.color.red,
+      borderColor: theme.color.red,
     },
   },
   inputSucess: {
-    borderColor: LinodeTheme.color.green,
+    borderColor: theme.color.green,
     '&[class*="focused"]': {
-      borderColor: LinodeTheme.color.green,
+      borderColor: theme.color.green,
     },
     '& + p': {
-      color: LinodeTheme.color.green,
+      color: theme.color.green,
     },
   },
 });

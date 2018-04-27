@@ -13,7 +13,7 @@ import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 import Tooltip from 'material-ui/Tooltip';
 
-import LinodeTheme from 'src/theme';
+
 import Flag from 'src/assets/icons/flag.svg';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingTop: theme.spacing.unit,
     paddingLeft: 3,
     paddingRight: 3,
-    color: LinodeTheme.palette.text.primary,
+    color: theme.palette.text.primary,
     ...theme.typography.caption,
   },
   flexContainer: {
@@ -94,12 +94,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     padding: '12px 12px 14px',
     height: '100%',
     margin: 0,
-    borderTop: '1px solid ' + LinodeTheme.palette.divider,
+    borderTop: '1px solid ' + theme.palette.divider,
   },
   consoleButton: {
     width: '50%',
     borderColor: theme.pale,
-    borderRight: '1px solid ' + LinodeTheme.palette.divider,
+    borderRight: '1px solid ' + theme.palette.divider,
   },
   rebootButton: {
     width: '50%',

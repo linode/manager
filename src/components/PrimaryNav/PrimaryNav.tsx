@@ -14,7 +14,7 @@ import {
 } from 'material-ui/styles';
 import Grid from 'src/components/Grid';
 import { ListItem, ListItemText } from 'material-ui/List';
-import LinodeTheme from 'src/theme';
+
 
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import Logo from 'src/assets/logo/logo-text.svg';
@@ -73,9 +73,9 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   active: {
     transition: 'border-color .7s ease-in-out',
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderLeftColor: LinodeTheme.color.green,
+    borderLeftColor: theme.color.green,
     '&:hover': {
-      borderLeftColor: LinodeTheme.color.green,
+      borderLeftColor: theme.color.green,
     },
   },
   activeLink: {

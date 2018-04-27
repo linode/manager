@@ -13,7 +13,7 @@ import {
   rebootLinode,
 } from 'src/features/linodes/LinodesLanding/powerActions';
 
-import LinodeTheme from 'src/theme';
+
 import PowerOn from '../../../../assets/icons/powerOn.svg';
 import Reload from '../../../../assets/icons/reload.svg';
 
@@ -29,7 +29,7 @@ type ClassNames = 'root'
   | 'fadeIn'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -49,12 +49,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   button: {
     background: 'white',
-    border: `1px solid ${LinodeTheme.color.border3}`,
+    border: `1px solid ${theme.color.border3}`,
     transition: theme.transitions.create('border'),
     padding: '12px 16px 13px',
     minWidth: 145,
     '&:hover, &.active': {
-      borderColor: LinodeTheme.color.border1,
+      borderColor: theme.color.border1,
     },
   },
   caret: {
@@ -86,10 +86,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginRight: theme.spacing.unit + 2,
   },
   powerOn: {
-    color: LinodeTheme.color.green,
+    color: theme.color.green,
   },
   powerOff: {
-    color: LinodeTheme.color.red,
+    color: theme.color.red,
   },
   rotate: {
     animation: 'rotate 2s linear infinite',
