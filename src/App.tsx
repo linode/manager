@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
@@ -169,7 +169,7 @@ export class App extends React.Component<CombinedProps, State> {
     const { classes, longLivedLoaded, documentation } = this.props;
 
     return (
-      <React.Fragment>
+      <Router>
         {longLivedLoaded &&
           <React.Fragment>
             <CssBaseline />
@@ -206,7 +206,6 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Billing" />} />
                         <Route exact path="/users" render={() =>
                           <Placeholder title="Users" />} />
-                        <Route path="/profile" component={Profile} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
@@ -227,7 +226,7 @@ export class App extends React.Component<CombinedProps, State> {
             <VolumeDrawer />
           </React.Fragment>
         }
-      </React.Fragment>
+      </Router>
     );
   }
 }
