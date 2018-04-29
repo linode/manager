@@ -14,6 +14,16 @@ const LinodeTheme: Linode.Theme = {
       error: '#f8dedf',
       errorDark: '#cd2227',
     },
+    text: {
+      primary: '#fff',
+    },
+  },
+  overrides: {
+    MuiPaper: {
+      root: {
+        backgroundColor: '#000',
+      },
+    },
   },
 };
 
