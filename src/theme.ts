@@ -622,6 +622,7 @@ const LinodeTheme: Linode.Theme = {
     offWhite: '#fbfbfb',
     navy: '#32363C',
     lightBlue: '#D7E3EF',
+    white: '#fff',
   },
 };
 
