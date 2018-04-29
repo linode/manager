@@ -18,7 +18,6 @@ import {
 import ButtonBase from 'material-ui/ButtonBase';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import UserIcon from 'src/assets/icons/user.svg';
-import LinodeTheme from 'src/theme';
 
 type MenuLink = {
   display: string,
@@ -87,8 +86,8 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
     fontSize: '.9rem',
     fontWeight: 400,
     '&:hover, &:focus': {
-      backgroundColor: LinodeTheme.bg.offWhite,
-      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
     },
   },
   hidden: {
