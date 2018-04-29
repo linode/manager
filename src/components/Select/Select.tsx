@@ -34,10 +34,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       minWidth: 200,
     },
-    '& .selectPlaceholder': {
-      height: 0,
-      padding: 0,
-    },
   },
   dropDown: {
     boxShadow: 'none',

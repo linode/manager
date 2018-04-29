@@ -162,11 +162,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
                 inputProps={{ name: 'image-select', id: 'image-select' }}
                 data-qa-rebuild-image
               >
-                <MenuItem
-                  value={'select'}
-                  disabled
-                  className="selectPlaceholder"
-                >
+                <MenuItem value={'select'} disabled>
                   Select an Image
                 </MenuItem>
                 {
