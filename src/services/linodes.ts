@@ -57,6 +57,10 @@ export const allocatePrivateIP = (linodeID: number) =>
   Axios.post(`${API_ROOT}/linode/instances/${linodeID}/ips`, { type: 'ipv4', public: false })
     .then(response => response.data);
 
+export const allocatePublicIP = (linodeID: number) =>
+  Axios.post(`${API_ROOT}/linode/instances/${linodeID}/ips`, { type: 'ipv4', public: true })
+    .then(response => response.data);
+
 type RebuildLinodeType = Promise<{}>;
 export const rebuildLinode = (id: number, image: string, password: string): RebuildLinodeType =>
   Axios.post(`${API_ROOT}/linode/instances/${id}/rebuild`, { image, root_pass: password })
