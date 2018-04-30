@@ -19,6 +19,7 @@ import Toggle from 'src/components/Toggle';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import Logo from 'src/assets/logo/logo-text.svg';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { Divider } from 'material-ui';
 
 type PrimaryLink = {
   display: string,
@@ -78,6 +79,10 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       borderLeftColor: theme.color.green,
     },
   },
+  lastItem: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   activeLink: {
     color: 'white',
   },
@@ -119,17 +124,30 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       outline: 0,
     },
   },
+  switchWrapper: {
+    padding: '16px 40px 16px 34px',
+    alignItems: 'center',
+    // hidding for now - replace with flex
+    display: 'none',
+  },
+  invert: {
+    color: '#777',
+    fontSize: '.8rem',
+  },
 });
 
 type ClassNames =
   'headerGrid'
   | 'logoItem'
   | 'listItem'
+  | 'lastItem'
   | 'linkItem'
   | 'active'
   | 'activeLink'
   | 'sublink'
-  | 'sublinkPanel';
+  | 'sublinkPanel'
+  | 'switchWrapper'
+  | 'invert';
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
@@ -215,7 +233,10 @@ class PrimaryNav extends React.Component<Props> {
             Users
           </Link>
         </ShowMoreExpansion>
-        <ShowMoreExpansion classes={{ root: classes.sublinkPanel }} name="Support">
+        <ShowMoreExpansion
+          classes={{ root: classes.sublinkPanel }}
+          name="Support"
+        >
           <a
             className={classes.sublink}
             href="https://www.linode.com/docs"
@@ -238,7 +259,12 @@ class PrimaryNav extends React.Component<Props> {
             Support Tickets
           </Link>
         </ShowMoreExpansion>
-        <Toggle onChange={() => toggleTheme()} />
+        <Divider className={classes.lastItem} />
+        <div className={classes.switchWrapper}>
+          <span className={classes.invert}>Light</span>
+          <Toggle onChange={() => toggleTheme()} value="checkedA" />
+          <span className={classes.invert}>Dark</span>
+        </div>
       </React.Fragment>
     );
   }
