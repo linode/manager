@@ -25,6 +25,7 @@ it('renders without crashing', () => {
             response={jest.fn()}
             longLivedLoaded
             documentation={[]}
+            toggleTheme={() => { return; }}
           />
         </StaticRouter>
       </Provider>
