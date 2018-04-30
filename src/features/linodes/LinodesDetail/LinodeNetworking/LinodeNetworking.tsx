@@ -5,6 +5,7 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import TableHead from 'material-ui/Table/TableHead';
@@ -12,13 +13,16 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableCell from 'material-ui/Table/TableCell';
 
+import PlusSquare from 'src/assets/icons/plus-square.svg';
 import Table from 'src/components/Table';
+import IconTextLink from 'src/components/IconTextLink';
 import { getLinodeIPs } from 'src/services/linodes';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
+import CreateIPv4Drawer from './CreateIPv4Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
 
 type ClassNames =
@@ -80,6 +84,9 @@ interface State {
     address?: string;
     rdns?: string;
   };
+  createIPv4Drawer: {
+    open: boolean;
+  };
 }
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
@@ -94,6 +101,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       open: false,
     },
     editRDNSDrawer: {
+      open: false,
+    },
+    createIPv4Drawer: {
       open: false,
     },
   };
@@ -187,19 +197,40 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.refreshIPs();
   }
 
+  closeCreateIPv4Drawer() {
+    this.setState({
+      createIPv4Drawer: { open: false },
+    });
+    this.refreshIPs();
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, linodeID } = this.props;
     const { linodeIPs } = this.state;
 
     return (
       <React.Fragment>
-        <Typography
-          variant="headline"
-          className={classes.ipv4Title}
-          data-qa-title
-        >
-          IPv4
-        </Typography>
+        <Grid container justify="space-between" alignItems="flex-end">
+          <Grid item>
+            <Typography
+              variant="headline"
+              className={classes.ipv4Title}
+              data-qa-title
+            >
+              IPv4
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconTextLink
+              SideIcon={PlusSquare}
+              onClick={() => {
+                this.setState({ createIPv4Drawer: { open: true } });
+              }}
+              text="Add Public IPv4"
+              title="Add Public IPv4"
+            />
+          </Grid>
+        </Grid>
         <Paper style={{ padding: 0 }}>
           <Table>
             <TableHead>
@@ -221,12 +252,25 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
 
-        <Typography
-          variant="headline"
-          className={classes.ipv6Title}
-        >
-          IPv6
-        </Typography>
+        <Grid container justify="space-between" alignItems="flex-end">
+          <Grid item>
+            <Typography
+              variant="headline"
+              className={classes.ipv4Title}
+              data-qa-title
+            >
+              IPv6
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconTextLink
+              SideIcon={PlusSquare}
+              onClick={() => console.log('open create ipv6')}
+              text="Add IPv6"
+              title="Add IPv6"
+            />
+          </Grid>
+        </Grid>
         <Paper style={{ padding: 0 }}>
           <Table>
             <TableHead>
@@ -266,6 +310,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onClose={() => this.closeEditRDNSDrawer()}
           address={this.state.editRDNSDrawer.address}
           rdns={this.state.editRDNSDrawer.rdns}
+        />
+
+        <CreateIPv4Drawer
+          open={this.state.createIPv4Drawer.open}
+          onClose={() => this.closeCreateIPv4Drawer()}
+          linodeID={linodeID}
         />
       </React.Fragment>
     );
