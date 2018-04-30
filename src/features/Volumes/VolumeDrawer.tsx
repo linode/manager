@@ -19,8 +19,11 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
+import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
+import { resetEventsPolling } from 'src/events';
 import { close } from 'src/store/reducers/volumeDrawer';
+import { create } from 'src/services/volumes';
 import { getLinodes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -87,6 +90,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       size: nextProps.size || 20,
       region: nextProps.region || 'none',
       linodeId: nextProps.linodeId || 0,
+      errors: undefined,
     });
   }
 
@@ -95,7 +99,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    console.log('Submit volume drawer');
+    const { label, size, region, linodeId } = this.state;
+    create(label!, size!, region!, linodeId!)
+      .then(() => {
+        resetEventsPolling();
+        this.props.close();
+      })
+      .catch((errResponse) => {
+        this.setState({
+          errors: path(['response', 'data', 'errors'], errResponse),
+        });
+      });
   }
 
   render() {
@@ -112,11 +126,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       errors,
     } = this.state;
 
-    const hasErrorFor = getAPIErrorFor({}, errors);
+    const hasErrorFor = getAPIErrorFor({
+      linode_id: 'Linode ID',
+      region: 'Region',
+      size: 'Size',
+      label: 'Label',
+    }, errors);
     const labelError = hasErrorFor('label');
     const sizeError = hasErrorFor('size');
     const regionError = hasErrorFor('region');
     const linodeError = hasErrorFor('linode_id');
+    const generalError = hasErrorFor('none');
 
     return (
       <Drawer
@@ -124,6 +144,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         onClose={() => this.onClose()}
         title={titleMap[mode]}
       >
+        {generalError &&
+          <Notice
+            error
+            text={generalError}
+          />
+        }
+
         {mode === modes.CLONING &&
           <TextField
             label="Cloned Label"
@@ -201,8 +228,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             error={Boolean(regionError)}
           >
             <MenuItem key="none" value="0">Select a Linode</MenuItem>,
-            {linodes && linodes.map(linode =>
-              <MenuItem key={linode.id} value={linode.id}>{linode.label}</MenuItem>,
+            {linodes && linodes
+              .filter(linode => linode.region === region)
+              .map(linode =>
+                <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
             )}
           </Select>
           {linodeError &&
