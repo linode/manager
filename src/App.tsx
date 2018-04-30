@@ -3,7 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
-import { pathOr } from 'ramda';
+import { append, pathOr, range, flatten } from 'ramda';
+import * as Promise from 'bluebird';
 
 import {
   withStyles,
@@ -145,6 +146,27 @@ export class App extends React.Component<CombinedProps, State> {
           })
           .catch(error => response(['profile'], error));
       }),
+      new Promise(() => {
+        request(['kernels']);
+        // Get first page of kernels.
+        return Axios.get(`${API_ROOT}/linode/kernels`)
+          .then(({ data: { data: firstPageData, page, pages } }) => {
+            // If we only have one page, return it.
+            if (page === pages) { return firstPageData; }
+
+            // Create an iterable list of the remaining pages.
+            const remainingPages = range(page + 1, pages + 1);
+
+            return Promise.map(remainingPages, currentPage =>
+              Axios
+                .get(`${API_ROOT}/linode/kernels`, { params: { page: currentPage } })
+                .then(response => response.data.data),
+              )
+              .then(compose(flatten, append(firstPageData)));
+          })
+          .then(data => response(['kernels'], data))
+          .catch(error => response(['kernels'], error));
+      }),
     ];
 
     Promise
@@ -227,7 +249,7 @@ export class App extends React.Component<CombinedProps, State> {
             <BetaNotification
               open={this.state.betaNotification}
               onClose={this.closeBetaNotice}
-              data-qa-beta-notice/>
+              data-qa-beta-notice />
             <ToastNotifications />
             <VolumeDrawer />
           </MuiThemeProvider>
@@ -245,6 +267,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 const mapStateToProps = (state: Linode.AppState) => ({
   longLivedLoaded:
     Boolean(pathOr(false, ['resources', 'types', 'data', 'data'], state))
+    && Boolean(pathOr(false, ['resources', 'kernels', 'data'], state))
     && Boolean(pathOr(false, ['resources', 'profile', 'data'], state)),
   documentation: state.documentation,
 });

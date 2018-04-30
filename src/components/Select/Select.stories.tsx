@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import Select from './Select';
-import ThemeDecorator from '../../utilities/storybookDecorators';
-import { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import InputLabel from 'material-ui/Input/InputLabel';
+import MenuItem from 'material-ui/Menu/MenuItem';
+import FormControl from 'material-ui/Form/FormControl';
+import FormHelperText from 'material-ui/Form/FormHelperText';
 import Grid from 'material-ui/Grid';
+
+import ThemeDecorator from '../../utilities/storybookDecorators';
+
+import Select from './Select';
 
 interface State {
   selected: number;

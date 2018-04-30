@@ -148,4 +148,15 @@ namespace Linode {
     sdg: null | DiskDevice | VolumeDevice;
     sdh: null | DiskDevice | VolumeDevice;
   }
+
+  export interface Kernel {
+    id: string;
+    label: string;
+    version: string;
+    kvm: boolean;
+    xen: boolean;
+    architecture: string;
+    pvops: boolean;
+  }
+
 }
