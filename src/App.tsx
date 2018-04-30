@@ -92,6 +92,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 });
 
 interface Props {
+  toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -166,7 +167,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded, documentation } = this.props;
+    const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
 
     return (
       <Router>
@@ -174,7 +175,7 @@ export class App extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <CssBaseline />
             <div className={classes.appFrame}>
-              <SideMenu open={menuOpen} toggle={this.toggleMenu} />
+              <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
               <main className={classes.content}>
                 <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />

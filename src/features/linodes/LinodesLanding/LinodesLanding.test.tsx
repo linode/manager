@@ -38,7 +38,6 @@ describe('ListLinodes', () => {
   beforeEach(() => {
     linodes = promiseLoaderType(resourcePage(mockLinodes));
     images = promiseLoaderType(resourcePage(mockImages));
-
   });
 
   it('renders without error', () => {
@@ -71,7 +70,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             clearDocs={clearDocs}
           />
-        </StaticRouter>,
+        </StaticRouter>
       </LinodeThemeWrapper>,
     );
 

@@ -15,7 +15,7 @@ import {
 import Grid from 'src/components/Grid';
 import { ListItem, ListItemText } from 'material-ui/List';
 
-
+import Toggle from 'src/components/Toggle';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import Logo from 'src/assets/logo/logo-text.svg';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -133,6 +133,7 @@ type ClassNames =
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   toggleMenu: () => void;
+  toggleTheme: () => void;
 }
 
 class PrimaryNav extends React.Component<Props> {
@@ -181,7 +182,7 @@ class PrimaryNav extends React.Component<Props> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, toggleTheme } = this.props;
 
     return (
       <React.Fragment>
@@ -237,6 +238,7 @@ class PrimaryNav extends React.Component<Props> {
             Support Tickets
           </Link>
         </ShowMoreExpansion>
+        <Toggle onChange={() => toggleTheme()} />
       </React.Fragment>
     );
   }
