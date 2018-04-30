@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
 import {
   withStyles,
   StyleRulesCallback,
@@ -10,9 +12,8 @@ import { pathOr } from 'ramda';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
-import {
-  getVolumes,
-} from 'src/services/volumes';
+import { openForCreating } from 'src/store/reducers/volumeDrawer';
+import { getVolumes } from 'src/services/volumes';
 
 type ClassNames = 'root';
 
@@ -22,6 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   volumes: PromiseLoaderResponse<Linode.Volume[]>;
+  openForCreating: typeof openForCreating;
 }
 
 interface State {
@@ -36,7 +38,7 @@ class Volumes extends React.Component<CombinedProps, State> {
   };
 
   openVolumesDrawer() {
-    console.log('volumes drawer opening');
+    this.props.openForCreating();
   }
 
   render() {
@@ -64,6 +66,13 @@ const preloaded = PromiseLoader<CombinedProps>({
   volumes: (props: Props) => getVolumes(),
 });
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { openForCreating },
+  dispatch,
+);
+
+const connected = connect(undefined, mapDispatchToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(preloaded(Volumes));
+export default connected(styled(preloaded(Volumes)));

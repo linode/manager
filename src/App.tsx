@@ -32,6 +32,7 @@ import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -228,6 +229,7 @@ export class App extends React.Component<CombinedProps, State> {
               onClose={this.closeBetaNotice}
               data-qa-beta-notice/>
             <ToastNotifications />
+            <VolumeDrawer />
           </MuiThemeProvider>
         }
       </React.Fragment>

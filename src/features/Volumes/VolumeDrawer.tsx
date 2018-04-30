@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { path } from 'ramda';
+import { compose, bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
+
 import {
   withStyles,
   StyleRulesCallback,
@@ -6,11 +10,19 @@ import {
   WithStyles,
 } from 'material-ui';
 import Button from 'material-ui/Button';
+import { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 
 import TextField from 'src/components/TextField';
+import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Drawer from 'src/components/Drawer';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Select from 'src/components/Select';
 import { dcDisplayNames } from 'src/constants';
+import { close } from 'src/store/reducers/volumeDrawer';
+import { getLinodes } from 'src/services/linodes';
+import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
@@ -20,8 +32,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 export interface Props {
+  regions: PromiseLoaderResponse<Linode.ResourcePage<Linode.Volume>>;
+  linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
   /* from Redux */
   mode: string;
+  close: typeof close;
   cloneLabel?: string;
   label?: string;
   size?: number;
@@ -40,7 +55,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const modes = {
+export const modes = {
   CLOSED: 'closed',
   CREATING: 'creating',
   RESIZING: 'resizing',
@@ -58,29 +73,35 @@ const titleMap = {
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    cloneLabel: this.props.cloneLabel,
-    label: this.props.label,
-    size: this.props.size,
-    region: this.props.region,
-    linodeId: this.props.linodeId,
+    cloneLabel: this.props.cloneLabel || '',
+    label: this.props.label || '',
+    size: this.props.size || 20,
+    region: this.props.region || 'none',
+    linodeId: this.props.linodeId || 0,
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
-      cloneLabel: nextProps.cloneLabel,
-      label: nextProps.label,
-      size: nextProps.size,
-      region: nextProps.region,
-      linodeId: nextProps.linodeId,
+      cloneLabel: nextProps.cloneLabel || '',
+      label: nextProps.label || '',
+      size: nextProps.size || 20,
+      region: nextProps.region || 'none',
+      linodeId: nextProps.linodeId || 0,
     });
   }
 
   onClose = () => {
-    console.log('Set mode to close');
+    this.props.close();
+  }
+
+  onSubmit = () => {
+    console.log('Submit volume drawer');
   }
 
   render() {
     const { mode } = this.props;
+    const regions = path(['response', 'data'], this.props.regions) as Linode.Region[];
+    const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
 
     const {
       cloneLabel,
@@ -131,35 +152,69 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
-          endAdornment="GB"
+          InputProps={{
+            endAdornment: 'GB',
+          }}
           data-qa-size
         />
 
-        {/** Needs to be Select */}
-        <TextField
-          label="Region"
-          onChange={e => this.setState({ region: (e.target.value) })}
-          value={region && dcDisplayNames[region]}
-          error={Boolean(regionError)}
-          errorText={regionError}
-          disabled={mode === modes.CLONING || mode === modes.RESIZING}
-          data-qa-region
-          />
+        <FormControl fullWidth>
+          <InputLabel
+            htmlFor="region"
+            disableAnimation
+            shrink={true}
+            error={Boolean(regionError)}
+          >
+            Region
+          </InputLabel>
+          <Select
+            value={region}
+            onChange={e => this.setState({ region: (e.target.value) })}
+            inputProps={{ name: 'region', id: 'region' }}
+            error={Boolean(regionError)}
+          >
+            <MenuItem key="none" value="none">Select a Region</MenuItem>,
+            {regions && regions.map(region =>
+              <MenuItem key={region.id} value={region.id}>{dcDisplayNames[region.id]}</MenuItem>,
+            )}
+          </Select>
+          {regionError &&
+            <FormHelperText error={Boolean(regionError)}>
+              {regionError}
+            </FormHelperText>
+          }
+        </FormControl>
 
-        {/** Needs to be Select */}
-        <TextField
-          label="Attached To"
-          {...(onLinodeChange && { onChange: e => onLinodeChange(e.target.value) })}
-          value={linodeId}
-          error={Boolean(linodeError)}
-          errorText={linodeError}
-          disabled={disabled && disabled.linode}
-          data-qa-attach-to
-        />
+        <FormControl fullWidth>
+          <InputLabel
+            htmlFor="linode"
+            disableAnimation
+            shrink={true}
+            error={Boolean(linodeError)}
+          >
+            Linode
+          </InputLabel>
+          <Select
+            value={`${linodeId}`}
+            onChange={e => this.setState({ linodeId: +(e.target.value) })}
+            inputProps={{ name: 'linode', id: 'linode' }}
+            error={Boolean(regionError)}
+          >
+            <MenuItem key="none" value="0">Select a Linode</MenuItem>,
+            {linodes && linodes.map(linode =>
+              <MenuItem key={linode.id} value={linode.id}>{linode.label}</MenuItem>,
+            )}
+          </Select>
+          {linodeError &&
+            <FormHelperText error={Boolean(linodeError)}>
+              {linodeError}
+            </FormHelperText>
+          }
+        </FormControl>
 
         <ActionsPanel>
           <Button
-            onClick={onSubmit}
+            onClick={() => this.onSubmit()}
             variant="raised"
             color="primary"
             data-qa-submit
@@ -167,7 +222,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             Submit
           </Button>
           <Button
-            onClick={onClose}
+            onClick={() => this.onClose()}
             variant="raised"
             color="secondary"
             className="cancel"
@@ -181,6 +236,26 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { close },
+  dispatch,
+);
+
+const mapStateToProps = (state: Linode.AppState) => ({
+  mode: path(['volumeDrawer', 'mode'], state),
+});
+
+const preloaded = PromiseLoader<CombinedProps>({
+  regions: () => getRegions(),
+  linodes: () => getLinodes(),
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(VolumeDrawer);
+export default compose<any, any, any, any>(
+  preloaded,
+  connected,
+  styled,
+)(VolumeDrawer);
