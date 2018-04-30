@@ -58,6 +58,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
             className="destructive"
             onClick={this.openDeleteDialog}
             style={{ marginBottom: 8 }}
+            data-qa-delete-linode
           >
             Delete
           </Button>
@@ -74,6 +75,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
                 color="secondary"
                 className="destructive"
                 onClick={this.deleteLinode}
+                data-qa-confirm-delete
               >
                 Delete
               </Button>
@@ -82,6 +84,7 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
                 variant="raised"
                 color="secondary"
                 className="cancel"
+                data-qa-cancel-delete
               >
                 Cancel
             </Button>

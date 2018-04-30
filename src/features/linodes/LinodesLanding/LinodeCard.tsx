@@ -229,7 +229,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
     const loading = transitionStatus.includes(linodeStatus);
 
     return (
-      <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode>
+      <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
           <CardHeader
             subheader={this.renderTitle()}
