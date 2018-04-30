@@ -23,6 +23,7 @@ import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
+import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
 
 type ClassNames =
@@ -87,6 +88,9 @@ interface State {
   createIPv4Drawer: {
     open: boolean;
   };
+  createIPv6Drawer: {
+    open: boolean;
+  };
 }
 
 type CombinedProps = Props & PreloadedProps & WithStyles<ClassNames>;
@@ -104,6 +108,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       open: false,
     },
     createIPv4Drawer: {
+      open: false,
+    },
+    createIPv6Drawer: {
       open: false,
     },
   };
@@ -204,6 +211,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.refreshIPs();
   }
 
+  closeCreateIPv6Drawer() {
+    this.setState({
+      createIPv6Drawer: { open: false },
+    });
+  }
+
   render() {
     const { classes, linodeID } = this.props;
     const { linodeIPs } = this.state;
@@ -265,7 +278,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Grid item>
             <IconTextLink
               SideIcon={PlusSquare}
-              onClick={() => console.log('open create ipv6')}
+              onClick={() => this.setState({ createIPv6Drawer: { open: true } })}
               text="Add IPv6"
               title="Add IPv6"
             />
@@ -310,6 +323,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onClose={() => this.closeEditRDNSDrawer()}
           address={this.state.editRDNSDrawer.address}
           rdns={this.state.editRDNSDrawer.rdns}
+        />
+
+        <CreateIPv6Drawer
+          open={this.state.createIPv6Drawer.open}
+          onClose={() => this.closeCreateIPv6Drawer()}
         />
 
         <CreateIPv4Drawer
