@@ -43,10 +43,15 @@ namespace Linode {
 
   export type DocumentationState = Linode.Doc[];
 
+  export type VolumeDrawerState = {
+    mode: string;
+  };
+
   export interface AppState {
     authentication: AuthState;
     resources: ResourcesState;
     documentation: DocumentationState;
+    volumeDrawer: VolumeDrawerState;
   }
 
   export interface LinodeSpecs {
