@@ -111,7 +111,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {}
+interface Props { }
 
 interface State {
   toasts: Toast[];
@@ -120,9 +120,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const openFirstToast = (ts: Toast[]): Toast[] => {
-  if (ts.length === 0) {
-    return ts;
-  }
+  if (ts.length === 0) { return ts; }
   return over(
     lensPath([0]),
     set(lensPath(['open']), true),
@@ -139,7 +137,9 @@ const dismissFirstToast = (ts: Toast[]): Toast[] => {
   );
 };
 
-const removeFirstToast = (ts: Toast[]): Toast[] => tail(ts);
+const removeFirstToast = (ts: Toast[]): Toast[] => ts.length === 0
+  ? []
+  : tail(ts);
 
 class Notifier extends React.Component<CombinedProps, State> {
   state: State = {
@@ -156,22 +156,24 @@ class Notifier extends React.Component<CombinedProps, State> {
        * to keep up with the process.
        */
       .bufferTime(1000)
-      .subscribe((toast) => {
+      .subscribe((toasts) => {
+        if (toasts.length === 0) {
+          return;
+        }
+
         this.setState(
-          () => ({ toasts: [...this.state.toasts, ...toast] }),
+          () => ({ toasts: [...this.state.toasts, ...toasts] }),
           () => this.setState({ toasts: openFirstToast(this.state.toasts) }),
         );
       });
   }
 
-  onClose = () => {
-    this.setState(
-      { toasts: dismissFirstToast(this.state.toasts) },
-      () => this.setState(
-        { toasts: removeFirstToast(this.state.toasts) },
-        () => this.setState({ toasts: openFirstToast(this.state.toasts) }),
-      ),
-    );
+  onClose = (e: any, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ toasts: dismissFirstToast(this.state.toasts) });
   }
 
   componentWillUnmount() {
@@ -192,13 +194,23 @@ class Notifier extends React.Component<CombinedProps, State> {
             horizontal: 'right',
           }}
           open={Boolean(toast.open)}
-          SnackbarContentProps={{ className:
-            classNames({
-              [classes.error]: toast.level === 'error',
-              [classes.warning]: toast.level === 'warning',
-              [classes.success]: toast.level === 'success',
-              [classes.root]: true,
-            }),
+          autoHideDuration={6000}
+          onClose={this.onClose}
+          onExited={() => {
+            this.setState({ toasts: removeFirstToast(this.state.toasts) },
+              () => {
+                this.setState(({ toasts: openFirstToast(this.state.toasts) }));
+              },
+            );
+          }}
+          SnackbarContentProps={{
+            className:
+              classNames({
+                [classes.error]: toast.level === 'error',
+                [classes.warning]: toast.level === 'warning',
+                [classes.success]: toast.level === 'success',
+                [classes.root]: true,
+              }),
           }}
           message={
             <Grid
