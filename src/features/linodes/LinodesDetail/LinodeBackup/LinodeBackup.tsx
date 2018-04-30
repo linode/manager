@@ -340,7 +340,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             <TableBody>
               {backups.map((backup) => {
                 return (
-                  <TableRow key={backup.id}>
+                  <TableRow key={backup.id} data-qa-backup>
                     <TableCell>
                       {this.formatBackupDate(backup.created)}
                     </TableCell>
@@ -419,6 +419,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               color="primary"
               onClick={this.takeSnapshot}
               className={classes.snapshotAction}
+              data-qa-snapshot-button
             >
               Take Snapshot
             </Button>

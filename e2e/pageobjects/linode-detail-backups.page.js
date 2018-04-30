@@ -24,24 +24,68 @@ class Backups extends Page {
     get disks() { return $('[data-qa-backup-disks]'); }
     get spaceRequired() { $('[data-qa-space-required]'); }
 
+    baseElemsDisplay(backupsNotEnabled) {
+        if (backupsNotEnabled) {
+            this.placeholderText.waitForVisible();
+            expect(this.enableButton.isVisible()).toBe(true);
+            return;
+        }
+
+        this.manualDescription.waitForVisible();
+
+        if (this.backupInstances.length < 1) {
+            expect(this.description.isVisible()).toBe(true);
+        }
+        
+        expect(this.heading.isVisible()).toBe(true);
+        expect(this.manualSnapshotHeading.isVisible()).toBe(true);
+        expect(this.manualDescription.isVisible()).toBe(true);
+        expect(this.snapshotButton.isVisible()).toBe(true);
+        expect(this.settingsHeading.isVisible()).toBe(true);
+        expect(this.settingsDescription.isVisible()).toBe(true);
+        expect(this.timedaySelect.isVisible()).toBe(true);
+        expect(this.weekdaySelect.isVisible()).toBe(true);
+        expect(this.saveScheduleButton.isVisible()).toBe(true);
+        expect(this.cancelDescription.isVisible()).toBe(true);
+        expect(this.cancelButton.isVisible()).toBe(true);
+        expect(this.manualSnapshotName.isVisible()).toBe(true);
+        expect(this.cancelButton.getAttribute('class')).toContain('destructive');
+    }
+
+    enableBackups() {
+        const toastMsg = 'Backups are being enabled for this Linode';
+
+        this.enableButton.click();
+        browser.waitUntil(() => {
+            if (browser.getText('[data-qa-toast-message]') === toastMsg) {
+                browser.click('[data-qa-toast] button');
+                return true;
+            }
+        }, 10000);
+    }
+
     takeSnapshot(label) {
+        const toastMsg = 'A snapshot is being taken';
+
         this.manualSnapshotName.$('input').setValue(label);
         this.snapshotButton.click();
 
         browser.waitForVisible('[data-qa-toast]');
         browser.waitUntil(function() {
             return browser
-                .getText('[data-qa-toast-message]') === 'A snapshot is being taken';
+                .getText('[data-qa-toast-message]') === toastMsg;
         }, 10000);
+        return this;
     }
 
     assertSnapshot(label) {
-        browser.waitForVisible('[data-qa-backup]');
+        browser.waitForVisible('[data-qa-backup]', 45000);
 
         const backupInstance = this.backupInstances.map(i => {
-            return i.$(this.name.selector).getText();
+            return i.$(this.label.selector).getText();
         });
         expect(backupInstance).toContain(label);
+        return this;
     }
 
     scheduleSnapshots(dayTime, weekDay) {
@@ -51,12 +95,14 @@ class Backups extends Page {
     }
 
     cancelBackups() {
+        const toastMsg = 'Backups are being cancelled for this Linode';
+
         this.cancelButton.click();
         
         browser.waitForVisible('[data-qa-toast]');
         browser.waitUntil(function() {
             return browser
-                .getText('[data-qa-toast]') === 'Backups are being cancelled for this Linode';
+                .getText('[data-qa-toast-message]') === toastMsg;
         }, 10000);
 
         this.placeholderText.waitForVisible();

@@ -165,7 +165,7 @@ class LinodeRow extends React.Component<PropsWithStyles> {
     } = this.props;
 
     return (
-      <TableRow key={linodeId} data-qa-linode>
+      <TableRow key={linodeId} data-qa-linode={linodeLabel}>
         {this.headCell()}
         <TableCell className={classes.ipCell} data-qa-ips>
           <IPAddress ips={linodeIpv4} copyRight />
