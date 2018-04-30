@@ -28,6 +28,7 @@ import EditRDNSDrawer from './EditRDNSDrawer';
 
 type ClassNames =
   'root'
+  | 'title'
   | 'address'
   | 'reverseDNS'
   | 'type'
@@ -37,6 +38,9 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  title: {
+    margin: `${theme.spacing.unit * 2}px 0`,
+  },
   address: {
     width: '35%',
   },
@@ -57,7 +61,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   ipv6Title: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 2,
   },
 });
@@ -223,10 +227,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
+        <Typography variant="headline" className={classes.title}>
+          Networking
+        </Typography>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
-              variant="headline"
+              variant="title"
               className={classes.ipv4Title}
               data-qa-title
             >
@@ -265,11 +272,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </Table>
         </Paper>
 
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end">
           <Grid item>
             <Typography
-              variant="headline"
-              className={classes.ipv4Title}
+              variant="title"
+              className={classes.ipv6Title}
               data-qa-title
             >
               IPv6
