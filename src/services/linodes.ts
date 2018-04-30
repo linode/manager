@@ -1,7 +1,7 @@
 import Axios, { AxiosPromise } from 'axios';
 import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
-import { genAxiosConfig } from '.';
+import Request, { genAxiosConfig, setData, setURL, setMethod } from '.';
 
 /* tslint:disable-next-line */
 export type RescueRequestObject = Pick<Linode.Devices, 'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'>
@@ -132,3 +132,27 @@ export const restoreBackup = (
     { linode_id: targetLinodeID, overwrite })
     .then(response => response.data);
 };
+
+export interface LinodeConfigCreationData {
+  label: string;
+  devices: Linode.Devices;
+  kernel?: string;
+  comments?: string;
+  memory_limit?: number;
+  run_level?: 'default' | 'single' | 'binbash';
+  virt_mode?: 'fullvirt' | 'paravirt';
+  helpers: {
+    updatedb_disabled: boolean;
+    distro: boolean;
+    modules_dep: boolean;
+    network: boolean;
+    devtmpfs_automount: boolean;
+  };
+  root_device: string;
+}
+
+export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationData) => Request(
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),
+  setMethod('POST'),
+  setData<LinodeConfigCreationData>(data),
+);
