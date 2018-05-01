@@ -4,9 +4,8 @@ import VolumeDetail from '../../../pageobjects/volume-detail.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail.page';
 
-xdescribe('Edit - Clone - Resize Volumes Suite', () => {
-    let linodeName,
-        volume;
+describe('Edit - Clone - Resize Volumes Suite', () => {
+    let volume;
 
     const testVolume = {
         label: `test-volume-${new Date().getTime()}`,
@@ -22,17 +21,9 @@ xdescribe('Edit - Clone - Resize Volumes Suite', () => {
         }
     });
 
-    afterAll(() => {
-        browser.url(constants.routes.linodes);
-
-        ListLinodes.linodeElem.waitForVisible();
-        ListLinodes.powerOn(ListLinodes.linode[0]);
-    });
-
     beforeEach(() => {
         browser.url(constants.routes.linodes);
         ListLinodes.linodeElem.waitForVisible();
-        linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).click();
         LinodeDetail.landingElemsDisplay();
@@ -48,6 +39,13 @@ xdescribe('Edit - Clone - Resize Volumes Suite', () => {
     afterEach(() => {
         browser.waitForVisible(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-action-menu]`);
         VolumeDetail.removeVolume($(`[data-qa-volume-cell="${testVolume.id}"]`));
+    });
+
+    afterAll(() => {
+        browser.url(constants.routes.linodes);
+
+        ListLinodes.linodeElem.waitForVisible();
+        ListLinodes.powerOn(ListLinodes.linode[0]);
     });
 
     it('should edit the volume label', () => {
@@ -74,6 +72,7 @@ xdescribe('Edit - Clone - Resize Volumes Suite', () => {
         const linodeId = currentUrl.match(getPath)[0].match(/\d/g).join('');
         const numberOfVolumes = VolumeDetail.volumeCell.length;
 
+        browser.waitForVisible(`[data-qa-volume-cell="${testVolume.id}"] [data-qa-action-menu]`);
         VolumeDetail.selectActionMenuItem(volume, 'Clone');
         VolumeDetail.drawerTitle.waitForVisible();
 

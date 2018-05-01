@@ -5,8 +5,7 @@ import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail.page';
 
 describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
-    let linodeName,
-        volume;
+    let linodeName;
 
     const testVolume = {
         label: `test-volume-${new Date().getTime()}`,
@@ -26,7 +25,7 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
     });
 
     it('should display detach linode dialog', () => {
-        volume = VolumeDetail.volumeCell[0];
+        const volume = VolumeDetail.volumeCell[0];
         testVolume['id'] = volume.getAttribute('data-qa-volume-cell');
         testVolume['label'] = volume.$(VolumeDetail.volumeCellLabel.selector).getText();
 
@@ -48,7 +47,7 @@ describe('Linode - Volumes - Attach, Detach, Delete Suite', () => {
             VolumeDetail.placeholderText.isVisible() ? VolumeDetail.createButton : VolumeDetail.createIconLink;
 
         createButton.click();
-        // assert placeholder elems appear
+        VolumeDetail.drawerTitle.waitForVisible();
     });
 
     it('should attach to linode', () => {
