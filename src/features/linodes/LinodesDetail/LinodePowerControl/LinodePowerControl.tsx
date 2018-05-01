@@ -26,7 +26,8 @@ type ClassNames = 'root'
   | 'powerOn'
   | 'powerOff'
   | 'rotate'
-  | 'fadeIn';
+  | 'fadeIn'
+  | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -77,7 +78,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
-      backgroundColor: LinodeTheme.bg.offWhite,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
     },
   },
   icon: {
@@ -95,6 +97,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   fadeIn: {
     animation: 'fadeIn .2s ease-in-out',
+  },
+  hidden: {
+    height: 0,
+    padding: 0,
   },
 });
 
@@ -200,6 +206,7 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
           PaperProps={{ className: classes.popOver }}
         >
+          <MenuItem key="placeholder" className={classes.hidden} />
           <MenuItem
             onClick={this.reboot}
             className={classes.menuItem}
