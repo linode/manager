@@ -23,7 +23,7 @@ import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { close } from 'src/store/reducers/volumeDrawer';
-import { create } from 'src/services/volumes';
+import { create, VolumeRequestPayload } from 'src/services/volumes';
 import { getLinodes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -37,22 +37,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 export interface Props {
   regions: PromiseLoaderResponse<Linode.ResourcePage<Linode.Volume>>;
   linodes: PromiseLoaderResponse<Linode.ResourcePage<Linode.Linode>>;
-  /* from Redux */
-  mode: string;
-  close: typeof close;
   cloneLabel?: string;
-  label?: string;
-  size?: number;
-  region?: string;
-  linodeId?: number;
+  /* actionCreators */
+  close: typeof close;
+  /* Redux state */
+  mode: string;
+  label: string;
+  size: number;
+  region: string;
+  linodeId: number;
 }
 
 interface State {
   cloneLabel?: string;
-  label?: string;
-  size?: number;
-  region?: string;
-  linodeId?: number;
+  label: string;
+  size: number;
+  region: string;
+  linodeId: number;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -76,20 +77,20 @@ const titleMap = {
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    cloneLabel: this.props.cloneLabel || '',
-    label: this.props.label || '',
-    size: this.props.size || 20,
-    region: this.props.region || 'none',
-    linodeId: this.props.linodeId || 0,
+    cloneLabel: this.props.cloneLabel,
+    label: this.props.label,
+    size: this.props.size,
+    region: this.props.region,
+    linodeId: this.props.linodeId,
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       cloneLabel: nextProps.cloneLabel || '',
-      label: nextProps.label || '',
-      size: nextProps.size || 20,
-      region: nextProps.region || 'none',
-      linodeId: nextProps.linodeId || 0,
+      label: nextProps.label,
+      size: nextProps.size,
+      region: nextProps.region,
+      linodeId: nextProps.linodeId,
       errors: undefined,
     });
   }
@@ -100,7 +101,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { label, size, region, linodeId } = this.state;
-    create(label!, size!, region!, linodeId!)
+    const payload: VolumeRequestPayload = {
+      label,
+      size,
+      region: region === 'none' ? undefined : region,
+      linode_id: linodeId === 0 ? undefined : linodeId,
+    };
+
+    create(payload)
       .then(() => {
         resetEventsPolling();
         this.props.close();
@@ -272,6 +280,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 const mapStateToProps = (state: Linode.AppState) => ({
   mode: path(['volumeDrawer', 'mode'], state),
+  label: path(['volumeDrawer', 'label'], state),
+  size: path(['volumeDrawer', 'size'], state),
+  region: path(['volumeDrawer', 'region'], state),
+  linodeId: path(['volumeDrawer', 'linodeId'], state),
 });
 
 const preloaded = PromiseLoader<CombinedProps>({
