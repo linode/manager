@@ -35,11 +35,13 @@ export const update = (volumeId: number, label: string): Promise<{}> =>
   Axios
     .put(`${API_ROOT}/volumes/${volumeId}`, { label });
 
-export const create = (
+export type VolumeRequestPayload = {
   label: string,
   size: number,
-  region: string,
-  linodeId?: number,
-): Promise<{}> =>
+  region?: string,
+  linode_id?: number,
+};
+
+export const create = (payload: VolumeRequestPayload): Promise<{}> =>
   Axios
-    .post(`${API_ROOT}/volumes`, { label, size, region, linode_id: linodeId });
+    .post(`${API_ROOT}/volumes`, payload);

@@ -27,15 +27,19 @@ import Footer from 'src/features/Footer';
 import Placeholder from 'src/components/Placeholder';
 
 import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ToastNotifications from 'src/features/ToastNotifications';
 import AccountLevelNotifications from 'src/features/AccountLevelNotifications';
 
 import BetaNotification from './BetaNotification';
 import DocsSidebar from 'src/components/DocsSidebar';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
+});
+
+const Volumes = DefaultLoader({
+  loader: () => import('src/features/Volumes'),
 });
 
 const Profile = DefaultLoader({
@@ -186,12 +190,7 @@ export class App extends React.Component<CombinedProps, State> {
                         <Route exact path="/dashboard" render={() =>
                           <Placeholder title="Dashboard" />} />
                         <Route path="/linodes" component={LinodesRoutes} />
-                        <Route exact path="/volumes" render={() =>
-                          <Placeholder
-                            title="Volumes"
-                            icon={VolumeIcon}
-                          />}
-                        />
+                        <Route path="/volumes" component={Volumes} />
                         <Route exact path="/nodebalancers" render={() =>
                           <Placeholder
                             title="NodeBalancers"
@@ -230,6 +229,7 @@ export class App extends React.Component<CombinedProps, State> {
               onClose={this.closeBetaNotice}
               data-qa-beta-notice/>
             <ToastNotifications />
+            <VolumeDrawer />
           </MuiThemeProvider>
         }
       </React.Fragment>
