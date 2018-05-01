@@ -24,6 +24,10 @@ export const openForCreating = (): Creating => {
 
 export const defaultState = {
   mode: modes.CLOSED,
+  label: '',
+  size: 20,
+  region: 'none',
+  linodeId: 0,
 };
 
 export default function volumeDrawer(state = defaultState, action: Close | Creating) {
@@ -35,7 +39,7 @@ export default function volumeDrawer(state = defaultState, action: Close | Creat
       };
     case CREATING:
       return {
-        ...state,
+        ...defaultState,
         mode: modes.CREATING,
       };
     default:
