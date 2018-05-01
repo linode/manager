@@ -1,3 +1,7 @@
+import createBreakpoints from 'material-ui/styles/createBreakpoints';
+
+const breakpoints = createBreakpoints({});
+
 const LinodeTheme: Linode.Theme = {
   bg: {
     main: '#2F3236',
@@ -49,7 +53,7 @@ const LinodeTheme: Linode.Theme = {
   overrides: {
     MuiAppBar: {
       colorDefault: {
-        backgroundColor: '#000',
+        backgroundColor: '#2F3236',
       },
     },
     MuiButton: {
@@ -124,9 +128,107 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiInput: {
+      root: {
+        maxWidth: 415,
+        border: '1px solid #000',
+        alignItems: 'center',
+        transition: 'border-color 225ms ease-in-out',
+        lineHeight: 1,
+        color: 'white',
+        minHeight: 44,
+        boxSizing: 'border-box',
+        backgroundColor: '#444',
+        [breakpoints.down('xs')]: {
+          maxWidth: 250,
+        },
+        '& svg': {
+          fontSize: 18,
+          marginLeft: 8,
+          cursor: 'pointer',
+          color: 'white',
+          '&:hover': {
+            color: '#5E9AEA',
+          },
+        },
+        '&.affirmative': {
+          borderColor: '#00B159',
+        },
+      },
+      focused: {
+        borderColor: '#666',
+      },
+      error: {
+        borderColor: '#CA0813',
+      },
+      disabled: {
+        borderColor: '#f4f4f4',
+      },
+      input: {
+        padding: '12px 12px 13px',
+        fontSize: '.9rem',
+        boxSizing: 'border-box',
+      },
+      inputType: {
+        height: 'auto',
+      },
+      formControl: {
+        'label + &': {
+          marginTop: 0,
+        },
+      },
+    },
+    MuiFormControl: {
+      root: {
+        minHeight: 60,
+        marginTop: 16,
+        minWidth: 200,
+      },
+    },
+    MuiFormControlLabel: {
+      root: {
+        marginLeft: -11,
+      },
+    },
+    MuiInputLabel: {
+      formControl: {
+        position: 'relative',
+      },
+    },
     MuiPaper: {
       root: {
-        backgroundColor: '#000',
+        backgroundColor: '#32363C',
+      },
+    },
+    MuiSelect: {
+      root: {},
+      selectMenu: {
+        padding: '7px 32px 7px 10px',
+        color: '#666',
+        lineHeight: 2.2,
+        minHeight: 46,
+      },
+      select: {
+        '&[aria-pressed="true"]': {
+          '&+ input + $icon': {
+            transform: 'scale(1.25)',
+            stroke: '#666',
+          },
+        },
+      },
+      icon: {
+        marginTop: -5,
+        width: 32,
+        height: 32,
+        fill: 'none',
+        stroke: '#999',
+        clipPath: 'inset(45% 0 0 0)',
+        transition: 'transform 225ms ease-in-out, color 225ms ease-in-out',
+      },
+      disabled: {
+        '&+ input + $icon': {
+          opacity: '.5',
+        },
       },
     },
     MuiSwitch: {
