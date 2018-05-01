@@ -372,7 +372,6 @@ const LinodeTheme: Linode.Theme = {
         minHeight: 46,
         '&:focus': {
           backgroundColor: '#fff',
-          borderColor: 'pink',
         },
       },
       select: {
