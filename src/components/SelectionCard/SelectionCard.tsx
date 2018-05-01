@@ -49,7 +49,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     '&:focus $innerGrid': {
       borderColor: theme.palette.primary.main,
-      backgroundColor: '#f4f4f4',
+      backgroundColor: theme.bg.main,
     },
     '& .w100': {
       width: '100%',
@@ -106,8 +106,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     transition: `${'background-color 225ms ease-in-out, '}
     ${'border-color 225ms ease-in-out'}`,
     '&:hover': {
-      backgroundColor: '#f4f4f4',
-      borderColor: '#C9CACB',
+      backgroundColor: theme.bg.main,
+      borderColor: theme.color.border2,
     },
   },
   flex: {
