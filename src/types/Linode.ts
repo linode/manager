@@ -77,6 +77,36 @@ namespace Linode {
     | 'failed'
     | 'userAborted';
 
+  export interface IPAddress {
+    address: string;
+    gateway: string;
+    subnet_mask: string;
+    prefix: number;
+    type: string;
+    public: boolean;
+    rdns: string;
+    linode_id: number;
+    region: string;
+  }
+
+  export interface IPRange {
+    range: string;
+    region: string;
+    prefix?: number;
+  }
+
+  export interface LinodeIPsResponse {
+    ipv4: {
+      public: IPAddress[];
+      private: IPAddress[];
+      shared: IPAddress[];
+    };
+    ipv6: {
+      link_local: IPAddress;
+      slaac: IPAddress;
+      global: IPRange[];
+    };
+  }
 
   export type LinodeStatus =
     'offline'

@@ -140,7 +140,7 @@ const LinodeTheme: Linode.Theme = {
         padding: '0 24px 24px 24px',
         justifyContent: 'flex-start',
         '& button': {
-          marginRight: 16,
+          marginRight: 8,
           '&:first-child': {
             marginLeft: 0,
           },
@@ -171,10 +171,14 @@ const LinodeTheme: Linode.Theme = {
     MuiExpansionPanel: {},
     MuiExpansionPanelActions: {
       root: {
-        justifyContent: 'flex-start',
+        display: 'block',
         backgroundColor: 'white',
       },
-      action: {},
+      action: {
+        '&:first-child': {
+          marginRight: 8,
+        },
+      },
     },
     MuiExpansionPanelDetails: {
       root: {
@@ -215,7 +219,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiFormControl: {
       root: {
-        minHeight: 60,
+        minHeight: 50,
         marginTop: 16,
         minWidth: 200,
       },
