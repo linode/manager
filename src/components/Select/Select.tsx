@@ -23,7 +23,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     '&[class*="focused"]': {
-      borderColor: '#bbb',
+      borderColor: '#666',
     },
   },
   menu: {
@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     boxShadow: 'none',
     position: 'absolute',
     boxSizing: 'content-box',
-    border: '1px solid #bbb',
+    border: '1px solid #666',
     margin: '0 0 0 -1px',
     outline: 0,
   },
