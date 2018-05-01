@@ -237,7 +237,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             value={`${linodeId}`}
             onChange={e => this.setState({ linodeId: +(e.target.value) })}
             inputProps={{ name: 'linode', id: 'linode' }}
-            error={Boolean(regionError)}
+            error={Boolean(linodeError)}
           >
             <MenuItem key="none" value="0">Select a Linode</MenuItem>,
             {linodes && linodes
