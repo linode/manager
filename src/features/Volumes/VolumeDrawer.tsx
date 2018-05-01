@@ -8,7 +8,6 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
-  Typography,
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
@@ -173,6 +172,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         <TextField
           label="Label"
+          required
           value={label}
           onChange={e => this.setState({ label: (e.target.value) })}
           error={Boolean(labelError)}
@@ -183,6 +183,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
         <TextField
           label="Size"
+          required
           value={size}
           onChange={e => this.setState({ size: +(e.target.value) })}
           error={Boolean(sizeError)}
@@ -214,9 +215,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               <MenuItem key={region.id} value={region.id}>{dcDisplayNames[region.id]}</MenuItem>,
             )}
           </Select>
-          <Typography variant="body2">
-            Optional
-          </Typography>
           {regionError &&
             <FormHelperText error={Boolean(regionError)}>
               {regionError}
@@ -252,9 +250,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                 <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
             )}
           </Select>
-          <Typography variant="body2">
-            Optional
-          </Typography>
           {linodeError &&
             <FormHelperText error={Boolean(linodeError)}>
               {linodeError}
