@@ -13,12 +13,13 @@ const LinodeTheme: Linode.Theme = {
     red: '#CA0813',
     green: '#00B159',
     yellow: '#FECF2F',
-    border1: '#ABADAF',
-    border2: '#C5C6C8',
-    border3: '#eee',
+    border1: '#000',
+    border2: '#111',
+    border3: '#222',
     grey1: '#abadaf',
     grey2: '#E7E7E7',
     grey3: '#ccc',
+    white: '#32363C',
   },
   palette: {
     divider: '#000',
@@ -40,6 +41,8 @@ const LinodeTheme: Linode.Theme = {
     },
   },
   typography: {
+    fontFamily: '"Lato", sans-serif',
+    fontSize: 16,
     headline: {
       color: '#fff',
       fontSize: '1.5rem',
@@ -83,8 +86,11 @@ const LinodeTheme: Linode.Theme = {
         fontWeight: 700,
         color: '#3B85D9',
         padding: '12px 28px 14px',
-        '&:hover, &:focus': {
-          backgroundColor: '#fff',
+        '&:hover': {
+          backgroundColor: '#000',
+        },
+        '&:focus': {
+          backgroundColor: 'transparent',
         },
       },
       raisedPrimary: {

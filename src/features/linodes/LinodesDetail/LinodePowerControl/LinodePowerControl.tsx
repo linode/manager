@@ -46,18 +46,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       transform: 'rotate(360deg)',
     },
   },
-  root: {},
+  root: {
+    '& svg': {
+      transition: theme.transitions.create('color'),
+    },
+  },
   button: {
-    background: 'white',
-    border: `1px solid ${theme.color.border3}`,
-    transition: theme.transitions.create('border'),
+    backgroundColor: theme.color.white,
+    transition: theme.transitions.create('background', 'color', 'border-color'),
+    border: `1px solid ${theme.color.border1}`,
     padding: '12px 16px 13px',
     minWidth: 145,
     '&:hover, &.active': {
-      borderColor: theme.color.border1,
+      borderColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+      '& svg': {
+        color: 'white',
+      },
     },
   },
   caret: {
+    transition: theme.transitions.create('color'),
     position: 'relative',
     top: 2,
     left: 2,
@@ -78,8 +88,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      '& svg': {
+        color: 'white',
+      },
     },
   },
   icon: {
