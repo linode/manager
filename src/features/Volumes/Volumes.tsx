@@ -9,9 +9,12 @@ import {
 } from 'material-ui';
 import { pathOr } from 'ramda';
 
+import { Subscription } from 'rxjs/Rx';
+
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import { events$ } from 'src/events';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import { getVolumes } from 'src/services/volumes';
 
@@ -33,9 +36,38 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Volumes extends React.Component<CombinedProps, State> {
+  eventsSub: Subscription;
+  mounted: boolean = false;
+
   state = {
     volumes: pathOr([], ['response', 'data'], this.props.volumes),
   };
+
+  componentDidMount() {
+    this.mounted = true;
+
+    this.eventsSub = events$
+      .filter(event => (
+        !event._initial
+        && [
+          'volume_create',
+          'volume_attach',
+          'volume_delete',
+          'volume_detach',
+          'volume_resize',
+          'volume_clone',
+        ].includes(event.action)
+      ))
+      .subscribe((event) => {
+        getVolumes()
+          .then((volumes) => {
+            this.setState({ volumes: volumes.data });
+          })
+          .catch(() => {
+            /* @todo: how do we want to display this error? */
+          });
+      });
+  }
 
   openVolumesDrawer() {
     this.props.openForCreating();
