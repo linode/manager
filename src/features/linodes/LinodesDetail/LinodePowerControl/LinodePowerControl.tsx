@@ -20,7 +20,6 @@ import Reload from '../../../../assets/icons/reload.svg';
 type ClassNames = 'root'
   | 'button'
   | 'caret'
-  | 'popOver'
   | 'menuItem'
   | 'icon'
   | 'powerOn'
@@ -72,15 +71,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     top: 2,
     left: 2,
     marginLeft: theme.spacing.unit / 2,
-  },
-  popOver: {
-    position: 'absolute',
-    outline: 0,
-    boxShadow: '0 0 5px #ddd',
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    minWidth: 250,
   },
   menuItem: {
     color: theme.palette.primary.main,
@@ -215,7 +205,6 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
-          PaperProps={{ className: classes.popOver }}
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           <MenuItem
