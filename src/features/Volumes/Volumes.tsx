@@ -18,6 +18,8 @@ import { events$ } from 'src/events';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import { getVolumes } from 'src/services/volumes';
 
+import VolumesLanding from './VolumesLanding';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -78,7 +80,9 @@ class Volumes extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {volumes.length
-          ? <h1>Volumes Table</h1>
+          ? <VolumesLanding
+              volumes={volumes}
+            />
           : <Placeholder
               title="Create a Volume"
               copy="Add storage to your Linodes using the resilient Volumes service"
