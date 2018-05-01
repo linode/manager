@@ -20,6 +20,9 @@ import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
 import { generateInFilter } from 'src/events';
 
+import VolumesActionMenu from './VolumesActionMenu';
+import VolumeConfigDrawer from './VolumeConfigDrawer';
+
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -35,13 +38,21 @@ interface Props {
 
 interface State {
   linodeLabels: { [id: number]: string };
+  configDrawer: {
+    open: boolean;
+    volumePath?: string;
+    volumeLabel?: string;
+  };
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
-  state = {
+  state: State = {
     linodeLabels: {},
+    configDrawer: {
+      open: false,
+    },
   };
 
   componentDidMount() {
@@ -101,13 +112,31 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                     <TableCell data-qa-volume-size>{size} GB</TableCell>
                     <TableCell data-qa-fs-path>{filesystem_path}</TableCell>
                     <TableCell data-qa-volume-region>{region}</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>
+                      <VolumesActionMenu
+                        onShowConfig={() => {
+                          this.setState({
+                            configDrawer: {
+                              open: true,
+                              volumePath: filesystem_path,
+                              volumeLabel: label,
+                            },
+                          });
+                        }}
+                      />
+                    </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
           </Table>
         </Paper>
+        <VolumeConfigDrawer
+          open={this.state.configDrawer.open}
+          onClose={() => { this.setState({ configDrawer: { open: false } }); }}
+          volumePath={this.state.configDrawer.volumePath}
+          volumeLabel={this.state.configDrawer.volumeLabel}
+        />
       </React.Fragment>
     );
   }
