@@ -8,6 +8,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
+  Typography,
 } from 'material-ui';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
@@ -213,6 +214,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               <MenuItem key={region.id} value={region.id}>{dcDisplayNames[region.id]}</MenuItem>,
             )}
           </Select>
+          <Typography variant="body2">
+            Optional
+          </Typography>
           {regionError &&
             <FormHelperText error={Boolean(regionError)}>
               {regionError}
@@ -237,11 +241,20 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           >
             <MenuItem key="none" value="0">Select a Linode</MenuItem>,
             {linodes && linodes
-              .filter(linode => linode.region === region)
+              .filter((linode) => {
+                return (
+                  (region && region !== 'none')
+                    ? linode.region === region
+                    : true
+                );
+              })
               .map(linode =>
                 <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
             )}
           </Select>
+          <Typography variant="body2">
+            Optional
+          </Typography>
           {linodeError &&
             <FormHelperText error={Boolean(linodeError)}>
               {linodeError}
