@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import Axios from 'axios';
-import { compose, filter, path, pathOr } from 'ramda';
+import { compose, filter, path, pathOr, sort } from 'ramda';
 
 import { withStyles, Theme, WithStyles, StyleRulesCallback } from 'material-ui/styles';
 import Button from 'material-ui/Button';
@@ -373,16 +373,30 @@ export class APITokens extends React.Component<CombinedProps, State> {
     const now = moment.utc().format();
     const isPastNow = isPast(now);
 
-    const appTokens = compose<Props, Linode.Token[], Linode.Token[], Linode.Token[]>(
-      this.formatDates,
-      filter<Linode.Token>(t => isPastNow(t.expiry)),
-      pathOr([], ['appTokens', 'response', 'data']),
+    const appTokens = compose<
+      Props,
+      Linode.Token[],
+      Linode.Token[],
+      Linode.Token[],
+      Linode.Token[]
+      >(
+        this.formatDates,
+        sortCreatedDateAscending,
+        filter<Linode.Token>(t => isPastNow(t.expiry)),
+        pathOr([], ['appTokens', 'response', 'data']),
     )(this.props);
 
-    const pats = compose<State, Linode.Token[], Linode.Token[], Linode.Token[]>(
-      this.formatDates,
-      filter<Linode.Token>(t => isPastNow(t.expiry)),
-      pathOr([], ['pats']),
+    const pats = compose<
+      State,
+      Linode.Token[],
+      Linode.Token[],
+      Linode.Token[],
+      Linode.Token[]
+      >(
+        this.formatDates,
+        sortCreatedDateAscending,
+        filter<Linode.Token>(t => isPastNow(t.expiry)),
+        pathOr([], ['pats']),
     )(this.state);
 
     return (
@@ -471,6 +485,10 @@ export class APITokens extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const sortCreatedDateAscending = sort((a: Linode.Token, b: Linode.Token) => {
+  return moment.utc(b.created).diff(moment.utc(a.created));
+});
 
 const styled = withStyles(styles, { withTheme: true })<Props>(APITokens);
 
