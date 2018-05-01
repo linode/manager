@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
 
 import {
   withStyles,
@@ -17,6 +18,7 @@ import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import { openForCreating } from 'src/store/reducers/volumeDrawer';
 
 type CSSClasses = 'wrapper' | 'menu' | 'button' | 'caret';
 
@@ -45,7 +47,9 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
   },
 });
 
-interface Props { }
+interface Props {
+  openForCreating: typeof openForCreating;
+}
 
 interface State {
   anchorEl?: HTMLElement;
@@ -54,7 +58,6 @@ interface State {
 type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
 const styled = withStyles(styles, { withTheme: true });
-
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
@@ -75,6 +78,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Volume',
       onClick: (e) => {
+        this.props.openForCreating();
         this.handleClose();
         e.preventDefault();
       },
@@ -146,9 +150,18 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     );
   }
 }
+
 export const styledComponent = styled(AddNewMenu);
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { openForCreating },
+  dispatch,
+);
+
+const connected = connect(undefined, mapDispatchToProps);
+
 export default compose(
+  connected,
   withRouter,
   styled,
 )(AddNewMenu);

@@ -500,7 +500,12 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       });
     }
 
-    createVolume(label, Number(size), region, linodeId)
+    createVolume({
+      label,
+      size: Number(size),
+      region,
+      linode_id: linodeId,
+    })
       .then(() => {
         this.closeUpdatingDrawer();
         this.getAllVolumes();

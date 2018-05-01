@@ -70,7 +70,7 @@ export const resizeLinode = (id: number, type: string): Promise<{}> => Axios
   .post(`${API_ROOT}/linode/instances/${id}/resize`, { type });
 
 type GetLinodes = Promise<Linode.ResourcePage<Linode.Linode>>;
-export const getLinodes = (params: any, filter: any): GetLinodes =>
+export const getLinodes = (params?: any, filter?: any): GetLinodes =>
   Axios.get(`${API_ROOT}/linode/instances/`, genAxiosConfig(params, filter))
     .then(response => response.data);
 
