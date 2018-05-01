@@ -319,6 +319,7 @@ const LinodeTheme: Linode.Theme = {
           paddingBottom: 4,
           fontWeight: 700,
           fontSize: '1rem',
+          color: '#ddd',
         },
       },
       disabled: {
@@ -329,6 +330,28 @@ const LinodeTheme: Linode.Theme = {
       secondary: {
         marginTop: 4,
         lineHeight: '1.2em',
+      },
+    },
+    MuiMenuItem: {
+      root: {
+        height: 'auto',
+        fontWeight: 400,
+        fontSize: '.9rem',
+        whiteSpace: 'initial',
+        textOverflow: 'initial',
+        color: '#999',
+        transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
+        ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+        '&:hover, &:focus': {
+          color: 'white',
+        },
+        '& em': {
+          fontStyle: 'normal !important',
+        },
+      },
+      selected: {
+        color: 'white !important',
+        cursor: 'initial',
       },
     },
     MuiPaper: {
@@ -415,6 +438,49 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
         boxSizing: 'content-box',
+      },
+    },
+    MuiTab: {
+      root: {
+        color: '#C9CACB',
+        minWidth: 50,
+        textTransform: 'inherit',
+        fontWeight: 400,
+        [breakpoints.up('md')]: {
+          minWidth: 75,
+        },
+      },
+      textColorPrimary: {
+        color: '#C9CACB',
+      },
+      textColorPrimarySelected: {
+        color: '#3B85D9',
+        fontWeight: 700,
+      },
+      label: {
+        [breakpoints.up('md')]: {
+          fontSize: '1rem',
+        },
+      },
+      labelContainer: {
+        paddingLeft: 9,
+        paddingRight: 9,
+        [breakpoints.up('md')]: {
+          paddingLeft: 18,
+          paddingRight: 18,
+        },
+      },
+    },
+    MuiTabs: {
+      root: {
+        margin: '16px 0',
+        boxShadow: 'inset 0 -1px 0 #000',
+      },
+    },
+    MuiTabIndicator: {
+      root: {
+        bottom: 0,
+        backgroundColor: '#3B85D9',
       },
     },
   },
