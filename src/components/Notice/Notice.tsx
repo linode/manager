@@ -33,14 +33,13 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {
+interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
   text?: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
   className?: string;
-  [name: string]: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
