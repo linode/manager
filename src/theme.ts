@@ -31,7 +31,7 @@ const LinodeTheme: Linode.Theme = {
         fontWeight: 700,
         color: '#3B85D9',
         padding: '12px 28px 14px',
-        '&:hover, &:focus': {
+        '&:hover': {
           backgroundColor: '#fff',
         },
       },
@@ -615,6 +615,7 @@ const LinodeTheme: Linode.Theme = {
     grey1: '#abadaf',
     grey2: '#E7E7E7',
     grey3: '#ccc',
+    white: '#fff',
   },
   bg: {
     main: '#f4f4f4',
