@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '&:hover, &:focus': {
         backgroundColor: status.successDark,
         '& h3, & svg': {
-          color: 'white',
+          color: theme.color.white,
         },
       },
       '& svg': {

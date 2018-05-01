@@ -42,12 +42,31 @@ const LinodeTheme: Linode.Theme = {
   typography: {
     headline: {
       color: '#fff',
+      fontSize: '1.5rem',
+      fontWeight: 700,
     },
     title: {
       color: '#f4f4f4',
+      ontSize: '1.125rem',
+      fontWeight: 700,
+      lineHeight: '1.35417em',
     },
     subheading: {
       color: '#fff',
+      fontSize: '1rem',
+      fontWeight: 700,
+      lineHeight: '1.2em',
+    },
+    body1: {
+      fontSize: '1rem',
+    },
+    body2: {
+      fontSize: '.78rem',
+      lineHeight: '1.3em',
+    },
+    caption: {
+      fontSize: '.9rem',
+      lineHeight: '1.1em',
     },
   },
   overrides: {
@@ -128,6 +147,77 @@ const LinodeTheme: Linode.Theme = {
         },
       },
     },
+    MuiDialogActions: {
+      root: {
+        margin: 0,
+        padding: '0 24px 24px 24px',
+        justifyContent: 'flex-start',
+        '& button': {
+          marginRight: 16,
+          '&:first-child': {
+            marginLeft: 0,
+          },
+          '&:last-child': {
+            marginRight: 0,
+          },
+        },
+      },
+      action: {
+        margin: 0,
+      },
+    },
+    MuiExpansionPanel: {
+      root: {
+        '&:before': {
+          display: 'none',
+        },
+      },
+    },
+    MuiExpansionPanelActions: {
+      root: {
+        justifyContent: 'flex-start',
+        backgroundColor: '#32363C',
+      },
+      action: {},
+    },
+    MuiExpansionPanelDetails: {
+      root: {
+        padding: 16,
+        backgroundColor: '#32363C',
+      },
+    },
+    MuiExpansionPanelSummary: {
+      root: {
+        padding: '0 16px',
+        backgroundColor: '#32363C',
+        borderBottom: '1px solid #222',
+        '&:hover, &:focus': {
+          '& h3': {
+            color: '#5F99EA',
+          },
+        },
+      },
+      expanded: {
+        minHeight: 48,
+      },
+      contentExpanded: {
+        margin: '12px 0',
+      },
+      expandIcon: {
+        transition: 'color 225ms ease-in-out',
+        top: 0,
+        right: 0,
+        transform: 'none',
+        color: 'white',
+        '& svg': {
+          width: 22,
+          height: 22,
+        },
+      },
+      expandIconExpanded: {
+        transform: 'none',
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,
@@ -162,7 +252,8 @@ const LinodeTheme: Linode.Theme = {
         borderColor: '#CA0813',
       },
       disabled: {
-        borderColor: '#f4f4f4',
+        borderColor: '#666',
+        opacity: .5,
       },
       input: {
         padding: '12px 12px 13px',
@@ -185,6 +276,26 @@ const LinodeTheme: Linode.Theme = {
         minWidth: 200,
       },
     },
+    MuiFormLabel: {
+      root: {
+        color: '#C9CACB',
+        fontWeight: 700,
+      },
+      focused: {
+        color: '#C9CACB',
+      },
+      error: {
+        color: '#C9CACB',
+      },
+    },
+    MuiFormHelperText: {
+      root: {
+        flexBasis: '100%',
+      },
+      error: {
+        color: '#CA0813',
+      },
+    },
     MuiFormControlLabel: {
       root: {
         marginLeft: -11,
@@ -193,6 +304,31 @@ const LinodeTheme: Linode.Theme = {
     MuiInputLabel: {
       formControl: {
         position: 'relative',
+      },
+    },
+    MuiList: {
+      padding: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    },
+    MuiListItem: {
+      root: {
+        '&.selectHeader': {
+          opacity: 1,
+          paddingBottom: 4,
+          fontWeight: 700,
+          fontSize: '1rem',
+        },
+      },
+      disabled: {
+        opacity: 1,
+      },
+    },
+    MuiListItemText: {
+      secondary: {
+        marginTop: 4,
+        lineHeight: '1.2em',
       },
     },
     MuiPaper: {
