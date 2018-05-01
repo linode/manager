@@ -34,6 +34,9 @@ const LinodeTheme: Linode.Theme = {
         '&:hover': {
           backgroundColor: '#fff',
         },
+        '&:focus': {
+          backgroundColor: 'transparent',
+        },
       },
       raisedPrimary: {
         '&:hover, &:focus': {

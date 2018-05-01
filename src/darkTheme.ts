@@ -365,6 +365,16 @@ const LinodeTheme: Linode.Theme = {
         backgroundColor: '#32363C',
       },
     },
+    MuiPopover: {
+      paper: {
+        boxShadow: '0 0 5px #222',
+        borderRadius: 0,
+        minWidth: 200,
+        [breakpoints.up('lg')]: {
+          minWidth: 250,
+        },
+      },
+    },
     MuiSelect: {
       root: {},
       selectMenu: {
