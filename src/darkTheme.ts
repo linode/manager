@@ -379,7 +379,7 @@ const LinodeTheme: Linode.Theme = {
       root: {},
       selectMenu: {
         padding: '7px 32px 7px 10px',
-        color: '#666',
+        color: '#C9CACB',
         lineHeight: 2.2,
         minHeight: 46,
       },
@@ -497,6 +497,28 @@ const LinodeTheme: Linode.Theme = {
       root: {
         bottom: 0,
         backgroundColor: '#3B85D9',
+      },
+    },
+    MuiTableCell: {
+      root: {
+        padding: '18px',
+        borderBottom: '1px solid #000',
+        '&:last-child': {
+          paddingRight: 18,
+        },
+      },
+      head: {
+        fontSize: '.9rem',
+        fontWeight: 900,
+        color: 'white',
+      },
+      body: {
+        fontSize: '.9rem',
+      },
+    },
+    MuiTableHead: {
+      root: {
+        backgroundColor: '#32363C',
       },
     },
   },
