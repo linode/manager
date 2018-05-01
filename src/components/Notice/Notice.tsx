@@ -33,8 +33,8 @@ const styles: StyleRulesCallback = (theme: Linode.Theme) => {
   };
 };
 
-interface Props {
-  text: string;
+interface Props extends React.DetailsHTMLAttributes<HTMLDivElement> {
+  text?: string;
   error?: boolean;
   warning?: boolean;
   success?: boolean;
@@ -45,18 +45,33 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Notice: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, text, error, warning, success, typeProps, className } = props;
+  const {
+    classes,
+    className,
+    text,
+    error,
+    warning,
+    success,
+    typeProps,
+    children,
+    ...restProps,
+  } = props;
 
   return (
-    <div className={`${classNames({
-      [classes.error]: error,
-      [classes.warning]: warning,
-      [classes.success]: success,
-      [classes.root]: true,
-      notice: true,
-    })}
-    ${className}`}>
-      <Typography {...typeProps}>{text}</Typography>
+    <div
+      className={`${classNames({
+        [classes.error]: error,
+        [classes.warning]: warning,
+        [classes.success]: success,
+        [classes.root]: true,
+        notice: true,
+      })} ${className}`}
+      {...restProps}
+    >
+      <Typography {...typeProps}>
+        {text && text}
+        {children && children}
+      </Typography>
     </div>
   );
 };

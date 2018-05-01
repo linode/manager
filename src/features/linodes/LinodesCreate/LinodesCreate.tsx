@@ -18,7 +18,7 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 import { dcDisplayNames } from 'src/constants';
-import { createLinode, getLinodeTypes } from 'src/services/linodes';
+import { createLinode, getLinodeTypes, allocatePrivateIP } from 'src/services/linodes';
 import { getImages } from 'src/services/images';
 import { getRegions } from 'src/services/misc';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -235,7 +235,8 @@ class LinodeCreate extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
     })
-      .then(() => {
+      .then((linode) => {
+        if (this.state.privateIP) allocatePrivateIP(linode.id);
         resetEventsPolling();
         history.push('/linodes');
       })
