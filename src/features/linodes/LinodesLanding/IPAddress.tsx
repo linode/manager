@@ -65,6 +65,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     color: LinodeTheme.palette.primary.main,
     position: 'relative',
     display: 'inline-block',
+    width: 28,
     transition: theme.transitions.create(['color']),
     '&:hover, &:focus': {
       color: 'white',
