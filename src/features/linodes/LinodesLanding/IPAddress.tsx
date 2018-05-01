@@ -16,6 +16,7 @@ type CSSClasses =  'root'
 | 'right'
 | 'icon'
 | 'row'
+| 'ip'
 | 'ipLink'
 | 'copied';
 
@@ -59,6 +60,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     borderRadius: 2,
     position: 'absolute',
     top: -9,
+  },
+  ip: {
+    color: theme.palette.text.primary,
+    fontSize: '.9rem',
   },
   ipLink: {
     color: theme.palette.primary.main,
@@ -137,7 +142,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <div className="ip">{ip}</div>
+        <div className={`${classes.ip} ${'ip'}`}>{ip}</div>
         {copyRight && this.renderCopyIcon(ip)}
       </div>
     );

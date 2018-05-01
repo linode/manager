@@ -70,6 +70,7 @@ const LinodeTheme: Linode.Theme = {
     caption: {
       fontSize: '.9rem',
       lineHeight: '1.1em',
+      color: '#fff',
     },
   },
   overrides: {
@@ -151,6 +152,11 @@ const LinodeTheme: Linode.Theme = {
             animation: 'rotate 2s linear infinite',
           },
         },
+      },
+    },
+    MuiButtonBase: {
+      root: {
+        fontSize: '1rem',
       },
     },
     MuiDialogActions: {
@@ -404,6 +410,24 @@ const LinodeTheme: Linode.Theme = {
         '&+ input + $icon': {
           opacity: '.5',
         },
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        boxShadow: '0 0 5px #222',
+        color: '#666',
+        padding: 16,
+        margin: 16,
+        backgroundColor: 'transparent',
+        [breakpoints.up('md')]: {
+          margin: 0,
+          padding: 24,
+        },
+      },
+      message: {
+        margin: '0 auto',
+        width: '100%',
+        padding: 0,
       },
     },
     MuiSwitch: {

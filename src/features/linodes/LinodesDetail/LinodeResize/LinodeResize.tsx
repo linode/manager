@@ -45,7 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
       cursor: 'not-allowed',
       '& > div, &:focus > div': {
         backgroundColor: theme.bg.main,
-        borderColor: '#C9CACB',
+        borderColor: theme.color.border2,
       },
     },
   },
