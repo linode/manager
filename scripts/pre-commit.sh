@@ -11,6 +11,9 @@ status=$(($status + $?))
 if [[ $changes =~ .*src\/components.* ]]; then
     yarn storybook:e2e
     status=$(($status + $?))
+
+    # Ensure we cleanup any leftover selenium processes
+    $( pkill -f selenium-standalone )
 fi
 
 exit $status
