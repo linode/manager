@@ -210,7 +210,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
       return;
     }
 
-    attachtoLinode(Number(selectedVolume))(Number(linodeID))
+    attachtoLinode(Number(selectedVolume), { linode_id: Number(linodeID) })
       .then((response) => {
         this.closeAttachmentDrawer();
         resetEventsPolling();
