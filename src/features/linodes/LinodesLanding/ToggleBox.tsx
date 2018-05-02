@@ -44,6 +44,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     fontSize: '1rem',
     lineHeight: '1.3em',
     color: theme.palette.text.primary,
+    '&:focus': {
+      backgroundColor: theme.color.white,
+    },
     '&:hover': {
       backgroundColor: 'transparent',
       '& $icon': {
@@ -52,9 +55,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   buttonActive: {
-    backgroundColor: 'white',
+    backgroundColor: theme.color.white,
     '&:hover': {
-      backgroundColor: 'white',
+      backgroundColor: theme.color.white,
     },
   },
   buttonLeft: {
