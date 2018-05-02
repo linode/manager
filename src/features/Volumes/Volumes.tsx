@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Rx from 'rxjs/Rx';
 import { bindActionCreators } from 'redux';
 import { connect, Dispatch } from 'react-redux';
 import {
@@ -9,8 +10,6 @@ import {
 } from 'material-ui';
 import { pathOr } from 'ramda';
 
-import { Subscription } from 'rxjs/Rx';
-
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -19,6 +18,8 @@ import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import { getVolumes } from 'src/services/volumes';
 
 import VolumesLanding from './VolumesLanding';
+
+export const updateVolumes$ = new Rx.Subject<boolean>();
 
 type ClassNames = 'root';
 
@@ -38,7 +39,7 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Volumes extends React.Component<CombinedProps, State> {
-  eventsSub: Subscription;
+  eventsSub: Rx.Subscription;
   mounted: boolean = false;
 
   state = {
@@ -60,7 +61,8 @@ class Volumes extends React.Component<CombinedProps, State> {
           'volume_clone',
         ].includes(event.action)
       ))
-      .subscribe((event) => {
+      .merge(updateVolumes$)
+      .subscribe(() => {
         getVolumes()
           .then((volumes) => {
             this.setState({ volumes: volumes.data });
