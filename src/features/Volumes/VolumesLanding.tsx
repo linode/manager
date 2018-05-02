@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { pathOr } from 'ramda';
+import { pathOr, equals } from 'ramda';
 import {
   withStyles,
   StyleRulesCallback,
@@ -25,6 +25,7 @@ import { openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 
 import VolumesActionMenu from './VolumesActionMenu';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
+import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 
 type ClassNames = 'root' | 'title';
 
@@ -48,6 +49,12 @@ interface State {
     volumePath?: string;
     volumeLabel?: string;
   };
+  attachmentDrawer: {
+    open: boolean;
+    volumeID?: number;
+    volumeLabel?: string;
+    linodeRegion?: string;
+  };
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -58,9 +65,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     configDrawer: {
       open: false,
     },
+    attachmentDrawer: {
+      open: false,
+    },
   };
 
-  componentDidMount() {
+  getLinodeLabels() {
     const linodeIDs = this.props.volumes.map(volume => volume.linode_id).filter(Boolean);
     const xFilter = generateInFilter('id', linodeIDs);
     getLinodes(undefined, xFilter)
@@ -72,6 +82,16 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         this.setState({ linodeLabels });
       })
       .catch((err) => { /** @todo how do we want to display this error */});
+  }
+
+  componentDidMount() {
+    this.getLinodeLabels();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!equals(prevProps.volumes, this.props.volumes)) {
+      this.getLinodeLabels();
+    }
   }
 
   render() {
@@ -148,6 +168,17 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                           regionID,
                           linodeLabel,
                         )}
+                        attached={Boolean(linodeLabel)}
+                        onAttachment={() => {
+                          this.setState({
+                            attachmentDrawer: {
+                              open: true,
+                              volumeID: volume.id,
+                              volumeLabel: label,
+                              linodeRegion: regionID,
+                            },
+                          });
+                        }}
                       />
                     </TableCell>
                   </TableRow>
@@ -161,6 +192,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           onClose={() => { this.setState({ configDrawer: { open: false } }); }}
           volumePath={this.state.configDrawer.volumePath}
           volumeLabel={this.state.configDrawer.volumeLabel}
+        />
+        <VolumeAttachmentDrawer
+          open={this.state.attachmentDrawer.open}
+          volumeID={this.state.attachmentDrawer.volumeID || 0}
+          volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
+          linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
+          onClose={() => { this.setState({ attachmentDrawer: { open: false } }); }}
         />
       </React.Fragment>
     );
