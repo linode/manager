@@ -24,7 +24,12 @@ import { updateVolumes$ } from 'src/features/Volumes/Volumes';
 import { dcDisplayNames } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { close } from 'src/store/reducers/volumeDrawer';
-import { create, update, VolumeRequestPayload } from 'src/services/volumes';
+import {
+  create,
+  resize,
+  update,
+  VolumeRequestPayload,
+} from 'src/services/volumes';
 import { getLinodes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -152,6 +157,30 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               errors: path(['response', 'data', 'errors'], errorResponse),
             });
           });
+        return;
+      case modes.RESIZING:
+        if (!volumeID) {
+          return;
+        }
+
+        if (!label) {
+          this.setState({
+            errors: [{ field: 'size', reason: 'Size cannot be blank.' }],
+          });
+          return;
+        }
+
+        resize(volumeID, Number(size))
+          .then(() => {
+            resetEventsPolling();
+            close();
+          })
+          .catch((errorResponse) => {
+            this.setState({
+              errors: path(['response', 'data', 'errors'], errorResponse),
+            });
+          });
+        return;
       default:
         return;
     }
@@ -243,7 +272,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           </InputLabel>
           <Select
             value={region}
-            disabled={mode === modes.CLONING || mode === modes.EDITING}
+            disabled={
+              mode === modes.CLONING
+              || mode === modes.EDITING
+              || mode === modes.RESIZING
+            }
             onChange={e => this.setState({ region: (e.target.value) })}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
@@ -273,7 +306,11 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             value={mode === modes.EDITING || mode === modes.CLONING
               ? linodeLabel
               : `${linodeId}`}
-            disabled={mode === modes.CLONING || mode === modes.EDITING}
+            disabled={
+              mode === modes.CLONING
+              || mode === modes.EDITING
+              || mode === modes.RESIZING
+            }
             onChange={e => this.setState({ linodeId: +(e.target.value) })}
             inputProps={{ name: 'linode', id: 'linode' }}
             error={Boolean(linodeError)}
@@ -290,12 +327,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               .map(linode =>
                 <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
             )}
-            {(mode === modes.EDITING || mode === modes.CLONING) &&
+            {(mode === modes.EDITING
+              || mode === modes.CLONING
+              || mode === modes.RESIZING)
               /*
                * We optimize the lookup of the linodeLabel by providing it
                * explicitly when editing or cloning
                */
-              <MenuItem key={linodeLabel} value={linodeLabel}>{linodeLabel}</MenuItem>
+              && <MenuItem key={linodeLabel} value={linodeLabel}>{linodeLabel}</MenuItem>
             }
           </Select>
           {linodeError &&

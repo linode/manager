@@ -6,6 +6,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onShowConfig: () => void;
   onEdit: () => void;
+  onResize: () => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -15,6 +16,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
     const {
       onShowConfig,
       onEdit,
+      onResize,
     } = this.props;
 
     return function (closeMenu: Function): Action[] {
@@ -31,6 +33,14 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Edit Label',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit();
+            closeMenu();
+            e.preventDefault();
+          },
+        },
+        {
+          title: 'Resize',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onResize();
             closeMenu();
             e.preventDefault();
           },
