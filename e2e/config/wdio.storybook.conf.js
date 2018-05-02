@@ -4,6 +4,7 @@ const { browserCommands } = require('./custom-commands');
 const wdioMaster = require('./wdio.conf.js');
 const { constants } = require('../constants');
 const specsToRun = argv.file ? [ argv.file ] : ['./src/components/**/*.spec.js'];
+const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
 
 exports.config = merge(wdioMaster.config, {
     specs: specsToRun,
@@ -14,6 +15,7 @@ exports.config = merge(wdioMaster.config, {
             outputDir: './storybook-test-results'
         }
     },
+    services: servicesToStart,
     before: function (capabilities, specs) {
         browserCommands();
         browser.url(constants.routes.storybook);
