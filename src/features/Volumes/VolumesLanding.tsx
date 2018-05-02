@@ -6,6 +6,8 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
+import { bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
 
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
@@ -19,6 +21,7 @@ import TableCell from 'material-ui/Table/TableCell';
 import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
 import { generateInFilter } from 'src/events';
+import { openForEdit } from 'src/store/reducers/volumeDrawer';
 
 import VolumesActionMenu from './VolumesActionMenu';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
@@ -34,6 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   volumes: Linode.Volume[];
+  openForEdit: typeof openForEdit;
 }
 
 interface State {
@@ -70,7 +74,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { volumes, classes } = this.props;
+    const { volumes, classes, openForEdit } = this.props;
     const { linodeLabels } = this.state;
     return (
       <React.Fragment>
@@ -104,7 +108,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   ['filesystem_path'],
                   volume,
                 );
-                const region = dcDisplayNames[pathOr('', ['region'], volume)];
+                const regionID = pathOr('', ['region'], volume);
+                const region = dcDisplayNames[regionID];
                 return (
                   <TableRow key={volume.id} data-qa-volume-cell>
                     <TableCell data-qa-volume-cell-label>{label}</TableCell>
@@ -123,6 +128,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                             },
                           });
                         }}
+                        onEdit={() => openForEdit(
+                          volume.id,
+                          label,
+                          size,
+                          regionID,
+                          linodeLabel,
+                        )}
                       />
                     </TableCell>
                   </TableRow>
@@ -142,6 +154,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 }
 
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { openForEdit },
+  dispatch,
+);
+
+const connected = connect(undefined, mapDispatchToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(VolumesLanding);
+export default connected(styled(VolumesLanding));
