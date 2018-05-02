@@ -20,12 +20,15 @@ import TableCell from 'material-ui/Table/TableCell';
 
 import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
-import { generateInFilter } from 'src/events';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { generateInFilter, resetEventsPolling } from 'src/events';
 import { openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { detach, _delete } from 'src/services/volumes';
 
 import VolumesActionMenu from './VolumesActionMenu';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 
 type ClassNames = 'root' | 'title';
 
@@ -55,6 +58,11 @@ interface State {
     volumeLabel?: string;
     linodeRegion?: string;
   };
+  destructiveDialog: {
+    open: boolean;
+    mode: string;
+    volumeID?: number;
+  };
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -67,6 +75,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
     attachmentDrawer: {
       open: false,
+    },
+    destructiveDialog: {
+      open: false,
+      mode: 'detach',
     },
   };
 
@@ -92,6 +104,42 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (!equals(prevProps.volumes, this.props.volumes)) {
       this.getLinodeLabels();
     }
+  }
+
+  closeDestructiveDialog() {
+    this.setState({
+      destructiveDialog: { open: false, mode: 'detatch' },
+    });
+  }
+
+  detachVolume = () => {
+    const { destructiveDialog: { volumeID } } = this.state;
+    if (!volumeID) { return; }
+
+    detach(volumeID)
+      .then((response) => {
+        /* @todo: show a progress bar for volume detachment */
+        sendToast('Volume detachment started');
+        this.closeDestructiveDialog();
+        resetEventsPolling();
+      })
+      .catch((response) => {
+        /** @todo Error handling. */
+      });
+  }
+
+  deleteVolume = () => {
+    const { destructiveDialog: { volumeID } } = this.state;
+    if (!volumeID) { return; }
+
+    _delete(volumeID)
+      .then((response) => {
+        this.closeDestructiveDialog();
+        resetEventsPolling();
+      })
+      .catch((response) => {
+        /** @todo Error handling. */
+      });
   }
 
   render() {
@@ -169,13 +217,31 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                           linodeLabel,
                         )}
                         attached={Boolean(linodeLabel)}
-                        onAttachment={() => {
+                        onAttach={() => {
                           this.setState({
                             attachmentDrawer: {
                               open: true,
                               volumeID: volume.id,
                               volumeLabel: label,
                               linodeRegion: regionID,
+                            },
+                          });
+                        }}
+                        onDetach={() => {
+                          this.setState({
+                            destructiveDialog: {
+                              open: true,
+                              mode: 'detach',
+                              volumeID: volume.id,
+                            },
+                          });
+                        }}
+                        onDelete={() => {
+                          this.setState({
+                            destructiveDialog: {
+                              open: true,
+                              mode: 'delete',
+                              volumeID: volume.id,
                             },
                           });
                         }}
@@ -199,6 +265,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
           linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
           onClose={() => { this.setState({ attachmentDrawer: { open: false } }); }}
+        />
+        <DestructiveVolumeDialog
+          open={this.state.destructiveDialog.open}
+          mode={this.state.destructiveDialog.mode}
+          onClose={() => this.closeDestructiveDialog()}
+          onDetach={() => this.detachVolume()}
+          onDelete={() => this.deleteVolume()}
         />
       </React.Fragment>
     );
