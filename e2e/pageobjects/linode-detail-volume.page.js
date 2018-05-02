@@ -75,11 +75,10 @@ class VolumeDetail {
         const dialogConfirm = $('[data-qa-confirm]');
         const dialogCancel = $('[data-qa-cancel]');
         const dialogContent = $('[data-qa-dialog-content]');
-        const expectedMsg = 'Are you sure you want to detach this volume?';
 
         expect(dialogTitle.isVisible()).toBe(true);
         expect(dialogTitle.getText()).toBe('Detach Volume');
-        expect(dialogContent.getText()).toBe(expectedMsg);
+        expect(dialogContent.getText()).toMatch(/\w/ig);
         expect(dialogConfirm.isVisible()).toBe(true);
         expect(dialogConfirm.getTagName()).toBe('button');
         expect(dialogConfirm.getAttribute('class')).toContain('destructive');
