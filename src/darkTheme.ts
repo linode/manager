@@ -387,7 +387,7 @@ const LinodeTheme: Linode.Theme = {
     MuiSelect: {
       root: {},
       selectMenu: {
-        padding: '7px 32px 7px 10px',
+        padding: '7px 32px 7px 16px',
         color: '#C9CACB',
         lineHeight: 2.2,
         minHeight: 46,
