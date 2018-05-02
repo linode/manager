@@ -14,9 +14,9 @@ const specsToRun = () => {
         return [argv.file];
     }
     if (argv.dir) {
-        return [`./e2e/specs/${argv.dir}/**/*.spec.js`]
+        return ['./e2e/setup/*.js', `./e2e/specs/${argv.dir}/**/*.spec.js`]
     }
-    return ['./e2e/specs/**/*.js'];
+    return ['./e2e/setup/*.js','./e2e/specs/**/*.js'];
 }
 const selectedReporters = ['dot'];
 
