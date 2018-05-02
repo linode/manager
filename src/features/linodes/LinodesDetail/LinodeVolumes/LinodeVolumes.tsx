@@ -351,7 +351,7 @@ class LinodeVolumes extends React.Component<CombinedProps, State> {
         open={open}
         title={title}
       >
-        Are you sure you want to {mode} this volume?
+        <Typography> Are you sure you want to {mode} this volume?</Typography>
     </ConfirmationDialog>
     );
   }

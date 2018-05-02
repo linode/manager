@@ -45,7 +45,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => ({
   },
   icon: {
     animation: 'scaleIn .5s ease-in-out',
-    // backfaceVisibility: 'hidden',
     width: 225,
     height: 225,
     '& .outerCircle': {
