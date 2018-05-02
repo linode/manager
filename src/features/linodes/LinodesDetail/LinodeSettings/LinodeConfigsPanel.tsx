@@ -18,8 +18,8 @@ import TableHead from 'material-ui/Table/TableHead';
 import TableCell from 'material-ui/Table/TableCell';
 
 import PlusSquare from 'src/assets/icons/plus-square.svg';
-import Reload from 'src/assets/icons/reload.svg';
-import { getLinodeDisks, createLinodeConfig } from 'src/services/linodes';
+import { events$ } from 'src/events';
+import { getLinodeDisks, createLinodeConfig, deleteLinodeConfig } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import { ExtendedDisk, ExtendedVolume }
   from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -29,9 +29,12 @@ import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import createDevicesFromStrings, { DevicesAsStrings } from
   'src/utilities/createDevicesFromStrings';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+
 import LinodeConfigsEmptyState from './LinodeConfigsEmptyState';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
+import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
 
 type ClassNames = 'root' | 'headline';
 
@@ -68,6 +71,13 @@ interface ConfigDrawerState {
   maxMemory: number;
 }
 
+interface ConfirmDeleteState {
+  open: boolean;
+  submitting: boolean;
+  id?: number;
+  label?: string;
+}
+
 interface State {
   success?: string;
   submitting: boolean;
@@ -76,10 +86,12 @@ interface State {
     volumes: ExtendedVolume[];
   };
   configDrawer: ConfigDrawerState;
+  confirmDelete: ConfirmDeleteState;
 }
 
 interface Props {
   linodeId: number;
+  linodeLabel: string;
   linodeRegion: string;
   linodeConfigs: Linode.Config[];
   linodeMemory: number;
@@ -106,6 +118,10 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       disks: this.props.disks.response || [],
       volumes: this.props.volumes.response || [],
     },
+    confirmDelete: {
+      open: false,
+      submitting: false,
+    },
     configDrawer: {
       open: false,
       submitting: false,
@@ -130,12 +146,43 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
     },
   };
 
-  setConfigDrawer = (obj: Partial<ConfigDrawerState>) => this.setState({
+  setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) => this.setState({
     configDrawer: {
       ...this.state.configDrawer,
       ...obj,
     },
-  })
+  }, () => { if (fn) fn(); })
+
+  setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
+    confirmDelete: {
+      ...this.state.confirmDelete,
+      ...obj,
+    },
+  }, () => { if (fn) fn(); })
+
+
+  confirmDelete = (id: number, label: string) => {
+    this.setConfirmDelete({ open: true, id, label });
+  }
+
+  deleteConfig = () => {
+    this.setConfirmDelete({ submitting: true });
+    const { linodeId, linodeLabel } = this.props;
+    const { confirmDelete: { id: configId } } = this.state;
+    if (!configId) { return; }
+
+    deleteLinodeConfig(linodeId, configId)
+      .then(() => {
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+
+        this.setConfirmDelete({
+          submitting: false,
+        }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
+      })
+      .catch((error) => {
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+      });
+  }
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({
@@ -162,7 +209,10 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
               <TableRow key={config.id}>
                 <TableCell>{config.label}</TableCell>
                 <TableCell>
-                  <LinodeConfigActionMenu onEdit={() => null} onDelete={() => null} />
+                  <LinodeConfigActionMenu
+                    onEdit={() => null}
+                    onDelete={() => this.confirmDelete(config.id, config.label)}
+                  />
                 </TableCell>
               </TableRow>
             ))
@@ -173,7 +223,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
   }
 
   createConfig = () => {
-    const { linodeId } = this.props;
+    const { linodeId, linodeLabel } = this.props;
     const {
       label, devices, kernel, comments, memory_limit, run_level, virt_mode, helpers, root_device,
     } = this.state.configDrawer;
@@ -192,7 +242,31 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       root_device,
     })
       .then((repsonse) => {
-        this.setConfigDrawer({ submitting: false });
+        events$.next(genEvent('linode_reboot', linodeId, linodeLabel));
+
+        this.setConfigDrawer({ submitting: false }, () => {
+          this.setConfigDrawer({
+            open: false,
+            submitting: false,
+            mode: 'create',
+            label: '',
+            virt_mode: 'paravirt',
+            run_level: 'default',
+            kernel: 'linode/latest-64bit',
+            memory_limit: this.props.linodeMemory,
+            maxMemory: this.props.linodeMemory,
+            devices: {},
+            devicesCounter: 99,
+            useCustomRoot: false,
+            root_device: '',
+            helpers: {
+              updatedb_disabled: false,
+              distro: false,
+              modules_dep: false,
+              network: false,
+              devtmpfs_automount: false,
+            }});
+        });
       })
       .catch((error) => {
         this.setConfigDrawer({ errors: error.response.data.errors });
@@ -201,7 +275,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, linodeConfigs } = this.props;
-    const { submitting, configDrawer } = this.state;
+    const { configDrawer } = this.state;
     return (
       <React.Fragment>
         {
@@ -211,28 +285,16 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
             success={this.state.success}
             actions={() =>
               <ActionsPanel>
-                {
-                  submitting
-                    ? (
-                      <Button
-                        variant="raised"
-                        color="secondary"
-                        disabled
-                        className="loading"
-                      >
-                        <Reload />
-                      </Button>
-                    )
-                    : (
-                      <Button
-                        variant="raised"
-                        color="primary"
-                        onClick={() => null}
-                      >
-                        Save
-                        </Button>
-                    )
-                }
+                <Button
+                  variant="raised"
+                  color="primary"
+                  onClick={() => {
+                    const { linodeId, linodeLabel } = this.props;
+                    genEvent('reboot_linode', linodeId, linodeLabel);
+                  }}
+                >
+                  Save
+                </Button>
               </ActionsPanel>
             }
           >
@@ -271,6 +333,25 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
           onClose={() => this.setConfigDrawer({ open: false })}
           onSubmit={() => this.createConfig()}
         />
+        <ConfirmationDialog
+          title="Confirm Delete"
+          open={this.state.confirmDelete.open}
+          actions={() => <ActionsPanel>
+            <Button
+              onClick={() => this.deleteConfig()}
+              variant="raised"
+              color="secondary"
+              className="destructive"
+            >
+              Delete
+            </Button>
+            <Button onClick={() => this.setConfirmDelete({ open: false, id: undefined })}>
+              Cancel
+            </Button>
+          </ActionsPanel>}
+        >
+          Are you sure you want to delete "{this.state.confirmDelete.label}"
+        </ConfirmationDialog>
       </React.Fragment>
     );
   }
