@@ -21,7 +21,7 @@ import TableCell from 'material-ui/Table/TableCell';
 import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
 import { generateInFilter } from 'src/events';
-import { openForEdit } from 'src/store/reducers/volumeDrawer';
+import { openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 
 import VolumesActionMenu from './VolumesActionMenu';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
@@ -38,6 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   volumes: Linode.Volume[];
   openForEdit: typeof openForEdit;
+  openForResize: typeof openForResize;
 }
 
 interface State {
@@ -74,7 +75,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { volumes, classes, openForEdit } = this.props;
+    const {
+      volumes,
+      classes,
+      openForEdit,
+      openForResize,
+    } = this.props;
     const { linodeLabels } = this.state;
     return (
       <React.Fragment>
@@ -135,6 +141,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                           regionID,
                           linodeLabel,
                         )}
+                        onResize={() => openForResize(
+                          volume.id,
+                          label,
+                          size,
+                          regionID,
+                          linodeLabel,
+                        )}
                       />
                     </TableCell>
                   </TableRow>
@@ -155,7 +168,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit },
+  { openForEdit, openForResize },
   dispatch,
 );
 

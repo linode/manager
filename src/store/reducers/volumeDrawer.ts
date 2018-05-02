@@ -4,6 +4,7 @@ import { modes } from 'src/features/Volumes/VolumeDrawer';
 const CLOSE = '@@manager/volumeDrawer/CLOSE';
 const CREATING = '@@manager/volumeDrawer/CREATING';
 const EDITING = '@@manager/volumeDrawer/EDITING';
+const RESIZING = '@@manager/volumeDrawer/RESIZING';
 
 interface Close extends Action {
   type: typeof CLOSE;
@@ -49,6 +50,32 @@ export const openForEdit = (
   });
 };
 
+interface Resizing extends Action {
+  type: typeof RESIZING;
+  volumeID: number;
+  label: string;
+  size: number;
+  region: string;
+  linodeLabel: string;
+}
+
+export const openForResize = (
+  volumeID: number,
+  label: string,
+  size: number,
+  region: string,
+  linodeLabel: string,
+): Resizing => {
+  return ({
+    type: RESIZING,
+    volumeID,
+    label,
+    size,
+    region,
+    linodeLabel,
+  });
+};
+
 export const defaultState = {
   mode: modes.CLOSED,
   volumeID: 0,
@@ -62,7 +89,8 @@ export const defaultState = {
 type ActionTypes =
   Close
 | Creating
-| Editing;
+| Editing
+| Resizing;
 
 export default function volumeDrawer(state = defaultState, action: ActionTypes) {
   switch (action.type) {
@@ -84,6 +112,15 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
         region: action.region,
         linodeLabel: action.linodeLabel,
         mode: modes.EDITING,
+      };
+    case RESIZING:
+      return {
+        volumeID: action.volumeID,
+        label: action.label,
+        size: action.size,
+        region: action.region,
+        linodeLabel: action.linodeLabel,
+        mode: modes.RESIZING,
       };
     default:
       return state;
