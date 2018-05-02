@@ -10,6 +10,7 @@ class VolumeDetail {
     get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
+    get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeCellLabel() { return $('[data-qa-volume-cell-label]') }
     get volumeCellSize() { return $('[data-qa-volume-size]') }
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
@@ -19,6 +20,16 @@ class VolumeDetail {
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
+
+    getVolumeId(label) {
+        const volumesWithLabel = this.volumeCell.filter(v => v.$(this.volumeCellLabel.selector).getText() === label);
+
+        if (volumesWithLabel.length === 1) {
+            return volumesWithLabel[0].getAttribute('data-qa-volume-cell');
+        }
+
+        return volumesWithLabel.map(v => v.getAttribute('data-qa-volume-cell'));
+    }
 
     createVolume(volume) {
         if (this.placeholderText.isVisible()) {
@@ -116,10 +127,8 @@ class VolumeDetail {
         dialogConfirm.click();
 
         browser.waitUntil(function() {
-            return !browser.isExisting('[data-qa-volume-cell]');
+            return browser.waitForVisible('[data-qa-placeholder-title]', 20000) || !volumeElement.isExisting();
         }, 30000);
-
-        this.placeholderText.waitForVisible(20000);
     }
 
     selectActionMenuItem(volume, item) {
