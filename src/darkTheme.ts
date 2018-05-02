@@ -79,7 +79,7 @@ const LinodeTheme: Linode.Theme = {
   overrides: {
     MuiAppBar: {
       colorDefault: {
-        backgroundColor: '#2F3236',
+        backgroundColor: 'transparent',
       },
     },
     MuiButton: {
