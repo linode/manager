@@ -81,7 +81,7 @@ describe('Expansion Panel Suite', () => {
 
         it('should display save and cancel buttons', () => {
             const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible());
+            const visibleButtons = buttons.filter(b => b.isVisible() && b.getText() !== '');
             expect(visibleButtons.length).toBe(2);
         });
 
@@ -107,7 +107,7 @@ describe('Expansion Panel Suite', () => {
 
         it('should display save and cancel buttons', () => {
             const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible());
+            const visibleButtons = buttons.filter(b => b.isVisible() && b.getText() !== '');
             expect(visibleButtons.length).toBe(2);
         });
 
@@ -133,7 +133,7 @@ describe('Expansion Panel Suite', () => {
 
         it('should display save and cancel buttons', () => {
             const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible());
+            const visibleButtons = buttons.filter(b => b.isVisible() && b.getText() !== '');
             expect(visibleButtons.length).toBe(2);
         });
 
