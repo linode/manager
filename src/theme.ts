@@ -225,6 +225,9 @@ const LinodeTheme: Linode.Theme = {
         minHeight: 50,
         marginTop: 16,
         minWidth: 200,
+        '&.copy > div': {
+          backgroundColor: '#f4f4f4',
+        },
       },
     },
     MuiFormControlLabel: {
