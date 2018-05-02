@@ -34,10 +34,19 @@ import { getLinodes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+|  'suffix'
+|  'actionPanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  suffix: {
+    fontSize: '.9rem',
+    marginRight: theme.spacing.unit,
+  },
+  actionPanel: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
 export interface Props {
@@ -187,7 +196,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { mode, linodeLabel } = this.props;
+    const { mode, linodeLabel, classes } = this.props;
     const regions = path(['response', 'data'], this.props.regions) as Linode.Region[];
     const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
 
@@ -256,7 +265,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
           InputProps={{
-            endAdornment: 'GB',
+            endAdornment: <span className={classes.suffix}>GB</span>,
           }}
           data-qa-size
         />
@@ -344,7 +353,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           }
         </FormControl>
 
-        <ActionsPanel>
+        <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={() => this.onSubmit()}
             variant="raised"
