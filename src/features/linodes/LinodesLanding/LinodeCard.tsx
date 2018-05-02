@@ -87,14 +87,21 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     marginRight: theme.spacing.unit,
   },
   cardActions: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: theme.bg.offWhite,
     padding: 0,
   },
   button: {
     padding: '12px 12px 14px',
     height: '100%',
     margin: 0,
-    borderTop: '1px solid ' + theme.palette.divider,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    fontWeight: 400,
+    fontSize: '.9rem',
+    transition: theme.transitions.create(['background-color', 'color']),
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+    },
   },
   consoleButton: {
     width: '50%',
@@ -253,7 +260,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               onClick={() => weblishLaunch(`${linodeId}`)}
               data-qa-console
             >
-              <span className="btnLink">Launch Console</span>
+             Launch Console
             </Button>
             <Button
               className={`${classes.button}
@@ -261,7 +268,7 @@ class LinodeCard extends React.Component<Props & WithStyles<CSSClasses> > {
               onClick={() => rebootLinode(openConfigDrawer, linodeId, linodeLabel)}
               data-qa-reboot
             >
-              <span className="btnLink">Reboot</span>
+              Reboot
             </Button>
           </CardActions>
         </Card>
