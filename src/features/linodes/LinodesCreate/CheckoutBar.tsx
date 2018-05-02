@@ -7,7 +7,6 @@ import {
   StyleRules,
 } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 
 
@@ -37,7 +36,7 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       position: 'relative !important',
       left: '0 !important',
       bottom: '0 !important',
-      background: '#fff',
+      background: theme.color.white,
       padding: theme.spacing.unit * 2,
     },
   },
@@ -156,7 +155,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
         {typeInfo &&
           <React.Fragment>
             <div className={classes.checkoutSection} data-qa-type-summary>
-              <Divider />
               <Typography variant="subheading">
                 {typeInfo.name}
               </Typography>
@@ -170,7 +168,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
         {backups &&
           <React.Fragment>
             <div className={classes.checkoutSection} data-qa-backups-summary>
-              <Divider />
               <Typography variant="subheading">
                 Backups Enabled
               </Typography>
