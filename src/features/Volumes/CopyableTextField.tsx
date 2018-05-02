@@ -7,30 +7,24 @@ import {
 } from 'material-ui';
 import * as copy from 'copy-to-clipboard';
 
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
-
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
+import CopyTooltip from 'src/components/CopyTooltip';
 
-type ClassNames =
-  'root';
+type ClassNames = 'root'
+| 'copyIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  copyIcon: {
+    marginRight: theme.spacing.unit,
+  },
 });
 
 interface Props {}
 
-interface State {
-  copied: boolean;
-}
-
 type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
 
-class CopyableTextField extends React.Component<CombinedProps, State> {
-  state = {
-    copied: false,
-  };
-
+class CopyableTextField extends React.Component<CombinedProps> {
   clickIcon = (value: string) => {
     this.setState({
       copied: true,
@@ -40,14 +34,17 @@ class CopyableTextField extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { value } = this.props;
+    const { value, restProps, classes } = this.props;
+
     return (
       <TextField
-        {...this.props}
+        value={value}
+        {...restProps}
         InputProps={{
           endAdornment: (
-            <ContentCopyIcon
-              onClick={() => this.clickIcon(`${value}`)}
+            <CopyTooltip
+              text={`${value}`}
+              className={classes.copyIcon}
             />
           ),
         }}
