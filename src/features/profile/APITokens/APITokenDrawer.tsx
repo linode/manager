@@ -11,6 +11,7 @@ import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
 import TableHead from 'material-ui/Table/TableHead';
 import TableRow from 'material-ui/Table/TableRow';
+import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
@@ -239,7 +240,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
         }
         {mode === 'view' &&
-          'This application has access to your:'
+          <Typography>This application has access to your:</Typography>
         }
         {(mode === 'view' || mode === 'create') &&
           this.renderPermsTable()

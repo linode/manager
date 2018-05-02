@@ -162,6 +162,12 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '1rem',
       },
     },
+    MuiDialog: {
+      paper: {
+        boxShadow: '0 0 5px #222',
+        maxWidth: '768px !important',
+      },
+    },
     MuiDialogActions: {
       root: {
         margin: 0,
@@ -179,6 +185,12 @@ const LinodeTheme: Linode.Theme = {
       },
       action: {
         margin: 0,
+      },
+    },
+    MuiDialogTitle: {
+      root: {
+        borderBottom: '1px solid #000',
+        marginBottom: 20,
       },
     },
     MuiDrawer: {
