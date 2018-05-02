@@ -21,7 +21,6 @@ interface State {
 }
 
 type CSSClasses =  'root'
-| 'field'
 | 'copied';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
@@ -39,11 +38,26 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   root: {
     position: 'relative',
+    padding: 2,
+    transition: theme.transitions.create(['background-color']),
+    borderRadius: 4,
+    '& svg': {
+      transition: theme.transitions.create(['color']),
+      margin: 0,
+      position: 'relative',
+      width: 16,
+      height: 16,
+    },
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& svg': {
+        color: 'white',
+      },
+    },
   },
-  field: {},
   copied: {
     fontSize: '.85rem',
-    left: -12,
+    left: -16,
     color: theme.palette.primary.light,
     padding: '6px 8px',
     backgroundColor: 'white',
