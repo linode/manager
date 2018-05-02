@@ -267,7 +267,6 @@ const LinodeTheme: Linode.Theme = {
         },
         '& svg': {
           fontSize: 18,
-          marginLeft: 8,
           cursor: 'pointer',
           color: '#3B85D9',
           '&:hover': {
@@ -368,7 +367,7 @@ const LinodeTheme: Linode.Theme = {
     MuiSelect: {
       root: {},
       selectMenu: {
-        padding: '7px 32px 7px 10px',
+        padding: '7px 32px 7px 16px',
         color: '#666',
         backgroundColor: '#fff',
         lineHeight: 2.2,

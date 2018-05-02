@@ -32,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     overflowX: 'hidden',
     boxSizing: 'content-box',
     '& li': {
-      color: '#666',
+      color: theme.palette.text.primary,
     },
     [theme.breakpoints.down('xs')]: {
       minWidth: 200,
