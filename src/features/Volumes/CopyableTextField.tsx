@@ -11,16 +11,22 @@ import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import CopyTooltip from 'src/components/CopyTooltip';
 
 type ClassNames = 'root'
+| 'input'
 | 'copyIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {},
+  input: {
+    backgroundColor: theme.bg.offWhite,
+  },
   copyIcon: {
     marginRight: theme.spacing.unit,
   },
 });
 
-interface Props {}
+interface Props {
+  className: string;
+}
 
 type CombinedProps = Props & TextFieldProps & WithStyles<ClassNames>;
 
@@ -34,12 +40,13 @@ class CopyableTextField extends React.Component<CombinedProps> {
   }
 
   render() {
-    const { value, restProps, classes } = this.props;
+    const { value, restProps, classes, className } = this.props;
 
     return (
       <TextField
         value={value}
         {...restProps}
+        className={`${className} ${'copy'}`}
         InputProps={{
           endAdornment: (
             <CopyTooltip

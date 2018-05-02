@@ -13,10 +13,14 @@ import Drawer from 'src/components/Drawer';
 
 import CopyableTextField from './CopyableTextField';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+|  'copyField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  copyField: {
+    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 2}px`,
+  },
 });
 
 interface Props {
@@ -29,6 +33,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
   return (
     <Drawer
       open={props.open}
@@ -41,29 +46,37 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             To get started with a new volume, you'll want to create a filesystem on it:
           </Typography>
           <CopyableTextField
+            className={classes.copyField}
             value={`mkfs.ext4 "${props.volumePath}"`}
           />
+
           <Typography variant="body1">
             Once the volume has a filesystem, you can create a mountpoint for it:
           </Typography>
           <CopyableTextField
+            className={classes.copyField}
             value={`mkdir "/mnt/${props.volumeLabel}"`}
           />
+
           <Typography variant="body1">
             Then you can mount the new volume:
           </Typography>
           <CopyableTextField
+            className={classes.copyField}
             value={`mount "${props.volumePath}" "/mnt/${props.volumeLabel}"`}
           />
+
           <Typography variant="body1">
             If you want the volume to automatically mount every time your
             Linode boots, you'll want to add a line like the following to
             your /etc/fstab file:
           </Typography>
           <CopyableTextField
+            className={classes.copyField}
             value={`${props.volumePath} /mnt/${props.volumeLabel}`}
           />
-          <ActionsPanel style={{ marginTop: 16 }}>
+
+          <ActionsPanel>
             <Button
               variant="raised"
               color="primary"
