@@ -48,6 +48,7 @@ interface Props {
 
 interface State {
   linodeLabels: { [id: number]: string };
+  linodeStatuses: { [id: number]: string };
   configDrawer: {
     open: boolean;
     volumePath?: string;
@@ -71,6 +72,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
     linodeLabels: {},
+    linodeStatuses: {},
     configDrawer: {
       open: false,
     },
@@ -93,6 +95,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           linodeLabels[linode.id] = linode.label;
         }
         this.setState({ linodeLabels });
+
+        const linodeStatuses = {};
+        for (const linode of response.data) {
+          linodeStatuses[linode.id] = linode.status;
+        }
+        this.setState({ linodeStatuses });
       })
       .catch((err) => { /** @todo how do we want to display this error */});
   }
@@ -151,7 +159,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       openForResize,
       openForClone,
     } = this.props;
-    const { linodeLabels } = this.state;
+    const { linodeLabels, linodeStatuses } = this.state;
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
@@ -177,6 +185,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               {volumes.map((volume) => {
                 const label = pathOr('', ['label'], volume);
                 const linodeLabel = linodeLabels[volume.linode_id];
+                const linodeStatus = linodeStatuses[volume.linode_id];
                 const size = pathOr('', ['size'], volume);
                 const filesystem_path = pathOr(
                   /** @todo Remove path default when API releases filesystem_path. */
@@ -244,6 +253,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                             },
                           });
                         }}
+                        poweredOff={linodeStatus === 'offline'}
                         onDelete={() => {
                           this.setState({
                             destructiveDialog: {
