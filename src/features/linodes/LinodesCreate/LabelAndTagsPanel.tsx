@@ -10,12 +10,12 @@ import Notice from '../../../components/Notice';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.color.white,
   },
   inner: {
     padding: theme.spacing.unit * 3,

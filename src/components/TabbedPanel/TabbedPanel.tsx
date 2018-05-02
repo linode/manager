@@ -24,7 +24,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     padding: theme.spacing.unit * 3,
   },
   copy: {
-    color: '#606469',
     fontSize: '0.875rem',
     marginTop: theme.spacing.unit,
   },
