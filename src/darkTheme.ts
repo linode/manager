@@ -354,7 +354,7 @@ const LinodeTheme: Linode.Theme = {
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
-        color: '#999',
+        color: '#fff',
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
         '&:hover, &:focus': {
