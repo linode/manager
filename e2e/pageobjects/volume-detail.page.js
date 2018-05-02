@@ -6,7 +6,7 @@ class VolumeDetail {
     get label() { return $('[data-qa-volume-label]'); }
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-region]'); }
-    get attachedTo() { return $('[data-qa-attach-to]'); }
+    get attachedTo() { return $('[data-qa-attach-to]'); } 
     get submit() { return $('[data-qa-submit]'); }
     get cancel() { return $('[data-qa-cancel]'); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
@@ -14,27 +14,82 @@ class VolumeDetail {
     get volumeCellSize() { return $('[data-qa-volume-size]') }
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
     get volumeActionMenu() { return $('[data-qa-action-menu]'); }
+    get volumeSelect() { return $('[data-qa-volume-select] span'); }
+    get volumeOptions() { return $$('[data-qa-volume-option]'); }
+    get attachButton() { return $('[data-qa-confirm-attach]'); }
+    get cancelButton() { return $('[data-qa-cancel]'); }
+    get cloneLabel() { return $('[data-qa-clone-from] input'); }
 
     createVolume(volume) {
-        this.createButton.click();
+        if (this.placeholderText.isVisible()) {
+            this.createButton.click();
+        } else {
+            this.createIconLink.click();
+        }
         this.drawerTitle.waitForVisible();
 
-        this.label.setValue(volume.label);
-        this.size.setValue(volume.size);
+        this.label.$('input').setValue(volume.label);
+        this.size.$('input').setValue(volume.size);
         // this.region.setValue(volume.region);
         this.submit.click();
     }
 
     editVolume(volume, newLabel) {
-        // Placeholder volume action
+        browser.waitForVisible('[data-qa-drawer-title]');
+        const drawerTitle = browser.getText('[data-qa-drawer-title]');
+
+        browser.trySetValue('[data-qa-volume-label] input', newLabel, 10000);
+
+        this.submit.click();
+
+        browser.waitUntil(function() {
+            return newLabel === $(`[data-qa-volume-cell="${volume.id}"]`).$('[data-qa-volume-cell-label]').getText();
+        }, 10000);
     }
 
     resizeVolume(volume, newSize) {
         // Placeholder volume action
     }
 
+    attachVolume(linodeLabel, volume) {
+        browser.waitForVisible('[data-qa-drawer-title]');
+        const drawerTitle = browser.getText('[data-qa-drawer-title]');
+
+        browser.jsClick('[data-qa-volume-select] span');
+        
+        const options = this.volumeOptions.map(v => v.getText());
+        const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
+
+        expect(drawerTitle).toBe(`Attach Volume to ${linodeLabel}`);
+        expect(options).toContain(volume.label);
+
+        optToClick[0].click();
+        browser.jsClick('[data-qa-confirm-attach]');
+        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`);
+    }
+
     detachVolume(volume) {
-        // Placeholder volume action
+        this.selectActionMenuItem(volume, 'Detach');
+
+        const dialogTitle = $('[data-qa-dialog-title]');
+        const dialogConfirm = $('[data-qa-confirm]');
+        const dialogCancel = $('[data-qa-cancel]');
+        const dialogContent = $('[data-qa-dialog-content]');
+        const expectedMsg = 'Are you sure you want to detach this volume?';
+
+        expect(dialogTitle.isVisible()).toBe(true);
+        expect(dialogTitle.getText()).toBe('Detach Volume');
+        expect(dialogContent.getText()).toBe(expectedMsg);
+        expect(dialogConfirm.isVisible()).toBe(true);
+        expect(dialogConfirm.getTagName()).toBe('button');
+        expect(dialogConfirm.getAttribute('class')).toContain('destructive');
+        expect(dialogCancel.isVisible()).toBe(true);
+        expect(dialogCancel.getTagName()).toBe('button');
+    }
+
+    detachConfirm(volumeId) {
+        browser.click('[data-qa-confirm]');
+        browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, 10000, true);
     }
 
     cloneVolume(volume, newLabel) {
@@ -63,9 +118,14 @@ class VolumeDetail {
 
         browser.waitUntil(function() {
             return !browser.isExisting('[data-qa-volume-cell]');
-        }, 15000);
+        }, 30000);
 
         this.placeholderText.waitForVisible(20000);
+    }
+
+    selectActionMenuItem(volume, item) {
+        volume.$(this.volumeActionMenu.selector).click();
+        browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
     assertVolumeInTable(volume) {

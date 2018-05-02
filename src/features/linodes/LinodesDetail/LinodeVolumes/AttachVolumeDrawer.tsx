@@ -76,19 +76,38 @@ const AttachVolumeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           onChange={e => onChange('selectedVolume', e.target.value)}
           inputProps={{ name: 'volumes', id: 'volumes' }}
           error={Boolean(volumeError)}
+          data-qa-volume-select
         >
           <MenuItem value="" disabled><em>Select a Volume</em></MenuItem>
           {
             volumes && volumes.map((v: Linode.Volume) => {
-              return <MenuItem key={v.id} value={v.id}>{v.label}</MenuItem>;
+              return <MenuItem
+                key={v.id}
+                value={v.id}
+                data-qa-volume-option
+              >
+                {v.label}
+              </MenuItem>;
             })
           }
         </Select>
         { Boolean(volumeError) && <FormHelperText error>{ volumeError }</FormHelperText> }
       </FormControl>
       <ActionsPanel>
-        <Button variant="raised" color="primary" onClick={() => onSubmit()}>Attach</Button>
-        <Button onClick={onClose}> Cancel </Button>
+        <Button
+          variant="raised"
+          color="primary"
+          onClick={() => onSubmit()}
+          data-qa-confirm-attach
+        >
+          Attach
+        </Button>
+        <Button
+          onClick={onClose}
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
       </ActionsPanel>
     </Drawer>
   );
