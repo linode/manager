@@ -72,6 +72,9 @@ const LinodeTheme: Linode.Theme = {
       lineHeight: '1.1em',
       color: '#fff',
     },
+    display2: {
+      color: 'white',
+    },
   },
   overrides: {
     MuiAppBar: {
