@@ -181,7 +181,7 @@ class APITokenDrawer extends React.Component<CombinedProps, State> {
   }
 
   errorResources = {
-    label: 'A label',
+    label: 'label',
   };
 
   render() {
