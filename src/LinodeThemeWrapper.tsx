@@ -5,6 +5,8 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import LinodeLightTheme from 'src/theme';
 import LinodeDarkTheme from 'src/darkTheme';
 
+import { init } from 'src/events';
+
 interface Props {
 }
 
@@ -49,7 +51,7 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
      */
     this.setState(
       { render: false },
-      () => { this.setState({ render: true }); },
+      () => { this.setState({ render: true }); init(); },
     );
   }
 
