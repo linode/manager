@@ -156,3 +156,8 @@ export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationD
   setMethod('POST'),
   setData<LinodeConfigCreationData>(data),
 );
+
+export const deleteLinodeConfig = (linodeId: number, configId: number) => Request(
+  setMethod('DELETE'),
+  setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
+);
