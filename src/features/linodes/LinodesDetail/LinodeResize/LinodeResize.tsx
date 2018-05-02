@@ -100,14 +100,20 @@ class LinodeResize extends React.Component<CombinedProps, State> {
           >
             Resize
           </Typography>
-          <Typography>
+          <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website,
             or if you're not using your Linode as much as you thought,
             you can temporarily or permenantly resize your Linode
             to a different plan.
           </Typography>
-          <div className={classes.currentPlanContainer}>
-            <Typography variant="title" className={classes.subTitle}>Current Plan</Typography>
+          <div className={classes.currentPlanContainer} data-qa-current-container>
+            <Typography
+              variant="title"
+              className={classes.subTitle}
+              data-qa-current-header
+            >
+              Current Plan
+            </Typography>
             {<SelectionCard
               checked={false}
               onClick={e => null}
@@ -129,6 +135,7 @@ class LinodeResize extends React.Component<CombinedProps, State> {
             variant="raised"
             color="primary"
             onClick={this.onSubmit}
+            data-qa-submit
           >
             Submit
           </Button>
