@@ -11,6 +11,7 @@ interface Props {
   attached: boolean;
   onAttach: () => void;
   onDetach: () => void;
+  poweredOff: boolean;
   onDelete: () => void;
 }
 
@@ -26,6 +27,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
       attached,
       onAttach,
       onDetach,
+      poweredOff,
       onDelete,
     } = this.props;
 
@@ -74,14 +76,6 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
           },
         });
-        actions.push({
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDelete();
-            closeMenu();
-            e.preventDefault();
-          },
-        });
       } else {
         actions.push({
           title: 'Detach',
@@ -93,6 +87,16 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
         });
       }
 
+      if ((!attached) || poweredOff) {
+        actions.push({
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onDelete();
+            closeMenu();
+            e.preventDefault();
+          },
+        });
+      }
 
       return actions;
     };
