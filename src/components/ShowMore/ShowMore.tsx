@@ -34,6 +34,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   },
   popover: {
     minWidth: 175,
+    overflow: 'visible',
     padding: theme.spacing.unit * 2,
   },
 });

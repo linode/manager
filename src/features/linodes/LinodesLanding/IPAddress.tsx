@@ -92,9 +92,13 @@ interface Props {
   copyRight?: boolean;
 }
 
-class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
+interface State {
+  copied: string;
+}
+
+class IPAddress extends React.Component<Props & WithStyles<CSSClasses>, State> {
   state = {
-    copied: false,
+    copied: '',
   };
 
   copiedTimeout: number | null = null;
@@ -106,10 +110,8 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 
   clickIcon = (ip: string) => {
-    this.setState({
-      copied: true,
-    });
-    window.setTimeout(() => this.setState({ copied: false }), 1500);
+    this.setState({ copied: ip });
+    window.setTimeout(() => this.setState({ copied: '' }), 1500);
     copy(ip);
   }
 
@@ -126,7 +128,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         href="javascript:void(0)"
         data-qa-copy-ip
       >
-        {copied && <span className={classes.copied} data-qa-copied>copied</span>}
+        {(copied === ip) && <span className={classes.copied} data-qa-copied>copied</span>}
         <ContentCopyIcon
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
         />
