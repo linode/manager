@@ -9,7 +9,7 @@ import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 
 import ShowMore from 'src/components/ShowMore';
-import ContentCopyIcon from 'material-ui-icons/ContentCopy';
+import CopyTooltip from 'src/components/CopyTooltip';
 
 type CSSClasses =  'root'
 | 'left'
@@ -17,8 +17,7 @@ type CSSClasses =  'root'
 | 'icon'
 | 'row'
 | 'ip'
-| 'ipLink'
-| 'copied';
+| 'ipLink';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   '@keyframes popUp': {
@@ -29,7 +28,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     to: {
       opacity: 1,
-      top: -45,
+      top: -40,
       transform: 'scale(1)',
     },
   },
@@ -52,14 +51,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     marginLeft: theme.spacing.unit,
   },
   icon: {
-    marginRight: theme.spacing.unit,
-    height: 18,
-    width: 18,
-    padding: '3px',
-    transition: theme.transitions.create(['background-color']),
-    borderRadius: 2,
-    position: 'absolute',
-    top: -9,
+    '& svg': {
+      top: 1,
+      width: 14,
+      height: 14,
+    },
   },
   ip: {
     color: theme.palette.text.primary,
@@ -71,23 +67,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     display: 'inline-block',
     width: 28,
     transition: theme.transitions.create(['color']),
-    '&:hover, &:focus': {
-      color: 'white',
-      '& $icon': {
-        backgroundColor: theme.palette.primary.light,
-      },
-    },
-  },
-  copied: {
-    fontSize: '.85rem',
-    left: -12,
-    color: theme.palette.primary.light,
-    padding: '6px 8px',
-    backgroundColor: 'white',
-    position: 'absolute',
-    boxShadow: '0 0 5px #ddd',
-    transition: 'opacity .5s ease-in-out',
-    animation: 'popUp 200ms ease-in-out forwards',
   },
 });
 
@@ -119,22 +98,14 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   renderCopyIcon = (ip: string) => {
     const { classes, copyRight } = this.props;
-    const { copied } = this.state;
 
     return (
-      <a
-        aria-label="Copy IP address"
-        className={classes.ipLink}
-        title={ip}
-        onClick={() => this.clickIcon(ip)}
-        href="javascript:void(0)"
-        data-qa-copy-ip
-      >
-        {copied && <span className={classes.copied} data-qa-copied>copied</span>}
-        <ContentCopyIcon
+      <div className={classes.ipLink}>
+        <CopyTooltip
+          text={ip}
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
         />
-      </a>
+      </div>
     );
   }
 
