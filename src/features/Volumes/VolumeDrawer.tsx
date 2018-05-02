@@ -28,6 +28,7 @@ import {
   create,
   resize,
   update,
+  clone,
   VolumeRequestPayload,
 } from 'src/services/volumes';
 import { getLinodes } from 'src/services/linodes';
@@ -122,7 +123,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { mode, volumeID, close } = this.props;
-    const { label, size, region, linodeId } = this.state;
+    const { cloneLabel, label, size, region, linodeId } = this.state;
 
     switch (mode) {
       case modes.CREATING:
@@ -138,9 +139,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             resetEventsPolling();
             close();
           })
-          .catch((errResponse) => {
+          .catch((errorResponse) => {
             this.setState({
-              errors: path(['response', 'data', 'errors'], errResponse),
+              errors: path(['response', 'data', 'errors'], errorResponse),
             });
           });
         return;
@@ -180,6 +181,29 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         }
 
         resize(volumeID, Number(size))
+          .then(() => {
+            resetEventsPolling();
+            close();
+          })
+          .catch((errorResponse) => {
+            this.setState({
+              errors: path(['response', 'data', 'errors'], errorResponse),
+            });
+          });
+        return;
+      case modes.CLONING:
+        if (!volumeID) {
+          return;
+        }
+
+        if (!cloneLabel) {
+          this.setState({
+            errors: [{ field: 'label', reason: 'Label cannot be blank.' }],
+          });
+          return;
+        }
+
+        clone(volumeID, cloneLabel)
           .then(() => {
             resetEventsPolling();
             close();
@@ -302,56 +326,61 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           }
         </FormControl>
 
-        <FormControl fullWidth>
-          <InputLabel
-            htmlFor="linode"
-            disableAnimation
-            shrink={true}
-            error={Boolean(linodeError)}
-          >
-            Linode
-          </InputLabel>
-          <Select
-            value={mode === modes.EDITING || mode === modes.CLONING
-              ? linodeLabel
-              : `${linodeId}`}
-            disabled={
-              mode === modes.CLONING
-              || mode === modes.EDITING
-              || mode === modes.RESIZING
+        {mode !== modes.CLONING &&
+          <FormControl fullWidth>
+            <InputLabel
+              htmlFor="linode"
+              disableAnimation
+              shrink={true}
+              error={Boolean(linodeError)}
+            >
+              Linode
+            </InputLabel>
+            <Select
+              value={mode === modes.EDITING || mode === modes.RESIZING
+                ? linodeLabel
+                : `${linodeId}`}
+              disabled={
+                mode === modes.EDITING
+                || mode === modes.RESIZING
+              }
+              onChange={e => this.setState({ linodeId: +(e.target.value) })}
+              inputProps={{ name: 'linode', id: 'linode' }}
+              error={Boolean(linodeError)}
+            >
+              <MenuItem key="none" value="0">
+                {mode !== modes.CLONING
+                  ? 'Select a Linode'
+                  : ''
+                }
+              </MenuItem>,
+              {linodes && linodes
+                .filter((linode) => {
+                  return (
+                    (region && region !== 'none')
+                      ? linode.region === region
+                      : true
+                  );
+                })
+                .map(linode =>
+                  <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
+              )}
+              {(mode === modes.EDITING
+                || mode === modes.RESIZING)
+                /*
+                * We optimize the lookup of the linodeLabel by providing it
+                * explicitly when editing or cloning
+                */
+                && <MenuItem key={linodeLabel} value={linodeLabel}>{linodeLabel}</MenuItem>
+              }
+            </Select>
+            {linodeError &&
+              <FormHelperText error={Boolean(linodeError)}>
+                {linodeError}
+              </FormHelperText>
             }
-            onChange={e => this.setState({ linodeId: +(e.target.value) })}
-            inputProps={{ name: 'linode', id: 'linode' }}
-            error={Boolean(linodeError)}
-          >
-            <MenuItem key="none" value="0">Select a Linode</MenuItem>,
-            {linodes && linodes
-              .filter((linode) => {
-                return (
-                  (region && region !== 'none')
-                    ? linode.region === region
-                    : true
-                );
-              })
-              .map(linode =>
-                <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
-            )}
-            {(mode === modes.EDITING
-              || mode === modes.CLONING
-              || mode === modes.RESIZING)
-              /*
-               * We optimize the lookup of the linodeLabel by providing it
-               * explicitly when editing or cloning
-               */
-              && <MenuItem key={linodeLabel} value={linodeLabel}>{linodeLabel}</MenuItem>
-            }
-          </Select>
-          {linodeError &&
-            <FormHelperText error={Boolean(linodeError)}>
-              {linodeError}
-            </FormHelperText>
-          }
-        </FormControl>
+          </FormControl>
+        }
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button

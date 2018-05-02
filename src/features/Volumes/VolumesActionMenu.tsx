@@ -7,6 +7,7 @@ interface Props {
   onShowConfig: () => void;
   onEdit: () => void;
   onResize: () => void;
+  onClone: () => void;
   attached: boolean;
   onAttach: () => void;
   onDetach: () => void;
@@ -21,6 +22,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
       onShowConfig,
       onEdit,
       onResize,
+      onClone,
       attached,
       onAttach,
       onDetach,
@@ -49,6 +51,14 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onResize();
+            closeMenu();
+            e.preventDefault();
+          },
+        },
+        {
+          title: 'Clone',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onClone();
             closeMenu();
             e.preventDefault();
           },

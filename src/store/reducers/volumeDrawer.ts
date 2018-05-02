@@ -5,6 +5,7 @@ const CLOSE = '@@manager/volumeDrawer/CLOSE';
 const CREATING = '@@manager/volumeDrawer/CREATING';
 const EDITING = '@@manager/volumeDrawer/EDITING';
 const RESIZING = '@@manager/volumeDrawer/RESIZING';
+const CLONING = '@@manager/volumeDrawer/CLONING';
 
 interface Close extends Action {
   type: typeof CLOSE;
@@ -76,6 +77,29 @@ export const openForResize = (
   });
 };
 
+interface Cloning extends Action {
+  type: typeof CLONING;
+  volumeID: number;
+  label: string;
+  size: number;
+  region: string;
+}
+
+export const openForClone = (
+  volumeID: number,
+  label: string,
+  size: number,
+  region: string,
+): Cloning => {
+  return ({
+    type: CLONING,
+    volumeID,
+    label,
+    size,
+    region,
+  });
+};
+
 export const defaultState = {
   mode: modes.CLOSED,
   volumeID: 0,
@@ -90,7 +114,8 @@ type ActionTypes =
   Close
 | Creating
 | Editing
-| Resizing;
+| Resizing
+| Cloning;
 
 export default function volumeDrawer(state = defaultState, action: ActionTypes) {
   switch (action.type) {
@@ -121,6 +146,14 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
         region: action.region,
         linodeLabel: action.linodeLabel,
         mode: modes.RESIZING,
+      };
+    case CLONING:
+      return {
+        volumeID: action.volumeID,
+        label: action.label,
+        size: action.size,
+        region: action.region,
+        mode: modes.CLONING,
       };
     default:
       return state;
