@@ -168,7 +168,7 @@ const LinodeTheme: Linode.Theme = {
         padding: '0 24px 24px 24px',
         justifyContent: 'flex-start',
         '& button': {
-          marginRight: 16,
+          marginRight: 8,
           '&:first-child': {
             marginLeft: 0,
           },
@@ -179,6 +179,15 @@ const LinodeTheme: Linode.Theme = {
       },
       action: {
         margin: 0,
+      },
+    },
+    MuiDrawer: {
+      paper: {
+        boxShadow: '0 0 5px #222',
+        overflowY: 'overlay',
+        fallbacks: {
+          overflowY: 'auto',
+        },
       },
     },
     MuiExpansionPanel: {
@@ -193,7 +202,11 @@ const LinodeTheme: Linode.Theme = {
         justifyContent: 'flex-start',
         backgroundColor: '#32363C',
       },
-      action: {},
+      action: {
+        '&:first-child': {
+          marginRight: 8,
+        },
+      },
     },
     MuiExpansionPanelDetails: {
       root: {
