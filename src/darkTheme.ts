@@ -294,7 +294,8 @@ const LinodeTheme: Linode.Theme = {
       },
       disabled: {
         borderColor: '#666',
-        opacity: .5,
+        opacity: .3,
+        color: 'white',
       },
       input: {
         padding: '12px 12px 13px',
