@@ -20,9 +20,10 @@ const LinodeTheme: Linode.Theme = {
     grey2: '#E7E7E7',
     grey3: '#ccc',
     white: '#32363C',
+    boxShadow: '#222',
   },
   palette: {
-    divider: '#000',
+    divider: '#222',
     primary: {
       main: '#3B85D9',
       light: '#5F99EA',
@@ -189,7 +190,7 @@ const LinodeTheme: Linode.Theme = {
     },
     MuiDialogTitle: {
       root: {
-        borderBottom: '1px solid #000',
+        borderBottom: '1px solid #222',
         marginBottom: 20,
       },
     },
@@ -261,7 +262,7 @@ const LinodeTheme: Linode.Theme = {
     MuiInput: {
       root: {
         maxWidth: 415,
-        border: '1px solid #000',
+        border: '1px solid #222',
         alignItems: 'center',
         transition: 'border-color 225ms ease-in-out',
         lineHeight: 1,
@@ -542,7 +543,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTabs: {
       root: {
         margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #000',
+        boxShadow: 'inset 0 -1px 0 #222',
       },
     },
     MuiTabIndicator: {
@@ -554,7 +555,7 @@ const LinodeTheme: Linode.Theme = {
     MuiTableCell: {
       root: {
         padding: '18px',
-        borderBottom: '1px solid #000',
+        borderBottom: '1px solid #222',
         '&:last-child': {
           paddingRight: 18,
         },
