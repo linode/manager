@@ -22,7 +22,7 @@ import { getLinodes } from 'src/services/linodes';
 import { dcDisplayNames } from 'src/constants';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { generateInFilter, resetEventsPolling } from 'src/events';
-import { openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { openForEdit, openForResize, openForClone } from 'src/store/reducers/volumeDrawer';
 import { detach, _delete } from 'src/services/volumes';
 
 import VolumesActionMenu from './VolumesActionMenu';
@@ -43,6 +43,7 @@ interface Props {
   volumes: Linode.Volume[];
   openForEdit: typeof openForEdit;
   openForResize: typeof openForResize;
+  openForClone: typeof openForClone;
 }
 
 interface State {
@@ -148,6 +149,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       classes,
       openForEdit,
       openForResize,
+      openForClone,
     } = this.props;
     const { linodeLabels } = this.state;
     return (
@@ -216,6 +218,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                           regionID,
                           linodeLabel,
                         )}
+                        onClone={() => openForClone(
+                          volume.id,
+                          label,
+                          size,
+                          regionID,
+                        )}
                         attached={Boolean(linodeLabel)}
                         onAttach={() => {
                           this.setState({
@@ -279,7 +287,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit, openForResize },
+  { openForEdit, openForResize, openForClone },
   dispatch,
 );
 
