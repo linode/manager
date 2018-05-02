@@ -29,9 +29,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
     '&:hover': {
       color: theme.palette.primary.main,
-      fill: 'white',
+      fill: theme.color.white,
       '& .defaultFill': {
-        fill: 'white',
+        fill: theme.color.white,
       },
     },
     '&:hover$warning': {
