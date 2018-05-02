@@ -8,7 +8,9 @@ interface Props {
   onEdit: () => void;
   onResize: () => void;
   attached: boolean;
-  onAttachment: () => void;
+  onAttach: () => void;
+  onDetach: () => void;
+  onDelete: () => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -20,7 +22,9 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
       onEdit,
       onResize,
       attached,
-      onAttachment,
+      onAttach,
+      onDetach,
+      onDelete,
     } = this.props;
 
     return function (closeMenu: Function): Action[] {
@@ -53,9 +57,26 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
 
       if (!attached) {
         actions.push({
-          title: 'Attachment',
+          title: 'Attach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onAttachment();
+            onAttach();
+            closeMenu();
+            e.preventDefault();
+          },
+        });
+        actions.push({
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onDelete();
+            closeMenu();
+            e.preventDefault();
+          },
+        });
+      } else {
+        actions.push({
+          title: 'Detach',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onDetach();
             closeMenu();
             e.preventDefault();
           },
