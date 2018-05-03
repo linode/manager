@@ -62,7 +62,7 @@ interface State {
   };
   destructiveDialog: {
     open: boolean;
-    mode: string;
+    mode: 'detach' | 'delete';
     volumeID?: number;
   };
 }
@@ -117,7 +117,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   closeDestructiveDialog() {
     this.setState({
-      destructiveDialog: { open: false, mode: 'detatch' },
+      destructiveDialog: { open: false, mode: 'detach' },
     });
   }
 

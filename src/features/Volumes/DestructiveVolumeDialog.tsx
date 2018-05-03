@@ -7,6 +7,7 @@ import {
 } from 'material-ui';
 
 import Button from 'material-ui/Button';
+import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 
 type ClassNames = 'root';
@@ -17,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   open: boolean;
-  mode: string;
+  mode: 'detach' | 'delete';
   onClose: () => void;
   onDetach: () => void;
   onDelete: () => void;
@@ -41,26 +42,28 @@ const DestructiveVolumeDialog: React.StatelessComponent<CombinedProps> = (props)
       open={props.open}
       title={`${title}`}
       onClose={props.onClose}
-      actions={() => <div>
-        <Button
-          variant="raised"
-          color="secondary"
-          className="destructive"
-          onClick={method}
-          data-qa-confirm
-        >
-          Confirm
-        </Button>
-        <Button
-          onClick={props.onClose}
-          variant="raised"
-          color="secondary"
-          className="cancel"
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-      </div>}
+      actions={() =>
+        <ActionsPanel>
+          <Button
+            variant="raised"
+            color="secondary"
+            className="destructive"
+            onClick={method}
+            data-qa-confirm
+          >
+            Confirm
+          </Button>
+          <Button
+            onClick={props.onClose}
+            variant="raised"
+            color="secondary"
+            className="cancel"
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
+        </ActionsPanel>
+      }
     >
       Are you sure you want to {props.mode} this volume?
     </ConfirmationDialog>
