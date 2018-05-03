@@ -23,7 +23,6 @@ import {
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableRow from 'material-ui/Table/TableRow';
 import TableHead from 'material-ui/Table/TableHead';
@@ -37,6 +36,8 @@ import {
   getLinodeDisks,
   updateLinodeConfig,
 } from 'src/services/linodes';
+
+import Table from 'src/components/Table';
 import { getVolumes } from 'src/services/volumes';
 import { ExtendedDisk, ExtendedVolume }
   from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -248,21 +249,30 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
         <ConfirmationDialog
           title="Confirm Delete"
           open={this.state.confirmDelete.open}
-          actions={() => <ActionsPanel>
-            <Button
-              onClick={() => this.deleteConfig()}
-              variant="raised"
-              color="secondary"
-              className="destructive"
-            >
-              Delete
-            </Button>
-            <Button onClick={() => this.setConfirmDelete({ open: false, id: undefined })}>
-              Cancel
-            </Button>
-          </ActionsPanel>}
+          actions={() =>
+            <ActionsPanel style={{ padding: 0 }}>
+              <Button
+                onClick={() => this.deleteConfig()}
+                variant="raised"
+                color="secondary"
+                className="destructive"
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => this.setConfirmDelete({ open: false, id: undefined })}
+                variant="raised"
+                color="secondary"
+                className="cancel"
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          }
         >
-          Are you sure you want to delete "{this.state.confirmDelete.label}"
+          <Typography>
+            Are you sure you want to delete "{this.state.confirmDelete.label}"
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );

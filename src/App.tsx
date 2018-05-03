@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { connect, Dispatch } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import Axios from 'axios';
@@ -11,15 +11,12 @@ import {
   WithStyles,
   StyleRulesCallback,
   Theme,
-  MuiThemeProvider,
-  createMuiTheme,
 } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
 import Grid from 'material-ui/Grid';
 import 'typeface-lato';
 
 import { API_ROOT } from 'src/constants';
-import LinodeTheme from 'src/theme';
 import TopMenu from 'src/features/TopMenu';
 import SideMenu from 'src/components/SideMenu';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -47,9 +44,6 @@ const Profile = DefaultLoader({
   loader: () => import('src/features/profile'),
 });
 
-const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
-theme.shadows = theme.shadows.fill('none');
-
 type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
@@ -75,7 +69,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     },
   },
   wrapper: {
-    backgroundColor: LinodeTheme.bg.main,
+    backgroundColor: theme.bg.main,
     flex: 1,
     padding: theme.spacing.unit * 3,
     marginBottom: -100 + theme.spacing.unit * 3,
@@ -99,6 +93,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
 });
 
 interface Props {
+  toggleTheme: () => void;
   longLivedLoaded: boolean;
 }
 
@@ -180,6 +175,7 @@ export class App extends React.Component<CombinedProps, State> {
       });
   }
 
+
   toggleMenu = () => {
     this.setState({
       menuOpen: !this.state.menuOpen,
@@ -193,15 +189,15 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, longLivedLoaded, documentation } = this.props;
+    const { classes, longLivedLoaded, documentation, toggleTheme } = this.props;
 
     return (
-      <React.Fragment>
+      <Router>
         {longLivedLoaded &&
-          <MuiThemeProvider theme={theme}>
+          <React.Fragment>
             <CssBaseline />
             <div className={classes.appFrame}>
-              <SideMenu open={menuOpen} toggle={this.toggleMenu} />
+              <SideMenu open={menuOpen} toggle={this.toggleMenu} toggleTheme={toggleTheme} />
               <main className={classes.content}>
                 <AccountLevelNotifications />
                 <TopMenu toggleSideMenu={this.toggleMenu} />
@@ -233,7 +229,6 @@ export class App extends React.Component<CombinedProps, State> {
                           <Placeholder title="Billing" />} />
                         <Route exact path="/users" render={() =>
                           <Placeholder title="Users" />} />
-                        <Route path="/profile" component={Profile} />
                         <Route exact path="/support" render={() =>
                           <Placeholder title="Support" />} />
                         <Route path="/profile" component={Profile} />
@@ -252,9 +247,9 @@ export class App extends React.Component<CombinedProps, State> {
               data-qa-beta-notice />
             <ToastNotifications />
             <VolumeDrawer />
-          </MuiThemeProvider>
+          </React.Fragment>
         }
-      </React.Fragment>
+      </Router>
     );
   }
 }

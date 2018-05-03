@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { mount } from 'enzyme';
+
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 import ShowMore from './ShowMore';
 
 describe('ShowMore', () => {
   const mockRender = jest.fn();
 
   const wrapper = mount(
-    <ShowMore
-      items={['a', 'b']}
-      render={mockRender}
-    />,
+    <LinodeThemeWrapper>
+      <ShowMore
+        items={['a', 'b']}
+        render={mockRender}
+      />
+    </LinodeThemeWrapper>,
   );
 
   it('should call provided render function with items.', () => {

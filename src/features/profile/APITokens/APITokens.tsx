@@ -321,6 +321,17 @@ export class APITokens extends React.Component<CombinedProps, State> {
       });
       return;
     }
+    if (!this.state.form.values.label) { // if no label
+      this.setState({
+        form: {
+          ...this.state.form,
+          errors: [
+            { reason: 'You must give your token a label.', field: 'label' },
+          ],
+        },
+      });
+      return;
+    }
 
     const { form } = this.state;
     this.setState({ form: { ...form, values: { ...form.values, scopes } } }, () => {
@@ -341,10 +352,22 @@ export class APITokens extends React.Component<CombinedProps, State> {
           });
         });
     });
+    return;
   }
 
   editToken = () => {
     const { form } = this.state;
+    if (!form.values.label) {
+      this.setState({
+        form: {
+          ...this.state.form,
+          errors: [
+            { reason: 'You must give your token a label.', field: 'label' },
+          ],
+        },
+      });
+      return;
+    }
     Axios.put(`${API_ROOT}/profile/tokens/${form.id}`, { label: form.values.label })
       .then(() => { this.closeDrawer(); })
       .then(() => this.requestTokens())
@@ -358,6 +381,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           },
         });
       });
+    return;
   }
 
   componentDidMount() {
@@ -457,7 +481,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           }}
           onClose={() => this.closeRevokeDialog()}
         >
-          Are you sure you want to revoke this API Token?
+         <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog

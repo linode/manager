@@ -8,7 +8,7 @@ import {
 } from 'material-ui/styles';
 import Chip from 'material-ui/Chip';
 import Close from 'material-ui-icons/Close';
-import LinodeTheme from '../../../src/theme';
+
 
 type Variants =
   'white'
@@ -23,7 +23,7 @@ type Variants =
 
 type CSSClasses = 'label' | 'root' | Variants;
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => {
   return ({
     label: {
 
@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => {
       color: 'white',
     },
     lightBlue: {
-      backgroundColor: LinodeTheme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue,
     },
     green: {
       backgroundColor: '#61CD7B',

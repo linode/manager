@@ -14,17 +14,16 @@ type ClassNames = 'root'
 | 'tabs'
 | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.color.white,
   },
   inner: {
     padding: theme.spacing.unit * 3,
   },
   copy: {
-    color: '#606469',
     fontSize: '0.875rem',
     marginTop: theme.spacing.unit,
   },

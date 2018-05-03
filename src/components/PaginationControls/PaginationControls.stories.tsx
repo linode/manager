@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import PaginationControls from './PaginationControls';
 
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-} from 'material-ui/styles';
-import LinodeTheme from '../../../src/theme';
+import ThemeDecorator from 'src/utilities/storybookDecorators';
+
+import PaginationControls from './PaginationControls';
 
 class Implementor extends React.Component<{ range: number }, { currentPage: number }> {
   constructor(props: { range: number }) {
@@ -22,24 +19,20 @@ class Implementor extends React.Component<{ range: number }, { currentPage: numb
     const pages = Array.from(Array(14), (_, idx) => idx + 1);
 
     return (
-    <MuiThemeProvider theme={theme}>
       <PaginationControls
         pages={pages}
         currentPage={this.state.currentPage}
         onClickHandler={this.handleClick}
         range={this.props.range}
       />
-    </MuiThemeProvider>
     );
   }
 }
 
 export default Implementor;
 
-const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
-theme.shadows = theme.shadows.fill('none');
-
 storiesOf('Pagination Controls', module)
+  .addDecorator(ThemeDecorator)
   .add('With even range.', () => (
     <Implementor range={10} />
   ))

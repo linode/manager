@@ -13,7 +13,7 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { setUpCharts } from 'src/utilities/charts';
 import transitionStatus from 'src/features/linodes/linodeTransitionStatus';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import LinodeTheme from 'src/theme';
+
 import Select from 'src/components/Select';
 
 import LinodeBusyStatus from './LinodeBusyStatus';
@@ -87,22 +87,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
     },
     blue: {
       '&:before': {
-        backgroundColor: LinodeTheme.palette.primary.main,
+        backgroundColor: theme.palette.primary.main,
       },
     },
     green: {
       '&:before': {
-        backgroundColor: LinodeTheme.color.green,
+        backgroundColor: theme.color.green,
       },
     },
     red: {
       '&:before': {
-        backgroundColor: LinodeTheme.color.red,
+        backgroundColor: theme.color.red,
       },
     },
     yellow: {
       '&:before': {
-        backgroundColor: LinodeTheme.color.yellow,
+        backgroundColor: theme.color.yellow,
       },
     },
   };

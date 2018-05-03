@@ -8,7 +8,7 @@ import {
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import LinodeTheme from 'src/theme';
+
 
 type CSSClasses = 'root'
 | 'content'
@@ -33,7 +33,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     alignItems: 'center',
     transition: 'background-color .2s ease-in-out',
     '&:hover': {
-      backgroundColor: LinodeTheme.bg.offWhite,
+      backgroundColor: theme.bg.offWhite,
       '& .circle': {
         fill: theme.palette.primary.main,
         transition: 'fill .2s ease-in-out .2s',
