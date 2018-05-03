@@ -404,7 +404,9 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
 
         this.setConfigDrawer(this.defaultConfigDrawerState);
       })
-      .catch(error => console.error(error));
+      .catch((error) => {
+        this.setConfigDrawer({ errors: error.response.data.errors });
+      });
   }
 
   createConfig = () => {
