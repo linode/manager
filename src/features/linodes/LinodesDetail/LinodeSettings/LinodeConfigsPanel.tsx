@@ -46,12 +46,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import createDevicesFromStrings, { DevicesAsStrings } from
-'src/utilities/createDevicesFromStrings';
+  'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
-import LinodeConfigsEmptyState from './LinodeConfigsEmptyState';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 import { genEvent } from 'src/features/linodes/LinodesLanding/powerActions';
@@ -183,7 +182,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, linodeConfigs } = this.props;
+    const { classes } = this.props;
     const { configDrawer } = this.state;
     return (
       <React.Fragment>
@@ -192,20 +191,6 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
             defaultExpanded
             heading="Advanced Configurations"
             success={this.state.success}
-            actions={() =>
-              <ActionsPanel>
-                <Button
-                  variant="raised"
-                  color="primary"
-                  onClick={() => {
-                    const { linodeId, linodeLabel } = this.props;
-                    genEvent('reboot_linode', linodeId, linodeLabel);
-                  }}
-                >
-                  Save
-                </Button>
-              </ActionsPanel>
-            }
           >
             <Grid
               container
@@ -226,11 +211,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
                 />
               </Grid>
             </Grid>
-            {
-              !linodeConfigs || linodeConfigs.length > 0
-                ? <this.LinodeConfigsTable />
-                : <LinodeConfigsEmptyState />
-            }
+            <this.LinodeConfigsTable />
           </ExpansionPanel>
         }
         <LinodeConfigDrawer
