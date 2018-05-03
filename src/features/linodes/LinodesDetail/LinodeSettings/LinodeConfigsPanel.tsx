@@ -45,9 +45,10 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import IconTextLink from 'src/components/IconTextLink';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import createDevicesFromStrings, { DevicesAsStrings } from
-  'src/utilities/createDevicesFromStrings';
+'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
 import LinodeConfigsEmptyState from './LinodeConfigsEmptyState';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
@@ -477,7 +478,10 @@ const preloaded = PromiseLoader<Props>({
   ),
 });
 
-export default compose<any, any, any, any>(
+const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
+
+export default compose<any, any, any, any, any>(
+  errorBoundary,
   preloaded,
   connected,
   styled,

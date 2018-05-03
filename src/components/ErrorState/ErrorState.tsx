@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 
 import {
   withStyles,
@@ -13,13 +14,17 @@ import LinodeTheme from 'src/theme';
 
 interface Props {
   errorText: string;
+  compact?: boolean;
 }
 
-type CSSClasses = 'root' | 'iconContainer' | 'icon';
+type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     padding: theme.spacing.unit * 10,
+  },
+  compact: {
+    padding: theme.spacing.unit * 5,
   },
   iconContainer: {
     textAlign: 'center',
@@ -36,7 +41,10 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   return (
     <Grid
       container
-      className={props.classes.root}
+      className={classNames({
+        [props.classes.root]: true,
+        [props.classes.compact]: props.compact,
+      })}
       justify="center"
       alignItems="center"
     >

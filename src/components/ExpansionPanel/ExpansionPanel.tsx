@@ -74,7 +74,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
   };
 };
 
-interface Props extends ExpansionPanelProps {
+export interface Props extends ExpansionPanelProps {
   heading: string;
   error?: string;
   warning?: string;
