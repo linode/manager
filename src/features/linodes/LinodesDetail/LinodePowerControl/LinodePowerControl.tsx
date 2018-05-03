@@ -47,12 +47,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
   },
   root: {
     '& svg': {
-      transition: theme.transitions.create('color'),
+      transition: theme.transitions.create(['color']),
     },
   },
   button: {
     backgroundColor: theme.color.white,
-    transition: theme.transitions.create('background', 'color', 'border-color'),
+    transition: theme.transitions.create(['background-color', 'color', 'border-color']),
     border: `1px solid ${theme.color.border1}`,
     padding: '12px 16px 13px',
     minWidth: 145,
@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => 
     },
   },
   caret: {
-    transition: theme.transitions.create('color'),
+    transition: theme.transitions.create(['color']),
     position: 'relative',
     top: 2,
     left: 2,
