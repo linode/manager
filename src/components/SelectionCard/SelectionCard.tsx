@@ -109,6 +109,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
       backgroundColor: '#f4f4f4',
       borderColor: '#C9CACB',
     },
+    [theme.breakpoints.up('sm')]: {
+      padding: 8,
+    },
   },
   flex: {
     flex: 1,
