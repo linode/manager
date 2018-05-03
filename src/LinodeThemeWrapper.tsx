@@ -64,7 +64,9 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
         {render &&
           React.cloneElement(
             this.props.children as Linode.TodoAny,
-            { toggleTheme: () => this.toggleTheme() },
+            {
+              toggleTheme: () => this.toggleTheme(),
+            },
           )
         }
       </MuiThemeProvider>

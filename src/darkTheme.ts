@@ -3,6 +3,7 @@ import createBreakpoints from 'material-ui/styles/createBreakpoints';
 const breakpoints = createBreakpoints({});
 
 const LinodeTheme: Linode.Theme = {
+  name: 'darkTheme',
   bg: {
     main: '#2F3236',
     navy: '#32363C',
