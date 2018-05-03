@@ -1,10 +1,6 @@
 import * as React from 'react';
+import { compose, lensPath, set } from 'ramda';
 
-import {
-  compose,
-  lensPath,
-  set,
-} from 'ramda';
 import {
   withStyles,
   StyleRulesCallback,
@@ -24,7 +20,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import Reload from 'src/assets/icons/reload.svg';
-
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root'
   | 'switch'
   | 'copy'
@@ -374,4 +370,9 @@ const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(LinodeSettingsAlertsPanel);
+const errorBoundary = PanelErrorBoundary({ heading: 'Notification Thresholds' });
+
+export default compose(
+  errorBoundary,
+  styled,
+)(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;

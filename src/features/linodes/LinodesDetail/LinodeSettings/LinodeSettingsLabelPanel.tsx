@@ -18,6 +18,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import TextField from 'src/components/TextField';
 import Reload from 'src/assets/icons/reload.svg';
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 
 type ClassNames = 'root';
 
@@ -118,4 +119,9 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(LinodeSettingsLabelPanel);
+const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
+
+export default compose(
+  errorBoundary,
+  styled,
+)(LinodeSettingsLabelPanel) as React.ComponentType<Props>;

@@ -9,7 +9,7 @@ import {
 } from 'material-ui';
 import InputLabel from 'material-ui/Input/InputLabel';
 import MenuItem from 'material-ui/Menu/MenuItem';
-import { FormControl } from 'material-ui/Form';
+import FormControl from 'material-ui/Form/FormControl';
 
 import Select from 'src/components/Select';
 import { titlecase } from 'src/features/linodes/presentation';
@@ -35,6 +35,8 @@ interface Props {
   onChange: (slot: string, id: string) => void;
   getSelected: (slot: string) => string;
   counter?: number;
+  slots: string[];
+  rescue?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,11 +46,11 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
     devices,
     onChange,
     getSelected,
+    slots,
+    rescue,
   } = props;
 
   const counter = defaultTo(0, props.counter);
-
-  const slots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg'];
 
   return (
     <React.Fragment>
@@ -63,6 +65,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
               /dev/{slot}
             </InputLabel>
             <Select
+              fullWidth
               value={getSelected(slot) || 'none'}
               onChange={e => onChange(slot, e.target.value)}
               inputProps={{ name: `rescueDevice_${slot}`, id: `rescueDevice_${slot}` }}
@@ -79,14 +82,14 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
                       {titlecase(type)}
                     </MenuItem>,
                     ...(items as any[]).map(({ _id, label }) =>
-                    <MenuItem key={_id} value={_id}>{label}</MenuItem>),
+                      <MenuItem key={_id} value={_id}>{label}</MenuItem>),
                   ])
               }
             </Select>
           </FormControl>;
         })
       }
-      <FormControl fullWidth>
+      {rescue && <FormControl fullWidth>
         <InputLabel htmlFor={`rescueDevice_sdh`} disableAnimation shrink={true} >
           /dev/sdh
         </InputLabel>
@@ -97,7 +100,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
         >
           <MenuItem value="finnix">Finnix Media</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl>}
     </React.Fragment >
   );
 };
