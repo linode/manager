@@ -63,6 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   linodeId: number;
+  linodeRegion?: string;
 }
 
 interface PromiseLoaderProps {
@@ -87,11 +88,18 @@ type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
+    // do filtering here, so that it can be picked up in testing
     super(props);
+    const filteredVolumes = props.volumes.response.filter((volume) => {
+      const linodeIdIsNull = volume.linode_id === null ? true : false;
+      const volumeIsAttached = volume.linode_id === props.linodeId;
+      const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region ? true : false;
+      return volumeIsAttached || linodeIdIsNull && volumeAndLinodeRegionMatch;
+    });
     this.state = {
       devices: {
         disks: props.disks.response || [],
-        volumes: props.volumes.response || [],
+        volumes: filteredVolumes || [],
       },
       counter: 1,
       rescueDevices: {
@@ -203,7 +211,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const preloaded = PromiseLoader({
+export const preloaded = PromiseLoader({
   /** @todo filter for available */
   disks: ({ linodeId }): Promise<ExtendedDisk[]> => getLinodeDisks(linodeId)
     .then(
@@ -219,13 +227,8 @@ const preloaded = PromiseLoader({
       compose<
         Linode.ResourcePage<Linode.Volume>,
         Linode.Volume[],
-        ExtendedVolume[],
         ExtendedVolume[]
         >(
-          filter<ExtendedVolume>((volume) => {
-            // console.log(volume);
-            return volume.region === linodeRegion;
-          }),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
