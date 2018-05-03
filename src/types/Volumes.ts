@@ -11,7 +11,7 @@ namespace Linode {
     filesystem_path: string;
   }
 
-  type VolumeStatus =
+  export type VolumeStatus =
     'creating'
     | 'active'
     | 'resizing'
