@@ -6,6 +6,7 @@ import {
   StyleRulesCallback,
   Theme,
   WithStyles,
+  Divider,
 } from 'material-ui';
 import Typography from 'material-ui/Typography';
 import RadioGroup from 'material-ui/Radio/RadioGroup';
@@ -27,11 +28,19 @@ import Radio from 'src/components/Radio';
 import Toggle from 'src/components/Toggle';
 import ActionsPanel from 'src/components/ActionsPanel';
 
-type ClassNames = 'root';
-
+type ClassNames = 'root'
+| 'section'
+| 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  section: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  divider: {
+    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
+    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
+  },
 });
 
 interface EditableFields {
@@ -101,6 +110,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       onClose,
       onChange,
 
+      classes,
     } = this.props;
 
     const errorFor = getAPIErrorsFor({}, errors);
@@ -112,15 +122,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         onClose={onClose}
       >
         <Grid container direction="row">
-          <Grid item>
-            <Typography component="div" variant="headline">Label and Comments</Typography>
+
+          <Grid item xs={12} className={classes.section}>
+            <Typography variant="subheading">Label and Comments</Typography>
             <TextField
               label="Label"
               required
               value={label}
               onChange={e => onChange('label', e.target.value)}
               errorText={errorFor('label')}
-
             />
 
             <TextField
@@ -133,12 +143,14 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             />
           </Grid>
 
-          <Grid item>
-            <Typography component="div" variant="headline">Virtual Machine</Typography>
+          <Divider className={classes.divider} />
+
+          <Grid item xs={12} className={classes.section}>
+            <Typography variant="subheading">Virtual Machine</Typography>
             <FormControl component="fieldset">
               <FormLabel
                 htmlFor="virt_mode"
-                component="legend"
+                component="label"
               >
                 VM Mode
             </FormLabel>
@@ -154,8 +166,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
-            <Typography component="div" variant="headline">Boot Settings</Typography>
+          <Divider className={classes.divider} />
+
+          <Grid item xs={12} className={classes.section}>
+            <Typography variant="subheading">Boot Settings</Typography>
             <TextField
               label="Kernel"
               select={true}
@@ -176,7 +190,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </TextField>
 
             <FormControl fullWidth component="fieldset">
-              <FormLabel htmlFor="run_level" component="label">
+              <FormLabel
+                htmlFor="run_level"
+                component="label"
+              >
                 Run Level
               </FormLabel>
               <RadioGroup
@@ -200,8 +217,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             />
           </Grid>
 
-          <Grid item xs={12}>
-            <Typography component="div" variant="headline">Block Device Assignment</Typography>
+          <Divider className={classes.divider} />
+
+          <Grid item xs={12} className={classes.section}>
+            <Typography variant="subheading">Block Device Assignment</Typography>
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
               devices={availableDevices}
@@ -228,6 +247,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 inputProps={{ name: 'root_device', id: 'root_device' }}
                 select={!useCustomRoot}
                 fullWidth
+                autoFocus={useCustomRoot && true}
               >
                 {
                   !useCustomRoot &&
@@ -246,8 +266,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
-            <Typography component="div" variant="headline">Filesystem/Boot Helpers</Typography>
+          <Divider className={classes.divider} />
+
+          <Grid item xs={12} className={classes.section}>
+            <Typography variant="subheading">Filesystem/Boot Helpers</Typography>
             <FormControl fullWidth component="fieldset">
               <FormGroup>
                 <FormControlLabel
@@ -303,7 +325,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               </FormGroup>
             </FormControl>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.section}>
             <ActionsPanel>
               <Button onClick={onSubmit} variant="raised" color="primary">Submit</Button>
               <Button onClick={onClose}>Cancel</Button>
