@@ -61,7 +61,7 @@ describe('Header - Search - Volumes Suite', () => {
 
     it('should navigate to linode detail volume page', () => {
         browser.click('[data-qa-suggestion]');
-        browser.waitForVisible('[data-qa-volumes-table]');
+        VolumeDetail.volumeCellElem.waitForVisible();
     });
 
     it('should remove the volume', () => {
