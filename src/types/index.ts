@@ -38,7 +38,8 @@ namespace Linode {
   }
 
   export interface ResourcesState {
-    types?: ResourcePage<Linode.LinodeType>;
+    types?: { loading: boolean; data: ResourcePage<Linode.LinodeType>; };
+    kernels?: { loading: boolean; data: Linode.Kernel[] };
   }
 
   export type DocumentationState = Linode.Doc[];
@@ -121,12 +122,12 @@ namespace Linode {
     'stackscript_delete' |
     'volume_detach';
 
-    export type EventStatus =
-      'scheduled' |
-      'started' |
-      'finished' |
-      'failed' |
-      'notification';
+  export type EventStatus =
+    'scheduled' |
+    'started' |
+    'finished' |
+    'failed' |
+    'notification';
 
   export interface Event {
     id: number;

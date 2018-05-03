@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { lensPath, set } from 'ramda';
 
 import {
   withStyles,
@@ -13,6 +12,7 @@ import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
+import LinodeConfigsPanel from './LinodeConfigsPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -26,63 +26,55 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   linodeId: number;
   linodeLabel: string;
-  alerts: Linode.LinodeAlerts;
-}
-
-interface State {
-  linodeLabel: string;
-  alerts: Linode.LinodeAlerts;
+  linodeAlerts: Linode.LinodeAlerts;
+  linodeConfigs: Linode.Config[];
+  linodeRegion: string;
+  linodeMemory: number;
 }
 
 type CombinedProps = Props
   & WithStyles<ClassNames>;
 
-class LinodeSettings extends React.Component<CombinedProps, State> {
-  state: State = {
-    linodeLabel: this.props.linodeLabel,
-    alerts: this.props.alerts,
-  };
+const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
+  const {
+    classes,
+    linodeAlerts,
+    linodeConfigs,
+    linodeId,
+    linodeLabel,
+    linodeMemory,
+    linodeRegion,
+  } = props;
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
-    if (nextProps.linodeLabel !== this.state.linodeLabel) {
-      this.setState(
-        set(lensPath(['linodeLabel']), nextProps.linodeLabel),
-      );
-    }
-
-    if (nextProps.alerts !== this.state.alerts) {
-      this.setState(
-        set(lensPath(['alerts']), nextProps.alerts),
-      );
-    }
-  }
-
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <Typography variant="headline" className={classes.title}>Settings</Typography>
-        <LinodeSettingsLabelPanel
-          linodeLabel={this.state.linodeLabel}
-          linodeId={this.props.linodeId}
-        />
-        <LinodeSettingsPasswordPanel
-          linodeLabel={this.state.linodeLabel}
-          linodeId={this.props.linodeId}
-        />
-        <LinodeSettingsAlertsPanel
-          linodeId={this.props.linodeId}
-          linodeLabel={this.state.linodeLabel}
-          linodeAlerts={this.state.alerts}
-        />
-        <LinodeSettingsDeletePanel
-          linodeId={this.props.linodeId}
-        />
-      </React.Fragment >
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <Typography variant="headline" className={classes.title}>Settings</Typography>
+      <LinodeSettingsLabelPanel
+        linodeLabel={linodeLabel}
+        linodeId={linodeId}
+      />
+      <LinodeSettingsPasswordPanel
+        linodeLabel={linodeLabel}
+        linodeId={linodeId}
+      />
+      <LinodeSettingsAlertsPanel
+        linodeId={linodeId}
+        linodeLabel={linodeLabel}
+        linodeAlerts={linodeAlerts}
+      />
+      <LinodeConfigsPanel
+        linodeId={linodeId}
+        linodeLabel={linodeLabel}
+        linodeRegion={linodeRegion}
+        linodeConfigs={linodeConfigs}
+        linodeMemory={linodeMemory}
+      />
+      <LinodeSettingsDeletePanel
+        linodeId={linodeId}
+      />
+    </React.Fragment >
+  );
+};
 
 const styled = withStyles(styles, { withTheme: true });
 

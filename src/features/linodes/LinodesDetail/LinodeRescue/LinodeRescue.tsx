@@ -1,20 +1,13 @@
 import * as React from 'react';
 import {
-  always,
   assoc,
   clamp,
   compose,
-  contains,
   filter,
-  ifElse,
-  isNil,
-  last,
   map,
-  objOf,
   path,
-  prop,
-  split,
   pathOr,
+  prop,
 } from 'ramda';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 
@@ -30,7 +23,6 @@ import Button from 'material-ui/Button';
 import {
   rescueLinode,
   getLinodeDisks,
-  RescueRequestObject,
 } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import { resetEventsPolling } from 'src/events';
@@ -41,6 +33,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import ActionsPanel from 'src/components/ActionsPanel';
 import ErrorState from 'src/components/ErrorState';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
+import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 type ClassNames = 'root'
   | 'title'
@@ -77,19 +70,8 @@ interface PromiseLoaderProps {
   volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
-interface RescueDeviceState {
-  sda?: string;
-  sdb?: string;
-  sdc?: string;
-  sdd?: string;
-  sde?: string;
-  sdf?: string;
-  sdg?: string;
-  sdh?: string;
-}
-
 interface State {
-  rescueDevices: RescueDeviceState;
+  rescueDevices: DevicesAsStrings;
   errors?: Linode.ApiFieldError[];
   devices: {
     disks: ExtendedDisk[];
@@ -101,32 +83,6 @@ interface State {
 
 type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
-let getIdOrNullFor: (t: string) => (d?: string) => null | Linode.VolumeDevice | Linode.DiskDevice;
-getIdOrNullFor = type => compose(
-  ifElse(isNil, always(null), compose(
-    ifElse(
-      contains(type),
-      compose<string, string[], string, number, Record<string, number>>(
-        objOf(`${type}_id`), Number, last, split('-'),
-      ),
-      always(null),
-    ),
-  )),
-);
-
-const idForDisk = getIdOrNullFor('disk');
-const idForVolume = getIdOrNullFor('volume');
-
-export let createRescueDevicesPostObject: (v: RescueDeviceState) => RescueRequestObject;
-createRescueDevicesPostObject = devices => ({
-  sda: idForDisk(devices.sda) || idForVolume(devices.sda),
-  sdb: idForDisk(devices.sdb) || idForVolume(devices.sdb),
-  sdc: idForDisk(devices.sdc) || idForVolume(devices.sdc),
-  sdd: idForDisk(devices.sdd) || idForVolume(devices.sdd),
-  sde: idForDisk(devices.sde) || idForVolume(devices.sde),
-  sdf: idForDisk(devices.sdf) || idForVolume(devices.sdf),
-  sdg: idForDisk(devices.sdg) || idForVolume(devices.sdg),
-});
 
 
 class LinodeRescue extends React.Component<CombinedProps, State> {
@@ -155,7 +111,7 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
     const { linodeId } = this.props;
     const { rescueDevices } = this.state;
 
-    rescueLinode(linodeId, createRescueDevicesPostObject(rescueDevices))
+    rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then((response) => {
         this.setState({
           counter: 1,
@@ -221,10 +177,12 @@ class LinodeRescue extends React.Component<CombinedProps, State> {
             recovery and disk management tasks.
           </Typography>
           <DeviceSelection
+            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             devices={devices}
             onChange={this.onChange}
             getSelected={slot => pathOr('', ['rescueDevices', slot], this.state)}
             counter={this.state.counter}
+            rescue
           />
           <IconTextLink
             SideIcon={PlusSquare}

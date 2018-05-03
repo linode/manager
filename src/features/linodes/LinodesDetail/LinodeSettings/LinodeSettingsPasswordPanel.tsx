@@ -27,7 +27,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
 import Reload from 'src/assets/icons/reload.svg';
-
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -170,4 +170,10 @@ const loaded = PromiseLoader<Props>({
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default loaded(styled(LinodeSettingsPasswordPanel));
+const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
+
+export default compose(
+  errorBoundary,
+  loaded,
+  styled,
+)(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

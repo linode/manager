@@ -1,9 +1,9 @@
-import { createRescueDevicesPostObject } from './LinodeRescue';
+import createDevicesFromStrings from './createDevicesFromStrings';
 
 describe('LinodeRescue', () => {
   describe('createRescueDevicesPostObject', () => {
     it('Returns the minumum requirement.', () => {
-      const result = createRescueDevicesPostObject({});
+      const result = createDevicesFromStrings({});
       const expected = {
         sda: null,
         sdb: null,
@@ -12,12 +12,13 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
     });
     it('should provide a disk_id for a given slot when provided a valid value', () => {
-      const result = createRescueDevicesPostObject({ sda: 'disk-123', sdd: 'disk-456' });
+      const result = createDevicesFromStrings({ sda: 'disk-123', sdd: 'disk-456' });
       const expected = {
         sda: { disk_id: 123 },
         sdb: null,
@@ -26,13 +27,14 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
     });
 
     it('should provide a volume_id for a given slot when provided a valid value', () => {
-      const result = createRescueDevicesPostObject({ sdb: 'volume-123', sde: 'volume-456' });
+      const result = createDevicesFromStrings({ sdb: 'volume-123', sde: 'volume-456' });
       const expected = {
         sda: null,
         sdb: { volume_id: 123 },
@@ -41,6 +43,7 @@ describe('LinodeRescue', () => {
         sde: { volume_id: 456 },
         sdf: null,
         sdg: null,
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
