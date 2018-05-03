@@ -17,6 +17,7 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import TextField from 'src/components/TextField';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import Drawer from 'src/components/Drawer';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Select from 'src/components/Select';
 import Notice from 'src/components/Notice';
@@ -220,9 +221,10 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { mode, linodeLabel, classes } = this.props;
+    const { mode, classes } = this.props;
     const regions = path(['response', 'data'], this.props.regions) as Linode.Region[];
     const linodes = path(['response', 'data'], this.props.linodes) as Linode.Linode[];
+    const linodeLabel = this.props.linodeLabel || '';
 
     const {
       cloneLabel,
@@ -366,12 +368,14 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
                   <MenuItem key={linode.id} value={`${linode.id}`}>{linode.label}</MenuItem>,
               )}
               {(mode === modes.EDITING
-                || mode === modes.RESIZING)
+                || mode === modes.RESIZING) &&
                 /*
                 * We optimize the lookup of the linodeLabel by providing it
-                * explicitly when editing or cloning
+                * explicitly when editing or resizing
                 */
-                && <MenuItem key={linodeLabel} value={linodeLabel}>{linodeLabel}</MenuItem>
+                <MenuItem key={linodeLabel} value={linodeLabel}>
+                  {linodeLabel}
+                </MenuItem>
               }
             </Select>
             {linodeError &&
@@ -430,8 +434,9 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any, any, any, any>(
+export default compose<any, any, any, any, any>(
   preloaded,
   connected,
   styled,
+  SectionErrorBoundary,
 )(VolumeDrawer);

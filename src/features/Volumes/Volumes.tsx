@@ -8,10 +8,11 @@ import {
   Theme,
   WithStyles,
 } from 'material-ui';
-import { pathOr } from 'ramda';
+import { pathOr, compose } from 'ramda';
 
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import Placeholder from 'src/components/Placeholder';
+import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import { events$ } from 'src/events';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
@@ -113,4 +114,9 @@ const connected = connect(undefined, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default connected(styled(preloaded(Volumes)));
+export default compose(
+  connected,
+  styled,
+  preloaded,
+  SectionErrorBoundary,
+)(Volumes);
