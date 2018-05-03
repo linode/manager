@@ -131,6 +131,7 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
       };
     case EDITING:
       return {
+        ...defaultState,
         volumeID: action.volumeID,
         label: action.label,
         size: action.size,
@@ -140,6 +141,7 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
       };
     case RESIZING:
       return {
+        ...defaultState,
         volumeID: action.volumeID,
         label: action.label,
         size: action.size,
@@ -149,6 +151,7 @@ export default function volumeDrawer(state = defaultState, action: ActionTypes) 
       };
     case CLONING:
       return {
+        ...defaultState,
         volumeID: action.volumeID,
         label: action.label,
         size: action.size,
