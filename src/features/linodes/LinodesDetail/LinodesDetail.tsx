@@ -82,7 +82,7 @@ interface PreloadedProps {
 type ClassNames = 'cta'
   | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   cta: {
     [theme.breakpoints.down('sm')]: {
       display: 'flex',
@@ -93,18 +93,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   launchButton: {
     marginRight: theme.spacing.unit,
     padding: '12px 16px 13px',
-    minHeight: 49,
-    marginTop: 1,
+    minHeight: 50,
     transition: theme.transitions.create(['background-color', 'color']),
     [theme.breakpoints.down('sm')]: {
-      backgroundColor: 'white',
-      border: '1px solid #eee',
+      backgroundColor: theme.color.white,
+      border: `1px solid ${theme.color.border1}`,
       marginTop: 0,
       minHeight: 51,
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
+      borderColor: theme.palette.primary.main,
     },
   },
 });

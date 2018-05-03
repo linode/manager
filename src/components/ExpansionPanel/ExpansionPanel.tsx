@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       '&:hover, &:focus': {
         backgroundColor: status.successDark,
         '& h3, & svg': {
-          color: 'white',
+          color: theme.color.white,
         },
       },
       '& svg': {
@@ -118,11 +118,6 @@ class EExpansionPanel extends React.Component<CombinedProps> {
           onClick={this.handleClick}
           expandIcon={this.state.open ? <Plus /> : <Minus />}
           {...summaryProps}
-          // className={classNames({
-          //   [classes.success]: Boolean(this.props.success),
-          //   [classes.warning]: Boolean(this.props.warning),
-          //   [classes.error]: Boolean(this.props.error),
-          // })}
           data-qa-panel-summary
         >
           <Typography

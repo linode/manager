@@ -8,7 +8,6 @@ import {
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 
-import LinodeTheme from 'src/theme';
 import ShowMore from 'src/components/ShowMore';
 import ContentCopyIcon from 'material-ui-icons/ContentCopy';
 
@@ -17,6 +16,7 @@ type CSSClasses =  'root'
 | 'right'
 | 'icon'
 | 'row'
+| 'ip'
 | 'ipLink'
 | 'copied';
 
@@ -61,8 +61,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     position: 'absolute',
     top: -9,
   },
+  ip: {
+    color: theme.palette.text.primary,
+    fontSize: '.9rem',
+  },
   ipLink: {
-    color: LinodeTheme.palette.primary.main,
+    color: theme.palette.primary.main,
     position: 'relative',
     display: 'inline-block',
     width: 28,
@@ -77,7 +81,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   copied: {
     fontSize: '.85rem',
     left: -12,
-    color: LinodeTheme.palette.primary.light,
+    color: theme.palette.primary.light,
     padding: '6px 8px',
     backgroundColor: 'white',
     position: 'absolute',
@@ -138,7 +142,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <div className="ip">{ip}</div>
+        <div className={`${classes.ip} ${'ip'}`}>{ip}</div>
         {copyRight && this.renderCopyIcon(ip)}
       </div>
     );

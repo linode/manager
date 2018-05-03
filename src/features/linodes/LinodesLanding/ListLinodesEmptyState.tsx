@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 
-import LinodeTheme from 'src/theme';
+
 
 type CSSClasses = 'root' | 'copy' | 'button' | 'icon' | 'title';
 
@@ -50,7 +50,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     height: 225,
     '& .outerCircle': {
       fill: 'white',
-      stroke: LinodeTheme.bg.offWhite,
+      stroke: theme.bg.offWhite,
     },
     '& .insidePath path': {
       opacity: 0,

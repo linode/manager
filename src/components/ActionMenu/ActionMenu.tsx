@@ -30,7 +30,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     paddingBottom: theme.spacing.unit * 1.5,
     fontWeight: 400,
     fontSize: '.9rem',
-    color: theme.palette.primary.main,
     transition: `${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
     ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
     '&:hover, &:focus': {

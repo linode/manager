@@ -31,8 +31,8 @@ class HideShowText extends React.Component<Props, State> {
         type={hidden ? 'password' : 'text'}
         InputProps={{
           startAdornment: hidden
-            ? <Visibility onClick={this.toggleHidden} />
-            : <VisibilityOff onClick={this.toggleHidden} />,
+            ? <Visibility onClick={this.toggleHidden} style={{ marginLeft: 14 }} />
+            : <VisibilityOff onClick={this.toggleHidden} style={{ marginLeft: 14 }} />,
         }}
       />
     );

@@ -10,7 +10,7 @@ import Collapse from 'material-ui/transitions/Collapse';
 
 import { ListItem } from 'material-ui/List';
 import KeyboardArrowRight from 'material-ui-icons/KeyboardArrowRight';
-import LinodeTheme from '../../../src/theme';
+
 
 
 type CSSClasses = 'root' | 'header' | 'caret' ;
@@ -35,7 +35,7 @@ const styles: StyleRulesCallback = (theme: Theme & Linode.Theme) => ({
     display: 'flex',
     alignItems: 'center',
     fontWeight: 700,
-    color: LinodeTheme.color.headline,
+    color: theme.color.headline,
     transition: 'color 225ms ease-in-out',
   },
   caret: {

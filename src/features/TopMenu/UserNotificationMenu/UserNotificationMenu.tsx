@@ -15,14 +15,14 @@ import UserNotificationList from './UserNotificationList';
 
 type ClassNames = 'root' | 'dropDown';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     transform: `translate(-${theme.spacing.unit * 2}px, ${theme.spacing.unit}px)`,
   },
   dropDown: {
     position: 'absolute',
     outline: 0,
-    boxShadow: '0 0 5px #ddd',
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     overflowY: 'auto',
     overflowX: 'hidden',
     minHeight: 16,

@@ -14,7 +14,6 @@ import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import HideShowText from './HideShowText';
 
-
 interface Props extends TextFieldProps {
 }
 

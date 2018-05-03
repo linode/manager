@@ -481,7 +481,7 @@ export class APITokens extends React.Component<CombinedProps, State> {
           }}
           onClose={() => this.closeRevokeDialog()}
         >
-          Are you sure you want to revoke this API Token?
+         <Typography>Are you sure you want to revoke this API Token?</Typography>
         </ConfirmationDialog>
 
         <ConfirmationDialog

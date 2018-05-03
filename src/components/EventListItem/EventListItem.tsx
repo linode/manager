@@ -5,7 +5,7 @@ import { ListItemText } from 'material-ui/List';
 import { MenuItem, MenuItemProps } from 'material-ui/Menu';
 
 import { withStyles, StyleRulesCallback, WithStyles } from 'material-ui';
-import LinodeTheme from 'src/theme';
+
 
 type ClassNames = 'root'
   | 'error'
@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       borderLeftColor: 'transparent',
       transition: theme.transitions.create(['background-color']),
       '&:hover': {
-        backgroundColor: LinodeTheme.bg.offWhite,
+        backgroundColor: theme.bg.offWhite,
       },
     },
     error: {
