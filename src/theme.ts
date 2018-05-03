@@ -236,6 +236,8 @@ const LinodeTheme: Linode.Theme = {
       root: {
         color: '#555',
         fontWeight: 700,
+        fontSize: '.9rem',
+        marginBottom: 2,
       },
       focused: {
         color: '#555',
@@ -277,6 +279,10 @@ const LinodeTheme: Linode.Theme = {
           borderColor: '#00B159',
         },
       },
+      inputMultiline: {
+        minHeight: 125,
+        padding: '5px 12px',
+      },
       focused: {
         borderColor: '#666',
       },
@@ -303,6 +309,9 @@ const LinodeTheme: Linode.Theme = {
     MuiInputLabel: {
       formControl: {
         position: 'relative',
+      },
+      shrink: {
+        transform: 'none',
       },
     },
     MuiList: {
@@ -367,11 +376,11 @@ const LinodeTheme: Linode.Theme = {
     MuiSelect: {
       root: {},
       selectMenu: {
-        padding: '7px 32px 7px 16px',
+        padding: '5px 32px 5px 16px',
         color: '#666',
         backgroundColor: '#fff',
         lineHeight: 2.2,
-        minHeight: 46,
+        minHeight: 40,
         '&:focus': {
           backgroundColor: '#fff',
         },
