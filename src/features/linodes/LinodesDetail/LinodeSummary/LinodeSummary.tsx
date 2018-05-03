@@ -78,6 +78,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Linode.Theme) => {
       },
     },
     graphTitle: {
+      position: 'relative',
+      top: 6,
       marginRight: theme.spacing.unit * 2,
     },
     graphControls: {
@@ -139,6 +141,7 @@ const chartOptions = {
         zeroLineBorderDashOffset: 2,
       },
       ticks: {
+        suggestedMax: 100,
         beginAtZero: true,
         callback(value: number, index: number) {
           if (value >= 1000000) {
