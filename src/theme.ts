@@ -11,6 +11,7 @@ const LinodeTheme: Linode.Theme = {
       transform: 'rotate(360deg)',
     },
   },
+  name: 'lightTheme',
   breakpoints: { breakpoints },
   overrides: {
     MuiAppBar: {
