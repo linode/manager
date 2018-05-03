@@ -10,9 +10,12 @@ export const getVolumesPage = (page: number): GetVolumesPage =>
 export const getVolumes = (): Promise<Linode.ResourcePage<Linode.Volume>> =>
   getVolumesPage(1);
 
-export const attach = (volumeId: number) => (linodeId: number): Promise<{}> =>
+export const attach = (volumeId: number, payload: {
+  linode_id: number,
+  config_id?: number,
+}): Promise<{}> =>
   Axios
-    .post(`${API_ROOT}/volumes/${volumeId}/attach`, { linode_id: linodeId });
+    .post(`${API_ROOT}/volumes/${volumeId}/attach`, payload);
 
 export const detach = (volumeId: number): Promise<{}> =>
   Axios
