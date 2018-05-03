@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { LinodeRescue } from './LinodeRescue';
 import { ExtendedVolume } from './DeviceSelection';
 import { createPromiseLoaderResponse } from 'src/utilities/testHelpers';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 describe('LinodeRescue', () => {
   describe('volumes', () => {
@@ -86,27 +87,31 @@ describe('LinodeRescue', () => {
       },
     ]);
 
-    const component = mount(
-      <LinodeRescue
-        classes={{
-          root: '',
-          title: '',
-          intro: '',
-          actionPanel: '',
-        }}
-        disks={disks}
-        linodeId={7843027}
-        linodeRegion="us-east"
-        volumes={volumes}
-      />,
+    const component = shallow(
+      <LinodeThemeWrapper>
+        <LinodeRescue
+          classes={{
+            root: '',
+            title: '',
+            intro: '',
+            actionPanel: '',
+          }}
+          disks={disks}
+          linodeId={7843027}
+          linodeRegion="us-east"
+          volumes={volumes}
+        />
+      </LinodeThemeWrapper>,
     );
+    const rescueComponent: any = component.find('LinodeRescue').dive();
+    const rescueComponentProps = component.props().children.props;
     it(
       `volumes in the rescue dropdowns should only display volumes
       that are in the same region as the Linode`,
       () => {
-        const linodeRegion = component.props().linodeRegion;
+        const linodeRegion = rescueComponentProps.linodeRegion;
         let volumesAndLinodeSameRegion = true;
-        component
+        rescueComponent
           .state()
           .devices
           .volumes
@@ -122,9 +127,9 @@ describe('LinodeRescue', () => {
       `volumes in the rescue dropdowns should only display volumes
         that are either attached to the current Linode or no Linode`,
       () => {
-        const linodeId = component.props().linodeId;
+        const linodeId = rescueComponentProps.linodeId;
         let volumeCanBeRescued = true;
-        component
+        rescueComponent
           .state()
           .devices
           .volumes
