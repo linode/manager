@@ -124,6 +124,7 @@ namespace Linode {
     comments: string;
     memory_limit: number;
     root_device_ro: boolean;
+    root_device: string;
     run_level: 'default' | 'single' | 'binbash';
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
@@ -147,6 +148,7 @@ namespace Linode {
     sdf: null | DiskDevice | VolumeDevice;
     sdg: null | DiskDevice | VolumeDevice;
     sdh: null | DiskDevice | VolumeDevice;
+    [index: string]: null | DiskDevice | VolumeDevice;
   }
 
   export interface Kernel {
