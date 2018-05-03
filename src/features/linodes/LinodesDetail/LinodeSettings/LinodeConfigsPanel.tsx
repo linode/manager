@@ -154,6 +154,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       network: false,
       devtmpfs_automount: false,
     },
+    errors: undefined,
   };
 
   state: State = {
@@ -416,7 +417,7 @@ class LinodeConfigsPanel extends React.Component<CombinedProps, State> {
       label, devices, kernel, comments, memory_limit, run_level, virt_mode, helpers, root_device,
     } = this.state.configDrawer;
 
-    this.setConfigDrawer({ submitting: true });
+    this.setConfigDrawer({ submitting: true, errors: undefined });
 
     createLinodeConfig(linodeId, {
       label,

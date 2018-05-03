@@ -27,10 +27,11 @@ import TextField from 'src/components/TextField';
 import Radio from 'src/components/Radio';
 import Toggle from 'src/components/Toggle';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root'
-| 'section'
-| 'divider';
+  | 'section'
+  | 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -114,6 +115,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const errorFor = getAPIErrorsFor({}, errors);
+    const generalError = errorFor('none');
 
     return (
       <Drawer
@@ -122,7 +124,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         onClose={onClose}
       >
         <Grid container direction="row">
-
+          {generalError && <Notice error text={generalError} />}
           <Grid item xs={12} className={classes.section}>
             <Typography variant="subheading">Label and Comments</Typography>
             <TextField
@@ -175,6 +177,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               select={true}
               value={kernel}
               onChange={e => onChange('kernel', e.target.value)}
+              errorText={errorFor('kernel')}
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
@@ -210,6 +213,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </FormControl>
 
             <TextField
+              type="number"
               label="Memory Limit"
               value={memory_limit}
               onChange={e => onChange('memory_limit', clamp(0, maxMemory, +e.target.value))}
@@ -248,6 +252,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 select={!useCustomRoot}
                 fullWidth
                 autoFocus={useCustomRoot && true}
+                errorText={errorFor('root_device')}
               >
                 {
                   !useCustomRoot &&
