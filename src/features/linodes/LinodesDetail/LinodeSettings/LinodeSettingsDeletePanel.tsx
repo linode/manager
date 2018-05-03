@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { lensPath, set } from 'ramda';
+import { compose, lensPath, set } from 'ramda';
 
 import {
   withStyles,
@@ -15,7 +15,7 @@ import { deleteLinode } from 'src/services/linodes';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-
+import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -101,4 +101,10 @@ class LinodeSettingsDeletPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(styled(LinodeSettingsDeletPanel));
+const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
+
+export default compose(
+  errorBoundary,
+  withRouter,
+  styled,
+)(LinodeSettingsDeletPanel) as React.ComponentType<Props>;
