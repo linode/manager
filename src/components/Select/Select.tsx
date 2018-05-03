@@ -11,7 +11,7 @@ import Select, { SelectProps } from 'material-ui/Select';
 import Input, { InputProps } from 'material-ui/Input';
 import { MenuProps } from 'material-ui/Menu';
 
-import LinodeTheme from '../../../src/theme';
+
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
@@ -20,10 +20,10 @@ type ClassNames = 'root'
   | 'inputSucess'
   | 'inputError';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     '&[class*="focused"]': {
-      borderColor: '#bbb',
+      borderColor: '#666',
     },
   },
   menu: {
@@ -31,6 +31,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     boxSizing: 'content-box',
+    '& li': {
+      color: theme.palette.text.primary,
+    },
     [theme.breakpoints.down('xs')]: {
       minWidth: 200,
     },
@@ -39,23 +42,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     boxShadow: 'none',
     position: 'absolute',
     boxSizing: 'content-box',
-    border: '1px solid #bbb',
+    border: '1px solid #666',
     margin: '0 0 0 -1px',
     outline: 0,
   },
   inputError: {
-    borderColor: LinodeTheme.color.red,
+    borderColor: theme.color.red,
     '&[class*="focused"]': {
-      borderColor: LinodeTheme.color.red,
+      borderColor: theme.color.red,
     },
   },
   inputSucess: {
-    borderColor: LinodeTheme.color.green,
+    borderColor: theme.color.green,
     '&[class*="focused"]': {
-      borderColor: LinodeTheme.color.green,
+      borderColor: theme.color.green,
     },
     '& + p': {
-      color: LinodeTheme.color.green,
+      color: theme.color.green,
     },
   },
 });

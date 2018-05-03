@@ -10,7 +10,7 @@ import {
 import Button from 'material-ui/Button';
 import ViewList from 'material-ui-icons/ViewList';
 import ViewModule from 'material-ui-icons/ViewModule';
-import LinodeTheme from 'src/theme';
+
 
 type CSSClasses =
   'root'
@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
   button: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: LinodeTheme.color.border1,
+    borderColor: theme.color.border1,
     borderRadius: 0,
     fontWeight: 700,
     textTransform: 'inherit',
@@ -43,7 +43,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     minHeight: 'inherit',
     fontSize: '1rem',
     lineHeight: '1.3em',
-    color: LinodeTheme.palette.text.primary,
+    color: theme.palette.text.primary,
+    '&:focus': {
+      backgroundColor: theme.color.white,
+    },
     '&:hover': {
       backgroundColor: 'transparent',
       '& $icon': {
@@ -52,9 +55,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => 
     },
   },
   buttonActive: {
-    backgroundColor: 'white',
+    backgroundColor: theme.color.white,
     '&:hover': {
-      backgroundColor: 'white',
+      backgroundColor: theme.color.white,
     },
   },
   buttonLeft: {

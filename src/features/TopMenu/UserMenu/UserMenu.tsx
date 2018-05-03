@@ -17,6 +17,7 @@ import {
 } from 'material-ui/styles';
 import ButtonBase from 'material-ui/ButtonBase';
 import Menu, { MenuItem } from 'material-ui/Menu';
+
 import UserIcon from 'src/assets/icons/user.svg';
 
 type MenuLink = {

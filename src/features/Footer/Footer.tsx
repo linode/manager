@@ -8,7 +8,7 @@ import {
 } from 'material-ui';
 
 import Grid from 'src/components/Grid';
-import LinodeTheme from 'src/theme';
+
 
 import FooterLogo from 'src/assets/logo/logo-footer.svg';
 
@@ -18,10 +18,10 @@ type CSSClasses = 'container'
 | 'logoWrapper'
 | 'logo';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = (theme: Theme & Linode.Theme) => ({
   container: {
     width: '100%',
-    backgroundColor: LinodeTheme.bg.main,
+    backgroundColor: theme.bg.main,
     margin: 0,
     height: 100,
   },
@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: LinodeTheme.bg.main,
+    backgroundColor: theme.bg.main,
     height: 70,
   },
   logo: {
@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme: Theme) => ({
   link: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    color: LinodeTheme.palette.text.primary,
+    color: theme.palette.text.primary,
     textDecoration: 'none',
     fontSize: '90%',
     '&:hover, &:focus': {

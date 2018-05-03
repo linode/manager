@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   withStyles,
   WithStyles,
-  Theme,
   StyleRules,
 } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -22,7 +21,7 @@ type ClassNames = 'appBar'
   | 'leftIcon'
   | 'toolbar';
 
-const styles = (theme: Theme): StyleRules => ({
+const styles = (theme: Linode.Theme): StyleRules => ({
   root: {
     color: theme.palette.text.primary,
   },
@@ -31,7 +30,7 @@ const styles = (theme: Theme): StyleRules => ({
   },
   appBar: {
     color: theme.palette.text.primary,
-    backgroundColor: 'white',
+    backgroundColor: theme.bg.white,
     position: 'relative',
     paddingRight: '0 !important',
   },

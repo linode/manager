@@ -13,14 +13,13 @@ import {
   rebootLinode,
 } from 'src/features/linodes/LinodesLanding/powerActions';
 
-import LinodeTheme from 'src/theme';
+
 import PowerOn from '../../../../assets/icons/powerOn.svg';
 import Reload from '../../../../assets/icons/reload.svg';
 
 type ClassNames = 'root'
   | 'button'
   | 'caret'
-  | 'popOver'
   | 'menuItem'
   | 'icon'
   | 'powerOn'
@@ -29,7 +28,7 @@ type ClassNames = 'root'
   | 'fadeIn'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -46,31 +45,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       transform: 'rotate(360deg)',
     },
   },
-  root: {},
+  root: {
+    '& svg': {
+      transition: theme.transitions.create('color'),
+    },
+  },
   button: {
-    background: 'white',
-    border: `1px solid ${LinodeTheme.color.border3}`,
-    transition: theme.transitions.create('border'),
+    backgroundColor: theme.color.white,
+    transition: theme.transitions.create('background', 'color', 'border-color'),
+    border: `1px solid ${theme.color.border1}`,
     padding: '12px 16px 13px',
     minWidth: 145,
     '&:hover, &.active': {
-      borderColor: LinodeTheme.color.border1,
+      borderColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+      '& svg': {
+        color: 'white',
+      },
     },
   },
   caret: {
+    transition: theme.transitions.create('color'),
     position: 'relative',
     top: 2,
     left: 2,
     marginLeft: theme.spacing.unit / 2,
-  },
-  popOver: {
-    position: 'absolute',
-    outline: 0,
-    boxShadow: '0 0 5px #ddd',
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    minWidth: 250,
   },
   menuItem: {
     color: theme.palette.primary.main,
@@ -78,18 +78,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      '& svg': {
+        color: 'white',
+      },
     },
   },
   icon: {
     marginRight: theme.spacing.unit + 2,
   },
   powerOn: {
-    color: LinodeTheme.color.green,
+    color: theme.color.green,
   },
   powerOff: {
-    color: LinodeTheme.color.red,
+    color: theme.color.red,
   },
   rotate: {
     animation: 'rotate 2s linear infinite',
@@ -204,7 +205,6 @@ class LinodePowerButton extends React.Component<CombinedProps, State> {
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
-          PaperProps={{ className: classes.popOver }}
         >
           <MenuItem key="placeholder" className={classes.hidden} />
           <MenuItem

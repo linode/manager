@@ -20,7 +20,7 @@ import { resizeLinode, getLinodeTypes } from 'src/services/linodes';
 import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 
-import LinodeTheme from 'src/theme';
+
 
 type ClassNames = 'root'
   | 'title'
@@ -28,7 +28,7 @@ type ClassNames = 'root'
   | 'currentPlanContainer'
   | 'actionPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme: Theme & Linode.Theme) => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 1,
@@ -44,8 +44,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       padding: 0,
       cursor: 'not-allowed',
       '& > div, &:focus > div': {
-        backgroundColor: LinodeTheme.bg.main,
-        borderColor: '#C9CACB',
+        backgroundColor: theme.bg.main,
+        borderColor: theme.color.border2,
       },
     },
   },

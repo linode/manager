@@ -7,10 +7,9 @@ import {
   StyleRules,
 } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 
-import LinodeTheme from 'src/theme';
+
 import { TypeInfo } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 
 type ClassNames = 'root'
@@ -37,14 +36,14 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
       position: 'relative !important',
       left: '0 !important',
       bottom: '0 !important',
-      background: '#fff',
+      background: theme.color.white,
       padding: theme.spacing.unit * 2,
     },
   },
   checkoutSection: {
     opacity: 0,
     padding: `${theme.spacing.unit * 2}px 0`,
-    borderTop: `1px solid ${LinodeTheme.color.border2}`,
+    borderTop: `1px solid ${theme.color.border2}`,
     animation: 'fadeIn 225ms linear forwards',
   },
   noBorder: {
@@ -52,16 +51,16 @@ const styles = (theme: Theme & Linode.Theme): StyleRules => ({
   },
   sidebarTitle: {
     fontSize: '1.5rem',
-    color: LinodeTheme.color.green,
+    color: theme.color.green,
   },
   detail: {
     fontSize: '.8rem',
-    color: LinodeTheme.color.headline,
+    color: theme.color.headline,
     lineHeight: '1.5em',
   },
   price: {
     fontSize: '1.5rem',
-    color: LinodeTheme.color.green,
+    color: theme.color.green,
     display: 'inline-block',
   },
   per: {
@@ -156,7 +155,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
         {typeInfo &&
           <React.Fragment>
             <div className={classes.checkoutSection} data-qa-type-summary>
-              <Divider />
               <Typography variant="subheading">
                 {typeInfo.name}
               </Typography>
@@ -170,7 +168,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
         {backups &&
           <React.Fragment>
             <div className={classes.checkoutSection} data-qa-backups-summary>
-              <Divider />
               <Typography variant="subheading">
                 Backups Enabled
               </Typography>

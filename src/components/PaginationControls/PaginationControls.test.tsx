@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 import PaginationControls from './PaginationControls';
 
 const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find('PageButton[first]');
@@ -13,12 +15,14 @@ describe('PaginationControls', () => {
 
   it('should render a left and right arrow', () => {
     const wrapper = mount(
-      <PaginationControls
-        onClickHandler={jest.fn()}
-        pages={mockPages}
-        currentPage={3}
-        range={10}
-      />,
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          pages={mockPages}
+          currentPage={3}
+          range={10}
+        />
+       </LinodeThemeWrapper>,
     );
 
     const prevPage = getFirstPageButton(wrapper);
@@ -30,12 +34,14 @@ describe('PaginationControls', () => {
 
   it('should render a disabled previous button when at first page.', () => {
     const wrapper = mount(
-      <PaginationControls
-        onClickHandler={jest.fn()}
-        pages={mockPages}
-        currentPage={1}
-        range={10}
-      />,
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          pages={mockPages}
+          currentPage={1}
+          range={10}
+        />
+      </LinodeThemeWrapper>,
     );
 
     const prevPage = getFirstPageButton(wrapper);
@@ -44,12 +50,14 @@ describe('PaginationControls', () => {
 
   it('should render a disabled next button when at last page.', () => {
     const wrapper = mount(
-      <PaginationControls
-        onClickHandler={jest.fn()}
-        pages={mockPages}
-        currentPage={7}
-        range={10}
-      />,
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={jest.fn()}
+          pages={mockPages}
+          currentPage={7}
+          range={10}
+        />
+      </LinodeThemeWrapper>,
     );
 
     const nextPage = getLastPageButton(wrapper);
@@ -60,12 +68,14 @@ describe('PaginationControls', () => {
     const mockClickHandler = jest.fn();
 
     const wrapper = mount(
-      <PaginationControls
-        onClickHandler={mockClickHandler}
-        pages={mockPages}
-        currentPage={7}
-        range={10}
-      />,
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={mockClickHandler}
+          pages={mockPages}
+          currentPage={7}
+          range={10}
+        />
+      </LinodeThemeWrapper>,
     );
 
     wrapper.find('PageButton').first().find('button').simulate('click');
@@ -78,12 +88,14 @@ describe('PaginationControls', () => {
     const pages = Array.from(Array(20), (x, i) => i + 1);
 
     const wrapper = mount(
-      <PaginationControls
-        onClickHandler={mockClickHandler}
-        pages={pages}
-        currentPage={1}
-        range={10}
-      />,
+      <LinodeThemeWrapper>
+        <PaginationControls
+          onClickHandler={mockClickHandler}
+          pages={pages}
+          currentPage={1}
+          range={10}
+        />
+      </LinodeThemeWrapper>,
     );
 
     const pageButtons = wrapper

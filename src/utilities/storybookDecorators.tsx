@@ -5,9 +5,10 @@ import {
   MuiThemeProvider,
   createMuiTheme,
 } from 'material-ui/styles';
-import LinodeTheme from '../theme';
+import LinodeThemeLight from 'src/theme';
 
-const theme = createMuiTheme(LinodeTheme as Linode.TodoAny);
+
+const theme = createMuiTheme(LinodeThemeLight as Linode.TodoAny);
 theme.shadows = theme.shadows.fill('none');
 
 const ThemeDecorator = (storyFn: Function) => {
