@@ -82,6 +82,15 @@ describe('APITokens', () => {
         website: 'http://localhost:3000',
         label: 'test-app-4',
       },
+      {
+        created: '2028-04-26T14:45:07',
+        expiry: moment.utc().add(3, 'months').format(),
+        thumbnail_url: null,
+        id: 5,
+        scopes: '*',
+        website: 'http://localhost:3000',
+        label: '',
+      },
     ]));
 
   const component = mount(
@@ -109,11 +118,86 @@ describe('APITokens', () => {
 
   it('should expect tokens to show in ascending order by created date', () => {
     const find = component.find('tr[data-qa-table-row]');
-    expect(find.at(0).prop('data-qa-table-row')).toEqual('test-app-3');
-    expect(find.at(1).prop('data-qa-table-row')).toEqual('test-app-2');
-    expect(find.at(2).prop('data-qa-table-row')).toEqual('test-app-4');
-    expect(find.at(3).prop('data-qa-table-row')).toEqual('test-3');
-    expect(find.at(4).prop('data-qa-table-row')).toEqual('test-2');
-    expect(find.at(5).prop('data-qa-table-row')).toEqual('test-4');
+    expect(find.at(0).prop('data-qa-table-row')).toEqual('');
+    expect(find.at(1).prop('data-qa-table-row')).toEqual('test-app-3');
+    expect(find.at(2).prop('data-qa-table-row')).toEqual('test-app-2');
+    expect(find.at(3).prop('data-qa-table-row')).toEqual('test-app-4');
+    expect(find.at(4).prop('data-qa-table-row')).toEqual('test-3');
+    expect(find.at(5).prop('data-qa-table-row')).toEqual('test-2');
+  });
+});
+
+describe('create and edit tokens', () => {
+  const pats: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>> =
+    createPromiseLoaderResponse(createResourcePage([
+      {
+        created: '2018-04-09T20:00:00',
+        expiry: moment.utc().subtract(1, 'day').format(),
+        id: 1,
+        token: 'aa588915b6368b80',
+        scopes: 'account:read_write',
+        label: 'test-1',
+      },
+    ]));
+
+  const appTokens: PromiseLoaderResponse<Linode.ResourcePage<Linode.Token>> =
+    createPromiseLoaderResponse(createResourcePage([
+      {
+        created: '2018-04-26T20:00:00',
+        expiry: moment.utc().subtract(1, 'day').format(),
+        thumbnail_url: null,
+        id: 1,
+        scopes: '*',
+        website: 'http://localhost:3000',
+        label: 'test-app-1',
+      },
+    ]));
+
+  const component = mount(
+    <APITokens
+      classes={{
+        headline: '',
+        paper: '',
+        labelCell: '',
+        typeCell: '',
+        createdCell: '',
+      }}
+      pats={pats}
+      appTokens={appTokens}
+    />,
+  );
+
+  it('create token submit form should return false if label is blank', () => {
+    (component.instance() as APITokens).createToken('*');
+    const errorsExist = (!!component.state().form.errors);
+    expect(errorsExist).toBeTruthy();
+  });
+
+  it('edit token submit form should return false if label is blank', () => {
+    (component.instance() as APITokens).editToken();
+    const errorsExist = (!!component.state().form.errors);
+    expect(errorsExist).toBeTruthy();
+  });
+
+  it('create token submit form should return no error state if label exists', () => {
+    component.setState({
+      form: {
+        ...component.state().form,
+        errors: undefined, // important that we reset the errors here after the previous tests
+        values: {
+          ...component.state().form.values,
+          label: 'test label',
+        },
+      },
+    });
+    (component.instance() as APITokens).createToken('*');
+    const errorsExist = (!!component.state().form.errors);
+    expect(errorsExist).toBeFalsy();
+  });
+
+  it('edit token submit form should return no error state if label exists', () => {
+    (component.instance() as APITokens).editToken();
+    const errorsExist = (!!component.state().form.errors);
+    expect(errorsExist).toBeFalsy();
   });
 });
