@@ -118,7 +118,8 @@ namespace Linode {
     'stackscript_create' |
     'stackscript_publicize' |
     'stackscript_revise' |
-    'stackscript_delete';
+    'stackscript_delete' |
+    'volume_detach';
 
     export type EventStatus =
       'scheduled' |

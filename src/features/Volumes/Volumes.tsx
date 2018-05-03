@@ -74,6 +74,10 @@ class Volumes extends React.Component<CombinedProps, State> {
       });
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   openVolumesDrawer() {
     this.props.openForCreating();
   }
