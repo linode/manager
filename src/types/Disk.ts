@@ -16,7 +16,8 @@ namespace Linode {
     | 'rebooting'
     | 'provisioning'
     | 'deleting'
-    | 'migrating';
+    | 'migrating'
+    | 'ready';
 
   type DiskFilesystem = 'raw'
     | 'swap'

@@ -85,7 +85,7 @@ type CombinedProps = Props & PromiseLoaderProps & WithStyles<ClassNames>;
 
 
 
-class LinodeRescue extends React.Component<CombinedProps, State> {
+export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
@@ -222,7 +222,10 @@ const preloaded = PromiseLoader({
         ExtendedVolume[],
         ExtendedVolume[]
         >(
-          filter<ExtendedVolume>(volume => volume.region === linodeRegion),
+          filter<ExtendedVolume>((volume) => {
+            // console.log(volume);
+            return volume.region === linodeRegion;
+          }),
           map(volume => assoc('_id', `volume-${volume.id}`, volume)),
           prop('data'),
       ),
